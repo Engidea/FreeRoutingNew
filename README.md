@@ -1,10 +1,15 @@
 FreeRouting
 ===========
 
+You should be able to run it by going to deploy and use run.sh
+There is a ingle button that allows you to open a dsn, normally exported from Kicad
+Below there are message windows...
+
 I am currently trying to reach the following goal
 
-- Automatic fix of "unconnected" tracks when importing from Kicad
-- Automatic fix of clearance violations by push and shove tracks and vias
+- Automatic fix of "unconnected" tracks when importing from Kicad (done)
+
+- Automatic fix of clearance violations by push and shove tracks and vias (still looking)
 
 Please excuse me if I am simplifying the code by "extracting" quite a few of the static inner classes and assign unique
 name to them, I find the code much simpler to read if I do not have to follow the prefix
@@ -13,7 +18,10 @@ Yes, I understand the reasoning and it is formally correct, it is just me that p
 
 At the moment you can run the jar and it is not dependent on the java web start anymore
 
-I must tell you all that Alfons is great, we should all be grateful to him for FreeROuting
+I must tell you all that Alfons is great, we should all be grateful to him for FreeRouting
+
+NOTE: This is a new repo since for some misterious reason Github did not show the previous one up
+
 
 Damiano
 
