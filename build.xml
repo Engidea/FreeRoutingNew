@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<project name="FreeRouting" default="all" basedir=".">
+  
+  <property name="javac.debug" value="on"/>
+  <property name="classes.dir" value="classes"/>
+  <property name="javac.deprecation" value="on"/>
+
+  <property name="deploy.dir" value="deploy"/>
+  <property name="app.jar" value="${deploy.dir}/FreeRouting.jar"/>
+  
+  <target name="init">
+    <tstamp/>
+    <mkdir dir="${classes.dir}" />
+<!--    <mkdir dir="${deploy.dir}" />  -->
+  </target>
+
+  <target name="all" description="Build the project" depends="compile,copy,deploy"/>
+
+  <target name="clean" description="Clean the project">
+    <delete includeemptydirs="true" quiet="true">
+      <fileset dir="${classes.dir}" includes="**/*"/>
+    </delete>
+  </target>
+
+  <target name="compile" description="Compile Java source files" depends="init">
+    <javac destdir="${classes.dir}" debug="${javac.debug}" 
+           deprecation="${javac.deprecation}" 
+           source="1.6" target="1.6">
+      <src path="src"/>
+    </javac>
+  </target>
+
+  <target name="copy" description="Copy files to output directory"  depends="init">
+    <copy todir="${classes.dir}">
+      <fileset dir="src">
+        <include name="**/*.gif"/>
+        <include name="**/*.jpg"/>
+        <include name="**/*.jpeg"/>
+        <include name="**/*.png"/>
+        <include name="**/*.properties"/>
+        <include name="**/*.resources"/>
+      </fileset>
+    </copy>
+  </target>
+
+
+  <target name="deploy">
+	<!-- do not delete app.jar, git will try to add a new one -->
+  	
+    <jar compress="yes" destfile="${app.jar}" >
+      <manifest>
+          <attribute name="Main-Class" value="main.MainApplication"/>
+          <attribute name="Copyright" value="Damiano Bolla"/>     
+          <attribute name="SplashScreen-Image" value="logo.gif" /> 
+      </manifest>
+      <fileset dir="${classes.dir}">
+          <include name="*.gif"/>
+          <include name="**/*.class"/>
+          <include name="**/*.gif"/>
+          <include name="**/*.resources"/>
+          <include name="**/*.properties"/>
+      </fileset>
+    </jar>
+  </target>
+  
+</project>

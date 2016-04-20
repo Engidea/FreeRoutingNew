@@ -1,0 +1,6 @@
+package graphics;
+
+public enum ItemColorName
+   {
+   LAYER, TRACES, FIXED_TRACES, VIAS, FIXED_VIAS, PINS, CONDUCTION_AREAS, KEEPOUTS, VIA_KEEPOUTS, PLACE_KEEPOUTS
+   }
