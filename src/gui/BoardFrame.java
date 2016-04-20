@@ -19,6 +19,7 @@ package gui;
 import gui.config.GuiConfigFile;
 import gui.menu.BoardMenuBar;
 import gui.varie.FileFilter;
+import gui.varie.GuiHelp;
 import gui.varie.GuiResources;
 import gui.varie.SubwindowSelections;
 import gui.win.WindowAbout;
@@ -49,6 +50,7 @@ import gui.win.WindowUnitMeasure;
 import gui.win.WindowVia;
 import interactive.ScreenMessages;
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -103,7 +105,7 @@ public final class BoardFrame
 
    public final ScreenMessages screen_messages;
 
-   private final boolean help_system_used;
+   public final GuiHelp gui_help;
 
    private final GuiResources resources;
 
@@ -185,11 +187,12 @@ public final class BoardFrame
       board_observers = new board.BrdObserverVoid();
       item_id_no_generator = new IdGenerator();
       resources = new GuiResources(p_stat,"gui.resources.BoardFrame");
+      gui_help = new GuiHelp(stat);
 
       work_frame = new JFrame();
       
       menubar = new BoardMenuBar(p_stat, this);
-      help_system_used = true;
+      
       work_frame.setJMenuBar(menubar);
 
       toolbar_panel = new BoardToolbar(p_stat, this);
@@ -395,29 +398,16 @@ public final class BoardFrame
          }
       }
 
-   /**
-    * Sets contexts sensitive help for the input component
-    * TODO enable this feature again
-    */
-   public void set_context_sensitive_help(java.awt.Component p_component, String p_help_id)
+   
+   
+   public void set_context_sensitive_help(Component awin, String p_help_id)
       {
-      if ( ! help_system_used) return;
-      
-      @SuppressWarnings("unused")
-      java.awt.Component curr_component;
-      if (p_component instanceof JFrame)
-         {
-         curr_component = ((JFrame) p_component).getRootPane();
-         }
-      else
-         {
-         curr_component = p_component;
-         }
+      gui_help.set_context_sensitive_help(awin,p_help_id);
       }
 
    public void set_context_sensitive_help(GuiSubWindow awin, String p_help_id)
       {
-      set_context_sensitive_help(awin.getJFrame(),p_help_id);
+      gui_help.set_context_sensitive_help(awin.getJFrame(),p_help_id);
       }
    
    /** 

@@ -22,6 +22,7 @@ package gui.menu;
 
 import gui.BoardFrame;
 import javax.swing.JMenu;
+import javax.swing.JMenuBar;
 import main.Stat;
 
 /**
@@ -29,7 +30,7 @@ import main.Stat;
  *
  * @author Alfons Wirtz
  */
-public final class BoardMenuBar extends javax.swing.JMenuBar
+public final class BoardMenuBar extends JMenuBar
    {
    private static final long serialVersionUID = 1L;
 
@@ -43,15 +44,18 @@ public final class BoardMenuBar extends javax.swing.JMenuBar
       JMenu display_menu = new BoardMenuDisplay(stat, p_board_frame);
       add(display_menu);
       
-      javax.swing.JMenu parameter_menu = new BoardMenuParameter(p_board_frame);
+      JMenu parameter_menu = new BoardMenuParameter(p_board_frame);
       add(parameter_menu);
-      javax.swing.JMenu rules_menu = BoardMenuRules.get_instance(p_board_frame);
+      JMenu rules_menu = BoardMenuRules.get_instance(p_board_frame);
       add(rules_menu);
-      javax.swing.JMenu info_menu = BoardMenuInfo.get_instance(p_board_frame);
+      JMenu info_menu = BoardMenuInfo.get_instance(p_board_frame);
       add(info_menu);
-      javax.swing.JMenu other_menu = BoardMenuOther.get_instance(p_board_frame);
+      JMenu other_menu = BoardMenuOther.get_instance(p_board_frame);
       add(other_menu);
-      javax.swing.JMenu help_menu = new BoardMenuHelpReduced(p_board_frame);
+      
+      JMenu help_menu = new BoardMenuHelp(p_board_frame);
+      p_board_frame.gui_help.add_menu_items(help_menu);
+
       add(help_menu);
       }
 

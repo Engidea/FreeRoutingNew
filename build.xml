@@ -6,7 +6,9 @@
   <property name="classes.dir" value="classes"/>
   <property name="javac.deprecation" value="on"/>
 
+  <property name="src.dir" value="src"/>
   <property name="deploy.dir" value="deploy"/>
+  <property name="lib.dir" value="jarlibs"/>
   <property name="app.jar" value="${deploy.dir}/FreeRouting.jar"/>
   
   <target name="init">
@@ -61,6 +63,10 @@
           <include name="**/*.resources"/>
           <include name="**/*.properties"/>
       </fileset>
+	  <fileset dir="${src.dir}">
+        <include name="**/helpset/**"/>
+      </fileset>
+   	  <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" /> 
     </jar>
   </target>
   

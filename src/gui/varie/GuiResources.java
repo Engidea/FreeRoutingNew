@@ -111,8 +111,10 @@ public final class GuiResources
    public JMenuItem newJMenuItem ( String name, String tooltip, ActionListener listener )
       {
       JMenuItem risul = new JMenuItem();
+      
       risul.setText(getString(name));
-      risul.setToolTipText(getString(tooltip));
+      
+      if ( tooltip != null ) risul.setToolTipText(getString(tooltip));
       
       if ( listener != null )
          risul.addActionListener(listener);
