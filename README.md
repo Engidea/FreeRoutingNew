@@ -8,6 +8,7 @@ Below there are message windows...
 I am currently trying to reach the following goal
 
 - Automatic fix of "unconnected" tracks when importing from Kicad (done)
+  What you do is to use the autorouter and configure it not to do ripup or optimizations
 
 - Automatic fix of clearance violations by push and shove tracks and vias (still looking)
 
