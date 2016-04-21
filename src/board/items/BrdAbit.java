@@ -253,7 +253,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   protected ShapeTile[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
+   protected final ShapeTile[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
       {
       return p_search_tree.calculate_tree_shapes(this);
       }

@@ -66,6 +66,7 @@ public abstract class ShapeTree
 
    /**
     * Insert a shape - creates a new node with a bounding shape
+    * This is possibly the entry point to understand the whole search tree mechanism
     */
    protected final ShapeTreeLeaf insert(ShapeTreeStorable p_object, int p_index)
       {

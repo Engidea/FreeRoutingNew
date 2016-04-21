@@ -117,7 +117,11 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       return 0;
       }
 
-   protected ShapeTile[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
+   /**
+    * A component outline does not have any shape to be stored in the search tree
+    */
+   @Override
+   protected final ShapeTile[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
       {
       return new ShapeTile[0];
       }

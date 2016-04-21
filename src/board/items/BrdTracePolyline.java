@@ -144,7 +144,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       return polyline;
       }
 
-   protected ShapeTile[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
+   @Override
+   protected final ShapeTile[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
       {
       return p_search_tree.calculate_tree_shapes(this);
       }

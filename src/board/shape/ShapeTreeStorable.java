@@ -18,8 +18,8 @@ public interface ShapeTreeStorable extends Comparable<Object>
    ShapeTile get_tree_shape(ShapeTree p_tree, int p_index);
 
    /**
-    * Stores the entries in the ShapeTrees of this object for better performance while for example deleting tree entries. Called
-    * only by insert methods of class ShapeTree.
+    * Stores the entries in the ShapeTrees of this object for better performance while for example deleting tree entries. 
+    * Called only by insert methods of class ShapeTree.
     */
    void set_search_tree_entries(ShapeTreeLeaf[] p_entries, ShapeTree p_tree);
    }

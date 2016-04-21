@@ -900,6 +900,22 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       }
 
    /**
+    * This is for a polyline
+    */
+   public final ShapeTile[] calculate_tree_shapes(BrdTracePolyline p_trace)
+      {
+      int offset_width = p_trace.get_half_width() + get_clearance_compensation(p_trace.clearance_class_no(), p_trace.get_layer());
+      
+      ShapeTile[] result = new ShapeTile[p_trace.tile_shape_count()];
+
+      for (int index = 0; index < result.length; ++index)
+         {
+         result[index] = offset_shape(p_trace.polyline(), offset_width, index);
+         }
+      return result;
+      }
+
+   /**
     * WIll be overrideen under...
     * @param p_drill_item
     * @return
@@ -946,9 +962,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       }
 
    /**
-    * Careful, overide in subclass
-    * @param p_obstacle_area
-    * @return
+    * Careful, overide in subclass, this is for BoardArea
     */
    public ShapeTile[] calculate_tree_shapes(BrdArea p_obstacle_area)
       {
@@ -988,22 +1002,24 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       return result;
       }
 
+   /**
+    * This is for a board outline
+    */
    public ShapeTile[] calculate_tree_shapes(BrdOutline p_board_outline)
       {
       ShapeTile[] result;
       if (p_board_outline.keepout_outside_outline_generated())
          {
          ShapeTile[] convex_shapes = p_board_outline.get_keepout_area().split_to_convex();
-         if (convex_shapes == null)
-            {
-            return new ShapeTile[0];
-            }
+
+         if (convex_shapes == null) return new ShapeTile[0];
+
          Collection<ShapeTile> tree_shape_list = new LinkedList<ShapeTile>();
          for (int layer_no = 0; layer_no < r_board.layer_structure.size(); ++layer_no)
             {
-            for (int i = 0; i < convex_shapes.length; ++i)
+            for (int index = 0; index < convex_shapes.length; ++index)
                {
-               ShapeTile curr_convex_shape = convex_shapes[i];
+               ShapeTile curr_convex_shape = convex_shapes[index];
                int offset_width = get_clearance_compensation(p_board_outline.clearance_class_no(), 0);
                curr_convex_shape = (ShapeTile) curr_convex_shape.enlarge(offset_width);
                tree_shape_list.add(curr_convex_shape);
@@ -1011,9 +1027,9 @@ public class ShapeSearchTree extends ShapeTreeMinArea
             }
          result = new ShapeTile[tree_shape_list.size()];
          Iterator<ShapeTile> it = tree_shape_list.iterator();
-         for (int i = 0; i < result.length; ++i)
+         for (int index = 0; index < result.length; ++index)
             {
-            result[i] = it.next();
+            result[index] = it.next();
             }
          }
       else
@@ -1062,16 +1078,6 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       return p_polyline.offset_shapes(p_half_width, p_from_no, p_to_no);
       }
 
-   public final ShapeTile[] calculate_tree_shapes(BrdTracePolyline p_trace)
-      {
-      int offset_width = p_trace.get_half_width() + get_clearance_compensation(p_trace.clearance_class_no(), p_trace.get_layer());
-      ShapeTile[] result = new ShapeTile[p_trace.tile_shape_count()];
-      for (int i = 0; i < result.length; ++i)
-         {
-         result[i] = offset_shape(p_trace.polyline(), offset_width, i);
-         }
-      return result;
-      }
 
    /**
     * Makes shure that on each layer there will be more than 1 IncompleteFreeSpaceExpansionRoom, 

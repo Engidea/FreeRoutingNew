@@ -163,9 +163,9 @@ public final class PlaCircle implements ShapeConvex , Serializable
       int ly = center.v_y - radius;
       int uy = center.v_y + radius;
 
-      final double sqrt2_minus_1 = Math.sqrt(2) - 1;
-      final int ceil_corner_value = (int) Math.ceil(sqrt2_minus_1 * radius);
-      final int floor_corner_value = (int) Math.floor(sqrt2_minus_1 * radius);
+      double sqrt2_minus_1 = Math.sqrt(2) - 1;
+      int ceil_corner_value = (int) Math.ceil(sqrt2_minus_1 * radius);
+      int floor_corner_value = (int) Math.floor(sqrt2_minus_1 * radius);
 
       int ulx = lx - (center.v_y + floor_corner_value);
       int lrx = rx - (center.v_y - ceil_corner_value);
