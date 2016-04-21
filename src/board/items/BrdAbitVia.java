@@ -25,8 +25,8 @@ import java.util.Iterator;
 import library.LibPadstack;
 import planar.PlaPoint;
 import planar.PlaPointInt;
-import planar.PlaVector;
 import planar.PlaShape;
+import planar.PlaVector;
 import planar.ShapeTile;
 import autoroute.ArtItem;
 import autoroute.expand.ExpandDrill;
@@ -230,7 +230,8 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       autoroute_drill_info = null;
       }
 
-   public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
+   @Override
+   public final boolean is_selected_by_filter(ItemSelectionFilter p_filter)
       {
       if (!is_selected_by_fixed_filter(p_filter)) return false;
 
@@ -239,23 +240,20 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
 
    public java.awt.Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
       {
-      java.awt.Color[] result;
-      if (this.net_count() == 0)
+      if ( net_count() == 0)
          {
          // display unconnected vias as obstacles
-         result = p_graphics_context.get_obstacle_colors();
-
+         return p_graphics_context.get_obstacle_colors();
          }
       else if (this.first_layer() >= this.last_layer())
          {
          // display vias with only one layer as pins
-         result = p_graphics_context.get_pin_colors();
+         return p_graphics_context.get_pin_colors();
          }
       else
          {
-         result = p_graphics_context.get_via_colors(this.is_user_fixed());
+         return p_graphics_context.get_via_colors(this.is_user_fixed());
          }
-      return result;
       }
 
    public double get_draw_intensity(graphics.GdiContext p_graphics_context)

@@ -57,7 +57,7 @@ public final class MazeShoveTraceAlgo
    /**
     * Returns false if the algorithm did not succeed and trying to shove from another door section may be more successful.
     */
-   public boolean check_shove_trace_line(MazeListElement p_list_element, ExpandRoomObstacle p_obstacle_room,  boolean p_shove_to_the_left, Collection<MazeDoorSection> p_to_door_list)
+   boolean check_shove_trace_line(MazeListElement p_list_element, ExpandRoomObstacle p_obstacle_room,  boolean p_shove_to_the_left, Collection<MazeDoorSection> p_to_door_list)
       {
       if (!(p_list_element.door instanceof ExpandDoor)) return true;
       
@@ -357,11 +357,11 @@ public final class MazeShoveTraceAlgo
       {
       if (p_from_item == p_trace) return true;
 
-      if (!p_trace.shares_net(p_from_item)) return false;
+      if ( ! p_trace.shares_net(p_from_item)) return false;
       
       if (p_from_item instanceof BrdAbit)
          {
-         PlaPoint from_center = ((board.items.BrdAbit) p_from_item).get_center();
+         PlaPoint from_center = ((BrdAbit) p_from_item).get_center();
          if ( from_center.equals(p_trace.first_corner()) ) return true;
          
          if ( from_center.equals(p_trace.last_corner()) ) return true;

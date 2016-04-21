@@ -109,9 +109,10 @@ public final class RoutingBoard implements java.io.Serializable
    public final Communication communication;
    // bounding orthogonal rectangle of this board
    public final ShapeTileBox bounding_box;
-   // the biggest half width of all traces on the board
+   
+   // the biggest half width of all traces on the board, actually, calculated on the fly when inserting...
    private int max_trace_half_width = 1000;
-   // the smallest half width of all traces on the board
+   // the smallest half width of all traces on the board, actually, calculated on the fly when inserting...
    private int min_trace_half_width = 10000;
 
    // Handles the search trees pointing into the items of this board, initialized on constructor
@@ -159,14 +160,15 @@ public final class RoutingBoard implements java.io.Serializable
    
    /**
     * Inserts a trace into the board, whose geometry is described by a Polyline. p_clearance_class is the index in the
-    * clearance_matix, which describes the required clearance restrictions to other items. Because no internal cleaning of items is
-    * done, the new inserted item can be returned.
+    * clearance_matix, which describes the required clearance restrictions to other items. 
+    * Because no internal cleaning of items is done, the new inserted item can be returned.
     */
    public BrdTracePolyline insert_trace_without_cleaning(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
       if (p_polyline.corner_count() < 2) return null;
 
       BrdTracePolyline new_trace = new BrdTracePolyline(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, this);
+      
       if (new_trace.first_corner().equals(new_trace.last_corner()))
          {
          if (p_fixed_state.ordinal() < ItemFixState.USER_FIXED.ordinal())
@@ -174,12 +176,15 @@ public final class RoutingBoard implements java.io.Serializable
             return null;
             }
          }
+      
       insert_item(new_trace);
+      
       if (new_trace.is_nets_normal())
          {
          max_trace_half_width = Math.max(max_trace_half_width, p_half_width);
          min_trace_half_width = Math.min(min_trace_half_width, p_half_width);
          }
+      
       return new_trace;
       }
 
@@ -1167,8 +1172,9 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Returns the list of items on the board, whose shape on layer p_layer contains the point at p_location. If p_layer < 0, the
-    * layer is ignored. If p_item_selection_filter != null, only items of types selected by the filter are picked.
+    * Returns the list of items on the board, whose shape on layer p_layer contains the point at p_location. 
+    * If p_layer < 0, the layer is ignored. 
+    * @param p_item_selection_filter mst be non null
     */
    public Set<BrdItem> pick_items(PlaPoint p_location, int p_layer, ItemSelectionFilter p_filter)
       {
@@ -1182,16 +1188,39 @@ public final class RoutingBoard implements java.io.Serializable
          {
          if ( !(curr_object instanceof BrdItem)) continue;
 
-         result.add((BrdItem) curr_object);
+         BrdItem curr_item = (BrdItem) curr_object;
+         
+         if ( ! curr_item.is_selected_by_filter(p_filter) ) continue;
+         
+         result.add(curr_item);
          }
-      
-      if (p_filter != null)
-         {
-         result = p_filter.filter(result);
-         }
+
       return result;
       }
 
+   public Set<BrdItem> pick_items(PlaPoint p_location, int p_layer )
+      {
+      Set<BrdItem> result = new TreeSet<BrdItem>();
+   
+      ShapeTile point_shape = p_location.surrounding_box();
+      
+      Collection<ShapeTreeObject> overlaps = overlapping_objects(point_shape, p_layer);
+   
+      for (ShapeTreeObject curr_object : overlaps)
+         {
+         if ( !(curr_object instanceof BrdItem)) continue;
+   
+         BrdItem curr_item = (BrdItem) curr_object;
+         
+         result.add(curr_item);
+         }
+   
+      return result;
+      }
+
+   
+   
+   
    /**
     * checks, if p_point is contained in the bounding box of this board.
     */

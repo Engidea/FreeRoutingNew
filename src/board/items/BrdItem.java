@@ -1188,16 +1188,12 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Internally used for implementing the function is_selectrd_by_filter
     */
-   protected boolean is_selected_by_fixed_filter(ItemSelectionFilter p_filter)
+   protected final boolean is_selected_by_fixed_filter(ItemSelectionFilter p_filter)
       {
-      if ( is_user_fixed())
-         {
+      if ( is_user_fixed() )
          return p_filter.is_selected(ItemSelectionChoice.FIXED);
-         }
       else
-         {
          return p_filter.is_selected(ItemSelectionChoice.UNFIXED);
-         }
       }
 
    /**

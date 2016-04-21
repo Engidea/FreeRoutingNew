@@ -76,8 +76,8 @@ public final class IteraSettings implements java.io.Serializable
 
    public ArtSettings autoroute_settings;
 
-   // The filter used in interactive selection of board items. 
-   public ItemSelectionFilter item_selection_filter = new ItemSelectionFilter();
+   // The filter used in interactive selection of board items I am now sure it is never null
+   public final ItemSelectionFilter item_selection_filter = new ItemSelectionFilter();
 
    // Defines the data of the snapshot selected for restoring. 
    SnapshotAttributes snapshot_attributes = new SnapshotAttributes();
@@ -144,7 +144,7 @@ public final class IteraSettings implements java.io.Serializable
       manual_trace_half_width_arr = new int[p_settings.manual_trace_half_width_arr.length];
       System.arraycopy(p_settings.manual_trace_half_width_arr, 0, manual_trace_half_width_arr, 0, manual_trace_half_width_arr.length);
       autoroute_settings = new ArtSettings(p_settings.autoroute_settings);
-      item_selection_filter = new ItemSelectionFilter(p_settings.item_selection_filter);
+      item_selection_filter.set_filter(p_settings.item_selection_filter);
       snapshot_attributes = new SnapshotAttributes(p_settings.snapshot_attributes);
       }
 

@@ -78,7 +78,7 @@ public final class BrdAreaObstacleVia extends BrdArea
       }
 
    @Override
-   public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
+   public final boolean is_selected_by_filter(ItemSelectionFilter p_filter)
       {
       if (! is_selected_by_fixed_filter(p_filter)) return false;
 

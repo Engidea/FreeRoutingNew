@@ -21,6 +21,7 @@
 package board.items;
 
 import gui.varie.ObjectInfoPanel;
+import java.awt.Color;
 import java.util.Collection;
 import java.util.LinkedList;
 import library.LibPackage;
@@ -33,9 +34,9 @@ import planar.PlaLineInt;
 import planar.PlaPoint;
 import planar.PlaPointFloat;
 import planar.PlaPointInt;
+import planar.PlaShape;
 import planar.PlaVector;
 import planar.Polyline;
-import planar.PlaShape;
 import planar.ShapeConvex;
 import planar.ShapeTile;
 import board.RoutingBoard;
@@ -532,28 +533,23 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       return result;
       }
 
-   public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
+   @Override
+   public final boolean is_selected_by_filter(ItemSelectionFilter p_filter)
       {
-      if (!this.is_selected_by_fixed_filter(p_filter))
-         {
-         return false;
-         }
+      if ( ! is_selected_by_fixed_filter(p_filter)) return false;
+
       return p_filter.is_selected(ItemSelectionChoice.PINS);
       }
 
-   public java.awt.Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
+   public Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
       {
-      java.awt.Color[] result;
-      if (this.net_count() > 0)
-         {
-         result = p_graphics_context.get_pin_colors();
-         }
+      if ( net_count() > 0)
+         return p_graphics_context.get_pin_colors();
       else
          {
          // display unconnected pins as obstacles
-         result = p_graphics_context.get_obstacle_colors();
+         return p_graphics_context.get_obstacle_colors();
          }
-      return result;
       }
 
    public double get_draw_intensity(graphics.GdiContext p_graphics_context)

@@ -460,12 +460,11 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
     */
    public abstract boolean check_connection_to_pin(boolean p_at_start);
 
-   public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
+   @Override
+   public final boolean is_selected_by_filter(ItemSelectionFilter p_filter)
       {
-      if (!is_selected_by_fixed_filter(p_filter))
-         {
-         return false;
-         }
+      if ( ! is_selected_by_fixed_filter(p_filter)) return false;
+
       return p_filter.is_selected(ItemSelectionChoice.TRACES);
       }
 

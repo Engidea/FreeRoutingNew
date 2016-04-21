@@ -66,7 +66,8 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       return new BrdComponentOutline(relative_area, is_front, translation, rotation_in_degree, get_component_no(), get_fixed_state(), r_board);
       }
 
-   public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
+   @Override
+   public final boolean is_selected_by_filter(ItemSelectionFilter p_filter)
       {
       return false;
       }

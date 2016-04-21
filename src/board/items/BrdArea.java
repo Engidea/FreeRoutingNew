@@ -246,12 +246,11 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       clear_derived_data();
       }
 
+   @Override
    public boolean is_selected_by_filter(ItemSelectionFilter p_filter)
       {
-      if (!is_selected_by_fixed_filter(p_filter))
-         {
-         return false;
-         }
+      if (!is_selected_by_fixed_filter(p_filter)) return false;
+
       return p_filter.is_selected(ItemSelectionChoice.KEEPOUT);
       }
 

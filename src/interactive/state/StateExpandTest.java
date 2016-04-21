@@ -62,7 +62,7 @@ public final class StateExpandTest extends StateInteractive
       // look if an autoroute can be started at the input location
       RoutingBoard board = i_brd.get_routing_board();
       int layer = i_brd.itera_settings.layer_no;
-      Collection<BrdItem> found_items = board.pick_items(p_location.round(), layer, null);
+      Collection<BrdItem> found_items = board.pick_items(p_location.round(), layer);
       BrdItem route_item = null;
       int route_net_no = 0;
 
@@ -171,7 +171,9 @@ public final class StateExpandTest extends StateInteractive
       {
       // next 10^p_key_char expansions
       int d = Character.digit(p_key_char, 10);
+      
       final int max_count = (int) Math.pow(10, d);
+      
       if (in_autoroute())
          {
          for (int i = 0; i < max_count; ++i)

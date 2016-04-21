@@ -23,16 +23,18 @@ package interactive.state;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
+import java.util.Collection;
 import java.util.Iterator;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
 import planar.PlaArea;
 import planar.PlaCircle;
-import planar.PolylineArea;
+import planar.PlaPointFloat;
+import planar.PlaPointInt;
 import planar.PlaShape;
+import planar.PolylineArea;
 import planar.ShapePolygon;
 import planar.ShapePolyline;
 import board.items.BrdArea;
+import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 
@@ -70,7 +72,7 @@ public class StateConstructHole extends StateConstructCorner
       PlaPointInt pick_location = p_location.round();
       ItemSelectionChoice[] selectable_choices = { ItemSelectionChoice.KEEPOUT, ItemSelectionChoice.VIA_KEEPOUT, ItemSelectionChoice.CONDUCTION };
       ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-      java.util.Collection<board.items.BrdItem> found_items = i_brd.get_routing_board().pick_items(pick_location, i_brd.itera_settings.layer_no, selection_filter);
+      Collection<BrdItem> found_items = i_brd.get_routing_board().pick_items(pick_location, i_brd.itera_settings.layer_no, selection_filter);
       if (found_items.size() != 1)
          {
          i_brd.screen_messages.set_status_message(resources.getString("no_item_found_for_adding_hole"));
@@ -82,17 +84,17 @@ public class StateConstructHole extends StateConstructCorner
          i_brd.screen_messages.set_status_message(resources.getString("no_obstacle_area_found_for_adding_hole"));
          return false;
          }
-      this.item_to_modify = (BrdArea) found_item;
+      item_to_modify = (BrdArea) found_item;
       if (item_to_modify.get_area() instanceof PlaCircle)
          {
          i_brd.screen_messages.set_status_message(resources.getString("adding_hole_to_circle_not_yet_implemented"));
          return false;
          }
-      if (this.actlog != null)
+      if (actlog != null)
          {
          actlog.start_scope(LogfileScope.ADDING_HOLE);
          }
-      this.add_corner(p_location);
+      add_corner(p_location);
       return true;
       }
 
@@ -103,7 +105,7 @@ public class StateConstructHole extends StateConstructCorner
       {
       if (item_to_modify == null)
          {
-         return this.return_state;
+         return return_state;
          }
       if (item_to_modify.get_area().contains(p_next_corner))
          {
@@ -121,7 +123,7 @@ public class StateConstructHole extends StateConstructCorner
       {
       if (item_to_modify == null)
          {
-         return this.return_state;
+         return return_state;
          }
       add_corner_for_snap_angle();
       int corner_count = corner_list.size();
@@ -169,18 +171,18 @@ public class StateConstructHole extends StateConstructCorner
             }
          else
             {
-            this.observers_activated = !i_brd.get_routing_board().observers_active();
-            if (this.observers_activated)
+            observers_activated = !i_brd.get_routing_board().observers_active();
+            if (observers_activated)
                {
                i_brd.get_routing_board().start_notify_observers();
                }
             i_brd.get_routing_board().generate_snapshot();
             i_brd.get_routing_board().remove_item(item_to_modify);
             i_brd.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(), item_to_modify.clearance_class_no(), board.varie.ItemFixState.UNFIXED);
-            if (this.observers_activated)
+            if (observers_activated)
                {
                i_brd.get_routing_board().end_notify_observers();
-               this.observers_activated = false;
+               observers_activated = false;
                }
             }
          }
@@ -196,7 +198,7 @@ public class StateConstructHole extends StateConstructCorner
          {
          actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
          }
-      return this.return_state;
+      return return_state;
       }
 
    public void display_default_message()

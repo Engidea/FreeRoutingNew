@@ -379,7 +379,7 @@ public final class IteraRoute
    private boolean snap_to_smd_center(int p_layer)
       {
       ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
-      java.util.Collection<BrdItem> picked_items = r_board.pick_items(prev_corner, p_layer, selection_filter);
+      Collection<BrdItem> picked_items = r_board.pick_items(prev_corner, p_layer, selection_filter);
       board.items.BrdAbitPin found_smd_pin = null;
       for (BrdItem curr_item : picked_items)
          {
@@ -551,7 +551,7 @@ public final class IteraRoute
          }
       // add the from item, if it is a pin
       ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
-      java.util.Collection<BrdItem> picked_items = r_board.pick_items(prev_corner, layer_active_no, selection_filter);
+      Collection<BrdItem> picked_items = r_board.pick_items(prev_corner, layer_active_no, selection_filter);
       for (BrdItem curr_item : picked_items)
          {
          if (curr_item instanceof board.items.BrdAbitPin)

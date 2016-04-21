@@ -90,9 +90,11 @@ public final class MazeSearch
    private final ExpandDestinationDistance destination_distance;
    // The destination door found by the expanding algorithm.
    private ExpandObject destination_door = null;
+   
    private int section_no_of_destination_door = 0;
    
    private boolean is_initialized;  // true when the maze is initialized correctly
+   
    private final MazeShoveTraceAlgo maze_shove_trace;
    
    /**
@@ -108,16 +110,7 @@ public final class MazeSearch
       search_tree = p_art_engine.autoroute_search_tree;
       destination_distance = new ExpandDestinationDistance(art_ctrl.trace_costs, art_ctrl.layer_active, art_ctrl.min_normal_via_cost, art_ctrl.min_cheap_via_cost);
       maze_shove_trace = new MazeShoveTraceAlgo(r_board, art_ctrl);
-      
-      init(p_start_items, p_destination_items);      
-      }
 
-
-   /**
-    * Initializes the maze search algorithm
-    */
-   private void init(Set<BrdItem> p_start_items, Set<BrdItem> p_destination_items)
-      {
       is_initialized = false; // assume not initialized
       
       reduce_trace_shapes_at_tie_pins(p_start_items, art_ctrl.net_no,  search_tree);
@@ -149,7 +142,7 @@ public final class MazeSearch
          }
       
       // process the start items
-      Collection<ExpandRoomFreespaceIncomplete> start_rooms = new LinkedList<ExpandRoomFreespaceIncomplete>();
+      LinkedList<ExpandRoomFreespaceIncomplete> start_rooms = new LinkedList<ExpandRoomFreespaceIncomplete>();
 
       for ( BrdItem curr_item : p_start_items )
          {
@@ -172,7 +165,7 @@ public final class MazeSearch
          }
 
       // complete the start rooms
-      Collection<ExpandRoomFreespaceComplete> completed_start_rooms = new LinkedList<ExpandRoomFreespaceComplete>();
+      LinkedList<ExpandRoomFreespaceComplete> completed_start_rooms = new LinkedList<ExpandRoomFreespaceComplete>();
 
       for (ExpandRoomFreespaceIncomplete curr_room : start_rooms)
          {
@@ -245,7 +238,7 @@ public final class MazeSearch
       // Search the next element, which is not yet expanded.
       boolean next_element_found = false;
       
-      while (!maze_expansion_list.isEmpty())
+      while ( ! maze_expansion_list.isEmpty())
          {
          if (art_engine.is_stop_requested()) return false;
          
@@ -254,17 +247,19 @@ public final class MazeSearch
          list_element = iter.next();
 
          int curr_section_no = list_element.section_no_of_door;
+        
          curr_door_section = list_element.door.get_maze_search_element(curr_section_no);
+         
          iter.remove();
          
-         if (!curr_door_section.is_occupied)
+         if ( ! curr_door_section.is_occupied )
             {
             next_element_found = true;
             break;
             }
          }
       
-      if (!next_element_found) return false;
+      if ( ! next_element_found) return false;
 
       curr_door_section.backtrack_door = list_element.backtrack_door;
       curr_door_section.section_no_of_backtrack_door = list_element.section_no_of_backtrack_door;

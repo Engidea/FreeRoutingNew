@@ -64,7 +64,7 @@ public class StatePinSwap extends StateInteractive
       java.util.Collection<BrdItem> picked_items = i_brd.pick_items(p_location, selection_filter);
       if (picked_items.isEmpty())
          {
-         this.i_brd.screen_messages.set_status_message(resources.getString("no_pin_selected"));
+         i_brd.screen_messages.set_status_message(resources.getString("no_pin_selected"));
          return this.cancel();
          }
       BrdItem to_item = picked_items.iterator().next();

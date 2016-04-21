@@ -22,6 +22,7 @@ package interactive.state;
 
 import interactive.Actlog;
 import interactive.IteraBoard;
+import java.util.Collection;
 import java.util.Iterator;
 import planar.PlaPointFloat;
 import board.items.BrdAbit;
@@ -60,7 +61,7 @@ public abstract class StateDrag extends StateInteractive
          {
          if (i == 0 || pick_layer != curr_layer && (p_board_handling.gdi_context.get_layer_visibility(pick_layer)) > 0)
             {
-            java.util.Collection<BrdItem> found_items = p_board_handling.get_routing_board().pick_items(p_location.round(), pick_layer, p_board_handling.itera_settings.item_selection_filter);
+            Collection<BrdItem> found_items = p_board_handling.get_routing_board().pick_items(p_location.round(), pick_layer, p_board_handling.itera_settings.item_selection_filter);
             Iterator<BrdItem> it = found_items.iterator();
             while (it.hasNext())
                {

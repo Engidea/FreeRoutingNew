@@ -692,7 +692,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
    private boolean split_inside_drill_pad_prohibited(int p_line_no, PlaLineInt p_line)
       {
       PlaPoint intersection = polyline.lines_arr[p_line_no].intersection(p_line);
-      java.util.Collection<BrdItem> overlap_items = r_board.pick_items(intersection, get_layer(), null);
+      java.util.Collection<BrdItem> overlap_items = r_board.pick_items(intersection, get_layer() );
       boolean pad_found = false;
       for (BrdItem curr_item : overlap_items)
          {

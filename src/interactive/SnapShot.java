@@ -28,7 +28,6 @@ import interactive.state.StateMenuDrag;
 import interactive.state.StateMenuRoute;
 import interactive.state.StateMenuSelect;
 import java.awt.Point;
-import board.varie.ItemSelectionFilter;
 
 /**
  * Snapshot of the client situation in an interactive session.
@@ -110,7 +109,7 @@ public final class SnapShot implements java.io.Serializable
          }
       if (snapshot_attributes.selectable_items)
          {
-         p_board_handling.itera_settings.item_selection_filter = new ItemSelectionFilter(settings.item_selection_filter);
+         p_board_handling.itera_settings.item_selection_filter.set_filter(settings.item_selection_filter);
          }
       if (snapshot_attributes.current_layer)
          {

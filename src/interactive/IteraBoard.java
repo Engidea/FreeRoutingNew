@@ -1681,8 +1681,8 @@ public final class IteraBoard
       }
 
    /**
-    * Gets all items at p_location on the active board layer. If nothing is found on the active layer and
-    * settings.select_on_all_layers is true, all layers are selected.
+    * Gets all items at p_location on the active board layer. 
+    * If nothing is found on the active layer and settings.select_on_all_layers is true, all layers are selected.
     */
    public Set<BrdItem> pick_items(PlaPointFloat p_location)
       {
@@ -1690,24 +1690,24 @@ public final class IteraBoard
       }
 
    /**
-    * Gets all items at p_location on the active board layer with the inputt item filter. If nothing is found on the active layer
-    * and settings.select_on_all_layers is true, all layers are selected.
+    * Gets all items at p_location on the active board layer with the inputt item filter. 
+    * If nothing is found on the active layer and settings.select_on_all_layers is true, all layers are selected.
     */
    public Set<BrdItem> pick_items(PlaPointFloat p_location, ItemSelectionFilter p_item_filter)
       {
       PlaPointInt location = p_location.round();
-      java.util.Set<BrdItem> result = r_board.pick_items(location, itera_settings.layer_no, p_item_filter);
-      if (result.size() == 0 && itera_settings.select_on_all_visible_layers)
+      
+      Set<BrdItem> result = r_board.pick_items(location, itera_settings.layer_no, p_item_filter);
+      
+      if ( ! ( result.size() == 0 && itera_settings.select_on_all_visible_layers ) ) return result;
+      
+      for (int index = 0; index < gdi_context.layer_count(); ++index)
          {
-         for (int index = 0; index < gdi_context.layer_count(); ++index)
-            {
-            if (index == itera_settings.layer_no || gdi_context.get_layer_visibility(index) <= 0)
-               {
-               continue;
-               }
-            result.addAll(r_board.pick_items(location, index, p_item_filter));
-            }
+         if (index == itera_settings.layer_no || gdi_context.get_layer_visibility(index) <= 0)  continue;
+         
+         result.addAll(r_board.pick_items(location, index, p_item_filter));
          }
+
       return result;
       }
 

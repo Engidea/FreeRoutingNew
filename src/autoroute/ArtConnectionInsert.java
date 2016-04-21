@@ -143,7 +143,7 @@ public final class ArtConnectionInsert
          {
          ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
          PlaPoint curr_end_corner = p_trace.corners[0];
-         for (int i = 0; i < 2; ++i)
+         for (int index = 0; index < 2; ++index)
             {
             Set<BrdItem> picked_items = r_board.pick_items(curr_end_corner, p_trace.layer, item_filter);
             for (BrdItem curr_item : picked_items)
@@ -151,7 +151,7 @@ public final class ArtConnectionInsert
                board.items.BrdAbitPin curr_pin = (board.items.BrdAbitPin) curr_item;
                if (curr_pin.contains_net(ctrl.net_no) && curr_pin.get_center().equals(curr_end_corner))
                   {
-                  if (i == 0)
+                  if (index == 0)
                      {
                      start_pin = curr_pin;
                      }

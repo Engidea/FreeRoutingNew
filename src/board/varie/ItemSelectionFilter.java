@@ -20,6 +20,7 @@
 
 package board.varie;
 
+import java.util.Arrays;
 import java.util.Set;
 import java.util.TreeSet;
 import board.items.BrdItem;
@@ -29,20 +30,20 @@ import board.items.BrdItem;
  *
  * @author Alfons Wirtz
  */
-public class ItemSelectionFilter implements java.io.Serializable
+public final class ItemSelectionFilter implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
    // the filter array of the item types
-   private final boolean[] sel_array;
+   private final boolean[] sel_array = new boolean[ItemSelectionChoice.values().length];
 
    /**
     * Creates a new filter with all item types selected.
     */
    public ItemSelectionFilter()
       {
-      sel_array = new boolean[ItemSelectionChoice.values().length];
-      java.util.Arrays.fill(this.sel_array, true);
+      Arrays.fill(sel_array, true);
+      
       sel_array[ItemSelectionChoice.KEEPOUT.ordinal()] = false;
       sel_array[ItemSelectionChoice.VIA_KEEPOUT.ordinal()] = false;
       sel_array[ItemSelectionChoice.COMPONENT_KEEPOUT.ordinal()] = false;
@@ -59,14 +60,20 @@ public class ItemSelectionFilter implements java.io.Serializable
       return sel_array[p_choice.ordinal()];
       }
 
+   public void set_filter ( ItemSelectionFilter from_filter )
+      {
+      if ( from_filter == null ) return;
+      
+      for (int index = 0; index < sel_array.length; index++)
+         sel_array[index] = from_filter.sel_array[index];
+      }
 
    /**
     * Creates a new filter with only p_item_type selected.
     */
    public ItemSelectionFilter(ItemSelectionChoice p_item_type)
       {
-      sel_array = new boolean[ItemSelectionChoice.values().length];
-      java.util.Arrays.fill(this.sel_array, false);
+      java.util.Arrays.fill(sel_array, false);
       sel_array[p_item_type.ordinal()] = true;
       sel_array[ItemSelectionChoice.FIXED.ordinal()] = true;
       sel_array[ItemSelectionChoice.UNFIXED.ordinal()] = true;
@@ -77,26 +84,13 @@ public class ItemSelectionFilter implements java.io.Serializable
     */
    public ItemSelectionFilter(ItemSelectionChoice[] p_item_types)
       {
-      sel_array = new boolean[ItemSelectionChoice.values().length];
-      java.util.Arrays.fill(this.sel_array, false);
+      java.util.Arrays.fill(sel_array, false);
       for (int i = 0; i < p_item_types.length; ++i)
          {
          sel_array[p_item_types[i].ordinal()] = true;
          }
       sel_array[ItemSelectionChoice.FIXED.ordinal()] = true;
       sel_array[ItemSelectionChoice.UNFIXED.ordinal()] = true;
-      }
-
-   /**
-    * Copy constructor
-    */
-   public ItemSelectionFilter(ItemSelectionFilter p_item_selection_filter)
-      {
-      sel_array = new boolean[ItemSelectionChoice.values().length];
-      for (int i = 0; i < sel_array.length; ++i)
-         {
-         this.sel_array[i] = p_item_selection_filter.sel_array[i];
-         }
       }
 
    /**
@@ -112,7 +106,7 @@ public class ItemSelectionFilter implements java.io.Serializable
     */
    public void select_all()
       {
-      java.util.Arrays.fill(sel_array, true);
+      Arrays.fill(sel_array, true);
       }
 
    /**
@@ -120,16 +114,17 @@ public class ItemSelectionFilter implements java.io.Serializable
     */
    public void deselect_all()
       {
-      java.util.Arrays.fill(sel_array, false);
+      Arrays.fill(sel_array, false);
       }
 
    /**
     * Filters a collection of items with this filter.
     */
-   public Set<BrdItem> filter(java.util.Set<board.items.BrdItem> p_items)
+   public Set<BrdItem> filter(Set<BrdItem> p_items)
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
-      for (board.items.BrdItem curr_item : p_items)
+      
+      for (BrdItem curr_item : p_items)
          {
          if (curr_item.is_selected_by_filter(this))
             {
