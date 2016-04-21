@@ -3,9 +3,9 @@ package autoroute.varie;
 /** 
  * Array of via costs from one layer to the other layers 
  */
-public class ArtViaCost
+public final class ArtViaCost
    {
-   public int[] to_layer;
+   public final int[] to_layer;
 
    public ArtViaCost(int p_layer_count)
       {

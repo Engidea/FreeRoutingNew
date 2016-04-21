@@ -1,6 +1,6 @@
 package autoroute.varie;
 
-public class ArtViaMask
+public final class ArtViaMask
    {
    public final int from_layer;
    public final int to_layer;

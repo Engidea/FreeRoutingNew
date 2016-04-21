@@ -55,17 +55,18 @@ public final class ArtComponent implements Comparable<ArtComponent>
       }
 
    /**
-    * Sort the components, so that components with maor pins come first
+    * Sort the components, so that components with more pins come first
     */
    @Override
    public int compareTo(ArtComponent p_other)
       {
-      int compare_value = smd_pin_count - p_other.smd_pin_count;
+      int me_more = smd_pin_count - p_other.smd_pin_count;
 
-      if (compare_value > 0) return -1;
-
-      if (compare_value < 0) return 1;
-
-      return brd_component.id_no - p_other.brd_component.id_no;
+      if (me_more > 0) 
+         return 1;
+      else if (me_more < 0) 
+         return -1;
+      else
+         return brd_component.id_no - p_other.brd_component.id_no;
       }
    }

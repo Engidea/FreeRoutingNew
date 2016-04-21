@@ -54,10 +54,10 @@ public final class BatchFanout
 
    private BatchFanout(BrdActionThread p_thread)
       {
-      this.thread = p_thread;
-      this.routing_board = p_thread.hdlg.get_routing_board();
+      thread = p_thread;
+      routing_board = p_thread.hdlg.get_routing_board();
       Collection<board.items.BrdAbitPin> board_smd_pin_list = routing_board.get_smd_pins();
-      this.sorted_components = new java.util.TreeSet<ArtComponent>();
+      sorted_components = new java.util.TreeSet<ArtComponent>();
       for (int i = 1; i <= routing_board.brd_components.count(); ++i)
          {
          board.infos.BrdComponent curr_board_component = routing_board.brd_components.get(i);
@@ -74,7 +74,7 @@ public final class BatchFanout
     */
    private int fanout_pass(int p_pass_no)
       {
-      int components_to_go = this.sorted_components.size();
+      int components_to_go = sorted_components.size();
       int routed_count = 0;
       int not_routed_count = 0;
       int insert_error_count = 0;
@@ -115,16 +115,16 @@ public final class BatchFanout
                }
             if (art_result != ArtResult.NOT_ROUTED)
                {
-               this.thread.hdlg.repaint();
+               thread.hdlg.repaint();
                }
-            if (this.thread.is_stop_requested())
+            if (thread.is_stop_requested())
                {
                return routed_count;
                }
             }
          --components_to_go;
          }
-      if (this.routing_board.get_test_level() != board.varie.TestLevel.RELEASE_VERSION)
+      if (routing_board.get_test_level() != board.varie.TestLevel.RELEASE_VERSION)
          {
          System.out.println("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count + ", not routed: " + not_routed_count + ", errors: " + insert_error_count);
          }
