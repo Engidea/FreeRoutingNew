@@ -21,6 +21,7 @@ import gui.varie.ObjectInfoPanel;
 import gui.varie.UndoableObjectStorable;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Iterator;
@@ -119,6 +120,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Implements the comparable interface
     * Should it throw exception if non comparable ? Damiano
     */
+   @Override
    public int compareTo(Object p_other)
       {
       if (p_other instanceof BrdItem)
@@ -167,15 +169,15 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    @Override
-   public boolean is_obstacle(int p_net_no)
+   public final boolean is_obstacle(int p_net_no)
       {
-      return !contains_net(p_net_no);
+      return ! contains_net(p_net_no);
       }
 
    @Override
-   public boolean is_trace_obstacle(int p_net_no)
+   public  boolean is_trace_obstacle(int p_net_no)
       {
-      return !contains_net(p_net_no);
+      return ! contains_net(p_net_no);
       }
 
    /**
@@ -218,6 +220,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Returns the p_index-throws shape of this item after decomposition into convex polygonal shapes
+    * Overriden in subclasses
     */
    public ShapeTile get_tile_shape(int p_index)
       {
@@ -300,7 +303,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * write this item to an output stream
     */
-   public abstract boolean write(java.io.ObjectOutputStream p_stream);
+   public abstract boolean write(ObjectOutputStream p_stream);
 
    /**
     * Translates the shapes of this item by p_vector. Does not move the item in the board.
@@ -330,6 +333,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Translates this item by p_vector in the board.
+    * Override in subclasses
     */
    public void move_by(PlaVector p_vector)
       {
@@ -344,7 +348,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Returns true, if some shapes of this item and p_other are on the same layer.
     */
-   public boolean shares_layer(BrdItem p_other)
+   public final boolean shares_layer(BrdItem p_other)
       {
       int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
       int min_last_layer = Math.min(this.last_layer(), p_other.last_layer());
@@ -352,12 +356,14 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Returns the first layer, where both this item and p_other have a shape. Returns -1, if such a layer does not exisr.
+    * Returns the first layer, where both this item and p_other have a shape. 
+    * Returns -1, if such a layer does not exisr.
     */
-   public int first_common_layer(BrdItem p_other)
+   public final int first_common_layer(BrdItem p_other)
       {
       int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
       int min_last_layer = Math.min(this.last_layer(), p_other.last_layer());
+      
       if (max_first_layer > min_last_layer)
          {
          return -1;
@@ -368,35 +374,32 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Returns the last layer, where both this item and p_other have a shape. Returns -1, if such a layer does not exisr.
     */
-   public int last_common_layer(BrdItem p_other)
+   public final int last_common_layer(BrdItem p_other)
       {
-      int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
-      int min_last_layer = Math.min(this.last_layer(), p_other.last_layer());
-      if (max_first_layer > min_last_layer)
-         {
-         return -1;
-         }
+      int max_first_layer = Math.max(first_layer(), p_other.first_layer());
+      int min_last_layer = Math.min(last_layer(), p_other.last_layer());
+
+      if (max_first_layer > min_last_layer) return -1;
+
       return min_last_layer;
       }
 
    /**
     * Return the name of the component of this item or null, if this item does not belong to a component.
     */
-   public String component_name()
+   public final String component_name()
       {
-      if (component_no <= 0)
-         {
-         return null;
-         }
+      if ( component_no <= 0 ) return null;
+
       return r_board.brd_components.get(component_no).name;
       }
 
    /**
     * Returns the count of clearance violations of this item with other items.
     */
-   public int clearance_violation_count()
+   public final int clearance_violation_count()
       {
-      Collection<BrdItemViolation> violations = this.clearance_violations();
+      Collection<BrdItemViolation> violations = clearance_violations();
       return violations.size();
       }
 
@@ -461,7 +464,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns a list of all clearance violations of this item with other items. 
     * The first_item in such an object is always this item.
     */
-   public Collection<BrdItemViolation> clearance_violations()
+   public final Collection<BrdItemViolation> clearance_violations()
       {
       Collection<BrdItemViolation> result = new LinkedList<BrdItemViolation>();
       
@@ -518,33 +521,34 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Returns all connectable Items with a direct contacts to this item. The result will be empty, if this item is not connectable.
+    * Returns all connectable Items with a direct contacts to this item. 
+    * The result will be empty, if this item is not connectable.
     */
-   public Set<BrdItem> get_all_contacts()
+   public final Set<BrdItem> get_all_contacts()
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
-      if (!(this instanceof BrdConnectable))
+      
+      if (!(this instanceof BrdConnectable)) return result;
+      
+      for (int index = 0; index < tile_shape_count(); ++index)
          {
-         return result;
-         }
-      for (int i = 0; i < this.tile_shape_count(); ++i)
-         {
-         Collection<ShapeTreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(i), shape_layer(i));
+         Collection<ShapeTreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), shape_layer(index));
          Iterator<ShapeTreeObject> it = overlapping_items.iterator();
          while (it.hasNext())
             {
             ShapeTreeObject curr_ob = it.next();
-            if (!(curr_ob instanceof BrdItem))
-               {
-               continue;
-               }
+            
+            if (!(curr_ob instanceof BrdItem)) continue;
+
             BrdItem curr_item = (BrdItem) curr_ob;
+
             if (curr_item != this && curr_item instanceof BrdConnectable && curr_item.shares_net(this))
                {
                result.add(curr_item);
                }
             }
          }
+      
       return result;
       }
 
@@ -552,28 +556,25 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns all connectable Items with a direct contacts to this item on the input layer. The result will be empty, if this item
     * is not connectable.
     */
-   public Set<BrdItem> get_all_contacts(int p_layer)
+   public final Set<BrdItem> get_all_contacts(int p_layer)
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
-      if (!(this instanceof BrdConnectable))
+
+      if (!(this instanceof BrdConnectable)) return result;
+
+      for (int index = 0; index < tile_shape_count(); ++index)
          {
-         return result;
-         }
-      for (int i = 0; i < this.tile_shape_count(); ++i)
-         {
-         if (this.shape_layer(i) != p_layer)
-            {
-            continue;
-            }
-         Collection<ShapeTreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(i), p_layer);
+         if ( shape_layer(index) != p_layer) continue;
+
+         Collection<ShapeTreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), p_layer);
          Iterator<ShapeTreeObject> it = overlapping_items.iterator();
+
          while (it.hasNext())
             {
             ShapeTreeObject curr_ob = it.next();
-            if (!(curr_ob instanceof BrdItem))
-               {
-               continue;
-               }
+         
+            if (!(curr_ob instanceof BrdItem)) continue;
+
             BrdItem curr_item = (BrdItem) curr_ob;
             if (curr_item != this && curr_item instanceof BrdConnectable && curr_item.shares_net(this))
                {
@@ -585,12 +586,12 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Checks, if this item is electrically connected to another connectable item. Returns false for items, which are not
-    * connectable.
+    * Checks, if this item is electrically connected to another connectable item. 
+    * Returns false for items, which are not connectable.
     */
-   public boolean is_connected()
+   public final boolean is_connected()
       {
-      Collection<BrdItem> contacts = this.get_all_contacts();
+      Collection<BrdItem> contacts = get_all_contacts();
       return (contacts.size() > 0);
       }
 
@@ -598,7 +599,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Checks, if this item is electrically connected to another connectable item on the input layer. Returns false for items, which
     * are not connectable.
     */
-   public boolean is_connected_on_layer(int p_layer)
+   public final boolean is_connected_on_layer(int p_layer)
       {
       Collection<BrdItem> contacts_on_layer = this.get_all_contacts(p_layer);
       return (contacts_on_layer.size() > 0);
@@ -613,7 +614,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Returns the contact point, if this item and p_other are Connectable and have a unique normal contact. Returns null otherwise
+    * Returns the contact point, if this item and p_other are Connectable and have a unique normal contact. 
+    * Returns null otherwise
     */
    public PlaPoint normal_contact_point(BrdItem p_other)
       {
@@ -640,7 +642,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns the set of all Connectable items of the net with number p_net_no which can be reached recursively via normal contacts
     * from this item. If p_net_no <= 0, the net number is ignored.
     */
-   public Set<BrdItem> get_connected_set(int p_net_no)
+   public final Set<BrdItem> get_connected_set(int p_net_no)
       {
       return get_connected_set(p_net_no, false);
       }
@@ -650,15 +652,12 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * from this item. If p_net_no <= 0, the net number is ignored. If p_stop_at_plane, the recursive algorithm stops, when a
     * conduction area is reached, which does not belong to a component.
     */
-   public Set<BrdItem> get_connected_set(int p_net_no, boolean p_stop_at_plane)
+   public final Set<BrdItem> get_connected_set(int p_net_no, boolean p_stop_at_plane)
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
       
-      if (p_net_no > 0 && ! contains_net(p_net_no))
-         {
-         return result;
-         }
-      
+      if (p_net_no > 0 && ! contains_net(p_net_no)) return result;
+
       result.add(this);
       
       get_connected_set_recu(result, p_net_no, p_stop_at_plane);
@@ -672,20 +671,21 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    private void get_connected_set_recu(Set<BrdItem> p_result, int p_net_no, boolean p_stop_at_plane)
       {
       Collection<BrdItem> contact_list = get_normal_contacts();
-      if (contact_list == null)
-         {
-         return;
-         }
+
+      if (contact_list == null) return;
+
       for (BrdItem curr_contact : contact_list)
          {
          if (p_stop_at_plane && curr_contact instanceof BrdAreaConduction && curr_contact.get_component_no() <= 0)
             {
             continue;
             }
+
          if (p_net_no > 0 && !curr_contact.contains_net(p_net_no))
             {
             continue;
             }
+         
          if (p_result.add(curr_contact))
             {
             curr_contact.get_connected_set_recu(p_result, p_net_no, p_stop_at_plane);
@@ -695,6 +695,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Returns true, if this item contains some overlap to be cleaned.
+    * To be overriden in subclasses
     */
    public boolean is_overlap()
       {
@@ -704,7 +705,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Recursive part of Trace.is_cycle. If p_ignore_areas is true, cycles where conduction areas are involved are ignored.
     */
-   public boolean is_cycle_recu(Set<BrdItem> p_visited_items, BrdItem p_search_item, BrdItem p_come_from_item, boolean p_ignore_areas)
+   protected final boolean is_cycle_recu(Set<BrdItem> p_visited_items, BrdItem p_search_item, BrdItem p_come_from_item, boolean p_ignore_areas)
       {
       if (p_ignore_areas && this instanceof BrdAreaConduction)
          {
@@ -742,7 +743,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns the set of all Connectable items belonging to the net with number p_net_no, which are not in the connected set of this
     * item. If p_net_no <= 0, the net numbers contained in this items are used instead of p_net_no.
     */
-   public Set<BrdItem> get_unconnected_set(int p_net_no)
+   public final Set<BrdItem> get_unconnected_set(int p_net_no)
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
       
@@ -771,7 +772,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Returns all traces and vias from this item until the next fork or terminal item.
     */
-   public Set<BrdItem> get_connection_items()
+   public final Set<BrdItem> get_connection_items()
       {
       return get_connection_items(BrdStopConnection.NONE);
       }
@@ -781,14 +782,13 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout via, If p_stop_option == StopConnectionOption.VIA,
     * the algorithm will stop at any via.
     */
-   public Set<BrdItem> get_connection_items(BrdStopConnection p_stop_option)
+   public final Set<BrdItem> get_connection_items(BrdStopConnection p_stop_option)
       {
-      Set<BrdItem> contacts = this.get_normal_contacts();
+      Set<BrdItem> contacts = get_normal_contacts();
       Set<BrdItem> result = new TreeSet<BrdItem>();
-      if (this.is_route())
-         {
-         result.add(this);
-         }
+
+      if (is_route()) result.add(this);
+
       Iterator<BrdItem> it = contacts.iterator();
       while (it.hasNext())
          {
@@ -894,31 +894,31 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Returns all corners of this item, which are used for displaying the ratsnest. To be overwritten in derived classes
-    * implementing the Connectable interface.
+    * Returns all corners of this item, which are used for displaying the ratsnest. 
+    * To be overwritten in derived classes implementing the Connectable interface.
     */
    public PlaPoint[] get_ratsnest_corners()
       {
       return new PlaPoint[0];
       }
 
-   public void draw(Graphics p_g, GdiContext p_graphics_context, Color p_color, double p_intensity)
+   @Override
+   public final void draw(Graphics p_g, GdiContext p_graphics_context, Color p_color, double p_intensity)
       {
       Color[] color_arr = new Color[r_board.get_layer_count()];
-      for (int i = 0; i < color_arr.length; ++i)
-         {
-         color_arr[i] = p_color;
-         }
+
+      for (int index = 0; index < color_arr.length; ++index) color_arr[index] = p_color;
+      
       draw(p_g, p_graphics_context, color_arr, p_intensity);
       }
 
    /**
     * Draws this item whith its draw colors from p_graphics_context. 
-    * p_layer_visibility[i] is expected between 0 and 1 for each layer i.
     */
-   public void draw(Graphics p_g, GdiContext p_graphics_context)
+   public final void draw(Graphics p_g, GdiContext p_graphics_context)
       {
       Color[] layer_colors = get_draw_colors(p_graphics_context);
+      
       draw(p_g, p_graphics_context, layer_colors, get_draw_intensity(p_graphics_context));
       }
 
@@ -948,7 +948,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Returns true, if it is not allowed to change this item except evtl. shoving the item
     */
-   public boolean is_user_fixed()
+   public final boolean is_user_fixed()
       {
       return (fixed_state.ordinal() >= ItemFixState.USER_FIXED.ordinal());
       }
@@ -956,7 +956,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Returns true, if it is not allowed to delete this item.
     */
-   public boolean is_delete_fixed()
+   public final boolean is_delete_fixed()
       {
       // Items belonging to a component are delete_fixed.
       if (component_no > 0 ) return true;
@@ -977,10 +977,11 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Returns true, if it is not allowed to change the location of this item by the push algorithm.
+    * Override in classes
     */
    public boolean is_shove_fixed()
       {
-      return (this.fixed_state.ordinal() >= ItemFixState.SHOVE_FIXED.ordinal());
+      return (fixed_state.ordinal() >= ItemFixState.SHOVE_FIXED.ordinal());
       }
 
    /**
@@ -1021,6 +1022,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * @return true, if this item is an unfixed trace or via
+    * To be overriden
     */
    public boolean is_route()
       {
@@ -1062,7 +1064,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Removes p_net_no from the net number array. Returns false, if p_net_no was not contained in this array.
     */
-   public boolean remove_from_net(int p_net_no)
+   public final boolean remove_from_net(int p_net_no)
       {
       int found_index = -1;
       for (int i = 0; i < net_no_arr.length; ++i)
@@ -1244,6 +1246,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Clears the data allocated for the autoroute algorithm.
+    * Cannot make it final since a subclass override it
     */
    public void art_item_clear()
       {
@@ -1252,6 +1255,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Clear all cached or derived data. so that they have to be recalculated, when they are used next time.
+    * Cannot make it final since subclass override it
     */
    public void clear_derived_data()
       {
@@ -1263,7 +1267,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Internal function used in the implementation of print_info
     */
-   protected void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   protected final void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
       for (int i = 0; i < this.net_count(); ++i)
@@ -1277,23 +1281,23 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Internal function used in the implementation of print_info
     */
-   protected void print_clearance_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   protected final void print_clearance_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       if (this.clearance_class > 0)
          {
          java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
          p_window.append(", " + resources.getString("clearance_class") + " ");
-         String name = r_board.brd_rules.clearance_matrix.get_name(this.clearance_class);
-         p_window.append(name, resources.getString("clearance_info"), r_board.brd_rules.clearance_matrix.get_row(this.clearance_class));
+         String name = r_board.brd_rules.clearance_matrix.get_name(clearance_class);
+         p_window.append(name, resources.getString("clearance_info"), r_board.brd_rules.clearance_matrix.get_row(clearance_class));
          }
       }
 
    /**
     * Internal function used in the implementation of print_info
     */
-   protected void print_fixed_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   protected final void print_fixed_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      if (this.fixed_state != ItemFixState.UNFIXED)
+      if (fixed_state != ItemFixState.UNFIXED)
          {
          java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.FixedState", p_locale);
          p_window.append(", ");
@@ -1304,7 +1308,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Internal function used in the implementation of print_info
     */
-   protected void print_contact_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   protected final void print_contact_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       Collection<BrdItem> contacts = this.get_normal_contacts();
       if (!contacts.isEmpty())
@@ -1319,7 +1323,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Internal function used in the implementation of print_info
     */
-   protected void print_clearance_violation_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   protected final void print_clearance_violation_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       Collection<BrdItemViolation> clearance_violations = this.clearance_violations();
       
@@ -1344,7 +1348,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Internal function used in the implementation of print_info
     */
-   protected void print_connectable_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   protected final void print_connectable_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       this.print_clearance_info(p_window, p_locale);
       this.print_fixed_info(p_window, p_locale);
@@ -1356,7 +1360,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Internal funktion used in the implementation of print_info
     */
-   protected void print_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   protected final void print_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       this.print_clearance_info(p_window, p_locale);
       this.print_fixed_info(p_window, p_locale);
@@ -1366,7 +1370,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Checks, if all nets of this items are normal.
     */
-   public boolean is_nets_normal()
+   public final boolean is_nets_normal()
       {
       for (int index = 0; index < net_no_arr.length; ++index)
          {
@@ -1381,7 +1385,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Checks, if this item and p_other contain exactly the same net numbers.
     */
-   public boolean nets_equal(BrdItem p_other)
+   public final boolean nets_equal(BrdItem p_other)
       {
       return nets_equal(p_other.net_no_arr);
       }
@@ -1389,7 +1393,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Checks, if this item contains exactly the nets in p_net_no_arr
     */
-   public boolean nets_equal(int[] p_net_no_arr)
+   public final boolean nets_equal(int[] p_net_no_arr)
       {
       if (net_no_arr.length != p_net_no_arr.length) return false;
 
@@ -1402,10 +1406,10 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Returns true, if the via is directly ob by a trace connected to a nearby SMD-pin. If p_ignore_items != null, contact traces in
-    * P-ignore_items are ignored.
+    * Returns true, if the via is directly ob by a trace connected to a nearby SMD-pin. 
+    * If p_ignore_items != null, contact traces in P-ignore_items are ignored.
     */
-   public boolean is_fanout_via(Set<BrdItem> p_ignore_items)
+   public final boolean is_fanout_via(Set<BrdItem> p_ignore_items)
       {
       Collection<BrdItem> contact_list = this.get_normal_contacts();
       for (BrdItem curr_contact : contact_list)

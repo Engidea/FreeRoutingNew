@@ -324,7 +324,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
    /**
     * Returns true, if it is not allowed to change the location of this item by the push algorithm.
     */
-   public boolean is_shove_fixed()
+   public final boolean is_shove_fixed()
       {
       if ( super.is_shove_fixed())  return true;
 
@@ -333,13 +333,11 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       
       for (int curr_net_no : net_no_arr)
          {
-         if (rules.RuleNets.is_normal_net_no(curr_net_no))
-            {
-            if (nets.get(curr_net_no).get_class().is_shove_fixed())
-               {
-               return true;
-               }
-            }
+         // do not check special nets
+         if ( ! rules.RuleNets.is_normal_net_no(curr_net_no)) continue;
+         
+         // trace is fixed if the net is shove fixed
+         if (nets.get(curr_net_no).get_class().is_shove_fixed()) return true;
          }
       
       return false;

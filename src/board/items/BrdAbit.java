@@ -123,7 +123,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       PlaPoint old_center = get_center();
       // remember the contact situation of this drillitem to traces on each layer
       Set<BrdTraceInfo> contact_trace_info = new TreeSet<BrdTraceInfo>();
-      Collection<BrdItem> contacts = this.get_normal_contacts();
+      Collection<BrdItem> contacts = get_normal_contacts();
       Iterator<BrdItem> it = contacts.iterator();
       while (it.hasNext())
          {
@@ -141,7 +141,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       // this DrillItem was connected to a Trace.
       Collection<PlaPoint> connect_point_list = new java.util.LinkedList<PlaPoint>();
       connect_point_list.add(old_center);
-      PlaPoint new_center = this.get_center();
+      PlaPoint new_center = get_center();
       PlaPointInt add_corner = null;
       if (old_center instanceof PlaPointInt && new_center instanceof PlaPointInt)
          {
@@ -193,7 +193,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public int first_layer()
       {
-      if (this.precalculated_first_layer < 0)
+      if (precalculated_first_layer < 0)
          {
          LibPadstack padstack = get_padstack();
          if (is_placed_on_front() || padstack.placed_absolute)
@@ -234,7 +234,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       ShapeTileBox result = ShapeTileBox.EMPTY;
       for (int i = 0; i < tile_shape_count(); ++i)
          {
-         PlaShape curr_shape = this.get_shape(i);
+         PlaShape curr_shape = get_shape(i);
          if (curr_shape != null)
             {
             result = result.union(curr_shape.bounding_box());
@@ -398,9 +398,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public PlaPoint normal_contact_point(BrdAbit p_other)
       {
-      if (this.shares_layer(p_other) && this.get_center().equals(p_other.get_center()))
+      if (shares_layer(p_other) && get_center().equals(p_other.get_center()))
          {
-         return this.get_center();
+         return get_center();
          }
       return null;
       }
@@ -410,7 +410,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       {
       if ( ! shares_layer(p_trace)) return null;
 
-      PlaPoint drill_center = this.get_center();
+      PlaPoint drill_center = get_center();
 
       if (drill_center.equals(p_trace.first_corner()) || drill_center.equals(p_trace.last_corner()))
          {
@@ -424,7 +424,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    public PlaPoint[] get_ratsnest_corners()
       {
       PlaPoint[] result = new PlaPoint[1];
-      result[0] = this.get_center();
+      result[0] = get_center();
       return result;
       }
 
@@ -505,7 +505,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       double intensity = p_intensity / Math.max(visibility_factor, 1);
       for (int i = 0; i <= to_layer - from_layer; ++i)
          {
-         PlaShape curr_shape = this.get_shape(i);
+         PlaShape curr_shape = get_shape(i);
          if (curr_shape == null)
             {
             continue;
