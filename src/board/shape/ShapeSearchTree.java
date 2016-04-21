@@ -1086,10 +1086,8 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    protected Collection<ExpandRoomFreespaceIncomplete> divide_large_room(Collection<ExpandRoomFreespaceIncomplete> p_room_list, ShapeTileBox p_board_bounding_box)
       {
-      if (p_room_list.size() != 1)
-         {
-         return p_room_list;
-         }
+      if (p_room_list.size() != 1) return p_room_list;
+
       ExpandRoomFreespaceIncomplete curr_room = p_room_list.iterator().next();
       ShapeTileBox room_bounding_box = curr_room.get_shape().bounding_box();
       if (2 * room_bounding_box.height() <= p_board_bounding_box.height() || 2 * room_bounding_box.width() <= p_board_bounding_box.width())

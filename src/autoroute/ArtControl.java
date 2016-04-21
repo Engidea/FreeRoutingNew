@@ -180,21 +180,21 @@ public final class ArtControl
          curr_net_class = null;
          }
       
-      for (int i = 0; i < layer_count; ++i)
+      for (int index = 0; index < layer_count; ++index)
          {
          if (net_no > 0)
             {
-            trace_half_width[i] = p_board.brd_rules.get_trace_half_width(net_no, i);
+            trace_half_width[index] = p_board.brd_rules.get_trace_half_width(net_no, index);
             }
          else
             {
-            trace_half_width[i] = p_board.brd_rules.get_trace_half_width(1, i);
+            trace_half_width[index] = p_board.brd_rules.get_trace_half_width(1, index);
             }
          
-         compensated_trace_half_width[i] = trace_half_width[i] + p_board.brd_rules.clearance_matrix.clearance_compensation_value(trace_clearance_class_no, i);
-         if (curr_net_class != null && !curr_net_class.is_active_routing_layer(i))
+         compensated_trace_half_width[index] = trace_half_width[index] + p_board.brd_rules.clearance_matrix.clearance_compensation_value(trace_clearance_class_no, index);
+         if (curr_net_class != null && !curr_net_class.is_active_routing_layer(index))
             {
-            layer_active[i] = false;
+            layer_active[index] = false;
             }
          }
       

@@ -22,7 +22,6 @@ package interactive.state;
 import interactive.IteraBoard;
 import java.awt.Graphics;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -45,7 +44,7 @@ import board.varie.BrdStopConnection;
  * State for testing the expanding algorithm of the autorouter.
  * @author Alfons Wirtz
  */
-public class StateExpandTest extends StateInteractive
+public final class StateExpandTest extends StateInteractive
    {
    private MazeSearch maze_search_algo = null;
    private ArtConnectionLocate locate_connection = null;
@@ -66,28 +65,27 @@ public class StateExpandTest extends StateInteractive
       Collection<BrdItem> found_items = board.pick_items(p_location.round(), layer, null);
       BrdItem route_item = null;
       int route_net_no = 0;
-      Iterator<BrdItem> it = found_items.iterator();
-      while (it.hasNext())
+
+      for ( BrdItem cur_item : found_items )
          {
-         BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdConnectable)
+         if ( ! ( cur_item instanceof BrdConnectable) ) continue;
+         
+         // I want an item with just one net count
+         if (cur_item.net_count() != 1 ) continue;
+         
+         if ( cur_item.get_net_no(0) > 0)
             {
-            BrdItem curr_item = curr_ob;
-            if (curr_item.net_count() == 1 && curr_item.get_net_no(0) > 0)
-               {
-               route_item = curr_item;
-               route_net_no = curr_item.get_net_no(0);
-               break;
-               }
+            route_item = cur_item;
+            route_net_no = cur_item.get_net_no(0);
+            break;
             }
          }
       
       control_settings = new ArtControl(i_brd.get_routing_board(), route_net_no, i_brd.itera_settings);
-      // this.control_settings.ripup_allowed = true;
-      // this.control_settings.is_fanout = true;
       control_settings.ripup_pass_no = i_brd.itera_settings.autoroute_settings.pass_no_get();
       control_settings.ripup_costs = control_settings.ripup_pass_no * i_brd.itera_settings.autoroute_settings.get_start_ripup_costs();
       control_settings.vias_allowed = false;
+
       autoroute_engine = new ArtEngine(board, route_net_no, control_settings.trace_clearance_class_no, null );
       
       if (route_item == null)
@@ -136,6 +134,7 @@ public class StateExpandTest extends StateInteractive
       else
          {
          boolean completing_succeeded = false;
+      
          while (!completing_succeeded)
             {
             ExpandRoomFreespaceIncomplete next_room = this.autoroute_engine.get_first_incomplete_expansion_room();
@@ -158,11 +157,11 @@ public class StateExpandTest extends StateInteractive
          }
       else
          {
-         ExpandRoomFreespaceIncomplete next_room = this.autoroute_engine.get_first_incomplete_expansion_room();
+         ExpandRoomFreespaceIncomplete next_room = autoroute_engine.get_first_incomplete_expansion_room();
          while (next_room != null)
             {
             complete_expansion_room(next_room);
-            next_room = this.autoroute_engine.get_first_incomplete_expansion_room();
+            next_room = autoroute_engine.get_first_incomplete_expansion_room();
             }
          }
    
@@ -189,11 +188,11 @@ public class StateExpandTest extends StateInteractive
       else
          {
          int curr_count = 0;
-         ExpandRoomFreespaceIncomplete next_room = this.autoroute_engine.get_first_incomplete_expansion_room();
+         ExpandRoomFreespaceIncomplete next_room = autoroute_engine.get_first_incomplete_expansion_room();
          while (next_room != null && curr_count < max_count)
             {
             complete_expansion_room(next_room);
-            next_room = this.autoroute_engine.get_first_incomplete_expansion_room();
+            next_room = autoroute_engine.get_first_incomplete_expansion_room();
             ++curr_count;
             }
          }
@@ -214,7 +213,7 @@ public class StateExpandTest extends StateInteractive
          }
       else if (Character.isDigit(p_key_char))
          {
-         key_digit_typed(p_key_char);         result = this;
+         key_digit_typed(p_key_char);
          }
       else
          {
@@ -226,11 +225,13 @@ public class StateExpandTest extends StateInteractive
       return result;
       }
 
+   @Override
    public StateInteractive left_button_clicked(PlaPointFloat p_location)
       {
       return cancel();
       }
 
+   @Override
    public StateInteractive cancel()
       {
       autoroute_engine.autoroute_clear();

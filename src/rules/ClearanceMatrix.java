@@ -280,11 +280,8 @@ public final class ClearanceMatrix implements java.io.Serializable
     */
    public boolean append_class(String p_class_name)
       {
-      if (get_no(p_class_name) >= 0)
-         {
-         return false;
-         }
-      
+      if (get_no(p_class_name) >= 0) return false;
+   
       int old_class_count = class_count;
       
       ++class_count;
@@ -314,13 +311,13 @@ public final class ClearanceMatrix implements java.io.Serializable
 
       // Set the new matrix elements to default values.
 
-      for (int i = 0; i < old_class_count; ++i)
+      for (int index = 0; index < old_class_count; ++index)
          {
          for (int j = 0; j < layer_structure.size(); ++j)
             {
-            int default_value = value_at(1, i, j);
-            set_value(old_class_count, i, j, default_value);
-            set_value(i, old_class_count, j, default_value);
+            int default_value = value_at(1, index, j);
+            set_value(old_class_count, index, j, default_value);
+            set_value(index, old_class_count, j, default_value);
             }
          }
 

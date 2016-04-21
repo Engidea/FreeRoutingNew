@@ -29,10 +29,7 @@ import planar.ShapeBounding_45_Degree;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeSearchTree45Degree;
-import board.shape.ShapeSearchTree90Degree;
 import board.shape.ShapeTreeLeaf;
-import board.varie.TraceAngleRestriction;
 import datastructures.UndoableObjectNode;
 
 /**
@@ -55,6 +52,7 @@ public final class SearchTreeManager
       
       compensated_search_trees = new LinkedList<ShapeSearchTree>();
       compensated_search_trees.add(default_tree);
+      
       clearance_compensation_used = false;
       }
 
@@ -218,22 +216,8 @@ public final class SearchTreeManager
             return curr_tree;
             }
          }
-      
-      // tree is not yet initialized
-      ShapeSearchTree curr_autoroute_tree;
-      
-      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
-         {
-         curr_autoroute_tree = new ShapeSearchTree90Degree(r_board, p_clearance_class_no);
-         }
-      else if ( r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
-         {
-         curr_autoroute_tree = new ShapeSearchTree45Degree(r_board, p_clearance_class_no);
-         }
-      else
-         {
-         curr_autoroute_tree = new ShapeSearchTree(ShapeBounding_45_Degree.INSTANCE, r_board, p_clearance_class_no);
-         }
+
+      ShapeSearchTree curr_autoroute_tree = new ShapeSearchTree(ShapeBounding_45_Degree.INSTANCE, r_board, p_clearance_class_no);
       
       compensated_search_trees.add(curr_autoroute_tree);
       

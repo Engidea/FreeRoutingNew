@@ -533,7 +533,9 @@ public final class MazeSearch
       return something_expanded;
       }
 
-   /** Expand the target doors of the room. Returns true, if at leat 1 target door was expanded */
+   /** Expand the target doors of the room. 
+    * Returns true, if at leat 1 target door was expanded 
+    */
    private boolean expand_to_target_doors(MazeListElement p_list_element, boolean p_next_room_is_thick, boolean p_curr_door_is_small, PlaPointFloat p_shape_entry_middle)
       {
       if (p_curr_door_is_small)
@@ -548,18 +550,15 @@ public final class MazeSearch
                enter_through_small_door = true;
                }
             }
-         if (!enter_through_small_door)
-            {
-            return false;
-            }
+      
+         if ( ! enter_through_small_door ) return false;
          }
+    
       boolean result = false;
       for (ExpandDoorItem to_door : p_list_element.next_room.get_target_doors())
          {
-         if (to_door == p_list_element.door)
-            {
-            continue;
-            }
+         if (to_door == p_list_element.door) continue;
+
          ShapeTile target_shape = ((BrdConnectable) to_door.item).get_trace_connection_shape(art_engine.autoroute_search_tree, to_door.tree_entry_no);
          PlaPointFloat connection_point = target_shape.nearest_point_approx(p_shape_entry_middle);
          if (!p_next_room_is_thick)

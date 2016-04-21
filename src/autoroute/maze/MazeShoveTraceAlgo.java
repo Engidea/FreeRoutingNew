@@ -197,6 +197,7 @@ public final class MazeShoveTraceAlgo
                }
             }
          }
+      
       int trace_half_width = art_ctrl.trace_half_width[trace_layer];
       int[] net_no_arr = new int[1];
       net_no_arr[0] = art_ctrl.net_no;
@@ -261,6 +262,7 @@ public final class MazeShoveTraceAlgo
                continue;
                }
             }
+         
          ShapeTile curr_door_shape = curr_door.get_shape();
          if (curr_door.dimension.is_area() && shove_width >= Integer.MAX_VALUE)
             {

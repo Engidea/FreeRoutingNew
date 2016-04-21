@@ -194,15 +194,15 @@ public final class SortedRooms_xx_Degree
       SortedRooms_xx_Degree result = new SortedRooms_xx_Degree(p_room, completed_room);
       Collection<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
       p_autoroute_search_tree.calc_overlapping_tree_entries(room_shape, p_room.get_layer(), overlapping_objects);
-      // Calculate the touching neigbour objects and sort them in counterclock sence
-      // around the border of the room shape.
+
+      // Calculate the touching neigbour objects and sort them in counterclock sence around the border of the room shape.
+      
       for (ShapeTreeEntry curr_entry : overlapping_objects)
          {
          ShapeTreeObject curr_object = (ShapeTreeObject) curr_entry.object;
-         if (curr_object == p_room)
-            {
-            continue;
-            }
+      
+         if (curr_object == p_room) continue;
+
          if ((p_room instanceof ExpandRoomFreespaceIncomplete) && !curr_object.is_trace_obstacle(p_net_no))
             {
             // delay processing the target doors until the room shape will not change any more
@@ -226,7 +226,7 @@ public final class SortedRooms_xx_Degree
                   ((ExpandRoomObstacle) completed_room).create_overlap_door(curr_overlap_room);
                   }
                }
-            else if (p_test_level.ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
+            else 
                {
                System.out.println("SortedRoomNeighbours.calculate: unexpected area overlap of free space expansion room");
                }
@@ -243,10 +243,7 @@ public final class SortedRooms_xx_Degree
             int[] touching_sides = room_shape.touching_sides(curr_shape);
             if (touching_sides.length != 2)
                {
-               if (p_test_level.ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
-                  {
-                  System.out.println("SortedRoomNeighbours.calculate: touching_sides length 2 expected");
-                  }
+               System.out.println("SortedRoomNeighbours.calculate: touching_sides length 2 expected");
                continue;
                }
             result.add_sorted_neighbour(curr_shape, touching_sides[0], touching_sides[1], false, false);
@@ -292,7 +289,7 @@ public final class SortedRooms_xx_Degree
                {
                room_touch_is_corner = false;
                touching_side_no_of_room = room_shape.contains_on_border_line_no(touching_point);
-               if (touching_side_no_of_room < 0 && p_test_level.ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
+               if (touching_side_no_of_room < 0 )
                   {
                   System.out.println("SortedRoomNeighbours.calculate: touching_side_no_of_room >= 0 expected");
                   }
@@ -310,7 +307,7 @@ public final class SortedRooms_xx_Degree
                {
                neighbour_room_touch_is_corner = false;
                touching_side_no_of_neighbour_room = curr_shape.contains_on_border_line_no(touching_point);
-               if (touching_side_no_of_neighbour_room < 0 && p_test_level.ordinal() >= TestLevel.CRITICAL_DEBUGGING_OUTPUT.ordinal())
+               if (touching_side_no_of_neighbour_room < 0 )
                   {
                   System.out.println("AutorouteEngine.SortedRoomNeighbours.calculate: touching_side_no_of_neighbour_room >= 0 expected");
                   }
@@ -349,6 +346,7 @@ public final class SortedRooms_xx_Degree
       while (it.hasNext())
          {
          SortedRoom_xx_Degree next_neighbour = it.next();
+
          if (next_neighbour.touching_side_no_of_room == prev_edge_no)
             {
             continue;
