@@ -24,8 +24,8 @@ import graphics.GdiContext;
 import graphics.GdiDrawable;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import library.LibPadstack;
@@ -121,28 +121,32 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    public void move_by(PlaVector p_vector)
       {
       PlaPoint old_center = get_center();
+      
       // remember the contact situation of this drillitem to traces on each layer
       Set<BrdTraceInfo> contact_trace_info = new TreeSet<BrdTraceInfo>();
-      Collection<BrdItem> contacts = get_normal_contacts();
-      Iterator<BrdItem> it = contacts.iterator();
-      while (it.hasNext())
+
+      for ( BrdItem curr_contact : get_normal_contacts() )
          {
-         BrdItem curr_contact = it.next();
-         if (curr_contact instanceof BrdTrace)
-            {
-            BrdTrace curr_trace = (BrdTrace) curr_contact;
-            BrdTraceInfo curr_trace_info = new BrdTraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(), curr_trace.clearance_class_no());
-            contact_trace_info.add(curr_trace_info);
-            }
+         if ( ! ( curr_contact instanceof BrdTrace) ) continue;
+
+         BrdTrace curr_trace = (BrdTrace) curr_contact;
+
+         BrdTraceInfo curr_trace_info = new BrdTraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(), curr_trace.clearance_class_no());
+         
+         contact_trace_info.add(curr_trace_info);
          }
+      
       super.move_by(p_vector);
 
-      // Insert a Trace from the old center to the new center, on all layers, where
-      // this DrillItem was connected to a Trace.
-      Collection<PlaPoint> connect_point_list = new java.util.LinkedList<PlaPoint>();
+      // Insert a Trace from the old center to the new center, on all layers, where this DrillItem was connected to a Trace.
+      LinkedList<PlaPoint> connect_point_list = new LinkedList<PlaPoint>();
+      
       connect_point_list.add(old_center);
+      
       PlaPoint new_center = get_center();
+      
       PlaPointInt add_corner = null;
+      
       if (old_center instanceof PlaPointInt && new_center instanceof PlaPointInt)
          {
          // Make shure, that the traces will remain 90- or 45-degree.
@@ -159,17 +163,13 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
          {
          connect_point_list.add(add_corner);
          }
+      
       connect_point_list.add(new_center);
-      PlaPoint[] connect_points = new PlaPoint[connect_point_list.size()];
-      Iterator<PlaPoint> it3 = connect_point_list.iterator();
-      for (int i = 0; i < connect_points.length; ++i)
+      
+      PlaPoint[] connect_points = connect_point_list.toArray(new PlaPoint[connect_point_list.size()]);
+      
+      for ( BrdTraceInfo curr_trace_info : contact_trace_info )
          {
-         connect_points[i] = it3.next();
-         }
-      Iterator<BrdTraceInfo> it2 = contact_trace_info.iterator();
-      while (it2.hasNext())
-         {
-         BrdTraceInfo curr_trace_info = it2.next();
          r_board.insert_trace(connect_points, curr_trace_info.layer, curr_trace_info.half_width, net_no_arr, curr_trace_info.clearance_type, ItemFixState.UNFIXED);
          }
       }

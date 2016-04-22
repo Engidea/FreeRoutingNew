@@ -22,7 +22,7 @@ public class BrdTraceInfo implements Comparable<BrdTraceInfo>
     */
    public int compareTo(BrdTraceInfo p_other)
       {
-      return p_other.layer - this.layer;
+      return p_other.layer - layer;
       }
 
    }
