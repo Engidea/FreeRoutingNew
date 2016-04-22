@@ -15,6 +15,9 @@
  */
 package board;
 
+import freert.host.BrdObserverVoid;
+import freert.host.BrdObservers;
+import freert.host.HostCom;
 import graphics.GdiContext;
 import graphics.GdiDrawable;
 import gui.varie.UndoableObjectStorable;
@@ -109,7 +112,7 @@ public final class RoutingBoard implements java.io.Serializable
    public final ShapeTileBox bounding_box;
 
    // For communication with a host system or host design file formats.
-   public final Communication communication;
+   public final HostCom host_com;
 
    public final BrdObservers observers = new BrdObserverVoid();
    
@@ -137,7 +140,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Creates a new instance of a routing Board with surrounding box p_bounding_box Rules contains the restrictions to obey when
     * inserting items. Among other things it may contain a clearance matrix.
     */
-   public RoutingBoard(ShapeTileBox p_bounding_box, BrdLayerStructure p_layer_structure, ShapePolyline[] p_outline_shapes, int p_outline_cl_class_no, BoardRules p_rules, Communication p_board_communication,
+   public RoutingBoard(ShapeTileBox p_bounding_box, BrdLayerStructure p_layer_structure, ShapePolyline[] p_outline_shapes, int p_outline_cl_class_no, BoardRules p_rules, HostCom p_board_communication,
          Stat p_stat)
       {
       stat = p_stat;
@@ -146,7 +149,7 @@ public final class RoutingBoard implements java.io.Serializable
       library = new BrdLibrary();
       item_list = new UndoableObjects();
       brd_components = new BrdComponents();
-      communication = p_board_communication;
+      host_com = p_board_communication;
       bounding_box = p_bounding_box;
       search_tree_manager = new SearchTreeManager(this);
       

@@ -674,7 +674,7 @@ public final class IteraRoute
       draw_points[0] = from_corner;
       draw_points[1] = nearest_target_point;
       java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
-      double draw_width = Math.min(r_board.communication.get_resolution(UnitMeasure.MIL), 100); // problem with low resolution on
+      double draw_width = Math.min(r_board.host_com.get_resolution(UnitMeasure.MIL), 100); // problem with low resolution on
                                                                                             // Kicad
       if (!curr_length_matching_ok)
          {

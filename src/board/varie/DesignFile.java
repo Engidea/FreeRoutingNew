@@ -280,7 +280,7 @@ public final class DesignFile
 
       boolean result = true;
       String rule_file_name = p_design_name + ".rules";
-      boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().communication.specctra_parser_info.dsn_file_generated_by_host;
+      boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().host_com.specctra_parser_info.dsn_file_generated_by_host;
 
          {
          try

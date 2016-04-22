@@ -46,13 +46,13 @@ public final class DsnWriteSesFile
       {
       RoutingBoard routing_board = board_handling.get_routing_board();
       DsnWriteScopeParameter write_scope_parameter = new DsnWriteScopeParameter(routing_board, board_handling.itera_settings.autoroute_settings, output_file,
-            routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform, p_compat_mode);
+            routing_board.host_com.specctra_parser_info.string_quote, routing_board.host_com.coordinate_transform, p_compat_mode);
 
       output_file.start_scope();
       output_file.write("PCB ");
       write_scope_parameter.identifier_type.write(p_design_name, output_file);
-      DsnKeywordParser.write_scope(write_scope_parameter.file, write_scope_parameter.board.communication.specctra_parser_info, write_scope_parameter.identifier_type, false);
-      DsnKeywordResolution.write_scope(output_file, routing_board.communication);
+      DsnKeywordParser.write_scope(write_scope_parameter.file, write_scope_parameter.board.host_com.specctra_parser_info, write_scope_parameter.identifier_type, false);
+      DsnKeywordResolution.write_scope(output_file, routing_board.host_com);
       DsnKeywordStructure.write_scope(write_scope_parameter);
       DsnKeywordPlacement.write_scope(write_scope_parameter);
       DsnKeywordLibrary.write_scope(write_scope_parameter);

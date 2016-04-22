@@ -74,7 +74,7 @@ public class DsnKeywordResolution extends DsnKeywordScope
          }
       }
 
-   public static void write_scope(gui.varie.IndentFileWriter p_file, board.Communication p_board_communication) throws java.io.IOException
+   public static void write_scope(gui.varie.IndentFileWriter p_file, freert.host.HostCom p_board_communication) throws java.io.IOException
       {
       p_file.new_line();
       p_file.write("(resolution ");

@@ -19,6 +19,7 @@
  */
 package specctra;
 
+import freert.host.HostCom;
 import gui.varie.IndentFileWriter;
 import gui.varie.UndoableObjectStorable;
 import java.util.Collection;
@@ -32,7 +33,6 @@ import specctra.varie.DsnKeywordAutoroute;
 import specctra.varie.DsnReadUtils;
 import board.BrdLayer;
 import board.BrdLayerStructure;
-import board.Communication;
 import board.RoutingBoard;
 import board.items.BrdAreaConduction;
 import board.varie.ItemFixState;
@@ -934,7 +934,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       
       DsnParserInfo specctra_parser_info = new DsnParserInfo(p_par);
       
-      Communication board_communication = new Communication(p_par.dsn_unit_meas, p_par.dsn_resolution, specctra_parser_info, p_par.coordinate_transform, p_par.item_id_no_generator);
+      HostCom board_communication = new HostCom(p_par.dsn_unit_meas, p_par.dsn_resolution, specctra_parser_info, p_par.coordinate_transform, p_par.item_id_no_generator);
 
       ShapePolyline[] outline_shape_arr = new ShapePolyline[board_outline_shapes.size()];
       Iterator<ShapePolyline> it2 = board_outline_shapes.iterator();

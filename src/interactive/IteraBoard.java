@@ -20,6 +20,7 @@
  */
 package interactive;
 
+import freert.host.HostCom;
 import graphics.GdiContext;
 import gui.BoardPanel;
 import gui.varie.GuiResources;
@@ -71,7 +72,6 @@ import specctra.varie.DsnReadResult;
 import autoroute.batch.BatchAutorouteThread;
 import board.BrdLayer;
 import board.BrdLayerStructure;
-import board.Communication;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
@@ -655,7 +655,7 @@ public final class IteraBoard
     * Creates the Routingboard, the graphic context and the interactive settings
     */
    public void create_board(ShapeTileBox p_bounding_box, BrdLayerStructure p_layer_structure, ShapePolyline[] p_outline_shapes, String p_outline_clearance_class_name, BoardRules p_rules,
-         Communication p_communication )
+         HostCom p_communication )
       {
       if ( r_board != null)
          {

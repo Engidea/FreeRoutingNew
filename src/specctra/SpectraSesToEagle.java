@@ -62,8 +62,8 @@ public class SpectraSesToEagle extends javax.swing.JFrame
 
       boolean result = true;
 
-      double board_scale_factor = p_board.communication.coordinate_transform.board_to_dsn(1);
-      SpectraSesToEagle new_instance = new SpectraSesToEagle(scanner, file_writer, p_board, p_board.communication.unit, p_board.communication.resolution, board_scale_factor);
+      double board_scale_factor = p_board.host_com.coordinate_transform.board_to_dsn(1);
+      SpectraSesToEagle new_instance = new SpectraSesToEagle(scanner, file_writer, p_board, p_board.host_com.unit, p_board.host_com.resolution, board_scale_factor);
 
       try
          {
@@ -697,8 +697,8 @@ public class SpectraSesToEagle extends javax.swing.JFrame
       out_file.write(layer_name);
       out_file.write(";\n");
 
-      double[] location_1 = board.communication.coordinate_transform.board_to_dsn(p_pin_1.get_center().to_float());
-      double[] location_2 = board.communication.coordinate_transform.board_to_dsn(p_pin_2.get_center().to_float());
+      double[] location_1 = board.host_com.coordinate_transform.board_to_dsn(p_pin_1.get_center().to_float());
+      double[] location_2 = board.host_com.coordinate_transform.board_to_dsn(p_pin_2.get_center().to_float());
 
       out_file.write("PINSWAP ");
       out_file.write(" (");

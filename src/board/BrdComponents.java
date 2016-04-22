@@ -30,6 +30,7 @@ import planar.PlaVector;
 import board.infos.BrdComponent;
 import datastructures.UndoableObjectNode;
 import datastructures.UndoableObjects;
+import freert.host.BrdObservers;
 
 /**
  * Contains the lists of components on the board.

@@ -19,7 +19,7 @@
  *
  */
 
-package board;
+package freert.host;
 
 import board.infos.BrdComponent;
 import board.items.BrdItem;

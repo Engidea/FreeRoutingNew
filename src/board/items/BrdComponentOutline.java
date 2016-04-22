@@ -161,7 +161,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       Color color = p_color_arr[get_layer()];
       double intensity = p_graphics_context.get_layer_visibility(get_layer()) * p_intensity;
 
-      double draw_width = Math.min(r_board.communication.get_resolution(UnitMeasure.MIL), 100); // problem with low resolution on Kicad
+      double draw_width = Math.min(r_board.host_com.get_resolution(UnitMeasure.MIL), 100); // problem with low resolution on Kicad
       p_graphics_context.draw_boundary(get_area(), draw_width, color, p_g, intensity);
       }
 

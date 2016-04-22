@@ -159,7 +159,7 @@ public final class BatchAutorouteThread extends BrdActionThread
          Color draw_color = hdlg.gdi_context.get_incomplete_color();
          
          // problem with low resolution on Kicad 300;
-         double draw_width = Math.min(hdlg.get_routing_board().communication.get_resolution(UnitMeasure.UM) * 10, 300); 
+         double draw_width = Math.min(hdlg.get_routing_board().host_com.get_resolution(UnitMeasure.UM) * 10, 300); 
          
          hdlg.gdi_context.draw(draw_line, draw_width, draw_color, p_graphics, 1);
          }

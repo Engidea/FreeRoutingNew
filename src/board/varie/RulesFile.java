@@ -54,7 +54,7 @@ public class RulesFile
       IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
       RoutingBoard routing_board = p_board_handling.get_routing_board();
       DsnWriteScopeParameter write_scope_parameter = new DsnWriteScopeParameter(routing_board, p_board_handling.itera_settings.autoroute_settings, output_file,
-            routing_board.communication.specctra_parser_info.string_quote, routing_board.communication.coordinate_transform, false);
+            routing_board.host_com.specctra_parser_info.string_quote, routing_board.host_com.coordinate_transform, false);
       try
          {
          write_rules(write_scope_parameter, p_design_name);
@@ -111,7 +111,7 @@ public class RulesFile
          return false;
          }
       DsnLayerStructure layer_structure = new DsnLayerStructure(routing_board.layer_structure);
-      DsnCoordinateTransform coordinate_transform = routing_board.communication.coordinate_transform;
+      DsnCoordinateTransform coordinate_transform = routing_board.host_com.coordinate_transform;
       Object next_token = null;
       for (;;)
          {
@@ -226,8 +226,8 @@ public class RulesFile
             System.out.println("RulesFile.add_rules: layer not found");
             }
          }
-      DsnCoordinateTransform coordinate_transform = p_board.communication.coordinate_transform;
-      String string_quote = p_board.communication.specctra_parser_info.string_quote;
+      DsnCoordinateTransform coordinate_transform = p_board.host_com.coordinate_transform;
+      String string_quote = p_board.host_com.specctra_parser_info.string_quote;
       for (DsnRule curr_rule : p_rules)
          {
          if (curr_rule instanceof DsnRuleWidth)
@@ -325,7 +325,7 @@ public class RulesFile
          {
          return false;
          }
-      DsnKeywordNetwork.insert_net_class(curr_class, p_layer_structure, p_board, p_board.communication.coordinate_transform, false);
+      DsnKeywordNetwork.insert_net_class(curr_class, p_layer_structure, p_board, p_board.host_com.coordinate_transform, false);
       return true;
       }
    }

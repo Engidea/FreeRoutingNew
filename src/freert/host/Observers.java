@@ -18,7 +18,7 @@
  * Created on 13. Februar 2005, 09:14
  */
 
-package datastructures;
+package freert.host;
 
 /**
  * Interface to observe changes on objects for synchronisatiation purposes.

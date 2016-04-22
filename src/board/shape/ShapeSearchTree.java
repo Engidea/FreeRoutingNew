@@ -972,9 +972,9 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       
       double max_tree_shape_width = 50000;
       
-      if (r_board.communication.host_cad_exists())
+      if (r_board.host_com.host_cad_exists())
          {
-         max_tree_shape_width = Math.min(500 * r_board.communication.get_resolution(UnitMeasure.MIL), max_tree_shape_width);
+         max_tree_shape_width = Math.min(500 * r_board.host_com.get_resolution(UnitMeasure.MIL), max_tree_shape_width);
          // Problem with low resolution on Kicad.
          // Called only for designs from host cad systems because otherwise the old sample.dsn gets to many tree shapes.
          }

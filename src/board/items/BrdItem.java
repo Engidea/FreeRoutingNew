@@ -96,7 +96,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          }
 
       if (p_id_no <= 0)
-         id_no = r_board.communication.id_no_generator.new_no();
+         id_no = r_board.host_com.id_no_generator.new_no();
       else
          id_no = p_id_no;
       

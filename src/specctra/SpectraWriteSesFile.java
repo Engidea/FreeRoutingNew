@@ -69,7 +69,7 @@ public final class SpectraWriteSesFile
       try
          {
          String[] reserved_chars = { "(", ")", " ", "-" };
-         DsnIdentifier identifier_type = new DsnIdentifier(reserved_chars, r_board.communication.specctra_parser_info.string_quote);
+         DsnIdentifier identifier_type = new DsnIdentifier(reserved_chars, r_board.host_com.specctra_parser_info.string_quote);
          write_session_scope(identifier_type, session_name, p_design_name);
          output_file.close();
          stat.userPrintln(classname+"write DONE");
@@ -85,7 +85,7 @@ public final class SpectraWriteSesFile
 
    private void write_session_scope(DsnIdentifier p_identifier_type, String p_session_name, String p_design_name) throws IOException
       {
-      double scale_factor = r_board.communication.coordinate_transform.dsn_to_board(1) / r_board.communication.resolution;
+      double scale_factor = r_board.host_com.coordinate_transform.dsn_to_board(1) / r_board.host_com.resolution;
       DsnCoordinateTransform coordinate_transform = new DsnCoordinateTransform(scale_factor, 0, 0);
       output_file.start_scope();
       output_file.write("session ");
@@ -104,7 +104,7 @@ public final class SpectraWriteSesFile
       {
       output_file.start_scope();
       output_file.write("placement");
-      DsnKeywordResolution.write_scope(output_file, r_board.communication);
+      DsnKeywordResolution.write_scope(output_file, r_board.host_com);
 
       for (int i = 1; i <= r_board.library.packages.count(); ++i)
          {
@@ -235,8 +235,8 @@ public final class SpectraWriteSesFile
       {
       output_file.start_scope();
       output_file.write("routes ");
-      DsnKeywordResolution.write_scope(output_file, r_board.communication);
-      DsnKeywordParser.write_scope(output_file, r_board.communication.specctra_parser_info, p_identifier_type, true);
+      DsnKeywordResolution.write_scope(output_file, r_board.host_com);
+      DsnKeywordParser.write_scope(output_file, r_board.host_com.specctra_parser_info, p_identifier_type, true);
       write_library( p_identifier_type, p_coordinate_transform);
       write_network( p_identifier_type, p_coordinate_transform);
       output_file.end_scope();

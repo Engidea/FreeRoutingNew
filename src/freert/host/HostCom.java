@@ -18,7 +18,7 @@
  * Created on 5. Juli 2004, 07:31
  */
 
-package board;
+package freert.host;
 
 
 import java.io.IOException;
@@ -34,7 +34,7 @@ import datastructures.UnitMeasure;
  *
  * @author alfons
  */
-public final class Communication implements java.io.Serializable
+public final class HostCom implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
@@ -50,7 +50,7 @@ public final class Communication implements java.io.Serializable
 
    public final IdGenerator id_no_generator;
    
-   public Communication(UnitMeasure p_unit, int p_resolution, DsnParserInfo p_specctra_parser_info, DsnCoordinateTransform p_coordinate_transform, IdGenerator p_id_no_generator)
+   public HostCom(UnitMeasure p_unit, int p_resolution, DsnParserInfo p_specctra_parser_info, DsnCoordinateTransform p_coordinate_transform, IdGenerator p_id_no_generator)
       {
       coordinate_transform = p_coordinate_transform;
       unit = p_unit;
