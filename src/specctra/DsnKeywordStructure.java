@@ -862,9 +862,10 @@ public class DsnKeywordStructure extends DsnKeywordScope
          max_coor /= 10;
          }
 
+      // Qui ci sarebbe da vedere se si riesce ad avere una scala al decimo di micrometro.... damiano pippo
       p_par.coordinate_transform = new DsnCoordinateTransform(scale_factor, 0, 0);
 
-      ShapeTileBox bounds = (ShapeTileBox) bounding_box.transform_to_board(p_par.coordinate_transform);
+      ShapeTileBox bounds = bounding_box.transform_to_board(p_par.coordinate_transform);
       bounds = bounds.offset(1000);
 
       Collection<ShapePolyline> board_outline_shapes = new LinkedList<ShapePolyline>();

@@ -20,18 +20,18 @@
 
 package specctra;
 
-import planar.PlaPointFloat;
-import planar.ShapeTileBox;
 import planar.PlaLineInt;
-import planar.ShapePolyline;
+import planar.PlaPointFloat;
 import planar.PlaVector;
+import planar.ShapePolyline;
+import planar.ShapeTileBox;
 
 /**
  * Computes transformations between a specctra dsn-file coordinates and board coordinates.
  *
  * @author Alfons Wirtz
  */
-public class DsnCoordinateTransform implements java.io.Serializable
+public final class DsnCoordinateTransform implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
@@ -40,8 +40,8 @@ public class DsnCoordinateTransform implements java.io.Serializable
    private final double base_y;
    
    /**
-    * Creates a new instance of CoordinateTransform. The base point of the dsn coordinate system will be translated to zero in the
-    * board coordinate system.
+    * Creates a new instance of CoordinateTransform. 
+    * The base point of the dsn coordinate system will be translated to zero in the board coordinate system.
     */
    public DsnCoordinateTransform(double p_scale_factor, double p_base_x, double p_base_y)
       {

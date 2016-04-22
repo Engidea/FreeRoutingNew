@@ -23,6 +23,9 @@ import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import planar.PlaArea;
+import planar.PlaShape;
+import planar.PolylineArea;
 import planar.ShapePolyline;
 import specctra.varie.DsnReadUtils;
 
@@ -686,10 +689,10 @@ public abstract class DsnShape
       }
 
    /**
-    * Transforms a shape with holes to the board coordinate system. The first shape in the Collection p_area is the border, the
-    * other shapes are holes of the area.
+    * Transforms a shape with holes to the board coordinate system. 
+    * The first shape in the Collection p_area is the border, the other shapes are holes of the area.
     */
-   public static planar.PlaArea transform_area_to_board(Collection<DsnShape> p_area, DsnCoordinateTransform p_coordinate_transform)
+   public static PlaArea transform_area_to_board(Collection<DsnShape> p_area, DsnCoordinateTransform p_coordinate_transform)
       {
       int hole_count = p_area.size() - 1;
       if (hole_count <= -1)
@@ -699,8 +702,9 @@ public abstract class DsnShape
          }
       Iterator<DsnShape> it = p_area.iterator();
       DsnShape boundary = it.next();
-      planar.PlaShape boundary_shape = boundary.transform_to_board(p_coordinate_transform);
-      planar.PlaArea result;
+      PlaShape boundary_shape = boundary.transform_to_board(p_coordinate_transform);
+      
+      PlaArea result;
       if (hole_count == 0)
          {
          result = boundary_shape;
@@ -708,7 +712,7 @@ public abstract class DsnShape
       else
          {
          // Area with holes
-         if (!(boundary_shape instanceof planar.ShapePolyline))
+         if (!(boundary_shape instanceof ShapePolyline))
             {
             System.out.println("Shape.transform_area_to_board: PolylineShape expected");
             return null;
@@ -717,7 +721,7 @@ public abstract class DsnShape
          ShapePolyline[] holes = new ShapePolyline[hole_count];
          for (int i = 0; i < holes.length; ++i)
             {
-            planar.PlaShape hole_shape = it.next().transform_to_board(p_coordinate_transform);
+            PlaShape hole_shape = it.next().transform_to_board(p_coordinate_transform);
             if (!(hole_shape instanceof ShapePolyline))
                {
                System.out.println("Shape.transform_area_to_board: PolylineShape expected");
@@ -725,7 +729,7 @@ public abstract class DsnShape
                }
             holes[i] = (ShapePolyline) hole_shape;
             }
-         result = new planar.PolylineArea(border, holes);
+         result = new PolylineArea(border, holes);
          }
       return result;
       }
@@ -734,7 +738,7 @@ public abstract class DsnShape
     * Transforms the relative coordinates of a shape with holes to the board coordinate system. The first shape in the Collection
     * p_area is the border, the other shapes are holes of the area.
     */
-   public static planar.PlaArea transform_area_to_board_rel(Collection<DsnShape> p_area, DsnCoordinateTransform p_coordinate_transform)
+   public static PlaArea transform_area_to_board_rel(Collection<DsnShape> p_area, DsnCoordinateTransform p_coordinate_transform)
       {
       int hole_count = p_area.size() - 1;
       if (hole_count <= -1)
@@ -744,8 +748,8 @@ public abstract class DsnShape
          }
       Iterator<DsnShape> it = p_area.iterator();
       DsnShape boundary = it.next();
-      planar.PlaShape boundary_shape = boundary.transform_to_board_rel(p_coordinate_transform);
-      planar.PlaArea result;
+      PlaShape boundary_shape = boundary.transform_to_board_rel(p_coordinate_transform);
+      PlaArea result;
       if (hole_count == 0)
          {
          result = boundary_shape;
@@ -753,7 +757,7 @@ public abstract class DsnShape
       else
          {
          // Area with holes
-         if (!(boundary_shape instanceof planar.ShapePolyline))
+         if (!(boundary_shape instanceof ShapePolyline))
             {
             System.out.println("Shape.transform_area_to_board_rel: PolylineShape expected");
             return null;
@@ -762,7 +766,7 @@ public abstract class DsnShape
          ShapePolyline[] holes = new ShapePolyline[hole_count];
          for (int i = 0; i < holes.length; ++i)
             {
-            planar.PlaShape hole_shape = it.next().transform_to_board_rel(p_coordinate_transform);
+            PlaShape hole_shape = it.next().transform_to_board_rel(p_coordinate_transform);
             if (!(hole_shape instanceof ShapePolyline))
                {
                System.out.println("Shape.transform_area_to_board: PolylineShape expected");
@@ -770,7 +774,7 @@ public abstract class DsnShape
                }
             holes[i] = (ShapePolyline) hole_shape;
             }
-         result = new planar.PolylineArea(border, holes);
+         result = new PolylineArea(border, holes);
          }
       return result;
       }
@@ -779,14 +783,14 @@ public abstract class DsnShape
       {
       p_file.start_scope();
       p_file.write("window");
-      this.write_scope(p_file, p_identifier_type);
+      write_scope(p_file, p_identifier_type);
       p_file.end_scope();
       }
 
    /**
     * Transforms a specctra dsn shape to a geometry.planar.Shape.
     */
-   public abstract planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform);
+   public abstract PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform);
 
    /**
     * Returns the smallest axis parallel rectangle containing this shape.
@@ -796,7 +800,7 @@ public abstract class DsnShape
    /**
     * Transforms the relative (vector) coordinates of a specctra dsn shape to a geometry.planar.Shape.
     */
-   public abstract planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform);
+   public abstract PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform);
 
    protected DsnShape(DsnLayer p_layer)
       {

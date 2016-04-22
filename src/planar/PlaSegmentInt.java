@@ -289,8 +289,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       double lly = Math.min(start_corner.point_y, end_corner.point_y);
       double urx = Math.max(start_corner.point_x, end_corner.point_x);
       double ury = Math.max(start_corner.point_y, end_corner.point_y);
-      PlaPointInt lower_left = new PlaPointInt((int) Math.floor(llx), (int) Math.floor(lly));
-      PlaPointInt upper_right = new PlaPointInt((int) Math.ceil(urx), (int) Math.ceil(ury));
+      PlaPointInt lower_left = new PlaPointInt(Math.floor(llx), Math.floor(lly));
+      PlaPointInt upper_right = new PlaPointInt(Math.ceil(urx), Math.ceil(ury));
       return new ShapeTileBox(lower_left, upper_right);
       }
 
@@ -638,18 +638,16 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Returns an array with the borderline numbers of p_shape, which are intersected by this line segment. Intersections at an
-    * endpoint of this line segment are only counted, if the line segment intersects with the interiour of p_shape. The result array
-    * may have lenght 0, 1 or 2. With 2 intersections the intersection which is nearest to the start point of the line segment comes
-    * first.
+    * Returns an array with the borderline numbers of p_shape, which are intersected by this line segment. 
+    * Intersections at an endpoint of this line segment are only counted, if the line segment intersects with the interiour of p_shape. 
+    * The result array may have lenght 0, 1 or 2. 
+    * With 2 intersections the intersection which is nearest to the start point of the line segment comes first.
     */
    public int[] border_intersections(ShapeTile p_shape)
       {
       int[] empty_result = new int[0];
-      if (!this.bounding_box().intersects(p_shape.bounding_box()))
-         {
-         return empty_result;
-         }
+      
+      if ( ! bounding_box().intersects(p_shape.bounding_box())) return empty_result;
 
       int edge_count = p_shape.border_line_count();
       PlaLineInt prev_line = p_shape.border_line(edge_count - 1);
@@ -657,8 +655,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       int[] result = new int[2];
       PlaPoint[] intersection = new PlaPoint[2];
       int intersection_count = 0;
-      PlaPoint line_start = this.start_point();
-      PlaPoint line_end = this.end_point();
+      PlaPoint line_start = start_point();
+      PlaPoint line_end = end_point();
 
       for (int edge_line_no = 0; edge_line_no < edge_count; ++edge_line_no)
          {
@@ -708,7 +706,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          if (start_point_side != PlaSide.ON_THE_RIGHT || end_point_side != PlaSide.ON_THE_RIGHT)
             {
             // not both points are inside the halplane defined by curr_line
-            PlaPoint is = this.middle.intersection(curr_line);
+            PlaPoint is = middle.intersection(curr_line);
             PlaSide prev_line_side_of_is = prev_line.side_of(is);
             PlaSide next_line_side_of_is = next_line.side_of(is);
             if (prev_line_side_of_is != PlaSide.ON_THE_LEFT && next_line_side_of_is != PlaSide.ON_THE_LEFT)
@@ -742,8 +740,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
                      }
                   // check, that prev_prev_corner and next_corner
                   // are on different sides of this line segment.
-                  PlaSide prev_prev_corner_side = this.middle.side_of(prev_prev_corner);
-                  PlaSide next_corner_side = this.middle.side_of(next_corner);
+                  PlaSide prev_prev_corner_side = middle.side_of(prev_prev_corner);
+                  PlaSide next_corner_side = middle.side_of(next_corner);
                   if (prev_prev_corner_side == PlaSide.COLLINEAR || next_corner_side == PlaSide.COLLINEAR || prev_prev_corner_side == next_corner_side)
                      {
                      return empty_result;
@@ -804,7 +802,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
                      {
                      System.out.println("border_intersections: intersection_count to big!");
                      }
-
                   }
                }
             }
