@@ -333,8 +333,8 @@ public class ShapeTraceEntries
       board.search_tree_manager.reuse_entries_after_cutout(p_trace, start_piece, end_piece);
       board.remove_item(p_trace);
 
-      board.communication.observers.notify_new(start_piece);
-      board.communication.observers.notify_new(end_piece);
+      board.observers.notify_new(start_piece);
+      board.observers.notify_new(end_piece);
       }
 
    /**

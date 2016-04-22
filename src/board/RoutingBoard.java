@@ -105,10 +105,14 @@ public final class RoutingBoard implements java.io.Serializable
    public final BrdLibrary library;
    // The layer structure of this board.
    public final BrdLayerStructure layer_structure;
-   // For communication with a host system or host design file formats.
-   public final Communication communication;
    // bounding orthogonal rectangle of this board
    public final ShapeTileBox bounding_box;
+
+   // For communication with a host system or host design file formats.
+   public final Communication communication;
+
+   public final BrdObservers observers = new BrdObserverVoid();
+   
    
    // the biggest half width of all traces on the board, actually, calculated on the fly when inserting...
    private int max_trace_half_width = 1000;
@@ -425,7 +429,7 @@ public final class RoutingBoard implements java.io.Serializable
       item_list.delete(p_item);
 
       // let the observers synchronize the deletion
-      communication.observers.notify_deleted(p_item);
+      observers.notify_deleted(p_item);
       }
 
    /**
@@ -1317,10 +1321,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public void start_notify_observers()
       {
-      if (communication.observers != null)
-         {
-         communication.observers.activate();
-         }
+      observers.activate();
       }
 
    /**
@@ -1328,10 +1329,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public void end_notify_observers()
       {
-      if (communication.observers != null)
-         {
-         communication.observers.deactivate();
-         }
+      observers.deactivate();
       }
 
    /**
@@ -1339,9 +1337,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean observers_active()
       {
-      if ( communication.observers == null)  return false;
- 
-      return communication.observers.is_active();
+      return observers.is_active();
       }
 
    /**
@@ -1388,7 +1384,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       search_tree_manager.insert(p_item);
 
-      communication.observers.notify_new(p_item);
+      observers.notify_new(p_item);
       }
 
    /**
@@ -1398,7 +1394,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean undo(Set<Integer> p_changed_nets)
       {
-      brd_components.undo(communication.observers);
+      brd_components.undo(observers);
       
       Collection<UndoableObjectStorable> cancelled_objects = new LinkedList<UndoableObjectStorable>();
       Collection<UndoableObjectStorable> restored_objects = new LinkedList<UndoableObjectStorable>();
@@ -1415,7 +1411,7 @@ public final class RoutingBoard implements java.io.Serializable
          search_tree_manager.remove(curr_item);
 
          // let the observers syncronize the deletion
-         communication.observers.notify_deleted(curr_item);
+         observers.notify_deleted(curr_item);
          
          if (p_changed_nets != null)
             {
@@ -1438,7 +1434,7 @@ public final class RoutingBoard implements java.io.Serializable
          search_tree_manager.insert(curr_item);
 
          // let the observers know the insertion
-         communication.observers.notify_new(curr_item);
+         observers.notify_new(curr_item);
          
          if (p_changed_nets != null)
             {
@@ -1458,7 +1454,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean redo(Set<Integer> p_changed_nets)
       {
-      brd_components.redo(communication.observers);
+      brd_components.redo(observers);
       Collection<UndoableObjectStorable> cancelled_objects = new LinkedList<UndoableObjectStorable>();
       Collection<UndoableObjectStorable> restored_objects = new LinkedList<UndoableObjectStorable>();
       boolean result = item_list.redo(cancelled_objects, restored_objects);
@@ -1469,7 +1465,7 @@ public final class RoutingBoard implements java.io.Serializable
          BrdItem curr_item = (BrdItem) it.next();
          search_tree_manager.remove(curr_item);
          // let the observers syncronize the deletion
-         communication.observers.notify_deleted(curr_item);
+         observers.notify_deleted(curr_item);
          if (p_changed_nets != null)
             {
             for (int i = 0; i < curr_item.net_count(); ++i)
@@ -1486,7 +1482,7 @@ public final class RoutingBoard implements java.io.Serializable
          search_tree_manager.insert(curr_item);
          curr_item.art_item_clear();
          // let the observers know the insertion
-         communication.observers.notify_new(curr_item);
+         observers.notify_new(curr_item);
          if (p_changed_nets != null)
             {
             for (int i = 0; i < curr_item.net_count(); ++i)

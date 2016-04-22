@@ -24,6 +24,7 @@ import gui.varie.IteraNetItems;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -205,7 +206,7 @@ public class StateMoveItem extends StateInteractive
 
       observers_activated = !i_brd.get_routing_board().observers_active();
       
-      if (this.observers_activated)
+      if (observers_activated)
          {
          i_brd.get_routing_board().start_notify_observers();
          }
@@ -229,13 +230,13 @@ public class StateMoveItem extends StateInteractive
             {
             add_to_net_items_list(copied_item, curr_item.get_net_no(i));
             }
-         this.item_list.add(copied_item);
+         item_list.add(copied_item);
          }
       }
 
    private void add_to_net_items_list(BrdItem p_item, int p_net_no)
       {
-      for (IteraNetItems curr_items : this.net_items_list)
+      for (IteraNetItems curr_items : net_items_list)
          {
          if (curr_items.net_no == p_net_no)
             {
@@ -247,7 +248,7 @@ public class StateMoveItem extends StateInteractive
       Collection<BrdItem> new_item_list = i_brd.get_routing_board().get_connectable_items(p_net_no);
       new_item_list.add(p_item);
       IteraNetItems new_net_items = new IteraNetItems(p_net_no, new_item_list);
-      this.net_items_list.add(new_net_items);
+      net_items_list.add(new_net_items);
       }
 
    public StateInteractive mouse_moved()
@@ -256,7 +257,7 @@ public class StateMoveItem extends StateInteractive
       move(i_brd.get_current_mouse_position());
       if (actlog != null)
          {
-         actlog.add_corner(this.current_position.to_float());
+         actlog.add_corner(current_position.to_float());
          }
       return this;
       }
@@ -269,13 +270,13 @@ public class StateMoveItem extends StateInteractive
 
    public StateInteractive left_button_clicked(PlaPointFloat p_location)
       {
-      return this.complete();
+      return complete();
       }
 
    @Override
    public StateInteractive complete()
       {
-      for (BrdItem curr_item : this.item_list)
+      for (BrdItem curr_item : item_list)
          {
          if (curr_item.clearance_violation_count() > 0)
             {
@@ -284,20 +285,20 @@ public class StateMoveItem extends StateInteractive
             }
          }
       RoutingBoard routing_board = i_brd.get_routing_board();
-      for (BrdItem curr_item : this.item_list)
+      for (BrdItem curr_item : item_list)
          {
          routing_board.insert_item(curr_item);
          }
 
       // let the observers syncronize the moving
-      for (BrdComponent curr_component : this.component_list)
+      for (BrdComponent curr_component : component_list)
          {
-         routing_board.communication.observers.notify_moved(curr_component);
+         routing_board.observers.notify_moved(curr_component);
          }
 
-      for (IteraNetItems curr_net_items : this.net_items_list)
+      for (IteraNetItems curr_net_items : net_items_list)
          {
-         this.i_brd.update_ratsnest(curr_net_items.net_no);
+         i_brd.update_ratsnest(curr_net_items.net_no);
          }
 
       if (actlog != null)
@@ -306,21 +307,21 @@ public class StateMoveItem extends StateInteractive
          }
       i_brd.screen_messages.set_status_message(resources.getString("move_completed"));
       i_brd.repaint();
-      return this.return_state;
+      return return_state;
       }
 
    public StateInteractive cancel()
       {
       i_brd.get_routing_board().undo(null);
-      for (IteraNetItems curr_net_items : this.net_items_list)
+      for (IteraNetItems curr_net_items : net_items_list)
          {
-         this.i_brd.update_ratsnest(curr_net_items.net_no);
+         i_brd.update_ratsnest(curr_net_items.net_no);
          }
       if (actlog != null)
          {
          actlog.start_scope(LogfileScope.CANCEL_SCOPE);
          }
-      return this.return_state;
+      return return_state;
       }
 
    @Override
@@ -356,10 +357,10 @@ public class StateMoveItem extends StateInteractive
             components.move(curr_component.id_no, translate_vector);
             }
          clearance_violations = new LinkedList<BrdItemViolation>();
-         for (BrdItem curr_item : this.item_list)
+         for (BrdItem curr_item : item_list)
             {
             curr_item.translate_by(translate_vector);
-            this.clearance_violations.addAll(curr_item.clearance_violations());
+            clearance_violations.addAll(curr_item.clearance_violations());
             }
          previous_position = current_position;
          for (IteraNetItems curr_net_items : net_items_list)
@@ -372,11 +373,11 @@ public class StateMoveItem extends StateInteractive
 
    private PlaVector adjust_to_placement_grid(PlaVector p_vector)
       {
-      PlaPoint new_component_location = this.grid_snap_component.get_location().translate_by(p_vector);
+      PlaPoint new_component_location = grid_snap_component.get_location().translate_by(p_vector);
       PlaPointInt rounded_component_location = new_component_location.to_float().round_to_grid(i_brd.itera_settings.horizontal_component_grid, i_brd.itera_settings.vertical_component_grid);
       PlaVector adjustment = rounded_component_location.difference_by(new_component_location);
       PlaVector result = p_vector.add(adjustment);
-      this.current_position = this.previous_position.translate_by(result).to_float().round();
+      current_position = previous_position.translate_by(result).to_float().round();
       return p_vector.add(adjustment);
       }
 
@@ -390,19 +391,19 @@ public class StateMoveItem extends StateInteractive
          return;
          }
       board.BrdComponents components = i_brd.get_routing_board().brd_components;
-      for (BrdComponent curr_component : this.component_list)
+      for (BrdComponent curr_component : component_list)
          {
          components.turn_90_degree(curr_component.id_no, p_factor, current_position);
          }
-      this.clearance_violations = new java.util.LinkedList<BrdItemViolation>();
-      for (BrdItem curr_item : this.item_list)
+      clearance_violations = new java.util.LinkedList<BrdItemViolation>();
+      for (BrdItem curr_item : item_list)
          {
          curr_item.turn_90_degree(p_factor, current_position);
-         this.clearance_violations.addAll(curr_item.clearance_violations());
+         clearance_violations.addAll(curr_item.clearance_violations());
          }
-      for (IteraNetItems curr_net_items : this.net_items_list)
+      for (IteraNetItems curr_net_items : net_items_list)
          {
-         this.i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
+         i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
          }
       if (actlog != null)
          {
@@ -418,20 +419,20 @@ public class StateMoveItem extends StateInteractive
          return;
          }
       board.BrdComponents components = i_brd.get_routing_board().brd_components;
-      for (BrdComponent curr_component : this.component_list)
+      for (BrdComponent curr_component : component_list)
          {
-         components.rotate(curr_component.id_no, p_angle_in_degree, this.current_position);
+         components.rotate(curr_component.id_no, p_angle_in_degree, current_position);
          }
-      this.clearance_violations = new java.util.LinkedList<BrdItemViolation>();
-      PlaPointFloat float_position = this.current_position.to_float();
-      for (BrdItem curr_item : this.item_list)
+      clearance_violations = new java.util.LinkedList<BrdItemViolation>();
+      PlaPointFloat float_position = current_position.to_float();
+      for (BrdItem curr_item : item_list)
          {
          curr_item.rotate_approx(p_angle_in_degree, float_position);
-         this.clearance_violations.addAll(curr_item.clearance_violations());
+         clearance_violations.addAll(curr_item.clearance_violations());
          }
-      for (IteraNetItems curr_net_items : this.net_items_list)
+      for (IteraNetItems curr_net_items : net_items_list)
          {
-         this.i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
+         i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
          }
       if (actlog != null)
          {
@@ -493,19 +494,19 @@ public class StateMoveItem extends StateInteractive
          }
 
       board.BrdComponents components = i_brd.get_routing_board().brd_components;
-      for (BrdComponent curr_component : this.component_list)
+      for (BrdComponent curr_component : component_list)
          {
          components.change_side(curr_component.id_no, current_position);
          }
-      this.clearance_violations = new java.util.LinkedList<BrdItemViolation>();
-      for (BrdItem curr_item : this.item_list)
+      clearance_violations = new java.util.LinkedList<BrdItemViolation>();
+      for (BrdItem curr_item : item_list)
          {
          curr_item.change_placement_side(current_position);
-         this.clearance_violations.addAll(curr_item.clearance_violations());
+         clearance_violations.addAll(curr_item.clearance_violations());
          }
-      for (IteraNetItems curr_net_items : this.net_items_list)
+      for (IteraNetItems curr_net_items : net_items_list)
          {
-         this.i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
+         i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
          }
       if (actlog != null)
          {
@@ -517,7 +518,7 @@ public class StateMoveItem extends StateInteractive
    public void reset_rotation()
       {
       BrdComponent component_to_reset = null;
-      for (BrdComponent curr_component : this.component_list)
+      for (BrdComponent curr_component : component_list)
          {
          if (component_to_reset == null)
             {
@@ -588,20 +589,19 @@ public class StateMoveItem extends StateInteractive
       return "MoveItemState";
       }
 
-   public void draw(java.awt.Graphics p_graphics)
+   public void draw( Graphics p_graphics)
       {
-      if (this.item_list == null)
-         {
-         return;
-         }
-      for (BrdItem curr_item : this.item_list)
+      if (item_list == null) return;
+
+      for (BrdItem curr_item : item_list)
          {
          curr_item.draw(p_graphics, i_brd.gdi_context);
          }
-      if (this.clearance_violations != null)
+
+      if ( clearance_violations != null)
          {
          java.awt.Color draw_color = i_brd.gdi_context.get_violations_color();
-         for (BrdItemViolation curr_violation : this.clearance_violations)
+         for (BrdItemViolation curr_violation : clearance_violations)
             {
             i_brd.gdi_context.fill_area(curr_violation.shape, p_graphics, draw_color, 1);
             }

@@ -71,7 +71,6 @@ import specctra.varie.DsnReadResult;
 import autoroute.batch.BatchAutorouteThread;
 import board.BrdLayer;
 import board.BrdLayerStructure;
-import board.BrdObservers;
 import board.Communication;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;
@@ -1081,11 +1080,12 @@ public final class IteraBoard
 
 
    /**
-    * Imports a board design from a Specctra dsn-file. The parameters p_item_observers and p_item_id_no_generator are used, in case
-    * the board is embedded into a host system. Returns false, if the dsn-file is currupted.
+    * Imports a board design from a Specctra dsn-file. 
+    * The parameters  p_item_id_no_generator are used, in case the board is embedded into a host system. 
+    * Returns false, if the dsn-file is currupted.
     * @return true if all is fine
     */
-   public boolean import_design( InputStream p_design, BrdObservers p_observers, IdGenerator p_item_id_no_generator, Stat p_stat)
+   public boolean import_design( InputStream p_design, IdGenerator p_item_id_no_generator, Stat p_stat)
       {
       if (p_design == null)
          throw new IllegalArgumentException("import_design: p_design == null");
@@ -1095,7 +1095,7 @@ public final class IteraBoard
       try
          {
          DsnReadFile reader = new DsnReadFile(this, p_design );
-         read_result = reader.read( p_observers, p_item_id_no_generator, stat.test_level);
+         read_result = reader.read( p_item_id_no_generator, stat.test_level);
          p_design.close();
          }
       catch (Exception exc)

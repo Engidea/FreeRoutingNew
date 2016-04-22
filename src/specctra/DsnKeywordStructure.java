@@ -932,10 +932,9 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       
       BoardRules board_rules = new BoardRules(board_layer_structure, clearance_matrix);
       
-      DsnParserInfo specctra_parser_info = new DsnParserInfo(p_par.string_quote, p_par.host_cad, p_par.host_version, p_par.constants,
-            p_par.write_resolution, p_par.dsn_file_generated_by_host);
+      DsnParserInfo specctra_parser_info = new DsnParserInfo(p_par);
       
-      Communication board_communication = new Communication(p_par.dsn_unit_meas, p_par.dsn_resolution, specctra_parser_info, p_par.coordinate_transform, p_par.item_id_no_generator, p_par.observers);
+      Communication board_communication = new Communication(p_par.dsn_unit_meas, p_par.dsn_resolution, specctra_parser_info, p_par.coordinate_transform, p_par.item_id_no_generator);
 
       ShapePolyline[] outline_shape_arr = new ShapePolyline[board_outline_shapes.size()];
       Iterator<ShapePolyline> it2 = board_outline_shapes.iterator();

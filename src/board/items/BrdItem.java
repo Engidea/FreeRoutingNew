@@ -342,7 +342,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       translate_by(p_vector);
       r_board.search_tree_manager.insert(this);
       // let the observers synchronize the changes
-      r_board.communication.observers.notify_changed(this);
+      r_board.observers.notify_changed(this);
       }
 
    /**

@@ -67,7 +67,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
 import main.Stat;
-import board.BrdObservers;
 import board.varie.DesignFile;
 import board.varie.IdGenerator;
 import board.varie.TestLevel;
@@ -109,7 +108,6 @@ public final class BoardFrame
 
    private final GuiResources resources;
 
-   private final BrdObservers board_observers;
    private final IdGenerator item_id_no_generator;
 
    public WindowAbout about_window = null;
@@ -184,7 +182,6 @@ public final class BoardFrame
       stat = p_stat;
       design_file = p_design;
 
-      board_observers = new board.BrdObserverVoid();
       item_id_no_generator = new IdGenerator();
       resources = new GuiResources(p_stat,"gui.resources.BoardFrame");
       gui_help = new GuiHelp(stat);
@@ -300,7 +297,7 @@ public final class BoardFrame
     */
    public boolean import_design(InputStream p_input_stream )
       {
-      if ( ! board_panel.board_handling.import_design(p_input_stream, board_observers, item_id_no_generator, stat) )
+      if ( ! board_panel.board_handling.import_design(p_input_stream, item_id_no_generator, stat) )
          {
          stat.userPrintln(resources.getString("error_6"));
          return false;

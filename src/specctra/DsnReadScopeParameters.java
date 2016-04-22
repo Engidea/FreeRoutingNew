@@ -25,7 +25,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import specctra.varie.DsnWriteResolution;
 import autoroute.ArtSettings;
-import board.BrdObservers;
 import board.varie.IdGenerator;
 import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
@@ -42,7 +41,6 @@ public final class DsnReadScopeParameters
    final IteraBoard board_handling;
    final DsnNetList netlist = new DsnNetList();
 
-   final BrdObservers observers;
    final IdGenerator item_id_no_generator;
    final TestLevel test_level;
 
@@ -88,12 +86,10 @@ public final class DsnReadScopeParameters
    // how much to further divide the unit measure, ideally 10 parts if Unit is UM
    int dsn_resolution;
 
-   DsnReadScopeParameters(JflexScanner p_scanner, IteraBoard p_board_handling, BrdObservers p_observers, IdGenerator p_item_id_no_generator,
-         TestLevel p_test_level)
+   DsnReadScopeParameters(JflexScanner p_scanner, IteraBoard p_board_handling,  IdGenerator p_item_id_no_generator, TestLevel p_test_level)
       {
       scanner = p_scanner;
       board_handling = p_board_handling;
-      observers = p_observers;
       item_id_no_generator = p_item_id_no_generator;
       test_level = p_test_level;
       }

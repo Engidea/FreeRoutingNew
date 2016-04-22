@@ -13,19 +13,17 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * ViaInfo.java
- *
  * Created on 31. Maerz 2005, 05:34
  */
 
 package board.infos;
 
-import rules.BoardRules;
 import library.LibPadstack;
+import rules.BoardRules;
 
 /**
- * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed used in interactive and automatic
- * routing.
+ * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed 
+ * used in interactive and automatic routing.
  *
  * @author Alfons Wirtz
  */
@@ -61,7 +59,7 @@ public final class BrdViaInfo implements Comparable<BrdViaInfo>, PrintableInfo, 
 
    public String toString()
       {
-      return this.via_name;
+      return via_name;
       }
 
    public LibPadstack get_padstack()
@@ -96,20 +94,20 @@ public final class BrdViaInfo implements Comparable<BrdViaInfo>, PrintableInfo, 
 
    public int compareTo(BrdViaInfo p_other)
       {
-      return this.via_name.compareTo(p_other.via_name);
+      return via_name.compareTo(p_other.via_name);
       }
 
    public void print_info(gui.varie.ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
       p_window.append_bold(resources.getString("via") + " ");
-      p_window.append_bold(this.via_name);
+      p_window.append_bold(via_name);
       p_window.append_bold(": ");
       p_window.append(resources.getString("padstack") + " ");
-      p_window.append(this.padstack.pads_name, resources.getString("padstack_info"), this.padstack);
+      p_window.append(padstack.pads_name, resources.getString("padstack_info"), padstack);
       p_window.append(", " + resources.getString("clearance_class") + " ");
-      String curr_name = board_rules.clearance_matrix.get_name(this.clearance_class);
-      p_window.append(curr_name, resources.getString("clearance_class_2"), board_rules.clearance_matrix.get_row(this.clearance_class));
+      String curr_name = board_rules.clearance_matrix.get_name(clearance_class);
+      p_window.append(curr_name, resources.getString("clearance_class_2"), board_rules.clearance_matrix.get_row(clearance_class));
       p_window.append(", " + resources.getString("attach_smd") + " ");
       if (attach_smd_allowed)
          {

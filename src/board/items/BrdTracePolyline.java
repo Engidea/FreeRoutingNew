@@ -212,7 +212,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       if (something_changed)
          {
          // let the observers synchronize the changes
-         r_board.communication.observers.notify_changed(this);
+         r_board.observers.notify_changed(this);
          art_item_clear(); // need to clean up possible autoroute item;
          }
       return something_changed;
@@ -1037,7 +1037,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       polyline = p_new_polyline;
 
       // let the observers syncronize the changes
-      r_board.communication.observers.notify_changed(this);
+      r_board.observers.notify_changed(this);
 
       ShapeTileOctagon clip_shape = null;
 

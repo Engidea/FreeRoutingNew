@@ -42,10 +42,14 @@ public interface Observers<ObjectType>
     */
    void notify_new(ObjectType p_object);
 
-   /** Starts notifying the observers */
+   /** 
+    * Starts notifying the observers 
+    */
    void activate();
 
-   /** Ends notifying the observers */
+   /** 
+    * Ends notifying the observers 
+    */
    void deactivate();
 
    /**

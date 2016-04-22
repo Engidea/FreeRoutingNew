@@ -27,7 +27,6 @@ import java.util.LinkedList;
 import specctra.varie.DsnReadResult;
 import board.BrdLayer;
 import board.BrdLayerStructure;
-import board.BrdObservers;
 import board.RoutingBoard;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
@@ -54,7 +53,7 @@ public final class DsnReadFile
     * The parameters p_item_observers and p_item_id_no_generator are used, in case the board is embedded into a host system
     * @throws IOException 
     */
-   public DsnReadResult read(  BrdObservers p_observers, IdGenerator p_item_id_no_generator, TestLevel p_test_level) throws IOException
+   public DsnReadResult read( IdGenerator p_item_id_no_generator, TestLevel p_test_level) throws IOException
       {
       JflexScanner scanner = new DsnFileScanner(new InputStreamReader(input_stream));
       Object curr_token = null;
@@ -79,7 +78,7 @@ public final class DsnReadFile
             }
          }
       
-      DsnReadScopeParameters read_scope_par = new DsnReadScopeParameters(scanner, board_handling, p_observers, p_item_id_no_generator, p_test_level);
+      DsnReadScopeParameters read_scope_par = new DsnReadScopeParameters(scanner, board_handling, p_item_id_no_generator, p_test_level);
       boolean read_ok = DsnKeyword.PCB_SCOPE.read_scope(read_scope_par);
       DsnReadResult result;
       if (read_ok)

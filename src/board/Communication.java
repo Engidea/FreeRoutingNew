@@ -49,26 +49,23 @@ public final class Communication implements java.io.Serializable
    public final DsnParserInfo specctra_parser_info;
 
    public final IdGenerator id_no_generator;
-
-   transient public BrdObservers observers;
-
    
-   public Communication(UnitMeasure p_unit, int p_resolution, DsnParserInfo p_specctra_parser_info, DsnCoordinateTransform p_coordinate_transform, IdGenerator p_id_no_generator, BrdObservers p_observers)
+   public Communication(UnitMeasure p_unit, int p_resolution, DsnParserInfo p_specctra_parser_info, DsnCoordinateTransform p_coordinate_transform, IdGenerator p_id_no_generator)
       {
       coordinate_transform = p_coordinate_transform;
       unit = p_unit;
       resolution = p_resolution;
       specctra_parser_info = p_specctra_parser_info;
       id_no_generator = p_id_no_generator;
-      observers = p_observers;
       }
 
-
+/*
    private boolean host_cad_is_eagle()
       {
       return specctra_parser_info != null && specctra_parser_info.host_cad != null && specctra_parser_info.host_cad.equalsIgnoreCase("CadSoft");
       }
-
+*/
+   
    public boolean host_cad_exists()
       {
       return specctra_parser_info != null && specctra_parser_info.host_cad != null;
@@ -85,7 +82,6 @@ public final class Communication implements java.io.Serializable
    private void readObject( ObjectInputStream p_stream) throws IOException, ClassNotFoundException
       {
       p_stream.defaultReadObject();
-      observers = new BrdObserverVoid();
       }
 
    }

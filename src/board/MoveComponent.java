@@ -178,7 +178,7 @@ public final class MoveComponent
          // component must be moved first, so that the new pin shapes are calculated correctly
          r_board.brd_components.move(component.id_no, translate_vector);
          // let the observers synchronize the moving
-         r_board.communication.observers.notify_moved(component);
+         r_board.observers.notify_moved(component);
          }
       
       for (int index = 0; index < item_group_arr.length; ++index)
