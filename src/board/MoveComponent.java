@@ -23,10 +23,6 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
 import board.infos.BrdComponent;
 import board.items.BrdAbit;
 import board.items.BrdArea;
@@ -34,6 +30,10 @@ import board.items.BrdComponentOutline;
 import board.items.BrdItem;
 import board.varie.SortedItemDouble;
 import datastructures.TimeLimit;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
 
 /**
  * Class for moving a group of items on the board

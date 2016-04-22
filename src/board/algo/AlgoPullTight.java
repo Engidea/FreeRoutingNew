@@ -21,14 +21,6 @@ package board.algo;
 
 import java.util.Collection;
 import java.util.Set;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaSide;
-import planar.Polyline;
-import planar.ShapeTile;
-import planar.ShapeTileOctagon;
 import autoroute.expand.ExpandCostFactor;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;
@@ -47,6 +39,14 @@ import board.varie.TraceAngleRestriction;
 import datastructures.Signum;
 import datastructures.ThreadStoppable;
 import datastructures.TimeLimitStoppable;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSide;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileOctagon;
 
 /**
  * Class with functionality for optimizing traces and vias

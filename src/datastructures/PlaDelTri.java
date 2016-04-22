@@ -25,10 +25,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
-import planar.PlaLimits;
-import planar.PlaPoint;
-import planar.PlaPointInt;
-import planar.PlaSide;
+import freert.planar.PlaLimits;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSide;
 import board.varie.IdGenerator;
 
 /**

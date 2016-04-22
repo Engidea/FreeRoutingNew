@@ -229,12 +229,12 @@ public class DsnKeywordPackage
          {
          keepout_layer = DsnLayer.SIGNAL;
          }
-      planar.PlaShape boundary_shape;
-      planar.PlaShape[] holes;
-      if (p_keepout.area instanceof planar.PlaShape)
+      freert.planar.PlaShape boundary_shape;
+      freert.planar.PlaShape[] holes;
+      if (p_keepout.area instanceof freert.planar.PlaShape)
          {
-         boundary_shape = (planar.PlaShape) p_keepout.area;
-         holes = new planar.PlaShape[0];
+         boundary_shape = (freert.planar.PlaShape) p_keepout.area;
+         holes = new freert.planar.PlaShape[0];
          }
       else
          {

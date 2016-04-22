@@ -20,12 +20,12 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Collection;
 import java.util.Set;
-import planar.PlaPointFloat;
 import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;

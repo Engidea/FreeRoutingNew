@@ -20,13 +20,13 @@
 
 package interactive.state;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraRoute;
 import interactive.LogfileScope;
 import java.awt.Graphics;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
 import rules.RuleNets;
 import rules.RuleViaInfoList;
 import board.RoutingBoard;

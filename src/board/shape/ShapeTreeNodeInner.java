@@ -1,6 +1,6 @@
 package board.shape;
 
-import planar.ShapeTileRegular;
+import freert.planar.ShapeTileRegular;
 
 /**
  * Description of an inner node of the tree, which implements a fork to its two children.

@@ -16,21 +16,21 @@
 
 package board.algo;
 
-import planar.PlaLimits;
-import planar.PlaDirection;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaSide;
-import planar.Polyline;
-import planar.ShapeTile;
 import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.varie.BrdKeepPoint;
 import datastructures.Signum;
 import datastructures.ThreadStoppable;
+import freert.planar.PlaDirection;
+import freert.planar.PlaLimits;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSide;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
 
 /**
  * Auxiliary class containing internal functions for pulling any angle traces tight.

@@ -15,6 +15,8 @@
  */
 package autoroute.batch;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentFloat;
 import gui.varie.GuiResources;
 import gui.varie.UndoableObjectStorable;
 import interactive.IteraBoard;
@@ -28,8 +30,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import main.Ldbg;
 import main.Mdbg;
-import planar.PlaPointFloat;
-import planar.PlaSegmentFloat;
 import rules.RuleNet;
 import autoroute.ArtControl;
 import autoroute.ArtEngine;

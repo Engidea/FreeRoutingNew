@@ -22,8 +22,8 @@ package interactive.state;
 
 import interactive.Actlog;
 import interactive.IteraBoard;
-import planar.PlaPointFloat;
 import datastructures.ItemClass;
+import freert.planar.PlaPointFloat;
 
 /**
  * State for interactive routing by adding corners with the left mouse button.

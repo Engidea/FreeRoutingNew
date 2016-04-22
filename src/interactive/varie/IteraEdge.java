@@ -1,7 +1,7 @@
 package interactive.varie;
 
-import planar.PlaPointFloat;
 import datastructures.Signum;
+import freert.planar.PlaPointFloat;
 
 public final class IteraEdge implements Comparable<IteraEdge>
    {

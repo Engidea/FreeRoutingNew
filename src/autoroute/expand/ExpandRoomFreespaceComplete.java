@@ -23,7 +23,7 @@ package autoroute.expand;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.LinkedList;
-import planar.ShapeTile;
+import freert.planar.ShapeTile;
 import autoroute.ArtEngine;
 import board.BrdConnectable;
 import board.items.BrdItem;

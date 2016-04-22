@@ -19,15 +19,15 @@
  */
 package specctra;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import library.LogicalPin;
-import planar.PlaPoint;
-import planar.PlaPointInt;
-import planar.PlaVector;
 import rules.BoardRules;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;

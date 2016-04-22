@@ -20,11 +20,11 @@
 
 package interactive;
 
+import freert.planar.PlaPointFloat;
 import gui.BoardPanelStatus;
 import gui.varie.GuiResources;
 import javax.swing.JLabel;
 import main.Stat;
-import planar.PlaPointFloat;
 
 /**
  * Text fields to display messages on the screen.

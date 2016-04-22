@@ -20,14 +20,14 @@
 
 package board.algo;
 
-import planar.PlaLineInt;
-import planar.PlaPointFloat;
-import planar.Polyline;
-import planar.ShapeTile;
 import board.RoutingBoard;
 import board.items.BrdTracePolyline;
 import board.varie.BrdKeepPoint;
 import datastructures.ThreadStoppable;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPointFloat;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
 
 /**
  *

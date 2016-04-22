@@ -20,14 +20,14 @@
 
 package gui.win;
 
+import freert.planar.PlaCoordTransform;
+import freert.planar.ShapeConvex;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import planar.PlaCoordTransform;
-import planar.ShapeConvex;
 import rules.BoardRules;
 import rules.RuleViaInfoList;
 import board.BrdLayer;
@@ -234,7 +234,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             object_list.add(board_library.get_via_padstack(i));
             }
-         planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("available_via_padstacks"), object_list, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -351,7 +351,7 @@ public class WindowVia extends GuiSubWindowSavable
             int circle_radius = (int) Math.round(coordinate_transform.user_to_board(radius));
             if (circle_radius > 0)
                {
-               padstack_shapes[i] = new planar.PlaCircle(planar.PlaPoint.ZERO, circle_radius);
+               padstack_shapes[i] = new freert.planar.PlaCircle(freert.planar.PlaPoint.ZERO, circle_radius);
                shape_exists = true;
                }
             }
@@ -447,7 +447,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             object_list.add(via_infos.get(i));
             }
-         planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("available_vias"), object_list, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -479,7 +479,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             object_list.add((PrintableInfo) (selected_objects[i]));
             }
-         planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("selected_rule"), object_list, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));

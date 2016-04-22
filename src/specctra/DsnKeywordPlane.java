@@ -20,7 +20,7 @@
 
 package specctra;
 
-import planar.PlaShape;
+import freert.planar.PlaShape;
 
 /**
  * Class for reading and writing plane scopes from dsn-files.
@@ -74,16 +74,16 @@ public class DsnKeywordPlane extends DsnKeywordScope
          return;
          }
       String net_name = p_par.board.brd_rules.nets.get(p_conduction.get_net_no(0)).name;
-      planar.PlaArea curr_area = p_conduction.get_area();
+      freert.planar.PlaArea curr_area = p_conduction.get_area();
       int layer_no = p_conduction.get_layer();
       board.BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
       DsnLayer plane_layer = new DsnLayer(board_layer.name, layer_no, board_layer.is_signal);
       PlaShape boundary_shape;
       PlaShape[] holes;
-      if (curr_area instanceof planar.PlaShape)
+      if (curr_area instanceof freert.planar.PlaShape)
          {
-         boundary_shape = (planar.PlaShape) curr_area;
-         holes = new planar.PlaShape[0];
+         boundary_shape = (freert.planar.PlaShape) curr_area;
+         holes = new freert.planar.PlaShape[0];
          }
       else
          {

@@ -20,15 +20,15 @@
 
 package interactive.state;
 
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSide;
+import freert.planar.ShapeTile;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Iterator;
-import planar.PlaLineInt;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaSide;
-import planar.ShapeTile;
 import rules.BoardRules;
 import board.RoutingBoard;
 import board.varie.ItemFixState;

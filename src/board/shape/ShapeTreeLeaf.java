@@ -1,6 +1,6 @@
 package board.shape;
 
-import planar.ShapeTileRegular;
+import freert.planar.ShapeTileRegular;
 
 /**
  * Description of a leaf of the Tree, where the geometric information is stored.

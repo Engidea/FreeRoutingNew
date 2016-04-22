@@ -24,11 +24,6 @@ package autoroute;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.SortedSet;
-import planar.PlaPointFloat;
-import planar.PlaSegmentFloat;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
-import planar.ShapeTileSimplex;
 import autoroute.expand.ExpandDoor;
 import autoroute.expand.ExpandObject;
 import autoroute.expand.ExpandRoomObstacle;
@@ -38,6 +33,11 @@ import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
 import board.varie.TraceAngleRestriction;
 import datastructures.Signum;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentFloat;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileSimplex;
 
 /**
  *

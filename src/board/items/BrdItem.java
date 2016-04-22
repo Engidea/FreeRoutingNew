@@ -15,6 +15,13 @@
  */
 package board.items;
 
+import freert.planar.PlaDimension;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import graphics.GdiDrawable;
 import gui.varie.ObjectInfoPanel;
@@ -28,13 +35,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
-import planar.PlaDimension;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import rules.RuleNets;
 import autoroute.ArtItem;
 import board.BrdConnectable;

@@ -21,16 +21,16 @@
 
 package autoroute.expand;
 
+import freert.planar.PlaDimension;
+import freert.planar.PlaPoint;
+import freert.planar.PolylineArea;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import planar.PlaDimension;
-import planar.PlaPoint;
-import planar.PolylineArea;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import autoroute.ArtEngine;
 import autoroute.maze.MazeSearchElement;
 import board.RoutingBoard;

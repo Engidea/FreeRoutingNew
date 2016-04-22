@@ -20,7 +20,7 @@ package autoroute.expand;
 
 import java.util.LinkedList;
 import java.util.List;
-import planar.ShapeTile;
+import freert.planar.ShapeTile;
 
 /**
  * Expansion Areas used by the maze search algorithm.

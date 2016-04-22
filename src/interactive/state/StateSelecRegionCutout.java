@@ -21,6 +21,9 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapeTileBox;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
@@ -28,9 +31,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
-import planar.PlaPointFloat;
-import planar.ShapeTileBox;
-import planar.PlaPointInt;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 

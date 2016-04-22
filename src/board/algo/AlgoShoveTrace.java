@@ -20,17 +20,6 @@ import java.util.LinkedList;
 import java.util.Set;
 import main.Ldbg;
 import main.Mdbg;
-import planar.PlaDirection;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaSegmentInt;
-import planar.PlaVector;
-import planar.Polyline;
-import planar.ShapeConvex;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import board.BrdFromSide;
 import board.BrdShapeAndFromSide;
 import board.RoutingBoard;
@@ -51,6 +40,17 @@ import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.TraceAngleRestriction;
 import datastructures.TimeLimit;
+import freert.planar.PlaDirection;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSegmentInt;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 
 /**
  * Contains internal auxiliary functions of class RoutingBoard for shoving traces

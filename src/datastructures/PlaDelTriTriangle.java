@@ -3,7 +3,7 @@ package datastructures;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
-import planar.PlaSide;
+import freert.planar.PlaSide;
 import board.varie.IdGenerator;
 
 /**

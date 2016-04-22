@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import planar.PlaPointFloat;
+import freert.planar.PlaPointFloat;
 import board.infos.BrdComponent;
 import board.items.BrdAbitPin;
 

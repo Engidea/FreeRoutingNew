@@ -1,10 +1,10 @@
 package board.infos;
 
+import freert.planar.PlaPointFloat;
 import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 import interactive.IteraBoard;
 import main.Stat;
-import planar.PlaPointFloat;
 import board.items.BrdItem;
 import board.items.BrdTrace;
 import datastructures.Signum;

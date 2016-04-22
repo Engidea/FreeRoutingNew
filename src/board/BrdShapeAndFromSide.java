@@ -18,11 +18,11 @@
 
 package board;
 
-import planar.PlaLineInt;
-import planar.PlaPointFloat;
-import planar.PlaSide;
-import planar.Polyline;
-import planar.ShapeTile;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSide;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 

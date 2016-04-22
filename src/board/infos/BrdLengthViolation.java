@@ -31,7 +31,7 @@ public final class BrdLengthViolation implements Comparable<BrdLengthViolation>,
 
    public String toString()
       {
-      planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+      freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
       NetClass net_class = this.net.get_class();
       Float allowed_length;
       String allowed_string;

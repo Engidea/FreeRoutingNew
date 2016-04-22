@@ -24,13 +24,13 @@ package board;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import planar.Polyline;
-import planar.ShapeBounding_45_Degree;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeLeaf;
 import datastructures.UndoableObjectNode;
+import freert.planar.Polyline;
+import freert.planar.ShapeBounding_45_Degree;
 
 /**
  *

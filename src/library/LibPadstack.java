@@ -22,11 +22,11 @@ package library;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import planar.PlaDirection;
-import planar.PlaDirectionInt;
-import planar.ShapeConvex;
-import planar.ShapeTileBox;
-import planar.ShapeTileOctagon;
+import freert.planar.PlaDirection;
+import freert.planar.PlaDirectionInt;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
 import board.infos.PrintableInfo;
 
 /**

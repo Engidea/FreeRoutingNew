@@ -20,9 +20,9 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
-import planar.PlaPointFloat;
 
 /**
  * Common base class for interactive selection of a rectangle.

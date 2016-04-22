@@ -24,7 +24,7 @@ package autoroute;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
-import planar.PlaPoint;
+import freert.planar.PlaPoint;
 import board.items.BrdItem;
 import board.items.BrdTrace;
 

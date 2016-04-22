@@ -1,9 +1,9 @@
 package specctra;
 
-import planar.PlaPoint;
-import planar.ShapePolyline;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
+import freert.planar.PlaPoint;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 
 /**
  * Used to separate the holes in the outline.

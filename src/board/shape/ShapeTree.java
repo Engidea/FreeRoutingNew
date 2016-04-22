@@ -20,9 +20,9 @@
 
 package board.shape;
 
-import planar.PlaShape;
-import planar.ShapeBounding;
-import planar.ShapeTileRegular;
+import freert.planar.PlaShape;
+import freert.planar.ShapeBounding;
+import freert.planar.ShapeTileRegular;
 
 /**
  * Abstract binary search tree for shapes in the plane. 

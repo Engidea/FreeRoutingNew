@@ -23,7 +23,7 @@ package board.varie;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import planar.ShapeTile;
+import freert.planar.ShapeTile;
 import board.shape.ShapeTree;
 import board.shape.ShapeTreeLeaf;
 

@@ -18,9 +18,9 @@ package graphics;
 
 import java.awt.Dimension;
 import java.awt.geom.Point2D;
-import planar.PlaLimits;
-import planar.PlaPointFloat;
-import planar.ShapeTileBox;
+import freert.planar.PlaLimits;
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTileBox;
 
 /**
  * Transformation function between the board and the screen coordinate systems.

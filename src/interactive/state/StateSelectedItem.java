@@ -19,6 +19,10 @@
  */
 package interactive.state;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
 import gui.win.WindowObjectInfo;
 import interactive.Actlog;
 import interactive.IteraBoard;
@@ -36,10 +40,6 @@ import library.LibPackage;
 import library.LibPackagePin;
 import main.Ldbg;
 import main.Mdbg;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
 import rules.RuleNet;
 import autoroute.varie.ArtResult;
 import board.BrdConnectable;

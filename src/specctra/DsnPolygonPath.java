@@ -20,9 +20,9 @@
 
 package specctra;
 
-import planar.PlaPointFloat;
-import planar.ShapeTileOctagon;
-import planar.PlaPointInt;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapeTileOctagon;
 import gui.varie.IndentFileWriter;
 
 /**
@@ -80,7 +80,7 @@ public class DsnPolygonPath extends DsnPath
       p_file.end_scope();
       }
 
-   public planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
+   public freert.planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
       {
       PlaPointFloat[] corner_arr = new PlaPointFloat[this.coordinate_arr.length / 2];
       double[] curr_point = new double[2];
@@ -101,7 +101,7 @@ public class DsnPolygonPath extends DsnPath
          {
          rounded_corner_arr[i] = corner_arr[i].round();
          }
-      planar.PlaShape result = new planar.ShapePolygon(rounded_corner_arr);
+      freert.planar.PlaShape result = new freert.planar.ShapePolygon(rounded_corner_arr);
       if (offset > 0)
          {
          result = result.bounding_tile().enlarge(offset);
@@ -109,7 +109,7 @@ public class DsnPolygonPath extends DsnPath
       return result;
       }
 
-   public planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
+   public freert.planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
       {
       PlaPointFloat[] corner_arr = new PlaPointFloat[this.coordinate_arr.length / 2];
       double[] curr_point = new double[2];
@@ -130,7 +130,7 @@ public class DsnPolygonPath extends DsnPath
          {
          rounded_corner_arr[i] = corner_arr[i].round();
          }
-      planar.PlaShape result = new planar.ShapePolygon(rounded_corner_arr);
+      freert.planar.PlaShape result = new freert.planar.ShapePolygon(rounded_corner_arr);
       if (offset > 0)
          {
          result = result.bounding_tile().enlarge(offset);

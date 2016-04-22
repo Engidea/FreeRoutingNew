@@ -20,9 +20,9 @@
 
 package specctra;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTileBox;
 import gui.varie.IndentFileWriter;
-import planar.PlaPointFloat;
-import planar.ShapeTileBox;
 
 /**
  * Describes a rectangle in a Specctra dsn file.

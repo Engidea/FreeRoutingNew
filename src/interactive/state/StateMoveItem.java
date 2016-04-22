@@ -20,6 +20,10 @@
 
 package interactive.state;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
 import gui.varie.IteraNetItems;
 import interactive.Actlog;
 import interactive.IteraBoard;
@@ -30,10 +34,6 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import library.BrdLibrary;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
 import board.BrdLayerStructure;
 import board.RoutingBoard;
 import board.infos.BrdComponent;

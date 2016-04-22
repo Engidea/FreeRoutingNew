@@ -20,7 +20,7 @@
 
 package autoroute.expand;
 
-import planar.ShapeTile;
+import freert.planar.ShapeTile;
 
 /**
  * An expansion room, whose shape is not yet completely calculated.

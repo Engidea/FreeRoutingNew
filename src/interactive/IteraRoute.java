@@ -15,6 +15,15 @@
  */
 package interactive;
 
+import freert.planar.PlaArea;
+import freert.planar.PlaEllipse;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
 import graphics.GdiContext;
 import interactive.varie.IteraTargetPoint;
 import interactive.varie.PinSwappable;
@@ -25,15 +34,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import library.LibPadstack;
-import planar.PlaArea;
-import planar.PlaEllipse;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
-import planar.Polyline;
-import planar.ShapeTileBox;
-import planar.ShapeTileOctagon;
 import rules.RuleNet;
 import rules.RuleViaInfoList;
 import board.RoutingBoard;
@@ -626,7 +626,7 @@ public final class IteraRoute
          if (max_trace_length <= 0)
             {
             // max_trace_length not provided. Create an ellipse containing the whole board.
-            max_trace_length = 0.3 * planar.PlaLimits.CRIT_INT;
+            max_trace_length = 0.3 * freert.planar.PlaLimits.CRIT_INT;
             }
          
          double curr_max_trace_length = max_trace_length - (curr_net.get_trace_length() + trace_length_add);

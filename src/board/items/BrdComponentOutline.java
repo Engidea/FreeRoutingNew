@@ -20,15 +20,15 @@
  */
 package board.items;
 
+import freert.planar.PlaArea;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
 import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
-import planar.PlaArea;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
-import planar.ShapeTile;
 import board.RoutingBoard;
 import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
@@ -165,7 +165,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       p_graphics_context.draw_boundary(get_area(), draw_width, color, p_g, intensity);
       }
 
-   public planar.ShapeTileBox bounding_box()
+   public freert.planar.ShapeTileBox bounding_box()
       {
       return get_area().bounding_box();
       }

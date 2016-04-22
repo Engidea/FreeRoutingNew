@@ -20,11 +20,11 @@
 
 package specctra;
 
-import planar.PlaLineInt;
-import planar.PlaPointFloat;
-import planar.PlaVector;
-import planar.ShapePolyline;
-import planar.ShapeTileBox;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaVector;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTileBox;
 
 /**
  * Computes transformations between a specctra dsn-file coordinates and board coordinates.
@@ -196,7 +196,7 @@ public final class DsnCoordinateTransform implements java.io.Serializable
    /**
     * Transforms a board shape to a dsn shape.
     */
-   public DsnShape board_to_dsn(planar.PlaShape p_board_shape, DsnLayer p_layer)
+   public DsnShape board_to_dsn(freert.planar.PlaShape p_board_shape, DsnLayer p_layer)
       {
       DsnShape result;
       if (p_board_shape instanceof ShapeTileBox)
@@ -209,9 +209,9 @@ public final class DsnCoordinateTransform implements java.io.Serializable
          double[] coors = board_to_dsn(corners);
          result = new DsnPolygon(p_layer, coors);
          }
-      else if (p_board_shape instanceof planar.PlaCircle)
+      else if (p_board_shape instanceof freert.planar.PlaCircle)
          {
-         planar.PlaCircle board_circle = (planar.PlaCircle) p_board_shape;
+         freert.planar.PlaCircle board_circle = (freert.planar.PlaCircle) p_board_shape;
          double diameter = 2 * board_to_dsn(board_circle.radius);
          double[] center_coor = board_to_dsn(board_circle.center.to_float());
          result = new DsnCircle(p_layer, diameter, center_coor[0], center_coor[1]);
@@ -227,7 +227,7 @@ public final class DsnCoordinateTransform implements java.io.Serializable
    /**
     * Transforms the relative (vector) coordinates of a geometry.planar.Shape to a specctra dsn shape.
     */
-   public DsnShape board_to_dsn_rel(planar.PlaShape p_board_shape, DsnLayer p_layer)
+   public DsnShape board_to_dsn_rel(freert.planar.PlaShape p_board_shape, DsnLayer p_layer)
       {
       DsnShape result;
       if (p_board_shape instanceof ShapeTileBox)
@@ -240,9 +240,9 @@ public final class DsnCoordinateTransform implements java.io.Serializable
          double[] coors = board_to_dsn_rel(corners);
          result = new DsnPolygon(p_layer, coors);
          }
-      else if (p_board_shape instanceof planar.PlaCircle)
+      else if (p_board_shape instanceof freert.planar.PlaCircle)
          {
-         planar.PlaCircle board_circle = (planar.PlaCircle) p_board_shape;
+         freert.planar.PlaCircle board_circle = (freert.planar.PlaCircle) p_board_shape;
          double diameter = 2 * board_to_dsn(board_circle.radius);
          double[] center_coor = board_to_dsn_rel(board_circle.center.to_float());
          result = new DsnCircle(p_layer, diameter, center_coor[0], center_coor[1]);

@@ -21,12 +21,12 @@
 
 package autoroute;
 
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import autoroute.expand.ExpandDrillPage;
 import board.RoutingBoard;
 

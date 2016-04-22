@@ -20,8 +20,8 @@
 
 package library;
 
+import freert.planar.PlaShape;
 import board.infos.PrintableInfo;
-import planar.PlaShape;
 
 /**
  * Component package templates describing the padstacks and relative locations of the packege pins, and optional other stuff like an

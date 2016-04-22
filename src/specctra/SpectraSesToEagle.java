@@ -152,7 +152,7 @@ public class SpectraSesToEagle extends javax.swing.JFrame
       // Generate Code to remove the complete route.
       // Write a bounding rectangle with GROUP (Min_X-1 Min_Y-1) (Max_X+1 Max_Y+1);
 
-      planar.ShapeTileBox board_bounding_box = board.get_bounding_box();
+      freert.planar.ShapeTileBox board_bounding_box = board.get_bounding_box();
 
       Float min_x = (float) board_scale_factor * (board_bounding_box.box_ll.v_x - 1);
       Float min_y = (float) board_scale_factor * (board_bounding_box.box_ll.v_y - 1);
@@ -558,7 +558,7 @@ public class SpectraSesToEagle extends javax.swing.JFrame
          return false;
          }
 
-      planar.ShapeConvex via_shape = via_padstack.get_shape(via_padstack.from_layer());
+      freert.planar.ShapeConvex via_shape = via_padstack.get_shape(via_padstack.from_layer());
 
       Double via_diameter = via_shape.max_width() * board_scale_factor;
 
@@ -591,11 +591,11 @@ public class SpectraSesToEagle extends javax.swing.JFrame
       out_file.write(via_diameter.toString());
 
       // Shape lesen und einsetzen Square / Round / Octagon
-      if (via_shape instanceof planar.PlaCircle)
+      if (via_shape instanceof freert.planar.PlaCircle)
          {
          out_file.write(" round ");
          }
-      else if (via_shape instanceof planar.ShapeTileOctagon)
+      else if (via_shape instanceof freert.planar.ShapeTileOctagon)
          {
          out_file.write(" octagon ");
          }

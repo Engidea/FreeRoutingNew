@@ -20,6 +20,10 @@
 
 package interactive.state;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaVector;
+import freert.planar.ShapeConvex;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
@@ -31,10 +35,6 @@ import java.util.TreeMap;
 import library.LibPackage;
 import library.LibPackagePin;
 import library.LibPadstack;
-import planar.PlaPointFloat;
-import planar.PlaPoint;
-import planar.PlaVector;
-import planar.ShapeConvex;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.items.BrdAbit;

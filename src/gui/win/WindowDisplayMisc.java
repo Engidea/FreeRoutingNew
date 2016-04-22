@@ -20,11 +20,11 @@
 
 package gui.win;
 
+import freert.planar.PlaPointFloat;
 import gui.BoardFrame;
 import gui.BoardPanel;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
-import planar.PlaPointFloat;
 
 /**
  * Window for interactive changing of miscellanious display properties.
@@ -308,7 +308,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
             return; // mirroring already switched off
             }
          // remember the old viewort center to retain the displayed section of the board.
-         planar.PlaPointFloat old_viewport_center = coordinate_transform.screen_to_board(panel.get_viewport_center());
+         freert.planar.PlaPointFloat old_viewport_center = coordinate_transform.screen_to_board(panel.get_viewport_center());
          coordinate_transform.set_mirror_left_right(false);
          coordinate_transform.set_mirror_top_bottom(false);
          panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));
@@ -326,7 +326,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
             return; // already mirrored
             }
          // remember the old viewort center to retain the displayed section of the board.
-         planar.PlaPointFloat old_viewport_center = coordinate_transform.screen_to_board(panel.get_viewport_center());
+         freert.planar.PlaPointFloat old_viewport_center = coordinate_transform.screen_to_board(panel.get_viewport_center());
          coordinate_transform.set_mirror_left_right(true);
          coordinate_transform.set_mirror_top_bottom(false);
          panel.set_viewport_center(coordinate_transform.board_to_screen(old_viewport_center));

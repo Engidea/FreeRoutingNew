@@ -20,11 +20,11 @@
 package autoroute.expand;
 
 import java.util.ArrayList;
-import planar.PlaDimension;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaSegmentFloat;
-import planar.ShapeTile;
+import freert.planar.PlaDimension;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentFloat;
+import freert.planar.ShapeTile;
 import autoroute.ArtEngine;
 import autoroute.maze.MazeSearchElement;
 

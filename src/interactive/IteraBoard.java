@@ -21,6 +21,11 @@
 package interactive;
 
 import freert.host.HostCom;
+import freert.planar.PlaCoordTransform;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import gui.BoardPanel;
 import gui.varie.GuiResources;
@@ -57,11 +62,6 @@ import java.util.Set;
 import main.Ldbg;
 import main.Mdbg;
 import main.Stat;
-import planar.PlaCoordTransform;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.ShapePolyline;
-import planar.ShapeTileBox;
 import rules.BoardRules;
 import rules.RuleNet;
 import specctra.DsnReadFile;

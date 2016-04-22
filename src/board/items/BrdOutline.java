@@ -19,17 +19,17 @@
  */
 package board.items;
 
+import freert.planar.PlaArea;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.PolylineArea;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
-import planar.PlaArea;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
-import planar.PolylineArea;
-import planar.ShapePolyline;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import board.RoutingBoard;
 import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;

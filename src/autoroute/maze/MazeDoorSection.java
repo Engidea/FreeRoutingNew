@@ -1,6 +1,6 @@
 package autoroute.maze;
 
-import planar.PlaSegmentFloat;
+import freert.planar.PlaSegmentFloat;
 import autoroute.expand.ExpandDoor;
 
 public final class MazeDoorSection

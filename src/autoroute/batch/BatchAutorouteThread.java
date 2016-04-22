@@ -20,12 +20,12 @@
  */
 package autoroute.batch;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentFloat;
 import gui.varie.GuiResources;
 import interactive.IteraBoard;
 import interactive.BrdActionThread;
 import java.awt.Color;
-import planar.PlaSegmentFloat;
-import planar.PlaPointFloat;
 import autoroute.ArtSettings;
 import board.varie.TraceAngleRestriction;
 import datastructures.UnitMeasure;

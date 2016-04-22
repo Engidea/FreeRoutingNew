@@ -1,6 +1,6 @@
 package board.varie;
 
-import planar.PlaDirectionInt;
+import freert.planar.PlaDirectionInt;
 
 
 /**

@@ -20,13 +20,13 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapePolygon;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Iterator;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.ShapePolygon;
 import rules.BoardRules;
 
 /**

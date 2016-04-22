@@ -16,15 +16,15 @@
 
 package board.items;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileOctagon;
 import gui.varie.ObjectInfoPanel;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.ShapeTile;
-import planar.ShapeTileOctagon;
 import rules.RuleNets;
 import board.BrdConnectable;
 import board.RoutingBoard;

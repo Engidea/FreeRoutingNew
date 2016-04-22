@@ -18,11 +18,11 @@
 package autoroute;
 
 import java.util.Set;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.Polyline;
 import library.LibPadstack;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.Polyline;
 import autoroute.varie.ArtLocateResult;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;

@@ -20,13 +20,13 @@
 
 package board;
 
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaSegmentInt;
-import planar.PlaSide;
-import planar.Polyline;
-import planar.ShapeTile;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentInt;
+import freert.planar.PlaSide;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
 
 /**
  *

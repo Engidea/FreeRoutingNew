@@ -16,16 +16,16 @@
 
 package board.items;
 
+import freert.planar.PlaArea;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
-import planar.PlaArea;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.shape.ShapeSearchTree;
@@ -333,7 +333,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
       p_window.append(" " + resources.getString("at") + " ");
-      planar.PlaPointFloat center = get_area().get_border().centre_of_gravity();
+      freert.planar.PlaPointFloat center = get_area().get_border().centre_of_gravity();
       p_window.append(center);
       Integer hole_count = relative_area.get_holes().length;
       if (hole_count > 0)

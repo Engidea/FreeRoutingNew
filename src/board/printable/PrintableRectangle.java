@@ -1,6 +1,6 @@
 package board.printable;
 
-import planar.PlaPointFloat;
+import freert.planar.PlaPointFloat;
 
 public final class PrintableRectangle extends PrintableShape
    {

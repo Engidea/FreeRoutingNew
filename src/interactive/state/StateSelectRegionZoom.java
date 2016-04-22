@@ -18,10 +18,10 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import java.awt.geom.Point2D;
-import planar.PlaPointFloat;
 
 /**
  * Class for interactive zooming to a rectangle.

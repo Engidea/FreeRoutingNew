@@ -20,9 +20,9 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
-import planar.PlaPointFloat;
 
 /**
  * Class implementing the different functionality in the select menu, especially the different behaviour of the mouse button 1.

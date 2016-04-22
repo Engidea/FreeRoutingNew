@@ -22,7 +22,7 @@ package library;
 
 import java.util.Iterator;
 import java.util.Vector;
-import planar.PlaShape;
+import freert.planar.PlaShape;
 
 /**
  * Describes a library of component packages.

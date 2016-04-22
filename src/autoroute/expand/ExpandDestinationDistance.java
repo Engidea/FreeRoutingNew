@@ -20,8 +20,8 @@
 
 package autoroute.expand;
 
-import planar.PlaPointFloat;
-import planar.ShapeTileBox;
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTileBox;
 
 /**
  * Calculation of a good lower bound for the distance between 

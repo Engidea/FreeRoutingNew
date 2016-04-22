@@ -34,9 +34,9 @@ import interactive.state.StateRoute;
 import interactive.state.StateSelecRegionCutout;
 import interactive.state.StateSelectRegionItems;
 import interactive.state.StateSelectedItem;
-import planar.PlaPointFloat;
 import board.varie.ItemSelectionChoice;
 import datastructures.TimeLimitStoppable;
+import freert.planar.PlaPointFloat;
 
 /**
  * Enumeration class defining scopes in a logfile, Each Object of the class must implement the read_scope method.

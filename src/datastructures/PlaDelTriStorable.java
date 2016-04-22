@@ -1,6 +1,6 @@
 package datastructures;
 
-import planar.PlaPoint;
+import freert.planar.PlaPoint;
 
 /**
  * Interface with functionality required for objects to be used in a planar triangulation.

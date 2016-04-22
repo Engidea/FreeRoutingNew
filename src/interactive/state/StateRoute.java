@@ -19,6 +19,9 @@
  */
 package interactive.state;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraRoute;
@@ -26,9 +29,6 @@ import interactive.LogfileScope;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
 import rules.RuleNet;
 import board.BrdLayerStructure;
 import board.RoutingBoard;

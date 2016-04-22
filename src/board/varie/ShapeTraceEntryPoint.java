@@ -1,6 +1,6 @@
 package board.varie;
 
-import planar.PlaPointFloat;
+import freert.planar.PlaPointFloat;
 import board.items.BrdTracePolyline;
 
 /**

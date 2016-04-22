@@ -18,10 +18,10 @@
 
 package board.items;
 
+import freert.planar.PlaArea;
+import freert.planar.PlaVector;
 import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
-import planar.PlaArea;
-import planar.PlaVector;
 import board.RoutingBoard;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;

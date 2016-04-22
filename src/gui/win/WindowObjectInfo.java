@@ -20,6 +20,7 @@
 
 package gui.win;
 
+import freert.planar.PlaCoordTransform;
 import gui.BoardFrame;
 import gui.GuiSubWindowTemp;
 import gui.varie.GuiResources;
@@ -37,7 +38,6 @@ import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyleContext;
 import javax.swing.text.StyledDocument;
-import planar.PlaCoordTransform;
 import board.infos.PrintableInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
@@ -165,7 +165,7 @@ public final class WindowObjectInfo extends GuiSubWindowTemp implements ObjectIn
     * p_object_list. p_coordinate_transform is for transforming board to user
     * coordinates, and p_location is the location of the window.
     */
-   public static WindowObjectInfo display(String p_title, Collection<PrintableInfo> p_object_list, BoardFrame p_board_frame, planar.PlaCoordTransform p_coordinate_transform)
+   public static WindowObjectInfo display(String p_title, Collection<PrintableInfo> p_object_list, BoardFrame p_board_frame, freert.planar.PlaCoordTransform p_coordinate_transform)
       {
       WindowObjectInfo new_window = new WindowObjectInfo(p_board_frame, p_coordinate_transform);
       new_window.setTitle(p_title);
@@ -191,7 +191,7 @@ public final class WindowObjectInfo extends GuiSubWindowTemp implements ObjectIn
       }
 
 
-   private WindowObjectInfo(BoardFrame p_board_frame, planar.PlaCoordTransform p_coordinate_transform)
+   private WindowObjectInfo(BoardFrame p_board_frame, freert.planar.PlaCoordTransform p_coordinate_transform)
       {
       super(p_board_frame);
       
@@ -289,9 +289,9 @@ public final class WindowObjectInfo extends GuiSubWindowTemp implements ObjectIn
     * Appends p_point to the text pane after transforming to the user coordinate
     * sytem. Returns false, if that was not possible.
     */
-   public boolean append(planar.PlaPointFloat p_point)
+   public boolean append(freert.planar.PlaPointFloat p_point)
       {
-      planar.PlaPointFloat transformed_point = coordinate_transform.board_to_user(p_point);
+      freert.planar.PlaPointFloat transformed_point = coordinate_transform.board_to_user(p_point);
       return append(transformed_point.to_string(board_frame.get_locale()));
       }
 
@@ -300,7 +300,7 @@ public final class WindowObjectInfo extends GuiSubWindowTemp implements ObjectIn
     * @returns false, if that was not possible.
     */
    @Override
-   public boolean append(planar.PlaShape p_shape, java.util.Locale p_locale)
+   public boolean append(freert.planar.PlaShape p_shape, java.util.Locale p_locale)
       {
       PrintableShape transformed_shape = coordinate_transform.board_to_user(p_shape, p_locale);
 

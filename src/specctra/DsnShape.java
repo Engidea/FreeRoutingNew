@@ -19,14 +19,14 @@
  */
 package specctra;
 
+import freert.planar.PlaArea;
+import freert.planar.PlaShape;
+import freert.planar.PolylineArea;
+import freert.planar.ShapePolyline;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import planar.PlaArea;
-import planar.PlaShape;
-import planar.PolylineArea;
-import planar.ShapePolyline;
 import specctra.varie.DsnReadUtils;
 
 /**

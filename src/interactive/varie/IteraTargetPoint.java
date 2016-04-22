@@ -1,6 +1,6 @@
 package interactive.varie;
 
-import planar.PlaPointFloat;
+import freert.planar.PlaPointFloat;
 import board.items.BrdItem;
 
 public class IteraTargetPoint

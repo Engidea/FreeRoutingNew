@@ -20,11 +20,11 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import java.util.LinkedList;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
 import board.varie.TraceAngleRestriction;
 
 /**

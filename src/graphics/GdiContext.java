@@ -34,15 +34,15 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import freert.planar.PlaArea;
+import freert.planar.PlaCircle;
+import freert.planar.PlaEllipse;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaShape;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import main.Stat;
-import planar.PlaArea;
-import planar.PlaCircle;
-import planar.PlaEllipse;
-import planar.PlaPointFloat;
-import planar.PlaShape;
-import planar.ShapePolyline;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import board.BrdLayerStructure;
 
 /**

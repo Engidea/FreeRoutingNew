@@ -16,10 +16,10 @@
 
 package board.varie;
 
-import planar.OctagonMutable;
-import planar.PlaPointFloat;
-import planar.ShapeTileBox;
-import planar.ShapeTileOctagon;
+import freert.planar.OctagonMutable;
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
 
 /**
  * Used internally for marking changed areas on the board after shoving and optimizing items.
@@ -66,7 +66,7 @@ public final class BrdChangedArea
    /**
     * enlarges the octagon on p_layer, so that it contains p_shape
     */
-   public void join(planar.ShapeTile p_shape, int p_layer)
+   public void join(freert.planar.ShapeTile p_shape, int p_layer)
       {
       if (p_shape == null) return;
 

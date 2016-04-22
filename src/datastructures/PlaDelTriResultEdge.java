@@ -1,6 +1,6 @@
 package datastructures;
 
-import planar.PlaPoint;
+import freert.planar.PlaPoint;
 
 
 /**

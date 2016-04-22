@@ -1,7 +1,7 @@
 package datastructures;
 
-import planar.PlaPoint;
-import planar.PlaSide;
+import freert.planar.PlaPoint;
+import freert.planar.PlaSide;
 
 /**
  * Contains a corner point together with the objects this corner belongs to.

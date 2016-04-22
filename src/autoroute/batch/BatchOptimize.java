@@ -15,13 +15,13 @@
  */
 package autoroute.batch;
 
+import freert.planar.PlaPointFloat;
 import gui.varie.UndoableObjectStorable;
 import interactive.BrdActionThread;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import planar.PlaPointFloat;
 import rules.BoardRules;
 import board.RoutingBoard;
 import board.items.BrdItem;

@@ -22,10 +22,10 @@ package board.varie;
 
 import java.util.Collection;
 import java.util.Iterator;
-import planar.PlaPointInt;
-import planar.Polyline;
-import planar.ShapeTile;
-import planar.ShapeTileOctagon;
+import freert.planar.PlaPointInt;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileOctagon;
 import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;

@@ -21,16 +21,6 @@
 package board.algo;
 
 import java.util.Collection;
-import planar.PlaDirection;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
-import planar.Polyline;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
-import planar.ShapeTileOctagon;
 import board.BrdFromSide;
 import board.BrdShapeAndFromSide;
 import board.RoutingBoard;
@@ -44,6 +34,16 @@ import board.shape.ShapeTraceEntries;
 import board.varie.BrdStopConnection;
 import board.varie.ShoveDrillResult;
 import datastructures.TimeLimit;
+import freert.planar.PlaDirection;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
 
 /**
  * Class with functions for checking and inserting pads with eventually shoving aside obstacle traces.

@@ -20,7 +20,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import planar.PlaPointFloat;
+import freert.planar.PlaPointFloat;
 
 /**
  * Log to track the actions in the interactive board handling for automatic replay.

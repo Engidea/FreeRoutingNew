@@ -20,13 +20,13 @@
 
 package interactive.state;
 
+import freert.planar.PlaCircle;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapeConvex;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
-import planar.PlaCircle;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.ShapeConvex;
 import rules.BoardRules;
 import board.RoutingBoard;
 import board.varie.ItemFixState;

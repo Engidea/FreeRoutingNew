@@ -22,8 +22,8 @@ package board.shape;
 
 import java.util.Set;
 import java.util.TreeSet;
-import planar.ShapeBounding;
-import planar.ShapeTileRegular;
+import freert.planar.ShapeBounding;
+import freert.planar.ShapeTileRegular;
 
 /**
  * Binary search tree for shapes in the plane. The shapes are stored in the leafs of the tree. 

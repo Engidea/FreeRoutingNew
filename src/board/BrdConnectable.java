@@ -17,9 +17,9 @@
 package board;
 
 import java.util.Set;
+import freert.planar.ShapeTile;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
-import planar.ShapeTile;
 
 /**
  * Functionality required for items, which can be electrical connected to other items.

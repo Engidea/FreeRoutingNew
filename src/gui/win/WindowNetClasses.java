@@ -389,7 +389,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
                   }
                }
             }
-         planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("contained_nets"), contained_nets, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));

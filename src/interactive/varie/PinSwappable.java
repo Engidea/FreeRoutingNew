@@ -1,8 +1,8 @@
 package interactive.varie;
 
 import java.util.Collection;
-import planar.PlaSegmentFloat;
-import planar.PlaPointFloat;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentFloat;
 import board.RoutingBoard;
 import board.items.BrdAbit;
 import board.items.BrdAbitPin;
@@ -45,7 +45,7 @@ public class PinSwappable implements Comparable<PinSwappable>
          }
 
       if (nearest_point != null)
-         incomplete = new planar.PlaSegmentFloat(pin_center, nearest_point);
+         incomplete = new freert.planar.PlaSegmentFloat(pin_center, nearest_point);
       }
 
    public int compareTo(PinSwappable p_other)

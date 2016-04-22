@@ -1,6 +1,6 @@
 package board.varie;
 
-import planar.PlaPoint;
+import freert.planar.PlaPoint;
 
 public final class BrdKeepPoint
    {

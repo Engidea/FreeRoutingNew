@@ -18,12 +18,12 @@ package board.shape;
 
 import java.util.Collection;
 import java.util.Iterator;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.Polyline;
-import planar.ShapeConvex;
-import planar.ShapeTile;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.Polyline;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
 import board.BrdFromSide;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;

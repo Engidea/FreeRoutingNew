@@ -1,8 +1,8 @@
 package board.infos;
 
+import freert.planar.PlaPointFloat;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
-import planar.PlaPointFloat;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdArea;

@@ -20,8 +20,8 @@
 
 package board.infos;
 
+import freert.planar.ShapeConvex;
 import gui.varie.ObjectInfoPanel;
-import planar.ShapeConvex;
 import board.items.BrdItem;
 
 /**

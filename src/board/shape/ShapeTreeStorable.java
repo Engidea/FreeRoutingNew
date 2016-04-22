@@ -1,6 +1,6 @@
 package board.shape;
 
-import planar.ShapeTile;
+import freert.planar.ShapeTile;
 
 /**
  * Interface, which must be implemented by objects to be stored in a ShapeTree.

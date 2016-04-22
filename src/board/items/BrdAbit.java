@@ -20,6 +20,13 @@
 
 package board.items;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import graphics.GdiDrawable;
 import java.awt.Color;
@@ -29,13 +36,6 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import library.LibPadstack;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaShape;
-import planar.PlaVector;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
 import board.BrdConnectable;
 import board.RoutingBoard;
 import board.shape.ShapeSearchTree;

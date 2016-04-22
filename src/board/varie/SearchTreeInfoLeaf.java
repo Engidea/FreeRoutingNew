@@ -1,6 +1,6 @@
 package board.varie;
 
-import planar.ShapeTile;
+import freert.planar.ShapeTile;
 import board.shape.ShapeTree;
 import board.shape.ShapeTreeLeaf;
 

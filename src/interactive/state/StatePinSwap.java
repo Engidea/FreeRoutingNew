@@ -20,9 +20,9 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
-import planar.PlaPointFloat;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;

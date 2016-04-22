@@ -20,19 +20,19 @@
 
 package interactive.state;
 
+import freert.planar.PlaArea;
+import freert.planar.PlaCircle;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PolylineArea;
+import freert.planar.ShapePolygon;
+import freert.planar.ShapePolyline;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Collection;
 import java.util.Iterator;
-import planar.PlaArea;
-import planar.PlaCircle;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaShape;
-import planar.PolylineArea;
-import planar.ShapePolygon;
-import planar.ShapePolyline;
 import board.items.BrdArea;
 import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;

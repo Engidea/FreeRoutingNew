@@ -147,10 +147,10 @@ public final class DsnReadFile
       double board_area = 0;
       for (int i = 0; i < board_outline.shape_count(); ++i)
          {
-         planar.ShapeTile[] curr_piece_arr = board_outline.get_shape(i).split_to_convex();
+         freert.planar.ShapeTile[] curr_piece_arr = board_outline.get_shape(i).split_to_convex();
          if (curr_piece_arr != null)
             {
-            for (planar.ShapeTile curr_piece : curr_piece_arr)
+            for (freert.planar.ShapeTile curr_piece : curr_piece_arr)
                {
                board_area += curr_piece.area();
                }
@@ -170,9 +170,9 @@ public final class DsnReadFile
             continue;
             }
          
-         planar.ShapeTile[] convex_pieces = curr_conduction_area.get_area().split_to_convex();
+         freert.planar.ShapeTile[] convex_pieces = curr_conduction_area.get_area().split_to_convex();
          double curr_area = 0;
-         for (planar.ShapeTile curr_piece : convex_pieces)
+         for (freert.planar.ShapeTile curr_piece : convex_pieces)
             {
             curr_area += curr_piece.area();
             }

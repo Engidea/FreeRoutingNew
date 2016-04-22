@@ -20,13 +20,13 @@
 
 package board.infos;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
 import gui.varie.ObjectInfoPanel;
 import gui.varie.UndoableObjectStorable;
 import library.LibPackage;
 import library.LogicalPart;
-import planar.PlaPoint;
-import planar.PlaPointInt;
-import planar.PlaVector;
 
 /**
  * Describes board components consisting of an array of pins and other stuff like component keepouts.

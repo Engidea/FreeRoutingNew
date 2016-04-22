@@ -20,14 +20,14 @@
 
 package specctra;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
 import gui.varie.IndentFileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import main.Stat;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
 import board.BrdLayer;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
@@ -285,7 +285,7 @@ public final class SpectraWriteSesFile
       p_identifier_type.write(p_padstack.pads_name, output_file);
       for (int index = first_layer_no; index <= last_layer_no; ++index)
          {
-         planar.PlaShape curr_board_shape = p_padstack.get_shape(index);
+         freert.planar.PlaShape curr_board_shape = p_padstack.get_shape(index);
          
          if (curr_board_shape == null) continue;
          
@@ -470,16 +470,16 @@ public final class SpectraWriteSesFile
          System.out.println("SessionFile.write_conduction_area: unexpected net count");
          return;
          }
-      planar.PlaArea curr_area = p_conduction_area.get_area();
+      freert.planar.PlaArea curr_area = p_conduction_area.get_area();
       int layer_no = p_conduction_area.get_layer();
       BrdLayer board_layer = r_board.layer_structure.get(layer_no);
       DsnLayer conduction_layer = new DsnLayer(board_layer.name, layer_no, board_layer.is_signal);
-      planar.PlaShape boundary_shape;
-      planar.PlaShape[] holes;
-      if (curr_area instanceof planar.PlaShape)
+      freert.planar.PlaShape boundary_shape;
+      freert.planar.PlaShape[] holes;
+      if (curr_area instanceof freert.planar.PlaShape)
          {
-         boundary_shape = (planar.PlaShape) curr_area;
-         holes = new planar.PlaShape[0];
+         boundary_shape = (freert.planar.PlaShape) curr_area;
+         holes = new freert.planar.PlaShape[0];
          }
       else
          {

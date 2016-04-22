@@ -20,13 +20,13 @@
 package specctra;
 
 import freert.host.HostCom;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTileBox;
 import gui.varie.IndentFileWriter;
 import gui.varie.UndoableObjectStorable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import planar.ShapePolyline;
-import planar.ShapeTileBox;
 import rules.BoardRules;
 import rules.ClearanceMatrix;
 import specctra.varie.DsnKeywordAutoroute;
@@ -252,7 +252,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
             System.out.println("Plane.read_scope: net not found");
             continue;
             }
-         planar.PlaArea plane_area = DsnShape.transform_area_to_board(plane_info.area.shape_list, p_par.coordinate_transform);
+         freert.planar.PlaArea plane_area = DsnShape.transform_area_to_board(plane_info.area.shape_list, p_par.coordinate_transform);
          DsnLayer curr_layer = (plane_info.area.shape_list.iterator().next()).layer;
          if (curr_layer.layer_no >= 0)
             {
@@ -457,16 +457,16 @@ public final class DsnKeywordStructure extends DsnKeywordScope
 
    private static void write_keepout_scope(DsnWriteScopeParameter p_par, board.items.BrdArea p_keepout) throws java.io.IOException
       {
-      planar.PlaArea keepout_area = p_keepout.get_area();
+      freert.planar.PlaArea keepout_area = p_keepout.get_area();
       int layer_no = p_keepout.get_layer();
       board.BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
       DsnLayer keepout_layer = new DsnLayer(board_layer.name, layer_no, board_layer.is_signal);
-      planar.PlaShape boundary_shape;
-      planar.PlaShape[] holes;
-      if (keepout_area instanceof planar.PlaShape)
+      freert.planar.PlaShape boundary_shape;
+      freert.planar.PlaShape[] holes;
+      if (keepout_area instanceof freert.planar.PlaShape)
          {
-         boundary_shape = (planar.PlaShape) keepout_area;
-         holes = new planar.PlaShape[0];
+         boundary_shape = (freert.planar.PlaShape) keepout_area;
+         holes = new freert.planar.PlaShape[0];
          }
       else
          {
@@ -886,7 +886,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          }
       
       // make scale factor smaller, if there is a danger of integer overflow.
-      while (5 * max_coor >= planar.PlaLimits.CRIT_INT)
+      while (5 * max_coor >= freert.planar.PlaLimits.CRIT_INT)
          {
          scale_factor /= 10;
          max_coor /= 10;
@@ -1298,7 +1298,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
 
    private static boolean insert_keepout(DsnScopeArea p_area, DsnReadScopeParameters p_par, KeepoutType p_keepout_type, ItemFixState p_fixed_state)
       {
-      planar.PlaArea keepout_area = DsnShape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
+      freert.planar.PlaArea keepout_area = DsnShape.transform_area_to_board(p_area.shape_list, p_par.coordinate_transform);
       if ( ! keepout_area.dimension().is_area() )
          {
          System.out.println("Structure.insert_keepout: keepout is not an area");
@@ -1334,7 +1334,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       return true;
       }
 
-   private static void insert_keepout(RoutingBoard p_board, planar.PlaArea p_area, int p_layer, String p_clearance_class_name, KeepoutType p_keepout_type, ItemFixState p_fixed_state)
+   private static void insert_keepout(RoutingBoard p_board, freert.planar.PlaArea p_area, int p_layer, String p_clearance_class_name, KeepoutType p_keepout_type, ItemFixState p_fixed_state)
       {
       int clearance_class_no;
       if (p_clearance_class_name == null)

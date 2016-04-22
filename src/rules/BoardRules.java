@@ -22,12 +22,12 @@ package rules;
 
 import java.util.Vector;
 import library.LibPadstack;
-import planar.ShapeConvex;
 import board.BrdLayerStructure;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
 import board.varie.TraceAngleRestriction;
 import datastructures.ItemClass;
+import freert.planar.ShapeConvex;
 
 /**
  * Contains the rules and constraints required for items to be inserted into a routing board

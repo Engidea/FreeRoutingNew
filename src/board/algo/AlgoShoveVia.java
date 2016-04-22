@@ -20,18 +20,18 @@
 
 package board.algo;
 
+import freert.planar.PlaCircle;
+import freert.planar.PlaLimits;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileSimplex;
 import library.LibPadstack;
-import planar.PlaLimits;
-import planar.PlaCircle;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaShape;
-import planar.PlaVector;
-import planar.ShapeConvex;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
-import planar.ShapeTileSimplex;
 import board.BrdFromSide;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;

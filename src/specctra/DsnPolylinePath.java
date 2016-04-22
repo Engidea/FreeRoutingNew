@@ -80,13 +80,13 @@ public class DsnPolylinePath extends DsnPath
       p_file.end_scope();
       }
 
-   public planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
+   public freert.planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
       {
       System.out.println("PolylinePath.transform_to_board_rel not implemented");
       return null;
       }
 
-   public planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
+   public freert.planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
       {
       System.out.println("PolylinePath.transform_to_board_rel not implemented");
       return null;

@@ -1,6 +1,6 @@
 package autoroute.varie;
 
-import planar.PlaPointInt;
+import freert.planar.PlaPointInt;
 
 /**
  * Type of a single item in the result list connection_items. Used to create a new PolylineTrace.

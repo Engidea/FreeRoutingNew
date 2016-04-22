@@ -22,14 +22,6 @@
 package board.algo;
 
 import java.util.Collection;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaVector;
-import planar.ShapeConvex;
-import planar.ShapeTile;
-import planar.ShapeTileBox;
-import planar.ShapeTileOctagon;
 import board.BrdFromSide;
 import board.RoutingBoard;
 import board.items.BrdAbit;
@@ -42,6 +34,14 @@ import board.shape.ShapeTraceEntries;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
 import datastructures.TimeLimit;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
 
 /**
  *

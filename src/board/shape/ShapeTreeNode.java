@@ -1,6 +1,6 @@
 package board.shape;
 
-import planar.ShapeTileRegular;
+import freert.planar.ShapeTileRegular;
 
 /**
  * Common functionality of inner nodes and leaf nodes.

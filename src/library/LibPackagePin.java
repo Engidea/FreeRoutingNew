@@ -1,6 +1,6 @@
 package library;
 
-import planar.PlaVector;
+import freert.planar.PlaVector;
 
 /**
  * Describes a pin padstack of a package.

@@ -20,7 +20,7 @@
 
 package autoroute.maze;
 
-import planar.PlaSegmentFloat;
+import freert.planar.PlaSegmentFloat;
 import autoroute.expand.ExpandObject;
 import autoroute.expand.ExpandRoomComplete;
 

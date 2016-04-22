@@ -21,8 +21,8 @@
 package gui.varie;
 
 import java.util.Collection;
-import planar.PlaPointFloat;
-import planar.PlaShape;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaShape;
 import board.infos.PrintableInfo;
 import board.items.BrdItem;
 

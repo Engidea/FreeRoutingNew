@@ -19,14 +19,14 @@
  */
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTile;
 import interactive.IteraBoard;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import planar.PlaPointFloat;
-import planar.ShapeTile;
 import autoroute.ArtConnectionInsert;
 import autoroute.ArtConnectionLocate;
 import autoroute.ArtControl;

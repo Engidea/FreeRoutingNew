@@ -21,7 +21,7 @@
 package library;
 
 import java.util.Vector;
-import planar.ShapeConvex;
+import freert.planar.ShapeConvex;
 import board.BrdLayerStructure;
 
 /**

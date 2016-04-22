@@ -19,8 +19,8 @@
  */
 package autoroute;
 
+import freert.planar.ShapeConvex;
 import interactive.IteraSettings;
-import planar.ShapeConvex;
 import rules.RuleViaInfoList;
 import autoroute.expand.ExpandCostFactor;
 import autoroute.varie.ArtViaCost;

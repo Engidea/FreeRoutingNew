@@ -20,6 +20,7 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import gui.varie.GuiResources;
 import interactive.Actlog;
 import interactive.IteraBoard;
@@ -27,7 +28,6 @@ import interactive.LogfileScope;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import javax.swing.JPopupMenu;
-import planar.PlaPointFloat;
 
 /**
  * Common base class of all interaction states with the graphical interface

@@ -20,6 +20,7 @@
 
 package interactive;
 
+import freert.planar.PlaPointFloat;
 import graphics.GdiContext;
 import gui.varie.GuiResources;
 import interactive.varie.IteraEdge;
@@ -31,7 +32,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import planar.PlaPointFloat;
 import rules.RuleNet;
 import board.RoutingBoard;
 import board.infos.AirLineInfo;

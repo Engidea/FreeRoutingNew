@@ -19,15 +19,15 @@
  */
 package board.items;
 
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
 import gui.varie.ObjectInfoPanel;
 import java.util.Collection;
 import java.util.Iterator;
 import library.LibPadstack;
-import planar.PlaPoint;
-import planar.PlaPointInt;
-import planar.PlaShape;
-import planar.PlaVector;
-import planar.ShapeTile;
 import autoroute.ArtItem;
 import autoroute.expand.ExpandDrill;
 import board.RoutingBoard;

@@ -20,6 +20,17 @@
 
 package board.items;
 
+import freert.planar.PlaDirection;
+import freert.planar.PlaDirectionInt;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
 import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
 import java.util.Collection;
@@ -28,17 +39,6 @@ import library.LibPackage;
 import library.LibPackagePin;
 import library.LibPadstack;
 import library.LogicalPin;
-import planar.PlaDirection;
-import planar.PlaDirectionInt;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.PlaShape;
-import planar.PlaVector;
-import planar.Polyline;
-import planar.ShapeConvex;
-import planar.ShapeTile;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.varie.BrdTraceExitRestriction;
@@ -639,7 +639,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          System.out.println("Pin.get_min_width: padstack_shape is null");
          return 0;
          }
-      planar.ShapeTileBox padstack_bounding_box = padstack_shape.bounding_box();
+      freert.planar.ShapeTileBox padstack_bounding_box = padstack_shape.bounding_box();
       if (padstack_bounding_box == null)
          {
          System.out.println("Pin.get_min_width: padstack_bounding_box is null");
@@ -670,7 +670,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          System.out.println("Pin.get_max_width: padstack_shape is null");
          return 0;
          }
-      planar.ShapeTileBox padstack_bounding_box = padstack_shape.bounding_box();
+      freert.planar.ShapeTileBox padstack_bounding_box = padstack_shape.bounding_box();
       if (padstack_bounding_box == null)
          {
          System.out.println("Pin.get_max_width: padstack_bounding_box is null");

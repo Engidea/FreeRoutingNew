@@ -19,8 +19,8 @@
  */
 package autoroute.expand;
 
-import planar.PlaDimension;
-import planar.ShapeTile;
+import freert.planar.PlaDimension;
+import freert.planar.ShapeTile;
 import autoroute.maze.MazeSearchElement;
 
 /**

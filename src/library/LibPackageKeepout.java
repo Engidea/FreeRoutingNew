@@ -1,6 +1,6 @@
 package library;
 
-import planar.PlaArea;
+import freert.planar.PlaArea;
 
 /** 
  * Deescribes a named keepout belonging to a package, 

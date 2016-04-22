@@ -20,16 +20,16 @@
 
 package specctra;
 
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.Polyline;
+import freert.planar.ShapeTileBox;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaPointInt;
-import planar.Polyline;
-import planar.ShapeTileBox;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
@@ -240,16 +240,16 @@ class DsnKeywordWiring extends DsnKeywordScope
          return;
          }
       rules.RuleNet curr_net = p_par.board.brd_rules.nets.get(p_conduction_area.get_net_no(0));
-      planar.PlaArea curr_area = p_conduction_area.get_area();
+      freert.planar.PlaArea curr_area = p_conduction_area.get_area();
       int layer_no = p_conduction_area.get_layer();
       board.BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
       DsnLayer conduction_layer = new DsnLayer(board_layer.name, layer_no, board_layer.is_signal);
-      planar.PlaShape boundary_shape;
-      planar.PlaShape[] holes;
-      if (curr_area instanceof planar.PlaShape)
+      freert.planar.PlaShape boundary_shape;
+      freert.planar.PlaShape[] holes;
+      if (curr_area instanceof freert.planar.PlaShape)
          {
-         boundary_shape = (planar.PlaShape) curr_area;
-         holes = new planar.PlaShape[0];
+         boundary_shape = (freert.planar.PlaShape) curr_area;
+         holes = new freert.planar.PlaShape[0];
          }
       else
          {
@@ -457,7 +457,7 @@ class DsnKeywordWiring extends DsnKeywordScope
          Collection<DsnShape> area = new LinkedList<DsnShape>();
          area.add(border_shape);
          area.addAll(hole_list);
-         planar.PlaArea conduction_area = DsnShape.transform_area_to_board(area, p_par.coordinate_transform);
+         freert.planar.PlaArea conduction_area = DsnShape.transform_area_to_board(area, p_par.coordinate_transform);
          result = board.insert_conduction_area(conduction_area, layer_no, net_no_arr, clearance_class_no, false, fixed);
          }
       else if (path instanceof DsnPolygonPath)

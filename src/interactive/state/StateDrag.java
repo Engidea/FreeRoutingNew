@@ -20,11 +20,11 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import java.util.Collection;
 import java.util.Iterator;
-import planar.PlaPointFloat;
 import board.items.BrdAbit;
 import board.items.BrdItem;
 import board.items.BrdTrace;

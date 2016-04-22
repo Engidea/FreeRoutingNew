@@ -1,9 +1,9 @@
 package autoroute.batch;
 
+import freert.planar.PlaPointFloat;
 import gui.varie.UndoableObjectStorable;
 import java.util.Iterator;
 import java.util.Set;
-import planar.PlaPointFloat;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;

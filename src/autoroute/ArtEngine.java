@@ -26,10 +26,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import planar.PlaDimension;
-import planar.PlaLineInt;
-import planar.ShapeTile;
-import planar.ShapeTileSimplex;
 import autoroute.expand.ExpandDoor;
 import autoroute.expand.ExpandDoorItem;
 import autoroute.expand.ExpandRoom;
@@ -49,6 +45,10 @@ import board.varie.BrdStopConnection;
 import board.varie.IdGenerator;
 import datastructures.ThreadStoppable;
 import datastructures.UndoableObjectNode;
+import freert.planar.PlaDimension;
+import freert.planar.PlaLineInt;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileSimplex;
 
 /**
  * Temporary autoroute data stored on the RoutingBoard.

@@ -20,15 +20,15 @@
 package autoroute.maze;
 
 import java.util.Collection;
-import planar.PlaDirection;
-import planar.PlaLineInt;
-import planar.PlaPoint;
-import planar.PlaPointFloat;
-import planar.PlaSegmentFloat;
-import planar.PlaSegmentInt;
-import planar.PlaSide;
-import planar.Polyline;
-import planar.ShapeTile;
+import freert.planar.PlaDirection;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentFloat;
+import freert.planar.PlaSegmentInt;
+import freert.planar.PlaSide;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
 import autoroute.ArtControl;
 import autoroute.expand.ExpandDoor;
 import autoroute.expand.ExpandRoomComplete;

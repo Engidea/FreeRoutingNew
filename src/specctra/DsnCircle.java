@@ -20,7 +20,7 @@
 
 package specctra;
 
-import planar.PlaPointInt;
+import freert.planar.PlaPointInt;
 import gui.varie.IndentFileWriter;
 
 /**
@@ -49,17 +49,17 @@ public class DsnCircle extends DsnShape
       coor[2] = p_center_y;
       }
 
-   public planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
+   public freert.planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
       {
       double[] location = new double[2];
       location[0] = coor[1];
       location[1] = coor[2];
       PlaPointInt center = p_coordinate_transform.dsn_to_board(location).round();
       int radius = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[0]) / 2);
-      return new planar.PlaCircle(center, radius);
+      return new freert.planar.PlaCircle(center, radius);
       }
 
-   public planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
+   public freert.planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
       {
       long[] new_coor = new long[3];
       new_coor[0] = Math.round(p_coordinate_transform.dsn_to_board(coor[0]) / 2);
@@ -67,7 +67,7 @@ public class DsnCircle extends DsnShape
          {
          new_coor[i] = Math.round(p_coordinate_transform.dsn_to_board(coor[i]));
          }
-      return new planar.PlaCircle(new PlaPointInt(new_coor[1], new_coor[2]), (int)new_coor[0]);
+      return new freert.planar.PlaCircle(new PlaPointInt(new_coor[1], new_coor[2]), (int)new_coor[0]);
       }
 
    public DsnRectangle bounding_box()

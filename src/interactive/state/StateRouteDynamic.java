@@ -20,11 +20,11 @@
 
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import javax.swing.JPopupMenu;
-import planar.PlaPointFloat;
 
 /**
  * State for dynamic interactive routing, which is routing while moving the mouse pointer.
