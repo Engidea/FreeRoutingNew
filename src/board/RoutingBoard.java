@@ -1458,7 +1458,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean redo(Set<Integer> p_changed_nets)
       {
-      this.brd_components.redo(this.communication.observers);
+      brd_components.redo(communication.observers);
       Collection<UndoableObjectStorable> cancelled_objects = new LinkedList<UndoableObjectStorable>();
       Collection<UndoableObjectStorable> restored_objects = new LinkedList<UndoableObjectStorable>();
       boolean result = item_list.redo(cancelled_objects, restored_objects);
@@ -1814,7 +1814,7 @@ public final class RoutingBoard implements java.io.Serializable
             }
          else
             {
-            int clearance_value = this.get_clearance(curr_obstacle.clearance_class_no(), p_cl_class_no, p_layer);
+            int clearance_value = get_clearance(curr_obstacle.clearance_class_no(), p_cl_class_no, p_layer);
             curr_offset_shape = (ShapeTile) shape_to_check.offset(clearance_value);
             shorten_value = p_trace_half_width + clearance_value;
             }
@@ -1905,7 +1905,7 @@ public final class RoutingBoard implements java.io.Serializable
       for (int i = 0; i < p_item.tile_shape_count(); ++i)
          {
          ShapeTile curr_shape = p_item.get_tile_shape(i);
-         Set<BrdItem> obstacles = this.overlapping_items_with_clearance(curr_shape, p_item.shape_layer(i), net_no_arr, p_item.clearance_class_no());
+         Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(i), net_no_arr, p_item.clearance_class_no());
          for (ShapeTreeObject curr_ob : obstacles)
             {
             if (curr_ob != p_item && curr_ob instanceof BrdConnectable && !((BrdConnectable) curr_ob).contains_net(p_new_net_no))
@@ -2295,7 +2295,7 @@ public final class RoutingBoard implements java.io.Serializable
             {
             last_trace_shape = last_trace_shape.bounding_box();
             }
-         int sample_width = 2 * this.get_min_trace_half_width();
+         int sample_width = 2 * get_min_trace_half_width();
          PlaPointFloat last_corner = new_polyline.corner_approx(last_shape_no + 1);
          PlaPointFloat prev_last_corner = new_polyline.corner_approx(last_shape_no);
          double last_segment_length = last_corner.distance(prev_last_corner);
@@ -2384,7 +2384,7 @@ public final class RoutingBoard implements java.io.Serializable
 
          // otherwise the new corner may no more be contained in the new trace after optimizing
          ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionChoice.TRACES);
-         Set<BrdItem> curr_picked_items = this.pick_items(new_corner, p_layer, item_filter);
+         Set<BrdItem> curr_picked_items = pick_items(new_corner, p_layer, item_filter);
          new_trace = null;
          if (!curr_picked_items.isEmpty())
             {
@@ -2628,7 +2628,7 @@ public final class RoutingBoard implements java.io.Serializable
    public void remove_trace_tails(int p_net_no, BrdStopConnection p_stop_connection_option)
       {
       SortedSet<BrdItem> stub_set = new TreeSet<BrdItem>();
-      Collection<BrdItem> board_items = this.get_items();
+      Collection<BrdItem> board_items = get_items();
 
       for (BrdItem curr_item : board_items)
          {

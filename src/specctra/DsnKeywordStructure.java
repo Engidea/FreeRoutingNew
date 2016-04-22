@@ -27,6 +27,7 @@ import java.util.LinkedList;
 import planar.ShapePolyline;
 import planar.ShapeTileBox;
 import rules.BoardRules;
+import rules.ClearanceMatrix;
 import specctra.varie.DsnKeywordAutoroute;
 import specctra.varie.DsnReadUtils;
 import board.BrdLayer;
@@ -44,8 +45,10 @@ import datastructures.UndoableObjectNode;
  *
  * @author Alfons Wirtz
  */
-public class DsnKeywordStructure extends DsnKeywordScope
+public final class DsnKeywordStructure extends DsnKeywordScope
    {
+   private static final String classname = "DsnKeywordStructure.";
+         
    public DsnKeywordStructure()
       {
       super("structure");
@@ -792,62 +795,89 @@ public class DsnKeywordStructure extends DsnKeywordScope
       p_file.end_scope();
       }
 
-   private boolean create_board(DsnReadScopeParameters p_par, DsnBoardConstruction p_board_construction_info)
+   private boolean calc_board_outline (DsnReadScopeParameters p_par, DsnBoardConstruction p_board_construction_info)
       {
-      int layer_count = p_board_construction_info.layer_info.size();
-      if (layer_count == 0)
+      // we already have a board outline
+      if (p_board_construction_info.bounding_shape != null) return true;
+   
+      if (p_board_construction_info.outline_shapes.isEmpty())
          {
-         System.err.println("Structure.create_board: layers missing in structure scope");
+         // happens if the boundary shape with layer PCB is missing
+         System.err.println("Structure.create_board: outline missing");
+         p_par.board_outline_ok = false;
          return false;
          }
       
-      if (p_board_construction_info.bounding_shape == null)
-         {
-         // happens if the boundary shape with layer PCB is missing
-         if (p_board_construction_info.outline_shapes.isEmpty())
-            {
-            System.err.println("Structure.create_board: outline missing");
-            p_par.board_outline_ok = false;
-            return false;
-            }
-         Iterator<DsnShape> it = p_board_construction_info.outline_shapes.iterator();
+      DsnRectangle bounding_box = null;
 
-         DsnRectangle bounding_box = it.next().bounding_box();
-         while (it.hasNext())
-            {
-            bounding_box = bounding_box.union(it.next().bounding_box());
-            }
-         p_board_construction_info.bounding_shape = bounding_box;
+      for ( DsnShape a_shape : p_board_construction_info.outline_shapes )
+         {
+         DsnRectangle a_boc = a_shape.bounding_box();
+         
+         if ( bounding_box == null ) 
+            bounding_box = a_boc;
+         else
+            bounding_box = bounding_box.union(a_boc);
          }
       
-      
-      DsnRectangle bounding_box = p_board_construction_info.bounding_shape.bounding_box();
+      p_board_construction_info.bounding_shape = bounding_box;
+
+      return true;
+      }
+
+   private BrdLayerStructure calc_board_layers (DsnReadScopeParameters p_par, DsnBoardConstruction p_board_construction_info)
+      {
+      int layer_count = p_board_construction_info.layer_info.size();
+
+      if (layer_count <= 0)
+         {
+         System.err.println(classname+"calc_board_layers: layers missing in structure scope");
+         return null;
+         }
+
       BrdLayer[] board_layer_arr = new BrdLayer[layer_count];
-      Iterator<DsnLayer> it = p_board_construction_info.layer_info.iterator();
+      
+      Iterator<DsnLayer> iter = p_board_construction_info.layer_info.iterator();
 
       for (int index = 0; index < layer_count; ++index)
          {
-         DsnLayer curr_layer = it.next();
+         DsnLayer curr_layer = iter.next();
+
          if (curr_layer.layer_no < 0 || curr_layer.layer_no >= layer_count)
             {
-            System.out.println("Structure.create_board: illegal layer number");
-            return false;
+            System.out.println(classname+"calc_board_layers: illegal layer number");
+            return null;
             }
-         board_layer_arr[index] = new BrdLayer(curr_layer.name, curr_layer.is_signal);
+         
+         if ( curr_layer.layer_no != index )
+            System.out.println(classname+"calc_board_layers: WARNING different layer_no");
+         
+         board_layer_arr[index] = new BrdLayer(index, curr_layer.name, curr_layer.is_signal);
          }
       
-      
-      BrdLayerStructure board_layer_structure = new BrdLayerStructure(board_layer_arr);
-      
-      p_par.layer_structure = new DsnLayerStructure(p_board_construction_info.layer_info);
+      return new BrdLayerStructure(board_layer_arr);
+      }
 
+   private boolean create_board(DsnReadScopeParameters p_par, DsnBoardConstruction p_board_construction_info)
+      {
+      if ( ! calc_board_outline(p_par, p_board_construction_info)) return false;
+
+      BrdLayerStructure board_layer_structure = calc_board_layers(p_par, p_board_construction_info);
+      
+      if ( board_layer_structure == null ) return false;      
+
+      p_par.layer_structure = new DsnLayerStructure(p_board_construction_info.layer_info);
+      
+      DsnRectangle bounding_box = p_board_construction_info.bounding_shape.bounding_box();
+
+      
       // Calculate an appropriate scaling between dsn coordinates and board coordinates.
-      int scale_factor = Math.max(p_par.wish_resolution, 1);
+      int scale_factor = Math.max(p_par.dsn_resolution, 1);
 
       double max_coor = 0;
       for (int i = 0; i < 4; ++i)
          {
-         max_coor = Math.max(max_coor, Math.abs(bounding_box.coor[i] * p_par.wish_resolution));
+         max_coor = Math.max(max_coor, Math.abs(bounding_box.coor[i] * p_par.dsn_resolution));
          }
       if (max_coor == 0)
          {
@@ -897,12 +927,15 @@ public class DsnKeywordStructure extends DsnKeywordScope
          board_outline_shapes.add(curr_board_shape);
          }
       Collection<ShapePolyline> hole_shapes = separate_holes(board_outline_shapes);
-      rules.ClearanceMatrix clearance_matrix = rules.ClearanceMatrix.get_default_instance(board_layer_structure, 0);
-      rules.BoardRules board_rules = new BoardRules(board_layer_structure, clearance_matrix);
+      
+      ClearanceMatrix clearance_matrix = ClearanceMatrix.get_default_instance(board_layer_structure, 0);
+      
+      BoardRules board_rules = new BoardRules(board_layer_structure, clearance_matrix);
+      
       DsnParserInfo specctra_parser_info = new DsnParserInfo(p_par.string_quote, p_par.host_cad, p_par.host_version, p_par.constants,
             p_par.write_resolution, p_par.dsn_file_generated_by_host);
       
-      Communication board_communication = new Communication(p_par.wish_unit_meas, p_par.wish_resolution, specctra_parser_info, p_par.coordinate_transform, p_par.item_id_no_generator, p_par.observers);
+      Communication board_communication = new Communication(p_par.dsn_unit_meas, p_par.dsn_resolution, specctra_parser_info, p_par.coordinate_transform, p_par.item_id_no_generator, p_par.observers);
 
       ShapePolyline[] outline_shape_arr = new ShapePolyline[board_outline_shapes.size()];
       Iterator<ShapePolyline> it2 = board_outline_shapes.iterator();

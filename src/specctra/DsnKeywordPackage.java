@@ -23,7 +23,6 @@ package specctra;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import specctra.varie.DsnKeywordComponent;
 import board.BrdLayer;
 import board.items.BrdItem;
 

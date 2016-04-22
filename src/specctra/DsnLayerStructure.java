@@ -27,12 +27,14 @@ import java.util.Iterator;
  *
  * @author alfons
  */
-public class DsnLayerStructure
+public final class DsnLayerStructure
    {
    public final DsnLayer[] arr;
    
 
-   /** Creates a new instance of LayerStructure from a list of layers */
+   /** 
+    * Creates a new instance of LayerStructure from a list of layers 
+    */
    public DsnLayerStructure(Collection<DsnLayer> p_layer_list)
       {
       arr = new DsnLayer[p_layer_list.size()];

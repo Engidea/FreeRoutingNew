@@ -21,7 +21,6 @@
 package specctra;
 
 import java.io.InputStreamReader;
-import specctra.varie.DsnKeywordComponent;
 import specctra.varie.EaglePinInfo;
 import board.RoutingBoard;
 
@@ -52,10 +51,7 @@ public class SpectraSesToEagle extends javax.swing.JFrame
    
    public static boolean get_instance(java.io.InputStream p_session, java.io.OutputStream p_output_stream, RoutingBoard p_board)
       {
-      if (p_output_stream == null)
-         {
-         return false;
-         }
+      if (p_output_stream == null) return false;
 
       // create a scanner for reading the session_file.
 

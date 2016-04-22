@@ -34,12 +34,6 @@ public final class BrdLayerStructure implements java.io.Serializable
    public BrdLayerStructure(BrdLayer[] p_layer_arr)
       {
       arr = p_layer_arr;
-      
-      for (int index=0; index<arr.length; index++)
-         {
-         arr[index].layer_no = index;
-         }
-      
       }
 
    public int size()

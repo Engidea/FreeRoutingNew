@@ -18,18 +18,10 @@
  * Created on 20. Mai 2004, 07:32
  */
 
-package specctra.varie;
+package specctra;
 
 import java.util.Iterator;
-import specctra.DsnClearanceInfo;
-import specctra.DsnComponentLocation;
-import specctra.DsnComponentPlacement;
-import specctra.DsnFileScanner;
-import specctra.DsnKeyword;
-import specctra.DsnKeywordScope;
-import specctra.DsnReadScopeParameters;
-import specctra.DsnWriteScopeParameter;
-import specctra.JflexScanner;
+import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.items.BrdArea;
 import board.items.BrdItem;
@@ -39,7 +31,7 @@ import datastructures.UndoableObjectNode;
  * Handles the placement bata of a library component.
  * @author alfons
  */
-public class DsnKeywordComponent extends DsnKeywordScope
+public final class DsnKeywordComponent extends DsnKeywordScope
    {
    public DsnKeywordComponent()
       {

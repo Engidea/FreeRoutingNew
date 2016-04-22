@@ -21,6 +21,8 @@
 package board;
 
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import specctra.DsnCoordinateTransform;
 import specctra.DsnParserInfo;
 import board.varie.IdGenerator;
@@ -62,7 +64,7 @@ public final class Communication implements java.io.Serializable
       }
 
 
-   public boolean host_cad_is_eagle()
+   private boolean host_cad_is_eagle()
       {
       return specctra_parser_info != null && specctra_parser_info.host_cad != null && specctra_parser_info.host_cad.equalsIgnoreCase("CadSoft");
       }
@@ -80,7 +82,7 @@ public final class Communication implements java.io.Serializable
       return UnitMeasure.scale(resolution, p_unit, unit);
       }
 
-   private void readObject(java.io.ObjectInputStream p_stream) throws java.io.IOException, java.lang.ClassNotFoundException
+   private void readObject( ObjectInputStream p_stream) throws IOException, ClassNotFoundException
       {
       p_stream.defaultReadObject();
       observers = new BrdObserverVoid();

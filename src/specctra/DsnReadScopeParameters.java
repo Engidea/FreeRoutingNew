@@ -20,11 +20,14 @@
 
 package specctra;
 
+import interactive.IteraBoard;
 import java.util.Collection;
 import java.util.LinkedList;
 import specctra.varie.DsnWriteResolution;
 import autoroute.ArtSettings;
+import board.BrdObservers;
 import board.varie.IdGenerator;
+import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
 import datastructures.UnitMeasure;
 
@@ -32,35 +35,24 @@ import datastructures.UnitMeasure;
  * Default parameter type used while reading a Specctra dsn-file.
  * @author alfons
  */
-public class DsnReadScopeParameters
+public final class DsnReadScopeParameters
    {
    public final JflexScanner scanner;
-   final interactive.IteraBoard board_handling;
+
+   final IteraBoard board_handling;
    final DsnNetList netlist = new DsnNetList();
 
-   final board.BrdObservers observers;
+   final BrdObservers observers;
    final IdGenerator item_id_no_generator;
-   final board.varie.TestLevel test_level;
-
-   DsnReadScopeParameters(JflexScanner p_scanner, interactive.IteraBoard p_board_handling, board.BrdObservers p_observers, IdGenerator p_item_id_no_generator,
-         board.varie.TestLevel p_test_level)
-      {
-      scanner = p_scanner;
-      board_handling = p_board_handling;
-      observers = p_observers;
-      item_id_no_generator = p_item_id_no_generator;
-      test_level = p_test_level;
-      }
+   final TestLevel test_level;
 
    // The plane cannot be inserted directly into the boards, because the layers may not be read completely.
    final Collection<DsnPlaneInfo> plane_list = new LinkedList<DsnPlaneInfo>();
    final Collection<String[]> constants = new LinkedList<String[]>();
 
-   /**
-    * Component placement information. It is filled while reading the placement scope and can be evaluated after reading the library
-    * and network scope.
-    */
-   public final Collection<DsnComponentPlacement> placement_list = new LinkedList<DsnComponentPlacement>();
+   // Component placement information. 
+   // It is filled while reading the placement scope and can be evaluated after reading the library and network scope.
+   final Collection<DsnComponentPlacement> placement_list = new LinkedList<DsnComponentPlacement>();
 
    // The names of the via padstacks filled while reading the structure scope and evaluated after reading the library scope.
    Collection<String> via_padstack_names = null;
@@ -86,9 +78,24 @@ public class DsnReadScopeParameters
    // The following objects will be initialized when the structure scope is read
    DsnCoordinateTransform coordinate_transform = null;
    DsnLayerStructure layer_structure = null;
+   
    ArtSettings autoroute_settings = null;
 
-   // From this I should try to apply the same to the actual board, Damiano
-   UnitMeasure wish_unit_meas = UnitMeasure.UM;
-   int wish_resolution = 100; // default resolution is to divide each unit in 100 parts
+   // The following two are read from dsn and then used to create the one used by freeroute
+   // note that the two values should be overwritten on import..
+   // ideally, I wish UM and a subdivision of 10
+   UnitMeasure dsn_unit_meas;
+   // how much to further divide the unit measure, ideally 10 parts if Unit is UM
+   int dsn_resolution;
+
+   DsnReadScopeParameters(JflexScanner p_scanner, IteraBoard p_board_handling, BrdObservers p_observers, IdGenerator p_item_id_no_generator,
+         TestLevel p_test_level)
+      {
+      scanner = p_scanner;
+      board_handling = p_board_handling;
+      observers = p_observers;
+      item_id_no_generator = p_item_id_no_generator;
+      test_level = p_test_level;
+      }
+
    }

@@ -142,28 +142,16 @@ public enum UnitMeasure implements java.io.Serializable
     */
    public static UnitMeasure from_string(String p_string)
       {
-      UnitMeasure result;
       if (p_string.compareToIgnoreCase("mil") == 0)
-         {
-         result = MIL;
-         }
+         return MIL;
       else if (p_string.compareToIgnoreCase("inch") == 0)
-         {
-         result = INCH;
-         }
+         return INCH;
       else if (p_string.compareToIgnoreCase("mm") == 0)
-         {
-         result = MM;
-         }
+         return MM;
       else if (p_string.compareToIgnoreCase("um") == 0)
-         {
-         result = UM;
-         }
+         return UM;
       else
-         {
-         result = null;
-         }
-      return result;
+         return null;
       }
 
    public static final double INCH_TO_MM = 25.4;

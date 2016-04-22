@@ -19,7 +19,6 @@
  */
 package specctra;
 
-import specctra.varie.DsnKeywordComponent;
 
 /**
  * Enumeration class for keywords of the specctra dsn file format

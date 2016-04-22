@@ -29,15 +29,15 @@ public final class BrdLayer implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
-   // should be set to proper value by BrdLayerStructure
-   public int layer_no = -1;
+   public final int layer_no;
    // The name of the layer
    public final String name;
    // True, if this is a signal layer, which can be used for routing. Otherwise it may be for example a power ground layer.
    public final boolean is_signal;
 
-   public BrdLayer(String p_name, boolean p_is_signal)
+   public BrdLayer(int p_layer_no, String p_name, boolean p_is_signal)
       {
+      layer_no = p_layer_no;
       name = p_name;
       is_signal = p_is_signal;
       }

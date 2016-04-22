@@ -44,8 +44,8 @@ public class DsnKeywordResolution extends DsnKeywordScope
             System.out.println("Resolution.read_scope: string expected");
             return false;
             }
-         p_par.wish_unit_meas = UnitMeasure.from_string((String) next_token);
-         if (p_par.wish_unit_meas == null)
+         p_par.dsn_unit_meas = UnitMeasure.from_string((String) next_token);
+         if (p_par.dsn_unit_meas == null)
             {
             System.out.println("Resolution.read_scope: unit mil, inch or mm expected");
             return false;
@@ -57,7 +57,7 @@ public class DsnKeywordResolution extends DsnKeywordScope
             System.out.println("Resolution.read_scope: integer expected");
             return false;
             }
-         p_par.wish_resolution = ((Integer) next_token).intValue();
+         p_par.dsn_resolution = ((Integer) next_token).intValue();
          // overread the closing bracket
          next_token = p_par.scanner.next_token();
          if (next_token != DsnKeyword.CLOSED_BRACKET)

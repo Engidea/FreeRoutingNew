@@ -149,6 +149,7 @@ public final class BrdComponents implements java.io.Serializable
    private void restore_component_arr_from_undo_list(BrdObservers p_observers)
       {
       Iterator<UndoableObjectNode> iter = undo_list.start_read_object();
+      
       for (;;)
          {
          BrdComponent curr_component = (BrdComponent) undo_list.read_object(iter);
