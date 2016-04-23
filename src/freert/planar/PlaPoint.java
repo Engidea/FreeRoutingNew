@@ -39,7 +39,21 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * returns the translation of this point by p_vector
     */
-   public abstract PlaPoint translate_by(PlaVector p_vector);
+   public final PlaPoint translate_by(PlaVector p_vector)
+      {
+      if ( p_vector == null ) return this;
+      
+      if ( p_vector instanceof PlaVectorInt )
+         return translate_by((PlaVectorInt)p_vector);
+      else if ( p_vector instanceof PlaVectorRational )
+         return translate_by((PlaVectorRational)p_vector);
+      else 
+         return null;
+      }
+   
+   protected abstract PlaPoint translate_by(PlaVectorInt p_vector);
+   protected abstract PlaPoint translate_by(PlaVectorRational p_vector);
+   
 
    /**
     * returns the difference vector of this point and p_other
@@ -190,12 +204,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
       return p_pole.translate_by(v);
       }
 
-   // auxiliary functions needed because the virtual function mechanism
-   // does not work in parameter position
-
-   abstract PlaPoint translate_by(PlaVectorInt p_vector);
-
-   abstract PlaPoint translate_by(PlaVectorRational p_vector);
 
 
 

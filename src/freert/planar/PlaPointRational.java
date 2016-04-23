@@ -184,28 +184,17 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return true;
       }
 
-   /**
-    * returns the translation of this point by p_vector
-    */
-   @Override
-   public PlaPoint translate_by(PlaVector p_vector)
-      {
-      if (p_vector.equals(PlaVector.ZERO))
-         {
-         return this;
-         }
-      return p_vector.add_to(this);
-      }
 
    @Override
-   PlaPoint translate_by(PlaVectorInt p_vector)
+   protected PlaPoint translate_by(PlaVectorInt p_vector)
       {
       PlaVectorRational vector = new PlaVectorRational(p_vector);
+      
       return translate_by(vector);
       }
 
    @Override
-   PlaPoint translate_by(PlaVectorRational p_vector)
+   protected PlaPoint translate_by(PlaVectorRational p_vector)
       {
       BigInteger v1[] = new BigInteger[3];
       v1[0] = rp_x;
@@ -217,6 +206,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       v2[1] = p_vector.y;
       v2[2] = p_vector.z;
       BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
+      
       return new PlaPointRational(result[0], result[1], result[2]);
       }
 

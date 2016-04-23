@@ -122,39 +122,17 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return v_x >= p_box.box_ll.v_x && v_y >= p_box.box_ll.v_y && v_x <= p_box.box_ur.v_x && v_y <= p_box.box_ur.v_y;
       }
 
-   /**
-    * @return the translation of this point by p_vector
-    */
    @Override
-   public final PlaPoint translate_by(PlaVector p_vector)
-      {
-      if (p_vector.equals(PlaVector.ZERO)) return this;
-
-      return p_vector.add_to(this);
-      }
-
-   @Override
-   PlaPointInt translate_by(PlaVectorInt p_vector)
+   protected PlaPointInt translate_by(PlaVectorInt p_vector)
       {
       return new PlaPointInt(v_x + p_vector.point_x, v_y + p_vector.point_y);
       }
 
    @Override
-   PlaPoint translate_by(PlaVectorRational p_vector)
+   protected  PlaPoint translate_by(PlaVectorRational p_vector)
       {
       return p_vector.add_to(this);
       }
-
-   /**
-    * @return the difference vector of this point and p_other
-   @Override
-   public PlaVector difference_by(PlaPoint p_other)
-      {
-      PlaVector tmp = p_other.difference_by(this);
-      
-      return tmp.negate();
-      }
-    */
 
    @Override
    public PlaVectorRational difference_by(PlaPointRational p_other)
