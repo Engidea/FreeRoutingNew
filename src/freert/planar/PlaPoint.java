@@ -44,11 +44,21 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * returns the difference vector of this point and p_other
     */
-   public abstract PlaVector difference_by(PlaPoint p_other);
+   public final PlaVector difference_by(PlaPoint p_other)
+      {
+      if ( p_other == null ) return null;
+      
+      if ( p_other instanceof PlaPointInt )
+         return difference_by((PlaPointInt)p_other);
+      else if ( p_other instanceof PlaPointRational )
+         return difference_by((PlaPointRational)p_other);
+      else 
+         return null;
+      }
 
-   public abstract PlaVector difference_by(PlaPointInt p_other);
-
-   public abstract PlaVector difference_by(PlaPointRational p_other);
+   
+   protected abstract PlaVector difference_by(PlaPointInt p_other);
+   protected abstract PlaVector difference_by(PlaPointRational p_other);
    
    /**
     * approximates the coordinates of this point by float coordinates
@@ -109,8 +119,19 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * Returns 1, if this Point has a strict bigger x coordinate than p_other, 0, if the x cooordinates are equal, and -1 otherwise.
     */
-   public abstract int compare_x(PlaPoint p_other);
+   public final int compare_x(PlaPoint p_other)
+      {
+      if ( this instanceof PlaPointInt )
+         return -p_other.compare_x((PlaPointInt)this);
+      else
+         return -p_other.compare_x((PlaPointRational)this);
+      }
+   
 
+   protected abstract int compare_x(PlaPointInt p_other);
+   abstract int compare_x(PlaPointRational p_other);
+   
+   
    /**
     * Returns 1, if this Point has a strict bigger y coordinate than p_other, 0, if the y cooordinates are equal, and -1 otherwise.
     */
@@ -166,9 +187,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
    abstract PlaPoint translate_by(PlaVectorRational p_vector);
 
 
-   abstract int compare_x(PlaPointInt p_other);
-
-   abstract int compare_x(PlaPointRational p_other);
 
    abstract int compare_y(PlaPointInt p_other);
 

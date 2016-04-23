@@ -147,7 +147,6 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
 
    /**
     * @return the difference vector of this point and p_other
-    */
    @Override
    public PlaVector difference_by(PlaPoint p_other)
       {
@@ -155,6 +154,7 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       
       return tmp.negate();
       }
+    */
 
    @Override
    public PlaVectorRational difference_by(PlaPointRational p_other)
@@ -165,7 +165,7 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       }
 
    @Override
-   public PlaVectorInt difference_by(PlaPointInt p_other)
+   protected PlaVectorInt difference_by(PlaPointInt p_other)
       {
       return new PlaVectorInt(v_x - p_other.v_x, v_y - p_other.v_y);
       }
@@ -494,19 +494,13 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       }
 
    @Override
-   public int compare_x(PlaPoint p_other)
-      {
-      return -p_other.compare_x(this);
-      }
-
-   @Override
    public int compare_y(PlaPoint p_other)
       {
       return -p_other.compare_y(this);
       }
 
    @Override
-   int compare_x(PlaPointInt p_other)
+   protected int compare_x(PlaPointInt p_other)
       {
       int result;
       if (this.v_x > p_other.v_x)

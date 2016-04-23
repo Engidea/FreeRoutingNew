@@ -220,18 +220,8 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return new PlaPointRational(result[0], result[1], result[2]);
       }
 
-   /**
-    * returns the difference vector of this point and p_other
-    */
    @Override
-   public PlaVector difference_by(PlaPoint p_other)
-      {
-      PlaVector tmp = p_other.difference_by(this);
-      return tmp.negate();
-      }
-
-   @Override
-   public PlaVectorRational difference_by(PlaPointInt p_other)
+   protected PlaVectorRational difference_by(PlaPointInt p_other)
       {
       PlaPointRational other = new PlaPointRational(p_other);
       
@@ -325,12 +315,13 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return new PlaPointRational(proj_x, proj_y, denominator);
       }
 
+   /*
    @Override
    public int compare_x(PlaPoint p_other)
       {
       return -p_other.compare_x(this);
       }
-
+*/
    @Override
    public int compare_y(PlaPoint p_other)
       {
@@ -354,7 +345,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       }
 
    @Override
-   int compare_x(PlaPointInt p_other)
+   protected int compare_x(PlaPointInt p_other)
       {
       BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_x));
       return rp_x.compareTo(tmp1);
