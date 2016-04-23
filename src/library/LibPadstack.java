@@ -22,12 +22,11 @@ package library;
 
 import java.util.Collection;
 import java.util.LinkedList;
+import board.infos.PrintableInfo;
 import freert.planar.PlaDirection;
-import freert.planar.PlaDirectionLong;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
-import board.infos.PrintableInfo;
 
 /**
  * Describes padstack masks for pins or vias located at the origin.
@@ -127,9 +126,9 @@ public final class LibPadstack implements Comparable<LibPadstack>, PrintableInfo
     * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer. If the length of the pad is
     * smaller than p_factor times the height of the pad, connection also to the long side is allowed.
     */
-   public Collection<PlaDirectionLong> get_trace_exit_directions(int p_layer, double p_factor)
+   public Collection<PlaDirection> get_trace_exit_directions(int p_layer, double p_factor)
       {
-      Collection<PlaDirectionLong> result = new LinkedList<PlaDirectionLong>();
+      Collection<PlaDirection> result = new LinkedList<PlaDirection>();
       
       if (p_layer < 0 || p_layer >= shapes.length) return result;
       

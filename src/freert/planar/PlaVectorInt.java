@@ -270,7 +270,7 @@ public final class PlaVectorInt extends PlaVector
    @Override
    PlaDirection to_normalized_direction()
       {
-      return new PlaDirectionLong(this);
+      return new PlaDirection(this);
       }
 
    @Override

@@ -864,7 +864,7 @@ public final class ShapeTileSimplex extends ShapeTile
       boolean check_cross_first_line = false;
       PlaLineInt prev_division_line = null;
       PlaLineInt first_division_line = division_line_arr[0][0];
-      PlaDirectionLong first_direction = (PlaDirectionLong) first_division_line.direction();
+      PlaDirection first_direction = first_division_line.direction();
       Collection<ShapeTileSimplex> result_list = new LinkedList<ShapeTileSimplex>();
 
       for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no)
@@ -881,12 +881,12 @@ public final class ShapeTileSimplex extends ShapeTile
             // Construct an unbounded simplex from
             // curr_division_lines[1] and curr_division_lines[0]
             // and intersect it with the outer simplex
-            PlaDirectionLong curr_dir = (PlaDirectionLong) curr_division_lines[0].direction();
+            PlaDirection curr_dir = curr_division_lines[0].direction();
             boolean merge_prev_division_line = false;
             boolean merge_first_division_line = false;
             if (prev_division_line != null)
                {
-               PlaDirectionLong prev_dir = (PlaDirectionLong) prev_division_line.direction();
+               PlaDirection prev_dir = prev_division_line.direction();
                if (curr_dir.determinant(prev_dir) > 0)
 
                   {
@@ -901,7 +901,7 @@ public final class ShapeTileSimplex extends ShapeTile
                }
             if (check_cross_first_line)
                {
-               PlaDirectionLong curr_dir2 = (PlaDirectionLong) curr_division_lines[1].direction();
+               PlaDirection curr_dir2 = curr_division_lines[1].direction();
                if (curr_dir2.determinant(first_direction) < 0)
                   {
                   // The current piece has an intersection area with the first
@@ -937,13 +937,13 @@ public final class ShapeTileSimplex extends ShapeTile
          // and intersect it with the outer simplex
          boolean merge_next_division_line = !next_division_line.point_b.equals(next_division_line.point_a);
          PlaLineInt last_curr_division_line = curr_division_lines[curr_division_lines.length - 1];
-         PlaDirectionLong last_curr_dir = (PlaDirectionLong) last_curr_division_line.direction();
+         PlaDirection last_curr_dir = last_curr_division_line.direction();
          boolean merge_last_curr_division_line = !last_curr_division_line.point_b.equals(last_curr_division_line.point_a);
          boolean merge_prev_division_line = false;
          boolean merge_first_division_line = false;
          if (prev_division_line != null)
             {
-            PlaDirectionLong prev_dir = (PlaDirectionLong) prev_division_line.direction();
+            PlaDirection prev_dir = prev_division_line.direction();
             if (last_curr_dir.determinant(prev_dir) > 0)
 
                {
@@ -960,7 +960,7 @@ public final class ShapeTileSimplex extends ShapeTile
             }
          if (check_cross_first_line)
             {
-            PlaDirectionLong next_dir = (PlaDirectionLong) next_division_line.direction();
+            PlaDirection next_dir = next_division_line.direction();
             if (next_dir.determinant(first_direction) < 0)
                {
                // The current piece has an intersection area with the first piece.
@@ -1075,8 +1075,8 @@ public final class ShapeTileSimplex extends ShapeTile
             next_line = line_arr[next_ind];
 
             boolean remove_line = false;
-            PlaDirectionLong prev_dir = (PlaDirectionLong) prev_line.direction();
-            PlaDirectionLong next_dir = (PlaDirectionLong) next_line.direction();
+            PlaDirection prev_dir = prev_line.direction();
+            PlaDirection next_dir = next_line.direction();
             double det = prev_dir.determinant(next_dir);
             if (det != 0) // prev_line and next_line are not parallel
                {
@@ -1099,7 +1099,7 @@ public final class ShapeTileSimplex extends ShapeTile
 
                   if (intersection_sides[ind] == PlaSide.ON_THE_LEFT)
                      {
-                     PlaDirectionLong curr_dir = (PlaDirectionLong) curr_line.direction();
+                     PlaDirection curr_dir = curr_line.direction();
                      if (prev_dir.determinant(curr_dir) > 0)
                      // direction of curr_line is bigger than direction of prev_line
                         {
@@ -1262,10 +1262,10 @@ public final class ShapeTileSimplex extends ShapeTile
          result[0] = prev_inner_line;
          return result;
          }
-      PlaDirectionLong first_projection_dir = PlaDirection.NULL;
-      PlaDirectionLong second_projection_dir = PlaDirection.NULL;
-      PlaDirectionLong prev_inner_dir = (PlaDirectionLong) prev_inner_line.direction().opposite();
-      PlaDirectionLong next_inner_dir = (PlaDirectionLong) curr_inner_line.direction();
+      PlaDirection first_projection_dir = PlaDirection.NULL;
+      PlaDirection second_projection_dir = PlaDirection.NULL;
+      PlaDirection prev_inner_dir = prev_inner_line.direction().opposite();
+      PlaDirection next_inner_dir = curr_inner_line.direction();
       int outer_line_no = 0;
 
       // search the first outer line, so that
@@ -1277,7 +1277,7 @@ public final class ShapeTileSimplex extends ShapeTile
       for (int ind = 0; ind < p_outer_simplex.arr.length; ++ind)
          {
          PlaLineInt outer_line = p_outer_simplex.arr[outer_line_no];
-         PlaDirectionLong curr_projection_dir = (PlaDirectionLong) inner_corner.perpendicular_direction(outer_line);
+         PlaDirection curr_projection_dir =  inner_corner.perpendicular_direction(outer_line);
          if (curr_projection_dir == PlaDirection.NULL)
             {
             PlaLineInt[] result = new PlaLineInt[1];
@@ -1290,7 +1290,7 @@ public final class ShapeTileSimplex extends ShapeTile
             double curr_distance = Math.abs(outer_line.signed_distance(inner_corner.to_float()));
             boolean second_division_necessary = curr_projection_dir.determinant(next_inner_dir) < 0;
             // may occor at a sharp angle
-            PlaDirectionLong curr_second_projection_dir = curr_projection_dir;
+            PlaDirection curr_second_projection_dir = curr_projection_dir;
 
             if (second_division_necessary)
                {
@@ -1308,7 +1308,7 @@ public final class ShapeTileSimplex extends ShapeTile
                      {
                      ++tmp_outer_line_no;
                      }
-                  curr_second_projection_dir = (PlaDirectionLong) inner_corner.perpendicular_direction(p_outer_simplex.arr[tmp_outer_line_no]);
+                  curr_second_projection_dir = inner_corner.perpendicular_direction(p_outer_simplex.arr[tmp_outer_line_no]);
 
                   if (curr_second_projection_dir == PlaDirection.NULL)
                   // inner corner is on outer_line

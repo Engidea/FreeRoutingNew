@@ -20,18 +20,6 @@
 
 package board.items;
 
-import freert.planar.PlaDirection;
-import freert.planar.PlaDirectionLong;
-import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaShape;
-import freert.planar.PlaVector;
-import freert.planar.Polyline;
-import freert.planar.ShapeConvex;
-import freert.planar.ShapeTile;
-import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.LinkedList;
@@ -45,6 +33,17 @@ import board.varie.BrdTraceExitRestriction;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaDirection;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
+import gui.varie.ObjectInfoPanel;
 
 /**
  * This is a Pin , a pin can be SMD or PTH and is normally attached to a component
@@ -333,7 +332,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
             }
          }
 
-      Collection<PlaDirectionLong> padstack_exit_directions = get_padstack().get_trace_exit_directions(padstack_layer, pad_xy_factor);
+      Collection<PlaDirection> padstack_exit_directions = get_padstack().get_trace_exit_directions(padstack_layer, pad_xy_factor);
 
       if (padstack_exit_directions.isEmpty()) return result;
 
@@ -348,7 +347,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       PlaPoint pin_center = get_center();
       PlaPointFloat center_approx = pin_center.to_float();
 
-      for (PlaDirectionLong curr_padstack_exit_direction : padstack_exit_directions)
+      for (PlaDirection curr_padstack_exit_direction : padstack_exit_directions)
          {
          LibPackage lib_package = component.get_package();
 
@@ -359,7 +358,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          if (package_pin == null)  continue;
 
          double curr_rotation_in_degree = component_rotation + package_pin.rotation_in_degree;
-         PlaDirectionLong curr_exit_direction;
+         PlaDirection curr_exit_direction;
          if (curr_rotation_in_degree % 45 == 0)
             {
             int fortyfive_degree_factor = ((int) curr_rotation_in_degree) / 45;

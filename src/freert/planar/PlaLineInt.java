@@ -33,7 +33,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    public final PlaPointInt point_a;
    public final PlaPointInt point_b;
    
-   private transient PlaDirectionLong dir=null; // should only be accessed from get_direction().
+   private transient PlaDirection dir=null; // should only be accessed from get_direction().
    
    private transient double cf_m,cf_q;
    
@@ -79,13 +79,10 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       point_b = (PlaPointInt)point_a.translate_by(p_dir.get_vector());
       
-      if ( p_dir instanceof PlaDirectionLong )
-         dir = (PlaDirectionLong)p_dir;
-      else
-         System.out.println("PlaLineInt found a dir that is not compatible");
+      dir = p_dir;
       }
 
-   public PlaLineInt(PlaPointInt p_a, PlaDirectionLong p_dir)
+   public PlaLineInt(PlaPointInt p_a, PlaDirection p_dir)
       {
       point_a = p_a;
       
@@ -155,12 +152,12 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    /**
     * get the direction of this directed line
     */
-   public PlaDirectionLong direction()
+   public PlaDirection direction()
       {
       if (dir == null)
          {
          PlaVectorInt d = point_b.difference_by(point_a);
-         dir = new PlaDirectionLong (d);
+         dir = new PlaDirection (d);
          }
       
       return dir;

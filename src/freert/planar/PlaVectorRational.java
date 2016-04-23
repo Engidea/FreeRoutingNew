@@ -251,7 +251,7 @@ public final class PlaVectorRational extends PlaVector
          dy = dx.divide(two);
          }
       
-      return new PlaDirectionLong(dx.longValue(), dy.longValue());
+      return new PlaDirection(dx.longValue(), dy.longValue());
       }
 
    double scalar_product(PlaVectorInt p_other)

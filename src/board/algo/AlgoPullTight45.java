@@ -26,7 +26,6 @@ import board.varie.BrdKeepPoint;
 import datastructures.Signum;
 import datastructures.ThreadStoppable;
 import freert.planar.PlaDirection;
-import freert.planar.PlaDirectionLong;
 import freert.planar.PlaLimits;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -329,9 +328,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaPointFloat prev_corner = p_line_arr[p_no].intersection_approx(p_line_arr[p_no - 1]);
       PlaPointFloat next_corner = p_line_arr[p_no + 1].intersection_approx(p_line_arr[p_no + 2]);
 
-      PlaDirectionLong prev_dir = p_line_arr[p_no].direction();
-      PlaDirectionLong next_dir = p_line_arr[p_no + 1].direction();
-      PlaDirectionLong new_line_dir = PlaDirection.get_instance(prev_dir.get_vector().add(next_dir.get_vector()));
+      PlaDirection prev_dir = p_line_arr[p_no].direction();
+      PlaDirection next_dir = p_line_arr[p_no + 1].direction();
+      PlaDirection new_line_dir = PlaDirection.get_instance(prev_dir.get_vector().add(next_dir.get_vector()));
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
       double translate_dist = (PlaLimits.sqrt2 - 1) * this.curr_half_width;
       double prev_dist = Math.abs(translate_line.signed_distance(prev_corner));
@@ -403,7 +402,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
          new_y = (int) Math.floor(curr_corner.point_y);
          new_line_is_horizontal = true;
          }
-      PlaDirectionLong new_line_dir = null;
+      PlaDirection new_line_dir = null;
       if (new_line_is_vertical)
          {
          if (prev_corner.point_y < next_corner.point_y)
@@ -451,9 +450,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaPointFloat next_corner = p_line_arr[p_no + 1].intersection_approx(p_line_arr[p_no + 2]);
       if ( next_corner.is_NaN()) return null;
 
-      PlaDirectionLong prev_dir = p_line_arr[p_no].direction();
-      PlaDirectionLong next_dir = p_line_arr[p_no + 1].direction();
-      PlaDirectionLong new_line_dir = PlaDirection.get_instance(prev_dir.get_vector().add(next_dir.get_vector()));
+      PlaDirection prev_dir = p_line_arr[p_no].direction();
+      PlaDirection next_dir = p_line_arr[p_no + 1].direction();
+      PlaDirection new_line_dir = PlaDirection.get_instance(prev_dir.get_vector().add(next_dir.get_vector()));
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
       double prev_dist = Math.abs(translate_line.signed_distance(prev_corner));
       double next_dist = Math.abs(translate_line.signed_distance(next_corner));
@@ -618,7 +617,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
 
       if (acute_angle)
          {
-         PlaDirectionLong new_line_dir;
+         PlaDirection new_line_dir;
          if (prev_corner_side == PlaSide.ON_THE_LEFT)
             {
             new_line_dir = other_trace_line.direction().turn_45_degree(2);
@@ -755,7 +754,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
 
       if (acute_angle)
          {
-         PlaDirectionLong new_line_dir;
+         PlaDirection new_line_dir;
          if (prev_corner_side == PlaSide.ON_THE_LEFT)
             {
             new_line_dir = other_trace_line.direction().turn_45_degree(6);
