@@ -316,11 +316,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       }
 
 
-   @Override
-   public int compare_y(PlaPoint p_other)
-      {
-      return -p_other.compare_y(this);
-      }
 
    @Override
    protected int compare_x(PlaPointInt p_other)
@@ -338,7 +333,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       }
 
    @Override
-   int compare_y(PlaPointRational p_other)
+   protected int compare_y(PlaPointRational p_other)
       {
       BigInteger tmp1 = rp_y.multiply(p_other.rp_z);
       BigInteger tmp2 = p_other.rp_y.multiply(rp_z);
@@ -347,7 +342,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
 
 
    @Override
-   int compare_y(PlaPointInt p_other)
+   protected int compare_y(PlaPointInt p_other)
       {
       BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_y));
       return rp_y.compareTo(tmp1);

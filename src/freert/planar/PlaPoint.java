@@ -127,16 +127,26 @@ public abstract class PlaPoint implements PlaObject, Serializable
       else
          return compare_x((PlaPointRational)p_other);
       }
-   
 
    protected abstract int compare_x(PlaPointInt p_other);
    protected abstract int compare_x(PlaPointRational p_other);
    
    
    /**
-    * Returns 1, if this Point has a strict bigger y coordinate than p_other, 0, if the y cooordinates are equal, and -1 otherwise.
+    * Returns > 0 , if this Point has a strict bigger x coordinate than p_other
+    * returns 0, if the x cooordinates are equal, and < 0 otherwise.
     */
-   public abstract int compare_y(PlaPoint p_other);
+   private final int compare_y(PlaPoint p_other)
+      {
+      if ( p_other instanceof PlaPointInt )
+         return compare_y((PlaPointInt)p_other);
+      else
+         return compare_y((PlaPointRational)p_other);
+      }
+
+   protected abstract int compare_y(PlaPointInt p_other);
+   protected abstract int compare_y(PlaPointRational p_other);
+   
 
    /**
     * The function returns compare_x (p_other), if the result is not 0. Otherwise it returns compare_y (p_other).
@@ -145,9 +155,9 @@ public abstract class PlaPoint implements PlaObject, Serializable
       {
       int result = compare_x(p_other);
       
-      if (result == 0) return compare_y(p_other);
-
-      return result;
+      if (result != 0) return result;
+      
+      return compare_y(p_other);
       }
 
    /**
@@ -155,7 +165,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
     */
    public PlaPoint turn_90_degree(int p_factor, PlaPoint p_pole)
       {
-      PlaVector v = this.difference_by(p_pole);
+      PlaVector v = difference_by(p_pole);
       v = v.turn_90_degree(p_factor);
       return p_pole.translate_by(v);
       }
@@ -189,7 +199,4 @@ public abstract class PlaPoint implements PlaObject, Serializable
 
 
 
-   abstract int compare_y(PlaPointInt p_other);
-
-   abstract int compare_y(PlaPointRational p_other);
    }

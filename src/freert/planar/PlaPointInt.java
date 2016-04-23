@@ -493,35 +493,11 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return result;
       }
 
-   @Override
-   public int compare_y(PlaPoint p_other)
-      {
-      return -p_other.compare_y(this);
-      }
 
    @Override
    protected int compare_x(PlaPointInt p_other)
       {
       return v_x - p_other.v_x;
-      }
-
-   @Override
-   int compare_y(PlaPointInt p_other)
-      {
-      int result;
-      if (this.v_y > p_other.v_y)
-         {
-         result = 1;
-         }
-      else if (this.v_y == p_other.v_y)
-         {
-         result = 0;
-         }
-      else
-         {
-         result = -1;
-         }
-      return result;
       }
 
    @Override
@@ -532,9 +508,16 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       }
 
    @Override
-   int compare_y(PlaPointRational p_other)
+   protected  int compare_y(PlaPointInt p_other)
       {
-      return -p_other.compare_y(this);
+      return v_y - p_other.v_y;
+      }
+
+   @Override
+   protected int compare_y(PlaPointRational p_other)
+      {
+      BigInteger my_y_tmp = p_other.rp_z.multiply(BigInteger.valueOf(v_y));
+      return my_y_tmp.compareTo(p_other.rp_y);
       }
    
    @Override 
