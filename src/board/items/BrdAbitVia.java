@@ -19,12 +19,6 @@
  */
 package board.items;
 
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaShape;
-import freert.planar.PlaVector;
-import freert.planar.ShapeTile;
-import gui.varie.ObjectInfoPanel;
 import java.util.Collection;
 import java.util.Iterator;
 import library.LibPadstack;
@@ -35,6 +29,12 @@ import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
+import gui.varie.ObjectInfoPanel;
 
 /**
  * Electrical Item on the board, which may have a shape on several layer, whose geometry is
@@ -67,6 +67,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       return new BrdAbitVia(padstack, get_center(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), attach_allowed, r_board);
       }
 
+   @Override
    public PlaShape get_shape(int p_index)
       {
       if ( precalculated_shapes != null) return precalculated_shapes[p_index];
@@ -74,19 +75,19 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       // will throw exception if padstack is null, good
       precalculated_shapes = new PlaShape[padstack.to_layer() - padstack.from_layer() + 1];
       
-      for (int i = 0; i < precalculated_shapes.length; ++i)
+      for (int index = 0; index < precalculated_shapes.length; ++index)
          {
-         int padstack_layer = i + this.first_layer();
+         int padstack_layer = index + first_layer();
          PlaVector translate_vector = get_center().difference_by(PlaPoint.ZERO);
          PlaShape curr_shape = padstack.get_shape(padstack_layer);
 
          if (curr_shape == null)
             {
-            precalculated_shapes[i] = null;
+            precalculated_shapes[index] = null;
             }
          else
             {
-            precalculated_shapes[i] = (PlaShape) curr_shape.translate_by(translate_vector);
+            precalculated_shapes[index] = (PlaShape) curr_shape.translate_by(translate_vector);
             }
          }
 

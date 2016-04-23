@@ -16,6 +16,13 @@
 
 package board.items;
 
+import java.awt.Color;
+import board.RoutingBoard;
+import board.infos.BrdComponent;
+import board.shape.ShapeSearchTree;
+import board.varie.ItemFixState;
+import board.varie.ItemSelectionChoice;
+import board.varie.ItemSelectionFilter;
 import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -25,13 +32,6 @@ import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
-import java.awt.Color;
-import board.RoutingBoard;
-import board.infos.BrdComponent;
-import board.shape.ShapeSearchTree;
-import board.varie.ItemFixState;
-import board.varie.ItemSelectionChoice;
-import board.varie.ItemSelectionFilter;
 
 /**
  *
@@ -197,6 +197,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       clear_derived_data();
       }
 
+   @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       rotation_in_degree += p_factor * 90;
@@ -234,13 +235,14 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       clear_derived_data();
       }
 
+   @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
       side_changed = !side_changed;
-      if (r_board != null)
-         {
-         layer_no = r_board.get_layer_count() - layer_no - 1;
-         }
+
+      // why is it changing layer ? damiano
+      layer_no = r_board.get_layer_count() - layer_no - 1;
+
       PlaPoint rel_location = PlaPoint.ZERO.translate_by(translation);
       translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPoint.ZERO);
       clear_derived_data();

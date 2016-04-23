@@ -34,6 +34,13 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
 
    private boolean is_nan;
    
+   public PlaPointInt()
+      {
+      is_nan = true;
+      v_x = PlaLimits.CRIT_INT;
+      v_y = PlaLimits.CRIT_INT;
+      }
+   
    public PlaPointInt(int p_x, int p_y)
       {
       if (PlaLimits.is_critical (p_x))
@@ -547,4 +554,16 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       {
       return -p_other.compare_y(this);
       }
+   
+   @Override 
+   public final String toString ()
+      {
+      StringBuilder risul = new StringBuilder(100);
+      risul.append("("+v_x);
+      risul.append(","+v_y);
+      risul.append(')');
+      return risul.toString();
+      }
+   
+   
    }

@@ -968,12 +968,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return null;
          }
       
-      if (lines_arr[p_line_no].is_parallel(p_end_line))
-         {
-         return null;
-         }
+      if (lines_arr[p_line_no].is_parallel(p_end_line)) return null;
       
       PlaPoint new_end_corner = lines_arr[p_line_no].intersection(p_end_line);
+      
+      if ( new_end_corner.is_NaN() ) return null;
+
       if (p_line_no <= 1 && new_end_corner.equals(first_corner()) || p_line_no >= lines_arr.length - 2 && new_end_corner.equals(last_corner()))
          {
          // No split, if p_end_line does not intersect, but touches only tnis Polyline at an end point.

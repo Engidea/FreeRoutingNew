@@ -35,6 +35,20 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    
    private transient PlaDirectionInt dir=null; // should only be accessed from get_direction().
    
+   private transient double cf_m,cf_q;
+   
+   boolean is_nan;
+   
+   /**
+    * creates am "empty" line
+    */
+   public PlaLineInt()
+      {
+      is_nan = true;
+      point_a = new PlaPointInt ();
+      point_b = new PlaPointInt ();
+      }
+   
    /**
     * creates a directed Line from two Points
     */
@@ -86,7 +100,19 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       return false;
       }
 
-   
+   /**
+    * Experimental
+    */
+   private void calc_m_q ()
+      {
+      double top    = point_a.v_y - point_b.v_y;
+      double bottom = point_a.v_x - point_b.v_x;
+      
+      cf_m = bottom != 0 ? top / bottom : 0;
+      
+      cf_q = point_a.v_y - cf_m * point_a.v_x;
+      }
+
    /**
     * returns true, if this and p_ob define the same line
     */
@@ -392,9 +418,34 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       // this is the real issue, returning a rational is a big issue....
 //      System.out.println("rational");
-      return new PlaPointRational(is_x, is_y, det);
+      PlaPointRational ret_rat = new PlaPointRational(is_x, is_y, det);
+      PlaPointInt ret_int = intersect(this,p_other);
+//      System.out.print("rat="+ret_rat);
+//      System.out.println(" int="+ret_int);
+      return ret_rat;
       }
 
+   private PlaPointInt intersect ( PlaLineInt line_a, PlaLineInt line_b )
+      {
+      line_a.calc_m_q();
+      line_b.calc_m_q();
+      
+      double bottom = line_a.cf_m - line_b.cf_m;
+      
+      if ( bottom == 0 ) return new PlaPointInt();
+      
+      double top_x = line_b.cf_q - line_a.cf_q;
+      
+      double new_x = top_x / bottom;
+      
+      double top_y = line_a.cf_m*line_b.cf_q - line_b.cf_m*line_a.cf_q;
+      
+      double new_y = top_y / bottom;
+      
+      return new PlaPointInt ( new_x, new_y);
+      
+      }
+   
    /**
     * Returns an approximation of the intersection of the 2 lines by a FloatPoint. 
     * If the lines are parallel the result coordinates will be a NaN PointFloat 

@@ -20,6 +20,9 @@
 
 package freert.planar;
 
+import java.io.Serializable;
+import java.text.NumberFormat;
+
 /**
  *
  * Implements a point in the plane as a touple of double's. Because arithmetic calculations with double's are in general not exact,
@@ -29,7 +32,7 @@ package freert.planar;
  * @author Alfons Wirtz
  */
 
-public final class PlaPointFloat implements java.io.Serializable,PlaObject
+public final class PlaPointFloat  implements Serializable,PlaObject
    {
    private static final long serialVersionUID = 1L;
    
@@ -605,14 +608,19 @@ public final class PlaPointFloat implements java.io.Serializable,PlaObject
 
    public String to_string(java.util.Locale p_locale)
       {
-      java.text.NumberFormat nf = java.text.NumberFormat.getInstance(p_locale);
+      NumberFormat nf = NumberFormat.getInstance(p_locale);
       nf.setMaximumFractionDigits(4);
       return (" (" + nf.format(point_x) + " , " + nf.format(point_y) + ") ");
       }
 
+   @Override
    public String toString()
       {
-      return to_string(java.util.Locale.ENGLISH);
+      StringBuilder risul = new StringBuilder(100);
+      risul.append("("+point_x);
+      risul.append(","+point_y);
+      risul.append(')');
+      return risul.toString();
       }
 
    /**

@@ -186,14 +186,15 @@ public final class PlaCircle implements ShapeConvex , Serializable
 
    /**
     * Creates a bounding tile shape around this circle, so that the length of the line segments of the tile is at most p_max_segment_length.
-    */
    public ShapeTile bounding_tile(int p_max_segment_length)
       {
       int quadrant_division_count = radius / p_max_segment_length + 1;
+      
       if (quadrant_division_count <= 2)
          {
          return bounding_octagon();
          }
+      
       PlaLineInt[] tangent_line_arr = new PlaLineInt[quadrant_division_count * 4];
       for (int i = 0; i < quadrant_division_count; ++i)
          {
@@ -221,6 +222,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
          }
       return ShapeTile.get_instance(tangent_line_arr);
       }
+    */
 
    @Override
    public boolean is_contained_in(ShapeTileBox p_box)

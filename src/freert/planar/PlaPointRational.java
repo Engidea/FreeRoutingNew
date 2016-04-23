@@ -64,8 +64,9 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
 
    /**
     * creates a RetionalPoint from an IntPoint
+    * needed to be able to do a difference from a rational to a plapoint int
     */
-   PlaPointRational(PlaPointInt p_point)
+   private PlaPointRational(PlaPointInt p_point)
       {
       rp_x = BigInteger.valueOf(p_point.v_x);
       rp_y = BigInteger.valueOf(p_point.v_y);
@@ -240,6 +241,8 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
    @Override
    public PlaVectorRational difference_by(PlaPointRational p_other)
       {
+//      System.out.println("difference_by(PlaPointRational p_other) CALL");
+      
       BigInteger v1[] = new BigInteger[3];
       v1[0] = rp_x;
       v1[1] = rp_y;
@@ -337,31 +340,37 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
    @Override
    int compare_x(PlaPointRational p_other)
       {
-      BigInteger tmp1 = this.rp_x.multiply(p_other.rp_z);
-      BigInteger tmp2 = p_other.rp_x.multiply(this.rp_z);
+      BigInteger tmp1 = rp_x.multiply(p_other.rp_z);
+      BigInteger tmp2 = p_other.rp_x.multiply(rp_z);
       return tmp1.compareTo(tmp2);
       }
 
    @Override
    int compare_y(PlaPointRational p_other)
       {
-      BigInteger tmp1 = this.rp_y.multiply(p_other.rp_z);
-      BigInteger tmp2 = p_other.rp_y.multiply(this.rp_z);
+      BigInteger tmp1 = rp_y.multiply(p_other.rp_z);
+      BigInteger tmp2 = p_other.rp_y.multiply(rp_z);
       return tmp1.compareTo(tmp2);
       }
 
    @Override
    int compare_x(PlaPointInt p_other)
       {
-      BigInteger tmp1 = this.rp_z.multiply(BigInteger.valueOf(p_other.v_x));
-      return this.rp_x.compareTo(tmp1);
+      BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_x));
+      return rp_x.compareTo(tmp1);
       }
 
    @Override
    int compare_y(PlaPointInt p_other)
       {
-      BigInteger tmp1 = this.rp_z.multiply(BigInteger.valueOf(p_other.v_y));
-      return this.rp_y.compareTo(tmp1);
-
+      BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_y));
+      return rp_y.compareTo(tmp1);
+      }
+   
+   @Override 
+   public final String toString ()
+      {
+      PlaPointFloat afloat = to_float();
+      return afloat.toString();
       }
    }

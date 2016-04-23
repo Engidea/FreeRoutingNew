@@ -15,20 +15,6 @@
  */
 package board.items;
 
-import freert.planar.PlaDirection;
-import freert.planar.PlaDirectionInt;
-import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaSegmentInt;
-import freert.planar.PlaShape;
-import freert.planar.PlaVector;
-import freert.planar.Polyline;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
-import freert.planar.ShapeTileOctagon;
-import graphics.GdiContext;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -45,6 +31,20 @@ import board.varie.TraceAngleRestriction;
 import datastructures.Signum;
 import datastructures.ThreadStoppable;
 import datastructures.TimeLimitStoppable;
+import freert.planar.PlaDirection;
+import freert.planar.PlaDirectionInt;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSegmentInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
+import graphics.GdiContext;
 
 /**
  * Objects of class Trace, whose geometry is described by a Polyline
@@ -753,25 +753,23 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
    /**
     * Splits this trace at the line with number p_line_no into two by inserting
     * p_endline as concluding line of the first split piece and as the start
-    * line of the second split piece. Returns the 2 pieces of the splitted
-    * trace, or null, if nothing was splitted.
+    * line of the second split piece. 
+    * Returns the 2 pieces of the splitted trace, or null, if nothing was splitted.
     */
    private BrdTracePolyline[] split(int p_line_no, PlaLineInt p_new_end_line)
       {
-      if (!is_on_the_board())
-         {
-         return null;
-         }
+      if (!is_on_the_board()) return null;
+
       Polyline[] split_polylines = polyline.split(p_line_no, p_new_end_line);
-      if (split_polylines == null)
-         {
-         return null;
-         }
+
+      if (split_polylines == null) return null;
+
       if (split_polylines.length != 2)
          {
          System.out.println("PolylineTrace.split: array of length 2 expected for split_polylines");
          return null;
          }
+      
       if (split_inside_drill_pad_prohibited(p_line_no, p_new_end_line))
          {
          return null;

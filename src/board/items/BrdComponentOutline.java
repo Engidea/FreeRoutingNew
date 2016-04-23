@@ -20,6 +20,12 @@
  */
 package board.items;
 
+import java.awt.Color;
+import board.RoutingBoard;
+import board.shape.ShapeSearchTree;
+import board.varie.ItemFixState;
+import board.varie.ItemSelectionFilter;
+import datastructures.UnitMeasure;
 import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -28,12 +34,6 @@ import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
 import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
-import java.awt.Color;
-import board.RoutingBoard;
-import board.shape.ShapeSearchTree;
-import board.varie.ItemFixState;
-import board.varie.ItemSelectionFilter;
-import datastructures.UnitMeasure;
 
 /**
  *
@@ -176,6 +176,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       clear_derived_data();
       }
 
+   @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
       is_front = !is_front;
@@ -205,6 +206,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       clear_derived_data();
       }
 
+   @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       rotation_in_degree += p_factor * 90;
