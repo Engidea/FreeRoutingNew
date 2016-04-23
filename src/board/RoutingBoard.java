@@ -2082,7 +2082,7 @@ public final class RoutingBoard implements java.io.Serializable
          ShapeTileOctagon tidy_clip_shape;
          if (p_tidy_width < Integer.MAX_VALUE)
             {
-            tidy_clip_shape = p_location.surrounding_octagon().enlarge(p_tidy_width);
+            tidy_clip_shape = new ShapeTileOctagon (p_location).enlarge(p_tidy_width);
             }
          else
             {
@@ -2361,7 +2361,7 @@ public final class RoutingBoard implements java.io.Serializable
       ShapeTileOctagon tidy_region = null;
       if (p_tidy_width < Integer.MAX_VALUE)
          {
-         tidy_region = new_corner.surrounding_octagon().enlarge(p_tidy_width);
+         tidy_region = new ShapeTileOctagon(new_corner).enlarge(p_tidy_width);
          }
       int[] opt_net_no_arr;
       if (p_max_recursion_depth <= 0)

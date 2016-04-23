@@ -24,7 +24,7 @@ package freert.planar;
  * @author Alfons Wirtz
  */
 
-public final class ShapeTileOctagon extends ShapeTileRegular
+public final class ShapeTileOctagon extends ShapeTileRegular 
    {
    private static final long serialVersionUID = 1L;
 
@@ -52,6 +52,66 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    private ShapeTileSimplex precalculated_to_simplex = null;
 
    /**
+    * Construct n octagon around the given point
+    * @param a_point
+    */
+   public ShapeTileOctagon ( PlaPoint a_point )
+      {
+      if ( a_point instanceof PlaPointInt )
+         {
+         PlaPointInt pint = (PlaPointInt) a_point;
+         int tmp_1 = pint.v_x - pint.v_y;
+         int tmp_2 = pint.v_x + pint.v_y;
+
+         oct_lx  = pint.v_x;
+         oct_ly  = pint.v_y;
+         oct_rx  = pint.v_x;;
+         oct_uy  = pint.v_y;
+         oct_ulx = tmp_1;
+         oct_lrx = tmp_1;
+         oct_llx = tmp_2;
+         oct_urx = tmp_2;
+         }
+      else if ( a_point instanceof PlaPointRational )
+         {
+         PlaPointFloat fp = ((PlaPointRational)a_point).to_float();
+         int lx = (int) Math.floor(fp.point_x);
+         int ly = (int) Math.floor(fp.point_y);
+         int rx = (int) Math.ceil(fp.point_x);
+         int uy = (int) Math.ceil(fp.point_y);
+
+         double tmp = fp.point_x - fp.point_y;
+         int ulx = (int) Math.floor(tmp);
+         int lrx = (int) Math.ceil(tmp);
+
+         tmp = fp.point_x + fp.point_y;
+         int llx = (int) Math.floor(tmp);
+         int urx = (int) Math.ceil(tmp);
+         
+         oct_lx  = lx;
+         oct_ly  = ly;
+         oct_rx  = rx;
+         oct_uy  = uy;
+         oct_ulx = ulx;
+         oct_lrx = lrx;
+         oct_llx = llx;
+         oct_urx = urx;
+         }
+      else
+         {
+         is_nan  = true;
+         oct_lx  = 0;
+         oct_ly  = 0;
+         oct_rx  = 0;
+         oct_uy  = 0;
+         oct_ulx = 0;
+         oct_lrx = 0;
+         oct_llx = 0;
+         oct_urx = 0;
+         }
+      }
+   
+   /**
     * Creates an IntOctagon from 8 integer values. 
     * p_lx is the smallest x value of the shape. 
     * p_ly is the smallest y value of the shape. 
@@ -64,10 +124,10 @@ public final class ShapeTileOctagon extends ShapeTileRegular
     */
    public ShapeTileOctagon(int p_lx, int p_ly, int p_rx, int p_uy, int p_ulx, int p_lrx, int p_llx, int p_urx)
       {
-      oct_lx = p_lx;
-      oct_ly = p_ly;
-      oct_rx = p_rx;
-      oct_uy = p_uy;
+      oct_lx  = p_lx;
+      oct_ly  = p_ly;
+      oct_rx  = p_rx;
+      oct_uy  = p_uy;
       oct_ulx = p_ulx;
       oct_lrx = p_lrx;
       oct_llx = p_llx;

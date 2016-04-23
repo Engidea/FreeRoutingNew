@@ -478,7 +478,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       PlaPoint curr_end_point = first_corner();
       for (int i = 0; i < 2; ++i)
          {
-         ShapeTileOctagon curr_oct = curr_end_point.surrounding_octagon();
+         ShapeTileOctagon curr_oct = new ShapeTileOctagon(curr_end_point);
          curr_oct = curr_oct.enlarge(trace_half_width);
          Set<BrdItem> curr_overlaps = r_board.overlapping_items_with_clearance(curr_oct, layer_no, new int[0], clearance_class_no());
          for (BrdItem curr_item : curr_overlaps)

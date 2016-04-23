@@ -128,25 +128,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       }
 
    @Override
-   public ShapeTileOctagon surrounding_octagon()
-      {
-      PlaPointFloat fp = to_float();
-      int lx = (int) Math.floor(fp.point_x);
-      int ly = (int) Math.floor(fp.point_y);
-      int rx = (int) Math.ceil(fp.point_x);
-      int uy = (int) Math.ceil(fp.point_y);
-
-      double tmp = fp.point_x - fp.point_y;
-      int ulx = (int) Math.floor(tmp);
-      int lrx = (int) Math.ceil(tmp);
-
-      tmp = fp.point_x + fp.point_y;
-      int llx = (int) Math.floor(tmp);
-      int urx = (int) Math.ceil(tmp);
-      return new ShapeTileOctagon(lx, ly, rx, uy, ulx, lrx, llx, urx);
-      }
-
-   @Override
    public boolean is_contained_in(ShapeTileBox p_box)
       {
       BigInteger tmp = BigInteger.valueOf(p_box.box_ll.v_x).multiply(rp_z);

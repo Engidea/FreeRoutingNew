@@ -263,7 +263,7 @@ public final class IteraRoute
          }
       else
          {
-         tidy_clip_shape = ok_point.surrounding_octagon().enlarge(itera_settings.trace_pull_tight_region_width);
+         tidy_clip_shape = new ShapeTileOctagon(ok_point).enlarge(itera_settings.trace_pull_tight_region_width);
          }
       
       int[] opt_net_no_arr;

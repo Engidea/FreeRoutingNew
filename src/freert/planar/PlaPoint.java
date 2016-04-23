@@ -80,16 +80,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
    public abstract PlaPointFloat to_float();
 
    /**
-    * creates the smallest Box with integer coordinates containing this point.
-    */
-//   public abstract ShapeTileBox surrounding_box();
-
-   /**
-    * creates the smallest Octagon with integer coordinates containing this point.
-    */
-   public abstract ShapeTileOctagon surrounding_octagon();
-
-   /**
     * Returns true, if this point lies in the interiour or on the border of p_box.
     */
    public abstract boolean is_contained_in(ShapeTileBox p_box);
@@ -177,7 +167,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * Turns this point by p_factor times 90 degree around p_pole.
     */
-   public PlaPoint turn_90_degree(int p_factor, PlaPoint p_pole)
+   public final PlaPoint turn_90_degree(int p_factor, PlaPoint p_pole)
       {
       PlaVector v = difference_by(p_pole);
       v = v.turn_90_degree(p_factor);
@@ -187,7 +177,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * Mirrors this point at the vertical line through p_pole.
     */
-   public PlaPoint mirror_vertical(PlaPoint p_pole)
+   public final PlaPoint mirror_vertical(PlaPoint p_pole)
       {
       PlaVector v = difference_by(p_pole);
       v = v.mirror_at_y_axis();
@@ -197,7 +187,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * Mirrors this point at the horizontal line through p_pole.
     */
-   public PlaPoint mirror_horizontal(PlaPoint p_pole)
+   public final PlaPoint mirror_horizontal(PlaPoint p_pole)
       {
       PlaVector v = difference_by(p_pole);
       v = v.mirror_at_x_axis();

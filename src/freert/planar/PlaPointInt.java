@@ -101,15 +101,6 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       }
 
    @Override
-   public ShapeTileOctagon surrounding_octagon()
-      {
-      int tmp_1 = v_x - v_y;
-      int tmp_2 = v_x + v_y;
-
-      return new ShapeTileOctagon(v_x, v_y, v_x, v_y, tmp_1, tmp_1, tmp_2, tmp_2);
-      }
-
-   @Override
    public boolean is_contained_in(ShapeTileBox p_box)
       {
       return v_x >= p_box.box_ll.v_x && v_y >= p_box.box_ll.v_y && v_x <= p_box.box_ur.v_x && v_y <= p_box.box_ur.v_y;
