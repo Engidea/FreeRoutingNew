@@ -15,24 +15,6 @@
  */
 package board;
 
-import freert.host.BrdObserverVoid;
-import freert.host.BrdObservers;
-import freert.host.HostCom;
-import freert.planar.PlaArea;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaSegmentInt;
-import freert.planar.PlaVector;
-import freert.planar.Polyline;
-import freert.planar.ShapeConvex;
-import freert.planar.ShapePolyline;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
-import freert.planar.ShapeTileOctagon;
-import graphics.GdiContext;
-import graphics.GdiDrawable;
-import gui.varie.UndoableObjectStorable;
 import interactive.IteraSettings;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -86,6 +68,24 @@ import datastructures.TimeLimit;
 import datastructures.TimeLimitStoppable;
 import datastructures.UndoableObjectNode;
 import datastructures.UndoableObjects;
+import freert.host.BrdObserverVoid;
+import freert.host.BrdObservers;
+import freert.host.HostCom;
+import freert.planar.PlaArea;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSegmentInt;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
+import graphics.GdiContext;
+import graphics.GdiDrawable;
+import gui.varie.UndoableObjectStorable;
 
 /**
  * Contains higher level functions of a board
@@ -114,7 +114,6 @@ public final class RoutingBoard implements java.io.Serializable
    // For communication with a host system or host design file formats.
    public final HostCom host_com;
 
-   public final BrdObservers observers = new BrdObserverVoid();
    
    
    // the biggest half width of all traces on the board, actually, calculated on the fly when inserting...
@@ -122,6 +121,7 @@ public final class RoutingBoard implements java.io.Serializable
    // the smallest half width of all traces on the board, actually, calculated on the fly when inserting...
    private int min_trace_half_width = 10000;
 
+   public transient BrdObservers observers = new BrdObserverVoid();
    // Handles the search trees pointing into the items of this board, initialized on constructor
    public transient SearchTreeManager search_tree_manager;
    // the rectangle, where the graphics may be not updated
@@ -1607,13 +1607,14 @@ public final class RoutingBoard implements java.io.Serializable
       p_stream.defaultReadObject();
 
       // restore all transient fields to a correct value
-      update_box = ShapeTileBox.EMPTY;
+      update_box          = ShapeTileBox.EMPTY;
       search_tree_manager = new SearchTreeManager(this);
       shove_trace_algo    = new AlgoShoveTrace(this);  
       shove_via_algo      = new AlgoShoveVia(this);
       move_drill_algo     = new AlgoMoveDrillItem(this);
       shove_obstacle      = new BrdShoveObstacle();
       shove_pad_algo      = new AlgoShovePad(this);
+      observers           = new BrdObserverVoid();
       
       for ( BrdItem curr_item : get_items() )
          {

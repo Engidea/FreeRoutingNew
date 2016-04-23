@@ -117,19 +117,20 @@ public abstract class PlaPoint implements PlaObject, Serializable
       }
 
    /**
-    * Returns 1, if this Point has a strict bigger x coordinate than p_other, 0, if the x cooordinates are equal, and -1 otherwise.
+    * Returns > 0 , if this Point has a strict bigger x coordinate than p_other
+    * returns 0, if the x cooordinates are equal, and < 0 otherwise.
     */
-   public final int compare_x(PlaPoint p_other)
+   private final int compare_x(PlaPoint p_other)
       {
-      if ( this instanceof PlaPointInt )
-         return -p_other.compare_x((PlaPointInt)this);
+      if ( p_other instanceof PlaPointInt )
+         return compare_x((PlaPointInt)p_other);
       else
-         return -p_other.compare_x((PlaPointRational)this);
+         return compare_x((PlaPointRational)p_other);
       }
    
 
    protected abstract int compare_x(PlaPointInt p_other);
-   abstract int compare_x(PlaPointRational p_other);
+   protected abstract int compare_x(PlaPointRational p_other);
    
    
    /**
