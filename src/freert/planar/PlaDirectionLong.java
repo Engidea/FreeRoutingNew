@@ -13,30 +13,30 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * IntDirection.java
- *
  * Created on 3. Februar 2003, 08:17
  */
 
 package freert.planar;
 
+import java.math.BigInteger;
 import datastructures.Signum;
 
 /**
- * Implements an abstract class Direction as an equivalence class of IntVector's.
- *
+ * Implements an abstract class Direction using long
+ * By using longs I really wish to nail down this miplementation, the possible error using longs is really small
+ * Direction is supposed to indicate an angle, a long is 2 to 64 bits, really small
  * @author Alfons Wirtz
  */
 
-public final class PlaDirectionInt extends PlaDirection implements java.io.Serializable
+public final class PlaDirectionLong extends PlaDirection implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
-   public final int dir_x;
-   public final int dir_y;
+   public final long dir_x;
+   public final long dir_y;
    
 
-   PlaDirectionInt(int p_x, int p_y)
+   PlaDirectionLong(long p_x, long p_y)
       {
       dir_x = p_x;
       dir_y = p_y;
@@ -46,18 +46,22 @@ public final class PlaDirectionInt extends PlaDirection implements java.io.Seria
     * Construct a Direction from an IntVector
     * @param p_vector
     */
-   public PlaDirectionInt(PlaVectorInt p_vector)
+   public PlaDirectionLong(PlaVectorInt p_vector)
       {
-      // need to "reduce" the points if necessary
-      int a_x = p_vector.point_x;
-      int a_y = p_vector.point_y;
+      long a_x = p_vector.point_x;
+      long a_y = p_vector.point_y;
 
-      int gcd = binaryGcd(Math.abs(a_x), Math.abs(a_y));
+      // need to "reduce" the points if necessary
+      BigInteger b1 = BigInteger.valueOf(a_x);
+      BigInteger b2 = BigInteger.valueOf(a_y);
+      BigInteger gcd = b1.gcd(b2);
+
+      long gcdlong = gcd.longValue();      
       
-      if (gcd > 1)
+      if (gcdlong > 1)
          {
-         a_x /= gcd;
-         a_y /= gcd;
+         a_x /= gcdlong;
+         a_y /= gcdlong;
          }
       
       dir_x = a_x;
@@ -85,7 +89,7 @@ public final class PlaDirectionInt extends PlaDirection implements java.io.Seria
       }
 
    @Override
-   int compareTo(PlaDirectionInt p_other)
+   int compareTo(PlaDirectionLong p_other)
       {
       if (dir_y > 0)
          {
@@ -141,17 +145,17 @@ public final class PlaDirectionInt extends PlaDirection implements java.io.Seria
       }
 
    @Override
-   public PlaDirectionInt opposite()
+   public PlaDirectionLong opposite()
       {
-      return new PlaDirectionInt(-dir_x, -dir_y);
+      return new PlaDirectionLong(-dir_x, -dir_y);
       }
 
    @Override
-   public PlaDirectionInt turn_45_degree(int p_factor)
+   public PlaDirectionLong turn_45_degree(int p_factor)
       {
       int n = p_factor % 8;
-      int new_x;
-      int new_y;
+      long new_x;
+      long new_y;
       switch (n)
          {
          case 0: // 0 degree
@@ -190,7 +194,7 @@ public final class PlaDirectionInt extends PlaDirection implements java.io.Seria
             new_x = 0;
             new_y = 0;
          }
-      return new PlaDirectionInt(new_x, new_y);
+      return new PlaDirectionLong(new_x, new_y);
       }
 
    /**
@@ -206,93 +210,10 @@ public final class PlaDirectionInt extends PlaDirection implements java.io.Seria
       return -p_other_direction.compareTo(this);
       }
 
-   @Override
-   int compareTo(PlaDirectionBigInt p_other)
-      {
-      return -(p_other.compareTo(this));
-      }
-
-   final double determinant(PlaDirectionInt p_other)
+   
+   final double determinant(PlaDirectionLong p_other)
       {
       return (double) dir_x * p_other.dir_y - (double) dir_y * p_other.dir_x;
       }
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   // the following function binaryGcd is copied from private parts of java.math
-   // because we need it public.
 
-   /*
-    * trailingZeroTable[i] is the number of trailing zero bits in the binary representaion of i.
-    */
-   private static final byte trailingZeroTable[] = { -25, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1,
-         0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0,
-         1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 7, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4,
-         0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 6, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0, 5, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0,
-         4, 0, 1, 0, 2, 0, 1, 0, 3, 0, 1, 0, 2, 0, 1, 0 };
-
-   /**
-    * Calculate GCD of a and b interpreted as unsigned integers.
-    */
-   private int binaryGcd(int a, int b)
-      {
-      if (b == 0)  return a;
-
-      if (a == 0)  return b;
-
-      int x;
-      int aZeros = 0;
-      while ((x = a & 0xff) == 0)
-         {
-         a >>>= 8;
-         aZeros += 8;
-         }
-      int y = trailingZeroTable[x];
-      aZeros += y;
-      a >>>= y;
-
-      int bZeros = 0;
-      while ((x = b & 0xff) == 0)
-         {
-         b >>>= 8;
-         bZeros += 8;
-         }
-      y = trailingZeroTable[x];
-      bZeros += y;
-      b >>>= y;
-
-      int t = (aZeros < bZeros ? aZeros : bZeros);
-
-      while (a != b)
-         {
-         if ((a + 0x80000000) > (b + 0x80000000))
-            { // a > b as unsigned
-            a -= b;
-
-            while ((x = a & 0xff) == 0)
-               a >>>= 8;
-            a >>>= trailingZeroTable[x];
-            }
-         else
-            {
-            b -= a;
-
-            while ((x = b & 0xff) == 0)
-               b >>>= 8;
-            b >>>= trailingZeroTable[x];
-            }
-         }
-      return a << t;
-      }
-   
-   
-   
-   
-   
    }

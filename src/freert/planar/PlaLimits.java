@@ -41,6 +41,8 @@ public final class PlaLimits
    public static final double CRIT_DOUBLE = 9007199254740992.0;
 
    public static final BigInteger CRIT_INT_BIG = BigInteger.valueOf(CRIT_INT);
+   public static final BigInteger CRIT_LONG_MAX = BigInteger.valueOf(Long.MAX_VALUE);
+   public static final BigInteger CRIT_LONG_MIN = BigInteger.valueOf(Long.MIN_VALUE);
 
    public static final double sqrt2 = Math.sqrt(2);
    
@@ -58,6 +60,11 @@ public final class PlaLimits
    public static boolean is_critical ( double value )
       {
       return value > CRIT_INT || value < -CRIT_INT;
+      }
+   
+   public static boolean is_critical ( BigInteger value )
+      {
+      return value.compareTo(CRIT_LONG_MAX) >= 0 || value.compareTo(CRIT_LONG_MIN) <= 0;
       }
    
    

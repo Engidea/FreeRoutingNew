@@ -42,7 +42,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    public abstract boolean is_zero();
 
    /**
-    * returns the Vector such that this plus this.negate() is zero
+    * returns the Vector such that this plus negate() is zero
     */
    public abstract PlaVector negate();
 
@@ -152,7 +152,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
     */
    public double length_approx()
       {
-      return this.to_float().distance();
+      return to_float().distance();
       }
 
    /**
@@ -160,8 +160,8 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
     */
    public double cos_angle(PlaVector p_other)
       {
-      double result = this.scalar_product(p_other);
-      result /= this.to_float().distance() * p_other.to_float().distance();
+      double result = scalar_product(p_other);
+      result /= to_float().distance() * p_other.to_float().distance();
       return result;
       }
 

@@ -398,14 +398,14 @@ public final class ShapePolygon extends ShapePolyline
 
       PlaLineInt first_line = new PlaLineInt(corners[corners.length - 1], corners[0]);
       PlaLineInt curr_line = new PlaLineInt(corners[0], corners[1]);
-      PlaDirectionInt first_direction = (PlaDirectionInt) first_line.direction();
-      PlaDirectionInt curr_direction = (PlaDirectionInt) curr_line.direction();
+      PlaDirectionLong first_direction = (PlaDirectionLong) first_line.direction();
+      PlaDirectionLong curr_direction = (PlaDirectionLong) curr_line.direction();
       double last_det = first_direction.determinant(curr_direction);
 
       for (int ind2 = 2; ind2 < corners.length; ++ind2)
          {
          curr_line = new PlaLineInt(curr_line.point_b, corners[ind2]);
-         curr_direction = (PlaDirectionInt) curr_line.direction();
+         curr_direction = (PlaDirectionLong) curr_line.direction();
          double curr_det = first_direction.determinant(curr_direction);
          if (last_det <= 0 && curr_det > 0)
             return false;

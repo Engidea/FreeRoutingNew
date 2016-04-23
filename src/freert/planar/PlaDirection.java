@@ -37,23 +37,23 @@ public abstract class PlaDirection implements Comparable<PlaDirection>, java.io.
    {
    private static final long serialVersionUID = 1L;
 
-   public static final PlaDirectionInt NULL = new PlaDirectionInt(0, 0);
+   public static final PlaDirectionLong NULL = new PlaDirectionLong(0, 0);
    // the direction to the east
-   public static final PlaDirectionInt RIGHT = new PlaDirectionInt(1, 0);
+   public static final PlaDirectionLong RIGHT = new PlaDirectionLong(1, 0);
    // the direction to the northeast
-   public static final PlaDirectionInt RIGHT45 = new PlaDirectionInt(1, 1);
+   public static final PlaDirectionLong RIGHT45 = new PlaDirectionLong(1, 1);
    // the direction to the north
-   public static final PlaDirectionInt UP = new PlaDirectionInt(0, 1);
+   public static final PlaDirectionLong UP = new PlaDirectionLong(0, 1);
    // the direction to the northwest
-   public static final PlaDirectionInt UP45 = new PlaDirectionInt(-1, 1);
+   public static final PlaDirectionLong UP45 = new PlaDirectionLong(-1, 1);
    // the direction to the west
-   public static final PlaDirectionInt LEFT = new PlaDirectionInt(-1, 0);
+   public static final PlaDirectionLong LEFT = new PlaDirectionLong(-1, 0);
    // the direction to the southwest
-   public static final PlaDirectionInt LEFT45 = new PlaDirectionInt(-1, -1);
+   public static final PlaDirectionLong LEFT45 = new PlaDirectionLong(-1, -1);
    // the direction to the south
-   public static final PlaDirectionInt DOWN = new PlaDirectionInt(0, -1);
+   public static final PlaDirectionLong DOWN = new PlaDirectionLong(0, -1);
    // the direction to the southeast
-   public static final PlaDirectionInt DOWN45 = new PlaDirectionInt(1, -1);
+   public static final PlaDirectionLong DOWN45 = new PlaDirectionLong(1, -1);
 
    /**
     * creates a Direction from the input Vector
@@ -66,9 +66,9 @@ public abstract class PlaDirection implements Comparable<PlaDirection>, java.io.
    /**
     * creates a Direction from the input Vector
     */
-   public static final PlaDirectionInt get_instance(PlaVectorInt p_vector)
+   public static final PlaDirectionLong get_instance(PlaVectorInt p_vector)
       {
-      return new PlaDirectionInt (p_vector);
+      return new PlaDirectionLong (p_vector);
       }
 
    /**
@@ -84,7 +84,7 @@ public abstract class PlaDirection implements Comparable<PlaDirection>, java.io.
    /**
     * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
     */
-   public static final PlaDirectionInt get_instance_approx(double p_angle)
+   public static final PlaDirectionLong get_instance_approx(double p_angle)
       {
       final double scale_factor = 10000;
       double x = Math.cos(p_angle) * scale_factor;
@@ -134,9 +134,9 @@ public abstract class PlaDirection implements Comparable<PlaDirection>, java.io.
 
    // auxiliary functions needed because the virtual function mechanism does not work in parameter position
 
-   abstract int compareTo(PlaDirectionInt p_other);
+   abstract int compareTo(PlaDirectionLong p_other);
 
-   abstract int compareTo(PlaDirectionBigInt p_other);
+//   abstract int compareTo(PlaDirectionBigInt p_other);
    
    /**
     * @return true, if p_ob is a Direction and this Direction and p_ob point into the same direction

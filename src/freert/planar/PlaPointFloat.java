@@ -32,7 +32,7 @@ import java.text.NumberFormat;
  * @author Alfons Wirtz
  */
 
-public final class PlaPointFloat  implements Serializable,PlaObject
+public final class PlaPointFloat  /*extends PlaPoint*/ implements Serializable,PlaObject
    {
    private static final long serialVersionUID = 1L;
    

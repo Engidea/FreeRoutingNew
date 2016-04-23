@@ -21,7 +21,7 @@
 package board.items;
 
 import freert.planar.PlaDirection;
-import freert.planar.PlaDirectionInt;
+import freert.planar.PlaDirectionLong;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -333,7 +333,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
             }
          }
 
-      Collection<PlaDirectionInt> padstack_exit_directions = get_padstack().get_trace_exit_directions(padstack_layer, pad_xy_factor);
+      Collection<PlaDirectionLong> padstack_exit_directions = get_padstack().get_trace_exit_directions(padstack_layer, pad_xy_factor);
 
       if (padstack_exit_directions.isEmpty()) return result;
 
@@ -348,7 +348,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       PlaPoint pin_center = get_center();
       PlaPointFloat center_approx = pin_center.to_float();
 
-      for (PlaDirectionInt curr_padstack_exit_direction : padstack_exit_directions)
+      for (PlaDirectionLong curr_padstack_exit_direction : padstack_exit_directions)
          {
          LibPackage lib_package = component.get_package();
 
@@ -359,7 +359,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          if (package_pin == null)  continue;
 
          double curr_rotation_in_degree = component_rotation + package_pin.rotation_in_degree;
-         PlaDirectionInt curr_exit_direction;
+         PlaDirectionLong curr_exit_direction;
          if (curr_rotation_in_degree % 45 == 0)
             {
             int fortyfive_degree_factor = ((int) curr_rotation_in_degree) / 45;

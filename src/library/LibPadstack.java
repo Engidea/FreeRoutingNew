@@ -23,7 +23,7 @@ package library;
 import java.util.Collection;
 import java.util.LinkedList;
 import freert.planar.PlaDirection;
-import freert.planar.PlaDirectionInt;
+import freert.planar.PlaDirectionLong;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
@@ -127,9 +127,9 @@ public final class LibPadstack implements Comparable<LibPadstack>, PrintableInfo
     * Calculates the allowed trace exit directions of the shape of this padstack on layer p_layer. If the length of the pad is
     * smaller than p_factor times the height of the pad, connection also to the long side is allowed.
     */
-   public Collection<PlaDirectionInt> get_trace_exit_directions(int p_layer, double p_factor)
+   public Collection<PlaDirectionLong> get_trace_exit_directions(int p_layer, double p_factor)
       {
-      Collection<PlaDirectionInt> result = new LinkedList<PlaDirectionInt>();
+      Collection<PlaDirectionLong> result = new LinkedList<PlaDirectionLong>();
       
       if (p_layer < 0 || p_layer >= shapes.length) return result;
       

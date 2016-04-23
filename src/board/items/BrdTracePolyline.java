@@ -32,7 +32,7 @@ import datastructures.Signum;
 import datastructures.ThreadStoppable;
 import datastructures.TimeLimitStoppable;
 import freert.planar.PlaDirection;
-import freert.planar.PlaDirectionInt;
+import freert.planar.PlaDirectionLong;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -635,7 +635,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                PlaPoint split_point = curr_drill_item.get_center();
                if (curr_line_segment.contains(split_point))
                   {
-                  PlaDirectionInt split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+                  PlaDirectionLong split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
                   PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
                   split(i + 1, split_line);
                   }
@@ -729,7 +729,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          
          if ( ! curr_line_segment.contains(p_point)) continue;
          
-         PlaDirectionInt split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+         PlaDirectionLong split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
 
          PlaLineInt split_line = new PlaLineInt(p_point, split_line_direction);
          
@@ -1210,7 +1210,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       double min_exit_corner_distance = Double.MAX_VALUE;
       PlaLineInt nearest_pin_exit_ray = null;
       int nearest_border_line_no = -1;
-      PlaDirectionInt pin_exit_direction = null;
+      PlaDirectionLong pin_exit_direction = null;
       PlaPointFloat nearest_exit_corner = null;
       final double TOLERANCE = 1;
       for (BrdTraceExitRestriction curr_exit_restriction : trace_exit_restrictions)

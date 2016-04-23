@@ -740,10 +740,10 @@ public final class ShapeTileBox extends ShapeTileRegular
       else
          {
          line_arr = new PlaLineInt[4];
-         line_arr[0] = new PlaLineInt(box_ll, PlaDirectionInt.RIGHT);
-         line_arr[1] = new PlaLineInt(box_ur, PlaDirectionInt.UP);
-         line_arr[2] = new PlaLineInt(box_ur, PlaDirectionInt.LEFT);
-         line_arr[3] = new PlaLineInt(box_ll, PlaDirectionInt.DOWN);
+         line_arr[0] = new PlaLineInt(box_ll, PlaDirectionLong.RIGHT);
+         line_arr[1] = new PlaLineInt(box_ur, PlaDirectionLong.UP);
+         line_arr[2] = new PlaLineInt(box_ur, PlaDirectionLong.LEFT);
+         line_arr[3] = new PlaLineInt(box_ll, PlaDirectionLong.DOWN);
          }
       return new ShapeTileSimplex(line_arr);
       }

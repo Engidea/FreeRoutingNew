@@ -1,6 +1,6 @@
 package board.varie;
 
-import freert.planar.PlaDirectionInt;
+import freert.planar.PlaDirectionLong;
 
 
 /**
@@ -8,10 +8,10 @@ import freert.planar.PlaDirectionInt;
  */
 public class BrdTraceExitRestriction
    {
-   public final PlaDirectionInt direction;
+   public final PlaDirectionLong direction;
    public final double min_length;
 
-   public BrdTraceExitRestriction(PlaDirectionInt p_direction, double p_min_length)
+   public BrdTraceExitRestriction(PlaDirectionLong p_direction, double p_min_length)
       {
       direction = p_direction;
       min_length = p_min_length;

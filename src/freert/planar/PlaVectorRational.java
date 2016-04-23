@@ -235,16 +235,23 @@ public final class PlaVectorRational extends PlaVector
       {
       BigInteger dx = x;
       BigInteger dy = y;
+      
       BigInteger gcd = dx.gcd(y);
+      
       dx = dx.divide(gcd);
       dy = dy.divide(gcd);
       
-      if ((dx.abs()).compareTo(PlaLimits.CRIT_INT_BIG) <= 0 && (dy.abs()).compareTo(PlaLimits.CRIT_INT_BIG) <= 0)
+      BigInteger two = BigInteger.valueOf(2);
+      
+      while ( PlaLimits.is_critical(dx) || PlaLimits.is_critical(dy) )
          {
-         return new PlaDirectionInt(dx.intValue(), dy.intValue());
+         // this really, should never happen, but if it does I just reduce accuracy until things fits
+         System.err.println("to_normalize_direction: REDUCING accuracy");
+         dx = dx.divide(two);
+         dy = dx.divide(two);
          }
       
-      return new PlaDirectionBigInt(dx, dy);
+      return new PlaDirectionLong(dx.longValue(), dy.longValue());
       }
 
    double scalar_product(PlaVectorInt p_other)
