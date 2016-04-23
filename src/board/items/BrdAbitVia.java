@@ -34,6 +34,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -200,7 +201,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       
       ArtItem via_autoroute_info = art_item_get();
       
-      ShapeTile curr_drill_shape = get_center().surrounding_box();
+      ShapeTile curr_drill_shape = new ShapeTileBox(get_center());
       
       autoroute_drill_info = new ExpandDrill(curr_drill_shape, get_center(), first_layer(), last_layer());
       

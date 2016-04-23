@@ -20,15 +20,6 @@
 
 package board.items;
 
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaShape;
-import freert.planar.PlaVector;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
-import graphics.GdiContext;
-import graphics.GdiDrawable;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Iterator;
@@ -43,6 +34,15 @@ import board.shape.ShapeTreeObject;
 import board.varie.BrdTraceInfo;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import graphics.GdiContext;
+import graphics.GdiDrawable;
 
 /**
  * Common superclass for Pins and Vias
@@ -337,7 +337,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
       PlaPoint drill_center = get_center();
 
-      ShapeTile search_shape = drill_center.surrounding_box();
+      ShapeTile search_shape = new ShapeTileBox(drill_center);
       
       Set<ShapeTreeObject> overlaps = r_board.overlapping_objects(search_shape, -1);
       
@@ -431,7 +431,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public ShapeTile get_trace_connection_shape(ShapeSearchTree p_search_tree, int p_index)
       {
-      return get_center().surrounding_box();
+      return new ShapeTileBox(get_center());
       }
 
    /** 

@@ -23,12 +23,13 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import freert.planar.PlaDimension;
-import freert.planar.PlaPoint;
-import freert.planar.ShapeTile;
 import autoroute.ArtEngine;
 import autoroute.maze.MazeSearchElement;
 import board.shape.ShapeTreeObject;
+import freert.planar.PlaDimension;
+import freert.planar.PlaPoint;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 
 /**
  * Layer change expansion object in the maze search algorithm.
@@ -74,7 +75,7 @@ public final class ExpandDrill implements ExpandObject
     */
    public boolean calculate_expansion_rooms(ArtEngine p_autoroute_engine)
       {
-      ShapeTile search_shape = location.surrounding_box();
+      ShapeTile search_shape = new ShapeTileBox(location);
       
       Collection<ShapeTreeObject> overlaps = p_autoroute_engine.autoroute_search_tree.find_overlap_objects(search_shape, -1);
 

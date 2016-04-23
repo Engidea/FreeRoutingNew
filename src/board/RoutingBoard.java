@@ -894,7 +894,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       Collection<BrdItem> picked_items = pick_items(p_location, p_layer, filter);
       
-      ShapeTileOctagon location_shape = p_location.surrounding_box().bounding_octagon();
+      ShapeTileOctagon location_shape = new ShapeTileBox(p_location).bounding_octagon();
 
       boolean trace_split = false;
       
@@ -1187,7 +1187,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
 
-      ShapeTile point_shape = p_location.surrounding_box();
+      ShapeTile point_shape = new ShapeTileBox(p_location);
       
       Collection<ShapeTreeObject> overlaps = overlapping_objects(point_shape, p_layer);
 
@@ -1209,7 +1209,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
    
-      ShapeTile point_shape = p_location.surrounding_box();
+      ShapeTile point_shape = new ShapeTileBox(p_location);
       
       Collection<ShapeTreeObject> overlaps = overlapping_objects(point_shape, p_layer);
    
@@ -1521,7 +1521,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public BrdTrace get_trace_tail(PlaPoint p_location, int p_layer, int[] p_net_no_arr)
       {
-      ShapeTile point_shape = p_location.surrounding_box();
+      ShapeTile point_shape = new ShapeTileBox(p_location);
       
       Collection<ShapeTreeObject> found_items = overlapping_objects(point_shape, p_layer);
 
@@ -1987,7 +1987,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public BrdItem pick_nearest_routing_item(PlaPoint p_location, int p_layer, BrdItem p_from_item)
       {
-      ShapeTile point_shape = p_location.surrounding_box();
+      ShapeTile point_shape = new ShapeTileBox(p_location);
 
       Collection<BrdItem> found_items = overlapping_items(point_shape, p_layer);
       PlaPointFloat pick_location = p_location.to_float();

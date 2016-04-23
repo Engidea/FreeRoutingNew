@@ -24,9 +24,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.ShapeTile;
 import autoroute.expand.ExpandDoorItem;
 import autoroute.expand.ExpandDrill;
 import autoroute.expand.ExpandObject;
@@ -40,6 +37,10 @@ import board.BrdConnectable;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 
 /**
  *
@@ -178,7 +179,7 @@ public abstract class ArtConnectionLocate
             {
             // the next trace leads to a via
             ExpandDrill current_target_drill = (ExpandDrill)  backtrack_array[ current_target_door_index].door;
-            current_target_shape = current_target_drill.location.surrounding_box();
+            current_target_shape = new ShapeTileBox(current_target_drill.location);
             }
          else
             {

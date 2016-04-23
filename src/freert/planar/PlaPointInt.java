@@ -100,13 +100,6 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return (v_x == other.v_x && v_y == other.v_y);
       }
 
-
-   @Override
-   public ShapeTileBox surrounding_box()
-      {
-      return new ShapeTileBox(this, this);
-      }
-
    @Override
    public ShapeTileOctagon surrounding_octagon()
       {

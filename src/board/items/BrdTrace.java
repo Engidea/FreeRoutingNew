@@ -16,11 +16,6 @@
 
 package board.items;
 
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileOctagon;
-import gui.varie.ObjectInfoPanel;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -34,6 +29,12 @@ import board.shape.ShapeTreeObject;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
+import gui.varie.ObjectInfoPanel;
 
 /**
  *
@@ -221,7 +222,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       // point should land on either first or last corner
       if ( !(p_point.equals(first_corner()) || p_point.equals(last_corner()))) return result;
 
-      ShapeTile search_shape = p_point.surrounding_box();
+      ShapeTile search_shape = new ShapeTileBox(p_point);
 
       Set<ShapeTreeObject> overlaps = r_board.overlapping_objects(search_shape, layer_no);
 

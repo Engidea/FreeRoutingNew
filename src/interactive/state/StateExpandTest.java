@@ -19,8 +19,6 @@
  */
 package interactive.state;
 
-import freert.planar.PlaPointFloat;
-import freert.planar.ShapeTile;
 import interactive.IteraBoard;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -39,6 +37,9 @@ import board.BrdConnectable;
 import board.RoutingBoard;
 import board.items.BrdItem;
 import board.varie.BrdStopConnection;
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 
 /**
  * State for testing the expanding algorithm of the autorouter.
@@ -91,7 +92,7 @@ public final class StateExpandTest extends StateInteractive
       if (route_item == null)
          {
          // create an expansion room in the empty space
-         ShapeTile contained_shape = p_location.round().surrounding_box();
+         ShapeTile contained_shape = new ShapeTileBox(p_location.round());
          ExpandRoomFreespaceIncomplete expansion_room = autoroute_engine.add_incomplete_expansion_room(null, layer, contained_shape);
          i_brd.userPrintln("expansion test started route_item==null");
          complete_expansion_room(expansion_room);

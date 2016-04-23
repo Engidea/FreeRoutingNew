@@ -36,7 +36,30 @@ public final class ShapeTileBox extends ShapeTileRegular
    // coordinates of the upper right corner
    public final PlaPointInt box_ur;   
    
-   
+   public ShapeTileBox (PlaPoint a_point)
+      {
+      if ( a_point instanceof PlaPointInt )
+         {
+         box_ll = (PlaPointInt)a_point;
+         box_ur = (PlaPointInt)a_point;
+         }
+      else if ( a_point instanceof PlaPointRational )
+         {
+         PlaPointFloat fp = a_point.to_float();
+         double p_ll_x = Math.floor(fp.point_x);
+         double p_ll_y = Math.floor(fp.point_y);
+         double p_ur_x = Math.ceil(fp.point_x);
+         double p_ur_y = Math.ceil(fp.point_y);
+         box_ll = new PlaPointInt(p_ll_x, p_ll_y);
+         box_ur = new PlaPointInt(p_ur_x, p_ur_y);
+         }
+      else
+         {
+         box_ll = new PlaPointInt();
+         box_ur = new PlaPointInt();
+         }
+      }
+
    /**
     * Creates an IntBox from its lower left and upper right corners.
     */

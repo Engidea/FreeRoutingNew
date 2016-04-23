@@ -845,7 +845,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          }
       else if (polygon_corners.length == 1)
          {
-         result = polygon_corners[0].surrounding_box();
+         result = new ShapeTileBox(polygon_corners[0]);
          }
       else
          {

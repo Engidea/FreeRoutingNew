@@ -82,7 +82,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * creates the smallest Box with integer coordinates containing this point.
     */
-   public abstract ShapeTileBox surrounding_box();
+//   public abstract ShapeTileBox surrounding_box();
 
    /**
     * creates the smallest Octagon with integer coordinates containing this point.

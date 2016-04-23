@@ -127,18 +127,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return (det.signum() == 0);
       }
 
-
-   @Override
-   public ShapeTileBox surrounding_box()
-      {
-      PlaPointFloat fp = to_float();
-      int llx = (int) Math.floor(fp.point_x);
-      int lly = (int) Math.floor(fp.point_y);
-      int urx = (int) Math.ceil(fp.point_x);
-      int ury = (int) Math.ceil(fp.point_y);
-      return new ShapeTileBox(llx, lly, urx, ury);
-      }
-
    @Override
    public ShapeTileOctagon surrounding_octagon()
       {
