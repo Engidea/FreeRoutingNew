@@ -89,13 +89,13 @@ public final class BrdViolation implements Comparable<BrdViolation>, PrintableIn
 
    public int compareTo(BrdViolation p_other)
       {
-      if (location.point_x > p_other.location.point_x)  return 1;
+      if (location.v_x > p_other.location.v_x)  return 1;
 
-      if (location.point_x < p_other.location.point_x)  return -1;
+      if (location.v_x < p_other.location.v_x)  return -1;
 
-      if (location.point_y > p_other.location.point_y)  return 1;
+      if (location.v_y > p_other.location.v_y)  return 1;
 
-      if (location.point_y < p_other.location.point_y)  return -1;
+      if (location.v_y < p_other.location.v_y)  return -1;
 
       return violation.layer_no - p_other.violation.layer_no;
       }

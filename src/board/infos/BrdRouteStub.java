@@ -66,11 +66,11 @@ public final class BrdRouteStub implements Comparable<BrdRouteStub>, PrintableIn
       int result = net.name.compareTo(p_other.net.name);
       if (result == 0)
          {
-         result = Signum.as_int(location.point_x - p_other.location.point_x);
+         result = Signum.as_int(location.v_x - p_other.location.v_x);
          }
       if (result == 0)
          {
-         result = Signum.as_int(location.point_y - p_other.location.point_y);
+         result = Signum.as_int(location.v_y - p_other.location.v_y);
          }
       if (result == 0)
          {

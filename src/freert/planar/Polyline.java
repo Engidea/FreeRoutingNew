@@ -743,10 +743,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
       for (int i = from_corner_no; i <= to_corner_no; ++i)
          {
          PlaPointFloat curr_corner = corner_approx(i);
-         llx = Math.min(llx, curr_corner.point_x);
-         lly = Math.min(lly, curr_corner.point_y);
-         urx = Math.max(urx, curr_corner.point_x);
-         ury = Math.max(ury, curr_corner.point_y);
+         llx = Math.min(llx, curr_corner.v_x);
+         lly = Math.min(lly, curr_corner.v_y);
+         urx = Math.max(urx, curr_corner.v_x);
+         ury = Math.max(ury, curr_corner.v_y);
          }
       PlaPointInt lower_left = new PlaPointInt(Math.floor(llx), Math.floor(lly));
       PlaPointInt upper_right = new PlaPointInt(Math.ceil(urx), Math.ceil(ury));
@@ -784,14 +784,14 @@ public final class Polyline implements java.io.Serializable, PlaObject
       for (int i = from_corner_no; i <= to_corner_no; ++i)
          {
          PlaPointFloat curr = corner_approx(i);
-         lx = Math.min(lx, curr.point_x);
-         ly = Math.min(ly, curr.point_y);
-         rx = Math.max(rx, curr.point_x);
-         uy = Math.max(uy, curr.point_y);
-         double tmp = curr.point_x - curr.point_y;
+         lx = Math.min(lx, curr.v_x);
+         ly = Math.min(ly, curr.v_y);
+         rx = Math.max(rx, curr.v_x);
+         uy = Math.max(uy, curr.v_y);
+         double tmp = curr.v_x - curr.v_y;
          ulx = Math.min(ulx, tmp);
          lrx = Math.max(lrx, tmp);
-         tmp = curr.point_x + curr.point_y;
+         tmp = curr.v_x + curr.v_y;
          llx = Math.min(llx, tmp);
          urx = Math.max(urx, tmp);
          }

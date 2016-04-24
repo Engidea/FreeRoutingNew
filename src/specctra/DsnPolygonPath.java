@@ -93,7 +93,7 @@ public class DsnPolygonPath extends DsnPath
       double offset = p_coordinate_transform.dsn_to_board(this.width) / 2;
       if (corner_arr.length <= 2)
          {
-         ShapeTileOctagon bounding_oct = PlaPointFloat.bounding_octagon(corner_arr);
+         ShapeTileOctagon bounding_oct = bounding_octagon(corner_arr);
          return bounding_oct.enlarge(offset);
          }
       PlaPointInt[] rounded_corner_arr = new PlaPointInt[corner_arr.length];
@@ -122,7 +122,7 @@ public class DsnPolygonPath extends DsnPath
       double offset = p_coordinate_transform.dsn_to_board(this.width) / 2;
       if (corner_arr.length <= 2)
          {
-         ShapeTileOctagon bounding_oct = PlaPointFloat.bounding_octagon(corner_arr);
+         ShapeTileOctagon bounding_oct = bounding_octagon(corner_arr);
          return bounding_oct.enlarge(offset);
          }
       PlaPointInt[] rounded_corner_arr = new PlaPointInt[corner_arr.length];
@@ -163,4 +163,52 @@ public class DsnPolygonPath extends DsnPath
          }
       return new DsnRectangle(layer, bounds);
       }
+   
+   
+   
+   
+   /**
+    * Calculates the smallest IntOctagon containing all the input points
+    */
+   public ShapeTileOctagon bounding_octagon(PlaPointFloat[] p_point_arr)
+      {
+      double lx = Integer.MAX_VALUE;
+      double ly = Integer.MAX_VALUE;
+      double rx = Integer.MIN_VALUE;
+      double uy = Integer.MIN_VALUE;
+      double ulx = Integer.MAX_VALUE;
+      double lrx = Integer.MIN_VALUE;
+      double llx = Integer.MAX_VALUE;
+      double urx = Integer.MIN_VALUE;
+      for (int i = 0; i < p_point_arr.length; ++i)
+         {
+         PlaPointFloat curr = p_point_arr[i];
+         lx = Math.min(lx, curr.v_x);
+         ly = Math.min(ly, curr.v_y);
+         rx = Math.max(rx, curr.v_x);
+         uy = Math.max(uy, curr.v_y);
+         double tmp = curr.v_x - curr.v_y;
+         ulx = Math.min(ulx, tmp);
+         lrx = Math.max(lrx, tmp);
+         tmp = curr.v_x + curr.v_y;
+         llx = Math.min(llx, tmp);
+         urx = Math.max(urx, tmp);
+         }
+      ShapeTileOctagon surrounding_octagon = new ShapeTileOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx),
+            (int) Math.floor(llx), (int) Math.ceil(urx));
+      return surrounding_octagon;
+      }
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    }

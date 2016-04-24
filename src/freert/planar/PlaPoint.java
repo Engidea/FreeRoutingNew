@@ -128,12 +128,16 @@ public abstract class PlaPoint implements PlaObject, Serializable
       {
       if ( p_other instanceof PlaPointInt )
          return compare_x((PlaPointInt)p_other);
-      else
+      else if ( p_other instanceof PlaPointRational )
          return compare_x((PlaPointRational)p_other);
+//      else if ( p_other instanceof PlaPointFloat )
+//         return compare_x((PlaPointFloat)p_other);
+      else return 0;
       }
 
    protected abstract int compare_x(PlaPointInt p_other);
    protected abstract int compare_x(PlaPointRational p_other);
+//   protected abstract int compare_x(PlaPointFloat p_other);
    
    
    /**

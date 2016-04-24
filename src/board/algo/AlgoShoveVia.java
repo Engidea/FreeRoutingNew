@@ -214,28 +214,28 @@ public final class AlgoShoveVia
          double border_y;
          if (i == 0)
             {
-            check_point = new PlaPointFloat(p_via_location.point_x, p_via_location.point_y - p_dist);
-            border_x = p_via_location.point_x;
+            check_point = new PlaPointFloat(p_via_location.v_x, p_via_location.v_y - p_dist);
+            border_x = p_via_location.v_x;
             border_y = via_box.box_ll.v_y;
             }
          else if (i == 1)
             {
-            check_point = new PlaPointFloat(p_via_location.point_x + p_dist, p_via_location.point_y);
+            check_point = new PlaPointFloat(p_via_location.v_x + p_dist, p_via_location.v_y);
             border_x = via_box.box_ur.v_x;
-            border_y = p_via_location.point_y;
+            border_y = p_via_location.v_y;
             }
          else if (i == 2)
             {
-            check_point = new PlaPointFloat(p_via_location.point_x, p_via_location.point_y + p_dist);
-            border_x = p_via_location.point_x;
+            check_point = new PlaPointFloat(p_via_location.v_x, p_via_location.v_y + p_dist);
+            border_x = p_via_location.v_x;
             border_y = via_box.box_ur.v_y;
             }
          else
             // i == 3
             {
-            check_point = new PlaPointFloat(p_via_location.point_x - p_dist, p_via_location.point_y);
+            check_point = new PlaPointFloat(p_via_location.v_x - p_dist, p_via_location.v_y);
             border_x = via_box.box_ll.v_x;
-            border_y = p_via_location.point_y;
+            border_y = p_via_location.v_y;
             }
          if (p_room_shape.contains(check_point))
             {
@@ -266,28 +266,28 @@ public final class AlgoShoveVia
          double border_y;
          if (i == 0)
             {
-            check_point = new PlaPointFloat(p_via_location.point_x + dist, p_via_location.point_y - dist);
-            border_x = p_via_location.point_x + border_dist;
-            border_y = p_via_location.point_y - border_dist;
+            check_point = new PlaPointFloat(p_via_location.v_x + dist, p_via_location.v_y - dist);
+            border_x = p_via_location.v_x + border_dist;
+            border_y = p_via_location.v_y - border_dist;
             }
          else if (i == 1)
             {
-            check_point = new PlaPointFloat(p_via_location.point_x + dist, p_via_location.point_y + dist);
-            border_x = p_via_location.point_x + border_dist;
-            border_y = p_via_location.point_y + border_dist;
+            check_point = new PlaPointFloat(p_via_location.v_x + dist, p_via_location.v_y + dist);
+            border_x = p_via_location.v_x + border_dist;
+            border_y = p_via_location.v_y + border_dist;
             }
          else if (i == 2)
             {
-            check_point = new PlaPointFloat(p_via_location.point_x - dist, p_via_location.point_y + dist);
-            border_x = p_via_location.point_x - border_dist;
-            border_y = p_via_location.point_y + border_dist;
+            check_point = new PlaPointFloat(p_via_location.v_x - dist, p_via_location.v_y + dist);
+            border_x = p_via_location.v_x - border_dist;
+            border_y = p_via_location.v_y + border_dist;
             }
          else
             // i == 3
             {
-            check_point = new PlaPointFloat(p_via_location.point_x - dist, p_via_location.point_y - dist);
-            border_x = p_via_location.point_x - border_dist;
-            border_y = p_via_location.point_y - border_dist;
+            check_point = new PlaPointFloat(p_via_location.v_x - dist, p_via_location.v_y - dist);
+            border_x = p_via_location.v_x - border_dist;
+            border_y = p_via_location.v_y - border_dist;
             }
          if (p_room_shape.contains(check_point))
             {

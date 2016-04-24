@@ -764,19 +764,19 @@ public final class GdiContext implements java.io.Serializable
          {
          return true;
          }
-      if (Math.max(p_1.point_x, p_2.point_x) < p_update_box.box_ll.v_x - p_update_offset)
+      if (Math.max(p_1.v_x, p_2.v_x) < p_update_box.box_ll.v_x - p_update_offset)
          {
          return true;
          }
-      if (Math.max(p_1.point_y, p_2.point_y) < p_update_box.box_ll.v_y - p_update_offset)
+      if (Math.max(p_1.v_y, p_2.v_y) < p_update_box.box_ll.v_y - p_update_offset)
          {
          return true;
          }
-      if (Math.min(p_1.point_x, p_2.point_x) > p_update_box.box_ur.v_x + p_update_offset)
+      if (Math.min(p_1.v_x, p_2.v_x) > p_update_box.box_ur.v_x + p_update_offset)
          {
          return true;
          }
-      if (Math.min(p_1.point_y, p_2.point_y) > p_update_box.box_ur.v_y + p_update_offset)
+      if (Math.min(p_1.v_y, p_2.v_y) > p_update_box.box_ur.v_y + p_update_offset)
          {
          return true;
          }

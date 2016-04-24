@@ -155,7 +155,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       for (int index = 0; index < corner_count; ++index)
          {
          PlaPointFloat next_corner = corner_approx(index);
-         result += curr_corner.point_x * (next_corner.point_y - prev_corner.point_y);
+         result += curr_corner.v_x * (next_corner.v_y - prev_corner.v_y);
          prev_corner = curr_corner;
          curr_corner = next_corner;
          }

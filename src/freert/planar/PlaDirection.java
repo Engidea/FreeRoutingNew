@@ -341,8 +341,8 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       PlaPointFloat v2 = p_other.get_vector().to_float();
       double length1 = v1.distance();
       double length2 = v2.distance();
-      double x = v1.point_x / length1 + v2.point_x / length2;
-      double y = v1.point_y / length1 + v2.point_y / length2;
+      double x = v1.v_x / length1 + v2.v_x / length2;
+      double y = v1.v_y / length1 + v2.v_y / length2;
       final double scale_factor = 1000;
       
       PlaVectorInt vm = new PlaVectorInt(x * scale_factor, y * scale_factor);

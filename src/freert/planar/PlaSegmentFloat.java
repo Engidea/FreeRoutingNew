@@ -73,12 +73,12 @@ public final class PlaSegmentFloat implements PlaObject
     */
    public PlaPointFloat intersection(PlaSegmentFloat p_other)
       {
-      double d1x = point_b.point_x - point_a.point_x;
-      double d1y = point_b.point_y - point_a.point_y;
-      double d2x = p_other.point_b.point_x - p_other.point_a.point_x;
-      double d2y = p_other.point_b.point_y - p_other.point_a.point_y;
-      double det_1 = point_a.point_x * point_b.point_y - point_a.point_y * point_b.point_x;
-      double det_2 = p_other.point_a.point_x * p_other.point_b.point_y - p_other.point_a.point_y * p_other.point_b.point_x;
+      double d1x = point_b.v_x - point_a.v_x;
+      double d1y = point_b.v_y - point_a.v_y;
+      double d2x = p_other.point_b.v_x - p_other.point_a.v_x;
+      double d2y = p_other.point_b.v_y - p_other.point_a.v_y;
+      double det_1 = point_a.v_x * point_b.v_y - point_a.v_y * point_b.v_x;
+      double det_2 = p_other.point_a.v_x * p_other.point_b.v_y - p_other.point_a.v_y * p_other.point_b.v_x;
       double det = d2x * d1y - d2y * d1x;
       double is_x;
       double is_y;
@@ -96,8 +96,8 @@ public final class PlaSegmentFloat implements PlaObject
     */
    public PlaSegmentFloat translate(double p_dist)
       {
-      double dx = point_b.point_x - point_a.point_x;
-      double dy = point_b.point_y - point_a.point_y;
+      double dx = point_b.v_x - point_a.v_x;
+      double dy = point_b.v_y - point_a.v_y;
       double dxdx = dx * dx;
       double dydy = dy * dy;
       double lenght = Math.sqrt(dxdx + dydy);
@@ -106,15 +106,15 @@ public final class PlaSegmentFloat implements PlaObject
          {
          // translate along the x axis
          double rel_x = (p_dist * lenght) / dy;
-         new_a = new PlaPointFloat(this.point_a.point_x - rel_x, this.point_a.point_y);
+         new_a = new PlaPointFloat(this.point_a.v_x - rel_x, this.point_a.v_y);
          }
       else
          {
          // translate along the y axis
          double rel_y = (p_dist * lenght) / dx;
-         new_a = new PlaPointFloat(point_a.point_x, point_a.point_y + rel_y);
+         new_a = new PlaPointFloat(point_a.v_x, point_a.v_y + rel_y);
          }
-      PlaPointFloat new_b = new PlaPointFloat(new_a.point_x + dx, new_a.point_y + dy);
+      PlaPointFloat new_b = new PlaPointFloat(new_a.v_x + dx, new_a.v_y + dy);
       return new PlaSegmentFloat(new_a, new_b);
       }
 
@@ -124,9 +124,9 @@ public final class PlaSegmentFloat implements PlaObject
     */
    public double signed_distance(PlaPointFloat p_point)
       {
-      double dx = point_b.point_x - point_a.point_x;
-      double dy = point_b.point_y - point_a.point_y;
-      double det = dy * (p_point.point_x - point_a.point_x) - dx * (p_point.point_y - point_a.point_y);
+      double dx = point_b.v_x - point_a.v_x;
+      double dy = point_b.v_y - point_a.v_y;
+      double det = dy * (p_point.v_x - point_a.v_x) - dx * (p_point.v_y - point_a.v_y);
       // area of the parallelogramm spanned by the 3 points
       double length = Math.sqrt(dx * dx + dy * dy);
       return det / length;
@@ -137,8 +137,8 @@ public final class PlaSegmentFloat implements PlaObject
     */
    public PlaPointFloat perpendicular_projection(PlaPointFloat p_point)
       {
-      double dx = point_b.point_x - point_a.point_x;
-      double dy = point_b.point_y - point_a.point_y;
+      double dx = point_b.v_x - point_a.v_x;
+      double dy = point_b.v_y - point_a.v_y;
       
       if (dx == 0 && dy == 0) return point_a;
 
@@ -146,10 +146,10 @@ public final class PlaSegmentFloat implements PlaObject
       double dydy = dy * dy;
       double dxdy = dx * dy;
       double denominator = dxdx + dydy;
-      double det = point_a.point_x * point_b.point_y - point_b.point_x * point_a.point_y;
+      double det = point_a.v_x * point_b.v_y - point_b.v_x * point_a.v_y;
 
-      double x = (p_point.point_x * dxdx + p_point.point_y * dxdy + det * dy) / denominator;
-      double y = (p_point.point_x * dxdy + p_point.point_y * dydy - det * dx) / denominator;
+      double x = (p_point.v_x * dxdx + p_point.v_y * dxdy + det * dy) / denominator;
+      double y = (p_point.v_x * dxdy + p_point.v_y * dydy - det * dx) / denominator;
 
       return new PlaPointFloat(x, y);
       }
@@ -194,7 +194,7 @@ public final class PlaSegmentFloat implements PlaObject
       else
          {
          projected_a = perpendicular_projection(p_line_segment.point_a);
-         if (Math.abs(projected_a.point_x) >= PlaLimits.CRIT_INT || Math.abs(projected_a.point_y) >= PlaLimits.CRIT_INT)
+         if (Math.abs(projected_a.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_a.v_y) >= PlaLimits.CRIT_INT)
             {
             return null;
             }
@@ -208,7 +208,7 @@ public final class PlaSegmentFloat implements PlaObject
          {
          projected_b = perpendicular_projection(p_line_segment.point_b);
          }
-      if (Math.abs(projected_b.point_x) >= PlaLimits.CRIT_INT || Math.abs(projected_b.point_y) >= PlaLimits.CRIT_INT)
+      if (Math.abs(projected_b.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_b.v_y) >= PlaLimits.CRIT_INT)
          {
          return null;
          }
@@ -234,7 +234,7 @@ public final class PlaSegmentFloat implements PlaObject
          {
          PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_a, p_line_segment.point_b.turn_90_degree(1, p_line_segment.point_a));
          projected_a = curr_perpendicular_line.intersection(this);
-         if (projected_a == null || Math.abs(projected_a.point_x) >= PlaLimits.CRIT_INT || Math.abs(projected_a.point_y) >= PlaLimits.CRIT_INT)
+         if (projected_a == null || Math.abs(projected_a.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_a.v_y) >= PlaLimits.CRIT_INT)
             {
             return null;
             }
@@ -250,7 +250,7 @@ public final class PlaSegmentFloat implements PlaObject
          {
          PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_b, p_line_segment.point_a.turn_90_degree(1, p_line_segment.point_b));
          projected_b = curr_perpendicular_line.intersection(this);
-         if (projected_b == null || Math.abs(projected_b.point_x) >= PlaLimits.CRIT_INT || Math.abs(projected_b.point_y) >= PlaLimits.CRIT_INT)
+         if (projected_b == null || Math.abs(projected_b.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_b.v_y) >= PlaLimits.CRIT_INT)
             {
             return null;
             }
@@ -267,17 +267,17 @@ public final class PlaSegmentFloat implements PlaObject
     */
    public PlaSegmentFloat shrink_segment(double p_offset)
       {
-      double dx = point_b.point_x - point_a.point_x;
-      double dy = point_b.point_y - point_a.point_y;
+      double dx = point_b.v_x - point_a.v_x;
+      double dy = point_b.v_y - point_a.v_y;
       if (dx == 0 && dy == 0)
          {
          return this;
          }
       double length = Math.sqrt(dx * dx + dy * dy);
       double offset = Math.min(p_offset, length / 2);
-      PlaPointFloat new_a = new PlaPointFloat(point_a.point_x + (dx * offset) / length, point_a.point_y + (dy * offset) / length);
+      PlaPointFloat new_a = new PlaPointFloat(point_a.v_x + (dx * offset) / length, point_a.v_y + (dy * offset) / length);
       double new_length = length - offset;
-      PlaPointFloat new_b = new PlaPointFloat(point_a.point_x + (dx * new_length) / length, point_a.point_y + (dy * new_length) / length);
+      PlaPointFloat new_b = new PlaPointFloat(point_a.v_x + (dx * new_length) / length, point_a.v_y + (dy * new_length) / length);
       return new PlaSegmentFloat(new_a, new_b);
       }
 
@@ -322,8 +322,8 @@ public final class PlaSegmentFloat implements PlaObject
       double line_length = this.point_b.distance(this.point_a);
       PlaSegmentFloat[] result = new PlaSegmentFloat[p_count];
       double section_length = line_length / p_count;
-      double dx = point_b.point_x - point_a.point_x;
-      double dy = point_b.point_y - point_a.point_y;
+      double dx = point_b.v_x - point_a.v_x;
+      double dy = point_b.v_y - point_a.v_y;
       PlaPointFloat curr_a = this.point_a;
       for (int i = 0; i < p_count; ++i)
          {
@@ -335,8 +335,8 @@ public final class PlaSegmentFloat implements PlaObject
          else
             {
             double curr_b_dist = (i + 1) * section_length;
-            double curr_b_x = point_a.point_x + (dx * curr_b_dist) / line_length;
-            double curr_b_y = point_a.point_y + (dy * curr_b_dist) / line_length;
+            double curr_b_x = point_a.v_x + (dx * curr_b_dist) / line_length;
+            double curr_b_y = point_a.v_y + (dy * curr_b_dist) / line_length;
             curr_b = new PlaPointFloat(curr_b_x, curr_b_y);
             }
          result[i] = new PlaSegmentFloat(curr_a, curr_b);

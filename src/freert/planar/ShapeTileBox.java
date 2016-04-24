@@ -46,14 +46,14 @@ public final class ShapeTileBox extends ShapeTileRegular
       else if ( a_point instanceof PlaPointRational )
          {
          PlaPointFloat fp = a_point.to_float();
-         double p_ll_x = Math.floor(fp.point_x);
-         double p_ll_y = Math.floor(fp.point_y);
-         double p_ur_x = Math.ceil(fp.point_x);
-         double p_ur_y = Math.ceil(fp.point_y);
+         double p_ll_x = Math.floor(fp.v_x);
+         double p_ll_y = Math.floor(fp.v_y);
+         double p_ur_x = Math.ceil(fp.v_x);
+         double p_ur_y = Math.ceil(fp.v_y);
          box_ll = new PlaPointInt(p_ll_x, p_ll_y);
          box_ur = new PlaPointInt(p_ur_x, p_ur_y);
          }
-      else
+      else 
          {
          box_ll = new PlaPointInt();
          box_ur = new PlaPointInt();
@@ -196,20 +196,20 @@ public final class ShapeTileBox extends ShapeTileRegular
    public PlaPointFloat nearest_point(PlaPointFloat p_from_point)
       {
       double x;
-      if (p_from_point.point_x <= box_ll.v_x)
+      if (p_from_point.v_x <= box_ll.v_x)
          x = box_ll.v_x;
-      else if (p_from_point.point_x >= box_ur.v_x)
+      else if (p_from_point.v_x >= box_ur.v_x)
          x = box_ur.v_x;
       else
-         x = p_from_point.point_x;
+         x = p_from_point.v_x;
 
       double y;
-      if (p_from_point.point_y <= box_ll.v_y)
+      if (p_from_point.v_y <= box_ll.v_y)
          y = box_ll.v_y;
-      else if (p_from_point.point_y >= box_ur.v_y)
+      else if (p_from_point.v_y >= box_ur.v_y)
          y = box_ur.v_y;
       else
-         y = p_from_point.point_y;
+         y = p_from_point.v_y;
 
       return new PlaPointFloat(x, y);
       }

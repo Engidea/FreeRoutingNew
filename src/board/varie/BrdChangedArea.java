@@ -49,16 +49,16 @@ public final class BrdChangedArea
    public void join(PlaPointFloat p_point, int p_layer)
       {
       OctagonMutable curr = arr[p_layer];
-      curr.lx = Math.min(p_point.point_x, curr.lx);
-      curr.ly = Math.min(p_point.point_y, curr.ly);
-      curr.rx = Math.max(curr.rx, p_point.point_x);
-      curr.uy = Math.max(curr.uy, p_point.point_y);
+      curr.lx = Math.min(p_point.v_x, curr.lx);
+      curr.ly = Math.min(p_point.v_y, curr.ly);
+      curr.rx = Math.max(curr.rx, p_point.v_x);
+      curr.uy = Math.max(curr.uy, p_point.v_y);
 
-      double tmp = p_point.point_x - p_point.point_y;
+      double tmp = p_point.v_x - p_point.v_y;
       curr.ulx = Math.min(curr.ulx, tmp);
       curr.lrx = Math.max(curr.lrx, tmp);
 
-      tmp = p_point.point_x + p_point.point_y;
+      tmp = p_point.v_x + p_point.v_y;
       curr.llx = Math.min(curr.llx, tmp);
       curr.urx = Math.max(curr.urx, tmp);
       }

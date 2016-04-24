@@ -160,8 +160,8 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
       for (int index = 0; index < corner_count; ++index)
          {
          PlaPointFloat curr_point = corner_approx(index);
-         x += curr_point.point_x;
-         y += curr_point.point_y;
+         x += curr_point.v_x;
+         y += curr_point.v_y;
          }
       x /= corner_count;
       y /= corner_count;

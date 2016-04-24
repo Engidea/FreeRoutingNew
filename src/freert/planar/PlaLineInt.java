@@ -182,7 +182,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       // only implemented for IntPoint lines for performance reasons
       PlaPointInt this_a = (PlaPointInt) point_a;
       PlaPointInt this_b = (PlaPointInt) point_b;
-      double det = (this_b.v_y - this_a.v_y) * (p_point.point_x - this_a.v_x) - (this_b.v_x - this_a.v_x) * (p_point.point_y - this_a.v_y);
+      double det = (this_b.v_y - this_a.v_y) * (p_point.v_x - this_a.v_x) - (this_b.v_x - this_a.v_x) * (p_point.v_y - this_a.v_y);
       PlaSide result;
       if (det - p_tolerance > 0)
          {
@@ -278,7 +278,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       PlaPointInt this_b = (PlaPointInt) point_b;
       double dx = this_b.v_x - this_a.v_x;
       double dy = this_b.v_y - this_a.v_y;
-      double det = dy * (p_point.point_x - this_a.v_x) - dx * (p_point.point_y - this_a.v_y);
+      double det = dy * (p_point.v_x - this_a.v_x) - dx * (p_point.v_y - this_a.v_y);
       // area of the parallelogramm spanned by the 3 points
       double length = Math.sqrt(dx * dx + dy * dy);
       return det / length;
@@ -660,14 +660,14 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       {
       PlaPointFloat p1 = point_a.to_float();
       PlaPointFloat p2 = point_b.to_float();
-      double dx = p2.point_x - p1.point_x;
+      double dx = p2.v_x - p1.v_x;
       if (dx == 0)
          {
          System.out.println("function_value_approx: line is vertical");
          return 0;
          }
-      double dy = p2.point_y - p1.point_y;
-      double det = p1.point_x * p2.point_y - p2.point_x * p1.point_y;
+      double dy = p2.v_y - p1.v_y;
+      double det = p1.v_x * p2.v_y - p2.v_x * p1.v_y;
       double result = (dy * p_x - det) / dx;
       return result;
       }
@@ -679,14 +679,14 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       {
       PlaPointFloat p1 = point_a.to_float();
       PlaPointFloat p2 = point_b.to_float();
-      double dy = p2.point_y - p1.point_y;
+      double dy = p2.v_y - p1.v_y;
       if (dy == 0)
          {
          System.out.println("function_in_y_value_approx: line is horizontal");
          return 0;
          }
-      double dx = p2.point_x - p1.point_x;
-      double det = p1.point_x * p2.point_y - p2.point_x * p1.point_y;
+      double dx = p2.v_x - p1.v_x;
+      double det = p1.v_x * p2.v_y - p2.v_x * p1.v_y;
       double result = (dx * p_y + det) / dy;
       return result;
       }

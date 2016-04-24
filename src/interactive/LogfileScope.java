@@ -1251,7 +1251,7 @@ public abstract class LogfileScope
       public StateInteractive read_scope(Actlog p_logfile, StateInteractive p_return_state, IteraBoard p_board_handling)
          {
          PlaPointFloat curr_location = p_logfile.read_corner();
-         java.awt.geom.Point2D new_center = new java.awt.geom.Point2D.Double(curr_location.point_x, curr_location.point_y);
+         java.awt.geom.Point2D new_center = new java.awt.geom.Point2D.Double(curr_location.v_x, curr_location.v_y);
          p_board_handling.get_panel().center_display(new_center);
          return p_return_state;
          }

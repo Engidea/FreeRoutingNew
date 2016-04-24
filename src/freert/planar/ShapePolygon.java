@@ -101,7 +101,7 @@ public final class ShapePolygon extends ShapePolyline
       for (int index = start_corner_no + 1; index <= last_corner_no; ++index)
          {
          PlaPointFloat curr_corner = curr_corners[index].to_float();
-         if (curr_corner.point_y < start_corner.point_y || curr_corner.point_y == start_corner.point_y && curr_corner.point_x < start_corner.point_x)
+         if (curr_corner.v_y < start_corner.v_y || curr_corner.v_y == start_corner.v_y && curr_corner.v_x < start_corner.v_x)
             {
             start_corner_no = index;
             start_corner = curr_corner;
@@ -323,10 +323,10 @@ public final class ShapePolygon extends ShapePolyline
       for (int index = 0; index < corners.length; ++index)
          {
          PlaPointFloat curr = corners[index].to_float();
-         llx = Math.min(llx, curr.point_x);
-         lly = Math.min(lly, curr.point_y);
-         urx = Math.max(urx, curr.point_x);
-         ury = Math.max(ury, curr.point_y);
+         llx = Math.min(llx, curr.v_x);
+         lly = Math.min(lly, curr.v_y);
+         urx = Math.max(urx, curr.v_x);
+         ury = Math.max(ury, curr.v_y);
          }
       
       PlaPointInt lower_left = new PlaPointInt(Math.floor(llx), Math.floor(lly));
@@ -352,16 +352,16 @@ public final class ShapePolygon extends ShapePolyline
       for (int index = 0; index < corners.length; ++index)
          {
          PlaPointFloat curr = corners[index].to_float();
-         lx = Math.min(lx, curr.point_x);
-         ly = Math.min(ly, curr.point_y);
-         rx = Math.max(rx, curr.point_x);
-         uy = Math.max(uy, curr.point_y);
+         lx = Math.min(lx, curr.v_x);
+         ly = Math.min(ly, curr.v_y);
+         rx = Math.max(rx, curr.v_x);
+         uy = Math.max(uy, curr.v_y);
 
-         double tmp = curr.point_x - curr.point_y;
+         double tmp = curr.v_x - curr.v_y;
          ulx = Math.min(ulx, tmp);
          lrx = Math.max(lrx, tmp);
 
-         tmp = curr.point_x + curr.point_y;
+         tmp = curr.v_x + curr.v_y;
          llx = Math.min(llx, tmp);
          urx = Math.max(urx, tmp);
          }
@@ -481,7 +481,7 @@ public final class ShapePolygon extends ShapePolyline
       for (int i = 0; i < corners.length; ++i)
          {
          PlaPointFloat next_corner = corners[i].to_float();
-         result += curr_corner.point_x * (next_corner.point_y - prev_corner.point_y);
+         result += curr_corner.v_x * (next_corner.v_y - prev_corner.v_y);
          prev_corner = curr_corner;
          curr_corner = next_corner;
          }

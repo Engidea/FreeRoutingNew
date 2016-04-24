@@ -190,7 +190,7 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
       PlaSegmentFloat door_line_segment = door_shape.diagonal_corner_segment();
       PlaPointFloat left_corner;
       PlaPointFloat right_corner;
-      if (door_line_segment.point_a.point_x < door_line_segment.point_b.point_x || door_line_segment.point_a.point_x == door_line_segment.point_b.point_x && door_line_segment.point_a.point_y <= door_line_segment.point_b.point_y)
+      if (door_line_segment.point_a.v_x < door_line_segment.point_b.v_x || door_line_segment.point_a.v_x == door_line_segment.point_b.v_x && door_line_segment.point_a.v_y <= door_line_segment.point_b.v_y)
          {
          left_corner = door_line_segment.point_a;
          right_corner = door_line_segment.point_b;
@@ -200,8 +200,8 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
          left_corner = door_line_segment.point_b;
          right_corner = door_line_segment.point_a;
          }
-      double door_dx = right_corner.point_x - left_corner.point_x;
-      double door_dy = right_corner.point_y - left_corner.point_y;
+      double door_dx = right_corner.v_x - left_corner.v_x;
+      double door_dy = right_corner.v_y - left_corner.v_y;
       double abs_door_dy = Math.abs(door_dy);
       double door_max_width = Math.max(door_dx, abs_door_dy);
       boolean result;
@@ -218,9 +218,9 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
          }
       else
          {
-         double dx = p_to_point.point_x - p_from_point.point_x;
-         double dy = p_to_point.point_y - p_from_point.point_y;
-         if (left_corner.point_y < right_corner.point_y)
+         double dx = p_to_point.v_x - p_from_point.v_x;
+         double dy = p_to_point.v_y - p_from_point.v_y;
+         if (left_corner.v_y < right_corner.v_y)
             {
             // door is about right diagonal
             if (Signum.of(dx) == Signum.of(dy))
@@ -265,7 +265,7 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
       PlaSegmentFloat door_line_segment = door_shape.diagonal_corner_segment();
       PlaPointFloat left_corner;
       PlaPointFloat right_corner;
-      if (door_line_segment.point_a.point_x < door_line_segment.point_b.point_x || door_line_segment.point_a.point_x == door_line_segment.point_b.point_x && door_line_segment.point_a.point_y <= door_line_segment.point_b.point_y)
+      if (door_line_segment.point_a.v_x < door_line_segment.point_b.v_x || door_line_segment.point_a.v_x == door_line_segment.point_b.v_x && door_line_segment.point_a.v_y <= door_line_segment.point_b.v_y)
          {
          left_corner = door_line_segment.point_a;
          right_corner = door_line_segment.point_b;
@@ -275,8 +275,8 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
          left_corner = door_line_segment.point_b;
          right_corner = door_line_segment.point_a;
          }
-      double door_dx = right_corner.point_x - left_corner.point_x;
-      double door_dy = right_corner.point_y - left_corner.point_y;
+      double door_dx = right_corner.v_x - left_corner.v_x;
+      double door_dy = right_corner.v_y - left_corner.v_y;
       double abs_door_dy = Math.abs(door_dy);
       double door_max_width = Math.max(door_dx, abs_door_dy);
       boolean result;
@@ -293,9 +293,9 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
          }
       else
          {
-         double dx = p_to_point.point_x - p_from_point.point_x;
-         double dy = p_to_point.point_y - p_from_point.point_y;
-         if (left_corner.point_y < right_corner.point_y)
+         double dx = p_to_point.v_x - p_from_point.v_x;
+         double dy = p_to_point.v_y - p_from_point.v_y;
+         if (left_corner.v_y < right_corner.v_y)
             {
             // door is about right diagonal
             if (Signum.of(dx) == Signum.of(dy))

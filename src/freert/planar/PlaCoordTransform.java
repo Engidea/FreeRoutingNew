@@ -77,7 +77,7 @@ public final class PlaCoordTransform implements java.io.Serializable
     */
    public PlaPointFloat board_to_user(PlaPointFloat p_point)
       {
-      return new PlaPointFloat(board_to_user(p_point.point_x), board_to_user(p_point.point_y));
+      return new PlaPointFloat(board_to_user(p_point.v_x), board_to_user(p_point.v_y));
       }
 
    /**
@@ -86,7 +86,7 @@ public final class PlaCoordTransform implements java.io.Serializable
     */
    public PlaPointFloat user_to_board(PlaPointFloat p_point)
       {
-      return new PlaPointFloat(user_to_board(p_point.point_x), user_to_board(p_point.point_y));
+      return new PlaPointFloat(user_to_board(p_point.v_x), user_to_board(p_point.v_y));
       }
 
    public PrintableShape board_to_user(PlaShape p_shape, java.util.Locale p_locale)

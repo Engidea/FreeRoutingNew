@@ -106,15 +106,30 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
       }
 
    /**
-    * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0, Signum.NEGATIVE, if the scalar
-    * product Vector is < 0, and Signum.ZERO, if the scalar product is equal 0.
+    * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0, 
+    * Signum.NEGATIVE, if the scalar product Vector is < 0, and 
+    * Signum.ZERO, if the scalar product is equal 0.
     */
    public abstract Signum projection(PlaVector p_other);
 
    /**
     * Returns an approximation of the scalar product of this vector with p_other by a double.
     */
-   public abstract double scalar_product(PlaVector p_other);
+   public final double scalar_product(PlaVector p_other)
+      {
+      if ( p_other == null ) throw new IllegalArgumentException("p_other is null");
+      
+      if ( p_other instanceof PlaVectorInt )
+         return scalar_product((PlaVectorInt)p_other);
+      else if ( p_other instanceof PlaVectorRational )
+         return scalar_product((PlaVectorRational)p_other);
+      else 
+         throw new IllegalArgumentException("p_other is unsupported");
+      }
+
+   abstract double scalar_product(PlaVectorInt p_other);
+   abstract double scalar_product(PlaVectorRational p_other);
+   
 
    /**
     * approximates the coordinates of this vector by float coordinates
@@ -232,8 +247,5 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
 
    abstract Signum projection(PlaVectorRational p_other);
 
-   abstract double scalar_product(PlaVectorInt p_other);
-
-   abstract double scalar_product(PlaVectorRational p_other);
 
    }

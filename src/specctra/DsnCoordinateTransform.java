@@ -72,8 +72,8 @@ public final class DsnCoordinateTransform implements java.io.Serializable
    public double[] board_to_dsn(PlaPointFloat p_point)
       {
       double[] result = new double[2];
-      result[0] = board_to_dsn(p_point.point_x) + base_x;
-      result[1] = board_to_dsn(p_point.point_y) + base_y;
+      result[0] = board_to_dsn(p_point.v_x) + base_x;
+      result[1] = board_to_dsn(p_point.v_y) + base_y;
       return result;
       }
 
@@ -83,8 +83,8 @@ public final class DsnCoordinateTransform implements java.io.Serializable
    public double[] board_to_dsn_rel(PlaPointFloat p_point)
       {
       double[] result = new double[2];
-      result[0] = board_to_dsn(p_point.point_x);
-      result[1] = board_to_dsn(p_point.point_y);
+      result[0] = board_to_dsn(p_point.v_x);
+      result[1] = board_to_dsn(p_point.v_y);
       return result;
       }
 
@@ -96,8 +96,8 @@ public final class DsnCoordinateTransform implements java.io.Serializable
       double[] result = new double[2 * p_points.length];
       for (int i = 0; i < p_points.length; ++i)
          {
-         result[2 * i] = board_to_dsn(p_points[i].point_x) + base_x;
-         result[2 * i + 1] = board_to_dsn(p_points[i].point_y) + base_y;
+         result[2 * i] = board_to_dsn(p_points[i].v_x) + base_x;
+         result[2 * i + 1] = board_to_dsn(p_points[i].v_y) + base_y;
          }
       return result;
       }
@@ -112,10 +112,10 @@ public final class DsnCoordinateTransform implements java.io.Serializable
          {
          PlaPointFloat a = p_lines[i].point_a.to_float();
          PlaPointFloat b = p_lines[i].point_b.to_float();
-         result[4 * i] = board_to_dsn(a.point_x) + base_x;
-         result[4 * i + 1] = board_to_dsn(a.point_y) + base_y;
-         result[4 * i + 2] = board_to_dsn(b.point_x) + base_x;
-         result[4 * i + 3] = board_to_dsn(b.point_y) + base_y;
+         result[4 * i] = board_to_dsn(a.v_x) + base_x;
+         result[4 * i + 1] = board_to_dsn(a.v_y) + base_y;
+         result[4 * i + 2] = board_to_dsn(b.v_x) + base_x;
+         result[4 * i + 3] = board_to_dsn(b.v_y) + base_y;
          }
       return result;
       }
@@ -129,8 +129,8 @@ public final class DsnCoordinateTransform implements java.io.Serializable
       double[] result = new double[2 * p_points.length];
       for (int i = 0; i < p_points.length; ++i)
          {
-         result[2 * i] = board_to_dsn(p_points[i].point_x);
-         result[2 * i + 1] = board_to_dsn(p_points[i].point_y);
+         result[2 * i] = board_to_dsn(p_points[i].v_x);
+         result[2 * i + 1] = board_to_dsn(p_points[i].v_y);
          }
       return result;
       }
@@ -142,8 +142,8 @@ public final class DsnCoordinateTransform implements java.io.Serializable
       {
       double[] result = new double[2];
       PlaPointFloat v = p_vector.to_float();
-      result[0] = board_to_dsn(v.point_x);
-      result[1] = board_to_dsn(v.point_y);
+      result[0] = board_to_dsn(v.v_x);
+      result[1] = board_to_dsn(v.v_y);
       return result;
       }
 

@@ -172,11 +172,11 @@ public final class BatchAutorouteThread extends BrdActionThread
          int radius = 10 * hdlg.get_routing_board().brd_rules.get_default_trace_half_width(0);
          java.awt.Color draw_color = this.hdlg.gdi_context.get_incomplete_color();
          PlaPointFloat[] draw_points = new PlaPointFloat[2];
-         draw_points[0] = new PlaPointFloat(current_opt_position.point_x - radius, current_opt_position.point_y - radius);
-         draw_points[1] = new PlaPointFloat(current_opt_position.point_x + radius, current_opt_position.point_y + radius);
+         draw_points[0] = new PlaPointFloat(current_opt_position.v_x - radius, current_opt_position.v_y - radius);
+         draw_points[1] = new PlaPointFloat(current_opt_position.v_x + radius, current_opt_position.v_y + radius);
          this.hdlg.gdi_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
-         draw_points[0] = new PlaPointFloat(current_opt_position.point_x + radius, current_opt_position.point_y - radius);
-         draw_points[1] = new PlaPointFloat(current_opt_position.point_x - radius, current_opt_position.point_y + radius);
+         draw_points[0] = new PlaPointFloat(current_opt_position.v_x + radius, current_opt_position.v_y - radius);
+         draw_points[1] = new PlaPointFloat(current_opt_position.v_x - radius, current_opt_position.v_y + radius);
          this.hdlg.gdi_context.draw(draw_points, draw_width, draw_color, p_graphics, 1);
          this.hdlg.gdi_context.draw_circle(current_opt_position, radius, draw_width, draw_color, p_graphics, 1);
          }

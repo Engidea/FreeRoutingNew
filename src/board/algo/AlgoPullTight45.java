@@ -314,7 +314,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
    private PlaLineInt smoothen_sharp_corner(PlaLineInt[] p_line_arr, int p_no)
       {
       PlaPointFloat curr_corner = p_line_arr[p_no].intersection_approx(p_line_arr[p_no + 1]);
-      if (curr_corner.point_x != (int) curr_corner.point_x)
+      if (curr_corner.v_x != (int) curr_corner.v_x)
          {
          // intersection of 2 diagonal lines is not integer
          PlaLineInt result = smoothen_non_integer_corner(p_line_arr, p_no);
@@ -378,34 +378,34 @@ public final class AlgoPullTight45 extends AlgoPullTight
       int new_y = 0;
       boolean new_line_is_vertical = false;
       boolean new_line_is_horizontal = false;
-      if (prev_corner.point_x > curr_corner.point_x && next_corner.point_x > curr_corner.point_x)
+      if (prev_corner.v_x > curr_corner.v_x && next_corner.v_x > curr_corner.v_x)
          {
-         new_x = (int) Math.ceil(curr_corner.point_x);
-         new_y = (int) Math.ceil(curr_corner.point_y);
+         new_x = (int) Math.ceil(curr_corner.v_x);
+         new_y = (int) Math.ceil(curr_corner.v_y);
          new_line_is_vertical = true;
          }
-      else if (prev_corner.point_x < curr_corner.point_x && next_corner.point_x < curr_corner.point_x)
+      else if (prev_corner.v_x < curr_corner.v_x && next_corner.v_x < curr_corner.v_x)
          {
-         new_x = (int) Math.floor(curr_corner.point_x);
-         new_y = (int) Math.floor(curr_corner.point_y);
+         new_x = (int) Math.floor(curr_corner.v_x);
+         new_y = (int) Math.floor(curr_corner.v_y);
          new_line_is_vertical = true;
          }
-      else if (prev_corner.point_y > curr_corner.point_y && next_corner.point_y > curr_corner.point_y)
+      else if (prev_corner.v_y > curr_corner.v_y && next_corner.v_y > curr_corner.v_y)
          {
-         new_x = (int) Math.ceil(curr_corner.point_x);
-         new_y = (int) Math.ceil(curr_corner.point_y);
+         new_x = (int) Math.ceil(curr_corner.v_x);
+         new_y = (int) Math.ceil(curr_corner.v_y);
          new_line_is_horizontal = true;
          }
-      else if (prev_corner.point_y < curr_corner.point_y && next_corner.point_y < curr_corner.point_y)
+      else if (prev_corner.v_y < curr_corner.v_y && next_corner.v_y < curr_corner.v_y)
          {
-         new_x = (int) Math.floor(curr_corner.point_x);
-         new_y = (int) Math.floor(curr_corner.point_y);
+         new_x = (int) Math.floor(curr_corner.v_x);
+         new_y = (int) Math.floor(curr_corner.v_y);
          new_line_is_horizontal = true;
          }
       PlaDirection new_line_dir = null;
       if (new_line_is_vertical)
          {
-         if (prev_corner.point_y < next_corner.point_y)
+         if (prev_corner.v_y < next_corner.v_y)
             {
             new_line_dir = PlaDirection.UP;
             }
@@ -416,7 +416,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
          }
       else if (new_line_is_horizontal)
          {
-         if (prev_corner.point_x < next_corner.point_x)
+         if (prev_corner.v_x < next_corner.v_x)
             {
             new_line_dir = PlaDirection.RIGHT;
             }

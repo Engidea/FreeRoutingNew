@@ -60,11 +60,11 @@ public class BatchSortedRouteItems
                {
                PlaPointFloat curr_via_center = curr_via.get_center().to_float();
                int curr_via_min_layer = curr_via.first_layer();
-               if (curr_via_center.point_x > min_item_coor.point_x || curr_via_center.point_x == min_item_coor.point_x
-                     && (curr_via_center.point_y > min_item_coor.point_y || curr_via_center.point_y == min_item_coor.point_y && curr_via_min_layer > min_item_layer))
+               if (curr_via_center.v_x > min_item_coor.v_x || curr_via_center.v_x == min_item_coor.v_x
+                     && (curr_via_center.v_y > min_item_coor.v_y || curr_via_center.v_y == min_item_coor.v_y && curr_via_min_layer > min_item_layer))
                   {
-                  if (curr_via_center.point_x < curr_min_coor.point_x || curr_via_center.point_x == curr_min_coor.point_x
-                        && (curr_via_center.point_y < curr_min_coor.point_y || curr_via_center.point_y == curr_min_coor.point_y && curr_via_min_layer < curr_min_layer))
+                  if (curr_via_center.v_x < curr_min_coor.v_x || curr_via_center.v_x == curr_min_coor.v_x
+                        && (curr_via_center.v_y < curr_min_coor.v_y || curr_via_center.v_y == curr_min_coor.v_y && curr_via_min_layer < curr_min_layer))
                      {
                      curr_min_coor = curr_via_center;
                      curr_min_layer = curr_via_min_layer;
@@ -91,7 +91,7 @@ public class BatchSortedRouteItems
                PlaPointFloat first_corner = curr_trace.first_corner().to_float();
                PlaPointFloat last_corner = curr_trace.last_corner().to_float();
                PlaPointFloat compare_corner;
-               if (first_corner.point_x < last_corner.point_x || first_corner.point_x == last_corner.point_x && first_corner.point_y < last_corner.point_y)
+               if (first_corner.v_x < last_corner.v_x || first_corner.v_x == last_corner.v_x && first_corner.v_y < last_corner.v_y)
                   {
                   compare_corner = last_corner;
                   }
@@ -100,11 +100,11 @@ public class BatchSortedRouteItems
                   compare_corner = first_corner;
                   }
                int curr_trace_layer = curr_trace.get_layer();
-               if (compare_corner.point_x > min_item_coor.point_x || compare_corner.point_x == min_item_coor.point_x
-                     && (compare_corner.point_y > min_item_coor.point_y || compare_corner.point_y == min_item_coor.point_y && curr_trace_layer > min_item_layer))
+               if (compare_corner.v_x > min_item_coor.v_x || compare_corner.v_x == min_item_coor.v_x
+                     && (compare_corner.v_y > min_item_coor.v_y || compare_corner.v_y == min_item_coor.v_y && curr_trace_layer > min_item_layer))
                   {
-                  if (compare_corner.point_x < curr_min_coor.point_x || compare_corner.point_x == curr_min_coor.point_x
-                        && (compare_corner.point_y < curr_min_coor.point_y || compare_corner.point_y == curr_min_coor.point_y && curr_trace_layer < curr_min_layer))
+                  if (compare_corner.v_x < curr_min_coor.v_x || compare_corner.v_x == curr_min_coor.v_x
+                        && (compare_corner.v_y < curr_min_coor.v_y || compare_corner.v_y == curr_min_coor.v_y && curr_trace_layer < curr_min_layer))
                      {
                      boolean is_connected_to_via = false;
                      Set<BrdItem> trace_contacts = curr_trace.get_normal_contacts();

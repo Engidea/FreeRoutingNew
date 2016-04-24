@@ -152,10 +152,7 @@ public final class ExpandDestinationDistance
 
    public double calculate(ShapeTileBox p_box, int p_layer)
       {
-      if (box_is_empty)
-         {
-         return Integer.MAX_VALUE;
-         }
+      if (box_is_empty) return Integer.MAX_VALUE;
 
       double component_side_delta_x;
       double component_side_delta_y;

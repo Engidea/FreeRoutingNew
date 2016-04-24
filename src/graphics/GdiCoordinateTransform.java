@@ -82,7 +82,7 @@ public final class GdiCoordinateTransform implements java.io.Serializable
       {
       screen_bounds = new Dimension(p_coordinate_transform.screen_bounds);
       design_box = new ShapeTileBox(p_coordinate_transform.design_box.box_ll, p_coordinate_transform.design_box.box_ur);
-      rotation_pole = new PlaPointFloat(p_coordinate_transform.rotation_pole.point_x, p_coordinate_transform.rotation_pole.point_y);
+      rotation_pole = new PlaPointFloat(p_coordinate_transform.rotation_pole.v_x, p_coordinate_transform.rotation_pole.v_y);
       design_box_with_offset = new ShapeTileBox(p_coordinate_transform.design_box_with_offset.box_ll, p_coordinate_transform.design_box_with_offset.box_ur);
       scale_factor = p_coordinate_transform.scale_factor;
       display_x_offset = p_coordinate_transform.display_x_offset;
@@ -118,19 +118,19 @@ public final class GdiCoordinateTransform implements java.io.Serializable
       double x, y;
       if (this.mirror_left_right)
          {
-         x = (design_box_with_offset.width() - rotated_point.point_x - 1) * scale_factor + display_x_offset;
+         x = (design_box_with_offset.width() - rotated_point.v_x - 1) * scale_factor + display_x_offset;
          }
       else
          {
-         x = rotated_point.point_x * scale_factor - display_x_offset;
+         x = rotated_point.v_x * scale_factor - display_x_offset;
          }
       if (this.mirror_top_bottom)
          {
-         y = (design_box_with_offset.height() - rotated_point.point_y - 1) * scale_factor + display_y_offset;
+         y = (design_box_with_offset.height() - rotated_point.v_y - 1) * scale_factor + display_y_offset;
          }
       else
          {
-         y = rotated_point.point_y * scale_factor - display_y_offset;
+         y = rotated_point.v_y * scale_factor - display_y_offset;
          }
       return new Point2D.Double(x, y);
       }
@@ -214,10 +214,10 @@ public final class GdiCoordinateTransform implements java.io.Serializable
       {
       PlaPointFloat corner_1 = screen_to_board(new Point2D.Double(p_rect.getX(), p_rect.getY()));
       PlaPointFloat corner_2 = screen_to_board(new Point2D.Double(p_rect.getX() + p_rect.getWidth(), p_rect.getY() + p_rect.getHeight()));
-      int llx = (int) Math.floor(Math.min(corner_1.point_x, corner_2.point_x));
-      int lly = (int) Math.floor(Math.min(corner_1.point_y, corner_2.point_y));
-      int urx = (int) Math.ceil(Math.max(corner_1.point_x, corner_2.point_x));
-      int ury = (int) Math.ceil(Math.max(corner_1.point_y, corner_2.point_y));
+      int llx = (int) Math.floor(Math.min(corner_1.v_x, corner_2.v_x));
+      int lly = (int) Math.floor(Math.min(corner_1.v_y, corner_2.v_y));
+      int urx = (int) Math.ceil(Math.max(corner_1.v_x, corner_2.v_x));
+      int ury = (int) Math.ceil(Math.max(corner_1.v_y, corner_2.v_y));
       return new ShapeTileBox(llx, lly, urx, ury);
       }
 

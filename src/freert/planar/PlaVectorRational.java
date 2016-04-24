@@ -140,13 +140,6 @@ public final class PlaVectorRational extends PlaVector
       return p_other.projection(this);
       }
 
-   /**
-    * calculates the scalar product of this vector and p_other
-    */
-   public double scalar_product(PlaVector p_other)
-      {
-      return p_other.scalar_product(this);
-      }
 
    /**
     * approximates the coordinates of this vector by float coordinates
@@ -246,7 +239,7 @@ public final class PlaVectorRational extends PlaVector
       {
       PlaPointFloat v1 = to_float();
       PlaPointFloat v2 = p_other.to_float();
-      return v1.point_x * v2.point_x + v1.point_y * v2.point_y;
+      return v1.v_x * v2.v_x + v1.v_y * v2.v_y;
       }
 
    Signum projection(PlaVectorInt p_other)

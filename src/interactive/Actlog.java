@@ -231,9 +231,9 @@ public class Actlog
             }
          try
             {
-            this.file_writer.write((new Double(p_corner.point_x)).toString());
+            this.file_writer.write((new Double(p_corner.v_x)).toString());
             this.file_writer.write(" ");
-            this.file_writer.write((new Double(p_corner.point_y)).toString());
+            this.file_writer.write((new Double(p_corner.v_y)).toString());
             this.file_writer.write("\n");
             }
          catch (IOException e2)

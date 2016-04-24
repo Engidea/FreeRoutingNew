@@ -22,7 +22,7 @@ public final class PrintableCircle extends PrintableShape
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", this.locale);
       String result = resources.getString("circle") + ": ";
-      if (center.point_x != 0 || center.point_y != 0)
+      if (center.v_x != 0 || center.v_y != 0)
          {
          String center_string = resources.getString("center") + " =" + center.to_string(this.locale);
          result += center_string;

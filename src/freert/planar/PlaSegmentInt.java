@@ -285,10 +285,10 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       {
       PlaPointFloat start_corner = middle.intersection_approx(start);
       PlaPointFloat end_corner = middle.intersection_approx(end);
-      double llx = Math.min(start_corner.point_x, end_corner.point_x);
-      double lly = Math.min(start_corner.point_y, end_corner.point_y);
-      double urx = Math.max(start_corner.point_x, end_corner.point_x);
-      double ury = Math.max(start_corner.point_y, end_corner.point_y);
+      double llx = Math.min(start_corner.v_x, end_corner.v_x);
+      double lly = Math.min(start_corner.v_y, end_corner.v_y);
+      double urx = Math.max(start_corner.v_x, end_corner.v_x);
+      double ury = Math.max(start_corner.v_y, end_corner.v_y);
       PlaPointInt lower_left = new PlaPointInt(Math.floor(llx), Math.floor(lly));
       PlaPointInt upper_right = new PlaPointInt(Math.ceil(urx), Math.ceil(ury));
       return new ShapeTileBox(lower_left, upper_right);
@@ -301,16 +301,16 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       {
       PlaPointFloat start_corner = middle.intersection_approx(start);
       PlaPointFloat end_corner = middle.intersection_approx(end);
-      double lx = Math.floor(Math.min(start_corner.point_x, end_corner.point_x));
-      double ly = Math.floor(Math.min(start_corner.point_y, end_corner.point_y));
-      double rx = Math.ceil(Math.max(start_corner.point_x, end_corner.point_x));
-      double uy = Math.ceil(Math.max(start_corner.point_y, end_corner.point_y));
-      double start_x_minus_y = start_corner.point_x - start_corner.point_y;
-      double end_x_minus_y = end_corner.point_x - end_corner.point_y;
+      double lx = Math.floor(Math.min(start_corner.v_x, end_corner.v_x));
+      double ly = Math.floor(Math.min(start_corner.v_y, end_corner.v_y));
+      double rx = Math.ceil(Math.max(start_corner.v_x, end_corner.v_x));
+      double uy = Math.ceil(Math.max(start_corner.v_y, end_corner.v_y));
+      double start_x_minus_y = start_corner.v_x - start_corner.v_y;
+      double end_x_minus_y = end_corner.v_x - end_corner.v_y;
       double ulx = Math.floor(Math.min(start_x_minus_y, end_x_minus_y));
       double lrx = Math.ceil(Math.max(start_x_minus_y, end_x_minus_y));
-      double start_x_plus_y = start_corner.point_x + start_corner.point_y;
-      double end_x_plus_y = end_corner.point_x + end_corner.point_y;
+      double start_x_plus_y = start_corner.v_x + start_corner.v_y;
+      double end_x_plus_y = end_corner.v_x + end_corner.v_y;
       double llx = Math.floor(Math.min(start_x_plus_y, end_x_plus_y));
       double urx = Math.ceil(Math.max(start_x_plus_y, end_x_plus_y));
       ShapeTileOctagon result = new ShapeTileOctagon((int) lx, (int) ly, (int) rx, (int) uy, (int) ulx, (int) lrx, (int) llx, (int) urx);

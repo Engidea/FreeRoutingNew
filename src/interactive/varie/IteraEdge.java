@@ -28,16 +28,16 @@ public final class IteraEdge implements Comparable<IteraEdge>
       double result = length_square - p_other.length_square;
       if (result != 0)  return Signum.as_int(result);
 
-      result = from_corner.point_x - p_other.from_corner.point_x;
+      result = from_corner.v_x - p_other.from_corner.v_x;
       if (result != 0) return Signum.as_int(result);
       
-      result = from_corner.point_y - p_other.from_corner.point_y;
+      result = from_corner.v_y - p_other.from_corner.v_y;
       if (result != 0) return Signum.as_int(result);
 
-      result = to_corner.point_x - p_other.to_corner.point_y;
+      result = to_corner.v_x - p_other.to_corner.v_y;
       if (result != 0) return Signum.as_int(result);
 
-      result = to_corner.point_y - p_other.to_corner.point_x;
+      result = to_corner.v_y - p_other.to_corner.v_x;
       if (result != 0) return Signum.as_int(result);
 
       return 1;

@@ -230,12 +230,6 @@ public final class PlaVectorInt extends PlaVector
       }
 
    @Override
-   public double scalar_product(PlaVector p_other)
-      {
-      return p_other.scalar_product(this);
-      }
-
-   @Override
    public PlaPointFloat to_float()
       {
       return new PlaPointFloat(point_x, point_y);

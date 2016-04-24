@@ -297,7 +297,7 @@ public final class ArtConnectionInsert
          PlaPointFloat float_neck_down_end_point = float_from_corner.change_length(float_to_corner, ok_length);
          neck_down_end_point = float_neck_down_end_point.round();
          // add a corner in case neck_down_end_point is not exactly on the line from p_from_corner to p_to_corner
-         boolean horizontal_first = Math.abs(float_from_corner.point_x - float_neck_down_end_point.point_x) >= Math.abs(float_from_corner.point_y - float_neck_down_end_point.point_y);
+         boolean horizontal_first = Math.abs(float_from_corner.v_x - float_neck_down_end_point.v_x) >= Math.abs(float_from_corner.v_y - float_neck_down_end_point.v_y);
          PlaPointInt add_corner = ArtConnectionLocate.calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
          PlaPoint curr_ok_point = r_board.insert_trace_segment(p_from_corner, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
                ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);

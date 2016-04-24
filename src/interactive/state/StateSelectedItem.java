@@ -294,8 +294,8 @@ public final class StateSelectedItem extends StateInteractive
          if (curr_ob instanceof BrdAbitVia)
             {
             PlaPointFloat curr_center = ((BrdAbit) curr_ob).get_center().to_float();
-            gravity_x += curr_center.point_x;
-            gravity_y += curr_center.point_y;
+            gravity_x += curr_center.v_x;
+            gravity_y += curr_center.v_y;
             ++pin_count;
             }
          else

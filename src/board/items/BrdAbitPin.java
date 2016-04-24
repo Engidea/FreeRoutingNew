@@ -237,7 +237,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
 
       PlaVector component_translation = component.get_location().difference_by(PlaPoint.ZERO);
 
-      for (int index = 0; index < this.precalculated_shapes.length; ++index)
+      for (int index = 0; index < precalculated_shapes.length; ++index)
          {
 
          int padstack_layer = get_padstack_layer(index);

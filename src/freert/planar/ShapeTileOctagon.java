@@ -75,16 +75,16 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       else if ( a_point instanceof PlaPointRational )
          {
          PlaPointFloat fp = ((PlaPointRational)a_point).to_float();
-         int lx = (int) Math.floor(fp.point_x);
-         int ly = (int) Math.floor(fp.point_y);
-         int rx = (int) Math.ceil(fp.point_x);
-         int uy = (int) Math.ceil(fp.point_y);
+         int lx = (int) Math.floor(fp.v_x);
+         int ly = (int) Math.floor(fp.v_y);
+         int rx = (int) Math.ceil(fp.v_x);
+         int uy = (int) Math.ceil(fp.v_y);
 
-         double tmp = fp.point_x - fp.point_y;
+         double tmp = fp.v_x - fp.v_y;
          int ulx = (int) Math.floor(tmp);
          int lrx = (int) Math.ceil(tmp);
 
-         tmp = fp.point_x + fp.point_y;
+         tmp = fp.v_x + fp.v_y;
          int llx = (int) Math.floor(tmp);
          int urx = (int) Math.ceil(tmp);
          
@@ -676,12 +676,12 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    @Override   
    public boolean contains(PlaPointFloat p_point)
       {
-      if (oct_lx > p_point.point_x || oct_ly > p_point.point_y || oct_rx < p_point.point_x || oct_uy < p_point.point_y)
+      if (oct_lx > p_point.v_x || oct_ly > p_point.v_y || oct_rx < p_point.v_x || oct_uy < p_point.v_y)
          {
          return false;
          }
-      double tmp_1 = p_point.point_x - p_point.point_y;
-      double tmp_2 = p_point.point_x + p_point.point_y;
+      double tmp_1 = p_point.v_x - p_point.v_y;
+      double tmp_2 = p_point.v_x + p_point.v_y;
       if (oct_ulx > tmp_1 || oct_lrx < tmp_1 || oct_llx > tmp_2 || oct_urx < tmp_2)
          {
          return false;

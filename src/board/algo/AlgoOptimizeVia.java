@@ -573,7 +573,7 @@ public final class AlgoOptimizeVia
 
       if (!first_delta.is_orthogonal())
          {
-         PlaPointFloat float_check_location = new PlaPointFloat(float_via_location.point_x, float_first_trace_from_corner.point_y);
+         PlaPointFloat float_check_location = new PlaPointFloat(float_via_location.v_x, float_first_trace_from_corner.v_y);
 
          curr_weighted_distance_1 = float_via_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
          curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
@@ -590,7 +590,7 @@ public final class AlgoOptimizeVia
                }
             }
 
-         float_check_location = new PlaPointFloat(float_first_trace_from_corner.point_x, float_via_location.point_y);
+         float_check_location = new PlaPointFloat(float_first_trace_from_corner.v_x, float_via_location.v_y);
 
          curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
          curr_weighted_distance_3 = float_check_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
@@ -609,7 +609,7 @@ public final class AlgoOptimizeVia
 
       if (!second_delta.is_orthogonal())
          {
-         PlaPointFloat float_check_location = new PlaPointFloat(float_via_location.point_x, float_second_trace_from_corner.point_y);
+         PlaPointFloat float_check_location = new PlaPointFloat(float_via_location.v_x, float_second_trace_from_corner.v_y);
 
          curr_weighted_distance_1 = float_via_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
          curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
@@ -626,7 +626,7 @@ public final class AlgoOptimizeVia
                }
             }
 
-         float_check_location = new PlaPointFloat(float_second_trace_from_corner.point_x, float_via_location.point_y);
+         float_check_location = new PlaPointFloat(float_second_trace_from_corner.v_x, float_via_location.v_y);
 
          curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
          curr_weighted_distance_3 = float_check_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);

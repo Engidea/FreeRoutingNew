@@ -95,8 +95,8 @@ public final class MoveComponent
       double gravity_y = 0;
       for (PlaPointFloat curr_center : item_centers)
          {
-         gravity_x += curr_center.point_x;
-         gravity_y += curr_center.point_y;
+         gravity_x += curr_center.v_x;
+         gravity_y += curr_center.v_y;
          }
       
       gravity_x /= item_centers.size();

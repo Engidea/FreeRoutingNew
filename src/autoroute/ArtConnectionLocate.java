@@ -436,21 +436,21 @@ public abstract class ArtConnectionLocate
       double y;
       if (p_horizontal_first)
          {
-         x = p_to_point.point_x;
-         y = p_from_point.point_y;
+         x = p_to_point.v_x;
+         y = p_from_point.v_y;
          }
       else
          {
-         x = p_from_point.point_x;
-         y = p_to_point.point_y;
+         x = p_from_point.v_x;
+         y = p_to_point.v_y;
          }
       return new PlaPointFloat(x, y);
       }
 
    private static PlaPointFloat fortyfive_degree_corner(PlaPointFloat p_from_point, PlaPointFloat p_to_point, boolean p_horizontal_first)
       {
-      double abs_dx = Math.abs(p_to_point.point_x - p_from_point.point_x);
-      double abs_dy = Math.abs(p_to_point.point_y - p_from_point.point_y);
+      double abs_dx = Math.abs(p_to_point.v_x - p_from_point.v_x);
+      double abs_dy = Math.abs(p_to_point.v_y - p_from_point.v_y);
       double x;
       double y;
 
@@ -458,26 +458,26 @@ public abstract class ArtConnectionLocate
          {
          if (p_horizontal_first)
             {
-            x = p_to_point.point_x;
-            if (p_to_point.point_y >= p_from_point.point_y)
+            x = p_to_point.v_x;
+            if (p_to_point.v_y >= p_from_point.v_y)
                {
-               y = p_from_point.point_y + abs_dx;
+               y = p_from_point.v_y + abs_dx;
                }
             else
                {
-               y = p_from_point.point_y - abs_dx;
+               y = p_from_point.v_y - abs_dx;
                }
             }
          else
             {
-            x = p_from_point.point_x;
-            if (p_to_point.point_y > p_from_point.point_y)
+            x = p_from_point.v_x;
+            if (p_to_point.v_y > p_from_point.v_y)
                {
-               y = p_to_point.point_y - abs_dx;
+               y = p_to_point.v_y - abs_dx;
                }
             else
                {
-               y = p_to_point.point_y + abs_dx;
+               y = p_to_point.v_y + abs_dx;
                }
             }
          }
@@ -485,26 +485,26 @@ public abstract class ArtConnectionLocate
          {
          if (p_horizontal_first)
             {
-            y = p_from_point.point_y;
-            if (p_to_point.point_x > p_from_point.point_x)
+            y = p_from_point.v_y;
+            if (p_to_point.v_x > p_from_point.v_x)
                {
-               x = p_to_point.point_x - abs_dy;
+               x = p_to_point.v_x - abs_dy;
                }
             else
                {
-               x = p_to_point.point_x + abs_dy;
+               x = p_to_point.v_x + abs_dy;
                }
             }
          else
             {
-            y = p_to_point.point_y;
-            if (p_to_point.point_x > p_from_point.point_x)
+            y = p_to_point.v_y;
+            if (p_to_point.v_x > p_from_point.v_x)
                {
-               x = p_from_point.point_x + abs_dy;
+               x = p_from_point.v_x + abs_dy;
                }
             else
                {
-               x = p_from_point.point_x - abs_dy;
+               x = p_from_point.v_x - abs_dy;
                }
             }
          }

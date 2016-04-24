@@ -595,10 +595,10 @@ public final class ShapeTileSimplex extends ShapeTile
          for (int i = 0; i < arr.length; ++i)
             {
             PlaPointFloat curr = corner_approx(i);
-            llx = Math.min(llx, curr.point_x);
-            lly = Math.min(lly, curr.point_y);
-            urx = Math.max(urx, curr.point_x);
-            ury = Math.max(ury, curr.point_y);
+            llx = Math.min(llx, curr.v_x);
+            lly = Math.min(lly, curr.v_y);
+            urx = Math.max(urx, curr.v_x);
+            ury = Math.max(ury, curr.v_y);
             }
          PlaPointInt lower_left = new PlaPointInt(Math.floor(llx), Math.floor(lly));
          PlaPointInt upper_right = new PlaPointInt(Math.ceil(urx), Math.ceil(ury));
@@ -626,16 +626,16 @@ public final class ShapeTileSimplex extends ShapeTile
          for (int i = 0; i < arr.length; ++i)
             {
             PlaPointFloat curr = corner_approx(i);
-            lx = Math.min(lx, curr.point_x);
-            ly = Math.min(ly, curr.point_y);
-            rx = Math.max(rx, curr.point_x);
-            uy = Math.max(uy, curr.point_y);
+            lx = Math.min(lx, curr.v_x);
+            ly = Math.min(ly, curr.v_y);
+            rx = Math.max(rx, curr.v_x);
+            uy = Math.max(uy, curr.v_y);
 
-            double tmp = curr.point_x - curr.point_y;
+            double tmp = curr.v_x - curr.v_y;
             ulx = Math.min(ulx, tmp);
             lrx = Math.max(lrx, tmp);
 
-            tmp = curr.point_x + curr.point_y;
+            tmp = curr.v_x + curr.v_y;
             llx = Math.min(llx, tmp);
             urx = Math.max(urx, tmp);
             }
@@ -1242,14 +1242,14 @@ public final class ShapeTileSimplex extends ShapeTile
       else
          prev_inner_line = this.arr[arr.length - 1];
       PlaPointFloat intersection = curr_inner_line.intersection_approx(prev_inner_line);
-      if (intersection.point_x >= Integer.MAX_VALUE)
+      if (intersection.v_x >= Integer.MAX_VALUE)
          {
          System.out.println("Simplex.calc_division_lines: intersection expexted");
          return null;
          }
       PlaPointInt inner_corner = intersection.round();
       double c_tolerance = 0.0001;
-      boolean is_exact = Math.abs(inner_corner.v_x - intersection.point_x) < c_tolerance && Math.abs(inner_corner.v_y - intersection.point_y) < c_tolerance;
+      boolean is_exact = Math.abs(inner_corner.v_x - intersection.v_x) < c_tolerance && Math.abs(inner_corner.v_y - intersection.v_y) < c_tolerance;
 
       if (!is_exact)
          {

@@ -204,13 +204,13 @@ public final class NetIncompletes
       double draw_intensity = p_graphics_context.get_incomplete_color_intensity();
       
       PlaPointFloat[] draw_points = new PlaPointFloat[2];
-      draw_points[0] = new PlaPointFloat(p_location.point_x - p_radius, p_location.point_y - p_radius);
-      draw_points[1] = new PlaPointFloat(p_location.point_x + p_radius, p_location.point_y + p_radius);
+      draw_points[0] = new PlaPointFloat(p_location.v_x - p_radius, p_location.v_y - p_radius);
+      draw_points[1] = new PlaPointFloat(p_location.v_x + p_radius, p_location.v_y + p_radius);
       
       p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
       
-      draw_points[0] = new PlaPointFloat(p_location.point_x + p_radius, p_location.point_y - p_radius);
-      draw_points[1] = new PlaPointFloat(p_location.point_x - p_radius, p_location.point_y + p_radius);
+      draw_points[0] = new PlaPointFloat(p_location.v_x + p_radius, p_location.v_y - p_radius);
+      draw_points[1] = new PlaPointFloat(p_location.v_x - p_radius, p_location.v_y + p_radius);
       
       p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
       }
@@ -223,14 +223,14 @@ public final class NetIncompletes
       double circle_radius = 0.5 * Math.abs(p_diameter);
       p_graphics_context.draw_circle(p_location, circle_radius, draw_width, draw_color, p_graphics, draw_intensity);
       PlaPointFloat[] draw_points = new PlaPointFloat[2];
-      draw_points[0] = new PlaPointFloat(p_location.point_x - circle_radius, p_location.point_y);
-      draw_points[1] = new PlaPointFloat(p_location.point_x + circle_radius, p_location.point_y);
+      draw_points[0] = new PlaPointFloat(p_location.v_x - circle_radius, p_location.v_y);
+      draw_points[1] = new PlaPointFloat(p_location.v_x + circle_radius, p_location.v_y);
       p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
       if (p_diameter > 0)
          {
          // draw also the vertical diameter to create a "+"
-         draw_points[0] = new PlaPointFloat(p_location.point_x, p_location.point_y - circle_radius);
-         draw_points[1] = new PlaPointFloat(p_location.point_x, p_location.point_y + circle_radius);
+         draw_points[0] = new PlaPointFloat(p_location.v_x, p_location.v_y - circle_radius);
+         draw_points[1] = new PlaPointFloat(p_location.v_x, p_location.v_y + circle_radius);
          p_graphics_context.draw(draw_points, draw_width, draw_color, p_graphics, draw_intensity);
          }
       }
