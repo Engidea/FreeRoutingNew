@@ -21,8 +21,8 @@
 package freert.planar;
 
 import java.math.BigInteger;
-import datastructures.BigIntAux;
-import datastructures.Signum;
+import freert.varie.BigIntAux;
+import freert.varie.Signum;
 
 /**
  *

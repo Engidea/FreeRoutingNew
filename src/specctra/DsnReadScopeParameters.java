@@ -28,7 +28,7 @@ import autoroute.ArtSettings;
 import board.varie.IdGenerator;
 import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
-import datastructures.UnitMeasure;
+import freert.varie.UnitMeasure;
 
 /**
  * Default parameter type used while reading a Specctra dsn-file.

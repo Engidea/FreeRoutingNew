@@ -34,7 +34,6 @@ import board.items.BrdOutline;
 import board.items.BrdTracePolyline;
 import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
-import datastructures.UnitMeasure;
 import freert.planar.PlaDimension;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
@@ -50,6 +49,7 @@ import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.planar.ShapeTileRegular;
 import freert.planar.ShapeTileSimplex;
+import freert.varie.UnitMeasure;
 
 /**
  * Elementary geometric search functions making direct use of the MinAreaTree in the package datastructures.

@@ -19,7 +19,7 @@
  *
  */
 
-package datastructures;
+package freert.varie;
 
 /**
  * Class used to cancel a performance critical algorithm after a time limit is exceeded.

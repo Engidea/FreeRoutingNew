@@ -20,6 +20,7 @@
 
 package gui.win;
 
+import freert.varie.ItemClass;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
@@ -36,7 +37,6 @@ import rules.ViaTableColumnName;
 import rules.ViaTableModel;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
-import datastructures.ItemClass;
 
 /**
  * Edit window for the table of available vias.

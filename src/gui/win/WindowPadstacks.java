@@ -20,12 +20,12 @@
 
 package gui.win;
 
+import freert.varie.UndoableObjectNode;
 import gui.BoardFrame;
 import gui.varie.UndoableObjectStorable;
 import library.LibPadstack;
 import library.LibPadstacks;
 import board.items.BrdAbit;
-import datastructures.UndoableObjectNode;
 
 /**
  * Window displaying the library padstacks.

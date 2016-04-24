@@ -33,7 +33,6 @@ import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
 import board.varie.BrdStopConnection;
 import board.varie.ShoveDrillResult;
-import datastructures.TimeLimit;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -44,6 +43,7 @@ import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.TimeLimit;
 
 /**
  * Class with functions for checking and inserting pads with eventually shoving aside obstacle traces.

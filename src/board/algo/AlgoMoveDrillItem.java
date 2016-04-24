@@ -33,7 +33,6 @@ import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
-import datastructures.TimeLimit;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -42,6 +41,7 @@ import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.TimeLimit;
 
 /**
  *

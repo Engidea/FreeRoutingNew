@@ -28,9 +28,9 @@ import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeLeaf;
-import datastructures.UndoableObjectNode;
 import freert.planar.Polyline;
 import freert.planar.ShapeBounding_45_Degree;
+import freert.varie.UndoableObjectNode;
 
 /**
  *

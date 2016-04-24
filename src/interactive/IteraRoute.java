@@ -24,6 +24,9 @@ import freert.planar.PlaVector;
 import freert.planar.Polyline;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.TimeLimit;
+import freert.varie.TimeLimitStoppable;
+import freert.varie.UnitMeasure;
 import graphics.GdiContext;
 import interactive.varie.IteraTargetPoint;
 import interactive.varie.PinSwappable;
@@ -48,9 +51,6 @@ import board.varie.BrdKeepPoint;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
-import datastructures.TimeLimit;
-import datastructures.TimeLimitStoppable;
-import datastructures.UnitMeasure;
 
 /**
  * Functionality for interactive routing.

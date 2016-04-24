@@ -20,6 +20,7 @@
 
 package gui.win;
 
+import freert.varie.UndoableObjectNode;
 import gui.BoardFrame;
 import gui.ComboBoxLayer;
 import gui.GuiSubWindowSavable;
@@ -27,7 +28,6 @@ import gui.varie.GuiResources;
 import javax.swing.JOptionPane;
 import rules.ClearanceMatrix;
 import board.RoutingBoard;
-import datastructures.UndoableObjectNode;
 
 /**
  * Window for interactive editing of the clearance Matrix.
@@ -395,7 +395,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
          // check, if there are items on the board assigned to clearance class i or j.
 
          interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
-         datastructures.UndoableObjects item_list = board_handling.get_routing_board().item_list;
+         freert.varie.UndoableObjects item_list = board_handling.get_routing_board().item_list;
          boolean items_already_assigned_row = false;
          boolean items_already_assigned_column = false;
          java.util.Iterator<UndoableObjectNode> it = item_list.start_read_object();

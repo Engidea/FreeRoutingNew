@@ -9,7 +9,7 @@
  * Created on 5. January 2003, 11:26
  */
 
-package datastructures;
+package freert.varie;
 
 import java.math.BigInteger;
 

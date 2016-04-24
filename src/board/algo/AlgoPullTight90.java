@@ -23,11 +23,11 @@ package board.algo;
 import board.RoutingBoard;
 import board.items.BrdTracePolyline;
 import board.varie.BrdKeepPoint;
-import datastructures.ThreadStoppable;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
+import freert.varie.ThreadStoppable;
 
 /**
  *

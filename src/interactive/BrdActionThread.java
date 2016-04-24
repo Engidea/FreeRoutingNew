@@ -20,7 +20,7 @@
  */
 package interactive;
 
-import datastructures.ThreadStoppable;
+import freert.varie.ThreadStoppable;
 
 
 

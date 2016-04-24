@@ -1,6 +1,6 @@
 package board.shape;
 
-import datastructures.Signum;
+import freert.varie.Signum;
 
 /**
  * created for sorting Items according to their clearance to p_cl_type on layer p_layer

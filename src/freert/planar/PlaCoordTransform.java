@@ -24,7 +24,7 @@ import board.printable.PrintableCircle;
 import board.printable.PrintablePolygon;
 import board.printable.PrintableRectangle;
 import board.printable.PrintableShape;
-import datastructures.UnitMeasure;
+import freert.varie.UnitMeasure;
 
 /**
  * Class for transforming objects between user coordinate space and board coordinate space.

@@ -39,7 +39,6 @@ import board.shape.ShapeTraceEntries;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.TraceAngleRestriction;
-import datastructures.TimeLimit;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -51,6 +50,7 @@ import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.TimeLimit;
 
 /**
  * Contains internal auxiliary functions of class RoutingBoard for shoving traces

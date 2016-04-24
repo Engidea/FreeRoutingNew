@@ -26,6 +26,8 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTileBox;
+import freert.varie.ItemClass;
+import freert.varie.UnitMeasure;
 import graphics.GdiContext;
 import gui.BoardPanel;
 import gui.varie.GuiResources;
@@ -80,8 +82,6 @@ import board.varie.IdGenerator;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
-import datastructures.ItemClass;
-import datastructures.UnitMeasure;
 
 /**
  * Central connection class between the graphical user interface and the board database.

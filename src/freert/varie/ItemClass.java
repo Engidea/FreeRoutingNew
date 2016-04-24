@@ -1,4 +1,4 @@
-package datastructures;
+package freert.varie;
 
 /**
  * Used in the function get_default_clearance_class to get the default claearance classes for item classes.

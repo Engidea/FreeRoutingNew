@@ -25,13 +25,13 @@ import board.RoutingBoard;
 import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionFilter;
-import datastructures.UnitMeasure;
 import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
+import freert.varie.UnitMeasure;
 import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
 

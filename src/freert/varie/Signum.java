@@ -14,7 +14,7 @@
  *   for more details.
  */
 
-package datastructures;
+package freert.varie;
 
 /**
  * Implements the mathematical signum function.

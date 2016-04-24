@@ -21,7 +21,7 @@
 package freert.planar;
 
 import java.math.BigInteger;
-import datastructures.BigIntAux;
+import freert.varie.BigIntAux;
 
 /**
  *

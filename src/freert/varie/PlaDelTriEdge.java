@@ -1,4 +1,4 @@
-package datastructures;
+package freert.varie;
 
 import board.varie.IdGenerator;
 

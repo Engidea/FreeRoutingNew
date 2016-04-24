@@ -22,6 +22,7 @@ package specctra;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.varie.ItemClass;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
@@ -32,7 +33,6 @@ import rules.BoardRules;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.varie.ItemFixState;
-import datastructures.ItemClass;
 
 /**
  * Class for reading and writing net network from dsn-files.

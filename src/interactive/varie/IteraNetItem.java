@@ -2,8 +2,8 @@ package interactive.varie;
 
 import java.util.Collection;
 import board.items.BrdItem;
-import datastructures.PlaDelTriStorable;
 import freert.planar.PlaPoint;
+import freert.varie.PlaDelTriStorable;
 
 public class IteraNetItem implements PlaDelTriStorable
    {

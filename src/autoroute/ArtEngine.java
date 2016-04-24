@@ -43,12 +43,12 @@ import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.IdGenerator;
-import datastructures.ThreadStoppable;
-import datastructures.UndoableObjectNode;
 import freert.planar.PlaDimension;
 import freert.planar.PlaLineInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileSimplex;
+import freert.varie.ThreadStoppable;
+import freert.varie.UndoableObjectNode;
 
 /**
  * Temporary autoroute data stored on the RoutingBoard.

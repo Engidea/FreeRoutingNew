@@ -21,7 +21,7 @@
 
 package rules;
 
-import datastructures.ItemClass;
+import freert.varie.ItemClass;
 
 /**
  * What is this doing ?

@@ -15,7 +15,7 @@
  */
 package freert.planar;
 
-import datastructures.Signum;
+import freert.varie.Signum;
 
 /**
  * Implements functionality for line segments. 

@@ -21,7 +21,7 @@
 package freert.planar;
 
 import java.math.BigInteger;
-import datastructures.Signum;
+import freert.varie.Signum;
 
 /**
  * Abstract class describing functionality of Vectors. Vectors are used for translating Points in the plane.

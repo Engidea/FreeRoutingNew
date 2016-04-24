@@ -28,9 +28,6 @@ import board.varie.BrdChangedArea;
 import board.varie.BrdTraceExitRestriction;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
-import datastructures.Signum;
-import datastructures.ThreadStoppable;
-import datastructures.TimeLimitStoppable;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -43,6 +40,9 @@ import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.Signum;
+import freert.varie.ThreadStoppable;
+import freert.varie.TimeLimitStoppable;
 import graphics.GdiContext;
 
 /**

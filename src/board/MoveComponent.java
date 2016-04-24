@@ -29,11 +29,11 @@ import board.items.BrdArea;
 import board.items.BrdComponentOutline;
 import board.items.BrdItem;
 import board.varie.SortedItemDouble;
-import datastructures.TimeLimit;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.varie.TimeLimit;
 
 /**
  * Class for moving a group of items on the board

@@ -1,5 +1,6 @@
 package gui.win;
 
+import freert.varie.UnitMeasure;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiPanelVertical;
@@ -12,7 +13,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
 import javax.swing.JFormattedTextField;
 import javax.swing.JPanel;
-import datastructures.UnitMeasure;
 
 /**
  * It is far easier to handle a sub window than some strange bits in the main bar
@@ -60,7 +60,7 @@ public final class WindowUnitMeasure extends GuiSubWindowSavable
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               datastructures.UnitMeasure new_unit = (UnitMeasure) unit_combo_box.getSelectedItem();
+               freert.varie.UnitMeasure new_unit = (UnitMeasure) unit_combo_box.getSelectedItem();
                board_frame.board_panel.board_handling.change_user_unit(new_unit);
                board_frame.refresh_windows();
                }

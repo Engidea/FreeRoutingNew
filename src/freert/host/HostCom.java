@@ -26,7 +26,7 @@ import java.io.ObjectInputStream;
 import specctra.DsnCoordinateTransform;
 import specctra.DsnParserInfo;
 import board.varie.IdGenerator;
-import datastructures.UnitMeasure;
+import freert.varie.UnitMeasure;
 
 /**
  * Communication information to host systems or host design formats.

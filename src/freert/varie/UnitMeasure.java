@@ -18,7 +18,7 @@
  * Created on 13. Dezember 2004, 08:01
  */
 
-package datastructures;
+package freert.varie;
 
 /**
  * Enum for the user units inch, mil or millimeter.

@@ -16,7 +16,7 @@
  * Created on 8. Januar 2005, 10:12
  */
 
-package datastructures;
+package freert.varie;
 
 import java.util.Collection;
 import java.util.Collections;

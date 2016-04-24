@@ -22,13 +22,13 @@ package autoroute.batch;
 
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
+import freert.varie.UnitMeasure;
 import gui.varie.GuiResources;
 import interactive.IteraBoard;
 import interactive.BrdActionThread;
 import java.awt.Color;
 import autoroute.ArtSettings;
 import board.varie.TraceAngleRestriction;
-import datastructures.UnitMeasure;
 
 /**
  * Thread for the batch autoroute.

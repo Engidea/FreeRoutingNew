@@ -20,6 +20,7 @@
 
 package interactive;
 
+import freert.varie.UndoableObjectNode;
 import graphics.GdiContext;
 import gui.varie.GuiResources;
 import java.awt.Graphics;
@@ -32,7 +33,6 @@ import board.BrdConnectable;
 import board.RoutingBoard;
 import board.infos.AirLineInfo;
 import board.items.BrdItem;
-import datastructures.UndoableObjectNode;
 
 /**
  * Creates all Incompletes (Ratsnest) to display them on the screen

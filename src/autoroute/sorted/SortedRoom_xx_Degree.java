@@ -1,12 +1,12 @@
 package autoroute.sorted;
 
-import datastructures.Signum;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSide;
 import freert.planar.ShapeTile;
+import freert.varie.Signum;
 
 /**
  * Helper class to sort the doors of an expansion room counterclockwise amount the border of the room shape.

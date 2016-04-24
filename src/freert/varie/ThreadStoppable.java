@@ -19,7 +19,7 @@
  *
  */
 
-package datastructures;
+package freert.varie;
 
 /**
  * Interface for stoppable threads.

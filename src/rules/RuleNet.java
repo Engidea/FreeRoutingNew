@@ -27,8 +27,8 @@ import board.infos.PrintableInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
 import board.items.BrdTrace;
-import datastructures.UndoableObjectNode;
-import datastructures.UndoableObjects;
+import freert.varie.UndoableObjectNode;
+import freert.varie.UndoableObjects;
 
 /**
  * Describes properties for an individual electrical net.

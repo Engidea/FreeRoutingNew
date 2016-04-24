@@ -1,4 +1,4 @@
-package datastructures;
+package freert.varie;
 
 import freert.planar.PlaPoint;
 import freert.planar.PlaSide;

@@ -23,8 +23,6 @@ import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.varie.BrdKeepPoint;
-import datastructures.Signum;
-import datastructures.ThreadStoppable;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLimits;
 import freert.planar.PlaLineInt;
@@ -35,6 +33,8 @@ import freert.planar.PlaSide;
 import freert.planar.PlaVector;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
+import freert.varie.Signum;
+import freert.varie.ThreadStoppable;
 
 /**
  *

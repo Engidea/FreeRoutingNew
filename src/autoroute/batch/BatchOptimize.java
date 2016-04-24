@@ -16,6 +16,7 @@
 package autoroute.batch;
 
 import freert.planar.PlaPointFloat;
+import freert.varie.UndoableObjectNode;
 import gui.varie.UndoableObjectStorable;
 import interactive.BrdActionThread;
 import java.util.Collection;
@@ -28,7 +29,6 @@ import board.items.BrdItem;
 import board.items.BrdTrace;
 import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
-import datastructures.UndoableObjectNode;
 
 /**
  * To optimize the vias and traces after the batch autorouter has completed the board.

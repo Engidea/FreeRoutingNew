@@ -25,12 +25,12 @@ import java.util.Iterator;
 import java.util.Vector;
 import library.LibPackage;
 import board.infos.BrdComponent;
-import datastructures.UndoableObjectNode;
-import datastructures.UndoableObjects;
 import freert.host.BrdObservers;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.varie.UndoableObjectNode;
+import freert.varie.UndoableObjects;
 
 /**
  * Contains the lists of components on the board.

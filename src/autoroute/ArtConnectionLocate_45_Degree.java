@@ -32,12 +32,12 @@ import autoroute.varie.ArtBacktrackElement;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
 import board.varie.TraceAngleRestriction;
-import datastructures.Signum;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileSimplex;
+import freert.varie.Signum;
 
 /**
  *

@@ -42,7 +42,7 @@ public class SpectraSesToEagle extends javax.swing.JFrame
    // The layer structure in specctra format
    private final DsnLayerStructure specctra_layer_structure;
 
-   private final datastructures.UnitMeasure unit;
+   private final freert.varie.UnitMeasure unit;
 
    // The scale factor for transforming coordinates from the session file to Eagle
    private final double session_file_scale_denominator;
@@ -88,7 +88,7 @@ public class SpectraSesToEagle extends javax.swing.JFrame
       return result;
       }
 
-   SpectraSesToEagle(JflexScanner p_scanner, java.io.OutputStreamWriter p_out_file, RoutingBoard p_board, datastructures.UnitMeasure p_unit, double p_session_file_scale_dominator, double p_board_scale_factor)
+   SpectraSesToEagle(JflexScanner p_scanner, java.io.OutputStreamWriter p_out_file, RoutingBoard p_board, freert.varie.UnitMeasure p_unit, double p_session_file_scale_dominator, double p_board_scale_factor)
       {
       scanner = p_scanner;
       out_file = p_out_file;

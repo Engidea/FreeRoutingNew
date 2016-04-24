@@ -20,7 +20,7 @@
 
 package freert.planar;
 
-import datastructures.Signum;
+import freert.varie.Signum;
 
 /**
  *

@@ -21,6 +21,9 @@
 package interactive;
 
 import freert.planar.PlaPointFloat;
+import freert.varie.PlaDelTri;
+import freert.varie.PlaDelTriResultEdge;
+import freert.varie.PlaDelTriStorable;
 import graphics.GdiContext;
 import gui.varie.GuiResources;
 import interactive.varie.IteraEdge;
@@ -37,9 +40,6 @@ import board.RoutingBoard;
 import board.infos.AirLineInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
-import datastructures.PlaDelTri;
-import datastructures.PlaDelTriResultEdge;
-import datastructures.PlaDelTriStorable;
 
 /**
  * Creates the Incompletes (Ratsnest) of one net to display them on the screen.

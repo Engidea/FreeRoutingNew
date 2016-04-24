@@ -20,7 +20,7 @@
 
 package specctra;
 
-import datastructures.UnitMeasure;
+import freert.varie.UnitMeasure;
 
 /**
  * Class for reading resolution scopes from dsn-files.

@@ -1,4 +1,4 @@
-package datastructures;
+package freert.varie;
 
 /*
  *  Copyright (C) 2016  Damiano Bolla  website www.engidea.com

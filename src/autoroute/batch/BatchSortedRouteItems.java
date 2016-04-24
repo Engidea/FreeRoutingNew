@@ -1,6 +1,7 @@
 package autoroute.batch;
 
 import freert.planar.PlaPointFloat;
+import freert.varie.UndoableObjectNode;
 import gui.varie.UndoableObjectStorable;
 import java.util.Iterator;
 import java.util.Set;
@@ -8,7 +9,6 @@ import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTrace;
-import datastructures.UndoableObjectNode;
 
 /**
  * Reads the vias and traces on the board in ascending x order. 

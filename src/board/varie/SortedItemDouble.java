@@ -1,7 +1,7 @@
 package board.varie;
 
 import board.items.BrdItem;
-import datastructures.Signum;
+import freert.varie.Signum;
 
 /**
  * Used to sort the group items in the direction of translate_vector, so that the front items can be moved first.

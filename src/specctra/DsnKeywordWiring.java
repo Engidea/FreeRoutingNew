@@ -26,6 +26,8 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTileBox;
+import freert.varie.ItemClass;
+import freert.varie.UndoableObjectNode;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
@@ -40,8 +42,6 @@ import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
-import datastructures.ItemClass;
-import datastructures.UndoableObjectNode;
 
 /**
  * Class for reading and writing wiring scopes from dsn-files.

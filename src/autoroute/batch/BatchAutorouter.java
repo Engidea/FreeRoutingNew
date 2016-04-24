@@ -17,6 +17,8 @@ package autoroute.batch;
 
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
+import freert.varie.TimeLimitStoppable;
+import freert.varie.UndoableObjectNode;
 import gui.varie.GuiResources;
 import gui.varie.UndoableObjectStorable;
 import interactive.IteraBoard;
@@ -41,8 +43,6 @@ import board.items.BrdAbit;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
 import board.varie.BrdStopConnection;
-import datastructures.TimeLimitStoppable;
-import datastructures.UndoableObjectNode;
 
 /**
  * Handles the sequencing of the batch autoroute passes.

@@ -26,8 +26,8 @@ import board.BrdLayerStructure;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
 import board.varie.TraceAngleRestriction;
-import datastructures.ItemClass;
 import freert.planar.ShapeConvex;
+import freert.varie.ItemClass;
 
 /**
  * Contains the rules and constraints required for items to be inserted into a routing board

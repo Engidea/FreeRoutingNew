@@ -22,7 +22,7 @@ import autoroute.varie.ArtComponent;
 import autoroute.varie.ArtPin;
 import autoroute.varie.ArtResult;
 import board.RoutingBoard;
-import datastructures.TimeLimitStoppable;
+import freert.varie.TimeLimitStoppable;
 
 /**
  * Handles the sequencing of the fanout inside the batch autorouter.

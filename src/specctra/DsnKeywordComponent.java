@@ -25,7 +25,7 @@ import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.items.BrdArea;
 import board.items.BrdItem;
-import datastructures.UndoableObjectNode;
+import freert.varie.UndoableObjectNode;
 
 /**
  * Handles the placement bata of a library component.

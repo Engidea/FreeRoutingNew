@@ -36,9 +36,6 @@ import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
-import datastructures.Signum;
-import datastructures.ThreadStoppable;
-import datastructures.TimeLimitStoppable;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -47,6 +44,9 @@ import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.Signum;
+import freert.varie.ThreadStoppable;
+import freert.varie.TimeLimitStoppable;
 
 /**
  * Class with functionality for optimizing traces and vias

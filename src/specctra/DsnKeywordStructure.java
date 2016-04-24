@@ -22,6 +22,8 @@ package specctra;
 import freert.host.HostCom;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTileBox;
+import freert.varie.ItemClass;
+import freert.varie.UndoableObjectNode;
 import gui.varie.IndentFileWriter;
 import gui.varie.UndoableObjectStorable;
 import java.util.Collection;
@@ -37,8 +39,6 @@ import board.RoutingBoard;
 import board.items.BrdAreaConduction;
 import board.varie.ItemFixState;
 import board.varie.TestLevel;
-import datastructures.ItemClass;
-import datastructures.UndoableObjectNode;
 
 /**
  * Class for reading and writing structure scopes from dsn-files.

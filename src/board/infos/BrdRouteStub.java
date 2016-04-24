@@ -1,13 +1,13 @@
 package board.infos;
 
 import freert.planar.PlaPointFloat;
+import freert.varie.Signum;
 import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 import interactive.IteraBoard;
 import main.Stat;
 import board.items.BrdItem;
 import board.items.BrdTrace;
-import datastructures.Signum;
 
 /**
  * Describes information of a route stub in the list.

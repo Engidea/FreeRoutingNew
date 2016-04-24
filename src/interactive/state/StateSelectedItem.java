@@ -23,6 +23,8 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.varie.ThreadStoppable;
+import freert.varie.TimeLimitStoppable;
 import gui.win.WindowObjectInfo;
 import interactive.Actlog;
 import interactive.IteraBoard;
@@ -54,8 +56,6 @@ import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
 import board.varie.TestLevel;
-import datastructures.ThreadStoppable;
-import datastructures.TimeLimitStoppable;
 
 /**
  * Class implementing actions on the currently selected items.
