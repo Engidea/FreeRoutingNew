@@ -228,15 +228,18 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    /**
     * Returns an approximation vector of this vector with the same direction and length p_length.
     */
-   public abstract PlaVector change_length_approx(double p_lenght);
+   public final PlaVectorInt change_length_approx(double p_length)
+      {
+      PlaPointFloat new_point = to_float().change_size(p_length);
+      return new_point.round().difference_by(PlaPoint.ZERO);
+      }
 
    abstract PlaDirection to_normalized_direction();
 
-
-
+   
    abstract PlaPoint add_to(PlaPointInt p_point);
 
-   abstract PlaPoint add_to(PlaPointRational p_point);
+//   abstract PlaPoint add_to(PlaPointRational p_point);
 
 
    /**

@@ -236,13 +236,6 @@ public final class PlaVectorInt extends PlaVector
       }
 
    @Override
-   public PlaVector change_length_approx(double p_length)
-      {
-      PlaPointFloat new_point = to_float().change_size(p_length);
-      return new_point.round().difference_by(PlaPoint.ZERO);
-      }
-
-   @Override
    PlaDirection to_normalized_direction()
       {
       return new PlaDirection(this);

@@ -20,9 +20,6 @@
 
 package interactive.state;
 
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
@@ -33,6 +30,9 @@ import java.util.TreeSet;
 import board.MoveComponent;
 import board.items.BrdItem;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
 
 /**
  * Class for interactive dragging items with the mouse on a routing board

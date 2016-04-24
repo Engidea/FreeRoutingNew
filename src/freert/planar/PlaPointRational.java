@@ -171,9 +171,9 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       v1[2] = rp_z;
 
       BigInteger v2[] = new BigInteger[3];
-      v2[0] = p_vector.x;
-      v2[1] = p_vector.y;
-      v2[2] = p_vector.z;
+      v2[0] = p_vector.v_x;
+      v2[1] = p_vector.v_y;
+      v2[2] = p_vector.v_z;
       BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
       
       return new PlaPointRational(result[0], result[1], result[2]);
