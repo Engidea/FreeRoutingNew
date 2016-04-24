@@ -6,8 +6,11 @@ import freert.planar.PlaSide;
 /**
  * Contains a corner point together with the objects this corner belongs to.
  */
-public class PlaDelTriCorner
+public final class PlaDelTriCorner
    {
+   public final PlaDelTriStorable object;
+   public final PlaPoint coor;
+
    public PlaDelTriCorner(PlaDelTriStorable p_object, PlaPoint p_coor)
       {
       object = p_object;
@@ -20,9 +23,6 @@ public class PlaDelTriCorner
     */
    public PlaSide side_of(PlaDelTriCorner p_1, PlaDelTriCorner p_2)
       {
-      return this.coor.side_of(p_1.coor, p_2.coor);
+      return coor.side_of(p_1.coor, p_2.coor);
       }
-
-   public final PlaDelTriStorable object;
-   public final PlaPoint coor;
    }

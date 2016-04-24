@@ -346,7 +346,7 @@ public final class PlaPointFloat  /*extends PlaPoint*/ implements Serializable,P
       double d01_y = this.point_y - p_1.point_y;
       double determinant = d21_x * d01_y - d21_y * d01_x;
       
-      return PlaSide.new_side_of(determinant);
+      return PlaSide.get_side_of(determinant);
       }
 
    /**

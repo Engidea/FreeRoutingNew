@@ -23,9 +23,9 @@ package freert.planar;
 
 public final class PlaSide
    {
-   public static final PlaSide ON_THE_LEFT = new PlaSide("on_the_left");
+   public static final PlaSide ON_THE_LEFT  = new PlaSide("on_the_left");
    public static final PlaSide ON_THE_RIGHT = new PlaSide("on_the_right");
-   public static final PlaSide COLLINEAR = new PlaSide("collinear");
+   public static final PlaSide COLLINEAR    = new PlaSide("collinear");
 
    private final String name;
 
@@ -54,9 +54,10 @@ public final class PlaSide
       }
 
    /**
-    * returns ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value == 0
+    * NOTE The implementation is actually opposite of the comment
+    * @return ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value == 0
     */
-   static PlaSide new_side_of(double p_value)
+   static PlaSide get_side_of(double p_value)
       {
       if (p_value > 0)
           return ON_THE_LEFT;

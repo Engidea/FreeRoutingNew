@@ -20,7 +20,6 @@
 
 package freert.planar;
 
-import java.math.BigInteger;
 import freert.varie.Signum;
 
 /**
@@ -49,18 +48,42 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    /**
     * adds p_other to this vector
     */
-   public abstract PlaVector add(PlaVector p_other);
+   public final PlaVector add(PlaVector p_other)
+      {
+      if ( p_other == null ) return null;
 
+      if ( p_other instanceof PlaVectorInt )
+         return add((PlaVectorInt)p_other);
+      else if ( p_other instanceof PlaVectorRational )
+         return add((PlaVectorRational)p_other);
+      else 
+         return null;
+      }
+
+   protected abstract PlaVector add(PlaVectorInt p_other);
+   protected abstract PlaVector add(PlaVectorRational p_other);
+
+   
+   
    /**
     * Let L be the line from the Zero Vector to p_other. 
     * The function returns Side.ON_THE_LEFT, if this Vector is on the left of L
     * Side.ON_THE_RIGHT, if this Vector is on the right of L 
     * Side.COLLINEAR, if this Vector is collinear with L.
     */
-   public abstract PlaSide side_of(PlaVector p_other);
+   public final PlaSide side_of(PlaVector p_other)
+      {
+      if ( p_other == null ) return null;
+      
+      if ( p_other instanceof PlaVectorInt )
+         return side_of((PlaVectorInt)p_other);
+      else if ( p_other instanceof PlaVectorRational )
+         return side_of((PlaVectorRational)p_other);
+      else 
+         return null;
+      }
    
    public abstract PlaSide side_of(PlaVectorInt p_other);
-   
    public abstract PlaSide side_of(PlaVectorRational p_other);
    
 
@@ -118,7 +141,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    /**
     * Creates a 2-dimensional Vector from the 3 input values. If p_z != 0 it correspondents to the Vector in the plane with rational
     * number coordinates (p_x / p_z, p_y / p_z).
-    */
    public static PlaVector get_instance(BigInteger p_x, BigInteger p_y, BigInteger p_z)
       {
       if (p_z.signum() < 0)
@@ -127,7 +149,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
          p_x = p_x.negate();
          p_y = p_y.negate();
          p_z = p_z.negate();
-
          }
       if ((p_x.mod(p_z)).signum() == 0 && (p_x.mod(p_z)).signum() == 0)
          {
@@ -146,6 +167,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
          }
       return new PlaVectorRational(p_x, p_y, p_z);
       }
+    */
 
    /**
     * returns an approximation of the euclidian length of this vector
@@ -195,12 +217,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
 
    abstract PlaDirection to_normalized_direction();
 
-   // auxiliary functions needed because the virtual function mechanism
-   // does not work in parameter position
 
-   abstract PlaVector add(PlaVectorInt p_other);
-
-   abstract PlaVector add(PlaVectorRational p_other);
 
    abstract PlaPoint add_to(PlaPointInt p_point);
 

@@ -121,24 +121,6 @@ public final class PlaVectorRational extends PlaVector
       return new PlaVectorRational(x.negate(), y.negate(), z);
       }
 
-   /**
-    * adds p_other to this vector
-    */
-   public final PlaVector add(PlaVector p_other)
-      {
-      return p_other.add(this);
-      }
-
-   /**
-    * Let L be the line from the Zero Vector to p_other. The function returns Side.ON_THE_LEFT, if this Vector is on the left of L
-    * Side.ON_THE_RIGHT, if this Vector is on the right of L and Side.COLLINEAR, if this Vector is collinear with L.
-    */
-   public PlaSide side_of(PlaVector p_other)
-      {
-      PlaSide tmp = p_other.side_of(this);
-      return tmp.negate();
-      }
-
    public boolean is_orthogonal()
       {
       return (x.signum() == 0 || y.signum() == 0);
@@ -282,13 +264,13 @@ public final class PlaVectorRational extends PlaVector
       return Signum.of(result);
       }
 
-   final PlaVector add(PlaVectorInt p_other)
+   protected final PlaVector add(PlaVectorInt p_other)
       {
       PlaVectorRational other = new PlaVectorRational(p_other);
       return add(other);
       }
 
-   final PlaVector add(PlaVectorRational p_other)
+   protected  final PlaVector add(PlaVectorRational p_other)
       {
       BigInteger v1[] = new BigInteger[3];
       v1[0] = x;
@@ -347,6 +329,6 @@ public final class PlaVectorRational extends PlaVector
       BigInteger tmp_2 = x.multiply(p_other.y);
       BigInteger determinant = tmp_1.subtract(tmp_2);
       int signum = determinant.signum();
-      return PlaSide.new_side_of(signum);
+      return PlaSide.get_side_of(signum);
       }
    }

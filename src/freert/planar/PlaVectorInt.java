@@ -177,20 +177,15 @@ public final class PlaVectorInt extends PlaVector
       return new PlaVectorInt(this.point_x, -this.point_y);
       }
 
-   @Override
-   public PlaVector add(PlaVector p_other)
-      {
-      return p_other.add(this);
-      }
 
    @Override
-   public PlaVectorInt add(PlaVectorInt p_other)
+   protected PlaVectorInt add(PlaVectorInt p_other)
       {
       return new PlaVectorInt(point_x + p_other.point_x, point_y + p_other.point_y);
       }
 
    @Override
-   PlaVector add(PlaVectorRational p_other)
+   protected PlaVector add(PlaVectorRational p_other)
       {
       return p_other.add(this);
       }
@@ -208,26 +203,12 @@ public final class PlaVectorInt extends PlaVector
       return p_point.translate_by(this);
       }
 
-   /**
-    * Let L be the line from the Zero Vector to p_other. 
-    * returns Side.ON_THE_LEFT, if this Vector is on the left of L
-    * Side.ON_THE_RIGHT, if this Vector is on the right of L 
-    * Side.COLLINEAR, if this Vector is colinear with L.
-    */
-   @Override
-   public PlaSide side_of(PlaVector p_other)
-      {
-      PlaSide tmp = p_other.side_of(this);
-      
-      return tmp.negate();
-      }
-
    @Override
    public PlaSide side_of(PlaVectorInt p_other)
       {
       double determinant = (double) p_other.point_x * point_y - (double) p_other.point_y * point_x;
       
-      return PlaSide.new_side_of(determinant);
+      return PlaSide.get_side_of(determinant);
       }
 
    @Override
