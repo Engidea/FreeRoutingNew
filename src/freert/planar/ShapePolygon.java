@@ -543,7 +543,7 @@ public final class ShapePolygon extends ShapePolyline
       for (int i = 0; i < convex_shapes.length; ++i)
          {
          PlaPointFloat curr_nearest_point = convex_shapes[i].nearest_point_approx(p_from_point);
-         double curr_dist = curr_nearest_point.distance_square(p_from_point);
+         double curr_dist = curr_nearest_point.length_square(p_from_point);
          if (curr_dist < min_dist)
             {
             min_dist = curr_dist;

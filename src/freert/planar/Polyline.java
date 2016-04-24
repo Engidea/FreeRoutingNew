@@ -516,7 +516,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          boolean direction_changed = false;
          for (int j = i + 2; j < lines_arr.length - 1; ++j)
             {
-            if (corner_approx(j - 1).distance_square(check_distance_corner) > check_dist_square)
+            if (corner_approx(j - 1).length_square(check_distance_corner) > check_dist_square)
                {
                break;
                }
@@ -564,7 +564,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          direction_changed = false;
          for (int j = i - 2; j >= 1; --j)
             {
-            if (corner_approx(j).distance_square(check_distance_corner) > check_dist_square)
+            if (corner_approx(j).length_square(check_distance_corner) > check_dist_square)
                {
                break;
                }

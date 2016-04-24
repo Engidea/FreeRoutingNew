@@ -403,7 +403,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       for (int i = 0; i < line_count; ++i)
          {
          PlaPointFloat curr_corner_f = corner_approx(i);
-         double curr_dist = curr_corner_f.distance_square(from_point_f);
+         double curr_dist = curr_corner_f.length_square(from_point_f);
          if (curr_dist < min_dist)
             {
             min_dist = curr_dist;
@@ -423,7 +423,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
                && (!corner_is_bounded(next_ind) || border_line(next_ind).side_of(projection) == PlaSide.ON_THE_RIGHT))
             {
             PlaPointFloat projection_f = projection.to_float();
-            double curr_dist = projection_f.distance_square(from_point_f);
+            double curr_dist = projection_f.length_square(from_point_f);
             if (curr_dist < min_dist)
                {
                min_dist = curr_dist;
@@ -490,7 +490,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          if (corner_is_bounded(i))
             {
             PlaPointFloat curr_corner = corner_approx(i);
-            double curr_dist = curr_corner.distance_square(p_from_point);
+            double curr_dist = curr_corner.length_square(p_from_point);
             for (int j = 0; j < result_count; ++j)
                {
                if (curr_dist < min_dists[j])
@@ -517,7 +517,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == PlaSide.ON_THE_RIGHT)
                && (!corner_is_bounded(next_ind) || border_line(next_ind).side_of(projection) == PlaSide.ON_THE_RIGHT))
             {
-            double curr_dist = projection.distance_square(p_from_point);
+            double curr_dist = projection.length_square(p_from_point);
             for (int j = 0; j < result_count; ++j)
                {
                if (curr_dist < min_dists[j])
@@ -609,7 +609,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             if (border_line(curr_ind).side_of(curr_corner) == PlaSide.ON_THE_RIGHT)
                {
                PlaPointFloat projection = curr_corner.projection_approx(border_line(curr_ind));
-               double curr_dist = projection.distance_square(curr_corner);
+               double curr_dist = projection.length_square(curr_corner);
                if (curr_dist > curr_max_dist)
                   {
                   curr_max_dist = curr_dist;
@@ -895,10 +895,10 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       
          if (curr_intersection.is_NaN()) continue; // lines are parallel
          
-         double curr_distence = curr_intersection.distance_square(from_point);
+         double curr_distence = curr_intersection.length_square(from_point);
          if (curr_distence < min_distance)
             {
-            boolean direction_ok = curr_border_line.side_of(second_line_point) == PlaSide.ON_THE_LEFT || second_line_point.distance_square(curr_intersection) < curr_distence;
+            boolean direction_ok = curr_border_line.side_of(second_line_point) == PlaSide.ON_THE_LEFT || second_line_point.length_square(curr_intersection) < curr_distence;
             if (direction_ok)
                {
                result = index;

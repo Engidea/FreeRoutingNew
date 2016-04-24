@@ -403,7 +403,7 @@ public class BatchAutorouter
             
             if ( curr_to_corner == null ) continue;
             
-            double curr_distance = curr_from_corner.distance_square(curr_to_corner);
+            double curr_distance = curr_from_corner.length_square(curr_to_corner);
             
             if (curr_distance < min_distance)
                {

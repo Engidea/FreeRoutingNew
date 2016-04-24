@@ -293,7 +293,7 @@ public final class PlaSegmentFloat implements PlaObject
          }
       // Now the projection is outside the line segment.
       PlaPointFloat result;
-      if (p_from_point.distance_square(this.point_a) <= p_from_point.distance_square(this.point_b))
+      if (p_from_point.length_square(this.point_a) <= p_from_point.length_square(this.point_b))
          {
          result = this.point_a;
          }

@@ -144,7 +144,7 @@ public final class MoveComponent
          if (item_group_arr[index].item instanceof BrdAbit)
             {
             BrdAbit curr_drill_item = (BrdAbit) item_group_arr[index].item;
-            if (translate_vector.length_approx() >= curr_drill_item.min_width())
+            if (translate_vector.distance() >= curr_drill_item.min_width())
                {
                // a clearance violation with a connecting trace may occur
                move_ok = false;

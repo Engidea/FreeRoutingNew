@@ -160,7 +160,7 @@ public final class BrdFromSide
             {
             PlaPointFloat curr_intersection = p_shape.border_line(index - 1).intersection_approx(check_line);
             
-            if (! curr_intersection.is_NaN() && (curr_intersection.distance_square(start_corner) < curr_intersection.distance_square(end_corner)) )
+            if (! curr_intersection.is_NaN() && (curr_intersection.length_square(start_corner) < curr_intersection.length_square(end_corner)) )
                {
                front_side_no = index - 1;
                break;

@@ -337,12 +337,16 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     */
    public final PlaDirection middle_approx(PlaDirection p_other)
       {
-      PlaPointFloat v1 = get_vector().to_float();
-      PlaPointFloat v2 = p_other.get_vector().to_float();
+      PlaPointFloat v1 = to_float();
+      PlaPointFloat v2 = p_other.to_float();
+      
       double length1 = v1.distance();
       double length2 = v2.distance();
+      
       double x = v1.v_x / length1 + v2.v_x / length2;
+      
       double y = v1.v_y / length1 + v2.v_y / length2;
+      
       final double scale_factor = 1000;
       
       PlaVectorInt vm = new PlaVectorInt(x * scale_factor, y * scale_factor);
@@ -350,6 +354,10 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       return PlaDirection.get_instance(vm);
       }
 
+   public final PlaPointFloat to_float ()
+      {
+      return new PlaPointFloat(dir_x, dir_y);
+      }
    
    /**
     * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 0, if p_1 is equal

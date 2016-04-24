@@ -716,7 +716,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
          }
       PlaPointFloat nearest_line_point = p_from_point.to_float().projection_approx(this);
       PlaDirection result;
-      if (nearest_line_point.distance_square(check_point_1.to_float()) <= nearest_line_point.distance_square(check_point_2.to_float()))
+      if (nearest_line_point.length_square(check_point_1.to_float()) <= nearest_line_point.length_square(check_point_2.to_float()))
          {
          result = dir1;
          }

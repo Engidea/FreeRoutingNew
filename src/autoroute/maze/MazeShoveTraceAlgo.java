@@ -118,13 +118,13 @@ public final class MazeShoveTraceAlgo
          PlaPointFloat corner_1 = trace_polyline.corner_approx(trace_corner_no);
          PlaPointFloat corner_2 = trace_polyline.corner_approx(trace_corner_no + 1);
 
-         if (corner_1.distance_square(corner_2) < 1)
+         if (corner_1.length_square(corner_2) < 1)
             {
             // shove_line_segment may be reduced to a point
             return false;
             }
          
-         boolean shove_into_direction_of_trace_start = door_center.distance_square(corner_2) < door_center.distance_square(corner_1);
+         boolean shove_into_direction_of_trace_start = door_center.length_square(corner_2) < door_center.length_square(corner_1);
          shove_line_segment = new PlaSegmentInt(trace_polyline, trace_corner_no + 1);
          if (shove_into_direction_of_trace_start)
             {
@@ -142,7 +142,7 @@ public final class MazeShoveTraceAlgo
 
          PlaSegmentFloat polar_line_segment = from_door_shape.polar_line_segment(from_point);
 
-         boolean door_line_swapped = polar_line_segment.point_b.distance_square(door_line_segment.point_a) < polar_line_segment.point_a.distance_square(door_line_segment.point_a);
+         boolean door_line_swapped = polar_line_segment.point_b.length_square(door_line_segment.point_a) < polar_line_segment.point_a.length_square(door_line_segment.point_a);
 
          boolean section_ok;
          // shove only from the right most section to the right or from the left most section to the left.
@@ -153,12 +153,12 @@ public final class MazeShoveTraceAlgo
          if (p_shove_to_the_left && !door_line_swapped || !p_shove_to_the_left && door_line_swapped)
             {
             section_ok = p_list_element.section_no_of_door == p_list_element.door.maze_search_element_count() - 1
-                  && (p_list_element.shape_entry.point_a.distance_square(door_line_segment.point_b) <= check_dist_square || p_list_element.shape_entry.point_b.distance_square(door_line_segment.point_b) <= check_dist_square);
+                  && (p_list_element.shape_entry.point_a.length_square(door_line_segment.point_b) <= check_dist_square || p_list_element.shape_entry.point_b.length_square(door_line_segment.point_b) <= check_dist_square);
             }
          else
             {
             section_ok = p_list_element.section_no_of_door == 0
-                  && (p_list_element.shape_entry.point_a.distance_square(door_line_segment.point_a) <= check_dist_square || p_list_element.shape_entry.point_b.distance_square(door_line_segment.point_a) <= check_dist_square);
+                  && (p_list_element.shape_entry.point_a.length_square(door_line_segment.point_a) <= check_dist_square || p_list_element.shape_entry.point_b.length_square(door_line_segment.point_a) <= check_dist_square);
             }
          
          if (!section_ok)
@@ -218,7 +218,7 @@ public final class MazeShoveTraceAlgo
 
       PlaPointFloat from_corner = shove_line_segment.start_point_approx();
       PlaPointFloat to_corner = shove_line_segment.end_point_approx();
-      boolean segment_ist_point = from_corner.distance_square(to_corner) < 0.1;
+      boolean segment_ist_point = from_corner.length_square(to_corner) < 0.1;
 
       if (!segment_ist_point)
          {
@@ -244,7 +244,7 @@ public final class MazeShoveTraceAlgo
          }
       else
          {
-         from_door_compare_distance = to_corner.distance_square(from_door_shape.corner_approx(0));
+         from_door_compare_distance = to_corner.length_square(from_door_shape.corner_approx(0));
          }
 
       for (ExpandDoor curr_door : room_doors)
@@ -307,7 +307,7 @@ public final class MazeShoveTraceAlgo
                }
             PlaSegmentFloat curr_door_line = curr_door_shape.polar_line_segment(from_corner);
             PlaPointFloat curr_door_nearest_corner;
-            if (curr_door_line.point_a.distance_square(from_corner) <= curr_door_line.point_b.distance_square(from_corner))
+            if (curr_door_line.point_a.length_square(from_corner) <= curr_door_line.point_b.length_square(from_corner))
                {
                curr_door_nearest_corner = curr_door_line.point_a;
                }
@@ -315,7 +315,7 @@ public final class MazeShoveTraceAlgo
                {
                curr_door_nearest_corner = curr_door_line.point_b;
                }
-            if (to_corner.distance_square(curr_door_nearest_corner) >= from_door_compare_distance)
+            if (to_corner.length_square(curr_door_nearest_corner) >= from_door_compare_distance)
                {
                // curr_door is not located into the direction of to_corner.
                continue;
@@ -329,7 +329,7 @@ public final class MazeShoveTraceAlgo
                   {
                   PlaSegmentFloat curr_line_section = line_sections[i];
                   PlaPointFloat curr_section_nearest_corner;
-                  if (curr_line_section.point_a.distance_square(from_corner) <= curr_line_section.point_b.distance_square(from_corner))
+                  if (curr_line_section.point_a.length_square(from_corner) <= curr_line_section.point_b.length_square(from_corner))
                      {
                      curr_section_nearest_corner = curr_line_section.point_a;
                      }

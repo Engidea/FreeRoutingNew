@@ -224,7 +224,7 @@ public final class AlgoMoveDrillItem
          PlaVector rel_coor = null;
          for (int i = 0; i < try_via_centers.length; ++i)
             {
-            if (i == 0 || check_via_center.distance_square(try_via_centers[i].to_float()) <= max_dist_square)
+            if (i == 0 || check_via_center.length_square(try_via_centers[i].to_float()) <= max_dist_square)
                {
                Collection<BrdItem> ignore_items = new java.util.LinkedList<BrdItem>();
                if (p_ignore_items != null)

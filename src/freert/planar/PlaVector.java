@@ -60,8 +60,8 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
          return null;
       }
 
-   protected abstract PlaVector add(PlaVectorInt p_other);
-   protected abstract PlaVector add(PlaVectorRational p_other);
+   public abstract PlaVector add(PlaVectorInt p_other);
+   public abstract PlaVector add(PlaVectorRational p_other);
 
    
    
@@ -110,8 +110,23 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
     * Signum.NEGATIVE, if the scalar product Vector is < 0, and 
     * Signum.ZERO, if the scalar product is equal 0.
     */
-   public abstract Signum projection(PlaVector p_other);
+   public final Signum projection(PlaVector p_other)
+      {
+      if ( p_other == null ) throw new IllegalArgumentException("p_other is null");
 
+      if ( p_other instanceof PlaVectorInt )
+         return projection((PlaVectorInt)p_other);
+      else if ( p_other instanceof PlaVectorRational )
+         return projection((PlaVectorRational)p_other);
+      else 
+         throw new IllegalArgumentException("p_other is unsupported");
+
+      }
+   
+   public abstract Signum projection(PlaVectorInt p_other);
+   public abstract Signum projection(PlaVectorRational p_other);
+   
+   
    /**
     * Returns an approximation of the scalar product of this vector with p_other by a double.
     */
@@ -127,8 +142,8 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
          throw new IllegalArgumentException("p_other is unsupported");
       }
 
-   abstract double scalar_product(PlaVectorInt p_other);
-   abstract double scalar_product(PlaVectorRational p_other);
+   public abstract double scalar_product(PlaVectorInt p_other);
+   public abstract double scalar_product(PlaVectorRational p_other);
    
 
    /**
@@ -151,43 +166,11 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
     */
    public abstract PlaVector mirror_at_y_axis();
 
-
-
    /**
-    * Creates a 2-dimensional Vector from the 3 input values. If p_z != 0 it correspondents to the Vector in the plane with rational
-    * number coordinates (p_x / p_z, p_y / p_z).
-   public static PlaVector get_instance(BigInteger p_x, BigInteger p_y, BigInteger p_z)
-      {
-      if (p_z.signum() < 0)
-         {
-         // the dominator z of a RationalVector is expected to be positive
-         p_x = p_x.negate();
-         p_y = p_y.negate();
-         p_z = p_z.negate();
-         }
-      if ((p_x.mod(p_z)).signum() == 0 && (p_x.mod(p_z)).signum() == 0)
-         {
-         // p_x and p_y can be divided by p_z
-         p_x = p_x.divide(p_z);
-         p_y = p_y.divide(p_z);
-         p_z = BigInteger.ONE;
-         }
-      if (p_z.equals(BigInteger.ONE))
-         {
-         if ((p_x.abs()).compareTo(PlaLimits.CRIT_INT_BIG) <= 0 && (p_y.abs()).compareTo(PlaLimits.CRIT_INT_BIG) <= 0)
-            {
-            // the Point fits into an IntPoint
-            return new PlaVectorInt(p_x.intValue(), p_y.intValue());
-            }
-         }
-      return new PlaVectorRational(p_x, p_y, p_z);
-      }
+    * Basically the distnce from 0,0 to v_x,v_y
+    * @return an approximation of the euclidian length of this vector
     */
-
-   /**
-    * returns an approximation of the euclidian length of this vector
-    */
-   public double length_approx()
+   public final double distance()
       {
       return to_float().distance();
       }
@@ -239,16 +222,8 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    
    abstract PlaPoint add_to(PlaPointInt p_point);
 
-//   abstract PlaPoint add_to(PlaPointRational p_point);
 
 
-   /**
-    * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0, Signum.NEGATIVE, if the scalar
-    * product Vector is < 0, and Signum.ZERO, if the scalar product is equal 0.
-    */
-   abstract Signum projection(PlaVectorInt p_other);
-
-   abstract Signum projection(PlaVectorRational p_other);
 
 
    }

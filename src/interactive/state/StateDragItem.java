@@ -83,7 +83,7 @@ public class StateDragItem extends StateDrag
       MoveComponent move_component = null;
       PlaVector rel_coor = to_location.difference_by(from_location);
       
-      double length = rel_coor.length_approx();
+      double length = rel_coor.distance();
       
       boolean shove_ok = false;
       

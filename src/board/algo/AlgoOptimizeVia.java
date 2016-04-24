@@ -433,7 +433,7 @@ public final class AlgoOptimizeVia
 
       PlaVector delta = p_to_location.difference_by(from_location);
 
-      if (p_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && delta.length_approx() <= 1.5)
+      if (p_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && delta.distance() <= 1.5)
          {
          // PullTightAlgoAnyAngle.reduce_corners mmay not be able to remove the new generated overlap
          // because of numerical stability problems

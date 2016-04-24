@@ -158,7 +158,7 @@ public final class AlgoShoveTrace
          boolean shove_via_ok = false;
          for (int i = 0; i < try_via_centers.length; ++i)
             {
-            if (i == 0 || curr_shove_via_center.distance_square(try_via_centers[i].to_float()) <= max_dist_square)
+            if (i == 0 || curr_shove_via_center.length_square(try_via_centers[i].to_float()) <= max_dist_square)
                {
                PlaVector delta = try_via_centers[i].difference_by(curr_shove_via.get_center());
                Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();

@@ -36,7 +36,7 @@ public class PinSwappable implements Comparable<PinSwappable>
             continue;
             }
          PlaPointFloat curr_point = ((BrdAbit) curr_item).get_center().to_float();
-         double curr_dist = pin_center.distance_square(curr_point);
+         double curr_dist = pin_center.length_square(curr_point);
          if (curr_dist < min_dist)
             {
             min_dist = curr_dist;

@@ -821,7 +821,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          PlaPointFloat is0 = intersection[0].to_float();
          PlaPointFloat is1 = intersection[1].to_float();
          PlaPointFloat curr_start = line_start.to_float();
-         if (curr_start.distance_square(is1) < curr_start.distance_square(is0))
+         if (curr_start.length_square(is1) < curr_start.length_square(is0))
          // swap the result points
             {
             int tmp = result[0];

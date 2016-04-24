@@ -158,7 +158,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (ok)
                {
                PlaPointFloat check_is = curr_lines[0].intersection_approx(curr_lines[1]);
-               double dist = check_is.distance_square(new_a);
+               double dist = check_is.length_square(new_a);
 
                if (dist > check_dist)
                   {
@@ -168,7 +168,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (ok)
                {
                PlaPointFloat check_is = curr_lines[1].intersection_approx(curr_lines[2]);
-               double dist = check_is.distance_square(new_b);
+               double dist = check_is.length_square(new_b);
                if (dist > check_dist)
                   {
                   ok = false;
@@ -923,7 +923,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          }
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner(1);
-      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().distance_square(curr_prev_end_corner.to_float()) < SKIP_LENGTH;
+      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().length_square(curr_prev_end_corner.to_float()) < SKIP_LENGTH;
       int start_line_no = 1;
       if (skip_short_segment)
          {
@@ -1075,7 +1075,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          }
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner(trace_polyline.corner_count() - 2);
-      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().distance_square(curr_prev_end_corner.to_float()) < SKIP_LENGTH;
+      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().length_square(curr_prev_end_corner.to_float()) < SKIP_LENGTH;
       int end_line_no = trace_polyline.lines_arr.length - 2;
       if (skip_short_segment)
          {

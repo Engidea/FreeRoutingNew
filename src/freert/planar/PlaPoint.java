@@ -51,8 +51,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
          return null;
       }
    
-   protected abstract PlaPoint translate_by(PlaVectorInt p_vector);
-   protected abstract PlaPoint translate_by(PlaVectorRational p_vector);
+   public abstract PlaPoint translate_by(PlaVectorInt p_vector);
+   public abstract PlaPoint translate_by(PlaVectorRational p_vector);
    
 
    /**

@@ -179,13 +179,13 @@ public final class PlaVectorInt extends PlaVector
 
 
    @Override
-   protected PlaVectorInt add(PlaVectorInt p_other)
+   public PlaVectorInt add(PlaVectorInt p_other)
       {
       return new PlaVectorInt(point_x + p_other.point_x, point_y + p_other.point_y);
       }
 
    @Override
-   protected PlaVector add(PlaVectorRational p_other)
+   public PlaVectorRational add(PlaVectorRational p_other)
       {
       return p_other.add(this);
       }
@@ -193,7 +193,8 @@ public final class PlaVectorInt extends PlaVector
    /**
     * returns the Point, which results from adding this vector to p_point
     */
-   PlaPointInt add_to(PlaPointInt p_point)
+   @Override
+   public PlaPointInt add_to(PlaPointInt p_point)
       {
       return new PlaPointInt(p_point.v_x + point_x, p_point.v_y + point_y);
       }
@@ -219,15 +220,6 @@ public final class PlaVectorInt extends PlaVector
       return tmp.negate();
       }
 
-   /**
-    * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0, Signum.NEGATIVE, if the scalar
-    * product Vector is < 0, and Signum.ZERO, if the scalar product is equal 0.
-    */
-   @Override
-   public Signum projection(PlaVector p_other)
-      {
-      return p_other.projection(this);
-      }
 
    @Override
    public PlaPointFloat to_float()
@@ -242,26 +234,26 @@ public final class PlaVectorInt extends PlaVector
       }
 
    @Override
-   Signum projection(PlaVectorInt p_other)
+   public Signum projection(PlaVectorInt p_other)
       {
       double tmp = (double) point_x * p_other.point_x + (double) point_y * p_other.point_y;
       return Signum.of(tmp);
       }
 
    @Override
-   double scalar_product(PlaVectorInt p_other)
+   public double scalar_product(PlaVectorInt p_other)
       {
       return (double) point_x * p_other.point_x + (double) point_y * p_other.point_y;
       }
 
    @Override
-   double scalar_product(PlaVectorRational p_other)
+   public double scalar_product(PlaVectorRational p_other)
       {
       return p_other.scalar_product(this);
       }
 
    @Override
-   Signum projection(PlaVectorRational p_other)
+   public Signum projection(PlaVectorRational p_other)
       {
       return p_other.projection(this);
       }

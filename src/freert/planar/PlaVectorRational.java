@@ -35,9 +35,9 @@ public final class PlaVectorRational extends PlaVector
    {
    private static final long serialVersionUID = 1L;
 
-   public final BigInteger v_x;
-   public final BigInteger v_y;
-   public final BigInteger v_z;
+   public final BigInteger rp_x;
+   public final BigInteger rp_y;
+   public final BigInteger rp_z;
    
    /**
     * creates a RetionalVector from 3 BigIntegers p_x, p_y and p_z. 
@@ -48,15 +48,15 @@ public final class PlaVectorRational extends PlaVector
       {
       if (p_z.signum() >= 0)
          {
-         v_x = p_x;
-         v_y = p_y;
-         v_z = p_z;
+         rp_x = p_x;
+         rp_y = p_y;
+         rp_z = p_z;
          }
       else
          {
-         v_x = p_x.negate();
-         v_y = p_y.negate();
-         v_z = p_z.negate();
+         rp_x = p_x.negate();
+         rp_y = p_y.negate();
+         rp_z = p_z.negate();
          }
       }
 
@@ -65,9 +65,9 @@ public final class PlaVectorRational extends PlaVector
     */
    PlaVectorRational(PlaVectorInt p_vector)
       {
-      v_x = BigInteger.valueOf(p_vector.point_x);
-      v_y = BigInteger.valueOf(p_vector.point_y);
-      v_z = BigInteger.ONE;
+      rp_x = BigInteger.valueOf(p_vector.point_x);
+      rp_y = BigInteger.valueOf(p_vector.point_y);
+      rp_z = BigInteger.ONE;
       }
 
    @Override
@@ -81,74 +81,62 @@ public final class PlaVectorRational extends PlaVector
     */
    public final boolean is_zero()
       {
-      return v_x.signum() == 0 && v_y.signum() == 0;
+      return rp_x.signum() == 0 && rp_y.signum() == 0;
       }
 
    /**
     * returns true, if this RationalVector is equal to p_ob
     */
-   public final boolean equals(Object p_ob)
+   @Override
+   public final boolean equals(Object p_other)
       {
-      if (this == p_ob)
-         {
-         return true;
-         }
-      if (p_ob == null)
-         {
-         return false;
-         }
-      if (getClass() != p_ob.getClass())
-         {
-         return false;
-         }
-      PlaPointRational other = (PlaPointRational) p_ob;
-      BigInteger det = BigIntAux.determinant(v_x, other.rp_x, v_z, other.rp_z);
+      if (p_other == null) return false;
+
+      if (this == p_other) return true;
+
+      if ( ! ( p_other instanceof PlaVectorRational ) ) return false;
+
+      PlaVectorRational other = (PlaVectorRational) p_other;
+      
+      BigInteger det = BigIntAux.determinant(rp_x, other.rp_x, rp_z, other.rp_z);
+
       if (det.signum() != 0)
          {
          return false;
          }
-      det = BigIntAux.determinant(v_y, other.rp_y, v_z, other.rp_z);
+      
+      det = BigIntAux.determinant(rp_y, other.rp_y, rp_z, other.rp_z);
 
       return (det.signum() == 0);
       }
 
    /**
-    * returns the Vector such that this plus this.minus() is zero
+    * returns the Vector such that this plus minus() is zero
     */
    @Override
    public PlaVectorRational negate()
       {
-      return new PlaVectorRational(v_x.negate(), v_y.negate(), v_z);
+      return new PlaVectorRational(rp_x.negate(), rp_y.negate(), rp_z);
       }
 
    public boolean is_orthogonal()
       {
-      return (v_x.signum() == 0 || v_y.signum() == 0);
+      return (rp_x.signum() == 0 || rp_y.signum() == 0);
       }
 
    public boolean is_diagonal()
       {
-      return v_x.abs().equals(v_y.abs());
+      return rp_x.abs().equals(rp_y.abs());
       }
-
-   /**
-    * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0, Signum.NEGATIVE, if the scalar
-    * product is < 0, and Signum.ZERO, if the scalar product is equal 0.
-    */
-   public Signum projection(PlaVector p_other)
-      {
-      return p_other.projection(this);
-      }
-
 
    /**
     * approximates the coordinates of this vector by float coordinates
     */
    public PlaPointFloat to_float()
       {
-      double xd = v_x.doubleValue();
-      double yd = v_y.doubleValue();
-      double zd = v_z.doubleValue();
+      double xd = rp_x.doubleValue();
+      double yd = rp_y.doubleValue();
+      double zd = rp_z.doubleValue();
       return new PlaPointFloat(xd / zd, yd / zd);
       }
 
@@ -163,44 +151,44 @@ public final class PlaVectorRational extends PlaVector
       switch (p_factor)
          {
          case 0: // 0 degree
-            new_x = v_x;
-            new_y = v_y;
+            new_x = rp_x;
+            new_y = rp_y;
             break;
          case 1: // 90 degree
-            new_x = v_y.negate();
-            new_y = v_x;
+            new_x = rp_y.negate();
+            new_y = rp_x;
             break;
          case 2: // 180 degree
-            new_x = v_x.negate();
-            new_y = v_y.negate();
+            new_x = rp_x.negate();
+            new_y = rp_y.negate();
             break;
          case 3: // 270 degree
-            new_x = v_y;
-            new_y = v_x.negate();
+            new_x = rp_y;
+            new_y = rp_x.negate();
             break;
          default:
             return this;
          }
-      return new PlaVectorRational(new_x, new_y, this.v_z);
+      return new PlaVectorRational(new_x, new_y, rp_z);
       }
 
    public PlaVector mirror_at_y_axis()
       {
-      return new PlaVectorRational(this.v_x.negate(), this.v_y, this.v_z);
+      return new PlaVectorRational(rp_x.negate(), rp_y, rp_z);
       }
 
    public PlaVector mirror_at_x_axis()
       {
-      return new PlaVectorRational(this.v_x, this.v_y.negate(), this.v_z);
+      return new PlaVectorRational(rp_x, rp_y.negate(), rp_z);
       }
 
    @Override
    PlaDirection to_normalized_direction()
       {
-      BigInteger dx = v_x;
-      BigInteger dy = v_y;
+      BigInteger dx = rp_x;
+      BigInteger dy = rp_y;
       
-      BigInteger gcd = dx.gcd(v_y);
+      BigInteger gcd = dx.gcd(rp_y);
       
       dx = dx.divide(gcd);
       dy = dy.divide(gcd);
@@ -218,51 +206,57 @@ public final class PlaVectorRational extends PlaVector
       return new PlaDirection(dx.longValue(), dy.longValue());
       }
 
-   double scalar_product(PlaVectorInt p_other)
+   @Override
+   public double scalar_product(PlaVectorInt p_other)
       {
       PlaVector other = new PlaVectorRational(p_other);
       return other.scalar_product(this);
       }
 
-   double scalar_product(PlaVectorRational p_other)
+   @Override
+   public double scalar_product(PlaVectorRational p_other)
       {
       PlaPointFloat v1 = to_float();
       PlaPointFloat v2 = p_other.to_float();
       return v1.v_x * v2.v_x + v1.v_y * v2.v_y;
       }
 
-   Signum projection(PlaVectorInt p_other)
+   @Override
+   public Signum projection(PlaVectorInt p_other)
       {
       PlaVector other = new PlaVectorRational(p_other);
       return other.projection(this);
       }
 
-   Signum projection(PlaVectorRational p_other)
+   @Override
+   public Signum projection(PlaVectorRational p_other)
       {
-      BigInteger tmp1 = v_x.multiply(p_other.v_x);
-      BigInteger tmp2 = v_y.multiply(p_other.v_y);
+      BigInteger tmp1 = rp_x.multiply(p_other.rp_x);
+      BigInteger tmp2 = rp_y.multiply(p_other.rp_y);
       BigInteger tmp3 = tmp1.add(tmp2);
       int result = tmp3.signum();
       return Signum.of(result);
       }
 
-   protected final PlaVector add(PlaVectorInt p_other)
+   @Override
+   public final PlaVectorRational add(PlaVectorInt p_other)
       {
       PlaVectorRational other = new PlaVectorRational(p_other);
       return add(other);
       }
 
-   protected  final PlaVector add(PlaVectorRational p_other)
+   @Override
+   public  final PlaVectorRational add(PlaVectorRational p_other)
       {
       BigInteger v1[] = new BigInteger[3];
-      v1[0] = v_x;
-      v1[1] = v_y;
-      v1[2] = v_z;
+      v1[0] = rp_x;
+      v1[1] = rp_y;
+      v1[2] = rp_z;
 
       BigInteger v2[] = new BigInteger[3];
-      v2[0] = p_other.v_x;
-      v2[1] = p_other.v_y;
-      v2[2] = p_other.v_z;
+      v2[0] = p_other.rp_x;
+      v2[1] = p_other.rp_y;
+      v2[2] = p_other.rp_z;
       BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
       return new PlaVectorRational(result[0], result[1], result[2]);
       }
@@ -270,12 +264,12 @@ public final class PlaVectorRational extends PlaVector
    @Override
    PlaPointRational add_to(PlaPointInt p_point)
       {
-      BigInteger new_x = v_z.multiply(BigInteger.valueOf(p_point.v_x));
-      new_x = new_x.add(v_x);
-      BigInteger new_y = v_z.multiply(BigInteger.valueOf(p_point.v_y));
-      new_y = new_y.add(v_y);
+      BigInteger new_x = rp_z.multiply(BigInteger.valueOf(p_point.v_x));
+      new_x = new_x.add(rp_x);
+      BigInteger new_y = rp_z.multiply(BigInteger.valueOf(p_point.v_y));
+      new_y = new_y.add(rp_y);
       
-      return new PlaPointRational(new_x, new_y, v_z);
+      return new PlaPointRational(new_x, new_y, rp_z);
       }
 
    /*
@@ -309,8 +303,8 @@ public final class PlaVectorRational extends PlaVector
    @Override
    public PlaSide side_of(PlaVectorRational p_other)
       {
-      BigInteger tmp_1 = v_y.multiply(p_other.v_x);
-      BigInteger tmp_2 = v_x.multiply(p_other.v_y);
+      BigInteger tmp_1 = rp_y.multiply(p_other.rp_x);
+      BigInteger tmp_2 = rp_x.multiply(p_other.rp_y);
       BigInteger determinant = tmp_1.subtract(tmp_2);
       int signum = determinant.signum();
       return PlaSide.get_side_of(signum);

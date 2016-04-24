@@ -629,7 +629,7 @@ public final class MazeSearch
          else
             {
             // expand only doors on the opposite side of the room from the shape_entry.
-            if (p_to_door.dimension.is_line() && i == 0 && line_sections[0].point_b.distance_square(line_sections[0].point_a) < 1)
+            if (p_to_door.dimension.is_line() && i == 0 && line_sections[0].point_b.length_square(line_sections[0].point_a) < 1)
                {
                // p_to_door is small belonging to a via or thin room
                continue;
@@ -1280,7 +1280,7 @@ public final class MazeSearch
             {
             result_a = p_to_segment.point_a;
             }
-         else if (first_projection.point_a.distance_square(p_to_segment.point_a) <= second_projection.point_a.distance_square(p_to_segment.point_a))
+         else if (first_projection.point_a.length_square(p_to_segment.point_a) <= second_projection.point_a.length_square(p_to_segment.point_a))
             {
             result_a = first_projection.point_a;
             }
@@ -1293,7 +1293,7 @@ public final class MazeSearch
             {
             result_b = p_to_segment.point_b;
             }
-         else if (first_projection.point_b.distance_square(p_to_segment.point_b) <= second_projection.point_b.distance_square(p_to_segment.point_b))
+         else if (first_projection.point_b.length_square(p_to_segment.point_b) <= second_projection.point_b.length_square(p_to_segment.point_b))
             {
             result_b = first_projection.point_b;
             }
@@ -1333,7 +1333,7 @@ public final class MazeSearch
          {
          // skip lines of lenghth 0
          PlaPointFloat next_corner = door_shape.corner_approx(i);
-         if (next_corner.distance_square(prev_corner) > 1)
+         if (next_corner.length_square(prev_corner) > 1)
             {
             door_line = door_shape.border_line(i - 1);
             break;

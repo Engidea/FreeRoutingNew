@@ -168,7 +168,7 @@ public final class ExpandDoor implements ExpandObject
             return new PlaSegmentFloat[0];
             }
          
-         if (door_line_segment.point_b.distance_square(door_line_segment.point_a) < 4 * offset * offset)
+         if (door_line_segment.point_b.length_square(door_line_segment.point_a) < 4 * offset * offset)
             {
             // door is small, 2 dimensional small doors are not yet expanded.
             return new PlaSegmentFloat[0];
