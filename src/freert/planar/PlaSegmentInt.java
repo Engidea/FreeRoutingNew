@@ -147,7 +147,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          }
       else
          {
-         result = this.start.intersection_approx(this.middle);
+         result = start.intersection_approx(middle);
          }
       return result;
       }
@@ -164,7 +164,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          }
       else
          {
-         result = this.end.intersection_approx(this.middle);
+         result = end.intersection_approx(middle);
          }
       return result;
       }
@@ -175,22 +175,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    public PlaLineInt get_line()
       {
       return middle;
-      }
-
-   /**
-    * Returns the start closing line of this segment.
-    */
-   public PlaLineInt get_start_closing_line()
-      {
-      return start;
-      }
-
-   /**
-    * Returns the end closing line of this segment.
-    */
-   public PlaLineInt get_end_closing_line()
-      {
-      return end;
       }
 
    /**
@@ -220,23 +204,23 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    public ShapeTileSimplex to_simplex()
       {
       PlaLineInt[] line_arr = new PlaLineInt[4];
-      if (this.end_point().side_of(this.start) == PlaSide.ON_THE_RIGHT)
+      if (end_point().side_of(start) == PlaSide.ON_THE_RIGHT)
          {
-         line_arr[0] = this.start.opposite();
+         line_arr[0] = start.opposite();
          }
       else
          {
-         line_arr[0] = this.start;
+         line_arr[0] = start;
          }
-      line_arr[1] = this.middle;
-      line_arr[2] = this.middle.opposite();
-      if (this.start_point().side_of(this.end) == PlaSide.ON_THE_RIGHT)
+      line_arr[1] = middle;
+      line_arr[2] = middle.opposite();
+      if (start_point().side_of(end) == PlaSide.ON_THE_RIGHT)
          {
-         line_arr[3] = this.end.opposite();
+         line_arr[3] = end.opposite();
          }
       else
          {
-         line_arr[3] = this.end;
+         line_arr[3] = end;
          }
       ShapeTileSimplex result = ShapeTileSimplex.get_instance(line_arr);
       return result;
@@ -253,8 +237,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       // endpoints of this segment are on difcferent sides of that line.
       PlaDirection perpendicular_direction = middle.direction().turn_45_degree(2);
       PlaLineInt perpendicular_line = new PlaLineInt(p_point, perpendicular_direction);
-      PlaSide start_point_side = perpendicular_line.side_of(this.start_point());
-      PlaSide end_point_side = perpendicular_line.side_of(this.end_point());
+      PlaSide start_point_side = perpendicular_line.side_of(start_point());
+      PlaSide end_point_side = perpendicular_line.side_of(end_point());
       
       if (start_point_side != PlaSide.COLLINEAR && end_point_side != PlaSide.COLLINEAR && start_point_side == end_point_side)
          {
@@ -324,9 +308,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    public PlaSegmentInt change_length_approx(double p_new_length)
       {
       PlaPointFloat new_end_point = start_point_approx().change_length(end_point_approx(), p_new_length);
-      PlaDirection perpendicular_direction = this.middle.direction().turn_45_degree(2);
+      PlaDirection perpendicular_direction = middle.direction().turn_45_degree(2);
       PlaLineInt new_end_line = new PlaLineInt(new_end_point.round(), perpendicular_direction);
-      PlaSegmentInt result = new PlaSegmentInt(this.start, this.middle, new_end_line);
+      PlaSegmentInt result = new PlaSegmentInt(start, middle, new_end_line);
       return result;
       }
 
@@ -351,7 +335,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       if (start_point_side == PlaSide.COLLINEAR && end_point_side == PlaSide.COLLINEAR)
          {
          // there may be an overlap
-         PlaSegmentInt this_sorted = this.sort_endpoints_in_x_y();
+         PlaSegmentInt this_sorted = sort_endpoints_in_x_y();
          PlaSegmentInt other_sorted = p_other.sort_endpoints_in_x_y();
          PlaSegmentInt left_line;
          PlaSegmentInt right_line;
@@ -391,12 +375,13 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
             }
          return result;
          }
-      if (start_point_side == end_point_side || p_other.start_point().side_of(this.middle) == p_other.end_point().side_of(this.middle))
+      if (start_point_side == end_point_side || p_other.start_point().side_of(middle) == p_other.end_point().side_of(middle))
          {
          return new PlaLineInt[0]; // no intersection possible
          }
-      // now both start points and both end points are on different sides of the middle
-      // line of the other segment.
+
+      // now both start points and both end points are on different sides of the middle line of the other segment.
+      
       PlaLineInt[] result = new PlaLineInt[1];
       result[0] = p_other.middle;
       return result;
@@ -427,8 +412,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPointInt[] stair_approximation_90(double p_width, boolean p_to_the_right)
       {
-      PlaPointInt start_point = this.start_point().to_float().round();
-      PlaPointInt end_point = this.end_point().to_float().round();
+      PlaPointInt start_point = start_point().to_float().round();
+      PlaPointInt end_point = end_point().to_float().round();
       if (start_point.equals(end_point))
          {
          return new PlaPointInt[0];
@@ -487,12 +472,12 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          if (function_of_x)
             {
             curr_line_point_x = start_point.v_x + i * stair_width;
-            curr_line_point_y = (int) Math.round(this.get_line().function_value_approx(curr_line_point_x));
+            curr_line_point_y = (int) Math.round(get_line().function_value_approx(curr_line_point_x));
             }
          else
             {
             curr_line_point_y = start_point.v_y + i * stair_width;
-            curr_line_point_x = (int) Math.round(this.get_line().function_in_y_value_approx(curr_line_point_y));
+            curr_line_point_x = (int) Math.round(get_line().function_in_y_value_approx(curr_line_point_y));
             }
          ++curr_index;
          if (change_x_first)
@@ -528,8 +513,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPointInt[] stair_approximation_45(double p_width, boolean p_to_the_right)
       {
-      PlaPointInt start_point = this.start_point().to_float().round();
-      PlaPointInt end_point = this.end_point().to_float().round();
+      PlaPointInt start_point = start_point().to_float().round();
+      PlaPointInt end_point = end_point().to_float().round();
       if (start_point.equals(end_point))
          {
          return new PlaPointInt[0];
@@ -586,12 +571,12 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
             if (function_of_x)
                {
                curr_x = start_point.v_x + i * stair_width;
-               curr_y = (int) Math.round(this.get_line().function_value_approx(curr_x));
+               curr_y = (int) Math.round(get_line().function_value_approx(curr_x));
                }
             else
                {
                curr_y = start_point.v_y + i * stair_width;
-               curr_x = (int) Math.round(this.get_line().function_value_approx(curr_y));
+               curr_x = (int) Math.round(get_line().function_value_approx(curr_y));
                }
             curr_line_point = new PlaPointInt(curr_x, curr_y);
             }
@@ -770,8 +755,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
                      }
                   // check, that prev_corner and next_next_corner
                   // are on different sides of this line segment.
-                  PlaSide prev_corner_side = this.middle.side_of(prev_corner);
-                  PlaSide next_next_corner_side = this.middle.side_of(next_next_corner);
+                  PlaSide prev_corner_side = middle.side_of(prev_corner);
+                  PlaSide next_next_corner_side = middle.side_of(next_next_corner);
                   if (prev_corner_side == PlaSide.COLLINEAR || next_next_corner_side == PlaSide.COLLINEAR || prev_corner_side == next_next_corner_side)
                      {
                      return empty_result;
@@ -853,9 +838,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
 
       if (swap_endlines)
          {
-         result = new PlaSegmentInt(this.end, this.middle, this.start);
-         result.precalculated_start_point = this.precalculated_end_point;
-         result.precalculated_end_point = this.precalculated_start_point;
+         result = new PlaSegmentInt(end, middle, start);
+         result.precalculated_start_point = precalculated_end_point;
+         result.precalculated_end_point = precalculated_start_point;
          }
       else
          {

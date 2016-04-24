@@ -71,8 +71,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
       }
 
    
-   protected abstract PlaVector difference_by(PlaPointInt p_other);
-   protected abstract PlaVector difference_by(PlaPointRational p_other);
+   public abstract PlaVector difference_by(PlaPointInt p_other);
+   public abstract PlaVector difference_by(PlaPointRational p_other);
    
    /**
     * approximates the coordinates of this point by float coordinates
@@ -135,8 +135,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
       else return 0;
       }
 
-   protected abstract int compare_x(PlaPointInt p_other);
-   protected abstract int compare_x(PlaPointRational p_other);
+   public abstract int compare_x(PlaPointInt p_other);
+   public abstract int compare_x(PlaPointRational p_other);
 //   protected abstract int compare_x(PlaPointFloat p_other);
    
    

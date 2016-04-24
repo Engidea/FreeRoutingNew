@@ -21,8 +21,10 @@
 package freert.planar;
 
 /**
- * Defines a line in the plane by to FloatPoints. Calculations with FloatLines are generally not exact. For that reason collinearity
- * for example is not defined for FloatLines. If exactness is needed, use the class Line instead.
+ * Defines a line in the plane by to FloatPoints. 
+ * Calculations with FloatLines are generally not exact. 
+ * For that reason collinearity for example is not defined for FloatLines. 
+ * If exactness is needed, use the class Line instead.
  *
  * @author Alfons Wirtz
  */
@@ -106,7 +108,7 @@ public final class PlaSegmentFloat implements PlaObject
          {
          // translate along the x axis
          double rel_x = (p_dist * lenght) / dy;
-         new_a = new PlaPointFloat(this.point_a.v_x - rel_x, this.point_a.v_y);
+         new_a = new PlaPointFloat(point_a.v_x - rel_x, point_a.v_y);
          }
       else
          {
@@ -200,7 +202,7 @@ public final class PlaSegmentFloat implements PlaObject
             }
          }
       PlaPointFloat projected_b;
-      if (this.point_b.scalar_product(point_a, p_line_segment.point_b) < 0)
+      if (point_b.scalar_product(point_a, p_line_segment.point_b) < 0)
          {
          projected_b = point_b;
          }
@@ -221,16 +223,16 @@ public final class PlaSegmentFloat implements PlaObject
     */
    public PlaSegmentFloat segment_projection_2(PlaSegmentFloat p_line_segment)
       {
-      if (p_line_segment.point_a.scalar_product(p_line_segment.point_b, this.point_b) <= 0)
+      if (p_line_segment.point_a.scalar_product(p_line_segment.point_b, point_b) <= 0)
          {
          return null;
          }
-      if (p_line_segment.point_b.scalar_product(p_line_segment.point_a, this.point_a) <= 0)
+      if (p_line_segment.point_b.scalar_product(p_line_segment.point_a, point_a) <= 0)
          {
          return null;
          }
       PlaPointFloat projected_a;
-      if (p_line_segment.point_a.scalar_product(p_line_segment.point_b, this.point_a) < 0)
+      if (p_line_segment.point_a.scalar_product(p_line_segment.point_b, point_a) < 0)
          {
          PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_a, p_line_segment.point_b.turn_90_degree(1, p_line_segment.point_a));
          projected_a = curr_perpendicular_line.intersection(this);
@@ -241,12 +243,12 @@ public final class PlaSegmentFloat implements PlaObject
          }
       else
          {
-         projected_a = this.point_a;
+         projected_a = point_a;
          }
 
       PlaPointFloat projected_b;
 
-      if (p_line_segment.point_b.scalar_product(p_line_segment.point_a, this.point_b) < 0)
+      if (p_line_segment.point_b.scalar_product(p_line_segment.point_a, point_b) < 0)
          {
          PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_b, p_line_segment.point_a.turn_90_degree(1, p_line_segment.point_b));
          projected_b = curr_perpendicular_line.intersection(this);
@@ -257,7 +259,7 @@ public final class PlaSegmentFloat implements PlaObject
          }
       else
          {
-         projected_b = this.point_b;
+         projected_b = point_b;
          }
       return new PlaSegmentFloat(projected_a, projected_b);
       }
@@ -286,20 +288,20 @@ public final class PlaSegmentFloat implements PlaObject
     */
    public PlaPointFloat nearest_segment_point(PlaPointFloat p_from_point)
       {
-      PlaPointFloat projection = this.perpendicular_projection(p_from_point);
-      if (projection.is_contained_in_box(this.point_a, this.point_b, 0.01))
+      PlaPointFloat projection = perpendicular_projection(p_from_point);
+      if (projection.is_contained_in_box(point_a, point_b, 0.01))
          {
          return projection;
          }
       // Now the projection is outside the line segment.
       PlaPointFloat result;
-      if (p_from_point.length_square(this.point_a) <= p_from_point.length_square(this.point_b))
+      if (p_from_point.length_square(point_a) <= p_from_point.length_square(point_b))
          {
-         result = this.point_a;
+         result = point_a;
          }
       else
          {
-         result = this.point_b;
+         result = point_b;
          }
       return result;
       }
@@ -319,18 +321,18 @@ public final class PlaSegmentFloat implements PlaObject
          result[0] = this;
          return result;
          }
-      double line_length = this.point_b.distance(this.point_a);
+      double line_length = point_b.distance(point_a);
       PlaSegmentFloat[] result = new PlaSegmentFloat[p_count];
       double section_length = line_length / p_count;
       double dx = point_b.v_x - point_a.v_x;
       double dy = point_b.v_y - point_a.v_y;
-      PlaPointFloat curr_a = this.point_a;
+      PlaPointFloat curr_a = point_a;
       for (int i = 0; i < p_count; ++i)
          {
          PlaPointFloat curr_b;
          if (i == p_count - 1)
             {
-            curr_b = this.point_b;
+            curr_b = point_b;
             }
          else
             {

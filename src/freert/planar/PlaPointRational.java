@@ -180,7 +180,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       }
 
    @Override
-   protected PlaVectorRational difference_by(PlaPointInt p_other)
+   public PlaVectorRational difference_by(PlaPointInt p_other)
       {
       PlaPointRational other = new PlaPointRational(p_other);
       
@@ -227,15 +227,13 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
    @Override
    public PlaPoint perpendicular_projection(PlaLineInt p_line)
       {
-      // this function is at the moment only implemented for lines
-      // consisting of IntPoints.
-      // The general implementation is still missing.
+      // this function is at the moment only implemented for lines consisting of IntPoints.
       PlaVectorInt v = (PlaVectorInt) p_line.point_b.difference_by(p_line.point_a);
       BigInteger vxvx = BigInteger.valueOf((long) v.point_x * v.point_x);
       BigInteger vyvy = BigInteger.valueOf((long) v.point_y * v.point_y);
       BigInteger vxvy = BigInteger.valueOf((long) v.point_x * v.point_y);
       BigInteger denominator = vxvx.add(vyvy);
-      BigInteger det = BigInteger.valueOf(((PlaPointInt) p_line.point_a).determinant((PlaPointInt) p_line.point_b));
+      BigInteger det = BigInteger.valueOf(p_line.point_a.determinant(p_line.point_b));
 
       BigInteger tmp1 = vxvx.multiply(rp_x);
       BigInteger tmp2 = vxvy.multiply(rp_y);
@@ -277,14 +275,14 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
 
 
    @Override
-   protected int compare_x(PlaPointInt p_other)
+   public int compare_x(PlaPointInt p_other)
       {
       BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_x));
       return rp_x.compareTo(tmp1);
       }
 
    @Override
-   protected int compare_x(PlaPointRational p_other)
+   public int compare_x(PlaPointRational p_other)
       {
       BigInteger tmp1 = rp_x.multiply(p_other.rp_z);
       BigInteger tmp2 = p_other.rp_x.multiply(rp_z);
