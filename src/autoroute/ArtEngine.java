@@ -35,7 +35,7 @@ import autoroute.expand.ExpandRoomFreespaceIncomplete;
 import autoroute.expand.ExpandRoomObstacle;
 import autoroute.maze.MazeSearch;
 import autoroute.maze.MazeSearchResult;
-import autoroute.sorted.SortedRooms_xx_Degree;
+import autoroute.sorted.SortedRooms_xx_Top;
 import autoroute.varie.ArtResult;
 import board.RoutingBoard;
 import board.items.BrdItem;
@@ -416,14 +416,9 @@ public final class ArtEngine
     */
    private ExpandRoomComplete calculate_doors(ExpandRoom p_room)
       {
-/*      
-      if (autoroute_search_tree instanceof ShapeSearchTree90Degree)
-         return SortedRooms_90_Degree.calculate(p_room, this);
-      else if (autoroute_search_tree instanceof ShapeSearchTree45Degree)
-         return SortedRooms_45_Degree.calculate(p_room, this);
-      else
-*/      
-         return SortedRooms_xx_Degree.calculate(p_room, this);
+      SortedRooms_xx_Top calculator = new SortedRooms_xx_Top(this);
+      
+      return calculator.calculate(p_room);
       }
 
    /**

@@ -74,6 +74,8 @@ import freert.planar.ShapeTileOctagon;
  */
 public final class MazeSearch
    {
+   private static final String classname="MazeSearch.";
+   
    private static final int ALREADY_RIPPED_COSTS = 1;
 
    private final java.util.Random random_generator = new java.util.Random();
@@ -665,7 +667,7 @@ public final class MazeSearch
       if (door_shape.is_empty())
          {
          if (r_board.debug(Mdbg.MAZE, Ldbg.DEBUG))
-            System.out.println("MazeSearchAlgo:check_door_width door_shape is empty");
+            System.out.println(classname+"door_is_small door_shape is empty");
 
          return true;
          }

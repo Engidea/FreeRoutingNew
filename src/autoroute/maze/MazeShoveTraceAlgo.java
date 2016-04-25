@@ -20,6 +20,16 @@
 package autoroute.maze;
 
 import java.util.Collection;
+import main.Ldbg;
+import main.Mdbg;
+import autoroute.ArtControl;
+import autoroute.expand.ExpandDoor;
+import autoroute.expand.ExpandRoomComplete;
+import autoroute.expand.ExpandRoomObstacle;
+import board.RoutingBoard;
+import board.items.BrdAbit;
+import board.items.BrdItem;
+import board.items.BrdTracePolyline;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -29,14 +39,6 @@ import freert.planar.PlaSegmentInt;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
-import autoroute.ArtControl;
-import autoroute.expand.ExpandDoor;
-import autoroute.expand.ExpandRoomComplete;
-import autoroute.expand.ExpandRoomObstacle;
-import board.RoutingBoard;
-import board.items.BrdAbit;
-import board.items.BrdItem;
-import board.items.BrdTracePolyline;
 
 /**
  * Auxiliary functions used in MazeSearchAlgo.
@@ -45,6 +47,8 @@ import board.items.BrdTracePolyline;
  */
 public final class MazeShoveTraceAlgo
    {
+   private static final String classname="MazeShoveTraceAlgo.";
+   
    private final RoutingBoard r_board;
    private final ArtControl art_ctrl;
    
@@ -283,10 +287,9 @@ public final class MazeShoveTraceAlgo
             PlaSegmentFloat curr_door_segment = curr_door_shape.diagonal_corner_segment();
             if (curr_door_segment == null)
                {
-               if (r_board.get_test_level() == board.varie.TestLevel.ALL_DEBUGGING_OUTPUT)
-                  {
-                  System.out.println("MazeShoveTraceAlgo.check_shove_trace_line: door shape is empty");
-                  }
+               if (r_board.debug(Mdbg.MAZE, Ldbg.SPC_C))
+                  System.out.println(classname+"check_shove_trace_line: door shape is empty");
+
                continue;
                }
             PlaSide start_corner_side_of_trace_line = shove_line.side_of(curr_door_segment.point_a, 0);
