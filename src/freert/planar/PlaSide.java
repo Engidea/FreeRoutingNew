@@ -18,6 +18,8 @@ package freert.planar;
 
 /**
  * Implementation of an enum class Side with the three values ON_THE_LEFT, ON_THE_RIGHT, COLLINEAR.
+ * Ok, the bigg issue is colinearity, that is the reason for the rationals, to be able to "know" whan a point is on a line...
+ * 
  * @author Alfons Wirtz
  */
 
@@ -66,4 +68,15 @@ public final class PlaSide
       else
          return COLLINEAR;
       }
+   
+   static PlaSide get_side_of(long p_value)
+      {
+      if (p_value > 0)
+          return ON_THE_LEFT;
+      else if (p_value < 0)
+          return ON_THE_RIGHT;
+      else
+         return COLLINEAR;
+      }
+
    }

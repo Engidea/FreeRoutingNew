@@ -20,6 +20,7 @@ import java.util.ArrayList;
 
 /**
  * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3 consecutive points collinear.
+ * That is kind of a polyline, but they do different things... still really, I wish we could use polyline or polygons, not both
  * @author Alfons Wirtz#
  */
 

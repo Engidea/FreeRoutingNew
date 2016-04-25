@@ -25,7 +25,6 @@ import freert.varie.Signum;
 
 /**
  *
- * Abstract class defining functionality of directions in the plane. 
  * A Direction is an equivalence class of vectors. 
  * Two vectors define the same object of class Direction, if they point into the same direction. 
  * We prefer using directions instead of angles because with angles the arithmetic calculations are in general not exact.
@@ -128,7 +127,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    /**
     * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
     */
-   public static final PlaDirection get_instance_approx(double p_angle)
+   public static final PlaDirection get_instance(double p_angle)
       {
       final double scale_factor = 10000;
       double x = Math.cos(p_angle) * scale_factor;
@@ -220,8 +219,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
         return 0;
         }
 
-     // now this direction and p_other are located in the same
-     // open horizontal half plane
+     // now this direction and p_other are located in the same open horizontal half plane
 
      double determinant = (double) p_other.dir_x * dir_y - (double) p_other.dir_y * dir_x;
      

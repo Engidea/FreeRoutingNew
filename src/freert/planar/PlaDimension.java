@@ -28,10 +28,10 @@ public final class PlaDimension
    private static final int PLAD_POINT=0;
    private static final int PLAD_EMPTY=-1;
    
-   public static final PlaDimension AREA = new PlaDimension(PLAD_AREA,"Area");
+   public static final PlaDimension AREA  = new PlaDimension(PLAD_AREA,"Area");
    public static final PlaDimension LINE  = new PlaDimension(PLAD_LINE,"Line");
-   public static final PlaDimension POINT  = new PlaDimension(PLAD_POINT,"Point");
-   public static final PlaDimension EMPTY  = new PlaDimension(PLAD_EMPTY,"Empty");
+   public static final PlaDimension POINT = new PlaDimension(PLAD_POINT,"Point");
+   public static final PlaDimension EMPTY = new PlaDimension(PLAD_EMPTY,"Empty");
    
    public final String name;
 

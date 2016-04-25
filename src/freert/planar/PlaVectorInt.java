@@ -207,7 +207,7 @@ public final class PlaVectorInt extends PlaVector
    @Override
    public PlaSide side_of(PlaVectorInt p_other)
       {
-      double determinant = (double) p_other.point_x * point_y - (double) p_other.point_y * point_x;
+      long determinant = (long) p_other.point_x * point_y - (long) p_other.point_y * point_x;
       
       return PlaSide.get_side_of(determinant);
       }
