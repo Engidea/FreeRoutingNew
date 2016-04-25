@@ -22,23 +22,25 @@ package gui.win;
 
 import gui.BoardFrame;
 import gui.BoardPanel;
+import gui.varie.GuiResources;
+import board.BrdLayerStructure;
 
 /**
  * Interactive Frame to adjust the visibility of the individual board layers
  *
  * @author alfons
  */
-public class WindowLayerVisibility extends WindowVisibility
+public final class WindowLayerVisibility extends WindowVisibility
    {
    private static final long serialVersionUID = 1L;
 
    public static WindowLayerVisibility get_instance(BoardFrame p_board_frame)
       {
       BoardPanel board_panel = p_board_frame.board_panel;
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("gui.resources.Default", p_board_frame.get_locale());
+      GuiResources resources = p_board_frame.newGuiResources("gui.resources.Default");
       String title = resources.getString("layer_visibility");
       String header_message = resources.getString("layer_visibility_header");
-      board.BrdLayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
+      BrdLayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
       String[] message_arr = new String[layer_structure.size()];
 
       for (int index = 0; index < message_arr.length; ++index)
@@ -55,24 +57,24 @@ public class WindowLayerVisibility extends WindowVisibility
       return result;
       }
 
-   /** Creates a new instance of LayerVisibilityFrame */
    private WindowLayerVisibility(BoardFrame p_board_frame, String p_title, String p_header_message, String[] p_message_arr)
       {
-
       super(p_board_frame, p_title, p_header_message, p_message_arr);
       }
 
-   protected void set_changed_value(int p_index, double p_value)
+   protected void set_changed_value(int p_layer_no, double p_value)
       {
-      get_board_handling().set_layer_visibility(p_index, p_value);
+      p_layer_no = get_board_handling().set_layer_visibility(p_layer_no, p_value);
+      
+      get_board_handling().set_layer(p_layer_no);
       }
 
    protected void set_all_minimum()
       {
-      int layer_count = this.get_board_handling().gdi_context.layer_count();
+      int layer_count = get_board_handling().gdi_context.layer_count();
       for (int i = 0; i < layer_count; ++i)
          {
-         if (i != this.get_board_handling().itera_settings.get_layer())
+         if (i != get_board_handling().itera_settings.get_layer())
             {
             set_slider_value(i, 0);
             set_changed_value(i, 0);
@@ -85,10 +87,10 @@ public class WindowLayerVisibility extends WindowVisibility
     */
    public void refresh()
       {
-      graphics.GdiContext graphics_context = this.get_board_handling().gdi_context;
+      graphics.GdiContext graphics_context = get_board_handling().gdi_context;
       for (int i = 0; i < graphics_context.layer_count(); ++i)
          {
-         this.set_slider_value(i, graphics_context.get_raw_layer_visibility(i));
+         set_slider_value(i, graphics_context.get_raw_layer_visibility(i));
          }
       }
    }

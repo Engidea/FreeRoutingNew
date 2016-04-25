@@ -23,6 +23,7 @@ package interactive;
 import gui.varie.SnapshotAttributes;
 import java.io.IOException;
 import autoroute.ArtSettings;
+import board.BrdLayer;
 import board.RoutingBoard;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -38,6 +39,8 @@ public final class IteraSettings implements java.io.Serializable
 
    // the current layer TODO transfor this in BrdLayer, a real object not an indice
    public int layer_no;
+   public BrdLayer cur_layer; 
+   
    // allows pushing obstacles aside 
    public boolean push_enabled;
    // allows dragging components with the route 

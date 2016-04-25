@@ -248,29 +248,19 @@ public final class IteraBoard
 
    /**
     * Changes the visibility of the input layer to the input value. p_value is expected between 0 and 1
+    * @return the given layer or a different one if it has become invisible
     */
-   public void set_layer_visibility(int p_layer, double p_value)
+   public int set_layer_visibility(int p_layer_no, double p_visibility)
       {
-      if ( ! gdi_context.is_valid_layer(p_layer) ) return;
+      if ( ! gdi_context.is_valid_layer(p_layer_no) ) 
+         return gdi_context.get_layer_visibility_best();
 
-      gdi_context.set_layer_visibility(p_layer, p_value);
+      gdi_context.set_layer_visibility(p_layer_no, p_visibility);
 
-      if (p_value == 0 && itera_settings.layer_no == p_layer)
-         {
-         // change the current layer to the best visible layer, if it becomes invisible;
-         double best_visibility = 0;
-         int best_visible_layer = 0;
-         for (int i = 0; i < gdi_context.layer_count(); ++i)
-            {
-            if (gdi_context.get_layer_visibility(i) > best_visibility)
-               {
-               best_visibility = gdi_context.get_layer_visibility(i);
-               best_visible_layer = i;
-               }
-            }
-         itera_settings.layer_no = best_visible_layer;
-         }
-
+      if ( p_visibility != 0 || itera_settings.layer_no != p_layer_no) return p_layer_no;
+      
+      // current layer has become invisible, return the best visible layer
+      return gdi_context.get_layer_visibility_best();
       }
 
    /**
@@ -391,21 +381,26 @@ public final class IteraBoard
     */
    public void set_current_layer(int p_layer)
       {
-      if (board_is_read_only)
-         {
-         return;
-         }
-      int layer = Math.max(p_layer, 0);
-      layer = Math.min(layer, r_board.get_layer_count() - 1);
-      set_layer(layer);
+      if (board_is_read_only) return;
+
+      p_layer = set_layer(p_layer);
+
       actlog.start_scope(LogfileScope.SET_LAYER, p_layer);
       }
 
    /**
-    * Changes the current layer without saving the change to logfile. Only for internal use inside this package.
+    * Changes the current layer without saving the change to logfile
+    * @return the actual value stored after having passed all checks
     */
-   public void set_layer(int p_layer_no)
+   public int set_layer(int p_layer_no)
       {
+      if ( p_layer_no < 0 )  p_layer_no  = 0;
+      
+      if ( p_layer_no >= r_board.get_layer_count() ) p_layer_no = r_board.get_layer_count() -1;
+      
+      // current setting is the same as new one, do nothing
+      if ( itera_settings.layer_no == p_layer_no ) return p_layer_no;
+      
       BrdLayer curr_layer = r_board.layer_structure.get(p_layer_no);
       
       screen_messages.set_layer(curr_layer.name);
@@ -430,6 +425,8 @@ public final class IteraBoard
       gdi_context.set_fully_visible_layer(p_layer_no);
       
       repaint();
+      
+      return p_layer_no;
       }
 
    /**

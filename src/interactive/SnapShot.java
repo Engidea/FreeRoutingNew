@@ -20,6 +20,7 @@
 
 package interactive;
 
+import graphics.ColorIntensityTable;
 import gui.BoardPanel;
 import gui.varie.SnapshotAttributes;
 import gui.varie.SubwindowSelections;
@@ -92,20 +93,20 @@ public final class SnapShot implements java.io.Serializable
 
       if (snapshot_attributes.object_visibility)
          {
-         p_board_handling.gdi_context.color_intensity_table = new graphics.ColorIntensityTable(this.graphics_context.color_intensity_table);
+         p_board_handling.gdi_context.color_intensity_table = new ColorIntensityTable(graphics_context.color_intensity_table);
          }
       if (snapshot_attributes.layer_visibility)
          {
-         p_board_handling.gdi_context.set_layer_visibility_arr(this.graphics_context.copy_layer_visibility_arr());
+         p_board_handling.gdi_context.set_layer_visibility_arr(graphics_context.copy_layer_visibility_arr());
          }
 
       if (snapshot_attributes.interactive_state)
          {
-         p_board_handling.set_interactive_state(this.get_interactive_state(p_board_handling, p_board_handling.actlog));
+         p_board_handling.set_interactive_state(get_interactive_state(p_board_handling, p_board_handling.actlog));
          }
       if (snapshot_attributes.selection_layers)
          {
-         p_board_handling.itera_settings.select_on_all_visible_layers = this.settings.select_on_all_visible_layers;
+         p_board_handling.itera_settings.select_on_all_visible_layers = settings.select_on_all_visible_layers;
          }
       if (snapshot_attributes.selectable_items)
          {
@@ -117,7 +118,7 @@ public final class SnapShot implements java.io.Serializable
          }
       if (snapshot_attributes.rule_selection)
          {
-         p_board_handling.itera_settings.manual_rule_selection = this.settings.manual_rule_selection;
+         p_board_handling.itera_settings.manual_rule_selection = settings.manual_rule_selection;
          }
       if (snapshot_attributes.manual_rule_settings)
          {
@@ -135,16 +136,16 @@ public final class SnapShot implements java.io.Serializable
          }
       if (snapshot_attributes.pull_tight_region)
          {
-         p_board_handling.itera_settings.trace_pull_tight_region_width = this.settings.trace_pull_tight_region_width;
+         p_board_handling.itera_settings.trace_pull_tight_region_width = settings.trace_pull_tight_region_width;
          }
       if (snapshot_attributes.component_grid)
          {
-         p_board_handling.itera_settings.horizontal_component_grid = this.settings.horizontal_component_grid;
-         p_board_handling.itera_settings.vertical_component_grid = this.settings.vertical_component_grid;
+         p_board_handling.itera_settings.horizontal_component_grid = settings.horizontal_component_grid;
+         p_board_handling.itera_settings.vertical_component_grid = settings.vertical_component_grid;
          }
       if (snapshot_attributes.info_list_selections)
          {
-         p_board_handling.get_panel().board_frame.set_snapshot_subwindow_selections(this.subwindow_filters);
+         p_board_handling.get_panel().board_frame.set_snapshot_subwindow_selections(subwindow_filters);
          }
       }
 

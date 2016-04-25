@@ -20,10 +20,6 @@
 
 package interactive.state;
 
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaVector;
-import freert.planar.ShapeConvex;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
@@ -41,6 +37,10 @@ import board.items.BrdAbit;
 import board.items.BrdAbitVia;
 import board.items.BrdArea;
 import board.items.BrdItem;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaVector;
+import freert.planar.ShapeConvex;
 
 /**
  * Interactive copying of items.
@@ -49,6 +49,14 @@ import board.items.BrdItem;
  */
 public class StateCopyItem extends StateInteractive
    {
+   private Collection<BrdItem> item_list;
+   private PlaPoint start_position;
+   private PlaPoint current_position;
+   private int current_layer;
+   private boolean layer_changed;
+   private PlaPoint previous_position;
+   
+   
    /**
     * Returns a new instance of CopyItemState or null, if p_item_list is empty.
     */
@@ -120,13 +128,13 @@ public class StateCopyItem extends StateInteractive
     */
    public boolean change_layer_action(int p_new_layer)
       {
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.CHANGE_LAYER, p_new_layer);
-         }
-      current_layer = p_new_layer;
+      p_new_layer = i_brd.set_layer(p_new_layer);
+
+      // save what actually has been set by ths system
+      actlog_start_scope(LogfileScope.CHANGE_LAYER, p_new_layer);
+
       layer_changed = true;
-      i_brd.set_layer(p_new_layer);
+      
       return true;
       }
 
@@ -326,11 +334,4 @@ public class StateCopyItem extends StateInteractive
          }
       return new_padstack;
       }
-
-   private Collection<BrdItem> item_list;
-   private PlaPoint start_position;
-   private PlaPoint current_position;
-   private int current_layer;
-   private boolean layer_changed;
-   private PlaPoint previous_position;
    }

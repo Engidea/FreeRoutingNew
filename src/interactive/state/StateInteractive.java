@@ -245,8 +245,8 @@ public class StateInteractive
       }
 
    /**
-    * Action to be taken, when the current layer is changed. returns false, if the layer could not be changed, Default function to
-    * be overwritten in derived classes.
+    * Action to be taken, when the current layer is changed. 
+    * returns false, if the layer could not be changed, Default function to be overwritten in derived classes.
     */
    public boolean change_layer_action(int p_new_layer)
       {

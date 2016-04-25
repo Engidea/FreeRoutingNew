@@ -34,6 +34,8 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import main.Stat;
+import board.BrdLayerStructure;
 import freert.planar.PlaArea;
 import freert.planar.PlaCircle;
 import freert.planar.PlaEllipse;
@@ -42,8 +44,6 @@ import freert.planar.PlaShape;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
-import main.Stat;
-import board.BrdLayerStructure;
 
 /**
  * Context for drawing items in the board package to the screen.
@@ -699,23 +699,37 @@ public final class GdiContext implements java.io.Serializable
       }
 
    /**
-    * Gets the visibility factor of the input layer. The result is between 0 and 1. If the result is 0, the layer is invisible, if
-    * the result is 1, the layer is fully visible.
+    * Gets the visibility factor of the input layer. 
+    * The result is between 0 and 1. 
+    * If the result is 0, the layer is invisible, if the result is 1, the layer is fully visible.
     */
    public double get_layer_visibility(int p_layer_no)
       {
-      double result;
       if (p_layer_no == fully_visible_layer)
-         {
-         result = layer_visibility_arr[p_layer_no];
-         }
+         return layer_visibility_arr[p_layer_no];
       else
-         {
-         result = auto_layer_dim_factor * layer_visibility_arr[p_layer_no];
-         }
-      return result;
+         return layer_visibility_arr[p_layer_no] * auto_layer_dim_factor;
       }
 
+   
+   public int get_layer_visibility_best ()
+      {
+      double best_visibility = 0;
+      int best_visible_layer = 0;
+      
+      for (int index = 0; index < layer_count(); ++index)
+         {
+         double curvis = get_layer_visibility(index);
+         
+         if ( curvis > best_visibility)
+            {
+            best_visibility = curvis;
+            best_visible_layer = index;
+            }
+         }
+
+      return best_visible_layer;
+      }
    /**
     * Gets the visibility factor of the input layer without the aoutomatic layer dimming.
     */
@@ -731,7 +745,11 @@ public final class GdiContext implements java.io.Serializable
     */
    public void set_layer_visibility(int p_layer_no, double p_value)
       {
-      layer_visibility_arr[p_layer_no] = Math.max(0, Math.min(p_value, 1));
+      if ( p_value < 0 ) p_value = 0;
+      
+      if ( p_value > 1 ) p_value = 1;
+      
+      layer_visibility_arr[p_layer_no] = p_value;
       }
 
    public void set_layer_visibility_arr(double[] p_layer_visibility_arr)

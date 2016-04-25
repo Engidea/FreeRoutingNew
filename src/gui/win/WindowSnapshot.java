@@ -28,16 +28,23 @@ import gui.varie.SnapSavedAttributes;
 import interactive.SnapShot;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JList;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 /**
  * Window handling snapshots of the interactive situation.
  *
  * @author Alfons Wirtz
  */
-public class WindowSnapshot extends GuiSubWindowSavable
+public final class WindowSnapshot extends GuiSubWindowSavable
    {
    private static final long serialVersionUID = 1L;
 
@@ -52,30 +59,30 @@ public class WindowSnapshot extends GuiSubWindowSavable
       {
       super(p_board_frame);
       
-      this.settings_window = new WindowSnapshotSettings(p_board_frame);
+      settings_window = new WindowSnapshotSettings(p_board_frame);
       resources = board_frame.newGuiResources("gui.resources.WindowSnapshot");
-      this.setTitle(resources.getString("title"));
+      setTitle(resources.getString("title"));
 
-      this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
       // create main panel
-      final javax.swing.JPanel main_panel = new javax.swing.JPanel();
+      final JPanel main_panel = new JPanel();
       add(main_panel);
       main_panel.setLayout(new java.awt.BorderLayout());
 
       // create goto button
-      javax.swing.JButton goto_button = new javax.swing.JButton(resources.getString("goto_snapshot"));
+      JButton goto_button = new JButton(resources.getString("goto_snapshot"));
       goto_button.setToolTipText(resources.getString("goto_tooltip"));
       GotoListener goto_listener = new GotoListener();
       goto_button.addActionListener(goto_listener);
       main_panel.add(goto_button, java.awt.BorderLayout.NORTH);
 
       // create snapshot list
-      this.gui_list = new JList<SnapShot>(this.list_model);
-      this.gui_list.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-      this.gui_list.setSelectedIndex(0);
-      this.gui_list.setVisibleRowCount(5);
-      this.gui_list.addMouseListener(new java.awt.event.MouseAdapter()
+      gui_list = new JList<SnapShot>(list_model);
+      gui_list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      gui_list.setSelectedIndex(0);
+      gui_list.setVisibleRowCount(5);
+      gui_list.addMouseListener(new java.awt.event.MouseAdapter()
          {
             public void mouseClicked(java.awt.event.MouseEvent evt)
                {
@@ -86,12 +93,12 @@ public class WindowSnapshot extends GuiSubWindowSavable
                }
          });
 
-      javax.swing.JScrollPane list_scroll_pane = new javax.swing.JScrollPane(this.gui_list);
+      JScrollPane list_scroll_pane = new JScrollPane(gui_list);
       list_scroll_pane.setPreferredSize(new java.awt.Dimension(200, 100));
       main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
 
       // create the south panel
-      final javax.swing.JPanel south_panel = new javax.swing.JPanel();
+      final JPanel south_panel = new JPanel();
       main_panel.add(south_panel, java.awt.BorderLayout.SOUTH);
       java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
       south_panel.setLayout(gridbag);
@@ -99,35 +106,35 @@ public class WindowSnapshot extends GuiSubWindowSavable
       gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
 
       // create panel to add a new snapshot
-      final javax.swing.JPanel add_panel = new javax.swing.JPanel();
+      final JPanel add_panel = new JPanel();
       gridbag.setConstraints(add_panel, gridbag_constraints);
       add_panel.setLayout(new java.awt.BorderLayout());
       south_panel.add(add_panel);
 
-      javax.swing.JButton add_button = new javax.swing.JButton(resources.getString("create"));
+      JButton add_button = new JButton(resources.getString("create"));
       AddListener add_listener = new AddListener();
       add_button.addActionListener(add_listener);
       add_panel.add(add_button, java.awt.BorderLayout.WEST);
 
-      this.name_field = new javax.swing.JTextField(10);
+      name_field = new JTextField(10);
       name_field.setText(resources.getString("snapshot") + " 1");
       add_panel.add(name_field, java.awt.BorderLayout.EAST);
 
       // create delete buttons
-      javax.swing.JButton delete_button = new javax.swing.JButton(resources.getString("remove"));
+      JButton delete_button = new JButton(resources.getString("remove"));
       DeleteListener delete_listener = new DeleteListener();
       delete_button.addActionListener(delete_listener);
       gridbag.setConstraints(delete_button, gridbag_constraints);
       south_panel.add(delete_button);
 
-      javax.swing.JButton delete_all_button = new javax.swing.JButton(resources.getString("remove_all"));
+      JButton delete_all_button = new JButton(resources.getString("remove_all"));
       DeleteAllListener delete_all_listener = new DeleteAllListener();
       delete_all_button.addActionListener(delete_all_listener);
       gridbag.setConstraints(delete_all_button, gridbag_constraints);
       south_panel.add(delete_all_button);
 
       // create button for the snapshot settings
-      javax.swing.JButton settings_button = new javax.swing.JButton(resources.getString("settings"));
+      JButton settings_button = new JButton(resources.getString("settings"));
       settings_button.setToolTipText(resources.getString("settings_tooltip"));
       SettingsListener settings_listener = new SettingsListener();
       settings_button.addActionListener(settings_listener);
@@ -136,7 +143,7 @@ public class WindowSnapshot extends GuiSubWindowSavable
 
       p_board_frame.set_context_sensitive_help(this, "WindowSnapshots");
 
-      this.pack();
+      pack();
       }
 
    public void dispose()
@@ -163,19 +170,19 @@ public class WindowSnapshot extends GuiSubWindowSavable
     * Reads the data of this frame from disk. Returns false, if the reading failed.
     */
    @Override
-   public boolean read(java.io.ObjectInputStream p_object_stream)
+   public boolean read(ObjectInputStream p_object_stream)
       {
       try
          {
          SnapSavedAttributes saved_attributes = (SnapSavedAttributes) p_object_stream.readObject();
-         this.snapshot_count = saved_attributes.snapshot_count;
-         this.list_model = saved_attributes.list_model;
-         this.gui_list.setModel(this.list_model);
+         snapshot_count = saved_attributes.snapshot_count;
+         list_model = saved_attributes.list_model;
+         gui_list.setModel(list_model);
          String next_default_name = "snapshot " + (new Integer(snapshot_count + 1)).toString();
-         this.name_field.setText(next_default_name);
-         this.setLocation(saved_attributes.location);
-         this.setVisible(saved_attributes.is_visible);
-         this.settings_window.read(p_object_stream);
+         name_field.setText(next_default_name);
+         setLocation(saved_attributes.location);
+         setVisible(saved_attributes.is_visible);
+         settings_window.read(p_object_stream);
          return true;
          }
       catch (Exception e)
@@ -189,9 +196,9 @@ public class WindowSnapshot extends GuiSubWindowSavable
     * Saves this frame to disk.
     */
    @Override
-   public void save(java.io.ObjectOutputStream p_object_stream)
+   public void save(ObjectOutputStream p_object_stream)
       {
-      SnapSavedAttributes saved_attributes = new SnapSavedAttributes(this.list_model, this.snapshot_count, this.getLocation(), this.isVisible());
+      SnapSavedAttributes saved_attributes = new SnapSavedAttributes(list_model, snapshot_count, getLocation(), isVisible());
       try
          {
          p_object_stream.writeObject(saved_attributes);
@@ -200,7 +207,7 @@ public class WindowSnapshot extends GuiSubWindowSavable
          {
          System.out.println("VisibilityFrame.save_attriutes: save failed");
          }
-      this.settings_window.save(p_object_stream);
+      settings_window.save(p_object_stream);
       }
 
    public void goto_selected()
@@ -247,7 +254,7 @@ public class WindowSnapshot extends GuiSubWindowSavable
     */
    public void refresh()
       {
-      this.settings_window.refresh();
+      settings_window.refresh();
       }
 
 
@@ -272,16 +279,14 @@ public class WindowSnapshot extends GuiSubWindowSavable
     */
    public void select_previous_item()
       {
-      if (!this.isVisible())
-         {
-         return;
-         }
-      int selected_index = this.gui_list.getSelectedIndex();
+      if (!isVisible()) return;
+
+      int selected_index = gui_list.getSelectedIndex();
       if (selected_index <= 0)
          {
          return;
          }
-      this.gui_list.setSelectedIndex(selected_index - 1);
+      gui_list.setSelectedIndex(selected_index - 1);
       }
 
    /**
@@ -289,17 +294,15 @@ public class WindowSnapshot extends GuiSubWindowSavable
     */
    public void select_next_item()
       {
-      if (!this.isVisible())
-         {
-         return;
-         }
-      int selected_index = this.gui_list.getSelectedIndex();
-      if (selected_index < 0 || selected_index >= this.list_model.getSize() - 1)
+      if (!isVisible())         return;
+      
+      int selected_index = gui_list.getSelectedIndex();
+      if (selected_index < 0 || selected_index >= list_model.getSize() - 1)
          {
          return;
          }
 
-      this.gui_list.setSelectedIndex(selected_index + 1);
+      gui_list.setSelectedIndex(selected_index + 1);
       }
 
    private class DeleteListener implements java.awt.event.ActionListener
@@ -336,7 +339,7 @@ public class WindowSnapshot extends GuiSubWindowSavable
          {
          if (first_time)
             {
-            java.awt.Point location = getLocation();
+            Point location = getLocation();
             settings_window.setLocation((int) location.getX() + 200, (int) location.getY());
             first_time = false;
             }

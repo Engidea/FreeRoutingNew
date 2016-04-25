@@ -500,7 +500,7 @@ public class StateRoute extends StateInteractive
                }
             else
                {
-               i_brd.set_layer(p_new_layer);
+               p_new_layer = i_brd.set_layer(p_new_layer);
                String layer_name = i_brd.get_routing_board().layer_structure.get_name(p_new_layer);
                i_brd.screen_messages.set_status_message(resources.getString("layer_changed_to") + " " + layer_name);
                // make the current situation restorable by undo
