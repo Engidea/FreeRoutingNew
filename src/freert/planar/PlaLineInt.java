@@ -416,7 +416,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       // this is the real issue, returning a rational is a big issue....
 //      System.out.println("rational");
       PlaPointRational ret_rat = new PlaPointRational(is_x, is_y, det);
-      PlaPointInt ret_int = intersect(this,p_other);
+//      PlaPointInt ret_int = intersect(this,p_other);
 //      System.out.print("rat="+ret_rat);
 //      System.out.println(" int="+ret_int);
       return ret_rat;

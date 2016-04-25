@@ -121,52 +121,18 @@ public abstract class PlaPoint implements PlaObject, Serializable
       }
 
    /**
-    * Returns > 0 , if this Point has a strict bigger x coordinate than p_other
-    * returns 0, if the x cooordinates are equal, and < 0 otherwise.
-    */
-   private final int compare_x(PlaPoint p_other)
-      {
-      if ( p_other instanceof PlaPointInt )
-         return compare_x((PlaPointInt)p_other);
-      else if ( p_other instanceof PlaPointRational )
-         return compare_x((PlaPointRational)p_other);
-//      else if ( p_other instanceof PlaPointFloat )
-//         return compare_x((PlaPointFloat)p_other);
-      else return 0;
-      }
-
-   public abstract int compare_x(PlaPointInt p_other);
-   public abstract int compare_x(PlaPointRational p_other);
-//   protected abstract int compare_x(PlaPointFloat p_other);
-   
-   
-   /**
-    * Returns > 0 , if this Point has a strict bigger x coordinate than p_other
-    * returns 0, if the x cooordinates are equal, and < 0 otherwise.
-    */
-   private final int compare_y(PlaPoint p_other)
-      {
-      if ( p_other instanceof PlaPointInt )
-         return compare_y((PlaPointInt)p_other);
-      else
-         return compare_y((PlaPointRational)p_other);
-      }
-
-   protected abstract int compare_y(PlaPointInt p_other);
-   protected abstract int compare_y(PlaPointRational p_other);
-   
-
-   /**
     * The function returns compare_x (p_other), if the result is not 0. Otherwise it returns compare_y (p_other).
     */
    public int compare_x_y(PlaPoint p_other)
       {
-      int result = compare_x(p_other);
-      
-      if (result != 0) return result;
-      
-      return compare_y(p_other);
+      if ( p_other instanceof PlaPointInt )
+         return compare_x_y((PlaPointInt)p_other);
+      else
+         return compare_x_y((PlaPointRational)p_other);
       }
+
+   public abstract int compare_x_y(PlaPointInt p_other);
+   public abstract int compare_x_y(PlaPointRational p_other);
 
    /**
     * Turns this point by p_factor times 90 degree around p_pole.

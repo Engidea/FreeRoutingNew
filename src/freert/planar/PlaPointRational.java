@@ -272,36 +272,29 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return new PlaPointRational(proj_x, proj_y, denominator);
       }
 
-
-
    @Override
-   public int compare_x(PlaPointInt p_other)
-      {
-      BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_x));
-      return rp_x.compareTo(tmp1);
-      }
-
-   @Override
-   public int compare_x(PlaPointRational p_other)
+   public int compare_x_y(PlaPointRational p_other)
       {
       BigInteger tmp1 = rp_x.multiply(p_other.rp_z);
       BigInteger tmp2 = p_other.rp_x.multiply(rp_z);
+      int risul = tmp1.compareTo(tmp2);
+      
+      if ( risul != 0 ) return risul;
+      
+      tmp1 = rp_y.multiply(p_other.rp_z);
+      tmp2 = p_other.rp_y.multiply(rp_z);
       return tmp1.compareTo(tmp2);
       }
 
    @Override
-   protected int compare_y(PlaPointRational p_other)
+   public int compare_x_y(PlaPointInt p_other)
       {
-      BigInteger tmp1 = rp_y.multiply(p_other.rp_z);
-      BigInteger tmp2 = p_other.rp_y.multiply(rp_z);
-      return tmp1.compareTo(tmp2);
-      }
+      BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_x));
+      int risul = rp_x.compareTo(tmp1);
+      
+      if ( risul != 0 ) return risul;
 
-
-   @Override
-   protected int compare_y(PlaPointInt p_other)
-      {
-      BigInteger tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_y));
+      tmp1 = rp_z.multiply(BigInteger.valueOf(p_other.v_y));
       return rp_y.compareTo(tmp1);
       }
    
