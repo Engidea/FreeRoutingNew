@@ -15,6 +15,7 @@
  */
 package autoroute.batch;
 
+import freert.varie.TimeLimitStoppable;
 import interactive.BrdActionThread;
 import java.util.Collection;
 import java.util.SortedSet;
@@ -22,7 +23,6 @@ import autoroute.varie.ArtComponent;
 import autoroute.varie.ArtPin;
 import autoroute.varie.ArtResult;
 import board.RoutingBoard;
-import freert.varie.TimeLimitStoppable;
 
 /**
  * Handles the sequencing of the fanout inside the batch autorouter.
@@ -124,10 +124,10 @@ public final class BatchFanout
             }
          --components_to_go;
          }
-      if (routing_board.get_test_level() != board.varie.TestLevel.RELEASE_VERSION)
-         {
-         System.out.println("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count + ", not routed: " + not_routed_count + ", errors: " + insert_error_count);
-         }
+      
+      
+      thread.hdlg.userPrintln("fanout pass: " + (p_pass_no + 1) + ", routed: " + routed_count + ", not routed: " + not_routed_count + ", errors: " + insert_error_count);
+
       return routed_count;
       }
    }

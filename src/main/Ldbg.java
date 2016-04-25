@@ -31,6 +31,8 @@ public interface Ldbg
    public int ERROR   = 0x00000020;
    public int SPC_A   = 0x00000040;
    public int SPC_B   = 0x00000080;
+   public int SPC_C   = 0x00000100;  // used in autoroute
+   public int RELEASE = 0x00000200;  // A bunch of things in freeroute are bound to a "release" concept
    
    
    }

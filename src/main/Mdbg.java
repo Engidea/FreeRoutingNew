@@ -16,7 +16,7 @@ package main;
  */
 
 /**
- * A holder for debug levels
+ * A holder for debug mask
  * It is just a simple and easy way to have a bunch of integers defined as public static final
  * @author damiano
  *
@@ -33,6 +33,7 @@ public interface Mdbg
    public int PUSH_VIA   = 0x00000080;
    public int PUSH_TRACE = 0x00000100;
    public int CLRVIOL    = 0x00000200;    // Clearance violations
+   public int AUTORT     = 0x00000400;    // Autoroute stuff
    
-   
+   public int ALL        = 0xFFFFFFFF;    // all masks
    }

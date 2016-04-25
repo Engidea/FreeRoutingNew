@@ -25,16 +25,8 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaSegmentFloat;
-import freert.planar.Polyline;
-import freert.planar.ShapeConvex;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
-import freert.planar.ShapeTileOctagon;
+import main.Ldbg;
+import main.Mdbg;
 import autoroute.ArtConnection;
 import autoroute.ArtControl;
 import autoroute.ArtEngine;
@@ -65,6 +57,16 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSegmentFloat;
+import freert.planar.Polyline;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
 
 /**
  * Class for autorouting an incomplete connection via a maze search algorithm.
@@ -654,41 +656,39 @@ public final class MazeSearch
     */
    private boolean door_is_small(ExpandDoor p_door, double p_trace_width)
       {
-      if (p_door.dimension.is_line() || p_door.first_room instanceof ExpandRoomFreespaceComplete && p_door.second_room instanceof ExpandRoomFreespaceComplete)
-         {
-         ShapeTile door_shape = p_door.get_shape();
-         if (door_shape.is_empty())
-            {
-            if (r_board.get_test_level().ordinal() >= board.varie.TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
-               {
-               System.out.println("MazeSearchAlgo:check_door_width door_shape is empty");
-               }
-            return true;
-            }
+      if ( ! p_door.dimension.is_line() ) return false;
+      
+      if ( ! ( p_door.first_room instanceof ExpandRoomFreespaceComplete && p_door.second_room instanceof ExpandRoomFreespaceComplete ) ) return false;
 
-         double door_length;
-         TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
-         if (angle_restriction == TraceAngleRestriction.NINETY_DEGREE)
-            {
-            ShapeTileBox door_box = door_shape.bounding_box();
-            door_length = door_box.max_width();
-            }
-         else if (angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE)
-            {
-            ShapeTileOctagon door_oct = door_shape.bounding_octagon();
-            door_length = door_oct.max_width();
-            }
-         else
-            {
-            PlaSegmentFloat door_line_segment = door_shape.diagonal_corner_segment();
-            door_length = door_line_segment.point_b.distance(door_line_segment.point_a);
-            }
-         if (door_length < p_trace_width)
-            {
-            return true;
-            }
+      ShapeTile door_shape = p_door.get_shape();
+      
+      if (door_shape.is_empty())
+         {
+         if (r_board.debug(Mdbg.MAZE, Ldbg.DEBUG))
+            System.out.println("MazeSearchAlgo:check_door_width door_shape is empty");
+
+         return true;
          }
-      return false;
+
+      double door_length;
+      TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
+      if (angle_restriction == TraceAngleRestriction.NINETY_DEGREE)
+         {
+         ShapeTileBox door_box = door_shape.bounding_box();
+         door_length = door_box.max_width();
+         }
+      else if (angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE)
+         {
+         ShapeTileOctagon door_oct = door_shape.bounding_octagon();
+         door_length = door_oct.max_width();
+         }
+      else
+         {
+         PlaSegmentFloat door_line_segment = door_shape.diagonal_corner_segment();
+         door_length = door_line_segment.point_b.distance(door_line_segment.point_a);
+         }
+
+      return door_length < p_trace_width;
       }
 
    /**

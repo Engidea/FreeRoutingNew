@@ -42,10 +42,10 @@ public final class Stat implements java.io.Serializable
    
    public Stat ()
       {
-      test_level = TestLevel.RELEASE_VERSION;   // assume I am in release more
-      locale     = Locale.ENGLISH;
-      debug_mask = Mdbg.CLRVIOL;
-      debug_level = 0xFFFFFF;
+      test_level  = TestLevel.RELEASE_VERSION;   // assume I am in release more
+      locale      = Locale.ENGLISH;
+      debug_mask  = Mdbg.ALL;
+      debug_level = Ldbg.RELEASE;
       }
    
    public void userPrintln(String message)

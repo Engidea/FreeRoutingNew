@@ -18,11 +18,9 @@
 package autoroute;
 
 import java.util.Set;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.Polyline;
 import library.LibPadstack;
+import main.Ldbg;
+import main.Mdbg;
 import autoroute.varie.ArtLocateResult;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;
@@ -32,7 +30,10 @@ import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
-import board.varie.TestLevel;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.Polyline;
 
 /**
  * Inserts the traces and vias of the connection found by the autoroute algorithm.
@@ -215,18 +216,17 @@ public final class ArtConnectionInsert
             }
          }
       
-      
-      
-      
-      if (r_board.get_test_level().ordinal() < TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
+            
+      if ( ! r_board.debug(Mdbg.AUTORT, Ldbg.SPC_C) )
          {
-         for (int i = 0; i < p_trace.corners.length - 1; ++i)
+         // the idea is that this code is always executed, unless you are debugging autoroute special C
+         for (int index = 0; index < p_trace.corners.length - 1; ++index)
             {
-            BrdTrace trace_stub = r_board.get_trace_tail(p_trace.corners[i], p_trace.layer, net_no_arr);
-            if (trace_stub != null)
-               {
-               r_board.remove_item(trace_stub);
-               }
+            BrdTrace trace_stub = r_board.get_trace_tail(p_trace.corners[index], p_trace.layer, net_no_arr);
+
+            if (trace_stub == null) continue;
+
+            r_board.remove_item(trace_stub);
             }
          }
       

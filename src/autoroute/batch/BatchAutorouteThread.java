@@ -24,10 +24,13 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
 import freert.varie.UnitMeasure;
 import gui.varie.GuiResources;
-import interactive.IteraBoard;
 import interactive.BrdActionThread;
+import interactive.IteraBoard;
 import java.awt.Color;
+import main.Ldbg;
+import main.Mdbg;
 import autoroute.ArtSettings;
+import board.varie.BrdValidate;
 import board.varie.TraceAngleRestriction;
 
 /**
@@ -96,11 +99,12 @@ public final class BatchAutorouteThread extends BrdActionThread
    
    private void validate_try ()
       {
+      // the idea is to sip the test on release version
+      if ( hdlg.debug(Mdbg.AUTORT, Ldbg.RELEASE) ) return;
+
       if ( hdlg.get_routing_board().brd_rules.get_trace_snap_angle() != TraceAngleRestriction.FORTYFIVE_DEGREE ) return;
-      
-      if ( hdlg.get_routing_board().get_test_level() == board.varie.TestLevel.RELEASE_VERSION ) return;
    
-      board.varie.BrdValidate.multiple_of_45_degree("after autoroute: ", hdlg.get_routing_board());
+      BrdValidate.multiple_of_45_degree("after autoroute: ", hdlg.get_routing_board());
       }
    
    @Override
