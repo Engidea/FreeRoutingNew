@@ -20,14 +20,14 @@
 
 package interactive.state;
 
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.ShapePolygon;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Iterator;
 import rules.BoardRules;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapePolygon;
 
 /**
  * Interactive state for constructing an obstacle with a polygon shape.
@@ -50,7 +50,7 @@ public class StateConstructPolygon extends StateConstructCorner
 
       if (actlog != null) actlog.start_scope(LogfileScope.CREATING_POLYGONSHAPE);
 
-      this.add_corner(p_location);
+      add_corner(p_location);
       }
 
    /**
@@ -79,22 +79,22 @@ public class StateConstructPolygon extends StateConstructCorner
             }
          else
             {
-            construction_succeeded = i_brd.get_routing_board().check_shape(obstacle_shape, i_brd.itera_settings.layer_no, new int[0], cl_class);
+            construction_succeeded = r_brd.check_shape(obstacle_shape, i_brd.itera_settings.layer_no, new int[0], cl_class);
             }
          if (construction_succeeded)
             {
-            this.observers_activated = !i_brd.get_routing_board().observers_active();
-            if (this.observers_activated)
+            observers_activated = !r_brd.observers_active();
+            if (observers_activated)
                {
-               i_brd.get_routing_board().start_notify_observers();
+               r_brd.start_notify_observers();
                }
-            i_brd.get_routing_board().generate_snapshot();
-            i_brd.get_routing_board().insert_obstacle(obstacle_shape, i_brd.itera_settings.layer_no, cl_class, board.varie.ItemFixState.UNFIXED);
-            i_brd.get_routing_board().end_notify_observers();
-            if (this.observers_activated)
+            r_brd.generate_snapshot();
+            r_brd.insert_obstacle(obstacle_shape, i_brd.itera_settings.layer_no, cl_class, board.varie.ItemFixState.UNFIXED);
+            r_brd.end_notify_observers();
+            if (observers_activated)
                {
-               i_brd.get_routing_board().end_notify_observers();
-               this.observers_activated = false;
+               r_brd.end_notify_observers();
+               observers_activated = false;
                }
             }
          }
@@ -110,7 +110,7 @@ public class StateConstructPolygon extends StateConstructCorner
          {
          actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
          }
-      return this.return_state;
+      return return_state;
       }
 
    public void display_default_message()

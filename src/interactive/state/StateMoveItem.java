@@ -20,11 +20,6 @@
 
 package interactive.state;
 
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
-import gui.varie.IteraNetItems;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
@@ -40,6 +35,11 @@ import board.infos.BrdComponent;
 import board.infos.BrdItemViolation;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import gui.varie.IteraNetItems;
 
 /**
  *
@@ -202,13 +202,13 @@ public class StateMoveItem extends StateInteractive
       
       actlog_start_scope(LogfileScope.MOVE_ITEMS, p_location);
       
-      RoutingBoard routing_board = i_brd.get_routing_board();
+      RoutingBoard routing_board = r_brd;
 
-      observers_activated = !i_brd.get_routing_board().observers_active();
+      observers_activated = !r_brd.observers_active();
       
       if (observers_activated)
          {
-         i_brd.get_routing_board().start_notify_observers();
+         r_brd.start_notify_observers();
          }
       
       // make the situation restorable by undo
@@ -245,7 +245,7 @@ public class StateMoveItem extends StateInteractive
             return;
             }
          }
-      Collection<BrdItem> new_item_list = i_brd.get_routing_board().get_connectable_items(p_net_no);
+      Collection<BrdItem> new_item_list = r_brd.get_connectable_items(p_net_no);
       new_item_list.add(p_item);
       IteraNetItems new_net_items = new IteraNetItems(p_net_no, new_item_list);
       net_items_list.add(new_net_items);
@@ -284,7 +284,7 @@ public class StateMoveItem extends StateInteractive
             return this;
             }
          }
-      RoutingBoard routing_board = i_brd.get_routing_board();
+      RoutingBoard routing_board = r_brd;
       for (BrdItem curr_item : item_list)
          {
          routing_board.insert_item(curr_item);
@@ -312,7 +312,7 @@ public class StateMoveItem extends StateInteractive
 
    public StateInteractive cancel()
       {
-      i_brd.get_routing_board().undo(null);
+      r_brd.undo(null);
       for (IteraNetItems curr_net_items : net_items_list)
          {
          i_brd.update_ratsnest(curr_net_items.net_no);
@@ -351,7 +351,7 @@ public class StateMoveItem extends StateInteractive
             {
             translate_vector = adjust_to_placement_grid(translate_vector);
             }
-         board.BrdComponents components = i_brd.get_routing_board().brd_components;
+         board.BrdComponents components = r_brd.brd_components;
          for (BrdComponent curr_component : component_list)
             {
             components.move(curr_component.id_no, translate_vector);
@@ -390,7 +390,7 @@ public class StateMoveItem extends StateInteractive
          {
          return;
          }
-      board.BrdComponents components = i_brd.get_routing_board().brd_components;
+      board.BrdComponents components = r_brd.brd_components;
       for (BrdComponent curr_component : component_list)
          {
          components.turn_90_degree(curr_component.id_no, p_factor, current_position);
@@ -418,7 +418,7 @@ public class StateMoveItem extends StateInteractive
          {
          return;
          }
-      board.BrdComponents components = i_brd.get_routing_board().brd_components;
+      board.BrdComponents components = r_brd.brd_components;
       for (BrdComponent curr_component : component_list)
          {
          components.rotate(curr_component.id_no, p_angle_in_degree, current_position);
@@ -462,8 +462,8 @@ public class StateMoveItem extends StateInteractive
    public void change_placement_side()
       {
       // Check, that all items can be mirrored
-      BrdLayerStructure layer_structure = i_brd.get_routing_board().layer_structure;
-      BrdLibrary board_library = i_brd.get_routing_board().library;
+      BrdLayerStructure layer_structure = r_brd.layer_structure;
+      BrdLibrary board_library = r_brd.library;
       boolean placement_side_changable = true;
       for (BrdItem curr_item : item_list)
          {
@@ -493,7 +493,7 @@ public class StateMoveItem extends StateInteractive
          return;
          }
 
-      board.BrdComponents components = i_brd.get_routing_board().brd_components;
+      board.BrdComponents components = r_brd.brd_components;
       for (BrdComponent curr_component : component_list)
          {
          components.change_side(curr_component.id_no, current_position);
@@ -535,7 +535,7 @@ public class StateMoveItem extends StateInteractive
          return;
          }
       double rotation = component_to_reset.get_rotation_in_degree();
-      if (!i_brd.get_routing_board().brd_components.get_flip_style_rotate_first() || component_to_reset.is_on_front())
+      if (!r_brd.brd_components.get_flip_style_rotate_first() || component_to_reset.is_on_front())
          {
          rotation = 360 - rotation;
          }

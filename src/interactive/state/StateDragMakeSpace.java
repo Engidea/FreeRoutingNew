@@ -29,7 +29,6 @@ import interactive.LogfileScope;
 import java.awt.Graphics;
 import rules.RuleNets;
 import rules.RuleViaInfoList;
-import board.RoutingBoard;
 import board.varie.TraceAngleRestriction;
 
 /**
@@ -42,15 +41,13 @@ public final class StateDragMakeSpace extends StateDrag
    {
    private static final int SHOVE_TRACE_WIDTH=200;
 
-   private final RoutingBoard r_board;
    private final IteraRoute itera_route;
    
    public StateDragMakeSpace(PlaPointFloat p_location, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_location, p_parent_state, p_board_handling, p_logfile);
-      r_board = i_brd.get_routing_board();
 
-      int[] shove_trace_width_arr = new int[r_board.get_layer_count()];
+      int[] shove_trace_width_arr = new int[r_brd.get_layer_count()];
       boolean[] layer_active_arr = new boolean[shove_trace_width_arr.length];
       
       for (int index = 0; index < shove_trace_width_arr.length; ++index)
@@ -72,7 +69,7 @@ public final class StateDragMakeSpace extends StateDrag
             true,
             null, 
             null, 
-            r_board, 
+            r_brd, 
             false, 
             false, 
             i_brd.itera_settings);
@@ -84,12 +81,12 @@ public final class StateDragMakeSpace extends StateDrag
       if (! something_dragged)
          {
          // initialisitions for the first time dragging
-         observers_activated = !r_board.observers_active();
+         observers_activated = !r_brd.observers_active();
 
-         if (observers_activated) r_board.start_notify_observers();
+         if (observers_activated) r_brd.start_notify_observers();
          
          // make the situation restorable by undo
-         r_board.generate_snapshot();
+         r_brd.generate_snapshot();
          
          // Delayed till here because otherwise the mouse might have been only clicked for selecting and not pressed for moving.
          actlog_start_scope(LogfileScope.MAKING_SPACE, previous_location);
@@ -101,7 +98,7 @@ public final class StateDragMakeSpace extends StateDrag
 
       PlaPoint route_end = itera_route.get_last_corner();
       
-      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && ! route_end.equals(p_to_location.round()))
+      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && ! route_end.equals(p_to_location.round()))
          {
          i_brd.move_mouse(route_end.to_float());
          }
@@ -116,11 +113,11 @@ public final class StateDragMakeSpace extends StateDrag
    @Override   
    public StateInteractive button_released()
       {
-      r_board.remove_items_unfixed(r_board.get_connectable_items(RuleNets.HIDDEN_NET_NO));
+      r_brd.remove_items_unfixed(r_brd.get_connectable_items(RuleNets.HIDDEN_NET_NO));
       
       if (observers_activated)
          {
-         r_board.end_notify_observers();
+         r_brd.end_notify_observers();
          observers_activated = false;
          }
       

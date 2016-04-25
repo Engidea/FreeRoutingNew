@@ -54,8 +54,8 @@ public class StatePinSwap extends StateInteractive
    private StatePinSwap(BrdAbitPin p_pin_to_swap, StateInteractive p_return_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_return_state, p_board_handling, p_logfile);
-      this.from_pin = p_pin_to_swap;
-      this.swappable_pins = p_pin_to_swap.get_swappable_pins();
+      from_pin = p_pin_to_swap;
+      swappable_pins = p_pin_to_swap.get_swappable_pins();
       }
 
    public StateInteractive left_button_clicked(PlaPointFloat p_location)
@@ -65,17 +65,17 @@ public class StatePinSwap extends StateInteractive
       if (picked_items.isEmpty())
          {
          i_brd.screen_messages.set_status_message(resources.getString("no_pin_selected"));
-         return this.cancel();
+         return cancel();
          }
       BrdItem to_item = picked_items.iterator().next();
       if (!(to_item instanceof BrdAbitPin))
          {
          i_brd.screen_messages.set_status_message(resources.getString("picked_pin_expected"));
-         return this.cancel();
+         return cancel();
          }
 
-      this.to_pin = (BrdAbitPin) to_item;
-      if (!swappable_pins.contains(this.to_pin))
+      to_pin = (BrdAbitPin) to_item;
+      if (!swappable_pins.contains(to_pin))
          {
          return cancel();
          }
@@ -85,56 +85,56 @@ public class StatePinSwap extends StateInteractive
    @Override
    public StateInteractive complete()
       {
-      if (this.from_pin == null || this.to_pin == null)
+      if (from_pin == null || to_pin == null)
          {
          i_brd.screen_messages.set_status_message(resources.getString("pin_to_swap_missing"));
-         return this.cancel();
+         return cancel();
          }
-      if (this.from_pin.net_count() > 1 || this.to_pin.net_count() > 1)
+      if (from_pin.net_count() > 1 || to_pin.net_count() > 1)
          {
          System.out.println("PinSwapState.complete: pin swap not yet implemented for pins belonging to more than 1 net ");
-         return this.cancel();
+         return cancel();
          }
       int from_net_no;
-      if (this.from_pin.net_count() > 0)
+      if (from_pin.net_count() > 0)
          {
-         from_net_no = this.from_pin.get_net_no(0);
+         from_net_no = from_pin.get_net_no(0);
          }
       else
          {
          from_net_no = -1;
          }
       int to_net_no;
-      if (this.to_pin.net_count() > 0)
+      if (to_pin.net_count() > 0)
          {
-         to_net_no = this.to_pin.get_net_no(0);
+         to_net_no = to_pin.get_net_no(0);
          }
       else
          {
          to_net_no = -1;
          }
-      if (!i_brd.get_routing_board().check_change_net(this.from_pin, to_net_no))
+      if (!r_brd.check_change_net(from_pin, to_net_no))
          {
          i_brd.screen_messages.set_status_message(resources.getString("pin_not_swapped_because_it_is_already_connected"));
-         return this.cancel();
+         return cancel();
          }
-      if (!i_brd.get_routing_board().check_change_net(this.to_pin, from_net_no))
+      if (!r_brd.check_change_net(to_pin, from_net_no))
          {
          i_brd.screen_messages.set_status_message(resources.getString("pin_not_swapped_because_second_pin_is_already_connected"));
-         return this.cancel();
+         return cancel();
          }
-      i_brd.get_routing_board().generate_snapshot();
-      this.from_pin.swap(this.to_pin);
-      for (int i = 0; i < this.from_pin.net_count(); ++i)
+      r_brd.generate_snapshot();
+      from_pin.swap(to_pin);
+      for (int i = 0; i < from_pin.net_count(); ++i)
          {
-         i_brd.update_ratsnest(this.from_pin.get_net_no(i));
+         i_brd.update_ratsnest(from_pin.get_net_no(i));
          }
-      for (int i = 0; i < this.to_pin.net_count(); ++i)
+      for (int i = 0; i < to_pin.net_count(); ++i)
          {
-         i_brd.update_ratsnest(this.to_pin.get_net_no(i));
+         i_brd.update_ratsnest(to_pin.get_net_no(i));
          }
       i_brd.screen_messages.set_status_message(resources.getString("pin_swap_completed"));
-      return this.return_state;
+      return return_state;
       }
 
    public void draw(java.awt.Graphics p_graphics)

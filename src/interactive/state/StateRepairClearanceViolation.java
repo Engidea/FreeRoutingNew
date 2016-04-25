@@ -30,7 +30,6 @@ import main.Ldbg;
 import main.Mdbg;
 import rules.RuleNets;
 import rules.RuleViaInfoList;
-import board.RoutingBoard;
 import board.infos.BrdItemViolation;
 import board.items.BrdItem;
 
@@ -44,19 +43,17 @@ public final class StateRepairClearanceViolation extends StateInteractive
    private static final String classname="StateRepairClearanceViolation.";
    
    private static final int SHOVE_TRACE_WIDTH=7;
-   
-   private final RoutingBoard r_board;
+
    
    StateRepairClearanceViolation (  StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super( p_parent_state, p_board_handling, p_logfile);
-      r_board = i_brd.get_routing_board();
       }
    
    
    private IteraRoute newIteraRoute (PlaPointInt start_point, int layer_no)
       {
-      int[] shove_trace_width_arr = new int[r_board.get_layer_count()];
+      int[] shove_trace_width_arr = new int[r_brd.get_layer_count()];
       boolean[] layer_active_arr = new boolean[shove_trace_width_arr.length];
       
       for (int index = 0; index < shove_trace_width_arr.length; ++index)
@@ -78,7 +75,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
             true,
             null, 
             null, 
-            r_board, 
+            r_brd, 
             false, 
             false, 
             i_brd.itera_settings);
@@ -110,7 +107,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
       
       i_brd.repaint();
 
-      r_board.remove_items_unfixed(r_board.get_connectable_items(RuleNets.HIDDEN_NET_NO));
+      r_brd.remove_items_unfixed(r_brd.get_connectable_items(RuleNets.HIDDEN_NET_NO));
       }
    
    /**

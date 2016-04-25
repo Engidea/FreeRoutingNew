@@ -45,7 +45,6 @@ import main.Mdbg;
 import rules.RuleNet;
 import autoroute.varie.ArtResult;
 import board.BrdConnectable;
-import board.RoutingBoard;
 import board.algo.AlgoOptimizeVia;
 import board.infos.BrdComponent;
 import board.items.BrdAbit;
@@ -64,7 +63,6 @@ import board.varie.ItemFixState;
 public final class StateSelectedItem extends StateInteractive
    {
    private static final String classname = "SelectedItemState.";
-   private final RoutingBoard r_board;
 
    private Set<BrdItem> items_list;
    
@@ -86,11 +84,8 @@ public final class StateSelectedItem extends StateInteractive
    private StateSelectedItem(Set<BrdItem> p_item_list, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
-      r_board = i_brd.get_routing_board();
       
       items_list = p_item_list;
-      
-      
       }
 
    /**
@@ -233,19 +228,18 @@ public final class StateSelectedItem extends StateInteractive
     */
    public StateInteractive assign_items_to_new_net()
       {
-      RoutingBoard board = i_brd.get_routing_board();
       // make the situation restorable by undo
-      board.generate_snapshot();
+      r_brd.generate_snapshot();
       
       boolean items_already_connected = false;
       
-      RuleNet new_net = board.brd_rules.nets.new_net();
+      RuleNet new_net = r_brd.brd_rules.nets.new_net();
 
       for ( BrdItem curr_item : items_list)
          {
          if (curr_item instanceof BrdArea)
             {
-            board.make_conductive((BrdArea) curr_item, new_net.net_number);
+            r_brd.make_conductive((BrdArea) curr_item, new_net.net_number);
             }
          else if (curr_item instanceof BrdAbit)
             {
@@ -280,8 +274,7 @@ public final class StateSelectedItem extends StateInteractive
     */
    public StateInteractive assign_items_to_new_group()
       {
-      RoutingBoard board = i_brd.get_routing_board();
-      board.generate_snapshot();
+      r_brd.generate_snapshot();
       // Take the gravity point of all item centers for the location of the new component.
       double gravity_x = 0;
       double gravity_y = 0;
@@ -320,19 +313,19 @@ public final class StateSelectedItem extends StateInteractive
          String pin_name = (new Integer(i + 1)).toString();
          pin_arr[i] = new LibPackagePin(pin_name, curr_via.get_padstack().pads_no, rel_coor, 0);
          }
-      LibPackage new_package = board.library.packages.add(pin_arr);
-      BrdComponent new_component = board.brd_components.add(gravity_point, 0, true, new_package);
+      LibPackage new_package = r_brd.library.packages.add(pin_arr);
+      BrdComponent new_component = r_brd.brd_components.add(gravity_point, 0, true, new_package);
       it = items_list.iterator();
       for (int i = 0; i < pin_arr.length; ++i)
          {
          BrdAbitVia curr_via = (BrdAbitVia) it.next();
-         board.remove_item(curr_via);
+         r_brd.remove_item(curr_via);
          int[] net_no_arr = new int[curr_via.net_count()];
          for (int j = 0; j < net_no_arr.length; ++j)
             {
             net_no_arr[j] = curr_via.get_net_no(j);
             }
-         board.insert_pin(new_component.id_no, i, net_no_arr, curr_via.clearance_class_no(), curr_via.get_fixed_state());
+         r_brd.insert_pin(new_component.id_no, i, net_no_arr, curr_via.clearance_class_no(), curr_via.get_fixed_state());
          }
 
       actlog_start_scope(LogfileScope.ASSIGN_SELECTED_TO_NEW_GROUP);
@@ -346,7 +339,7 @@ public final class StateSelectedItem extends StateInteractive
     */
    public StateInteractive delete_items()
       {
-      i_brd.get_routing_board().generate_snapshot();
+      r_brd.generate_snapshot();
 
       // calculate the changed nets for updating the ratsnest
       Set<Integer> changed_nets = new TreeSet<Integer>();
@@ -450,7 +443,7 @@ public final class StateSelectedItem extends StateInteractive
          
          boolean contains_plane = false;
          
-         RuleNet route_net = i_brd.get_routing_board().brd_rules.nets.get(curr_item.get_net_no(0));
+         RuleNet route_net = r_brd.brd_rules.nets.get(curr_item.get_net_no(0));
          
          if (route_net != null)
             {
@@ -464,13 +457,13 @@ public final class StateSelectedItem extends StateInteractive
          else
             via_costs = i_brd.itera_settings.autoroute_settings.get_via_costs();
          
-         i_brd.get_routing_board().start_marking_changed_area();
+         r_brd.start_marking_changed_area();
          
          ArtResult autoroute_result;
          
          try
             {
-            autoroute_result = i_brd.get_routing_board().autoroute(curr_item, i_brd.itera_settings, via_costs, p_thread );   
+            autoroute_result = r_brd.autoroute(curr_item, i_brd.itera_settings, via_costs, p_thread );   
             }
          catch ( Exception exc )
             {
@@ -558,8 +551,8 @@ public final class StateSelectedItem extends StateInteractive
             interrupted = true;
             break;
             }
-         i_brd.get_routing_board().start_marking_changed_area();
-         ArtResult autoroute_result = i_brd.get_routing_board().fanout(curr_pin, i_brd.itera_settings, -1, p_stoppable_thread );
+         r_brd.start_marking_changed_area();
+         ArtResult autoroute_result = r_brd.fanout(curr_pin, i_brd.itera_settings, -1, p_stoppable_thread );
          if (autoroute_result == ArtResult.ROUTED)
             {
             ++found_count;
@@ -622,9 +615,9 @@ public final class StateSelectedItem extends StateInteractive
       String start_message = resources.getString("pull_tight") + " " + resources.getString("stop_message");
       i_brd.screen_messages.set_status_message(start_message);
       
-      i_brd.get_routing_board().start_marking_changed_area();
+      r_brd.start_marking_changed_area();
       
-      AlgoOptimizeVia optimize_via = new AlgoOptimizeVia(i_brd.get_routing_board());
+      AlgoOptimizeVia optimize_via = new AlgoOptimizeVia(r_brd);
 
       for (BrdItem curr_item : items_list)
          {
@@ -657,7 +650,7 @@ public final class StateSelectedItem extends StateInteractive
 
          TimeLimitStoppable t_limit = new TimeLimitStoppable(10, p_thread);
 
-         i_brd.get_routing_board().optimize_changed_area(new int[0], null, i_brd.itera_settings.trace_pull_tight_accuracy, null, t_limit, null);
+         r_brd.optimize_changed_area(new int[0], null, i_brd.itera_settings.trace_pull_tight_accuracy, null, t_limit, null);
          }
 
       if (is_stop_requested(p_thread))
@@ -685,7 +678,7 @@ public final class StateSelectedItem extends StateInteractive
     */
    public StateInteractive assign_clearance_class(int p_cl_class_index)
       {
-      if (p_cl_class_index < 0 || p_cl_class_index >= r_board.brd_rules.clearance_matrix.get_class_count())
+      if (p_cl_class_index < 0 || p_cl_class_index >= r_brd.brd_rules.clearance_matrix.get_class_count())
          {
          return return_state;
          }
@@ -693,7 +686,7 @@ public final class StateSelectedItem extends StateInteractive
       actlog_start_scope(LogfileScope.ASSIGN_CLEARANCE_CLASS,p_cl_class_index);
 
       // make the situation restorable by undo
-      r_board.generate_snapshot();
+      r_brd.generate_snapshot();
       for (BrdItem curr_item : items_list)
          {
          if (curr_item.clearance_class_no() == p_cl_class_index)
@@ -729,7 +722,7 @@ public final class StateSelectedItem extends StateInteractive
          {
          int curr_net_no = an_int.intValue();
          
-         new_selected_items.addAll(i_brd.get_routing_board().get_connectable_items(curr_net_no));
+         new_selected_items.addAll(r_brd.get_connectable_items(curr_net_no));
          }
       
       items_list = new_selected_items;
@@ -769,7 +762,7 @@ public final class StateSelectedItem extends StateInteractive
       while (it2.hasNext())
          {
          int curr_group_no = it2.next();
-         new_selected_items.addAll(i_brd.get_routing_board().get_component_items(curr_group_no));
+         new_selected_items.addAll(r_brd.get_component_items(curr_group_no));
          }
       if (new_selected_items.isEmpty())
          {

@@ -20,10 +20,10 @@
 
 package interactive.state;
 
-import interactive.Actlog;
-import interactive.IteraBoard;
 import freert.planar.PlaPointFloat;
 import freert.varie.ItemClass;
+import interactive.Actlog;
+import interactive.IteraBoard;
 
 /**
  * State for interactive routing by adding corners with the left mouse button.
@@ -45,7 +45,7 @@ public class StateRouteStitch extends StateRoute
    public StateInteractive add_corner(PlaPointFloat p_location)
       {
       // make the current situation restorable by undo
-      i_brd.get_routing_board().generate_snapshot();
+      r_brd.generate_snapshot();
       return super.add_corner(p_location);
       }
 
@@ -82,9 +82,9 @@ public class StateRouteStitch extends StateRoute
       double display_width = i_brd.get_trace_halfwidth(route.net_no_arr[0], i_brd.itera_settings.layer_no);
       int clearance_draw_width = 50;
       double radius_with_clearance = display_width;
-      rules.NetClass default_net_class = i_brd.get_routing_board().brd_rules.get_default_net_class();
+      rules.NetClass default_net_class = r_brd.brd_rules.get_default_net_class();
       int cl_class = default_net_class.default_item_clearance_classes.get(ItemClass.TRACE);
-      radius_with_clearance += i_brd.get_routing_board().get_clearance(cl_class, cl_class, i_brd.itera_settings.layer_no);
+      radius_with_clearance += r_brd.get_clearance(cl_class, cl_class, i_brd.itera_settings.layer_no);
       i_brd.gdi_context.draw(draw_points, display_width, draw_color, p_graphics, 0.5);
       // draw the clearance boundary around the end point
       i_brd.gdi_context.draw_circle(draw_points[1], radius_with_clearance, clearance_draw_width, draw_color, p_graphics, 0.5);

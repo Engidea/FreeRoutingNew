@@ -20,14 +20,6 @@
 
 package interactive.state;
 
-import freert.planar.PlaArea;
-import freert.planar.PlaCircle;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaShape;
-import freert.planar.PolylineArea;
-import freert.planar.ShapePolygon;
-import freert.planar.ShapePolyline;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
@@ -37,6 +29,14 @@ import board.items.BrdArea;
 import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaArea;
+import freert.planar.PlaCircle;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.PolylineArea;
+import freert.planar.ShapePolygon;
+import freert.planar.ShapePolyline;
 
 /**
  * Interactive cutting a hole into an obstacle shape
@@ -72,7 +72,7 @@ public class StateConstructHole extends StateConstructCorner
       PlaPointInt pick_location = p_location.round();
       ItemSelectionChoice[] selectable_choices = { ItemSelectionChoice.KEEPOUT, ItemSelectionChoice.VIA_KEEPOUT, ItemSelectionChoice.CONDUCTION };
       ItemSelectionFilter selection_filter = new ItemSelectionFilter(selectable_choices);
-      Collection<BrdItem> found_items = i_brd.get_routing_board().pick_items(pick_location, i_brd.itera_settings.layer_no, selection_filter);
+      Collection<BrdItem> found_items = r_brd.pick_items(pick_location, i_brd.itera_settings.layer_no, selection_filter);
       if (found_items.size() != 1)
          {
          i_brd.screen_messages.set_status_message(resources.getString("no_item_found_for_adding_hole"));
@@ -171,17 +171,17 @@ public class StateConstructHole extends StateConstructCorner
             }
          else
             {
-            observers_activated = !i_brd.get_routing_board().observers_active();
+            observers_activated = !r_brd.observers_active();
             if (observers_activated)
                {
-               i_brd.get_routing_board().start_notify_observers();
+               r_brd.start_notify_observers();
                }
-            i_brd.get_routing_board().generate_snapshot();
-            i_brd.get_routing_board().remove_item(item_to_modify);
-            i_brd.get_routing_board().insert_obstacle(new_obs_area, item_to_modify.get_layer(), item_to_modify.clearance_class_no(), board.varie.ItemFixState.UNFIXED);
+            r_brd.generate_snapshot();
+            r_brd.remove_item(item_to_modify);
+            r_brd.insert_obstacle(new_obs_area, item_to_modify.get_layer(), item_to_modify.clearance_class_no(), board.varie.ItemFixState.UNFIXED);
             if (observers_activated)
                {
-               i_brd.get_routing_board().end_notify_observers();
+               r_brd.end_notify_observers();
                observers_activated = false;
                }
             }

@@ -34,7 +34,6 @@ import autoroute.expand.ExpandRoomFreespaceIncomplete;
 import autoroute.maze.MazeSearch;
 import autoroute.maze.MazeSearchResult;
 import board.BrdConnectable;
-import board.RoutingBoard;
 import board.items.BrdItem;
 import board.varie.BrdStopConnection;
 import freert.planar.PlaPointFloat;
@@ -61,9 +60,9 @@ public final class StateExpandTest extends StateInteractive
    private void expand_test_init(PlaPointFloat p_location)
       {
       // look if an autoroute can be started at the input location
-      RoutingBoard board = i_brd.get_routing_board();
+
       int layer = i_brd.itera_settings.layer_no;
-      Collection<BrdItem> found_items = board.pick_items(p_location.round(), layer);
+      Collection<BrdItem> found_items = r_brd.pick_items(p_location.round(), layer);
       BrdItem route_item = null;
       int route_net_no = 0;
 
@@ -82,12 +81,12 @@ public final class StateExpandTest extends StateInteractive
             }
          }
       
-      control_settings = new ArtControl(i_brd.get_routing_board(), route_net_no, i_brd.itera_settings);
+      control_settings = new ArtControl(r_brd, route_net_no, i_brd.itera_settings);
       control_settings.ripup_pass_no = i_brd.itera_settings.autoroute_settings.pass_no_get();
       control_settings.ripup_costs = control_settings.ripup_pass_no * i_brd.itera_settings.autoroute_settings.get_start_ripup_costs();
       control_settings.vias_allowed = false;
 
-      autoroute_engine = new ArtEngine(board, route_net_no, control_settings.trace_clearance_class_no, null );
+      autoroute_engine = new ArtEngine(r_brd, route_net_no, control_settings.trace_clearance_class_no, null );
       
       if (route_item == null)
          {
@@ -267,8 +266,8 @@ public final class StateExpandTest extends StateInteractive
       
       SortedSet<BrdItem> ripped_item_list = new TreeSet<BrdItem>();
       locate_connection = ArtConnectionLocate.get_instance(search_result, control_settings, autoroute_engine.autoroute_search_tree,
-            i_brd.get_routing_board().brd_rules.get_trace_snap_angle(), ripped_item_list );
-      i_brd.get_routing_board().generate_snapshot();
+            r_brd.brd_rules.get_trace_snap_angle(), ripped_item_list );
+      r_brd.generate_snapshot();
       
       SortedSet<BrdItem> ripped_connections = new TreeSet<BrdItem>();
       for (BrdItem curr_ripped_item : ripped_item_list)
@@ -276,9 +275,9 @@ public final class StateExpandTest extends StateInteractive
          ripped_connections.addAll(curr_ripped_item.get_connection_items(BrdStopConnection.VIA));
          }
       
-      i_brd.get_routing_board().remove_items_unfixed(ripped_connections);
+      r_brd.remove_items_unfixed(ripped_connections);
       
-      ArtConnectionInsert insert_algo = new ArtConnectionInsert( i_brd.get_routing_board(), control_settings);
+      ArtConnectionInsert insert_algo = new ArtConnectionInsert( r_brd, control_settings);
       
       insert_algo.insert(locate_connection);
       }

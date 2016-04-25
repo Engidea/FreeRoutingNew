@@ -20,17 +20,16 @@
 
 package interactive.state;
 
-import freert.planar.PlaCircle;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.ShapeConvex;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import rules.BoardRules;
-import board.RoutingBoard;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaCircle;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapeConvex;
 
 /**
  * Interactive creation of a circle obstacle
@@ -85,7 +84,7 @@ public class StateCircleConstrut extends StateInteractive
       int radius = (int) Math.round(circle_radius);
       int layer = i_brd.itera_settings.layer_no;
       int cl_class;
-      RoutingBoard board = i_brd.get_routing_board();
+
       cl_class = BoardRules.clearance_class_none;
       boolean construction_succeeded = (circle_radius > 0);
       ShapeConvex obstacle_shape = null;
@@ -93,31 +92,31 @@ public class StateCircleConstrut extends StateInteractive
          {
 
          obstacle_shape = new PlaCircle(center, radius);
-         if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+         if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
             {
             obstacle_shape = obstacle_shape.bounding_box();
             }
-         else if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
+         else if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
             {
             obstacle_shape = obstacle_shape.bounding_octagon();
             }
-         construction_succeeded = board.check_shape(obstacle_shape, layer, new int[0], cl_class);
+         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, new int[0], cl_class);
          }
       if (construction_succeeded)
          {
          i_brd.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
 
          // insert the new shape as keepout
-         this.observers_activated = !i_brd.get_routing_board().observers_active();
+         this.observers_activated = r_brd.observers_active();
          if (this.observers_activated)
             {
-            i_brd.get_routing_board().start_notify_observers();
+            r_brd.start_notify_observers();
             }
-         board.generate_snapshot();
-         board.insert_obstacle(obstacle_shape, layer, cl_class, ItemFixState.UNFIXED);
+         r_brd.generate_snapshot();
+         r_brd.insert_obstacle(obstacle_shape, layer, cl_class, ItemFixState.UNFIXED);
          if (this.observers_activated)
             {
-            i_brd.get_routing_board().end_notify_observers();
+            r_brd.end_notify_observers();
             this.observers_activated = false;
             }
          }

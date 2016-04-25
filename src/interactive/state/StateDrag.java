@@ -20,7 +20,6 @@
 
 package interactive.state;
 
-import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import java.util.Collection;
@@ -28,6 +27,7 @@ import java.util.Iterator;
 import board.items.BrdAbit;
 import board.items.BrdItem;
 import board.items.BrdTrace;
+import freert.planar.PlaPointFloat;
 
 /**
  * Class implementing functionality when the mouse is dragged on a routing board
@@ -125,13 +125,13 @@ public abstract class StateDrag extends StateInteractive
          {
          // an error occurred
          java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
-         i_brd.get_routing_board().undo(changed_nets);
+         r_brd.undo(changed_nets);
          for (Integer changed_net : changed_nets)
             {
             i_brd.update_ratsnest(changed_net);
             }
          }
-      if (this.something_dragged)
+      if (something_dragged)
          {
          if (actlog != null)
             {
@@ -144,7 +144,7 @@ public abstract class StateDrag extends StateInteractive
    @Override
    public StateInteractive complete()
       {
-      return this.button_released();
+      return button_released();
       }
 
    @Override

@@ -79,9 +79,9 @@ public class StateSelectRegionItems extends StateSelectRegion
             {
             actlog.add_corner(corner2);
             }
-         this.select_all_in_region();
+         select_all_in_region();
          }
-      return this.return_state;
+      return return_state;
       }
 
    /**
@@ -89,8 +89,8 @@ public class StateSelectRegionItems extends StateSelectRegion
     */
    private void select_all_in_region()
       {
-      PlaPointInt p1 = this.corner1.round();
-      PlaPointInt p2 = this.corner2.round();
+      PlaPointInt p1 = corner1.round();
+      PlaPointInt p2 = corner2.round();
 
       ShapeTileBox b = new ShapeTileBox(Math.min(p1.v_x, p2.v_x), Math.min(p1.v_y, p2.v_y), Math.max(p1.v_x, p2.v_x), Math.max(p1.v_y, p2.v_y));
       int select_layer;
@@ -102,7 +102,7 @@ public class StateSelectRegionItems extends StateSelectRegion
          {
          select_layer = i_brd.itera_settings.layer_no;
          }
-      Set<BrdItem> found_items = i_brd.itera_settings.item_selection_filter.filter(i_brd.get_routing_board().overlapping_items(b, select_layer));
+      Set<BrdItem> found_items = i_brd.itera_settings.item_selection_filter.filter(r_brd.overlapping_items(b, select_layer));
       if (i_brd.itera_settings.select_on_all_visible_layers)
          {
          // remove items, which are not visible
@@ -132,7 +132,7 @@ public class StateSelectRegionItems extends StateSelectRegion
             }
          else
             {
-            return_state = StateSelectedItem.get_instance(found_items, this.return_state, i_brd, actlog);
+            return_state = StateSelectedItem.get_instance(found_items, return_state, i_brd, actlog);
             }
          }
       else

@@ -63,11 +63,11 @@ public class StateDragItem extends StateDrag
       PlaPointInt to_location = p_to_location.round();
       PlaPointInt from_location = this.previous_location.round();
       
-      if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
          {
          to_location = to_location.orthogonal_projection(from_location);
          }
-      else if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
          {
          to_location = to_location.fortyfive_degree_projection(from_location);
          }
@@ -100,7 +100,7 @@ public class StateDragItem extends StateDrag
             {
             // reduce evtl. the shove distance to make the check shove function
             // work properly, if more than 1 trace have to be shoved.
-            double sample_width = 2 * i_brd.get_routing_board().get_min_trace_half_width();
+            double sample_width = 2 * r_brd.get_min_trace_half_width();
             if (length > sample_width)
                {
                rel_coor = rel_coor.change_length_approx(sample_width);
@@ -113,13 +113,13 @@ public class StateDragItem extends StateDrag
          if (!something_dragged)
             {
             // Initializations for the first time dragging
-            observers_activated = !i_brd.get_routing_board().observers_active();
+            observers_activated = !r_brd.observers_active();
             if (observers_activated)
                {
-               i_brd.get_routing_board().start_notify_observers();
+               r_brd.start_notify_observers();
                }
             // make the situation restorable by undo
-            i_brd.get_routing_board().generate_snapshot();
+            r_brd.generate_snapshot();
       
             // Delayed till here because otherwise the mouse might have been only clicked for selecting and not pressed for moving.
             if (actlog != null)  actlog.start_scope(LogfileScope.DRAGGING_ITEMS, this.previous_location);
@@ -142,7 +142,7 @@ public class StateDragItem extends StateDrag
       {
       if (this.observers_activated)
          {
-         i_brd.get_routing_board().end_notify_observers();
+         r_brd.end_notify_observers();
          this.observers_activated = false;
          }
       if (actlog != null && something_dragged)
@@ -161,7 +161,7 @@ public class StateDragItem extends StateDrag
             }
          else
             {
-            Collection<BrdItem> moved_items = i_brd.get_routing_board().get_component_items(item_to_move.get_component_no());
+            Collection<BrdItem> moved_items = r_brd.get_component_items(item_to_move.get_component_no());
             Set<Integer> changed_nets = new TreeSet<Integer>();
             Iterator<BrdItem> it = moved_items.iterator();
             while (it.hasNext())

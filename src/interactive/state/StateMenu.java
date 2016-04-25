@@ -155,7 +155,7 @@ public class StateMenu extends StateInteractive
       else if (p_key_char == '+')
          {
          // increase the current layer to the next signal layer
-         board.BrdLayerStructure layer_structure = i_brd.get_routing_board().layer_structure;
+         board.BrdLayerStructure layer_structure = r_brd.layer_structure;
          int current_layer_no = i_brd.itera_settings.layer_no;
          for (;;)
             {
@@ -173,7 +173,7 @@ public class StateMenu extends StateInteractive
       else if (p_key_char == '-')
          {
          // decrease the current layer to the previous signal layer
-         board.BrdLayerStructure layer_structure = i_brd.get_routing_board().layer_structure;
+         board.BrdLayerStructure layer_structure = r_brd.layer_structure;
          int current_layer_no = i_brd.itera_settings.layer_no;
          for (;;)
             {

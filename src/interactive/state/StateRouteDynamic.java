@@ -53,7 +53,7 @@ public final class StateRouteDynamic extends StateRoute
       {
       if (observers_activated)
          {
-         i_brd.get_routing_board().end_notify_observers();
+         r_brd.end_notify_observers();
          observers_activated = false;
          }
       

@@ -149,7 +149,6 @@ public class StateCopyItem extends StateInteractive
       // Contains old and new padstacks after layer change.
       Map<LibPadstack, LibPadstack> padstack_pairs = new TreeMap<LibPadstack, LibPadstack>(); 
 
-      RoutingBoard board = i_brd.get_routing_board();
       if (layer_changed)
          {
          // create new via padstacks
@@ -160,7 +159,7 @@ public class StateCopyItem extends StateInteractive
             if (curr_ob instanceof BrdAbitVia)
                {
                BrdAbitVia curr_via = (BrdAbitVia) curr_ob;
-               LibPadstack new_padstack = change_padstack_layers(curr_via.get_padstack(), current_layer, board, padstack_pairs);
+               LibPadstack new_padstack = change_padstack_layers(curr_via.get_padstack(), current_layer, r_brd, padstack_pairs);
                curr_via.set_padstack(new_padstack);
                }
             }
@@ -192,7 +191,7 @@ public class StateCopyItem extends StateInteractive
                }
             else
                {
-               BrdComponent old_component = board.brd_components.get(curr_cmp_no);
+               BrdComponent old_component = r_brd.brd_components.get(curr_cmp_no);
                if (old_component == null)
                   {
                   System.out.println("CopyItemState: component not found");
@@ -207,22 +206,22 @@ public class StateCopyItem extends StateInteractive
                   for (int i = 0; i < new_pin_arr.length; ++i)
                      {
                      LibPackagePin old_pin = old_component.get_package().get_pin(i);
-                     LibPadstack old_padstack = board.library.padstacks.get(old_pin.padstack_no);
+                     LibPadstack old_padstack = r_brd.library.padstacks.get(old_pin.padstack_no);
                      if (old_padstack == null)
                         {
                         System.out.println("CopyItemState.insert: package padstack not found");
                         return;
                         }
-                     LibPadstack new_padstack = change_padstack_layers(old_padstack, current_layer, board, padstack_pairs);
+                     LibPadstack new_padstack = change_padstack_layers(old_padstack, current_layer, r_brd, padstack_pairs);
                      new_pin_arr[i] = new LibPackagePin(old_pin.name, new_padstack.pads_no, old_pin.relative_location, old_pin.rotation_in_degree);
                      }
-                  new_package = board.library.packages.add(new_pin_arr);
+                  new_package = r_brd.library.packages.add(new_pin_arr);
                   }
                else
                   {
                   new_package = old_component.get_package();
                   }
-               BrdComponent new_component = board.brd_components.add(new_location, old_component.get_rotation_in_degree(), old_component.is_on_front(), new_package);
+               BrdComponent new_component = r_brd.brd_components.add(new_location, old_component.get_rotation_in_degree(), old_component.is_on_front(), new_package);
                copied_components.add(new_component);
                new_cmp_no = new_component.id_no;
                cmp_no_pairs.put(new Integer(curr_cmp_no), new Integer(new_cmp_no));
@@ -241,10 +240,10 @@ public class StateCopyItem extends StateInteractive
             if (first_time)
                {
                // make the current situation restorable by undo
-               board.generate_snapshot();
+               r_brd.generate_snapshot();
                first_time = false;
                }
-            board.insert_item(curr_item.copy(0));
+            r_brd.insert_item(curr_item.copy(0));
             }
          else
             {

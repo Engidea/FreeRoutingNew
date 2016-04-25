@@ -20,12 +20,12 @@
 
 package interactive.state;
 
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import java.util.LinkedList;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 
 /**
  * Common class for constructing an obstacle with a polygonal shape.
@@ -59,9 +59,9 @@ public class StateConstructCorner extends StateInteractive
     */
    public StateInteractive add_corner(PlaPointFloat p_location)
       {
-      PlaPointInt location = this.snap_to_restriction(p_location.round());
+      PlaPointInt location = snap_to_restriction(p_location.round());
       // make shure that the coordinates are integer
-      this.corner_list.add(location);
+      corner_list.add(location);
       i_brd.repaint();
       if (actlog != null)
          {
@@ -82,7 +82,7 @@ public class StateConstructCorner extends StateInteractive
       {
       super.mouse_moved();
       PlaPointInt curr_mouse_pos = i_brd.get_current_mouse_position().round();
-      this.snapped_mouse_position = (this.snap_to_restriction(curr_mouse_pos)).to_float();
+      snapped_mouse_position = (snap_to_restriction(curr_mouse_pos)).to_float();
       i_brd.repaint();
       return this;
       }
@@ -98,7 +98,7 @@ public class StateConstructCorner extends StateInteractive
    public void draw(java.awt.Graphics p_graphics)
       {
       int corner_count = corner_list.size();
-      if (this.snapped_mouse_position != null)
+      if (snapped_mouse_position != null)
          {
          ++corner_count;
          }
@@ -108,13 +108,13 @@ public class StateConstructCorner extends StateInteractive
          {
          corners[i] = (it.next()).to_float();
          }
-      if (this.snapped_mouse_position == null)
+      if (snapped_mouse_position == null)
          {
          corners[corners.length - 1] = it.next().to_float();
          }
       else
          {
-         corners[corners.length - 1] = this.snapped_mouse_position;
+         corners[corners.length - 1] = snapped_mouse_position;
          }
       i_brd.gdi_context.draw(corners, 300, java.awt.Color.white, p_graphics, 0.5);
       }
@@ -124,18 +124,18 @@ public class StateConstructCorner extends StateInteractive
     */
    protected void add_corner_for_snap_angle()
       {
-      if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE)
+      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE)
          {
          return;
          }
       PlaPointInt first_corner = corner_list.getFirst();
       PlaPointInt last_corner = corner_list.getLast();
       PlaPointInt add_corner = null;
-      if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
          {
          add_corner = last_corner.ninety_degree_corner(first_corner, true);
          }
-      else if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
          {
          add_corner = last_corner.fortyfive_degree_corner(first_corner, true);
          }
@@ -152,12 +152,12 @@ public class StateConstructCorner extends StateInteractive
       {
       PlaPointInt result;
       boolean list_empty = (corner_list.size() == 0);
-      if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE && !list_empty)
+      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE && !list_empty)
          {
          PlaPointInt last_corner = corner_list.getLast();
          result = p_point.orthogonal_projection(last_corner);
          }
-      else if (i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE && !list_empty)
+      else if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE && !list_empty)
          {
          PlaPointInt last_corner = corner_list.getLast();
          result = p_point.fortyfive_degree_projection(last_corner);

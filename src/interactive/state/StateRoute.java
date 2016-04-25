@@ -105,7 +105,9 @@ public class StateRoute extends StateInteractive
          return null;
          }
       
+      // uff, this static stuff is really annoying....
       RoutingBoard routing_board = p_board_handling.get_routing_board();
+      
       int[] trace_half_widths = new int[routing_board.get_layer_count()];
       boolean[] layer_active_arr = new boolean[trace_half_widths.length];
       for (int i = 0; i < trace_half_widths.length; ++i)
@@ -304,7 +306,7 @@ public class StateRoute extends StateInteractive
       if (Character.isDigit(p_key_char))
          {
          // change to the p_key_char-the signal layer
-         board.BrdLayerStructure layer_structure = i_brd.get_routing_board().layer_structure;
+         board.BrdLayerStructure layer_structure = r_brd.layer_structure;
          int d = Character.digit(p_key_char, 10);
          d = Math.min(d, layer_structure.signal_layer_count());
          // Board layers start at 0, keyboard input for layers starts at 1.
@@ -320,7 +322,7 @@ public class StateRoute extends StateInteractive
       else if (p_key_char == '+')
          {
          // change to the next signal layer
-         BrdLayerStructure layer_structure = i_brd.get_routing_board().layer_structure;
+         BrdLayerStructure layer_structure = r_brd.layer_structure;
          int current_layer_no = i_brd.itera_settings.layer_no;
          for (;;)
             {
@@ -338,7 +340,7 @@ public class StateRoute extends StateInteractive
       else if (p_key_char == '-')
          {
          // change to the to the previous signal layer
-         board.BrdLayerStructure layer_structure = i_brd.get_routing_board().layer_structure;
+         board.BrdLayerStructure layer_structure = r_brd.layer_structure;
          int current_layer_no = i_brd.itera_settings.layer_no;
          for (;;)
             {
@@ -368,7 +370,7 @@ public class StateRoute extends StateInteractive
       {
       boolean route_completed = route.next_corner(p_location);
       
-      String layer_string = i_brd.get_routing_board().layer_structure.get_name(route.nearest_target_layer());
+      String layer_string = r_brd.layer_structure.get_name(route.nearest_target_layer());
       
       i_brd.screen_messages.set_target_layer(layer_string);
       
@@ -383,7 +385,7 @@ public class StateRoute extends StateInteractive
 
          if (observers_activated)
             {
-            i_brd.get_routing_board().end_notify_observers();
+            r_brd.end_notify_observers();
             observers_activated = false;
             }
 
@@ -403,22 +405,22 @@ public class StateRoute extends StateInteractive
 
    public StateInteractive cancel()
       {
-      BrdTrace tail = i_brd.get_routing_board().get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_no_arr);
+      BrdTrace tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_no_arr);
       if (tail != null)
          {
          Collection<BrdItem> remove_items = tail.get_connection_items(BrdStopConnection.VIA);
          if (i_brd.itera_settings.push_enabled)
             {
-            i_brd.get_routing_board().remove_items_and_pull_tight(remove_items, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pull_tight_accuracy, false);
+            r_brd.remove_items_and_pull_tight(remove_items, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pull_tight_accuracy, false);
             }
          else
             {
-            i_brd.get_routing_board().remove_items_unfixed(remove_items);
+            r_brd.remove_items_unfixed(remove_items);
             }
          }
       if (observers_activated)
          {
-         i_brd.get_routing_board().end_notify_observers();
+         r_brd.end_notify_observers();
          observers_activated = false;
          }
       if (actlog != null)
@@ -436,11 +438,11 @@ public class StateRoute extends StateInteractive
    public boolean change_layer_action(int p_new_layer)
       {
       boolean result = true;
-      if (p_new_layer >= 0 && p_new_layer < i_brd.get_routing_board().get_layer_count())
+      if (p_new_layer >= 0 && p_new_layer < r_brd.get_layer_count())
          {
          if (route != null && !route.is_layer_active(p_new_layer))
             {
-            String layer_name = i_brd.get_routing_board().layer_structure.get_name(p_new_layer);
+            String layer_name = r_brd.layer_structure.get_name(p_new_layer);
             i_brd.screen_messages.set_status_message(resources.getString("layer_not_changed_because_layer") + " " + layer_name + " " + resources.getString("is_not_active_for_the_current_net"));
             }
          
@@ -451,7 +453,7 @@ public class StateRoute extends StateInteractive
             // check, if the layer change resulted in a connection to a power plane.
             int old_layer = i_brd.itera_settings.get_layer_no();
             ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
-            Collection<BrdItem> picked_items = i_brd.get_routing_board().pick_items(route.get_last_corner(), old_layer, selection_filter);
+            Collection<BrdItem> picked_items = r_brd.pick_items(route.get_last_corner(), old_layer, selection_filter);
             BrdAbitVia new_via = null;
             for (BrdItem curr_via : picked_items)
                {
@@ -501,10 +503,10 @@ public class StateRoute extends StateInteractive
             else
                {
                p_new_layer = i_brd.set_layer(p_new_layer);
-               String layer_name = i_brd.get_routing_board().layer_structure.get_name(p_new_layer);
+               String layer_name = r_brd.layer_structure.get_name(p_new_layer);
                i_brd.screen_messages.set_status_message(resources.getString("layer_changed_to") + " " + layer_name);
                // make the current situation restorable by undo
-               i_brd.get_routing_board().generate_snapshot();
+               r_brd.generate_snapshot();
                }
             if (actlog != null)
                {
@@ -513,10 +515,10 @@ public class StateRoute extends StateInteractive
             }
          else
             {
-            int shove_failing_layer = i_brd.get_routing_board().get_shove_failing_layer();
+            int shove_failing_layer = r_brd.get_shove_failing_layer();
             if (shove_failing_layer >= 0)
                {
-               String layer_name = i_brd.get_routing_board().layer_structure.get_name(i_brd.get_routing_board().get_shove_failing_layer());
+               String layer_name = r_brd.layer_structure.get_name(r_brd.get_shove_failing_layer());
                i_brd.screen_messages.set_status_message(resources.getString("layer_not_changed_because_of_obstacle_on_layer") + " " + layer_name);
                }
             else
@@ -575,7 +577,7 @@ public class StateRoute extends StateInteractive
       {
       if (route != null)
          {
-         rules.RuleNet curr_net = i_brd.get_routing_board().brd_rules.nets.get(route.net_no_arr[0]);
+         rules.RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_no_arr[0]);
          i_brd.screen_messages.set_status_message(resources.getString("routing_net") + " " + curr_net.name);
          }
       }

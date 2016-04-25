@@ -20,19 +20,18 @@
 
 package interactive.state;
 
-import freert.planar.PlaLineInt;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaSide;
-import freert.planar.ShapeTile;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Iterator;
 import rules.BoardRules;
-import board.RoutingBoard;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSide;
+import freert.planar.ShapeTile;
 
 /**
  * Class for interactive construction of a tile shaped obstacle
@@ -47,11 +46,11 @@ public class StateConstuctTile extends StateConstructCorner
    public StateConstuctTile(PlaPointFloat p_location, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
-      if (this.actlog != null)
+      if (actlog != null)
          {
          actlog.start_scope(LogfileScope.CREATING_TILE);
          }
-      this.add_corner(p_location);
+      add_corner(p_location);
       }
 
    /**
@@ -91,25 +90,25 @@ public class StateConstuctTile extends StateConstructCorner
             }
          edge_lines[corner_count - 1] = new PlaLineInt(prev_corner, first_corner);
          ShapeTile obstacle_shape = ShapeTile.get_instance(edge_lines);
-         RoutingBoard board = i_brd.get_routing_board();
+
          int layer = i_brd.itera_settings.layer_no;
          int cl_class = BoardRules.clearance_class_none;
 
-         construction_succeeded = board.check_shape(obstacle_shape, layer, new int[0], cl_class);
+         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, new int[0], cl_class);
          if (construction_succeeded)
             {
             // insert the new shape as keepout
-            this.observers_activated = !i_brd.get_routing_board().observers_active();
-            if (this.observers_activated)
+            observers_activated = !r_brd.observers_active();
+            if (observers_activated)
                {
-               i_brd.get_routing_board().start_notify_observers();
+               r_brd.start_notify_observers();
                }
-            board.generate_snapshot();
-            board.insert_obstacle(obstacle_shape, layer, cl_class, ItemFixState.UNFIXED);
-            if (this.observers_activated)
+            r_brd.generate_snapshot();
+            r_brd.insert_obstacle(obstacle_shape, layer, cl_class, ItemFixState.UNFIXED);
+            if (observers_activated)
                {
-               i_brd.get_routing_board().end_notify_observers();
-               this.observers_activated = false;
+               r_brd.end_notify_observers();
+               observers_activated = false;
                }
             }
          }
@@ -125,7 +124,7 @@ public class StateConstuctTile extends StateConstructCorner
          {
          actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
          }
-      return this.return_state;
+      return return_state;
       }
 
    /**
@@ -156,7 +155,7 @@ public class StateConstuctTile extends StateConstructCorner
             // side is ok, nothing to skip
             break;
             }
-         if (this.i_brd.get_routing_board().brd_rules.get_trace_snap_angle() != TraceAngleRestriction.FORTYFIVE_DEGREE)
+         if (r_brd.brd_rules.get_trace_snap_angle() != TraceAngleRestriction.FORTYFIVE_DEGREE)
             {
             // skip concave corner
             corner_arr[new_length - 2] = last_corner;
@@ -165,7 +164,7 @@ public class StateConstuctTile extends StateConstructCorner
          // In 45 degree case just skip last corner as nothing like the following
          // calculation for the 90 degree case to keep
          // the angle restrictions is implemented.
-         if (this.i_brd.get_routing_board().brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+         if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
             {
             // prevent generating a non orthogonal line by changing the previous corner
             PlaPointInt prev_prev_corner = null;
