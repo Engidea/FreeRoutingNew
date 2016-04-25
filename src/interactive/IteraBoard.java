@@ -1690,7 +1690,7 @@ public final class IteraBoard
       {
       PlaPointInt location = p_location.round();
       
-      Set<BrdItem> result = r_board.pick_items(location, itera_settings.layer_no, p_item_filter);
+      Set<BrdItem> result = r_board.pick_items(location, itera_settings.get_layer_no(), p_item_filter);
       
       if ( ! ( result.size() == 0 && itera_settings.select_on_all_visible_layers ) ) return result;
       

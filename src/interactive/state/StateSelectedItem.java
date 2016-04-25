@@ -371,11 +371,11 @@ public final class StateSelectedItem extends StateInteractive
       
       if (i_brd.itera_settings.push_enabled)
          {
-         all_items_removed = i_brd.get_routing_board().remove_items_and_pull_tight(items_list, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pull_tight_accuracy, with_delete_fixed);
+         all_items_removed = r_brd.remove_items_and_pull_tight(items_list, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pull_tight_accuracy, with_delete_fixed);
          }
       else
          {
-         all_items_removed = i_brd.get_routing_board().remove_items(items_list, with_delete_fixed);
+         all_items_removed = r_brd.remove_items(items_list, with_delete_fixed);
          }
       
       if (!all_items_removed)

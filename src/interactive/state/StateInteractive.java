@@ -28,6 +28,7 @@ import interactive.LogfileScope;
 import java.awt.Graphics;
 import java.awt.geom.Point2D;
 import javax.swing.JPopupMenu;
+import board.RoutingBoard;
 
 /**
  * Common base class of all interaction states with the graphical interface
@@ -39,6 +40,8 @@ public class StateInteractive
    {
    // board setting access handler for the derived classes
    protected final IteraBoard i_brd;
+   // routing board access handler for the derived classes
+   protected final RoutingBoard r_brd;
    // The intended state after this state is finished
    public StateInteractive return_state;
    // if logfile != null, the interactive actions are stored in a logfile 
@@ -50,6 +53,7 @@ public class StateInteractive
       {
       return_state = p_return_state;
       i_brd = p_itera_board;
+      r_brd = i_brd.get_routing_board();
       actlog = p_logfile;
       resources = p_itera_board.newGuiResources("interactive.resources.InteractiveState");
       }

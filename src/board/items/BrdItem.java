@@ -109,7 +109,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * When you read back from object strem you MUST recreate the transient objects
     * @param p_board
     */
-   public final void transient_set ( RoutingBoard p_board )
+   public final void set_transient_field ( RoutingBoard p_board )
       {
       r_board = p_board;
       search_trees_info = new SearchTreesInfo();
@@ -944,6 +944,21 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
 
+   /**
+    * Test if it is possible to delete this item
+    * @param delete_forced if true deletion is "forced"
+    * @return
+    */
+   public final boolean can_delete ( boolean delete_forced )
+      {
+      if ( delete_forced ) return true;
+      
+      if ( is_delete_fixed() ) return false;
+      
+      if ( is_user_fixed() ) return false;
+      
+      return true;
+      }
 
    /**
     * Returns true, if it is not allowed to change this item except evtl. shoving the item

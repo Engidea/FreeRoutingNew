@@ -617,6 +617,7 @@ public final class RoutingBoard implements java.io.Serializable
          }
       }
 
+   
    /**
     * remove all items, fixed or unfixed
     * @param with_delete_fixed
@@ -624,27 +625,21 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean remove_items(Collection<BrdItem> p_item_list, boolean with_delete_fixed )
       {
-      boolean result = true;
+      boolean all_deleted = true;
       
       for (BrdItem curr_item : p_item_list )
          {
-         if ( with_delete_fixed )
+         if ( ! curr_item.can_delete(with_delete_fixed) )
             {
-            // if asked so, just delete, no questions asked
-            remove_item(curr_item);
-            continue;
-            }
-
-         if ( curr_item.is_delete_fixed() || curr_item.is_user_fixed())
-            {
-            result = false;
+            // some items did not get delete
+            all_deleted = false;
             continue;
             }
 
          remove_item(curr_item);
          }
       
-      return result;
+      return all_deleted;
       }
 
    
@@ -1430,7 +1425,7 @@ public final class RoutingBoard implements java.io.Serializable
          {
          BrdItem curr_item = (BrdItem) iter.next();
          
-         curr_item.transient_set(this);
+         curr_item.set_transient_field(this);
          curr_item.art_item_clear();
          
          search_tree_manager.insert(curr_item);
@@ -1610,7 +1605,7 @@ public final class RoutingBoard implements java.io.Serializable
       for ( BrdItem curr_item : get_items() )
          {
          // insert the items on the board into the search trees
-         curr_item.transient_set(this); 
+         curr_item.set_transient_field(this); 
 
          search_tree_manager.insert(curr_item);
          }
@@ -1619,11 +1614,10 @@ public final class RoutingBoard implements java.io.Serializable
 
    /**
     * Removes the items in p_item_list and pulls the nearby rubber traces tight. 
-    * @return false, if some items could not be removed because they were fixed.
     */
    public boolean remove_items_and_pull_tight(Collection<BrdItem> p_item_list, int p_tidy_width, int p_pull_tight_accuracy, boolean p_with_delete_fixed)
       {
-      boolean result = true;
+      boolean all_deleted = true;
       ShapeTileOctagon tidy_region;
       boolean calculate_tidy_region;
       if (p_tidy_width < Integer.MAX_VALUE)
@@ -1636,38 +1630,42 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_region = null;
          calculate_tidy_region = false;
          }
+      
       start_marking_changed_area();
+      
       Set<Integer> changed_nets = new TreeSet<Integer>();
-      Iterator<BrdItem> it = p_item_list.iterator();
-      while (it.hasNext())
+
+      for ( BrdItem curr_item : p_item_list )
          {
-         BrdItem curr_item = it.next();
-         if (!p_with_delete_fixed && curr_item.is_delete_fixed() || curr_item.is_user_fixed())
+         if ( ! curr_item.can_delete(p_with_delete_fixed) )
             {
-            result = false;
+            all_deleted = false;
+            continue;
             }
-         else
+         
+         for (int index = 0; index < curr_item.tile_shape_count(); ++index)
             {
-            for (int i = 0; i < curr_item.tile_shape_count(); ++i)
+            ShapeTile curr_shape = curr_item.get_tile_shape(index);
+            changed_area.join(curr_shape, curr_item.shape_layer(index));
+            if (calculate_tidy_region)
                {
-               ShapeTile curr_shape = curr_item.get_tile_shape(i);
-               changed_area.join(curr_shape, curr_item.shape_layer(i));
-               if (calculate_tidy_region)
-                  {
-                  tidy_region = tidy_region.union(curr_shape.bounding_octagon());
-                  }
+               tidy_region = tidy_region.union(curr_shape.bounding_octagon());
                }
-            remove_item(curr_item);
-            for (int i = 0; i < curr_item.net_count(); ++i)
-               {
-               changed_nets.add(curr_item.get_net_no(i));
-               }
+            }
+         
+         remove_item(curr_item);
+         
+         for (int index = 0; index < curr_item.net_count(); ++index)
+            {
+            changed_nets.add(curr_item.get_net_no(index));
             }
          }
+
       for (Integer curr_net_no : changed_nets)
          {
          combine_traces(curr_net_no);
          }
+      
       if (calculate_tidy_region)
          {
          tidy_region = tidy_region.enlarge(p_tidy_width);
@@ -1677,7 +1675,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       optimize_changed_area(new int[0], tidy_region, p_pull_tight_accuracy, null, t_limit, null);
       
-      return result;
+      return all_deleted;
       }
 
    /**
