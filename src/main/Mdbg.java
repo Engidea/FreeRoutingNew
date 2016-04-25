@@ -34,6 +34,9 @@ public interface Mdbg
    public int PUSH_TRACE = 0x00000100;
    public int CLRVIOL    = 0x00000200;    // Clearance violations
    public int AUTORT     = 0x00000400;    // Autoroute stuff
+   public int OPTIMIZE   = 0x00000800;    // Optimize
+   public int SHAPE      = 0x00001000;    // 
+   public int DSN        = 0x00002000;    //
    
    public int ALL        = 0xFFFFFFFF;    // all masks
    }

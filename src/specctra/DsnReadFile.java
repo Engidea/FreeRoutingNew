@@ -33,7 +33,6 @@ import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTrace;
 import board.varie.IdGenerator;
-import board.varie.TestLevel;
 
 public final class DsnReadFile
    {
@@ -53,7 +52,7 @@ public final class DsnReadFile
     * The parameters p_item_observers and p_item_id_no_generator are used, in case the board is embedded into a host system
     * @throws IOException 
     */
-   public DsnReadResult read( IdGenerator p_item_id_no_generator, TestLevel p_test_level) throws IOException
+   public DsnReadResult read( IdGenerator p_item_id_no_generator ) throws IOException
       {
       JflexScanner scanner = new DsnFileScanner(new InputStreamReader(input_stream));
       Object curr_token = null;
@@ -78,7 +77,7 @@ public final class DsnReadFile
             }
          }
       
-      DsnReadScopeParameters read_scope_par = new DsnReadScopeParameters(scanner, board_handling, p_item_id_no_generator, p_test_level);
+      DsnReadScopeParameters read_scope_par = new DsnReadScopeParameters(scanner, board_handling, p_item_id_no_generator );
       boolean read_ok = DsnKeyword.PCB_SCOPE.read_scope(read_scope_par);
       DsnReadResult result;
       if (read_ok)

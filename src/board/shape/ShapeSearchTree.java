@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import main.Ldbg;
+import main.Mdbg;
 import rules.ClearanceMatrix;
 import autoroute.expand.ExpandRoomFreespaceComplete;
 import autoroute.expand.ExpandRoomFreespaceIncomplete;
@@ -32,7 +34,6 @@ import board.items.BrdArea;
 import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTracePolyline;
-import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaDimension;
 import freert.planar.PlaLineInt;
@@ -698,27 +699,26 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    private Collection<ExpandRoomFreespaceIncomplete> restrain_shape(ExpandRoomFreespaceIncomplete p_incomplete_room, ShapeTile p_obstacle_shape)
       {
-      // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained
-      // are on the right side of this line, and that the line segment
+      // Search the edge line of p_obstacle_shape, so that p_shape_to_be_contained are on the right side of this line, and that the line segment
       // intersects with the interiour of p_shape.
-      // If there are more than 1 such lines take the line which is
-      // furthest away from p_points_to_be_con.tained
-      // Then insersect p_shape with the halfplane defined by the
-      // opposite of this line.
-      ShapeTileSimplex obstacle_simplex = p_obstacle_shape.to_Simplex(); // otherwise border_lines of lenth 0 for octagons may not be
-                                                                // handeled correctly
-      ShapeTile shape_to_be_contained = p_incomplete_room.get_contained_shape().to_Simplex(); // There may be a performance problem,
-                                                                                              // if a point shape is represented as
-                                                                                              // an octagon
+      // If there are more than 1 such lines take the line which is furthest away from p_points_to_be_con.tained
+      // Then insersect p_shape with the halfplane defined by the opposite of this line.
+      
+      // otherwise border_lines of lenth 0 for octagons may not be handeled correctly      
+      ShapeTileSimplex obstacle_simplex = p_obstacle_shape.to_Simplex();
+
+      // There may be a performance problem, if a point shape is represented as an octagon      
+      ShapeTile shape_to_be_contained = p_incomplete_room.get_contained_shape().to_Simplex();
+      
       Collection<ExpandRoomFreespaceIncomplete> result = new LinkedList<ExpandRoomFreespaceIncomplete>();
       ShapeTile room_shape = p_incomplete_room.get_shape();
       int layer = p_incomplete_room.get_layer();
+      
       if (shape_to_be_contained.is_empty())
          {
-         if (r_board.get_test_level().ordinal() >= TestLevel.ALL_DEBUGGING_OUTPUT.ordinal())
-            {
+         if (r_board.debug(Mdbg.SHAPE, Ldbg.SPC_C) )
             System.out.println("ShapeSearchTree.restrain_shape: p_shape_to_be_contained is empty");
-            }
+
          return result;
          }
       PlaLineInt cut_line = null;
@@ -728,8 +728,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          PlaSegmentInt curr_line_segment = new PlaSegmentInt(obstacle_simplex, i);
          if (room_shape.is_intersected_interiour_by(curr_line_segment))
             {
-            // otherwise curr_object may not touch the intersection
-            // of p_shape with the half_plane defined by the cut_line.
+            // otherwise curr_object may not touch the intersection of p_shape with the half_plane defined by the cut_line.
             // That may lead to problems when creating the ExpansionRooms.
             PlaLineInt curr_line = obstacle_simplex.border_line(i);
 

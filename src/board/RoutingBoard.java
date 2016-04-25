@@ -61,7 +61,6 @@ import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
-import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
 import freert.host.BrdObserverVoid;
 import freert.host.BrdObservers;
@@ -1593,14 +1592,6 @@ public final class RoutingBoard implements java.io.Serializable
       return true;
       }
 
-   /**
-    * If != RELEASE_VERSION,, some features may be used, which are still in experimental state. Also warnings for debugging may be
-    * printed depending on the test_level.
-    */
-   public TestLevel get_test_level()
-      {
-      return stat.test_level;
-      }
 
    private void readObject(java.io.ObjectInputStream p_stream) throws java.io.IOException, java.lang.ClassNotFoundException
       {

@@ -511,6 +511,20 @@ public final class BoardPanel extends JPanel
       return custom_cursor != null;
       }
 
+   public final void userPrintln ( String message, Exception exc )
+      {
+      stat.log.exceptionPrint(message, exc);      
+      }
+   
+   /**
+    * @see stat.debug
+    */
+   public final boolean debug ( int mask, int level )
+      {
+      return stat.debug(mask, level);
+      }
+   
+   
    private class ColorTableListener implements TableModelListener
       {
       public void tableChanged(TableModelEvent p_event)

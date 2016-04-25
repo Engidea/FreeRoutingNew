@@ -1095,7 +1095,7 @@ public final class IteraBoard
       try
          {
          DsnReadFile reader = new DsnReadFile(this, p_design );
-         read_result = reader.read( p_item_id_no_generator, stat.test_level);
+         read_result = reader.read( p_item_id_no_generator );
          p_design.close();
          }
       catch (Exception exc)
@@ -1807,7 +1807,6 @@ public final class IteraBoard
       {
       stat.log.exceptionPrint(message, exc);      
       }
-   
    
    /**
     * @see stat.debug

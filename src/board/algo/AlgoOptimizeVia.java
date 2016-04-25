@@ -23,13 +23,8 @@ package board.algo;
 
 import java.util.Collection;
 import java.util.Iterator;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaSegmentFloat;
-import freert.planar.PlaSide;
-import freert.planar.PlaVector;
-import freert.planar.Polyline;
+import main.Ldbg;
+import main.Mdbg;
 import autoroute.expand.ExpandCostFactor;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
@@ -38,8 +33,14 @@ import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
-import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSegmentFloat;
+import freert.planar.PlaSide;
+import freert.planar.PlaVector;
+import freert.planar.Polyline;
 
 /**
  * Contains functions for optimizing and improving via locations.
@@ -167,7 +168,7 @@ public final class AlgoOptimizeVia
          second_layer_trace_costs = first_layer_trace_costs;
          }
 
-      PlaPoint new_location = reposition_via(r_board, p_via, first_trace.get_half_width(), first_trace.clearance_class_no(), first_trace.get_layer(), first_layer_trace_costs, first_trace_from_corner,
+      PlaPoint new_location = reposition_via( p_via, first_trace.get_half_width(), first_trace.clearance_class_no(), first_trace.get_layer(), first_layer_trace_costs, first_trace_from_corner,
             second_trace.get_half_width(), second_trace.clearance_class_no(), second_trace.get_layer(), second_layer_trace_costs, second_trace_from_corner);
       if (new_location == null || new_location.equals(via_center))
          {
@@ -272,7 +273,7 @@ public final class AlgoOptimizeVia
       int trace_half_width = contact_trace.get_half_width();
       int trace_layer = contact_trace.get_layer();
       int trace_cl_class_no = contact_trace.clearance_class_no();
-      PlaPoint new_via_location = reposition_via(r_board, p_via, rounded_check_corner, trace_half_width, trace_layer, trace_cl_class_no);
+      PlaPoint new_via_location = reposition_via( p_via, rounded_check_corner, trace_half_width, trace_layer, trace_cl_class_no);
       
       if (new_via_location == null && trace_polyline.corner_count() >= 3)
          {
@@ -362,13 +363,13 @@ public final class AlgoOptimizeVia
     * Tries to move the via into the direction of p_to_location as far as possible Return the new location of the via, or null, if
     * no move was possible.
     */
-   private PlaPoint reposition_via(RoutingBoard p_board, BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width, int p_trace_layer, int p_trace_cl_class)
+   private PlaPoint reposition_via( BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width, int p_trace_layer, int p_trace_cl_class)
       {
       PlaPoint from_location = p_via.get_center();
 
       if (from_location.equals(p_to_location)) return null;
 
-      double ok_length = p_board.check_trace_segment(from_location, p_to_location, p_trace_layer, p_via.net_no_arr, p_trace_half_width, p_trace_cl_class, false);
+      double ok_length = r_board.check_trace_segment(from_location, p_to_location, p_trace_layer, p_via.net_no_arr, p_trace_half_width, p_trace_cl_class, false);
 
       if (ok_length <= 0) return null;
 
@@ -416,7 +417,7 @@ public final class AlgoOptimizeVia
       return result;
       }
 
-   private boolean reposition_via(RoutingBoard p_board, BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width_1, int p_trace_layer_1, int p_trace_cl_class_1,
+   private boolean reposition_via( BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width_1, int p_trace_layer_1, int p_trace_cl_class_1,
          PlaPointInt p_connect_location, int p_trace_half_width_2, int p_trace_layer_2, int p_trace_cl_class_2)
 
       {
@@ -424,16 +425,15 @@ public final class AlgoOptimizeVia
 
       if (from_location.equals(p_to_location))
          {
-         if (p_board.get_test_level() == TestLevel.ALL_DEBUGGING_OUTPUT)
-            {
+         if ( r_board.debug(Mdbg.OPTIMIZE, Ldbg.SPC_C)  )
             System.out.println("OptViaAlgo.reposition_via: from_location equal p_to_location");
-            }
+
          return false;
          }
 
       PlaVector delta = p_to_location.difference_by(from_location);
 
-      if (p_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && delta.distance() <= 1.5)
+      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && delta.distance() <= 1.5)
          {
          // PullTightAlgoAnyAngle.reduce_corners mmay not be able to remove the new generated overlap
          // because of numerical stability problems
@@ -443,14 +443,14 @@ public final class AlgoOptimizeVia
 
       int[] net_no_arr = p_via.net_no_arr;
 
-      double ok_length = p_board.check_trace_segment(from_location, p_to_location, p_trace_layer_1, net_no_arr, p_trace_half_width_1, p_trace_cl_class_1, false);
+      double ok_length = r_board.check_trace_segment(from_location, p_to_location, p_trace_layer_1, net_no_arr, p_trace_half_width_1, p_trace_cl_class_1, false);
 
       if (ok_length < Integer.MAX_VALUE)
          {
          return false;
          }
 
-      ok_length = p_board.check_trace_segment(p_to_location, p_connect_location, p_trace_layer_2, net_no_arr, p_trace_half_width_2, p_trace_cl_class_2, false);
+      ok_length = r_board.check_trace_segment(p_to_location, p_connect_location, p_trace_layer_2, net_no_arr, p_trace_half_width_2, p_trace_cl_class_2, false);
 
       if (ok_length < Integer.MAX_VALUE)
          {
@@ -466,7 +466,7 @@ public final class AlgoOptimizeVia
    /**
     * Tries to reposition the via to a better location according to the trace costs. Returns null, if no better location was found.
     */
-   private PlaPoint reposition_via(RoutingBoard p_board, BrdAbitVia p_via, int p_first_trace_half_width, int p_first_trace_cl_class, int p_first_trace_layer,
+   private PlaPoint reposition_via( BrdAbitVia p_via, int p_first_trace_half_width, int p_first_trace_cl_class, int p_first_trace_layer,
          ExpandCostFactor p_first_trace_costs, PlaPoint p_first_trace_from_corner, int p_second_trace_half_width, int p_second_trace_cl_class, int p_second_trace_layer,
          ExpandCostFactor p_second_trace_costs, PlaPoint p_second_trace_from_corner)
       {
@@ -490,9 +490,9 @@ public final class AlgoOptimizeVia
          {
          if (second_trace_from_corner_distance < first_trace_from_corner_distance)
             {
-            return reposition_via(p_board, p_via, rounded_second_trace_from_corner, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
+            return reposition_via( p_via, rounded_second_trace_from_corner, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
             }
-         return reposition_via(p_board, p_via, rounded_first_trace_from_corner, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
+         return reposition_via( p_via, rounded_first_trace_from_corner, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
          }
       PlaPoint result = null;
 
@@ -502,7 +502,7 @@ public final class AlgoOptimizeVia
       if (curr_weighted_distance_1 > curr_weighted_distance_2)
          {
          // try to move the via in direction of p_first_trace_from_corner
-         result = reposition_via(p_board, p_via, rounded_first_trace_from_corner, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
+         result = reposition_via( p_via, rounded_first_trace_from_corner, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
          if (result != null)
             {
             return result;
@@ -515,13 +515,13 @@ public final class AlgoOptimizeVia
       if (curr_weighted_distance_1 > curr_weighted_distance_2)
          {
          // try to move the via in direction of p_second_trace_from_corner
-         result = reposition_via(p_board, p_via, rounded_second_trace_from_corner, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
+         result = reposition_via( p_via, rounded_second_trace_from_corner, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
          if (result != null)
             {
             return result;
             }
          }
-      if (scalar_product > 0 && p_board.brd_rules.get_trace_snap_angle() != TraceAngleRestriction.NINETY_DEGREE)
+      if (scalar_product > 0 && r_board.brd_rules.get_trace_snap_angle() != TraceAngleRestriction.NINETY_DEGREE)
          {
          // acute angle
          PlaPointInt to_point_1;
@@ -548,19 +548,19 @@ public final class AlgoOptimizeVia
          if (curr_weighted_distance_1 > curr_weighted_distance_2)
             {
             // try moving the via first into the direction of to_point_1
-            result = reposition_via(p_board, p_via, to_point_1, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
+            result = reposition_via( p_via, to_point_1, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
             if (result == null)
                {
-               result = reposition_via(p_board, p_via, to_point_2, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
+               result = reposition_via( p_via, to_point_2, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
                }
             }
          else
             {
             // try moving the via first into the direction of to_point_2
-            result = reposition_via(p_board, p_via, to_point_2, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
+            result = reposition_via( p_via, to_point_2, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
             if (result == null)
                {
-               result = reposition_via(p_board, p_via, to_point_1, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
+               result = reposition_via( p_via, to_point_1, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
                }
             }
          if (result != null)
@@ -582,7 +582,7 @@ public final class AlgoOptimizeVia
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via(p_board, p_via, check_location, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class, rounded_first_trace_from_corner,
+            boolean check_ok = reposition_via( p_via, check_location, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class, rounded_first_trace_from_corner,
                   p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
             if (check_ok)
                {
@@ -598,7 +598,7 @@ public final class AlgoOptimizeVia
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via(p_board, p_via, check_location, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class, rounded_first_trace_from_corner,
+            boolean check_ok = reposition_via( p_via, check_location, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class, rounded_first_trace_from_corner,
                   p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
             if (check_ok)
                {
@@ -618,7 +618,7 @@ public final class AlgoOptimizeVia
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via(p_board, p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, rounded_second_trace_from_corner,
+            boolean check_ok = reposition_via( p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, rounded_second_trace_from_corner,
                   p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
             if (check_ok)
                {
@@ -634,7 +634,7 @@ public final class AlgoOptimizeVia
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via(p_board, p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, rounded_second_trace_from_corner,
+            boolean check_ok = reposition_via( p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, rounded_second_trace_from_corner,
                   p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
             if (check_ok)
                {

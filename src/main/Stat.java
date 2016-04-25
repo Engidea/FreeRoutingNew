@@ -18,7 +18,6 @@ package main;
 
 
 import java.util.Locale;
-import board.varie.TestLevel;
 
 /**
  * For all of you wondering on this class, the rationale is this
@@ -32,7 +31,6 @@ public final class Stat implements java.io.Serializable
    private static final long serialVersionUID = 1L;
 
    public java.util.Locale locale;        // The Locale to be used in the whole program
-   public TestLevel test_level;           // Enable some debugging mode
    
    public transient WindowEventsLog log;
 
@@ -42,7 +40,6 @@ public final class Stat implements java.io.Serializable
    
    public Stat ()
       {
-      test_level  = TestLevel.RELEASE_VERSION;   // assume I am in release more
       locale      = Locale.ENGLISH;
       debug_mask  = Mdbg.ALL;
       debug_level = Ldbg.RELEASE;

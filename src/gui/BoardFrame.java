@@ -66,10 +66,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
+import main.Ldbg;
+import main.Mdbg;
 import main.Stat;
 import board.varie.DesignFile;
 import board.varie.IdGenerator;
-import board.varie.TestLevel;
 
 /**
  * Graphical frame of for interactive editing of a routing board.
@@ -780,7 +781,8 @@ public final class BoardFrame
          {
          work_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
          
-         if (stat.test_level == TestLevel.RELEASE_VERSION )
+         
+         if ( debug(Mdbg.GUI, Ldbg.RELEASE))
             {
             int option = JOptionPane.showConfirmDialog(null, resources.getString("confirm_cancel"), null, JOptionPane.YES_NO_OPTION);
             if (option == JOptionPane.NO_OPTION)

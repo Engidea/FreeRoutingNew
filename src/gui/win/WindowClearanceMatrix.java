@@ -26,6 +26,8 @@ import gui.ComboBoxLayer;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
 import javax.swing.JOptionPane;
+import main.Ldbg;
+import main.Mdbg;
 import rules.ClearanceMatrix;
 import board.RoutingBoard;
 
@@ -202,16 +204,17 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
             break;
             }
          }
-      if (name_exists)
-         {
-         return;
-         }
+      
+      if (name_exists) return;
+ 
       clearance_matrix.append_class(new_name);
-      if (routing_board.get_test_level() == board.varie.TestLevel.RELEASE_VERSION)
+
+      if ( routing_board.debug(Mdbg.GUI, Ldbg.RELEASE))
          {
          // clearance compensation is only used, if there are only the clearance classes default and null.
          routing_board.search_tree_manager.set_clearance_compensation_used(false);
          }
+      
       adjust_clearance_table();
       }
 

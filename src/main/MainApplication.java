@@ -34,7 +34,6 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import board.varie.DesignFile;
-import board.varie.TestLevel;
 
 /**
  * Main application for creating frames with new or existing board designs.
@@ -75,9 +74,6 @@ public class MainApplication extends JFrame
       
       setTitle(resources.getString("title"));
       addWindowListener(new WindowStateListener());
-      
-      if ( main_options.is_test_version )
-         stat.test_level = TestLevel.TEST_VERSION; 
       
       mainApplication();
       setVisible(true);
@@ -198,8 +194,6 @@ public class MainApplication extends JFrame
       {
       private boolean wantExit ()
          {
-         if ( stat.test_level != TestLevel.RELEASE_VERSION ) return true;
-         
          if ( board_frames.size() <= 0 ) return true;
          
          int option = javax.swing.JOptionPane.showConfirmDialog(null, resources.getString("confirm_cancel"), null, javax.swing.JOptionPane.YES_NO_OPTION);

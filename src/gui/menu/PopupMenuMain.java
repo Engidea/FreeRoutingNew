@@ -21,6 +21,8 @@
 package gui.menu;
 
 import gui.BoardFrame;
+import main.Ldbg;
+import main.Mdbg;
 import main.Stat;
 
 /**
@@ -81,8 +83,9 @@ public class PopupMenuMain extends PopupMenuDisplay
                }
          });
 
-      if (board_panel.board_handling.get_routing_board().get_test_level() != board.varie.TestLevel.RELEASE_VERSION)
+      if ( ! board_panel.debug(Mdbg.GUI_MENU, Ldbg.RELEASE))
          {
+         // obstacle menu is created when gui is NOT a release
          create_obstacle_menu.add(create_tile_item);
          }
 

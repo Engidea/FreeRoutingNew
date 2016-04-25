@@ -22,6 +22,8 @@ package gui.menu;
 
 import gui.BoardFrame;
 import javax.swing.JMenuItem;
+import main.Ldbg;
+import main.Mdbg;
 import main.Stat;
 
 /**
@@ -47,9 +49,10 @@ public class PopupMenuSelectedItems extends PopupMenuDisplay
                }
          });
 
-      if (board_panel.board_handling.get_routing_board().get_test_level() != board.varie.TestLevel.RELEASE_VERSION)
+      if ( ! board_panel.debug(Mdbg.GUI_MENU, Ldbg.RELEASE))
          {
-         this.add(copy_item);
+         // copy is added only when NOT in release mode
+         add(copy_item);
          }
 
       JMenuItem move_item = new JMenuItem();

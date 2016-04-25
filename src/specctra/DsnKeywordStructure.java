@@ -19,16 +19,11 @@
  */
 package specctra;
 
-import freert.host.HostCom;
-import freert.planar.ShapePolyline;
-import freert.planar.ShapeTileBox;
-import freert.varie.ItemClass;
-import freert.varie.UndoableObjectNode;
-import gui.varie.IndentFileWriter;
-import gui.varie.UndoableObjectStorable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import main.Ldbg;
+import main.Mdbg;
 import rules.BoardRules;
 import rules.ClearanceMatrix;
 import specctra.varie.DsnKeywordAutoroute;
@@ -38,7 +33,13 @@ import board.BrdLayerStructure;
 import board.RoutingBoard;
 import board.items.BrdAreaConduction;
 import board.varie.ItemFixState;
-import board.varie.TestLevel;
+import freert.host.HostCom;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTileBox;
+import freert.varie.ItemClass;
+import freert.varie.UndoableObjectNode;
+import gui.varie.IndentFileWriter;
+import gui.varie.UndoableObjectStorable;
 
 /**
  * Class for reading and writing structure scopes from dsn-files.
@@ -198,7 +199,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          }
       ItemFixState fixed_state;
       
-      if (board.get_test_level() == TestLevel.RELEASE_VERSION)
+      if ( board.debug(Mdbg.DSN, Ldbg.RELEASE) )
          {
          fixed_state = ItemFixState.SYSTEM_FIXED;
          }

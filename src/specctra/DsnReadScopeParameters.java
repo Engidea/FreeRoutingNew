@@ -20,15 +20,14 @@
 
 package specctra;
 
+import freert.varie.UnitMeasure;
 import interactive.IteraBoard;
 import java.util.Collection;
 import java.util.LinkedList;
 import specctra.varie.DsnWriteResolution;
 import autoroute.ArtSettings;
 import board.varie.IdGenerator;
-import board.varie.TestLevel;
 import board.varie.TraceAngleRestriction;
-import freert.varie.UnitMeasure;
 
 /**
  * Default parameter type used while reading a Specctra dsn-file.
@@ -42,7 +41,6 @@ public final class DsnReadScopeParameters
    final DsnNetList netlist = new DsnNetList();
 
    final IdGenerator item_id_no_generator;
-   final TestLevel test_level;
 
    // The plane cannot be inserted directly into the boards, because the layers may not be read completely.
    final Collection<DsnPlaneInfo> plane_list = new LinkedList<DsnPlaneInfo>();
@@ -86,12 +84,11 @@ public final class DsnReadScopeParameters
    // how much to further divide the unit measure, ideally 10 parts if Unit is UM
    int dsn_resolution;
 
-   DsnReadScopeParameters(JflexScanner p_scanner, IteraBoard p_board_handling,  IdGenerator p_item_id_no_generator, TestLevel p_test_level)
+   DsnReadScopeParameters(JflexScanner p_scanner, IteraBoard p_board_handling,  IdGenerator p_item_id_no_generator )
       {
       scanner = p_scanner;
       board_handling = p_board_handling;
       item_id_no_generator = p_item_id_no_generator;
-      test_level = p_test_level;
       }
 
    }

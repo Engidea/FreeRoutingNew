@@ -26,8 +26,6 @@ import java.util.Locale;
  */
 public class MainOptions
    {
-   boolean is_test_version = false;
-
    String design_file_name = null;
    String design_dir_name = null;
    Locale options_locale = null;
@@ -63,10 +61,6 @@ public class MainOptions
          else if (p_args[i].startsWith("-s"))
             {
             //session_file_option = true;
-            }
-         else if (p_args[i].startsWith("-test"))
-            {
-            is_test_version = true;
             }
          }
       }

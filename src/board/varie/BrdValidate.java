@@ -22,14 +22,16 @@ package board.varie;
 
 import java.util.Collection;
 import java.util.Iterator;
-import freert.planar.PlaPointInt;
-import freert.planar.Polyline;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileOctagon;
+import main.Ldbg;
+import main.Mdbg;
 import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeTreeObject;
+import freert.planar.PlaPointInt;
+import freert.planar.Polyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileOctagon;
 
 /**
  * Some consistency checking on a routing board.
@@ -46,10 +48,8 @@ public class BrdValidate
     */
    public static boolean check(String p_s, RoutingBoard p_board)
       {
-      if (p_board.get_test_level() == board.varie.TestLevel.RELEASE_VERSION)
-         {
-         return true;
-         }
+      if ( p_board.debug(Mdbg.AUTORT, Ldbg.RELEASE) ) return true;
+
       boolean result = true;
 
       ShapeTileOctagon surr_oct = p_board.bounding_box.to_IntOctagon();

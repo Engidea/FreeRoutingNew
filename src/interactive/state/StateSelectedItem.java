@@ -55,7 +55,6 @@ import board.items.BrdArea;
 import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
-import board.varie.TestLevel;
 
 /**
  * Class implementing actions on the currently selected items.
@@ -364,7 +363,9 @@ public final class StateSelectedItem extends StateInteractive
             }
          }
       
-      boolean with_delete_fixed = i_brd.get_routing_board().get_test_level() != TestLevel.RELEASE_VERSION;
+      
+      // you are llow to delete fixed items when NOT in release mode
+      boolean with_delete_fixed = ! i_brd.debug(Mdbg.GUI, Ldbg.RELEASE);
       
       boolean all_items_removed;
       
