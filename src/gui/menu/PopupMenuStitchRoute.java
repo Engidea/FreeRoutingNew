@@ -87,7 +87,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay
 
       add(cancel_item, 2);
 
-      BrdLayer curr_layer = layer_structure.get(board_panel.board_handling.itera_settings.get_layer());
+      BrdLayer curr_layer = layer_structure.get(board_panel.board_handling.itera_settings.get_layer_no());
       disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
       }
 

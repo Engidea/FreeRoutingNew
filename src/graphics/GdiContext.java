@@ -846,7 +846,7 @@ public final class GdiContext implements java.io.Serializable
       other_color_table = new OtherColorTableModel(p_stream);
       }
    
-   public void transient_update ( Stat p_stat )
+   public void set_transient_field ( Stat p_stat )
       {
       item_color_table.transient_update (p_stat);
       other_color_table.transient_update (p_stat);

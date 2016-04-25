@@ -89,7 +89,7 @@ public final class SnapShot implements java.io.Serializable
     */
    public void go_to(IteraBoard p_board_handling)
       {
-      SnapshotAttributes snapshot_attributes = settings.snapshot_attributes;
+      SnapshotAttributes snapshot_attributes = settings.get_snapshot_attributes();
 
       if (snapshot_attributes.object_visibility)
          {

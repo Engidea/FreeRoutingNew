@@ -3,10 +3,26 @@ package gui.varie;
 /**
  * Defines the data of the snapshot selected for restoring.
  */
-public class SnapshotAttributes implements java.io.Serializable
+public final class SnapshotAttributes implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
+   public boolean object_colors;
+   public boolean object_visibility;
+   public boolean layer_visibility;
+   public boolean display_region;
+   public boolean interactive_state;
+   public boolean selection_layers;
+   public boolean selectable_items;
+   public boolean current_layer;
+   public boolean rule_selection;
+   public boolean manual_rule_settings;
+   public boolean push_and_shove_enabled;
+   public boolean drag_components_enabled;
+   public boolean pull_tight_region;
+   public boolean component_grid;
+   public boolean info_list_selections;
+   
    public SnapshotAttributes()
       {
       object_colors = true;
@@ -26,8 +42,7 @@ public class SnapshotAttributes implements java.io.Serializable
       info_list_selections = true;
       }
 
-   /** Copy constructor */
-   public SnapshotAttributes(SnapshotAttributes p_attributes)
+   public void copy(SnapshotAttributes p_attributes)
       {
       object_colors = p_attributes.object_colors;
       object_visibility = p_attributes.object_visibility;
@@ -45,20 +60,4 @@ public class SnapshotAttributes implements java.io.Serializable
       component_grid = p_attributes.component_grid;
       info_list_selections = p_attributes.info_list_selections;
       }
-
-   public boolean object_colors;
-   public boolean object_visibility;
-   public boolean layer_visibility;
-   public boolean display_region;
-   public boolean interactive_state;
-   public boolean selection_layers;
-   public boolean selectable_items;
-   public boolean current_layer;
-   public boolean rule_selection;
-   public boolean manual_rule_settings;
-   public boolean push_and_shove_enabled;
-   public boolean drag_components_enabled;
-   public boolean pull_tight_region;
-   public boolean component_grid;
-   public boolean info_list_selections;
    }

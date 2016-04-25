@@ -86,7 +86,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
          change_layer_menu = null;
          }
 
-      int want_no = board_panel.board_handling.itera_settings.get_layer();
+      int want_no = board_panel.board_handling.itera_settings.get_layer_no();
       
       BrdLayer curr_layer = layer_structure.get(want_no);
       

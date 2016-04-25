@@ -71,7 +71,7 @@ public final class PopupMenuCopy extends PopupMenuDisplay
 
       this.add(done_item, 1);
 
-      board.BrdLayer curr_layer = layer_structure.get(board_panel.board_handling.itera_settings.get_layer());
+      board.BrdLayer curr_layer = layer_structure.get(board_panel.board_handling.itera_settings.get_layer_no());
       disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
       }
 

@@ -64,9 +64,9 @@ public final class WindowLayerVisibility extends WindowVisibility
 
    protected void set_changed_value(int p_layer_no, double p_value)
       {
-      p_layer_no = get_board_handling().set_layer_visibility(p_layer_no, p_value);
+      int new_layer_no = get_board_handling().set_layer_visibility(p_layer_no, p_value);
       
-      get_board_handling().set_layer(p_layer_no);
+      if ( new_layer_no != p_layer_no ) get_board_handling().set_layer(p_layer_no);
       }
 
    protected void set_all_minimum()
@@ -74,7 +74,7 @@ public final class WindowLayerVisibility extends WindowVisibility
       int layer_count = get_board_handling().gdi_context.layer_count();
       for (int i = 0; i < layer_count; ++i)
          {
-         if (i != get_board_handling().itera_settings.get_layer())
+         if (i != get_board_handling().itera_settings.get_layer_no())
             {
             set_slider_value(i, 0);
             set_changed_value(i, 0);

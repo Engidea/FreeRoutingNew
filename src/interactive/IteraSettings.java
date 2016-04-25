@@ -22,6 +22,7 @@ package interactive;
 
 import gui.varie.SnapshotAttributes;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import autoroute.ArtSettings;
 import board.BrdLayer;
 import board.RoutingBoard;
@@ -38,8 +39,8 @@ public final class IteraSettings implements java.io.Serializable
    private static final long serialVersionUID = 1L;
 
    // the current layer TODO transfor this in BrdLayer, a real object not an indice
+   // Not as easy beacuse of serialization...
    public int layer_no;
-   public BrdLayer cur_layer; 
    
    // allows pushing obstacles aside 
    public boolean push_enabled;
@@ -83,15 +84,18 @@ public final class IteraSettings implements java.io.Serializable
    public final ItemSelectionFilter item_selection_filter = new ItemSelectionFilter();
 
    // Defines the data of the snapshot selected for restoring. 
-   SnapshotAttributes snapshot_attributes = new SnapshotAttributes();
+   private final SnapshotAttributes snapshot_attributes = new SnapshotAttributes();
 
    // true if the data of this class are not allowed to be changed in interactive board editing. 
    private transient boolean settings_read_only = false;
    // The file used for logging interactive action, so that they can be replayed later
    private transient Actlog act_log;
+   // routing board is useful to pick things from system
+   private transient RoutingBoard r_board;
    
    public IteraSettings(RoutingBoard p_board, Actlog p_logfile)
       {
+      r_board = p_board;
       act_log = p_logfile;
 
       layer_no = 0;
@@ -148,14 +152,19 @@ public final class IteraSettings implements java.io.Serializable
       System.arraycopy(p_settings.manual_trace_half_width_arr, 0, manual_trace_half_width_arr, 0, manual_trace_half_width_arr.length);
       autoroute_settings = new ArtSettings(p_settings.autoroute_settings);
       item_selection_filter.set_filter(p_settings.item_selection_filter);
-      snapshot_attributes = new SnapshotAttributes(p_settings.snapshot_attributes);
+      snapshot_attributes.copy(p_settings.snapshot_attributes);
       }
 
-   public int get_layer()
+   public int get_layer_no()
       {
       return layer_no;
       }
 
+   public final BrdLayer get_layer( )
+      {
+      return r_board.layer_structure.get(layer_no);
+      }
+   
    /** 
     * allows pushing obstacles aside 
     */
@@ -505,8 +514,9 @@ public final class IteraSettings implements java.io.Serializable
     * Used to set proper value of act_log when reading objects
     * @param p_act_log
     */
-   void set_logfile(Actlog p_act_log)
+   void set_transient_fields(RoutingBoard p_board, Actlog p_act_log)
       {
+      r_board = p_board;
       act_log = p_act_log;
       }
 
@@ -515,15 +525,10 @@ public final class IteraSettings implements java.io.Serializable
     * restore transient files to a proper value 
     * note that act_log is updated using set_log method
     */
-   private void readObject(java.io.ObjectInputStream p_stream) throws IOException, ClassNotFoundException
+   private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException
       {
       p_stream.defaultReadObject();
       
-      if (snapshot_attributes == null)
-         {
-         System.out.println("Settings.readObject: snapshot_attributes is null");
-         snapshot_attributes = new SnapshotAttributes();
-         }
       settings_read_only = false;
       }
 

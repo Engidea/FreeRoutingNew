@@ -247,23 +247,6 @@ public final class IteraBoard
       }
 
    /**
-    * Changes the visibility of the input layer to the input value. p_value is expected between 0 and 1
-    * @return the given layer or a different one if it has become invisible
-    */
-   public int set_layer_visibility(int p_layer_no, double p_visibility)
-      {
-      if ( ! gdi_context.is_valid_layer(p_layer_no) ) 
-         return gdi_context.get_layer_visibility_best();
-
-      gdi_context.set_layer_visibility(p_layer_no, p_visibility);
-
-      if ( p_visibility != 0 || itera_settings.layer_no != p_layer_no) return p_layer_no;
-      
-      // current layer has become invisible, return the best visible layer
-      return gdi_context.get_layer_visibility_best();
-      }
-
-   /**
     * Gets the trace half width used in interactive routing for the input net on the input layer.
     */
    public int get_trace_halfwidth(int p_net_no, int p_layer)
@@ -285,10 +268,7 @@ public final class IteraBoard
     */
    public boolean is_active_routing_layer(int p_net_no, int p_layer)
       {
-      if (itera_settings.manual_rule_selection)
-         {
-         return true;
-         }
+      if (itera_settings.manual_rule_selection) return true;
       
       RuleNet curr_net = r_board.brd_rules.nets.get(p_net_no);
       if (curr_net == null)
@@ -367,10 +347,8 @@ public final class IteraBoard
     */
    public void set_trace_snap_angle(board.varie.TraceAngleRestriction p_snap_angle)
       {
-      if (board_is_read_only)
-         {
-         return;
-         }
+      if (board_is_read_only) return;
+
       r_board.brd_rules.set_trace_snap_angle(p_snap_angle);
       
       actlog.start_scope(LogfileScope.SET_SNAP_ANGLE, p_snap_angle.get_no());
@@ -378,6 +356,7 @@ public final class IteraBoard
 
    /**
     * Changes the current layer in the interactive board handling.
+    * This logs the action to the actlog
     */
    public void set_current_layer(int p_layer)
       {
@@ -403,14 +382,14 @@ public final class IteraBoard
       
       BrdLayer curr_layer = r_board.layer_structure.get(p_layer_no);
       
-      screen_messages.set_layer(curr_layer.name);
+      screen_messages.show_layer_name(curr_layer);
       
       itera_settings.layer_no = p_layer_no;
 
       // Change the selected layer in the select parameter window.
       int signal_layer_no = r_board.layer_structure.get_signal_layer_no(curr_layer);
       
-      if (!board_is_read_only)
+      if ( ! board_is_read_only)
          {
          board_panel.set_selected_signal_layer(signal_layer_no);
          }
@@ -430,13 +409,32 @@ public final class IteraBoard
       }
 
    /**
+    * Changes the visibility of the input layer to the input value. p_value is expected between 0 and 1
+    * @return the given layer or a different one if the given layer is invisible ir invalid
+    */
+   public int set_layer_visibility(int p_layer_no, double p_visibility)
+      {
+      if ( ! gdi_context.is_valid_layer(p_layer_no) ) 
+         return gdi_context.get_layer_visibility_best();
+
+      // here layer is valid, let me set the visibility
+      gdi_context.set_layer_visibility(p_layer_no, p_visibility);
+
+      if ( p_visibility != 0 || itera_settings.layer_no != p_layer_no) return p_layer_no;
+      
+      // current layer has become invisible, return the best visible layer
+      return gdi_context.get_layer_visibility_best();
+      }
+   
+   
+   /**
     * Displays the current layer in the layer message field, and clears the field for the additional message.
     */
    public void display_layer_messsage()
       {
       screen_messages.clear_add_field();
-      BrdLayer curr_layer = r_board.layer_structure.get(itera_settings.layer_no);
-      screen_messages.set_layer(curr_layer.name);
+      BrdLayer curr_layer = itera_settings.get_layer();
+      screen_messages.show_layer_name(curr_layer);
       }
 
    /**
@@ -1180,26 +1178,24 @@ public final class IteraBoard
       r_board.stat.log = stat.log;
       
       itera_settings = (IteraSettings) p_design.readObject();
-      itera_settings.set_logfile(actlog);
+      itera_settings.set_transient_fields(r_board, actlog);
       coordinate_transform = (PlaCoordTransform) p_design.readObject();
       gdi_context = (GdiContext) p_design.readObject();
 
-      gdi_context.transient_update(stat);
+      gdi_context.set_transient_field(stat);
       
-      screen_messages.set_layer(r_board.layer_structure.get_name(itera_settings.layer_no));
+      screen_messages.show_layer_name(itera_settings.get_layer());
       }
-   
-   
    
    /**
     * Processes the actions stored in the input logfile.
     */
    public void read_logfile(InputStream p_input_stream)
       {
-      if (board_is_read_only || !(interactive_state instanceof StateMenu))
-         {
-         return;
-         }
+      if (board_is_read_only ) return;
+      
+      if ( ! (interactive_state instanceof StateMenu)) return;
+
       interactive_action_thread = new ReadActlogThread(this, p_input_stream);
       interactive_action_thread.start();
       }

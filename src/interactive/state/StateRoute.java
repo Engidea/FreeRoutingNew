@@ -449,7 +449,7 @@ public class StateRoute extends StateInteractive
             {
             boolean connected_to_plane = false;
             // check, if the layer change resulted in a connection to a power plane.
-            int old_layer = i_brd.itera_settings.get_layer();
+            int old_layer = i_brd.itera_settings.get_layer_no();
             ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
             Collection<BrdItem> picked_items = i_brd.get_routing_board().pick_items(route.get_last_corner(), old_layer, selection_filter);
             BrdAbitVia new_via = null;

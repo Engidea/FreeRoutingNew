@@ -21,10 +21,13 @@
 package gui.win;
 
 import graphics.GdiCoordinateTransform;
+import graphics.ItemColorTableModel;
+import graphics.OtherColorTableModel;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
 import gui.varie.SnapSavedAttributes;
+import interactive.IteraBoard;
 import interactive.SnapShot;
 import java.awt.Dimension;
 import java.awt.Point;
@@ -215,15 +218,15 @@ public final class WindowSnapshot extends GuiSubWindowSavable
       int index = gui_list.getSelectedIndex();
       if (index >= 0 && list_model.getSize() > index)
          {
-         interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
-         interactive.SnapShot curr_snapshot = (interactive.SnapShot) list_model.elementAt(index);
+         IteraBoard board_handling = board_frame.board_panel.board_handling;
+         interactive.SnapShot curr_snapshot = (SnapShot) list_model.elementAt(index);
 
          curr_snapshot.go_to(board_handling);
 
          if (curr_snapshot.settings.get_snapshot_attributes().object_colors)
             {
-            board_handling.gdi_context.item_color_table = new graphics.ItemColorTableModel(curr_snapshot.graphics_context.item_color_table);
-            board_handling.gdi_context.other_color_table = new graphics.OtherColorTableModel(curr_snapshot.graphics_context.other_color_table);
+            board_handling.gdi_context.item_color_table = new ItemColorTableModel(curr_snapshot.graphics_context.item_color_table);
+            board_handling.gdi_context.other_color_table = new OtherColorTableModel(curr_snapshot.graphics_context.other_color_table);
 
             board_frame.color_manager.set_table_models(board_handling.gdi_context);
             }
@@ -262,7 +265,7 @@ public final class WindowSnapshot extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         interactive.SnapShot new_snapshot = interactive.SnapShot.get_instance(name_field.getText(), board_frame.board_panel.board_handling);
+         SnapShot new_snapshot = SnapShot.get_instance(name_field.getText(), board_frame.board_panel.board_handling);
          if (new_snapshot != null)
             {
             ++snapshot_count;

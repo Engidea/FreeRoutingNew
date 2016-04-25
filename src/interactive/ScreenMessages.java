@@ -25,6 +25,7 @@ import gui.BoardPanelStatus;
 import gui.varie.GuiResources;
 import javax.swing.JLabel;
 import main.Stat;
+import board.BrdLayer;
 
 /**
  * Text fields to display messages on the screen.
@@ -83,11 +84,11 @@ public final class ScreenMessages
    /**
     * Sets the displayed layer number on the screen.
     */
-   public void set_layer(String p_layer_name)
+   public void show_layer_name(BrdLayer p_layer)
       {
       if ( write_protected ) return;
 
-      layer_field.setText(active_layer_string + p_layer_name);
+      layer_field.setText(active_layer_string + p_layer.name);
       }
 
    public void set_interactive_autoroute_info(int p_found, int p_not_found, int p_items_to_go)

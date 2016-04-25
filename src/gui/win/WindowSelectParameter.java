@@ -166,7 +166,7 @@ public class WindowSelectParameter extends GuiSubWindowSavable
             }
          }
       board.BrdLayerStructure layer_structure = board_handling.get_routing_board().layer_structure;
-      board.BrdLayer current_layer = layer_structure.get(board_handling.itera_settings.get_layer());
+      board.BrdLayer current_layer = layer_structure.get(board_handling.itera_settings.get_layer_no());
       layer_name_arr[layer_structure.get_signal_layer_no(current_layer)].setSelected(true);
       }
 
