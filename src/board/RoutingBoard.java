@@ -2863,12 +2863,12 @@ public final class RoutingBoard implements java.io.Serializable
    
    public final void userPrintln( String message )
       {
-      stat.log.userPrintln(message);
+      stat.userPrintln(message);
       }
 
    public final void userPrintln( String message, Exception exc )
       {
-      stat.log.exceptionPrint(message, exc);
+      stat.userPrintln(message, exc);
       }
    
 

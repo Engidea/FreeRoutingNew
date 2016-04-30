@@ -110,13 +110,13 @@ public class MainApplication extends JFrame
       
       if (design_file == null)
          {
-         stat.log.userPrintln(resources.getString("message_3"));
+         stat.userPrintln(resources.getString("message_3"));
          return;
          }
 
       String message = resources.getString("loading_design") + " " + design_file.get_name();
 
-      stat.log.userPrintln(message); 
+      stat.userPrintln(message); 
 
       BoardFrame board_frame = create_board_frame(design_file, stat);
 

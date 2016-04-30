@@ -199,7 +199,7 @@ public class WindowMoveParameter extends GuiSubWindowSavable
 
             double input_value = clean_input_value(horizontal_grid_field);
 
-            stat.log.userPrintln(classname+" horizontal "+input_value);
+            stat.userPrintln(classname+" horizontal "+input_value);
             
             board_handling.itera_settings.set_horizontal_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
 
@@ -239,7 +239,7 @@ public class WindowMoveParameter extends GuiSubWindowSavable
 
             double input_value = clean_input_value(vertical_grid_field);
 
-            stat.log.userPrintln(classname+" vertical "+input_value);
+            stat.userPrintln(classname+" vertical "+input_value);
 
             board_handling.itera_settings.set_vertical_component_grid((int) Math.round(board_handling.coordinate_transform.user_to_board(input_value)));
 

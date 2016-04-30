@@ -313,10 +313,10 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    public boolean read(java.io.ObjectInputStream p_object_stream)
       {
       if ( ! super.read(p_object_stream) )
-         stat.log.userPrintln(classname+"read ERROR a");
+         stat.userPrintln(classname+"read ERROR a");
       
       if ( ! manual_rule_window.read(p_object_stream) )
-         stat.log.userPrintln(classname+"read ERROR b");
+         stat.userPrintln(classname+"read ERROR b");
 
       refresh();
       return true;
@@ -472,7 +472,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
             }
          }
       
-      stat.log.userPrintln(classname+" req TraceAngleRestriction.NINETY_DEGREE");
+      stat.userPrintln(classname+" req TraceAngleRestriction.NINETY_DEGREE");
       board_handling.set_trace_snap_angle(TraceAngleRestriction.NINETY_DEGREE);
       }
 
@@ -494,25 +494,25 @@ public class WindowRouteParameter extends GuiSubWindowSavable
             }
          }
 
-      stat.log.userPrintln(classname+" req TraceAngleRestriction.FORTYFIVE_DEGREE");
+      stat.userPrintln(classname+" req TraceAngleRestriction.FORTYFIVE_DEGREE");
       board_handling.set_trace_snap_angle(board.varie.TraceAngleRestriction.FORTYFIVE_DEGREE);
       }
 
    public void snap_angle_none_button_fun()
       {
-      stat.log.userPrintln(classname+" req AngleRestriction.NONE");
+      stat.userPrintln(classname+" req AngleRestriction.NONE");
       board_handling.set_trace_snap_angle(board.varie.TraceAngleRestriction.NONE);
       }
 
    public void dynamic_button_fun()
       {
-      stat.log.userPrintln(classname+" req set_stitch_route(false)");
+      stat.userPrintln(classname+" req set_stitch_route(false)");
       board_handling.itera_settings.set_stitch_route(false);
       }
 
    public void stitch_button_fun()
       {
-      stat.log.userPrintln(classname+" req set_stitch_route(true)");
+      stat.userPrintln(classname+" req set_stitch_route(true)");
       board_handling.itera_settings.set_stitch_route(true);
       }
 
@@ -648,7 +648,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
             
             board_handling.set_pin_edge_to_turn_dist(input_value);
             
-            stat.log.userPrintln(classname+"set pin turn dist "+input_value);
+            stat.userPrintln(classname+"set pin turn dist "+input_value);
             
             restrict_pin_exit_directions_check.setSelected(input_value > 0);
             
@@ -671,7 +671,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
             double edge_to_turn_dist = board_handling.get_routing_board().brd_rules.get_pin_edge_to_turn_dist();
             edge_to_turn_dist = board_handling.coordinate_transform.board_to_user(edge_to_turn_dist);
             
-            stat.log.userPrintln(classname+"restore pin turn dist "+edge_to_turn_dist);
+            stat.userPrintln(classname+"restore pin turn dist "+edge_to_turn_dist);
             
             edge_to_turn_dist_field.setValue(edge_to_turn_dist);
             key_input_completed = true;

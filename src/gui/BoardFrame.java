@@ -241,7 +241,7 @@ public final class BoardFrame
          }
       catch (Exception exc)
          {
-         stat.log.exceptionPrint(classname+"open_design: ", exc);
+         stat.userPrintln(classname+"open_design: ", exc);
          return false;
          }
 
@@ -332,14 +332,14 @@ public final class BoardFrame
       try
          {
          // Read the default GUI settings, if GUI default file exists.
-         stat.log.userPrintln("try open "+defaults_file);
+         stat.userPrintln("try open "+defaults_file);
          InputStream input_stream = new java.io.FileInputStream(defaults_file);
          GuiConfigFile.read(this, board_panel.board_handling, input_stream);
          input_stream.close();
          }
       catch (Exception exc)
          {
-         stat.log.exceptionPrint("open defaults exception", exc);
+         stat.userPrintln("open defaults exception", exc);
          screen_messages.set_status_message(resources.getString("error_1"));
          return false;
          }
@@ -374,7 +374,7 @@ public final class BoardFrame
       try
          {
          File to_file = design_file.get_output_file();
-         stat.log.userPrintln(classname+"save to_file "+to_file);
+         stat.userPrintln(classname+"save to_file "+to_file);
 
          java.io.OutputStream  output_stream = new java.io.FileOutputStream(to_file);
          java.io.ObjectOutputStream object_stream = new java.io.ObjectOutputStream(output_stream);
@@ -385,13 +385,13 @@ public final class BoardFrame
          object_stream.flush();
          output_stream.close();
 
-         stat.log.userPrintln(classname+"save to_file DONE");
+         stat.userPrintln(classname+"save to_file DONE");
 
          return true;
          }
       catch (Exception exc)
          {
-         stat.log.exceptionShow(classname+"save to_file ", exc);
+         stat.userPrintln(classname+"save to_file ", exc);
          return false;
          }
       }

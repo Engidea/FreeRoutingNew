@@ -30,7 +30,7 @@ public final class Stat
    {
    public java.util.Locale locale;        // The Locale to be used in the whole program
    
-   public transient WindowEventsLog log;
+   public WindowEventsLog log;
 
    public int debug_mask;                // debug log mask
    public int debug_level;               // debug level mask

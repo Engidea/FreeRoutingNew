@@ -159,7 +159,7 @@ public final class BoardMenuFile extends JMenu
          config_file.renameTo(defaults_file_backup);
          }
       
-      stat.log.userPrintln("try save config "+config_file);
+      stat.userPrintln("try save config "+config_file);
       
       try
          {
@@ -169,7 +169,7 @@ public final class BoardMenuFile extends JMenu
          }
       catch (Exception exc)
          {
-         stat.log.exceptionPrint(classname+"save_defaults_action", exc);
+         stat.userPrintln(classname+"save_defaults_action", exc);
          board_frame.screen_messages.set_status_message(resources.getString("message_18"));
          }
       }

@@ -107,7 +107,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
                }
             else
                {
-               stat.log.userPrintln(classname+"fill_list: net_count 1 expected");
+               stat.userPrintln(classname+"fill_list: net_count 1 expected");
                }
             }
          }

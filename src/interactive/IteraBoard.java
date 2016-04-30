@@ -1106,7 +1106,7 @@ public final class IteraBoard
          }
       catch (Exception exc)
          {
-         stat.log.exceptionPrint("import_design", exc);
+         stat.userPrintln("import_design", exc);
          return false;
          }
 
@@ -1517,7 +1517,7 @@ public final class IteraBoard
       {
       if (board_is_read_only)
          {
-         stat.log.userPrintln(classname+"start_batch_autorouter: FAIL board is read only");
+         stat.userPrintln(classname+"start_batch_autorouter: FAIL board is read only");
          return;
          }
       
@@ -1803,12 +1803,12 @@ public final class IteraBoard
    
    public final void userPrintln ( String message )
       {
-      stat.log.userPrintln(message);      
+      stat.userPrintln(message);      
       }
    
    public final void userPrintln ( String message, Exception exc )
       {
-      stat.log.exceptionPrint(message, exc);      
+      stat.userPrintln(message, exc);      
       }
    
    /**

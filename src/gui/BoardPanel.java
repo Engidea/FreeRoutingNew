@@ -513,7 +513,7 @@ public final class BoardPanel extends JPanel
 
    public final void userPrintln ( String message, Exception exc )
       {
-      stat.log.exceptionPrint(message, exc);      
+      stat.userPrintln(message, exc);      
       }
    
    /**

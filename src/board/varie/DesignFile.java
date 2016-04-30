@@ -258,7 +258,7 @@ public final class DesignFile
 
       File rules_file = new java.io.File(this.get_parent(), rules_file_name);
       
-      stat.log.userPrintln("board write rule to "+rules_file);
+      stat.userPrintln("board write rule to "+rules_file);
       
       try
          {
