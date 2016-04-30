@@ -108,37 +108,35 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public boolean corner_is_bounded(int p_no)
       {
-      int no;
+      if (arr.length == 1) return false;
+
       if (p_no < 0)
          {
          System.out.println("corner: p_no is < 0");
-         no = 0;
+         p_no = 0;
          }
       else if (p_no >= arr.length)
          {
          System.out.println("corner: p_index must be less than arr.length - 1");
-         no = arr.length - 1;
+         p_no = arr.length - 1;
          }
-      else
-         {
-         no = p_no;
-         }
-      if (arr.length == 1)
-         {
-         return false;
-         }
+
+      
       int prev_no;
-      if (no == 0)
+      
+      if (p_no == 0)
          {
          prev_no = arr.length - 1;
          }
       else
          {
-         prev_no = no - 1;
+         prev_no = p_no - 1;
          }
+      
       PlaVectorInt prev_dir = (PlaVectorInt) arr[prev_no].direction().get_vector();
-      PlaVectorInt curr_dir = (PlaVectorInt) arr[no].direction().get_vector();
-      return (prev_dir.determinant(curr_dir) > 0);
+      PlaVectorInt curr_dir = (PlaVectorInt) arr[p_no].direction().get_vector();
+      
+      return prev_dir.determinant(curr_dir) > 0;
       }
 
    /**

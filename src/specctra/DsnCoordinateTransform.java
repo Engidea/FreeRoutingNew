@@ -108,14 +108,18 @@ public final class DsnCoordinateTransform implements java.io.Serializable
    public double[] board_to_dsn(PlaLineInt[] p_lines)
       {
       double[] result = new double[4 * p_lines.length];
-      for (int i = 0; i < p_lines.length; ++i)
+      
+      for (int index = 0; index < p_lines.length; ++index)
          {
-         PlaPointFloat a = p_lines[i].point_a.to_float();
-         PlaPointFloat b = p_lines[i].point_b.to_float();
-         result[4 * i] = board_to_dsn(a.v_x) + base_x;
-         result[4 * i + 1] = board_to_dsn(a.v_y) + base_y;
-         result[4 * i + 2] = board_to_dsn(b.v_x) + base_x;
-         result[4 * i + 3] = board_to_dsn(b.v_y) + base_y;
+         PlaLineInt  aline = p_lines[index];
+         
+         PlaPointFloat a = aline.point_a.to_float();
+         PlaPointFloat b = aline.point_b.to_float();
+         
+         result[4 * index + 0] = board_to_dsn(a.v_x) + base_x;
+         result[4 * index + 1] = board_to_dsn(a.v_y) + base_y;
+         result[4 * index + 2] = board_to_dsn(b.v_x) + base_x;
+         result[4 * index + 3] = board_to_dsn(b.v_y) + base_y;
          }
       return result;
       }

@@ -294,7 +294,7 @@ public class ShapeTraceEntries
          // nothing cut off
          return;
          }
-      if (pieces.length == 2 && offset_shape.is_outside(pieces[0].first_corner()) && offset_shape.is_outside(pieces[1].last_corner()))
+      if (pieces.length == 2 && offset_shape.is_outside(pieces[0].corner_first()) && offset_shape.is_outside(pieces[1].corner_last()))
          {
          fcutout_trace_fast(p_trace, pieces[0], pieces[1]);
          }

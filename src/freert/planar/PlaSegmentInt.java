@@ -53,7 +53,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaSegmentInt(Polyline p_polyline, int p_no)
       {
-      if (p_no <= 0 || p_no >= p_polyline.lines_arr.length - 1)
+      if (p_no <= 0 || p_no >= p_polyline.corner_count())
          {
          System.out.println("LineSegment from Polyline: p_no out of range");
          start = null;

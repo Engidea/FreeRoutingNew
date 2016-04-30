@@ -388,7 +388,6 @@ public abstract class AlgoPullTight
             {
             ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
             check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
-
             }
          delta_dist /= 2;
          if (check_ok)
@@ -436,7 +435,7 @@ public abstract class AlgoPullTight
       
       Polyline curr_polyline = p_polyline;
       
-      for (int index = 1; index < curr_polyline.lines_arr.length - 1; index++)
+      for (int index = 1; index < curr_polyline.corner_count(); index++)
          {
          boolean try_skip;
          if (index == 1 || index == curr_polyline.lines_arr.length - 2)
@@ -539,8 +538,8 @@ public abstract class AlgoPullTight
             curr_trace = r_board.insert_trace_without_cleaning(adjusted_polyline, trace_layer, curr_half_width, curr_trace.net_no_arr, curr_cl_class, curr_fixed_state);
             for (int curr_net_no : curr_trace.net_no_arr)
                {
-               r_board.split_traces(adjusted_polyline.first_corner(), trace_layer, curr_net_no);
-               r_board.split_traces(adjusted_polyline.last_corner(), trace_layer, curr_net_no);
+               r_board.split_traces(adjusted_polyline.corner_first(), trace_layer, curr_net_no);
+               r_board.split_traces(adjusted_polyline.corner_last(), trace_layer, curr_net_no);
                r_board.normalize_traces(curr_net_no);
 
                if (split_traces_at_keep_point())

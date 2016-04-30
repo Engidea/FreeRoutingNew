@@ -569,7 +569,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             PlaPointFloat curr_other_trace_corner_approx;
             PlaLineInt curr_other_trace_line;
             PlaLineInt curr_other_prev_trace_line;
-            if (contact_trace_polyline.first_corner().equals(curr_end_corner))
+            if (contact_trace_polyline.corner_first().equals(curr_end_corner))
                {
                curr_other_trace_corner_approx = contact_trace_polyline.corner_approx(1);
                curr_other_trace_line = contact_trace_polyline.lines_arr[1];
@@ -685,7 +685,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaLineInt other_trace_line = null;
       PlaLineInt other_prev_trace_line = null;
       Polyline trace_polyline = p_trace.polyline();
-      PlaPoint curr_end_corner = trace_polyline.last_corner();
+      PlaPoint curr_end_corner = trace_polyline.corner_last();
 
       if (this.curr_clip_shape != null && this.curr_clip_shape.is_outside(curr_end_corner))
          {
@@ -706,7 +706,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             PlaPointFloat curr_other_trace_corner_approx;
             PlaLineInt curr_other_trace_line;
             PlaLineInt curr_other_prev_trace_line;
-            if (contact_trace_polyline.first_corner().equals(curr_end_corner))
+            if (contact_trace_polyline.corner_first().equals(curr_end_corner))
                {
                curr_other_trace_corner_approx = contact_trace_polyline.corner_approx(1);
                curr_other_trace_line = contact_trace_polyline.lines_arr[1];

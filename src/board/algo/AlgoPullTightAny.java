@@ -115,7 +115,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             boolean ok = true;
             if (new_line_index == 1)
                {
-               if (!(p_polyline.first_corner() instanceof PlaPointInt))
+               if (!(p_polyline.corner_first() instanceof PlaPointInt))
                   {
                   // first corner must not be changed
                   ok = false;
@@ -123,7 +123,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                else
                   {
                   PlaDirection dir = curr_lines[1].direction();
-                  curr_lines[0] = new PlaLineInt(p_polyline.first_corner(), dir.turn_45_degree(2));
+                  curr_lines[0] = new PlaLineInt(p_polyline.corner_first(), dir.turn_45_degree(2));
                   }
                }
             else
@@ -132,7 +132,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             if (index == last_index)
                {
-               if (!(p_polyline.last_corner() instanceof PlaPointInt))
+               if (!(p_polyline.corner_last() instanceof PlaPointInt))
                   {
                   // last corner must not be changed
                   ok = false;
@@ -140,7 +140,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                else
                   {
                   PlaDirection dir = curr_lines[1].direction();
-                  curr_lines[2] = new PlaLineInt(p_polyline.last_corner(), dir.turn_45_degree(2));
+                  curr_lines[2] = new PlaLineInt(p_polyline.corner_last(), dir.turn_45_degree(2));
                   }
                }
             else
@@ -174,7 +174,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                   ok = false;
                   }
                }
-            if (ok && index == 1 && !(p_polyline.first_corner() instanceof PlaPointInt))
+            if (ok && index == 1 && !(p_polyline.corner_first() instanceof PlaPointInt))
                {
                // There may be a connection to a trace.
                // make shure that the second corner of the new polyline
@@ -186,7 +186,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                   ok = false;
                   }
                }
-            if (ok && index == last_index - 1 && !(p_polyline.last_corner() instanceof PlaPointInt))
+            if (ok && index == last_index - 1 && !(p_polyline.corner_last() instanceof PlaPointInt))
                {
                // There may be a connection to a trace.
                // make shure that the second last corner of the new polyline
@@ -949,7 +949,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             PlaPointFloat curr_other_trace_corner_approx;
             PlaLineInt curr_other_trace_line;
             PlaLineInt curr_other_prev_trace_line;
-            if (contact_trace_polyline.first_corner().equals(curr_end_corner))
+            if (contact_trace_polyline.corner_first().equals(curr_end_corner))
                {
                curr_other_trace_corner_approx = contact_trace_polyline.corner_approx(1);
                curr_other_trace_line = contact_trace_polyline.lines_arr[1];
@@ -1069,7 +1069,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaLineInt other_trace_line = null;
       PlaLineInt other_prev_trace_line = null;
       Polyline trace_polyline = p_trace.polyline();
-      PlaPoint curr_end_corner = trace_polyline.last_corner();
+      PlaPoint curr_end_corner = trace_polyline.corner_last();
 
       if ( curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner))
          {
@@ -1103,7 +1103,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                PlaPointFloat curr_other_trace_corner_approx;
                PlaLineInt curr_other_trace_line;
                PlaLineInt curr_other_prev_trace_line;
-               if (contact_trace_polyline.first_corner().equals(curr_end_corner))
+               if (contact_trace_polyline.corner_first().equals(curr_end_corner))
                   {
                   curr_other_trace_corner_approx = contact_trace_polyline.corner_approx(1);
                   curr_other_trace_line = contact_trace_polyline.lines_arr[1];

@@ -182,15 +182,15 @@ public final class ArtConnectionInsert
          PlaPoint ok_point = r_board.insert_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer], p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
                ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
          boolean neckdown_inserted = false;
-         if (ok_point != null && ok_point != insert_polyline.last_corner() && ctrl.with_neckdown && curr_corner_arr.length == 2)
+         if (ok_point != null && ok_point != insert_polyline.corner_last() && ctrl.with_neckdown && curr_corner_arr.length == 2)
             {
             neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
             }
-         if (ok_point == insert_polyline.last_corner() || neckdown_inserted)
+         if (ok_point == insert_polyline.corner_last() || neckdown_inserted)
             {
             from_corner_no = i;
             }
-         else if (ok_point == insert_polyline.first_corner() && i != p_trace.corners.length - 1)
+         else if (ok_point == insert_polyline.corner_first() && i != p_trace.corners.length - 1)
             {
             // if ok_point == insert_polyline.first_corner() the spring over may have failed.
             // Spring over may correct the situation because an insertion, which is ok with clearance compensation

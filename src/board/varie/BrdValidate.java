@@ -140,7 +140,7 @@ public class BrdValidate
 
    static public boolean check(String p_s, RoutingBoard p_board, Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_cl_type)
       {
-      ShapeTile[] offset_shapes = p_polyline.offset_shapes(p_half_width, 0, p_polyline.lines_arr.length - 1);
+      ShapeTile[] offset_shapes = p_polyline.offset_shapes(p_half_width, 0, p_polyline.corner_count());
       for (int i = 0; i < offset_shapes.length; ++i)
          {
          Collection<BrdItem> obstacles = p_board.search_tree_manager.get_default_tree().find_overlap_items_with_clearance(offset_shapes[i], p_layer, p_net_no_arr, p_cl_type);

@@ -961,7 +961,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
    public Polyline[] cutout(Polyline p_polyline)
       {
       int[][] intersection_no = this.entrance_points(p_polyline);
-      PlaPoint first_corner = p_polyline.first_corner();
+      PlaPoint first_corner = p_polyline.corner_first();
       boolean first_corner_is_inside = this.contains_inside(first_corner);
       if (intersection_no.length == 0)
       // no intersections
@@ -979,7 +979,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       Collection<Polyline> pieces = new LinkedList<Polyline>();
       int curr_intersection_no = 0;
       int[] curr_intersection_tuple = intersection_no[curr_intersection_no];
-      PlaPoint first_intersection = p_polyline.lines_arr[curr_intersection_tuple[0]].intersection(this.border_line(curr_intersection_tuple[1]));
+      PlaPoint first_intersection = p_polyline.lines_arr[curr_intersection_tuple[0]].intersection(border_line(curr_intersection_tuple[1]));
       if (!first_corner_is_inside)
          {
          // calculate outside piece at start

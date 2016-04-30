@@ -758,7 +758,7 @@ public final class AlgoShoveTrace
          offset_shape = offset_shape.bounding_octagon();
          }
 
-      if (offset_shape.contains_inside(p_polyline.first_corner()) || offset_shape.contains_inside(p_polyline.last_corner()))
+      if (offset_shape.contains_inside(p_polyline.corner_first()) || offset_shape.contains_inside(p_polyline.corner_last()))
          {
          // can happen with clearance compensation off because of asymmetry in calculations with the offset shapes
          r_board.set_shove_failing_obstacle(found_obstacle);

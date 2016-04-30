@@ -59,7 +59,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       {
       super(p_layer, p_half_width, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
 
-      if (p_polyline.lines_arr.length < 3)
+      if ( ! p_polyline.is_valid())
          throw new IllegalArgumentException("PolylineTrace: p_polyline.arr.length >= 3 expected");
       
       polyline = p_polyline;
@@ -102,12 +102,11 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       }
 
    /**
-    * returns the number of corners of this trace, which is the number of lines
-    * of its polyline minus one
+    * returns the number of corners of this trace
     */
    public int corner_count()
       {
-      return polyline.lines_arr.length - 1;
+      return polyline.corner_count();
       }
 
    public double get_length()
@@ -1297,7 +1296,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
       Polyline cut_polyline = new Polyline(cut_lines);
       Polyline changed_polyline;
-      if (cut_polyline.first_corner().equals(cut_polyline.last_corner()))
+      if (cut_polyline.corner_first().equals(cut_polyline.corner_last()))
          {
          changed_polyline = border_polyline;
          }

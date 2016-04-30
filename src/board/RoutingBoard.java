@@ -2136,11 +2136,11 @@ public final class RoutingBoard implements java.io.Serializable
             p_max_spring_over_recursion_depth, p_tidy_width, p_pull_tight_accuracy, p_with_check, p_time_limit);
       
       PlaPoint result;
-      if (ok_point == insert_polyline.first_corner())
+      if (ok_point == insert_polyline.corner_first())
          {
          result = p_from_corner;
          }
-      else if (ok_point == insert_polyline.last_corner())
+      else if (ok_point == insert_polyline.corner_last())
          {
          result = p_to_corner;
          }
@@ -2159,17 +2159,17 @@ public final class RoutingBoard implements java.io.Serializable
       {
       ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
-      ShapeTile[] trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.lines_arr.length - 1);
+      ShapeTile[] trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.corner_count());
       boolean orthogonal_mode = (brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE);
 
-      for (int i = 0; i < trace_shapes.length; ++i)
+      for (int index = 0; index < trace_shapes.length; ++index)
          {
-         ShapeTile curr_trace_shape = trace_shapes[i];
+         ShapeTile curr_trace_shape = trace_shapes[index];
          if (orthogonal_mode)
             {
             curr_trace_shape = curr_trace_shape.bounding_box();
             }
-         BrdFromSide from_side = new BrdFromSide(p_polyline, i + 1, curr_trace_shape);
+         BrdFromSide from_side = new BrdFromSide(p_polyline, index + 1, curr_trace_shape);
 
          boolean check_shove_ok = shove_trace_algo.check(curr_trace_shape, from_side, null, p_layer, p_net_no_arr, p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
                p_max_spring_over_recursion_depth, null);
@@ -2202,8 +2202,8 @@ public final class RoutingBoard implements java.io.Serializable
       {
       clear_shove_failing_obstacle();
       
-      PlaPoint from_corner = p_polyline.first_corner();
-      PlaPoint to_corner = p_polyline.last_corner();
+      PlaPoint from_corner = p_polyline.corner_first();
+      PlaPoint to_corner = p_polyline.corner_last();
       
       if (from_corner.equals(to_corner)) return to_corner;
       
@@ -2248,7 +2248,7 @@ public final class RoutingBoard implements java.io.Serializable
          combined_polyline = new_polyline.combine(combine_trace.polyline());
          }
       
-      if (combined_polyline.lines_arr.length < 3)
+      if ( ! combined_polyline.is_valid() ) //lines_arr.length < 3)
          {
          return from_corner;
          }
@@ -2307,7 +2307,7 @@ public final class RoutingBoard implements java.io.Serializable
          if (last_segment_length > sample_width)
             {
             new_polyline = new_polyline.shorten(new_polyline.lines_arr.length - (trace_shapes.length - last_shape_no - 1), sample_width);
-            PlaPoint curr_last_corner = new_polyline.last_corner();
+            PlaPoint curr_last_corner = new_polyline.corner_last();
             if (!(curr_last_corner instanceof PlaPointInt))
                {
                System.out.println("insert_forced_trace_segment: IntPoint expected");

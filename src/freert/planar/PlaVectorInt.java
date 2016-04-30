@@ -119,7 +119,8 @@ public final class PlaVectorInt extends PlaVector
       }
 
    /**
-    * Calculates the determinant of the matrix consisting of this Vector and p_other.
+    * Calculates the determinant of the matrix consisting of this Vector and p_other
+    * it is also the area between the two vectors
     */
    public final long determinant(PlaVectorInt p_other)
       {
@@ -129,18 +130,15 @@ public final class PlaVectorInt extends PlaVector
    @Override
    public PlaVector turn_90_degree(int p_factor)
       {
-      int n = p_factor;
-      while (n < 0)
-         {
-         n += 4;
-         }
-      while (n >= 4)
-         {
-         n -= 4;
-         }
+      while (p_factor < 0)
+         p_factor += 4;
+
+      while (p_factor >= 4)
+         p_factor -= 4;
+
       int new_x;
       int new_y;
-      switch (n)
+      switch (p_factor)
          {
          case 0: // 0 degree
             new_x = point_x;
@@ -207,9 +205,7 @@ public final class PlaVectorInt extends PlaVector
    @Override
    public PlaSide side_of(PlaVectorInt p_other)
       {
-      long determinant = (long) p_other.point_x * point_y - (long) p_other.point_y * point_x;
-      
-      return PlaSide.get_side_of(determinant);
+      return PlaSide.get_side_correct(determinant(p_other));
       }
 
    @Override

@@ -99,7 +99,7 @@ public final class MazeShoveTraceAlgo
       int trace_corner_no = p_obstacle_room.get_index_in_item();
       Polyline trace_polyline = obstacle_trace.polyline();
 
-      if (trace_corner_no >= trace_polyline.lines_arr.length - 1)
+      if (trace_corner_no >= trace_polyline.corner_count() )
          {
          r_board.userPrintln("cannot shove trace_corner_no to big "+obstacle_trace);
          return false;
