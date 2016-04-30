@@ -774,6 +774,12 @@ public final class BoardFrame
       {
       JOptionPane.showMessageDialog(work_frame, message, title, JOptionPane.PLAIN_MESSAGE);
       }
+
+   public int showConfirmDialog (Object message, String title )
+      {
+      return JOptionPane.showConfirmDialog(work_frame, message, title, JOptionPane.YES_NO_OPTION);
+      }
+   
    
    private class WindowStateListener extends java.awt.event.WindowAdapter
       {

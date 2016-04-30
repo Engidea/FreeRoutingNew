@@ -14,6 +14,11 @@ import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
 import main.Stat;
 
+/**
+ * Alternative to ResourceBundle.getBundle
+ * @author damiano
+ *
+ */
 public final class GuiResources 
    {
    private final Stat stat;

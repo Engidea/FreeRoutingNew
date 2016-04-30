@@ -19,6 +19,7 @@
  */
 package board.items;
 
+import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Iterator;
 import library.LibPadstack;
@@ -291,7 +292,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       p_window.newline();
       }
 
-   public boolean write(java.io.ObjectOutputStream p_stream)
+   public boolean write(ObjectOutputStream p_stream)
       {
       try
          {
