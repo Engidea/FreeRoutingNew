@@ -172,7 +172,7 @@ public final class PlaVectorInt extends PlaVector
    @Override
    public PlaVector mirror_at_x_axis()
       {
-      return new PlaVectorInt(this.point_x, -this.point_y);
+      return new PlaVectorInt(point_x, -point_y);
       }
 
 

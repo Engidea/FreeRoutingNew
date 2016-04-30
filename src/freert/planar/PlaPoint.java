@@ -98,7 +98,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
     * Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2; 
     * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
     */
-   public PlaSide side_of(PlaPoint p_1, PlaPoint p_2)
+   public final PlaSide side_of(PlaPoint p_1, PlaPoint p_2)
       {
       PlaVector v1 = difference_by(p_1);
       PlaVector v2 = p_2.difference_by(p_1);

@@ -206,18 +206,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return new PlaVectorRational(result[0], result[1], result[2]);
       }
 
-   /**
-    * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; Side.ON_THE_RIGHT, if this
-    * Point is on the right f the line from p_1 to p_2; and Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
-    */
-   @Override
-   public PlaSide side_of(PlaPoint p_1, PlaPoint p_2)
-      {
-      PlaVector v1 = difference_by(p_1);
-      PlaVector v2 = p_2.difference_by(p_1);
-      return v1.side_of(v2);
-      }
-
    @Override
    public PlaSide side_of(PlaLineInt p_line)
       {

@@ -154,50 +154,64 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaDirection direction()
       {
-      if (dir == null)
-         {
-         PlaVectorInt d = point_b.difference_by(point_a);
-         dir = new PlaDirection (d);
-         }
+      if (dir != null) return dir;
+
+      dir = new PlaDirection (point_b.difference_by(point_a));
       
       return dir;
       }
 
    /**
-    * The function returns Side.ON_THE_LEFT, if this Line is on the left of p_point, Side.ON_THE_RIGHT, if this Line is on the right
-    * of p_point and Side.COLLINEAR, if this Line contains p_point.
+    * The function returns Side.ON_THE_LEFT, if this Line is on the left of p_point, 
+    * Side.ON_THE_RIGHT, if this Line is on the right of p_point 
+    * Side.COLLINEAR, if this Line contains p_point.
     */
-   public PlaSide side_of(PlaPoint p_point)
+   public final PlaSide side_of(PlaPoint p_point)
       {
       PlaSide result = p_point.side_of(this);
+      
       return result.negate();
       }
 
    /**
-    * Returns Side.COLLINEAR, if p_point is on the line with tolerance p_tolerance. Otherwise Side.ON_THE_LEFT, if this line is on
-    * the left of p_point, or Side.ON_THE_RIGHT, if this line is on the right of p_point,
+    * I wish to know where we are dealing with proper int points
+    * @param p_point
+    * @return
+    */
+   public final PlaSide side_of(PlaPointInt p_point)
+      {
+      PlaSide result = p_point.side_of(this);
+      
+      return result.negate();
+      }
+   
+   
+   /**
+    * Returns Side.COLLINEAR, if p_point is on the line with tolerance p_tolerance. 
+    * Why is this not using direction ? seems a good candidate, no ?
+    * Side.ON_THE_LEFT, if this line is on the left of p_point, 
+    * Side.ON_THE_RIGHT, if this line is on the right of p_point,
+    * TODO try to use direction adn side_of with the same params
     */
    public PlaSide side_of(PlaPointFloat p_point, double p_tolerance)
       {
       // only implemented for IntPoint lines for performance reasons
-      PlaPointInt this_a = (PlaPointInt) point_a;
-      PlaPointInt this_b = (PlaPointInt) point_b;
-      double det = (this_b.v_y - this_a.v_y) * (p_point.v_x - this_a.v_x) - (this_b.v_x - this_a.v_x) * (p_point.v_y - this_a.v_y);
-      PlaSide result;
+
+      double det = (point_b.v_y - point_a.v_y) * (p_point.v_x - point_a.v_x) - (point_b.v_x - point_a.v_x) * (p_point.v_y - point_a.v_y);
+
+      
       if (det - p_tolerance > 0)
          {
-         result = PlaSide.ON_THE_LEFT;
+         return PlaSide.ON_THE_LEFT;
          }
       else if (det + p_tolerance < 0)
          {
-         result = PlaSide.ON_THE_RIGHT;
+         return PlaSide.ON_THE_RIGHT;
          }
       else
          {
-         result = PlaSide.COLLINEAR;
+         return PlaSide.COLLINEAR;
          }
-
-      return result;
       }
 
    /**
@@ -242,9 +256,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public boolean is_on_the_left(ShapeTile p_tile)
       {
-      for (int i = 0; i < p_tile.border_line_count(); ++i)
+      for (int index = 0; index < p_tile.border_line_count(); ++index)
          {
-         if (side_of(p_tile.corner(i)) == PlaSide.ON_THE_RIGHT)
+         if (side_of(p_tile.corner(index)) == PlaSide.ON_THE_RIGHT)
             {
             return false;
             }
