@@ -79,4 +79,19 @@ public final class PlaSide
          return COLLINEAR;
       }
 
+   /**
+    * Depending on how you calculate the determinant you use this one or the previous one
+    * @param p_value
+    * @return
+    */
+   static PlaSide get_side_correct(long p_value)
+      {
+      if (p_value > 0)
+          return ON_THE_RIGHT;
+      else if (p_value < 0)
+          return ON_THE_LEFT;
+      else
+         return COLLINEAR;
+      }
+
    }

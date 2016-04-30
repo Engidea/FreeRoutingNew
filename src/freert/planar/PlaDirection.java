@@ -24,13 +24,16 @@ import java.math.BigInteger;
 import freert.varie.Signum;
 
 /**
- *
  * A Direction is an equivalence class of vectors. 
  * Two vectors define the same object of class Direction, if they point into the same direction. 
  * We prefer using directions instead of angles because with angles the arithmetic calculations are in general not exact.
  * A direction is a Vector that cannot be further "shortened"
  * You can define arbitrarily precise "angles" by using bigger and bigger numbers that cannot be "reduced"
+ * Now, it also happens that this could be the basis for the "m" coefficient of a line, the idea being that by having
+ * the y and x part you end up handling the situations where "m" would go to infinity in a nice way
+ * So, I am adding "m" support with the aim to get rid, sooner or later of the rationals... 
  * @author Alfons Wirtz
+ * @author Damiano Bolla 2016
  */
 
 public final class PlaDirection implements Comparable<PlaDirection>, java.io.Serializable, PlaObject
@@ -284,10 +287,19 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      }
 
 
-  
-  final double determinant(PlaDirection p_other)
+  /**
+   * Consider the two direction vectors written as 
+   *  Xa Xb
+   *  Ya Yb
+   * The determinant is zero if they are "colinear" or > 0 if on right or < 0 if on left
+   * There is some chance of overflow here, small one, in theory
+   * TODO I should check that dir_x " dir_Y are never > 32 bits                          
+   * @param p_other
+   * @return
+   */
+  final long determinant(PlaDirection p_other)
      {
-     return (double) dir_x * p_other.dir_y - (double) dir_y * p_other.dir_x;
+     return dir_x * p_other.dir_y - dir_y * p_other.dir_x;
      }
 
 
@@ -311,19 +323,21 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       }
 
    /**
-    * Let L be the line from the Zero Vector to p_other.get_vector(). 
-    * The function returns Side.ON_THE_LEFT, if this.get_vector() is on the left of L 
+    * The function returns 
+    * Side.ON_THE_LEFT, if this.get_vector() is on the left of L 
     * Side.ON_THE_RIGHT, if this.get_vector() is on the right of L 
     * Side.COLLINEAR, if this.get_vector() is collinear with L.
     */
    public final PlaSide side_of(PlaDirection p_other)
       {
-      return get_vector().side_of(p_other.get_vector());
+      return PlaSide.get_side_correct(determinant(p_other));
       }
 
    /**
     * The function returns Signum.POSITIVE, if the scalar product of of a vector representing this direction and a vector
-    * representing p_other is > 0, Signum.NEGATIVE, if the scalar product is < 0, and Signum.ZERO, if the scalar product is equal 0.
+    * representing p_other is > 0, 
+    * Signum.NEGATIVE, if the scalar product is < 0, and 
+    * Signum.ZERO, if the scalar product is equal 0.
     */
    public final Signum projection(PlaDirection p_other)
       {
