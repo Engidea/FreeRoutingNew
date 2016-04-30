@@ -23,6 +23,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
 import freert.rules.BoardRules;
+import freert.rules.NetClass;
 import freert.varie.ItemClass;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
@@ -447,10 +448,10 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                DsnRule curr_ob = it.next();
                if (curr_ob instanceof DsnRuleWidth)
                   {
-                  freert.rules.NetClass default_net_rule = p_board.brd_rules.get_default_net_class();
+                  NetClass default_net_rule = p_board.brd_rules.get_default_net_class();
                   double wire_width = ((DsnRuleWidth) curr_ob).value;
                   int trace_halfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(wire_width) / 2);
-                  freert.rules.NetClass net_rule = p_board.brd_rules.net_classes.find(trace_halfwidth, default_net_rule.get_trace_clearance_class(), default_net_rule.get_via_rule());
+                  NetClass net_rule = p_board.brd_rules.net_classes.find(trace_halfwidth, default_net_rule.get_trace_clearance_class(), default_net_rule.get_via_rule());
                   if (net_rule == null)
                      {
                      // create a new net rule

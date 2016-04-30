@@ -129,7 +129,25 @@ public final class NetClass implements java.io.Serializable, PrintableInfo
          System.out.println(" NetClass.get_trace_half_width: p_layer out of range");
          return 0;
          }
+      
       return trace_half_width_arr[p_layer];
+      }
+
+   /**
+    * Cheks if all layers have a trace half width given
+    * @param p_trace_half_width
+    * @return true if all layers have 
+    */
+   public boolean has_trace_half_width ( int p_trace_half_width) 
+      {
+      int layer_count = layer_count();
+      
+      for (int index = 0; index < layer_count; index++)
+         {
+         if (trace_half_width_arr[index] != p_trace_half_width) return false;
+         }
+      
+      return true;
       }
 
    /**
