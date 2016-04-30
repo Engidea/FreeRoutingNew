@@ -60,9 +60,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       {
       DsnBoardConstruction board_construction_info = new DsnBoardConstruction();
 
-      // If true, components on the back side are rotated before mirroring
-      // The correct location is the scope PlaceControl, but Electra writes it
-      // here.
+      // If true, components on the back side are rotated before mirroring The correct location is the scope PlaceControl, but Electra writes it here.
       boolean flip_style_rotate_first = false;
 
       Collection<DsnScopeArea> keepout_list = new LinkedList<DsnScopeArea>();
@@ -182,12 +180,12 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          }
 
       boolean result = true;
-      if (p_par.board_handling.get_routing_board() == null)
+      if (p_par.i_board.get_routing_board() == null)
          {
          result = create_board(p_par, board_construction_info);
          }
       
-      RoutingBoard board = p_par.board_handling.get_routing_board();
+      RoutingBoard board = p_par.i_board.get_routing_board();
       if (board == null)
          {
          return false;
@@ -283,10 +281,10 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          }
       insert_missing_power_planes(board_construction_info.layer_info, p_par.netlist, board);
 
-      p_par.board_handling.initialize_manual_trace_half_widths();
+      p_par.i_board.initialize_manual_trace_half_widths();
       if (p_par.autoroute_settings != null)
          {
-         p_par.board_handling.itera_settings.autoroute_settings = p_par.autoroute_settings;
+         p_par.i_board.itera_settings.autoroute_settings = p_par.autoroute_settings;
          }
       return result;
       }
@@ -930,7 +928,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       
       ClearanceMatrix clearance_matrix = ClearanceMatrix.get_default_instance(board_layer_structure, 0);
       
-      BoardRules board_rules = new BoardRules(board_layer_structure, clearance_matrix);
+      BoardRules board_rules = new BoardRules(p_par.i_board, board_layer_structure, clearance_matrix);
       
       DsnParserInfo specctra_parser_info = new DsnParserInfo(p_par);
       
@@ -945,9 +943,9 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       update_board_rules(p_par, p_board_construction_info, board_rules);
       board_rules.set_trace_snap_angle(p_par.snap_angle);
 
-      p_par.board_handling.create_board(bounds, board_layer_structure, outline_shape_arr, p_board_construction_info.outline_clearance_class_name, board_rules, board_communication );
+      p_par.i_board.create_board(bounds, board_layer_structure, outline_shape_arr, p_board_construction_info.outline_clearance_class_name, board_rules, board_communication );
 
-      RoutingBoard board = p_par.board_handling.get_routing_board();
+      RoutingBoard board = p_par.i_board.get_routing_board();
 
       // Insert the holes in the board outline as keepouts.
       for (ShapePolyline curr_outline_hole : hole_shapes)
@@ -1304,7 +1302,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          System.out.println("Structure.insert_keepout: keepout is not an area");
          return true;
          }
-      RoutingBoard board = p_par.board_handling.get_routing_board();
+      RoutingBoard board = p_par.i_board.get_routing_board();
       if (board == null)
          {
          System.out.println("Structure.insert_keepout: board not initialized");

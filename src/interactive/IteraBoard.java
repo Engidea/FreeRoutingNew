@@ -27,6 +27,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTileBox;
 import freert.rules.BoardRules;
+import freert.rules.NetClass;
 import freert.rules.RuleNet;
 import freert.varie.ItemClass;
 import freert.varie.UnitMeasure;
@@ -85,13 +86,14 @@ import board.varie.ItemSelectionFilter;
 
 /**
  * Central connection class between the graphical user interface and the board database.
+ * Note that this is not serialized
  * @author Alfons Wirtz
  */
 public final class IteraBoard
    {
    private static final String classname="BoardHandling.";
+
    private final Stat stat;
-   
    // The board database used in this interactive handling
    private RoutingBoard r_board = null;
    // The graphical context for drawing the board. */
@@ -132,8 +134,10 @@ public final class IteraBoard
       resources = new GuiResources(p_stat, "interactive.resources.BoardHandling");
       }
 
-   
-   
+   public Stat get_stat()
+      {
+      return stat;
+      }
    
    /**
     * Sets the board to read only for example when running a separate action thread to avoid unsynchronized change of the board.
@@ -171,10 +175,8 @@ public final class IteraBoard
     */
    public int get_layer_count()
       {
-      if (r_board == null)
-         {
-         return 0;
-         }
+      if (r_board == null) return 0;
+
       return r_board.get_layer_count();
       }
 
@@ -275,7 +277,8 @@ public final class IteraBoard
          {
          return true;
          }
-      freert.rules.NetClass curr_net_class = curr_net.get_class();
+      
+      NetClass curr_net_class = curr_net.get_class();
       if (curr_net_class == null)
          {
          return true;
@@ -649,7 +652,12 @@ public final class IteraBoard
    /**
     * Creates the Routingboard, the graphic context and the interactive settings
     */
-   public void create_board(ShapeTileBox p_bounding_box, BrdLayerStructure p_layer_structure, ShapePolyline[] p_outline_shapes, String p_outline_clearance_class_name, BoardRules p_rules,
+   public void create_board(
+         ShapeTileBox p_bounding_box, 
+         BrdLayerStructure p_layer_structure, 
+         ShapePolyline[] p_outline_shapes, 
+         String p_outline_clearance_class_name, 
+         BoardRules p_rules,
          HostCom p_communication )
       {
       if ( r_board != null)
@@ -683,6 +691,9 @@ public final class IteraBoard
       // create a graphics context for the board
       Dimension panel_size = board_panel.getPreferredSize();
       gdi_context = new GdiContext(p_bounding_box, panel_size, p_layer_structure, stat);
+      
+      
+      
       }
 
    /**
@@ -1174,8 +1185,7 @@ public final class IteraBoard
       {
       r_board = (RoutingBoard) p_design.readObject();
 
-      // the following to are marked transient...
-      r_board.stat.log = stat.log;
+      r_board.set_transient_item(this);
       
       itera_settings = (IteraSettings) p_design.readObject();
       itera_settings.set_transient_fields(r_board, actlog);

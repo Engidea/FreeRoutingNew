@@ -39,11 +39,11 @@ public final class DsnReadFile
    private static final String classname="DsnReadFile.";
    
    private final InputStream input_stream;
-   private final IteraBoard board_handling;
+   private final IteraBoard itera_board;
    
-   public DsnReadFile (IteraBoard p_board_handling,  InputStream p_input_stream)
+   public DsnReadFile (IteraBoard p_itera_board,  InputStream p_input_stream)
       {
-      board_handling = p_board_handling;
+      itera_board = p_itera_board;
       input_stream = p_input_stream;
       }
    
@@ -77,7 +77,7 @@ public final class DsnReadFile
             }
          }
       
-      DsnReadScopeParameters read_scope_par = new DsnReadScopeParameters(scanner, board_handling, p_item_id_no_generator );
+      DsnReadScopeParameters read_scope_par = new DsnReadScopeParameters(scanner, itera_board, p_item_id_no_generator );
       boolean read_ok = DsnKeyword.PCB_SCOPE.read_scope(read_scope_par);
       DsnReadResult result;
       if (read_ok)
@@ -108,7 +108,7 @@ public final class DsnReadFile
     */
    private boolean adjust_plane_autoroute_settings()
       {
-      RoutingBoard routing_board = board_handling.get_routing_board();
+      RoutingBoard routing_board = itera_board.get_routing_board();
       
       BrdLayerStructure board_layer_structure = routing_board.layer_structure;
       
@@ -199,7 +199,7 @@ public final class DsnReadFile
          return false;
          }
       // Adjust the layer preferred directions in the autoroute settings and deactivate the changed layers.
-      autoroute.ArtSettings autoroute_settings = board_handling.itera_settings.autoroute_settings;
+      autoroute.ArtSettings autoroute_settings = itera_board.itera_settings.autoroute_settings;
       int layer_count = routing_board.get_layer_count();
       boolean curr_preferred_direction_is_horizontal = autoroute_settings.get_preferred_direction_is_horizontal(0);
       for (int i = 0; i < layer_count; ++i)

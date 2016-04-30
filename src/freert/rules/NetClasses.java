@@ -20,6 +20,8 @@
 
 package freert.rules;
 
+import gui.varie.GuiResources;
+import interactive.IteraBoard;
 import java.util.Vector;
 import board.BrdLayerStructure;
 
@@ -79,9 +81,9 @@ public class NetClasses implements java.io.Serializable
    /**
     * Appends a new empty class to the class array. A name for the class is created internally
     */
-   NetClass append(BrdLayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, java.util.Locale p_locale)
+   NetClass append(BrdLayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, IteraBoard itera_board)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("rules.resources.Default", p_locale);
+      GuiResources resources = itera_board.newGuiResources("rules.resources.Default");
       String name_front = resources.getString("class");
       String new_name = null;
       Integer index = 0;
@@ -89,11 +91,9 @@ public class NetClasses implements java.io.Serializable
          {
          ++index;
          new_name = name_front + index.toString();
-         if (this.get(new_name) == null)
-            {
-            break;
-            }
+         if (get(new_name) == null)  break;
          }
+
       return append(new_name, p_layer_structure, p_clearance_matrix);
       }
 

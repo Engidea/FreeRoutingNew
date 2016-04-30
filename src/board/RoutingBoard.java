@@ -15,8 +15,11 @@
  */
 package board;
 
+import interactive.IteraBoard;
 import interactive.IteraSettings;
 import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -96,7 +99,6 @@ public final class RoutingBoard implements java.io.Serializable
    private static final String classname = "RoutingBoard.";
    private static final int s_PREVENT_ENDLESS_LOOP = 5;
 
-   public final Stat stat;
    // List of items inserted into this board, may be less than all available components
    public final UndoableObjects item_list;
    // List of placed components on the board
@@ -119,6 +121,9 @@ public final class RoutingBoard implements java.io.Serializable
    // the smallest half width of all traces on the board, actually, calculated on the fly when inserting...
    private int min_trace_half_width = 10000;
 
+   // it is transient just because it is useless to save it
+   public transient Stat stat;
+   // observers are not implemented anyway
    public transient BrdObservers observers = new BrdObserverVoid();
    // Handles the search trees pointing into the items of this board, initialized on constructor
    public transient SearchTreeManager search_tree_manager;
@@ -1587,7 +1592,7 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
 
-   private void readObject(java.io.ObjectInputStream p_stream) throws java.io.IOException, java.lang.ClassNotFoundException
+   private void readObject(ObjectInputStream p_stream) throws IOException, java.lang.ClassNotFoundException
       {
       p_stream.defaultReadObject();
 
@@ -1608,9 +1613,15 @@ public final class RoutingBoard implements java.io.Serializable
 
          search_tree_manager.insert(curr_item);
          }
+      
       }
    
-
+   public void set_transient_item ( IteraBoard p_itera_board )
+      {
+      brd_rules.set_transient_item(p_itera_board);
+      stat = p_itera_board.get_stat();
+      }
+   
    /**
     * Removes the items in p_item_list and pulls the nearby rubber traces tight. 
     */

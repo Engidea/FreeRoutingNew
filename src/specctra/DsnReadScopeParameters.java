@@ -37,7 +37,7 @@ public final class DsnReadScopeParameters
    {
    public final JflexScanner scanner;
 
-   final IteraBoard board_handling;
+   final IteraBoard i_board;
    final DsnNetList netlist = new DsnNetList();
 
    final IdGenerator item_id_no_generator;
@@ -84,10 +84,10 @@ public final class DsnReadScopeParameters
    // how much to further divide the unit measure, ideally 10 parts if Unit is UM
    int dsn_resolution;
 
-   DsnReadScopeParameters(JflexScanner p_scanner, IteraBoard p_board_handling,  IdGenerator p_item_id_no_generator )
+   DsnReadScopeParameters(JflexScanner p_scanner, IteraBoard p_itera_board,  IdGenerator p_item_id_no_generator )
       {
       scanner = p_scanner;
-      board_handling = p_board_handling;
+      i_board = p_itera_board;
       item_id_no_generator = p_item_id_no_generator;
       }
 

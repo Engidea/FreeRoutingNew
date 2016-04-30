@@ -1,13 +1,14 @@
 package board.infos;
 
-import freert.planar.PlaPointFloat;
-import freert.varie.Signum;
-import gui.varie.GuiResources;
-import gui.varie.ObjectInfoPanel;
 import interactive.IteraBoard;
 import main.Stat;
 import board.items.BrdItem;
 import board.items.BrdTrace;
+import freert.planar.PlaPointFloat;
+import freert.rules.RuleNet;
+import freert.varie.Signum;
+import gui.varie.GuiResources;
+import gui.varie.ObjectInfoPanel;
 
 /**
  * Describes information of a route stub in the list.
@@ -15,7 +16,7 @@ import board.items.BrdTrace;
 public final class BrdRouteStub implements Comparable<BrdRouteStub>, PrintableInfo
    {
    private final Stat stat;
-   private final freert.rules.RuleNet net;
+   private final RuleNet net;
    private final PlaPointFloat location;
    private final int layer_no;
    private final IteraBoard board_handling;

@@ -20,23 +20,25 @@
 
 package freert.rules;
 
+import freert.planar.ShapeConvex;
+import freert.varie.ItemClass;
+import interactive.IteraBoard;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.Serializable;
 import java.util.Vector;
 import library.LibPadstack;
 import board.BrdLayerStructure;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
 import board.varie.TraceAngleRestriction;
-import freert.planar.ShapeConvex;
-import freert.varie.ItemClass;
 
 /**
  * Contains the rules and constraints required for items to be inserted into a routing board
  *
  * @author Alfons Wirtz
  */
-public final class BoardRules implements java.io.Serializable
+public final class BoardRules implements Serializable
    {
    private static final long serialVersionUID = 1L;
    public static final int default_clearance_class=1;
@@ -50,7 +52,7 @@ public final class BoardRules implements java.io.Serializable
    public final RuleNets nets= new RuleNets();
    public final BrdViaInfoList via_infos = new BrdViaInfoList();
    public final Vector<RuleViaInfoList> via_rules = new Vector<RuleViaInfoList>();
-   public final NetClasses net_classes = new NetClasses();
+   public final NetClasses net_classes;
 
    
    // If true, the router ignores conduction areas.
@@ -65,9 +67,13 @@ public final class BoardRules implements java.io.Serializable
 
    // The angle restriction for traces: 90 degree, 45 degree or none. 
    private transient TraceAngleRestriction trace_angle_restriction;
+   private transient IteraBoard itera_board;
 
-   public BoardRules(BrdLayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
+   public BoardRules(IteraBoard p_itera_board, BrdLayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
       {
+      itera_board = p_itera_board;
+      
+      net_classes = new NetClasses();
       layer_structure = p_layer_structure;
       clearance_matrix = p_clearance_matrix;
       trace_angle_restriction = TraceAngleRestriction.NONE;
@@ -75,6 +81,11 @@ public final class BoardRules implements java.io.Serializable
       max_trace_half_width = 100;
       }
 
+   public void set_transient_item ( IteraBoard p_itera_board )
+      {
+      itera_board = p_itera_board;
+      }
+   
    /**
     * Returns the trace halfwidth used for routing with the input net on the input layer.
     */
@@ -159,9 +170,9 @@ public final class BoardRules implements java.io.Serializable
    /**
     * Returns an empty new net rule with an internally created name.
     */
-   public NetClass get_new_net_class(java.util.Locale p_locale)
+   public NetClass get_new_net_class()
       {
-      NetClass result = net_classes.append(layer_structure, clearance_matrix, p_locale);
+      NetClass result = net_classes.append(layer_structure, clearance_matrix, itera_board);
       result.set_trace_clearance_class(get_default_net_class().get_trace_clearance_class());
       result.set_via_rule(get_default_via_rule());
       result.set_trace_half_width(get_default_net_class().get_trace_half_width(0));
@@ -237,7 +248,7 @@ public final class BoardRules implements java.io.Serializable
     */
    public NetClass append_net_class(java.util.Locale p_locale)
       {
-      NetClass new_class = net_classes.append(layer_structure, clearance_matrix, p_locale);
+      NetClass new_class = net_classes.append(layer_structure, clearance_matrix, itera_board);
       NetClass default_class = net_classes.get(0);
       new_class.set_via_rule(default_class.get_via_rule());
       new_class.set_trace_half_width(default_class.get_trace_half_width(0));

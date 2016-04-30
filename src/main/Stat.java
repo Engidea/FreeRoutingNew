@@ -26,10 +26,8 @@ import java.util.Locale;
  * So, just pass it around and use the bits of it when you need
  * @author damiano
  */
-public final class Stat implements java.io.Serializable
+public final class Stat
    {
-   private static final long serialVersionUID = 1L;
-
    public java.util.Locale locale;        // The Locale to be used in the whole program
    
    public transient WindowEventsLog log;

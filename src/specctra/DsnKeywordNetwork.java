@@ -80,11 +80,11 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             {
             if (next_token == DsnKeyword.NET)
                {
-               read_net_scope(p_par.scanner, p_par.netlist, p_par.board_handling.get_routing_board(), p_par.coordinate_transform, p_par.layer_structure, p_par.board_handling.get_locale());
+               read_net_scope(p_par.scanner, p_par.netlist, p_par.i_board.get_routing_board(), p_par.coordinate_transform, p_par.layer_structure);
                }
             else if (next_token == DsnKeyword.VIA)
                {
-               board.infos.BrdViaInfo curr_via_info = read_via_info(p_par.scanner, p_par.board_handling.get_routing_board());
+               board.infos.BrdViaInfo curr_via_info = read_via_info(p_par.scanner, p_par.i_board.get_routing_board());
                if (curr_via_info == null)
                   {
                   return false;
@@ -93,7 +93,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                }
             else if (next_token == DsnKeyword.VIA_RULE)
                {
-               Collection<String> curr_via_rule = read_via_rule(p_par.scanner, p_par.board_handling.get_routing_board());
+               Collection<String> curr_via_rule = read_via_rule(p_par.scanner, p_par.i_board.get_routing_board());
                if (curr_via_rule == null)
                   {
                   return false;
@@ -124,8 +124,8 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                }
             }
          }
-      insert_via_infos(via_infos, p_par.board_handling.get_routing_board(), p_par.via_at_smd_allowed);
-      insert_via_rules(via_rules, p_par.board_handling.get_routing_board());
+      insert_via_infos(via_infos, p_par.i_board.get_routing_board(), p_par.via_at_smd_allowed);
+      insert_via_rules(via_rules, p_par.i_board.get_routing_board());
       insert_net_classes(classes, p_par);
       insert_class_pairs(class_class_list, p_par);
       insert_compoments(p_par);
@@ -297,7 +297,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   private boolean read_net_scope(JflexScanner p_scanner, DsnNetList p_net_list, RoutingBoard p_board, DsnCoordinateTransform p_coordinate_transform, DsnLayerStructure p_layer_structure, java.util.Locale p_locale)
+   private boolean read_net_scope(JflexScanner p_scanner, DsnNetList p_net_list, RoutingBoard p_board, DsnCoordinateTransform p_coordinate_transform, DsnLayerStructure p_layer_structure)
       {
       // read the net name
       Object next_token;
@@ -454,7 +454,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                   if (net_rule == null)
                      {
                      // create a new net rule
-                     net_rule = p_board.brd_rules.get_new_net_class(p_locale);
+                     net_rule = p_board.brd_rules.get_new_net_class();
                      }
                   net_rule.set_trace_half_width(trace_halfwidth);
                   board_net.set_class(net_rule);
@@ -743,7 +743,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
 
    private static void insert_net_classes(Collection<DsnNetClass> p_net_classes, DsnReadScopeParameters p_par)
       {
-      RoutingBoard routing_board = p_par.board_handling.get_routing_board();
+      RoutingBoard routing_board = p_par.i_board.get_routing_board();
       for (DsnNetClass curr_class : p_net_classes)
          {
          insert_net_class(curr_class, p_par.layer_structure, routing_board, p_par.coordinate_transform, p_par.via_at_smd_allowed);
@@ -878,7 +878,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       for (DsnNetClassClass curr_class_class : p_class_classes)
          {
          java.util.Iterator<String> it1 = curr_class_class.class_names.iterator();
-         RoutingBoard routing_board = p_par.board_handling.get_routing_board();
+         RoutingBoard routing_board = p_par.i_board.get_routing_board();
          while (it1.hasNext())
             {
             String first_name = it1.next();
@@ -1213,7 +1213,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
     */
    private static boolean insert_logical_parts(DsnReadScopeParameters p_par)
       {
-      RoutingBoard routing_board = p_par.board_handling.get_routing_board();
+      RoutingBoard routing_board = p_par.i_board.get_routing_board();
       for (DsnLogicalPart next_part : p_par.logical_parts)
          {
          library.LibPackage lib_package = search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
@@ -1304,7 +1304,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
     */
    private static void insert_component(DsnComponentLocation p_location, String p_lib_key, DsnReadScopeParameters p_par)
       {
-      board.RoutingBoard routing_board = p_par.board_handling.get_routing_board();
+      board.RoutingBoard routing_board = p_par.i_board.get_routing_board();
       library.LibPackage curr_front_package = routing_board.library.packages.get(p_lib_key, true);
       library.LibPackage curr_back_package = routing_board.library.packages.get(p_lib_key, false);
       if (curr_front_package == null || curr_back_package == null)

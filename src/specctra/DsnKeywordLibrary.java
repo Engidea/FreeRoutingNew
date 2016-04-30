@@ -45,8 +45,8 @@ public class DsnKeywordLibrary extends DsnKeywordScope
 
    public boolean read_scope(DsnReadScopeParameters p_par)
       {
-      board.RoutingBoard board = p_par.board_handling.get_routing_board();
-      board.library.padstacks = new library.LibPadstacks(p_par.board_handling.get_routing_board().layer_structure);
+      board.RoutingBoard board = p_par.i_board.get_routing_board();
+      board.library.padstacks = new library.LibPadstacks(p_par.i_board.get_routing_board().layer_structure);
       Collection<DsnKeywordPackage> package_list = new LinkedList<DsnKeywordPackage>();
       Object next_token = null;
       for (;;)

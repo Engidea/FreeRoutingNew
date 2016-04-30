@@ -105,7 +105,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
             return false;
             }
          }
-      RoutingBoard board = p_par.board_handling.get_routing_board();
+      RoutingBoard board = p_par.i_board.get_routing_board();
       for (int i = 1; i <= board.brd_rules.nets.max_net_no(); ++i)
          {
          board.normalize_traces(i);
@@ -405,7 +405,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          System.out.println("Wiring.read_wire_scope: shape missing");
          return;
          }
-      RoutingBoard board = p_par.board_handling.get_routing_board();
+      RoutingBoard board = p_par.i_board.get_routing_board();
 
       NetClass net_class = board.brd_rules.get_default_net_class();
       
@@ -652,7 +652,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
                   }
                }
             }
-         RoutingBoard board = p_par.board_handling.get_routing_board();
+         RoutingBoard board = p_par.i_board.get_routing_board();
          library.LibPadstack curr_padstack = board.library.padstacks.get(padstack_name);
          if (curr_padstack == null)
             {

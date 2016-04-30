@@ -70,7 +70,7 @@ public class DsnKeywordPlaceControl extends DsnKeywordScope
          }
       if (flip_style_rotate_first)
          {
-         p_par.board_handling.get_routing_board().brd_components.set_flip_style_rotate_first(true);
+         p_par.i_board.get_routing_board().brd_components.set_flip_style_rotate_first(true);
          }
       return true;
       }
