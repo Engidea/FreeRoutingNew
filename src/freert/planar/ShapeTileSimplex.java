@@ -1077,7 +1077,7 @@ public final class ShapeTileSimplex extends ShapeTile
             boolean remove_line = false;
             PlaDirection prev_dir = prev_line.direction();
             PlaDirection next_dir = next_line.direction();
-            double det = prev_dir.determinant(next_dir);
+            long det = prev_dir.determinant(next_dir);
             if (det != 0) // prev_line and next_line are not parallel
                {
                if (intersection_sides[ind] == null)
