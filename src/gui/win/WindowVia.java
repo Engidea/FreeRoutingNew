@@ -22,14 +22,14 @@ package gui.win;
 
 import freert.planar.PlaCoordTransform;
 import freert.planar.ShapeConvex;
+import freert.rules.BoardRules;
+import freert.rules.RuleViaInfoList;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
-import rules.BoardRules;
-import rules.RuleViaInfoList;
 import board.BrdLayer;
 import board.RoutingBoard;
 import board.infos.PrintableInfo;
@@ -497,7 +497,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             return;
             }
-         rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
          WindowViaRule new_window = new WindowViaRule((RuleViaInfoList) selected_object, board_rules.via_infos, board_frame);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -541,7 +541,7 @@ public class WindowVia extends GuiSubWindowSavable
          String message = resources.getString("remove_via_rule") + " " + selected_rule.rule_name + "?";
          if (WindowMessage.confirm(message))
             {
-            rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+            freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
             board_rules.via_rules.remove(selected_rule);
             rule_list_model.removeElement(selected_rule);
             }

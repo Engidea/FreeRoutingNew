@@ -22,13 +22,13 @@ package interactive.state;
 
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.rules.RuleNets;
+import freert.rules.RuleViaInfoList;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraRoute;
 import interactive.LogfileScope;
 import java.awt.Graphics;
-import rules.RuleNets;
-import rules.RuleViaInfoList;
 import board.varie.TraceAngleRestriction;
 
 /**

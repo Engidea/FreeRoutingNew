@@ -1,4 +1,4 @@
-package rules;
+package freert.rules;
 
 public enum ViaTableColumnName
 {

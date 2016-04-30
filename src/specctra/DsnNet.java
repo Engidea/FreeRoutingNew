@@ -43,7 +43,7 @@ public class DsnNet
       id = p_net_id;
       }
 
-   public static void write_scope(DsnWriteScopeParameter p_par, rules.RuleNet p_net, Collection<board.items.BrdAbitPin> p_pin_list) throws java.io.IOException
+   public static void write_scope(DsnWriteScopeParameter p_par, freert.rules.RuleNet p_net, Collection<board.items.BrdAbitPin> p_pin_list) throws java.io.IOException
       {
       p_par.file.start_scope();
       write_net_id(p_net, p_par.file, p_par.identifier_type);
@@ -63,7 +63,7 @@ public class DsnNet
       p_par.file.end_scope();
       }
 
-   public static void write_net_id(rules.RuleNet p_net, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
+   public static void write_net_id(freert.rules.RuleNet p_net, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
       {
       p_file.write("net ");
       p_identifier_type.write(p_net.name, p_file);

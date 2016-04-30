@@ -15,7 +15,7 @@ import board.items.BrdTrace;
 public final class BrdRouteStub implements Comparable<BrdRouteStub>, PrintableInfo
    {
    private final Stat stat;
-   private final rules.RuleNet net;
+   private final freert.rules.RuleNet net;
    private final PlaPointFloat location;
    private final int layer_no;
    private final IteraBoard board_handling;

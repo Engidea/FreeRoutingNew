@@ -23,8 +23,6 @@ package specctra;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import rules.NetClass;
-import rules.RuleNet;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
@@ -41,6 +39,8 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTileBox;
+import freert.rules.NetClass;
+import freert.rules.RuleNet;
 import freert.varie.ItemClass;
 import freert.varie.UndoableObjectNode;
 import gui.varie.IndentFileWriter;
@@ -157,7 +157,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       PlaPointFloat via_location = p_via.get_center().to_float();
       double[] via_coor = p_par.coordinate_transform.board_to_dsn(via_location);
       int net_no;
-      rules.RuleNet via_net;
+      freert.rules.RuleNet via_net;
       if (p_via.net_count() > 0)
          {
          net_no = p_via.get_net_no(0);
@@ -197,7 +197,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       board.BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
       DsnLayer curr_layer = new DsnLayer(board_layer.name, layer_no, board_layer.is_signal);
       double wire_width = p_par.coordinate_transform.board_to_dsn(2 * curr_wire.get_half_width());
-      rules.RuleNet wire_net = null;
+      freert.rules.RuleNet wire_net = null;
       if (curr_wire.net_count() > 0)
          {
          wire_net = p_par.board.brd_rules.nets.get(curr_wire.get_net_no(0));
@@ -242,7 +242,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          System.out.println("Plane.write_scope: unexpected net count");
          return;
          }
-      rules.RuleNet curr_net = p_par.board.brd_rules.nets.get(p_conduction_area.get_net_no(0));
+      freert.rules.RuleNet curr_net = p_par.board.brd_rules.nets.get(p_conduction_area.get_net_no(0));
       freert.planar.PlaArea curr_area = p_conduction_area.get_area();
       int layer_no = p_conduction_area.get_layer();
       board.BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
@@ -276,7 +276,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   static private void write_net(rules.RuleNet p_net, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
+   static private void write_net(freert.rules.RuleNet p_net, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
       {
       p_file.new_line();
       p_file.write("(");
@@ -563,14 +563,14 @@ final class DsnKeywordWiring extends DsnKeywordScope
          }
       }
 
-   private static Collection<rules.RuleNet> get_subnets(DsnNetId p_net_id, rules.BoardRules p_rules)
+   private static Collection<freert.rules.RuleNet> get_subnets(DsnNetId p_net_id, freert.rules.BoardRules p_rules)
       {
-      Collection<rules.RuleNet> found_nets = new LinkedList<rules.RuleNet>();
+      Collection<freert.rules.RuleNet> found_nets = new LinkedList<freert.rules.RuleNet>();
       if (p_net_id != null)
          {
          if (p_net_id.subnet_number > 0)
             {
-            rules.RuleNet found_net = p_rules.nets.get(p_net_id.name, p_net_id.subnet_number);
+            freert.rules.RuleNet found_net = p_rules.nets.get(p_net_id.name, p_net_id.subnet_number);
             if (found_net != null)
                {
                found_nets.add(found_net);
@@ -659,8 +659,8 @@ final class DsnKeywordWiring extends DsnKeywordScope
             System.out.println("Wiring.read_via_scope: via padstack not found");
             return false;
             }
-         rules.NetClass net_class = board.brd_rules.get_default_net_class();
-         Collection<rules.RuleNet> found_nets = get_subnets(net_id, board.brd_rules);
+         freert.rules.NetClass net_class = board.brd_rules.get_default_net_class();
+         Collection<freert.rules.RuleNet> found_nets = get_subnets(net_id, board.brd_rules);
          if (net_id != null && found_nets.isEmpty())
             {
             System.out.print("Wiring.read_via_scope: net with name ");
@@ -669,7 +669,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
             }
          int[] net_no_arr = new int[found_nets.size()];
          int curr_index = 0;
-         for (rules.RuleNet curr_net : found_nets)
+         for (freert.rules.RuleNet curr_net : found_nets)
             {
             net_no_arr[curr_index] = curr_net.net_number;
             net_class = curr_net.get_class();

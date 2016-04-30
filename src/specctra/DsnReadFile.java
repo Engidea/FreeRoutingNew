@@ -183,7 +183,7 @@ public final class DsnReadFile
 
          for (int i = 0; i < curr_conduction_area.net_count(); ++i)
             {
-            rules.RuleNet curr_net = routing_board.brd_rules.nets.get(curr_conduction_area.get_net_no(i));
+            freert.rules.RuleNet curr_net = routing_board.brd_rules.nets.get(curr_conduction_area.get_net_no(i));
             curr_net.set_contains_plane(true);
             nothing_changed = false;
             }

@@ -26,6 +26,8 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTileBox;
+import freert.rules.BoardRules;
+import freert.rules.RuleNet;
 import freert.varie.ItemClass;
 import freert.varie.UnitMeasure;
 import graphics.GdiContext;
@@ -64,8 +66,6 @@ import java.util.Set;
 import main.Ldbg;
 import main.Mdbg;
 import main.Stat;
-import rules.BoardRules;
-import rules.RuleNet;
 import specctra.DsnReadFile;
 import specctra.DsnWriteSesFile;
 import specctra.SpectraSesToEagle;
@@ -275,7 +275,7 @@ public final class IteraBoard
          {
          return true;
          }
-      rules.NetClass curr_net_class = curr_net.get_class();
+      freert.rules.NetClass curr_net_class = curr_net.get_class();
       if (curr_net_class == null)
          {
          return true;
@@ -299,9 +299,9 @@ public final class IteraBoard
       }
 
    /** Gets the via rule used in interactive routing. */
-   public rules.RuleViaInfoList get_via_rule(int p_net_no)
+   public freert.rules.RuleViaInfoList get_via_rule(int p_net_no)
       {
-      rules.RuleViaInfoList result = null;
+      freert.rules.RuleViaInfoList result = null;
       if (itera_settings.manual_rule_selection)
          {
          result = r_board.brd_rules.via_rules.get(itera_settings.manual_via_rule_index);

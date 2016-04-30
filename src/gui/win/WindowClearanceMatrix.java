@@ -20,6 +20,7 @@
 
 package gui.win;
 
+import freert.rules.ClearanceMatrix;
 import freert.varie.UndoableObjectNode;
 import gui.BoardFrame;
 import gui.ComboBoxLayer;
@@ -28,7 +29,6 @@ import gui.varie.GuiResources;
 import javax.swing.JOptionPane;
 import main.Ldbg;
 import main.Mdbg;
-import rules.ClearanceMatrix;
 import board.RoutingBoard;
 
 /**
@@ -291,7 +291,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
    private int max_name_length()
       {
       int result = 1;
-      rules.ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().brd_rules.clearance_matrix;
+      freert.rules.ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().brd_rules.clearance_matrix;
       for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
          {
          result = Math.max(result, clearance_matrix.get_name(i).length());
@@ -332,7 +332,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
 
       public ClearanceTableModel(interactive.IteraBoard p_board_handling)
          {
-         rules.ClearanceMatrix clearance_matrix = p_board_handling.get_routing_board().brd_rules.clearance_matrix;
+         freert.rules.ClearanceMatrix clearance_matrix = p_board_handling.get_routing_board().brd_rules.clearance_matrix;
 
          column_names = new String[clearance_matrix.get_class_count() + 1];
          column_names[0] = resources.getString("class");

@@ -1,4 +1,4 @@
-package rules;
+package freert.rules;
 
 import board.BrdLayerStructure;
 

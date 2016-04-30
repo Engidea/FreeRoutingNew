@@ -22,6 +22,7 @@ package specctra;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.rules.BoardRules;
 import freert.varie.ItemClass;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
@@ -29,7 +30,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import library.LogicalPin;
-import rules.BoardRules;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.varie.ItemFixState;
@@ -148,7 +148,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   public static void write_via_infos(rules.BoardRules p_rules, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
+   public static void write_via_infos(freert.rules.BoardRules p_rules, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
       {
       for (int i = 0; i < p_rules.via_infos.count(); ++i)
          {
@@ -169,9 +169,9 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   public static void write_via_rules(rules.BoardRules p_rules, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
+   public static void write_via_rules(freert.rules.BoardRules p_rules, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
       {
-      for (rules.RuleViaInfoList curr_rule : p_rules.via_rules)
+      for (freert.rules.RuleViaInfoList curr_rule : p_rules.via_rules)
          {
          p_file.start_scope();
          p_file.write("via_rule");
@@ -194,7 +194,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   public static void write_net_class(rules.NetClass p_net_class, DsnWriteScopeParameter p_par) throws java.io.IOException
+   public static void write_net_class(freert.rules.NetClass p_net_class, DsnWriteScopeParameter p_par) throws java.io.IOException
       {
       p_par.file.start_scope();
       p_par.file.write("class ");
@@ -247,7 +247,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   private static void write_circuit(rules.NetClass p_net_class, DsnWriteScopeParameter p_par) throws java.io.IOException
+   private static void write_circuit(freert.rules.NetClass p_net_class, DsnWriteScopeParameter p_par) throws java.io.IOException
       {
       double min_trace_length = p_net_class.get_minimum_trace_length();
       double max_trace_length = p_net_class.get_maximum_trace_length();
@@ -435,7 +435,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          if (!net_rules.isEmpty())
             {
             // Evaluate the net rules.
-            rules.RuleNet board_net = p_board.brd_rules.nets.get(curr_subnet.id.name, curr_subnet.id.subnet_number);
+            freert.rules.RuleNet board_net = p_board.brd_rules.nets.get(curr_subnet.id.name, curr_subnet.id.subnet_number);
             if (board_net == null)
                {
                System.out.println("Network.read_net_scope: board net not found");
@@ -447,10 +447,10 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                DsnRule curr_ob = it.next();
                if (curr_ob instanceof DsnRuleWidth)
                   {
-                  rules.NetClass default_net_rule = p_board.brd_rules.get_default_net_class();
+                  freert.rules.NetClass default_net_rule = p_board.brd_rules.get_default_net_class();
                   double wire_width = ((DsnRuleWidth) curr_ob).value;
                   int trace_halfwidth = (int) Math.round(p_coordinate_transform.dsn_to_board(wire_width) / 2);
-                  rules.NetClass net_rule = p_board.brd_rules.net_classes.find(trace_halfwidth, default_net_rule.get_trace_clearance_class(), default_net_rule.get_via_rule());
+                  freert.rules.NetClass net_rule = p_board.brd_rules.net_classes.find(trace_halfwidth, default_net_rule.get_trace_clearance_class(), default_net_rule.get_via_rule());
                   if (net_rule == null)
                      {
                      // create a new net rule
@@ -660,7 +660,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   private static void create_default_via_infos(RoutingBoard p_board, rules.NetClass p_net_class, boolean p_attach_allowed)
+   private static void create_default_via_infos(RoutingBoard p_board, freert.rules.NetClass p_net_class, boolean p_attach_allowed)
       {
       int cl_class = p_net_class.default_item_clearance_classes.get(ItemClass.VIA);
       boolean is_default_class = (p_net_class == p_board.brd_rules.get_default_net_class());
@@ -713,8 +713,8 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       {
       Iterator<String> it = p_name_list.iterator();
       String rule_name = it.next();
-      rules.RuleViaInfoList existing_rule = p_board.brd_rules.get_via_rule(rule_name);
-      rules.RuleViaInfoList curr_rule = new rules.RuleViaInfoList(rule_name);
+      freert.rules.RuleViaInfoList existing_rule = p_board.brd_rules.get_via_rule(rule_name);
+      freert.rules.RuleViaInfoList curr_rule = new freert.rules.RuleViaInfoList(rule_name);
       boolean rule_ok = true;
       while (it.hasNext())
          {
@@ -752,7 +752,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
 
    public static void insert_net_class(DsnNetClass p_class, DsnLayerStructure p_layer_structure, RoutingBoard p_board, DsnCoordinateTransform p_coordinate_transform, boolean p_via_at_smd_allowed)
       {
-      rules.NetClass board_net_class = p_board.brd_rules.append_net_class(p_class.name);
+      freert.rules.NetClass board_net_class = p_board.brd_rules.append_net_class(p_class.name);
       if (p_class.trace_clearance_class != null)
          {
          int trace_clearance_class = p_board.brd_rules.clearance_matrix.get_no(p_class.trace_clearance_class);
@@ -767,7 +767,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       if (p_class.via_rule != null)
          {
-         rules.RuleViaInfoList via_rule = p_board.brd_rules.get_via_rule(p_class.via_rule);
+         freert.rules.RuleViaInfoList via_rule = p_board.brd_rules.get_via_rule(p_class.via_rule);
          if (via_rule != null)
             {
             board_net_class.set_via_rule(via_rule);
@@ -787,8 +787,8 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       for (String curr_net_name : p_class.net_list)
          {
-         Collection<rules.RuleNet> curr_net_list = p_board.brd_rules.nets.get(curr_net_name);
-         for (rules.RuleNet curr_net : curr_net_list)
+         Collection<freert.rules.RuleNet> curr_net_list = p_board.brd_rules.nets.get(curr_net_name);
+         for (freert.rules.RuleNet curr_net : curr_net_list)
             {
             curr_net.set_class(board_net_class);
             }
@@ -882,7 +882,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          while (it1.hasNext())
             {
             String first_name = it1.next();
-            rules.NetClass first_class = routing_board.brd_rules.net_classes.get(first_name);
+            freert.rules.NetClass first_class = routing_board.brd_rules.net_classes.get(first_name);
             if (first_class == null)
                {
                System.out.println("Network.insert_class_pairs: first class not found");
@@ -893,7 +893,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                while (it2.hasNext())
                   {
                   String second_name = it2.next();
-                  rules.NetClass second_class = routing_board.brd_rules.net_classes.get(second_name);
+                  freert.rules.NetClass second_class = routing_board.brd_rules.net_classes.get(second_name);
                   if (second_class == null)
                      {
                      System.out.println("Network.insert_class_pairs: second class not found");
@@ -908,7 +908,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   static private void insert_class_pair_info(DsnNetClassClass p_class_class, rules.NetClass p_first_class, rules.NetClass p_second_class, RoutingBoard p_board,
+   static private void insert_class_pair_info(DsnNetClassClass p_class_class, freert.rules.NetClass p_first_class, freert.rules.NetClass p_second_class, RoutingBoard p_board,
          DsnCoordinateTransform p_coordinate_transform)
       {
       for (DsnRule curr_rule : p_class_class.rules)
@@ -948,7 +948,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   static private void add_mixed_clearance_rule(rules.ClearanceMatrix p_clearance_matrix, rules.NetClass p_first_class, rules.NetClass p_second_class, DsnRuleClearance p_clearance_rule,
+   static private void add_mixed_clearance_rule(freert.rules.ClearanceMatrix p_clearance_matrix, freert.rules.NetClass p_first_class, freert.rules.NetClass p_second_class, DsnRuleClearance p_clearance_rule,
          int p_layer_no, DsnCoordinateTransform p_coordinate_transform)
       {
       int curr_clearance = (int) Math.round(p_coordinate_transform.dsn_to_board(p_clearance_rule.value));
@@ -1020,7 +1020,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   static private void create_default_clearance_classes(rules.NetClass p_net_class, rules.ClearanceMatrix p_clearance_matrix)
+   static private void create_default_clearance_classes(freert.rules.NetClass p_net_class, freert.rules.ClearanceMatrix p_clearance_matrix)
       {
       get_clearance_class(p_clearance_matrix, p_net_class, "via");
       get_clearance_class(p_clearance_matrix, p_net_class, "smd");
@@ -1028,9 +1028,9 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       get_clearance_class(p_clearance_matrix, p_net_class, "area");
       }
 
-   private static void create_via_rule(Collection<String> p_use_via, rules.NetClass p_net_class, RoutingBoard p_board, boolean p_attach_allowed)
+   private static void create_via_rule(Collection<String> p_use_via, freert.rules.NetClass p_net_class, RoutingBoard p_board, boolean p_attach_allowed)
       {
-      rules.RuleViaInfoList new_via_rule = new rules.RuleViaInfoList(p_net_class.get_name());
+      freert.rules.RuleViaInfoList new_via_rule = new freert.rules.RuleViaInfoList(p_net_class.get_name());
       int default_via_cl_class = p_net_class.default_item_clearance_classes.get(ItemClass.VIA);
       for (String curr_via_name : p_use_via)
          {
@@ -1050,7 +1050,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       p_net_class.set_via_rule(new_via_rule);
       }
 
-   private static void create_active_trace_layers(Collection<String> p_use_layer, DsnLayerStructure p_layer_structure, rules.NetClass p_net_class)
+   private static void create_active_trace_layers(Collection<String> p_use_layer, DsnLayerStructure p_layer_structure, freert.rules.NetClass p_net_class)
       {
       for (int i = 0; i < p_layer_structure.arr.length; ++i)
          {
@@ -1071,7 +1071,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   private static void add_clearance_rule(rules.ClearanceMatrix p_clearance_matrix, rules.NetClass p_net_class, DsnRuleClearance p_rule, int p_layer_no, DsnCoordinateTransform p_coordinate_transform)
+   private static void add_clearance_rule(freert.rules.ClearanceMatrix p_clearance_matrix, freert.rules.NetClass p_net_class, DsnRuleClearance p_rule, int p_layer_no, DsnCoordinateTransform p_coordinate_transform)
       {
       int curr_clearance = (int) Math.round(p_coordinate_transform.dsn_to_board(p_rule.value));
       final String class_name = p_net_class.get_name();
@@ -1141,7 +1141,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
     * Gets the number of the clearance class with name combined of p_net_class_name and p_item_class_name. Creates a new class, if
     * that class is not yet existing.
     */
-   static private int get_clearance_class(rules.ClearanceMatrix p_clearance_matrix, rules.NetClass p_net_class, String p_item_class_name)
+   static private int get_clearance_class(freert.rules.ClearanceMatrix p_clearance_matrix, freert.rules.NetClass p_net_class, String p_item_class_name)
       {
       String net_class_name = p_net_class.get_name();
       String new_class_name = net_class_name;
@@ -1356,7 +1356,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          Collection<Integer> net_numbers = new LinkedList<Integer>();
          for (DsnNet curr_pin_net : pin_nets)
             {
-            rules.RuleNet curr_board_net = routing_board.brd_rules.nets.get(curr_pin_net.id.name, curr_pin_net.id.subnet_number);
+            freert.rules.RuleNet curr_board_net = routing_board.brd_rules.nets.get(curr_pin_net.id.name, curr_pin_net.id.subnet_number);
             if (curr_board_net == null)
                {
                System.out.println("Network.insert_component: board net not found");
@@ -1374,8 +1374,8 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             net_no_arr[net_index] = curr_net_no;
             ++net_index;
             }
-         rules.NetClass net_class;
-         rules.RuleNet board_net;
+         freert.rules.NetClass net_class;
+         freert.rules.RuleNet board_net;
          if (net_no_arr.length > 0)
             {
             board_net = routing_board.brd_rules.nets.get(net_no_arr[0]);

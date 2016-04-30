@@ -644,7 +644,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                boolean ignore_areas = false;
                if (net_no_arr.length > 0)
                   {
-                  rules.RuleNet curr_net = r_board.brd_rules.nets.get(net_no_arr[0]);
+                  freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(net_no_arr[0]);
                   if (curr_net != null && curr_net.get_class() != null)
                      {
                      ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();

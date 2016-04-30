@@ -24,7 +24,6 @@ import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Iterator;
-import rules.BoardRules;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaLineInt;
@@ -32,6 +31,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.ShapeTile;
+import freert.rules.BoardRules;
 
 /**
  * Class for interactive construction of a tile shaped obstacle

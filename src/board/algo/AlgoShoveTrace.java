@@ -307,7 +307,7 @@ public final class AlgoShoveTrace
       PlaPointFloat end_corner_appprox = p_line_segment.end_point_approx();
       double segment_length = end_corner_appprox.distance(start_corner_appprox);
 
-      rules.ClearanceMatrix cl_matrix = r_board.brd_rules.clearance_matrix;
+      freert.rules.ClearanceMatrix cl_matrix = r_board.brd_rules.clearance_matrix;
 
       double result = Integer.MAX_VALUE;
 

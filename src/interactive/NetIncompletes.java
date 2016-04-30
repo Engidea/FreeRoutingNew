@@ -21,6 +21,7 @@
 package interactive;
 
 import freert.planar.PlaPointFloat;
+import freert.rules.RuleNet;
 import freert.varie.PlaDelTri;
 import freert.varie.PlaDelTriResultEdge;
 import freert.varie.PlaDelTriStorable;
@@ -35,7 +36,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import rules.RuleNet;
 import board.RoutingBoard;
 import board.infos.AirLineInfo;
 import board.items.BrdAbitPin;

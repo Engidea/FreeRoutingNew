@@ -17,7 +17,7 @@
  *
  * Created on 9. Juni 2004, 10:24
  */
-package rules;
+package freert.rules;
 
 import java.util.Collection;
 import java.util.LinkedList;

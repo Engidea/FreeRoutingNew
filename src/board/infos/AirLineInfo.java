@@ -1,8 +1,8 @@
 package board.infos;
 
 import freert.planar.PlaPointFloat;
+import freert.rules.RuleNet;
 import gui.varie.GuiResources;
-import rules.RuleNet;
 import board.items.BrdItem;
 
 /**

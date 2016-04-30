@@ -1,7 +1,8 @@
-package rules;
+package freert.rules;
 
 import gui.BoardFrame;
 import gui.varie.GuiResources;
+import board.RoutingBoard;
 import board.infos.BrdViaInfo;
 
 /**
@@ -23,7 +24,7 @@ public class ViaTableModel extends javax.swing.table.AbstractTableModel
          {
          column_names[i] = resources.getString((ViaTableColumnName.values()[i]).toString());
          }
-      rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+      freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
       data = new Object[board_rules.via_infos.count()][];
       for (int i = 0; i < data.length; ++i)
          {
@@ -71,7 +72,7 @@ public class ViaTableModel extends javax.swing.table.AbstractTableModel
 
    public void setValueAt(Object p_value, int p_row, int p_col)
       {
-      board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
       BoardRules board_rules = routing_board.brd_rules;
       Object via_name = getValueAt(p_row, ViaTableColumnName.NAME.ordinal());
       if (!(via_name instanceof String))

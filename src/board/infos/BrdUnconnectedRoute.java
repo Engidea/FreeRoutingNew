@@ -12,14 +12,14 @@ import board.items.BrdItem;
 public final class BrdUnconnectedRoute implements Comparable<BrdUnconnectedRoute>,PrintableInfo
    {
    private final GuiResources resources;
-   private final rules.RuleNet net;
+   private final freert.rules.RuleNet net;
    private final int id_no;
    private final Integer trace_count;
    private final Integer via_count;
 
    public final Collection<BrdItem> item_list;
 
-   public BrdUnconnectedRoute(GuiResources resources, rules.RuleNet p_net, Collection<BrdItem> p_item_list, int id_no)
+   public BrdUnconnectedRoute(GuiResources resources, freert.rules.RuleNet p_net, Collection<BrdItem> p_item_list, int id_no)
       {
       this.resources = resources;
       this.net = p_net;

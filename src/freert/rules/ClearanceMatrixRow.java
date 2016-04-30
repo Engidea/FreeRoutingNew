@@ -1,4 +1,4 @@
-package rules;
+package freert.rules;
 
 import gui.varie.ObjectInfoPanel;
 import board.infos.PrintableInfo;
@@ -35,7 +35,7 @@ public class ClearanceMatrixRow implements PrintableInfo, java.io.Serializable
 
    public void print_info( ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("freert.board.resources.ObjectInfoPanel", p_locale);
       p_window.append_bold(resources.getString("spacing_from_clearance_class") + " ");
       p_window.append_bold(name);
       for (int i = 1; i < column.length; ++i)

@@ -17,7 +17,7 @@
  *
  * Created on 11. Juni 2004, 08:17
  */
-package rules;
+package freert.rules;
 
 import java.util.Collection;
 import java.util.Iterator;

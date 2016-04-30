@@ -18,7 +18,10 @@
  * Created on 7. April 2005, 07:52
  */
 
-package rules;
+package freert.rules;
+
+import java.util.Vector;
+import board.BrdLayerStructure;
 
 /**
  * Contains the array of net classes for interactive routing.
@@ -29,7 +32,7 @@ public class NetClasses implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
-   private final java.util.Vector<NetClass> class_arr = new java.util.Vector<NetClass>();
+   private final Vector<NetClass> class_arr = new Vector<NetClass>();
    
    /**
     * Returns the number of classes in this array.
@@ -76,7 +79,7 @@ public class NetClasses implements java.io.Serializable
    /**
     * Appends a new empty class to the class array. A name for the class is created internally
     */
-   NetClass append(board.BrdLayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, java.util.Locale p_locale)
+   NetClass append(BrdLayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("rules.resources.Default", p_locale);
       String name_front = resources.getString("class");

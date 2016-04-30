@@ -20,12 +20,12 @@
 
 package gui.win;
 
+import freert.rules.NetClass;
+import freert.rules.RuleNet;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
 import javax.swing.JComboBox;
-import rules.NetClass;
-import rules.RuleNet;
 import board.RoutingBoard;
 
 /**
@@ -142,7 +142,7 @@ public class WindowAssignNetClass extends GuiSubWindowSavable
          column_names[0] = resources.getString("net_name");
          column_names[1] = resources.getString("class_name");
 
-         rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
          data = new Object[board_rules.nets.max_net_no()][];
          for (int i = 0; i < data.length; ++i)
             {
@@ -154,7 +154,7 @@ public class WindowAssignNetClass extends GuiSubWindowSavable
       /** Calculates the the valus in this table */
       public void set_values()
          {
-         rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
          RuleNet[] sorted_arr = new RuleNet[this.getRowCount()];
          for (int i = 0; i < sorted_arr.length; ++i)
             {

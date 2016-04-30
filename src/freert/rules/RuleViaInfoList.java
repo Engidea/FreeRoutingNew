@@ -18,7 +18,7 @@
  * Created on 31. Maerz 2005, 06:44
  */
 
-package rules;
+package freert.rules;
 
 import gui.varie.ObjectInfoPanel;
 import java.util.LinkedList;

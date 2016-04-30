@@ -20,12 +20,12 @@
 
 package gui.win;
 
+import freert.rules.RuleViaInfoList;
 import gui.BoardFrame;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
-import rules.RuleViaInfoList;
 
 /**
  * Window for editing a single via rule.

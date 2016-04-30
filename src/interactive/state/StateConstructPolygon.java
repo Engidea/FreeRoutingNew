@@ -24,10 +24,10 @@ import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Iterator;
-import rules.BoardRules;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapePolygon;
+import freert.rules.BoardRules;
 
 /**
  * Interactive state for constructing an obstacle with a polygon shape.

@@ -327,7 +327,7 @@ class BoardToolbarSelectedItem extends JToolBar
          {
          return;
          }
-      rules.ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().brd_rules.clearance_matrix;
+      freert.rules.ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().brd_rules.clearance_matrix;
       Object[] class_name_arr = new Object[clearance_matrix.get_class_count()];
       for (int i = 0; i < class_name_arr.length; ++i)
          {

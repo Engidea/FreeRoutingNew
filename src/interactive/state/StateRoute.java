@@ -22,6 +22,7 @@ package interactive.state;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.rules.RuleNet;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraRoute;
@@ -29,7 +30,6 @@ import interactive.LogfileScope;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
-import rules.RuleNet;
 import board.BrdLayerStructure;
 import board.RoutingBoard;
 import board.items.BrdAbit;
@@ -577,7 +577,7 @@ public class StateRoute extends StateInteractive
       {
       if (route != null)
          {
-         rules.RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_no_arr[0]);
+         freert.rules.RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_no_arr[0]);
          i_brd.screen_messages.set_status_message(resources.getString("routing_net") + " " + curr_net.name);
          }
       }

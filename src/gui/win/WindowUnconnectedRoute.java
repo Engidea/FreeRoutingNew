@@ -98,7 +98,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
             // We have found unconnected route
             if (curr_item.net_count() == 1)
                {
-               rules.RuleNet curr_net = routing_board.brd_rules.nets.get(curr_item.get_net_no(0));
+               freert.rules.RuleNet curr_net = routing_board.brd_rules.nets.get(curr_item.get_net_no(0));
                if (curr_net != null)
                   {
                   BrdUnconnectedRoute curr_unconnected_route_info = new BrdUnconnectedRoute(resources, curr_net, curr_connected_set,max_unconnected_route_info_id_no++);

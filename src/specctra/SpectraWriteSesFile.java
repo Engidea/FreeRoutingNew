@@ -337,7 +337,7 @@ public final class SpectraWriteSesFile
             {
             output_file.start_scope();
             output_file.write("net ");
-            rules.RuleNet curr_net = r_board.brd_rules.nets.get(p_net_no);
+            freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(p_net_no);
             if (curr_net == null)
                {
                System.out.println("SessionFile.write_net: net not found");

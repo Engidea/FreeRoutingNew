@@ -17,7 +17,7 @@
  *
  * Created on 7. April 2005, 06:08
  */
-package rules;
+package freert.rules;
 
 import board.BrdLayerStructure;
 import board.infos.PrintableInfo;

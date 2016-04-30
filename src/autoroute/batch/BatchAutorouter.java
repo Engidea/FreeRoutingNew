@@ -17,6 +17,7 @@ package autoroute.batch;
 
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
+import freert.rules.RuleNet;
 import freert.varie.TimeLimitStoppable;
 import freert.varie.UndoableObjectNode;
 import gui.varie.GuiResources;
@@ -32,7 +33,6 @@ import java.util.SortedSet;
 import java.util.TreeSet;
 import main.Ldbg;
 import main.Mdbg;
-import rules.RuleNet;
 import autoroute.ArtControl;
 import autoroute.ArtEngine;
 import autoroute.expand.ExpandCostFactor;

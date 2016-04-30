@@ -22,11 +22,11 @@
 package gui.win;
 
 import board.infos.BrdLengthViolation;
+import freert.rules.RuleNets;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
 import interactive.RatsNest;
 import main.Stat;
-import rules.RuleNets;
 
 /**
  *

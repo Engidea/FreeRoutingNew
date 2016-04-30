@@ -620,7 +620,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          {
          if (restrict_pin_exit_directions_check.isSelected())
             {
-            rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
+            freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
             double edge_to_turn_dist = board_handling.coordinate_transform.board_to_user(board_rules.get_min_trace_half_width());
             board_handling.set_pin_edge_to_turn_dist(edge_to_turn_dist);
             }

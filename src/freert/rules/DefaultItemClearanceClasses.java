@@ -19,7 +19,7 @@
  *
  */
 
-package rules;
+package freert.rules;
 
 import freert.varie.ItemClass;
 

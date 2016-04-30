@@ -22,7 +22,7 @@ package specctra;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import rules.BoardRules;
+import freert.rules.BoardRules;
 import board.BrdLayer;
 
 /**
@@ -170,7 +170,7 @@ public abstract class DsnRule
          }
       }
 
-   public static void write_scope(rules.NetClass p_net_class, DsnWriteScopeParameter p_par) throws java.io.IOException
+   public static void write_scope(freert.rules.NetClass p_net_class, DsnWriteScopeParameter p_par) throws java.io.IOException
       {
       p_par.file.start_scope();
       p_par.file.write("rule");
@@ -192,7 +192,7 @@ public abstract class DsnRule
          }
       }
 
-   private static void write_layer_rule(rules.NetClass p_net_class, int p_layer_no, DsnWriteScopeParameter p_par) throws java.io.IOException
+   private static void write_layer_rule(freert.rules.NetClass p_net_class, int p_layer_no, DsnWriteScopeParameter p_par) throws java.io.IOException
       {
       p_par.file.start_scope();
       p_par.file.write("layer_rule ");
@@ -255,7 +255,7 @@ public abstract class DsnRule
     */
    private static void write_clearance_rules(DsnWriteScopeParameter p_par, int p_layer, int p_cl_class, int p_max_cl_class, int p_default_clearance) throws java.io.IOException
       {
-      rules.ClearanceMatrix cl_matrix = p_par.board.brd_rules.clearance_matrix;
+      freert.rules.ClearanceMatrix cl_matrix = p_par.board.brd_rules.clearance_matrix;
       for (int i = p_cl_class; i < p_max_cl_class; ++i)
          {
          int curr_board_clearance = cl_matrix.value_at(p_cl_class, i, p_layer);

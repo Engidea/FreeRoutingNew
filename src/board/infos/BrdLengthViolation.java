@@ -1,11 +1,11 @@
 package board.infos;
 
+import freert.rules.NetClass;
+import freert.rules.RuleNet;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 import java.util.Locale;
-import rules.NetClass;
-import rules.RuleNet;
 
 public final class BrdLengthViolation implements Comparable<BrdLengthViolation>, PrintableInfo
    {

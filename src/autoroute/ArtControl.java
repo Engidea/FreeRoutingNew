@@ -20,8 +20,8 @@
 package autoroute;
 
 import freert.planar.ShapeConvex;
+import freert.rules.RuleViaInfoList;
 import interactive.IteraSettings;
-import rules.RuleViaInfoList;
 import autoroute.expand.ExpandCostFactor;
 import autoroute.varie.ArtViaCost;
 import autoroute.varie.ArtViaMask;
@@ -164,8 +164,8 @@ public final class ArtControl
     */
    private void net_init( RoutingBoard p_board, int p_via_costs)
       {
-      rules.RuleNet curr_net = p_board.brd_rules.nets.get(net_no);
-      rules.NetClass curr_net_class;
+      freert.rules.RuleNet curr_net = p_board.brd_rules.nets.get(net_no);
+      freert.rules.NetClass curr_net_class;
       
       if (curr_net != null)
          {

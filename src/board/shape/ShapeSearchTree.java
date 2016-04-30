@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import main.Ldbg;
 import main.Mdbg;
-import rules.ClearanceMatrix;
 import autoroute.expand.ExpandRoomFreespaceComplete;
 import autoroute.expand.ExpandRoomFreespaceIncomplete;
 import board.RoutingBoard;
@@ -50,6 +49,7 @@ import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.planar.ShapeTileRegular;
 import freert.planar.ShapeTileSimplex;
+import freert.rules.ClearanceMatrix;
 import freert.varie.UnitMeasure;
 
 /**

@@ -20,7 +20,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import rules.RuleNets;
 import board.BrdConnectable;
 import board.RoutingBoard;
 import board.algo.AlgoPullTight;
@@ -34,6 +33,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.rules.RuleNets;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -335,7 +335,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       for (int curr_net_no : net_no_arr)
          {
          // do not check special nets
-         if ( ! rules.RuleNets.is_normal_net_no(curr_net_no)) continue;
+         if ( ! freert.rules.RuleNets.is_normal_net_no(curr_net_no)) continue;
          
          // trace is fixed if the net is shove fixed
          if (nets.get(curr_net_no).get_class().is_shove_fixed()) return true;
@@ -389,7 +389,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       boolean ignore_areas = false;
       if (net_no_arr.length > 0)
          {
-         rules.RuleNet curr_net = r_board.brd_rules.nets.get(net_no_arr[0]);
+         freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(net_no_arr[0]);
          if (curr_net != null && curr_net.get_class() != null)
             {
             ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();

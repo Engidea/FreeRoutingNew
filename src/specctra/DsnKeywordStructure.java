@@ -24,8 +24,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import main.Ldbg;
 import main.Mdbg;
-import rules.BoardRules;
-import rules.ClearanceMatrix;
 import specctra.varie.DsnKeywordAutoroute;
 import specctra.varie.DsnReadUtils;
 import board.BrdLayer;
@@ -36,6 +34,8 @@ import board.varie.ItemFixState;
 import freert.host.HostCom;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTileBox;
+import freert.rules.BoardRules;
+import freert.rules.ClearanceMatrix;
 import freert.varie.ItemClass;
 import freert.varie.UndoableObjectNode;
 import gui.varie.IndentFileWriter;
@@ -247,7 +247,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                board.brd_rules.nets.add(new_net.id.name, new_net.id.subnet_number, true);
                }
             }
-         rules.RuleNet curr_net = board.brd_rules.nets.get(plane_info.net_name, 1);
+         freert.rules.RuleNet curr_net = board.brd_rules.nets.get(plane_info.net_name, 1);
          if (curr_net == null)
             {
             System.out.println("Plane.read_scope: net not found");
@@ -430,7 +430,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       p_file.write(")");
       }
 
-   private static void write_control_scope(rules.BoardRules p_rules, IndentFileWriter p_file) throws java.io.IOException
+   private static void write_control_scope(freert.rules.BoardRules p_rules, IndentFileWriter p_file) throws java.io.IOException
       {
       p_file.start_scope();
       p_file.write("control");
@@ -907,8 +907,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
             DsnPolygonPath curr_path = (DsnPolygonPath) curr_shape;
             if (curr_path.width != 0)
                {
-               // set the width to 0, because the offset function used in
-               // transform_to_board is not implemented
+               // set the width to 0, because the offset function used in transform_to_board is not implemented
                // for shapes, which are not convex.
                curr_shape = new DsnPolygonPath(curr_path.layer, 0, curr_path.coordinate_arr);
                }
@@ -995,7 +994,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                   p_board.brd_rules.nets.add(new_net.id.name, new_net.id.subnet_number, true);
                   }
                }
-            rules.RuleNet curr_net = p_board.brd_rules.nets.get(curr_net_id.name, curr_net_id.subnet_number);
+            freert.rules.RuleNet curr_net = p_board.brd_rules.nets.get(curr_net_id.name, curr_net_id.subnet_number);
                {
                if (curr_net == null)
                   {
@@ -1255,7 +1254,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       {
       p_board_rules.clearance_matrix.append_class(p_name);
       int result = p_board_rules.clearance_matrix.get_no(p_name);
-      rules.NetClass default_net_class = p_board_rules.get_default_net_class();
+      freert.rules.NetClass default_net_class = p_board_rules.get_default_net_class();
       if (p_name.equals("via"))
          {
          default_net_class.default_item_clearance_classes.set(ItemClass.VIA, result);
@@ -1278,7 +1277,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
    /**
     * Returns true, if all clearance values on the 2 input layers are equal.
     */
-   private static boolean clearance_equals(rules.ClearanceMatrix p_cl_matrix, int p_layer_1, int p_layer_2)
+   private static boolean clearance_equals(freert.rules.ClearanceMatrix p_cl_matrix, int p_layer_1, int p_layer_2)
       {
       if (p_layer_1 == p_layer_2)
          {

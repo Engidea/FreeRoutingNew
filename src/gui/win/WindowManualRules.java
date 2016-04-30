@@ -19,6 +19,7 @@
  */
 package gui.win;
 
+import freert.rules.RuleViaInfoList;
 import gui.BoardFrame;
 import gui.ComboBoxClearance;
 import gui.ComboBoxLayer;
@@ -28,7 +29,6 @@ import gui.varie.GuiResources;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import rules.RuleViaInfoList;
 
 /**
  * Used for manual choice of trace widths in interactive routing.
@@ -131,7 +131,7 @@ public class WindowManualRules extends GuiSubWindowSavable
       board.RoutingBoard routing_board = board_handling.get_routing_board();
       ComboBoxModel<RuleViaInfoList> new_model = new DefaultComboBoxModel<RuleViaInfoList>(routing_board.brd_rules.via_rules);
       via_rule_combo_box.setModel(new_model);
-      rules.ClearanceMatrix clearance_matrix = board_handling.get_routing_board().brd_rules.clearance_matrix;
+      freert.rules.ClearanceMatrix clearance_matrix = board_handling.get_routing_board().brd_rules.clearance_matrix;
       if (this.clearance_combo_box.get_class_count() != routing_board.brd_rules.clearance_matrix.get_class_count())
          {
          this.clearance_combo_box.adjust(clearance_matrix);

@@ -20,10 +20,10 @@
 
 package gui;
 
+import freert.rules.ClearanceMatrix;
 import gui.varie.GuiClearanceClass;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JComboBox;
-import rules.ClearanceMatrix;
 
 /**
  * A Combo Box with an item for each clearance class of the board..

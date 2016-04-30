@@ -82,7 +82,7 @@ public class StateRouteStitch extends StateRoute
       double display_width = i_brd.get_trace_halfwidth(route.net_no_arr[0], i_brd.itera_settings.layer_no);
       int clearance_draw_width = 50;
       double radius_with_clearance = display_width;
-      rules.NetClass default_net_class = r_brd.brd_rules.get_default_net_class();
+      freert.rules.NetClass default_net_class = r_brd.brd_rules.get_default_net_class();
       int cl_class = default_net_class.default_item_clearance_classes.get(ItemClass.TRACE);
       radius_with_clearance += r_brd.get_clearance(cl_class, cl_class, i_brd.itera_settings.layer_no);
       i_brd.gdi_context.draw(draw_points, display_width, draw_color, p_graphics, 0.5);

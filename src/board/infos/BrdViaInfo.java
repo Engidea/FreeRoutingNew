@@ -18,8 +18,8 @@
 
 package board.infos;
 
+import freert.rules.BoardRules;
 import library.LibPadstack;
-import rules.BoardRules;
 
 /**
  * Information about a combination of via_padstack, via clearance class and drill_to_smd_allowed 

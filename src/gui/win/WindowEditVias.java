@@ -20,6 +20,9 @@
 
 package gui.win;
 
+import freert.rules.BoardRules;
+import freert.rules.ViaTableColumnName;
+import freert.rules.ViaTableModel;
 import freert.varie.ItemClass;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
@@ -32,9 +35,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import main.Stat;
-import rules.BoardRules;
-import rules.ViaTableColumnName;
-import rules.ViaTableModel;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
 
@@ -171,7 +171,7 @@ public class WindowEditVias extends GuiSubWindowSavable
                }
             ++no;
             }
-         rules.NetClass default_net_class = routing_board.brd_rules.get_default_net_class();
+         freert.rules.NetClass default_net_class = routing_board.brd_rules.get_default_net_class();
          BrdViaInfo new_via = new BrdViaInfo(new_name, routing_board.library.get_via_padstack(0), default_net_class.default_item_clearance_classes.get(ItemClass.VIA),
                false, routing_board.brd_rules);
          via_infos.add(new_via);
@@ -201,7 +201,7 @@ public class WindowEditVias extends GuiSubWindowSavable
          BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
          BrdViaInfo via_info = board_rules.via_infos.get((String) via_name);
          // Check, if via_info is used in a via rule.
-         for (rules.RuleViaInfoList curr_rule : board_rules.via_rules)
+         for (freert.rules.RuleViaInfoList curr_rule : board_rules.via_rules)
             {
             if (curr_rule.contains(via_info))
                {

@@ -22,6 +22,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.rules.RuleNets;
 import graphics.GdiContext;
 import graphics.GdiDrawable;
 import gui.varie.ObjectInfoPanel;
@@ -35,7 +36,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
-import rules.RuleNets;
 import autoroute.ArtItem;
 import board.BrdConnectable;
 import board.RoutingBoard;
@@ -1288,7 +1288,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       for (int i = 0; i < this.net_count(); ++i)
          {
          p_window.append(", " + resources.getString("net") + " ");
-         rules.RuleNet curr_net = r_board.brd_rules.nets.get(this.get_net_no(i));
+         freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(this.get_net_no(i));
          p_window.append(curr_net.name, resources.getString("net_info"), curr_net);
          }
       }

@@ -18,8 +18,10 @@
  * Created on 1. Juni 2004, 07:16
  */
 
-package rules;
+package freert.rules;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.Vector;
 import library.LibPadstack;
 import board.BrdLayerStructure;
@@ -305,7 +307,7 @@ public final class BoardRules implements java.io.Serializable
 
       for (int i = 0; i < net_classes.count(); ++i)
          {
-         rules.NetClass curr_net_class = net_classes.get(i);
+         freert.rules.NetClass curr_net_class = net_classes.get(i);
          if (curr_net_class.get_trace_clearance_class() == p_from_no)
             {
             curr_net_class.set_trace_clearance_class(p_to_no);
@@ -344,7 +346,7 @@ public final class BoardRules implements java.io.Serializable
          }
       for (int i = 0; i < net_classes.count(); ++i)
          {
-         rules.NetClass curr_net_class = net_classes.get(i);
+         freert.rules.NetClass curr_net_class = net_classes.get(i);
          if (curr_net_class.get_trace_clearance_class() == p_index)
             {
             return false;
@@ -377,7 +379,7 @@ public final class BoardRules implements java.io.Serializable
 
       for (int i = 0; i < net_classes.count(); ++i)
          {
-         rules.NetClass curr_net_class = net_classes.get(i);
+         freert.rules.NetClass curr_net_class = net_classes.get(i);
          if (curr_net_class.get_trace_clearance_class() > p_index)
             {
             curr_net_class.set_trace_clearance_class(curr_net_class.get_trace_clearance_class() - 1);
@@ -495,7 +497,7 @@ public final class BoardRules implements java.io.Serializable
    /** 
     * Reads an instance of this class from a file 
     */
-   private void readObject(java.io.ObjectInputStream p_stream) throws java.io.IOException, java.lang.ClassNotFoundException
+   private void readObject(ObjectInputStream p_stream) throws IOException, ClassNotFoundException
       {
       p_stream.defaultReadObject();
       int snap_angle_no = p_stream.readInt();

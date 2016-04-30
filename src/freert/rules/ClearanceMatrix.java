@@ -14,7 +14,7 @@
  *   for more details.
  */
 
-package rules;
+package freert.rules;
 
 import board.BrdLayerStructure;
 
@@ -62,14 +62,15 @@ public final class ClearanceMatrix implements java.io.Serializable
     * Creates a new instance for p_class_count clearance classes on p_layer_count layers. p_names is an array of dimension
     * p_class_count;
     */
-   public ClearanceMatrix(int p_class_count, board.BrdLayerStructure p_layer_structure, String[] p_name_arr)
+   public ClearanceMatrix(int p_class_count, BrdLayerStructure p_layer_structure, String[] p_name_arr)
       {
       class_count = Math.max(p_class_count, 1);
       layer_structure = p_layer_structure;
       clearance_rows = new ClearanceMatrixRow[class_count];
-      for (int i = 0; i < class_count; ++i)
+      
+      for (int index = 0; index < class_count; ++index)
          {
-         clearance_rows[i] = new ClearanceMatrixRow(this, p_name_arr[i]);
+         clearance_rows[index] = new ClearanceMatrixRow(this, p_name_arr[index]);
          }
       
       max_value_on_layer = new int[layer_structure.size()];

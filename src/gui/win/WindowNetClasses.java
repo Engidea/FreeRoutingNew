@@ -19,6 +19,9 @@
  */
 package gui.win;
 
+import freert.rules.BoardRules;
+import freert.rules.NetClass;
+import freert.rules.RuleViaInfoList;
 import gui.BoardFrame;
 import gui.ComboBoxLayer;
 import gui.GuiSubWindowSavable;
@@ -26,9 +29,6 @@ import gui.varie.GuiLayer;
 import gui.varie.GuiResources;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
-import rules.BoardRules;
-import rules.NetClass;
-import rules.RuleViaInfoList;
 import board.RoutingBoard;
 import board.infos.PrintableInfo;
 
@@ -243,7 +243,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
          // Check, if net_rule is used in a net of the net list
          for (int i = 1; i < board_rules.nets.max_net_no(); ++i)
             {
-            rules.RuleNet curr_net = board_rules.nets.get(i);
+            freert.rules.RuleNet curr_net = board_rules.nets.get(i);
             if (curr_net.get_class() == net_rule)
                {
                String message = resources.getString("message_2") + " " + curr_net.name;
@@ -285,7 +285,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             {
             selected_class_arr[i] = routing_board.brd_rules.net_classes.get((String) table.getValueAt(selected_rows[i], ColumnName.NAME.ordinal()));
             }
-         rules.RuleNets nets = routing_board.brd_rules.nets;
+         freert.rules.RuleNets nets = routing_board.brd_rules.nets;
          java.util.Set<board.items.BrdItem> selected_items = new java.util.TreeSet<board.items.BrdItem>();
          java.util.Collection<board.items.BrdItem> board_items = routing_board.get_items();
          for (board.items.BrdItem curr_item : board_items)
@@ -293,7 +293,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             boolean item_matches = false;
             for (int i = 0; i < curr_item.net_count(); ++i)
                {
-               rules.NetClass curr_net_class = nets.get(curr_item.get_net_no(i)).get_class();
+               freert.rules.NetClass curr_net_class = nets.get(curr_item.get_net_no(i)).get_class();
                if (curr_net_class == null)
                   {
                   continue;
@@ -332,7 +332,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             return;
             }
          interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
-         rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
          NetClass[] selected_class_arr = new NetClass[selected_rows.length];
          for (int i = 0; i < selected_class_arr.length; ++i)
             {
@@ -368,7 +368,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             return;
             }
          interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
-         rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
          NetClass[] selected_class_arr = new NetClass[selected_rows.length];
          for (int i = 0; i < selected_class_arr.length; ++i)
             {
@@ -378,7 +378,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
          int max_net_no = board_rules.nets.max_net_no();
          for (int i = 1; i <= max_net_no; ++i)
             {
-            rules.RuleNet curr_net = board_rules.nets.get(i);
+            freert.rules.RuleNet curr_net = board_rules.nets.get(i);
             NetClass curr_net_class = curr_net.get_class();
             for (int j = 0; j < selected_class_arr.length; ++j)
                {
@@ -458,7 +458,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
       /** Calculates the the valus in this table */
       public void set_values()
          {
-         rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
          this.data = new Object[board_rules.net_classes.count()][];
          for (int i = 0; i < data.length; ++i)
             {
@@ -497,7 +497,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
          {
          Float trace_width;
          interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
-         rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
          NetClass curr_net_class = board_rules.net_classes.get(p_rule_no);
          if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX)
             {
