@@ -109,7 +109,6 @@ public final class RoutingBoard implements java.io.Serializable
    public final BrdLayerStructure layer_structure;
    // bounding orthogonal rectangle of this board
    public final ShapeTileBox bounding_box;
-
    // For communication with a host system or host design file formats.
    public final HostCom host_com;
 
@@ -171,7 +170,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public BrdTracePolyline insert_trace_without_cleaning(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
-      if (p_polyline.corner_count() < 2) return null;
+      if ( ! p_polyline.is_valid() ) return null;
 
       BrdTracePolyline new_trace = new BrdTracePolyline(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, this);
       
@@ -2325,24 +2324,25 @@ public final class RoutingBoard implements java.io.Serializable
                }
             }
          BrdFromSide from_side = new BrdFromSide(combined_polyline, shape_index, last_trace_shape);
-         boolean check_shove_ok = shove_trace_algo.check(last_trace_shape, from_side, null, p_layer, p_net_no_arr, p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
-               p_max_spring_over_recursion_depth, p_time_limit);
-         if (!check_shove_ok)
-            {
-            return from_corner;
-            }
-         boolean insert_ok = shove_trace_algo.insert(last_trace_shape, from_side, p_layer, p_net_no_arr, p_clearance_class_no, null, p_max_recursion_depth, p_max_via_recursion_depth,
-               p_max_spring_over_recursion_depth);
+         boolean check_shove_ok = shove_trace_algo.check(
+               last_trace_shape, from_side, null, p_layer, p_net_no_arr, p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,p_max_spring_over_recursion_depth, p_time_limit);
+
+         if (!check_shove_ok) return from_corner;
+
+         boolean insert_ok = shove_trace_algo.insert(
+               last_trace_shape, from_side, p_layer, p_net_no_arr, p_clearance_class_no, null, p_max_recursion_depth, p_max_via_recursion_depth, p_max_spring_over_recursion_depth);
+
          if (!insert_ok)
             {
             System.out.println("shove trace failed");
             return null;
             }
+         
          }
       // insert the new trace segment
-      for (int i = 0; i < new_polyline.corner_count(); ++i)
+      for (int index = 0; index < new_polyline.corner_count(); ++index)
          {
-         join_changed_area(new_polyline.corner_approx(i), p_layer);
+         join_changed_area(new_polyline.corner_approx(index), p_layer);
          }
       BrdTracePolyline new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class_no, ItemFixState.UNFIXED);
       new_trace.combine();
@@ -2385,8 +2385,7 @@ public final class RoutingBoard implements java.io.Serializable
             }
          }
 
-      // To avoid, that a separate handling for moving backwards in the own trace line
-      // becomes necessesary, pull tight is called here.
+      // To avoid, that a separate handling for moving backwards in the own trace line becomes necessesary, pull tight is called here.
       if (p_tidy_width > 0 && new_trace != null)
          {
          new_trace.pull_tight(pull_tight_algo);

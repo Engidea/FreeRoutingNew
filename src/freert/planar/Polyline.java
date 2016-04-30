@@ -324,21 +324,29 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaPointFloat corner_approx(int p_no)
       {
+      int corners_count = lines_arr.length -1;
+
+      if (corners_count < 1)
+         {
+         System.err.println(classname+"corner: corners_count < 1");
+         return null;
+         }
+      
       if (p_no < 0)
          {
-         System.err.println("Polyline.corner_approx: p_no is < 0");
+         System.err.println(classname+"corner_approx: p_no is < 0");
          p_no = 0;
          }
-      else if (p_no >= lines_arr.length - 1)
+      else if (p_no >= corners_count )
          {
-         System.err.println("Polyline.corner_approx: p_no must be less than arr.length - 1");
-         p_no = lines_arr.length - 2;
+         System.err.println(classname+"corner_approx: p_no must be less than arr.length - 1");
+         p_no = corners_count - 1;
          }
       
       if (precalculated_float_corners == null)
          {
          // corner array is not yet allocated
-         precalculated_float_corners = new PlaPointFloat[lines_arr.length - 1];
+         precalculated_float_corners = new PlaPointFloat[corners_count];
          }
 
       if (precalculated_float_corners[p_no] == null)
@@ -355,42 +363,38 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaPoint corner(int p_no)
       {
-      if (lines_arr.length < 2)
+      int corners_count = lines_arr.length -1;
+      
+      if (corners_count < 1)
          {
-         System.out.println("Polyline.corner: arr.length is < 2");
+         System.err.println(classname+"corner: corners_count < 1");
          return null;
          }
       
-      int no;
       if (p_no < 0)
          {
-         System.out.println("Polyline.corner: p_no is < 0");
-         no = 0;
+         System.err.println(classname+"corner: p_no is < 0 adjusted to 0");
+         p_no = 0;
          }
-      
-      else if (p_no >= lines_arr.length - 1)
+      else if (p_no >= corners_count)
          {
-         System.out.println("Polyline.corner: p_no must be less than arr.length - 1");
-         no = lines_arr.length - 2;
-         }
-      else
-         {
-         no = p_no;
+         System.out.println(classname+"corner: p_no must be less than arr.length - 1");
+         p_no = corners_count - 1;
          }
       
       if (precalculated_corners == null)
          {
          // corner array is not yet allocated
-         precalculated_corners = new PlaPoint[lines_arr.length - 1];
+         precalculated_corners = new PlaPoint[corners_count];
          }
 
-      if (precalculated_corners[no] == null)
+      if (precalculated_corners[p_no] == null)
          {
          // corner is not yet calculated
-         precalculated_corners[no] = lines_arr[no].intersection(lines_arr[no + 1]);
+         precalculated_corners[p_no] = lines_arr[p_no].intersection(lines_arr[p_no + 1]);
          }
       
-      return precalculated_corners[no];
+      return precalculated_corners[p_no];
       }
 
    /**

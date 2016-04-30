@@ -20,18 +20,11 @@
 
 package specctra;
 
-import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.Polyline;
-import freert.planar.ShapeTileBox;
-import freert.varie.ItemClass;
-import freert.varie.UndoableObjectNode;
-import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import rules.NetClass;
+import rules.RuleNet;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
@@ -42,15 +35,25 @@ import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.Polyline;
+import freert.planar.ShapeTileBox;
+import freert.varie.ItemClass;
+import freert.varie.UndoableObjectNode;
+import gui.varie.IndentFileWriter;
 
 /**
  * Class for reading and writing wiring scopes from dsn-files.
  *
  * @author Alfons Wirtz
  */
-class DsnKeywordWiring extends DsnKeywordScope
+final class DsnKeywordWiring extends DsnKeywordScope
    {
-
+   private static final String classname="DsnKeywordWiring.";
+   
    public DsnKeywordWiring()
       {
       super("wiring");
@@ -404,21 +407,29 @@ class DsnKeywordWiring extends DsnKeywordScope
          }
       RoutingBoard board = p_par.board_handling.get_routing_board();
 
-      rules.NetClass net_class = board.brd_rules.get_default_net_class();
-      Collection<rules.RuleNet> found_nets = get_subnets(net_id, board.brd_rules);
+      NetClass net_class = board.brd_rules.get_default_net_class();
+      
+      Collection<RuleNet> found_nets = get_subnets(net_id, board.brd_rules);
+      
       int[] net_no_arr = new int[found_nets.size()];
+      
+      if ( found_nets.size() > 1 )
+         board.userPrintln(classname+"weird net_size="+found_nets.size());
+      
       int curr_index = 0;
-      for (rules.RuleNet curr_net : found_nets)
+      for (RuleNet curr_net : found_nets)
          {
          net_no_arr[curr_index] = curr_net.net_number;
          net_class = curr_net.get_class();
          ++curr_index;
          }
+      
       int clearance_class_no = -1;
       if (clearance_class_name != null)
          {
          clearance_class_no = board.brd_rules.clearance_matrix.get_no(clearance_class_name);
          }
+      
       int layer_no;
       int half_width;
       if (path != null)
@@ -466,6 +477,7 @@ class DsnKeywordWiring extends DsnKeywordScope
             {
             clearance_class_no = net_class.default_item_clearance_classes.get(ItemClass.TRACE);
             }
+         
          PlaPointInt[] corner_arr = new PlaPointInt[path.coordinate_arr.length / 2];
          double[] curr_point = new double[2];
          for (int i = 0; i < corner_arr.length; ++i)
