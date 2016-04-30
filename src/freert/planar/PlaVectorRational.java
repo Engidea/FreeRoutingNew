@@ -185,25 +185,7 @@ public final class PlaVectorRational extends PlaVector
    @Override
    PlaDirection to_normalized_direction()
       {
-      BigInteger dx = rp_x;
-      BigInteger dy = rp_y;
-      
-      BigInteger gcd = dx.gcd(rp_y);
-      
-      dx = dx.divide(gcd);
-      dy = dy.divide(gcd);
-      
-      BigInteger two = BigInteger.valueOf(2);
-      
-      while ( PlaLimits.is_critical(dx) || PlaLimits.is_critical(dy) )
-         {
-         // this really, should never happen, but if it does I just reduce accuracy until things fits
-         System.err.println("to_normalize_direction: REDUCING accuracy");
-         dx = dx.divide(two);
-         dy = dx.divide(two);
-         }
-      
-      return new PlaDirection(dx.longValue(), dy.longValue());
+      return new PlaDirection(rp_x, rp_y);
       }
 
    @Override

@@ -67,10 +67,42 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     * @param p_x
     * @param p_y
     */
-   PlaDirection(long p_x, long p_y)
+   private PlaDirection(int p_x, int p_y)
       {
       dir_x = p_x;
       dir_y = p_y;
+      }
+   
+   private PlaDirection(long p_x, long p_y)
+      {
+      dir_x = p_x;
+      dir_y = p_y;
+      }
+
+   /**
+    * Used whan you ahve a rational vector
+    * @param dx
+    * @param dy
+    */
+   PlaDirection (BigInteger dx, BigInteger dy )
+      {
+      BigInteger gcd = dx.gcd(dy);
+      
+      dx = dx.divide(gcd);
+      dy = dy.divide(gcd);
+      
+      BigInteger two = BigInteger.valueOf(2);
+      
+      while ( PlaLimits.is_critical(dx.longValue()) || PlaLimits.is_critical(dy.longValue()) )
+         {
+         // this really, should never happen, but if it does I just reduce accuracy until things fits
+         System.err.println("PlaDirection: INteger REDUCING accuracy");
+         dx = dx.divide(two);
+         dy = dx.divide(two);
+         }
+   
+      dir_x = dx.intValue();
+      dir_y = dy.intValue();
       }
    
    /**
@@ -110,14 +142,6 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       }
 
    /**
-    * creates a Direction from the input Vector
-    */
-   public static final PlaDirection get_instance(PlaVectorInt p_vector)
-      {
-      return new PlaDirection (p_vector);
-      }
-
-   /**
     * Calculates the direction from p_from to p_to. If p_from and p_to are equal, null is returned.
     */
    public static final PlaDirection get_instance(PlaPoint p_from, PlaPoint p_to)
@@ -135,7 +159,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       final double scale_factor = 10000;
       double x = Math.cos(p_angle) * scale_factor;
       double y = Math.sin(p_angle) * scale_factor;
-      return get_instance(new PlaVectorInt(x, y));
+      return new PlaDirection(new PlaVectorInt(x, y));
       }
 
    @Override
@@ -346,6 +370,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
 
    /**
     * calculates an approximation of the direction in the middle of this direction and p_other
+    * Really, this could now be more accurate, right ?
     */
    public final PlaDirection middle_approx(PlaDirection p_other)
       {
@@ -363,7 +388,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       
       PlaVectorInt vm = new PlaVectorInt(x * scale_factor, y * scale_factor);
 
-      return PlaDirection.get_instance(vm);
+      return new PlaDirection(vm);
       }
 
    public final PlaPointFloat to_float ()
