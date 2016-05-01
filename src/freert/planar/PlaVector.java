@@ -178,7 +178,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    /**
     * Returns an approximation of the cosinus of the angle between this vector and p_other by a double.
     */
-   public double cos_angle(PlaVector p_other)
+   private double cos_angle(PlaVector p_other)
       {
       double result = scalar_product(p_other);
       result /= to_float().distance() * p_other.to_float().distance();
@@ -196,6 +196,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
          {
          result = -result;
          }
+      
       return result;
       }
 
@@ -205,6 +206,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    public double angle_approx()
       {
       PlaVector other = new PlaVectorInt(1, 0);
+      
       return other.angle_approx(this);
       }
 

@@ -89,7 +89,7 @@ public final class PlaSide
     * @param p_value
     * @return
     */
-   static PlaSide get_side_correct(long p_value)
+   static PlaSide get_side_of(long p_value)
       {
       if (p_value > 0)
           return ON_THE_RIGHT;

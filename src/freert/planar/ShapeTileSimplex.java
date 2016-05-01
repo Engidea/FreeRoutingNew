@@ -133,8 +133,8 @@ public final class ShapeTileSimplex extends ShapeTile
          prev_no = p_no - 1;
          }
       
-      PlaVectorInt prev_dir = (PlaVectorInt) arr[prev_no].direction().get_vector();
-      PlaVectorInt curr_dir = (PlaVectorInt) arr[p_no].direction().get_vector();
+      PlaVectorInt prev_dir = arr[prev_no].direction().get_vector();
+      PlaVectorInt curr_dir = arr[p_no].direction().get_vector();
       
       return prev_dir.determinant(curr_dir) > 0;
       }

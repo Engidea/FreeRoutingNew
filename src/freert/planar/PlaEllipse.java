@@ -53,14 +53,13 @@ public final class PlaEllipse implements java.io.Serializable
          smaller_radius = p_radius_1;
          curr_rotation = p_rotation + 0.5 * Math.PI;
          }
+      
       while (curr_rotation >= Math.PI)
-         {
          curr_rotation -= Math.PI;
-         }
+      
       while (curr_rotation < 0)
-         {
          curr_rotation += Math.PI;
-         }
+      
       rotation = curr_rotation;
       }
 

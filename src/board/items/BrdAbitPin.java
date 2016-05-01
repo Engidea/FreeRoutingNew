@@ -367,8 +367,9 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          else
             {
             double curr_angle_in_radian = Math.toRadians(curr_rotation_in_degree) + curr_padstack_exit_direction.angle_approx();
-            curr_exit_direction = PlaDirection.get_instance(curr_angle_in_radian);
+            curr_exit_direction = new PlaDirection(curr_angle_in_radian);
             }
+         
          // calculate the minimum line length from the pin center into curr_exit_direction
          int intersecting_border_line_no = pad_shape.intersecting_border_line_no(pin_center, curr_exit_direction);
          

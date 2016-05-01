@@ -132,35 +132,37 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       dir_y = a_y;
       }
    
-   
    /**
-    * creates a Direction from the input Vector
+    * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
     */
-   public static final PlaDirection get_instance(PlaVector p_vector)
+   public PlaDirection (double p_angle)
       {
-      return p_vector.to_normalized_direction();
+      this(vector_from_angle(p_angle));
+      }
+   
+   private static PlaVectorInt vector_from_angle (double p_angle )
+      {
+      double scale_factor = 10000;
+      
+      double x = Math.cos(p_angle) * scale_factor;
+      double y = Math.sin(p_angle) * scale_factor;
+      
+      return new PlaVectorInt(x, y);
       }
 
    /**
-    * Calculates the direction from p_from to p_to. If p_from and p_to are equal, null is returned.
+    * Calculates the direction from p_from to p_to. 
+    * If p_from and p_to are equal, null is returned.
     */
    public static final PlaDirection get_instance(PlaPoint p_from, PlaPoint p_to)
       {
       if (p_from.equals(p_to)) return null;
 
-      return get_instance(p_to.difference_by(p_from));
+      PlaVector p_vector = p_to.difference_by(p_from);
+      
+      return p_vector.to_normalized_direction();
       }
 
-   /**
-    * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
-    */
-   public static final PlaDirection get_instance(double p_angle)
-      {
-      final double scale_factor = 10000;
-      double x = Math.cos(p_angle) * scale_factor;
-      double y = Math.sin(p_angle) * scale_factor;
-      return new PlaDirection(new PlaVectorInt(x, y));
-      }
 
    @Override
    public final boolean is_NaN ()
@@ -173,7 +175,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     */
    public final boolean is_multiple_of_45_degree()
       {
-      return (is_orthogonal() || is_diagonal());
+      return is_orthogonal() || is_diagonal();
       }
 
 
@@ -181,13 +183,13 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
  
   public boolean is_orthogonal()
       {
-      return (dir_x == 0 || dir_y == 0);
+      return dir_x == 0 || dir_y == 0;
       }
 
 
   public boolean is_diagonal()
      {
-     return (Math.abs(dir_x) == Math.abs(dir_y));
+     return Math.abs(dir_x) == Math.abs(dir_y);
      }
 
   /**
@@ -358,7 +360,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     */
    public final PlaSide side_of(PlaDirection p_other)
       {
-      return PlaSide.get_side_correct(determinant(p_other));
+      return PlaSide.get_side_of(determinant(p_other));
       }
 
    /**
@@ -444,13 +446,53 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       return result;
       }
 
+   private boolean is_vertical ( )
+      {
+      return dir_x == 0;
+      }
+   
+   private boolean is_horizontal ( )
+      {
+      return dir_y == 0;
+      }
+
+   
    /**
-    * Returns an approximation of the signed angle corresponding to this dierection.
+    * Returns an approximation of the signed angle corresponding to this dierection
+    * Now, for compatibility reason, the angle logic returned is as follows
+    * The top part (for y > 0 ) increases from 0 to PI 
+    * Is always negative and foes from -0 to -PI
     */
    public double angle_approx()
       {
-      return get_vector().angle_approx();
-      }
+      if ( is_vertical() )
+         {
+         if ( dir_y >= 0 ) 
+            return Math.PI / 2;
+         else 
+            return -Math.PI / 2;
+         }
+      else if ( is_horizontal() )
+         {
+         if ( dir_x >= 0 ) 
+            return 0;
+         else
+            return Math.PI;
+         }
 
+      // dir_x is the cosine and dir_y is the sine
+      double ratio = (double) dir_y / (double) dir_x;
+      
+      // atan goes from -PI/2 to PI/2 where it starts from 0 to PI/2 jumps to -PI/2 and goes on to close to -0
+      double atan_rad = Math.atan(ratio);
+
+      // Atan behaviour is already correct for the "right" side of the plane
+      if ( dir_x >= 0 ) return atan_rad;
+
+      if ( dir_y >= 0 )
+         return Math.PI + atan_rad;
+      else
+         return atan_rad - Math.PI;
+      }
 
    }

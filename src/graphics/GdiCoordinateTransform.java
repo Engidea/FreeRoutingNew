@@ -17,6 +17,7 @@
 package graphics;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import freert.planar.PlaLimits;
 import freert.planar.PlaPointFloat;
@@ -170,23 +171,27 @@ public final class GdiCoordinateTransform implements java.io.Serializable
     */
    public double board_to_screen_angle(double p_angle)
       {
-      double result = p_angle + this.rotation_radiants;
-      if (this.mirror_left_right)
+      double result = p_angle + rotation_radiants;
+      
+      if (mirror_left_right)
          {
          result = Math.PI - result;
          }
-      if (this.mirror_top_bottom)
+      if (mirror_top_bottom)
          {
          result = -result;
          }
+      
       while (result >= 2 * Math.PI)
          {
          result -= 2 * Math.PI;
          }
+      
       while (result < 0)
          {
          result += 2 * Math.PI;
          }
+      
       return result;
       }
 
@@ -194,7 +199,7 @@ public final class GdiCoordinateTransform implements java.io.Serializable
     * Transform a geometry.planar.IntBox to a java.awt.Rectangle If the internal rotation is not a multiple of Pi/2, a bounding
     * rectangle of the rotated rectangular shape is returned.
     */
-   public java.awt.Rectangle board_to_screen(ShapeTileBox p_box)
+   public Rectangle board_to_screen(ShapeTileBox p_box)
       {
       Point2D corner_1 = board_to_screen(p_box.box_ll.to_float());
       Point2D corner_2 = board_to_screen(p_box.box_ur.to_float());

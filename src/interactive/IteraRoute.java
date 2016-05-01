@@ -632,6 +632,7 @@ public final class IteraRoute
          double curr_max_trace_length = max_trace_length - (curr_net.get_trace_length() + trace_length_add);
          double curr_min_trace_length = min_trace_length - (curr_net.get_trace_length() + trace_length_add);
          double incomplete_length = nearest_target_point.distance(from_corner);
+
          if (incomplete_length < curr_max_trace_length && min_trace_length <= max_trace_length)
             {
             PlaVector delta = nearest_target_point.round().difference_by(prev_corner);

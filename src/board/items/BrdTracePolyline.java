@@ -1098,11 +1098,11 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          end_corner = last_corner();
          prev_end_corner = polyline.corner(polyline.corner_count() - 2);
          }
+      
       PlaDirection trace_end_direction = PlaDirection.get_instance(end_corner, prev_end_corner);
-      if (trace_end_direction == null)
-         {
-         return true;
-         }
+      
+      if (trace_end_direction == null) return true;
+      
       BrdTraceExitRestriction matching_exit_restriction = null;
       for (BrdTraceExitRestriction curr_exit_restriction : trace_exit_restrictions)
          {

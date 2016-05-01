@@ -205,7 +205,7 @@ public final class PlaVectorInt extends PlaVector
    @Override
    public PlaSide side_of(PlaVectorInt p_other)
       {
-      return PlaSide.get_side_correct(determinant(p_other));
+      return PlaSide.get_side_of(determinant(p_other));
       }
 
    @Override

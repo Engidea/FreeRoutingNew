@@ -35,7 +35,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    
    private transient PlaDirection dir=null; // should only be accessed from get_direction().
    
-   private transient double cf_m,cf_q;
+   private transient int cf_q;
    
    boolean is_nan;
    
@@ -102,12 +102,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    private void calc_m_q ()
       {
-      double top    = point_a.v_y - point_b.v_y;
-      double bottom = point_a.v_x - point_b.v_x;
       
-      cf_m = bottom != 0 ? top / bottom : 0;
-      
-      cf_q = point_a.v_y - cf_m * point_a.v_x;
+//      cf_q = point_a.v_y - cf_m * point_a.v_x;
       }
 
    /**
@@ -426,6 +422,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
 
    private PlaPointInt intersect ( PlaLineInt line_a, PlaLineInt line_b )
       {
+      return new PlaPointInt();
+    /*
       line_a.calc_m_q();
       line_b.calc_m_q();
       
@@ -442,7 +440,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       double new_y = top_y / bottom;
       
       return new PlaPointInt ( new_x, new_y);
-      
+     */ 
       }
    
    /**
@@ -453,13 +451,12 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    public final PlaPointFloat intersection_approx(PlaLineInt p_other)
       {
       // this function is at the moment only implemented for lines consisting of IntPoints.
-      PlaPointInt this_a  =  point_a;
-      PlaPointInt this_b  =  point_b;
       PlaPointInt other_a =  p_other.point_a;
       PlaPointInt other_b =  p_other.point_b;
       
-      double d1x = this_b.v_x  - this_a.v_x;
-      double d1y = this_b.v_y  - this_a.v_y;
+      double d1x = point_b.v_x - point_a.v_x;
+      double d1y = point_b.v_y - point_a.v_y;
+      
       double d2x = other_b.v_x - other_a.v_x;
       double d2y = other_b.v_y - other_a.v_y;
       
@@ -468,7 +465,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       // this would be an infinite distance since the lines are parallel
       if (det == 0) return new PlaPointFloat();
 
-      double det_1 = (double) this_a.v_x  * this_b.v_y  - (double) this_a.v_y  * this_b.v_x;
+      double det_1 = (double) point_a.v_x  * point_b.v_y  - (double) point_a.v_y  * point_b.v_x;
       double det_2 = (double) other_a.v_x * other_b.v_y - (double) other_a.v_y * other_b.v_x;
 
       double is_x = (d2x * det_1 - d1x * det_2) / det;
@@ -492,7 +489,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       {
       // this function is at the moment only implemented for lines consisting of IntPoints.
       PlaPointInt ai = point_a;
-      PlaVectorInt v = (PlaVectorInt) direction().get_vector();
+      PlaVectorInt v = direction().get_vector();
       double vxvx = (double) v.point_x * v.point_x;
       double vyvy = (double) v.point_y * v.point_y;
       double lenght = Math.sqrt(vxvx + vyvy);

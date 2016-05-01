@@ -138,7 +138,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
     */
    public PlaPointInt round_to_the_right(PlaDirection p_dir)
       {
-      PlaPointFloat dir = p_dir.get_vector().to_float();
+      PlaPointFloat dir = p_dir.to_float();
 
       double rounded_x;
       if (dir.v_y > 0)
@@ -206,7 +206,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
     */
    public PlaPointInt round_to_the_left(PlaDirection p_dir)
       {
-      PlaPointFloat dir = p_dir.get_vector().to_float();
+      PlaPointFloat dir = p_dir.to_float();
       double rounded_x;
 
       if (dir.v_y > 0)

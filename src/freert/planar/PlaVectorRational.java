@@ -253,26 +253,6 @@ public final class PlaVectorRational extends PlaVector
       
       return new PlaPointRational(new_x, new_y, rp_z);
       }
-
-   /*
-   @Override
-   PlaPointRational add_to(PlaPointRational p_point)
-      {
-      BigInteger v1[] = new BigInteger[3];
-      v1[0] = v_x;
-      v1[1] = v_y;
-      v1[2] = v_z;
-
-      BigInteger v2[] = new BigInteger[3];
-      v2[0] = p_point.rp_x;
-      v2[1] = p_point.rp_y;
-      v2[2] = p_point.rp_z;
-
-      BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
-      
-      return new PlaPointRational(result[0], result[1], result[2]);
-      }
-*/
    
    @Override
    public PlaSide side_of(PlaVectorInt p_other)
@@ -293,6 +273,6 @@ public final class PlaVectorRational extends PlaVector
 
       int signum = determinant.signum();
       
-      return PlaSide.get_side_correct(signum);
+      return PlaSide.get_side_of(signum);
       }
    }
