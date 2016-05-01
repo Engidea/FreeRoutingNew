@@ -61,18 +61,9 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    public final long dir_x;
    public final long dir_y;
    
-
    /**
     * Use this one only if you know that the values are already gcd
-    * @param p_x
-    * @param p_y
     */
-   private PlaDirection(int p_x, int p_y)
-      {
-      dir_x = p_x;
-      dir_y = p_y;
-      }
-   
    private PlaDirection(long p_x, long p_y)
       {
       dir_x = p_x;
@@ -88,8 +79,11 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       {
       BigInteger gcd = dx.gcd(dy);
       
-      dx = dx.divide(gcd);
-      dy = dy.divide(gcd);
+      if ( gcd.signum() != 0 )
+         {
+         dx = dx.divide(gcd);
+         dy = dy.divide(gcd);
+         }
       
       BigInteger two = BigInteger.valueOf(2);
       
@@ -106,30 +100,24 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       }
    
    /**
+    * The two points define a "line" and I want a direction of that
+    * To get it, you simply "move p_b so it is actually centered at zero with reference p_a
+    * The resulting value should be "reduced"
+\   */
+   public PlaDirection(PlaPointInt p_a, PlaPointInt p_b)
+      {
+      this ( BigInteger.valueOf(p_b.v_x - p_a.v_x),BigInteger.valueOf(p_b.v_y - p_a.v_y));
+      }
+   
+   
+   /**
     * Construct a Direction from an IntVector
     * One key point is to "reduce" the points using the gcd
     * @param p_vector
     */
    public PlaDirection(PlaVectorInt p_vector)
       {
-      long a_x = p_vector.point_x;
-      long a_y = p_vector.point_y;
-
-      // need to "reduce" the points if necessary
-      BigInteger b1 = BigInteger.valueOf(a_x);
-      BigInteger b2 = BigInteger.valueOf(a_y);
-      BigInteger gcd = b1.gcd(b2);
-
-      long gcdlong = gcd.longValue();      
-      
-      if (gcdlong > 1)
-         {
-         a_x /= gcdlong;
-         a_y /= gcdlong;
-         }
-      
-      dir_x = a_x;
-      dir_y = a_y;
+      this ( BigInteger.valueOf(p_vector.point_x),BigInteger.valueOf(p_vector.point_y));
       }
    
    /**
@@ -192,6 +180,21 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      return Math.abs(dir_x) == Math.abs(dir_y);
      }
 
+
+  /**
+   * Return a new PlaDirection that is the sum of this direction plus the other one
+   * @param p_oter
+   * @return
+   */
+  public PlaDirection add ( PlaDirection p_other )
+     {
+     long new_x = dir_x + p_other.dir_x;
+     long new_y = dir_y + p_other.dir_y;
+     
+     return new PlaDirection(BigInteger.valueOf(new_x),BigInteger.valueOf(new_y));
+     }
+  
+  
   /**
    * return any Vector pointing into this direction
    */

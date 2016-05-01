@@ -308,8 +308,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
       }
 
    /**
-    * adds a line between at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree. The distance of the new
-    * line to the corner will be so small that no clearance check is necessary.
+    * adds a line between at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree. 
+    * The distance of the new line to the corner will be so small that no clearance check is necessary.
     */
    private PlaLineInt smoothen_sharp_corner(PlaLineInt[] p_line_arr, int p_no)
       {
@@ -331,7 +331,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaDirection prev_dir = p_line_arr[p_no].direction();
       PlaDirection next_dir = p_line_arr[p_no + 1].direction();
       
-      PlaDirection new_line_dir = new PlaDirection(prev_dir.get_vector().add(next_dir.get_vector()));
+//      PlaDirection new_line_dir = new PlaDirection(prev_dir.get_vector().add(next_dir.get_vector()));
+      PlaDirection new_line_dir = prev_dir.add(next_dir);
       
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
       double translate_dist = (PlaLimits.sqrt2 - 1) * this.curr_half_width;
@@ -455,7 +456,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaDirection prev_dir = p_line_arr[p_no].direction();
       PlaDirection next_dir = p_line_arr[p_no + 1].direction();
       
-      PlaDirection new_line_dir = new PlaDirection(prev_dir.get_vector().add(next_dir.get_vector()));
+//      PlaDirection new_line_dir = new PlaDirection(prev_dir.get_vector().add(next_dir.get_vector()));
+      PlaDirection new_line_dir = prev_dir.add(next_dir);
       
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
       

@@ -125,23 +125,26 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * Returns true, if this and p_other define the same line. Is designed for good performance, but works only for lines consisting
-    * of IntPoints.
+    * Returns true, if this and p_other define the same line. 
+    * Is designed for good performance
     */
    public final boolean fast_equals(PlaLineInt p_other)
       {
-      PlaPointInt this_a = (PlaPointInt) point_a;
-      PlaPointInt this_b = (PlaPointInt) point_b;
-      PlaPointInt other_a = (PlaPointInt) p_other.point_a;
+      PlaPointInt this_a = point_a;
+      PlaPointInt this_b = point_b;
+      PlaPointInt other_a = p_other.point_a;
+      
       double dx1 = other_a.v_x - this_a.v_x;
       double dy1 = other_a.v_y - this_a.v_y;
       double dx2 = this_b.v_x - this_a.v_x;
       double dy2 = this_b.v_y - this_a.v_y;
       double det = dx1 * dy2 - dx2 * dy1;
+      
       if (det != 0)
          {
          return false;
          }
+      
       return direction().equals(p_other.direction());
       }
 
@@ -152,7 +155,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       {
       if (dir != null) return dir;
 
-      dir = new PlaDirection (point_b.difference_by(point_a));
+//      dir = new PlaDirection (point_b.difference_by(point_a));
+      
+      dir = new PlaDirection (point_a,point_b);
       
       return dir;
       }
