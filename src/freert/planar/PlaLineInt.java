@@ -192,26 +192,13 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     * Side.ON_THE_LEFT, if this line is on the left of p_point, 
     * Side.ON_THE_RIGHT, if this line is on the right of p_point,
     * TODO try to use direction adn side_of with the same params
+    * Occio che è la linea che è a destra o sinistra, NON il punto !!!
     */
    public PlaSide side_of(PlaPointFloat p_point, double p_tolerance)
       {
-      // only implemented for IntPoint lines for performance reasons
-
-      double det = (point_b.v_y - point_a.v_y) * (p_point.v_x - point_a.v_x) - (point_b.v_x - point_a.v_x) * (p_point.v_y - point_a.v_y);
-
+      PlaPointFloat point_dir = new PlaPointFloat(p_point.v_x - point_a.v_x, p_point.v_y - point_a.v_y);
       
-      if (det - p_tolerance > 0)
-         {
-         return PlaSide.ON_THE_LEFT;
-         }
-      else if (det + p_tolerance < 0)
-         {
-         return PlaSide.ON_THE_RIGHT;
-         }
-      else
-         {
-         return PlaSide.COLLINEAR;
-         }
+      return direction().side_of(point_dir, p_tolerance) ;
       }
 
    /**
@@ -224,8 +211,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * Returns Side.ON_THE_LEFT, if this line is on the left of the intersection of p_1 and p_2, Side.ON_THE_RIGHT, if this line is
-    * on the right of the intersection, and Side.COLLINEAR, if all 3 lines intersect in exacly 1 point.
+    * Returns Side.ON_THE_LEFT, if this line is on the left of the intersection of p_1 and p_2, 
+    * Side.ON_THE_RIGHT, if this line is on the right of the intersection
+    * Side.COLLINEAR, if all 3 lines intersect in exacly 1 point.
     */
    public PlaSide side_of_intersection(PlaLineInt p_1, PlaLineInt p_2)
       {

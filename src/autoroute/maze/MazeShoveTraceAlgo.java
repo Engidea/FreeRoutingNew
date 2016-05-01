@@ -142,6 +142,7 @@ public final class MazeShoveTraceAlgo
          PlaPointFloat from_point = from_room.get_shape().centre_of_gravity();
          PlaLineInt shove_trace_line = trace_polyline.lines_arr[trace_corner_no + 1];
          PlaSegmentFloat door_line_segment = from_door_shape.diagonal_corner_segment();
+         
          PlaSide side_of_trace_line = shove_trace_line.side_of(door_line_segment.point_a, 0);
 
          PlaSegmentFloat polar_line_segment = from_door_shape.polar_line_segment(from_point);

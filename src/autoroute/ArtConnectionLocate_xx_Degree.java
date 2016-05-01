@@ -23,16 +23,16 @@ package autoroute;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.SortedSet;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaSegmentFloat;
-import freert.planar.PlaSide;
-import freert.planar.ShapeTile;
 import autoroute.expand.ExpandRoomComplete;
 import autoroute.maze.MazeSearchResult;
 import autoroute.varie.ArtBacktrackElement;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
 import board.varie.TraceAngleRestriction;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaSegmentFloat;
+import freert.planar.PlaSide;
+import freert.planar.ShapeTile;
 
 /**
  * Calculates from the backtrack list the location of the traces and vias, which realize a connection found by the maze search
@@ -50,7 +50,8 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
       }
 
    /**
-    * Calculates a list with the next point of the trace under construction. If the trace is completed, the result list will be empty.
+    * Calculates a list with the next point of the trace under construction. 
+    * If the trace is completed, the result list will be empty.
     */
    protected Collection<PlaPointFloat> calculate_next_trace_corners()
       {
@@ -81,7 +82,7 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
 
       if ( door_right_corner == null ) return result;
  
-      if (current_from_point.side_of(door_left_corner, door_right_corner) != PlaSide.ON_THE_RIGHT)
+      if (current_from_point.side_of(door_left_corner, door_right_corner) != PlaSide.ON_THE_LEFT)
          {
          // the door is already crossed at this.from_point
          

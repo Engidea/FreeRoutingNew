@@ -186,20 +186,23 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
       PlaPointFloat left_most_corner = corner_approx(0);
       int corner_count = border_line_count();
       int result = 0;
+      
       for (int index = 1; index < corner_count; ++index)
          {
          PlaPointFloat curr_corner = corner_approx(index);
+         
          if (curr_corner.side_of(p_from_point, left_most_corner) == PlaSide.ON_THE_LEFT)
             {
             left_most_corner = curr_corner;
             result = index;
             }
          }
+      
       return result;
       }
 
    /**
-    * Returns the index of the corner of the shape, so that all other points of the shape are to the left of the line from
+    * Returns the index of the corner of the shape, so that all other points of the shape are to the right of the line from
     * p_from_point to this corner
     */
    public final int index_of_right_most_corner(PlaPointFloat p_from_point)
@@ -207,9 +210,11 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
       PlaPointFloat right_most_corner = corner_approx(0);
       int corner_count = border_line_count();
       int result = 0;
+      
       for (int index = 1; index < corner_count; ++index)
          {
          PlaPointFloat curr_corner = corner_approx(index);
+      
          if (curr_corner.side_of(p_from_point, right_most_corner) == PlaSide.ON_THE_RIGHT)
             {
             right_most_corner = curr_corner;
@@ -220,7 +225,7 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
       }
 
    /**
-    * Returns a FloatLine result, so that result.a is an approximation of the left most corner of this shape when viewed from
+    * Returns a FloatLine so that result.a is an approximation of the left most corner of this shape when viewed from
     * p_from_point, and result.b is an approximation of the right most corner.
     */
    public final PlaSegmentFloat polar_line_segment(PlaPointFloat p_from_point)
@@ -238,14 +243,13 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
          {
          PlaPointFloat curr_corner = corner_approx(index);
          if (curr_corner.side_of(p_from_point, right_most_corner) == PlaSide.ON_THE_RIGHT)
-            {
             right_most_corner = curr_corner;
-            }
+
          if (curr_corner.side_of(p_from_point, left_most_corner) == PlaSide.ON_THE_LEFT)
-            {
             left_most_corner = curr_corner;
-            }
+
          }
+
       return new PlaSegmentFloat(left_most_corner, right_most_corner);
       }
 

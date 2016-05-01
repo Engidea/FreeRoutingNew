@@ -56,25 +56,30 @@ public final class PlaSide
       }
 
    /**
-    * NOTE The implementation is actually opposite of the comment
     * @return ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value == 0
     */
    static PlaSide get_side_of(double p_value)
       {
       if (p_value > 0)
-          return ON_THE_LEFT;
-      else if (p_value < 0)
           return ON_THE_RIGHT;
+      else if (p_value < 0)
+          return ON_THE_LEFT;
       else
          return COLLINEAR;
       }
    
-   static PlaSide get_side_of(long p_value)
+   /**
+    * This uses the correct logic for determinant
+    * @param p_value
+    * @param tolerance a positive number for tolerance
+    * @return
+    */
+   static PlaSide get_side_of(double p_value, double tolerance)
       {
-      if (p_value > 0)
-          return ON_THE_LEFT;
-      else if (p_value < 0)
+      if (p_value > tolerance)
           return ON_THE_RIGHT;
+      else if (p_value < -tolerance)
+          return ON_THE_LEFT;
       else
          return COLLINEAR;
       }

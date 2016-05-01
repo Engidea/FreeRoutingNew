@@ -332,24 +332,27 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       {
       if (p_to_point == this) return this;
 
-      double middle_x = 0.5 * (this.v_x + p_to_point.v_x);
-      double middle_y = 0.5 * (this.v_y + p_to_point.v_y);
+      double middle_x = 0.5 * (v_x + p_to_point.v_x);
+      double middle_y = 0.5 * (v_y + p_to_point.v_y);
 
       return new PlaPointFloat(middle_x, middle_y);
       }
 
    /**
-    * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; and Side.ON_THE_RIGHT, if
-    * this Point is on the right of the line from p_1 to p_2. Collinearity is not defined, becouse numerical calculations ar not
-    * exact for FloatPoints.
+    * The function returns 
+    * Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2 
+    * Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2
+    * Collinearity is not defined, becouse numerical calculations ar not exact for FloatPoints.
     */
    public PlaSide side_of(PlaPointFloat p_1, PlaPointFloat p_2)
       {
-      double d21_x = p_2.v_x - p_1.v_x;
-      double d21_y = p_2.v_y - p_1.v_y;
-      double d01_x = this.v_x - p_1.v_x;
-      double d01_y = this.v_y - p_1.v_y;
-      double determinant = d21_x * d01_y - d21_y * d01_x;
+      double line_dir_x  = p_2.v_x - p_1.v_x;   // this is equivalent to direction x for the line
+      double line_dir_y  = p_2.v_y - p_1.v_y;   // this is equivalent to direction y for the line
+
+      double point_dir_x = v_x - p_1.v_x;   // this is equivalent to the direction x for this point
+      double point_dir_y = v_y - p_1.v_y;   // this is equivalent to the direction y for this point
+      
+      double determinant = line_dir_x * point_dir_y - line_dir_y * point_dir_x;
       
       return PlaSide.get_side_of(determinant);
       }
@@ -413,7 +416,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
     */
    public PlaPointFloat turn_90_degree(int p_factor, PlaPointFloat p_pole)
       {
-      PlaPointFloat v = this.substract(p_pole);
+      PlaPointFloat v = substract(p_pole);
       v = v.turn_90_degree(p_factor);
       return p_pole.add(v);
       }
@@ -464,8 +467,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
     */
    public ShapeTileBox bounding_box()
       {
-      PlaPointInt lower_left = new PlaPointInt((int) Math.floor(this.v_x), (int) Math.floor(this.v_y));
-      PlaPointInt upper_right = new PlaPointInt((int) Math.ceil(this.v_x), (int) Math.ceil(this.v_y));
+      PlaPointInt lower_left = new PlaPointInt(Math.floor(v_x), Math.floor(v_y));
+      PlaPointInt upper_right = new PlaPointInt(Math.ceil(v_x), Math.ceil(v_y));
       return new ShapeTileBox(lower_left, upper_right);
       }
 
@@ -481,8 +484,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       // turn the situation 90 degree if the x difference is smaller
       // than the y difference for better numerical stability
 
-      double dx = Math.abs(this.v_x - p_to_point.v_x);
-      double dy = Math.abs(this.v_y - p_to_point.v_y);
+      double dx = Math.abs(v_x - p_to_point.v_x);
+      double dy = Math.abs(v_y - p_to_point.v_y);
       boolean situation_turned = (dy > dx);
       PlaPointFloat pole;
       PlaPointFloat circle_center;
@@ -490,7 +493,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       if (situation_turned)
          {
          // turn the situation by 90 degree
-         pole = new PlaPointFloat(-this.v_y, this.v_x);
+         pole = new PlaPointFloat(-v_y, v_x);
          circle_center = new PlaPointFloat(-p_to_point.v_y, p_to_point.v_x);
          }
       else
@@ -540,8 +543,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       }
 
    /**
-    * Calculates the left tangential point of the line from this point to a circle around p_to_point with radius p_distance. Returns
-    * null, if this point is inside this circle.
+    * Calculates the left tangential point of the line from this point to a circle around p_to_point with radius p_distance. 
+    * @return null, if this point is inside this circle.
     */
    public PlaPointFloat left_tangential_point(PlaPointFloat p_to_point, double p_distance)
       {
@@ -551,16 +554,10 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
 
       if (tangent_points.length < 2)   return null;
 
-      PlaPointFloat result;
-      if (p_to_point.side_of(this, tangent_points[0]) == PlaSide.ON_THE_RIGHT)
-         {
-         result = tangent_points[0];
-         }
+      if (p_to_point.side_of(this, tangent_points[0]) == PlaSide.ON_THE_LEFT)
+         return tangent_points[0];
       else
-         {
-         result = tangent_points[1];
-         }
-      return result;
+         return tangent_points[1];
       }
 
    /**
@@ -572,20 +569,13 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       if (p_to_point == null)         return null;
 
       PlaPointFloat[] tangent_points = tangential_points(p_to_point, p_distance);
-      if (tangent_points.length < 2)
-         {
-         return null;
-         }
-      PlaPointFloat result;
-      if (p_to_point.side_of(this, tangent_points[0]) == PlaSide.ON_THE_LEFT)
-         {
-         result = tangent_points[0];
-         }
+
+      if (tangent_points.length < 2) return null;
+
+      if (p_to_point.side_of(this, tangent_points[0]) == PlaSide.ON_THE_RIGHT)
+         return tangent_points[0];
       else
-         {
-         result = tangent_points[1];
-         }
-      return result;
+         return tangent_points[1];
       }
 
    /**
@@ -594,10 +584,10 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
     */
    public PlaPointFloat circle_center(PlaPointFloat p_1, PlaPointFloat p_2)
       {
-      double slope_1 = (p_1.v_y - this.v_y) / (p_1.v_x - this.v_x);
+      double slope_1 = (p_1.v_y - v_y) / (p_1.v_x - v_x);
       double slope_2 = (p_2.v_y - p_1.v_y) / (p_2.v_x - p_1.v_x);
-      double x_center = (slope_1 * slope_2 * (this.v_y - p_2.v_y) + slope_2 * (this.v_x + p_1.v_x) - slope_1 * (p_1.v_x + p_2.v_x)) / (2 * (slope_2 - slope_1));
-      double y_center = (0.5 * (this.v_x + p_1.v_x) - x_center) / slope_1 + 0.5 * (this.v_y + p_1.v_y);
+      double x_center = (slope_1 * slope_2 * (v_y - p_2.v_y) + slope_2 * (v_x + p_1.v_x) - slope_1 * (p_1.v_x + p_2.v_x)) / (2 * (slope_2 - slope_1));
+      double y_center = (0.5 * (v_x + p_1.v_x) - x_center) / slope_1 + 0.5 * (v_y + p_1.v_y);
       return new PlaPointFloat(x_center, y_center);
       }
 
@@ -608,7 +598,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       {
       PlaPointFloat center = p_1.circle_center(p_2, p_3);
       double radius_square = center.length_square(p_1);
-      return (this.length_square(center) < radius_square - 1); // - 1 is a tolerance for numerical stability.
+      return (length_square(center) < radius_square - 1); // - 1 is a tolerance for numerical stability.
       }
 
    public String to_string(java.util.Locale p_locale)

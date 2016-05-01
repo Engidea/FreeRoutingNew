@@ -285,10 +285,14 @@ public final class PlaVectorRational extends PlaVector
    @Override
    public PlaSide side_of(PlaVectorRational p_other)
       {
-      BigInteger tmp_1 = rp_y.multiply(p_other.rp_x);
-      BigInteger tmp_2 = rp_x.multiply(p_other.rp_y);
+      BigInteger tmp_1 = rp_x.multiply(p_other.rp_y);
+
+      BigInteger tmp_2 = rp_y.multiply(p_other.rp_x);
+      
       BigInteger determinant = tmp_1.subtract(tmp_2);
+
       int signum = determinant.signum();
-      return PlaSide.get_side_of(signum);
+      
+      return PlaSide.get_side_correct(signum);
       }
    }

@@ -327,6 +327,10 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      }
 
 
+  final double determinant(PlaPointFloat p_other)
+     {
+     return dir_x * p_other.v_y - dir_y * p_other.v_x;
+     }
 
    
    /**
@@ -357,6 +361,18 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       return PlaSide.get_side_correct(determinant(p_other));
       }
 
+   /**
+    * Important: p_other represent a "direction" in a floating point mode
+    * @param p_other
+    * @param p_tolerance
+    * @return
+    */
+   public PlaSide side_of(PlaPointFloat p_other, double p_tolerance)
+      {
+      return PlaSide.get_side_of(determinant(p_other),p_tolerance);
+      }
+   
+   
    /**
     * The function returns Signum.POSITIVE, if the scalar product of of a vector representing this direction and a vector
     * representing p_other is > 0, 
