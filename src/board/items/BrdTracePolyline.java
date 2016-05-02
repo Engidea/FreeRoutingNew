@@ -397,41 +397,43 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       r_board.item_list.save_for_undo(this);
       
       // create the lines of the joined polyline
-      PlaLineInt[] this_lines = polyline.lines_arr;
-      PlaLineInt[] other_lines;
+
+      Polyline other_poly;
       
       if (reverse_order)
          {
-         other_lines = new PlaLineInt[other_trace.polyline.plalinelen()];
-         for (int index = 0; index < other_lines.length; ++index)
-            {
-            other_lines[index] = other_trace.polyline.plaline(other_lines.length - 1 - index).opposite();
-            }
+         other_poly = other_trace.polyline.reverse();
          }
       else
          {
-         other_lines = other_trace.polyline.lines_arr;
+         other_poly = other_trace.polyline;
          }
       
-      boolean skip_line = this_lines[this_lines.length - 2].is_equal_or_opposite(other_lines[1]);
-      int new_line_count = this_lines.length + other_lines.length - 2;
+      boolean skip_line = polyline.plaline(polyline.plalinelen(-2)).is_equal_or_opposite(other_poly.plaline(1));
+      
+      int new_line_count = polyline.plalinelen() + other_poly.plalinelen() - 2;
+      
       if (skip_line)
          {
          --new_line_count;
          }
+      
       PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
-      System.arraycopy(this_lines, 0, new_lines, 0, this_lines.length - 1);
-      int join_pos = this_lines.length - 1;
+      polyline.plaline_copy( 0, new_lines, 0, polyline.plalinelen(-1));
+      int join_pos = polyline.plalinelen(-1);
+      
       if (skip_line)
          {
          --join_pos;
          }
-      System.arraycopy(other_lines, 1, new_lines, join_pos, other_lines.length - 1);
+      
+      other_poly.plaline_copy( 1, new_lines, join_pos, other_poly.plalinelen(-1));
+      
       Polyline joined_polyline = new Polyline(new_lines);
+      
       if (joined_polyline.plalinelen() != new_line_count)
          {
-         // consecutive parallel lines where skipped at the join location
-         // combine without performance optimation
+         // consecutive parallel lines where skipped at the join location combine without performance optimation
          r_board.search_tree_manager.remove(this);
          clear_search_tree_entries();
          polyline = joined_polyline;
@@ -440,18 +442,18 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
       else
          {
-         // reuse tree entries for better performance
-         // create the changed line shape at the join location
-         int to_no = this_lines.length;
+         // reuse tree entries for better performance create the changed line shape at the join location
+         int to_no = polyline.plalinelen();
          if (skip_line)
             {
             --to_no;
             }
-         r_board.search_tree_manager.merge_entries_at_end(other_trace, this, joined_polyline, this_lines.length - 3, to_no);
+         r_board.search_tree_manager.merge_entries_at_end(other_trace, this, joined_polyline, polyline.plalinelen(-3), to_no);
          other_trace.clear_search_tree_entries();
          polyline = joined_polyline;
          }
-      if (polyline.plalinelen() < 3)
+      
+      if ( ! polyline.is_valid() )
          {
          r_board.remove_item(this);
          }

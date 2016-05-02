@@ -407,6 +407,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          {
          reversed_lines[index] = lines_arr[lines_arr.length - index - 1].opposite();
          }
+      
       return new Polyline(reversed_lines);
       }
 

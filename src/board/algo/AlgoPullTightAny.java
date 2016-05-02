@@ -275,15 +275,15 @@ public final class AlgoPullTightAny extends AlgoPullTight
     */
    private Polyline smoothen_corners(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 4)
-         {
-         return p_polyline;
-         }
+      if (p_polyline.plalinelen() < 4) return p_polyline;
+
       boolean polyline_changed = false;
       
-      PlaLineInt[] line_arr = new PlaLineInt[p_polyline.plalinelen()];
-      System.arraycopy(p_polyline.lines_arr, 0, line_arr, 0, line_arr.length);
+//      PlaLineInt[] line_arr = new PlaLineInt[p_polyline.plalinelen()];
+//      System.arraycopy(p_polyline.lines_arr, 0, line_arr, 0, line_arr.length);
 
+      PlaLineInt[] line_arr = p_polyline.plaline_copy();
+      
       for (int index = 0; index < line_arr.length - 3; ++index)
          {
          PlaLineInt new_line = smoothen_corner(line_arr, index);
@@ -299,10 +299,12 @@ public final class AlgoPullTightAny extends AlgoPullTight
             ++index;
             }
          }
+
       if (!polyline_changed)
          {
          return p_polyline;
          }
+      
       return new Polyline(line_arr);
       }
 
@@ -1192,22 +1194,26 @@ public final class AlgoPullTightAny extends AlgoPullTight
       else if (bend)
          {
          PlaLineInt[] check_line_arr = new PlaLineInt[new_line_count];
-         for (int i = 0; i < check_line_arr.length - 2; ++i)
+         for (int index = 0; index < check_line_arr.length - 2; ++index)
             {
-            check_line_arr[i] = trace_polyline.lines_arr[i + diff];
+            check_line_arr[index] = trace_polyline.plaline(index + diff);
             }
+         
          check_line_arr[check_line_arr.length - 2] = other_trace_line;
          check_line_arr[check_line_arr.length - 1] = other_prev_trace_line;
          PlaLineInt new_line = reposition_line(check_line_arr, check_line_arr.length - 5);
          if (new_line != null)
             {
-            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.lines_arr.length];
-            for (int i = 0; i < new_lines.length - 2; ++i)
+            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plalinelen()];
+            
+            for (int index = 0; index < new_lines.length - 2; ++index)
                {
-               new_lines[i] = trace_polyline.lines_arr[i];
+               new_lines[index] = trace_polyline.plaline(index);
                }
+            
             new_lines[new_lines.length - 2] = new_line;
             new_lines[new_lines.length - 1] = other_trace_line;
+            
             return new Polyline(new_lines);
             }
          }
