@@ -261,17 +261,15 @@ public final class AlgoPullTight45 extends AlgoPullTight
     */
    private Polyline smoothen_corners(Polyline p_polyline)
       {
-      Polyline result = p_polyline;
       boolean polyline_changed = true;
 
       while (polyline_changed)
          {
-         if (result.plalinelen() < 4) return result;
+         if (p_polyline.plalinelen() < 4) return p_polyline;
       
          polyline_changed = false;
          
-         PlaLineInt[] line_arr = new PlaLineInt[result.plalinelen()];
-         System.arraycopy(result.lines_arr, 0, line_arr, 0, line_arr.length);
+         PlaLineInt[] line_arr = p_polyline.plaline_copy();
 
          for (int index = 1; index < line_arr.length - 2; ++index)
             {
@@ -302,11 +300,11 @@ public final class AlgoPullTight45 extends AlgoPullTight
          
          if (polyline_changed)
             {
-            result = new Polyline(line_arr);
+            p_polyline = new Polyline(line_arr);
             }
          }
       
-      return result;
+      return p_polyline;
       }
 
    /**

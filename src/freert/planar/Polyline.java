@@ -1162,6 +1162,21 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return lines_arr.length + offset;
       }
    
-   
+   /**
+    * Copy current plaline array into a new one with the same len
+    * Content is copied
+    * @return
+    */
+   public PlaLineInt [] plaline_copy()
+      {
+      int arr_len = plalinelen();
+      
+      PlaLineInt [] risul = new PlaLineInt[arr_len];
+      
+      for (int index=0; index<arr_len; index++)
+         risul[index] = lines_arr[index];
+      
+      return risul;
+      }
    
    }
