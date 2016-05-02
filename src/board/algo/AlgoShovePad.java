@@ -149,7 +149,7 @@ public final class AlgoShovePad
             }
          for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
             {
-            PlaLineInt curr_line = curr_substitute_trace.polyline().lines_arr[i + 1];
+            PlaLineInt curr_line = curr_substitute_trace.polyline().plaline(i + 1);
             PlaDirection curr_dir = curr_line.direction();
             boolean is_in_front;
             if (p_check_only_front)

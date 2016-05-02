@@ -62,9 +62,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          return;
          }
       
-      start = p_polyline.lines_arr[p_no - 1];
-      middle = p_polyline.lines_arr[p_no];
-      end = p_polyline.lines_arr[p_no + 1];
+      start = p_polyline.plaline(p_no - 1);
+      middle = p_polyline.plaline(p_no);
+      end = p_polyline.plaline(p_no + 1);
       }
 
    @Override

@@ -88,8 +88,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
       int last_index = p_polyline.lines_arr.length - 4;
 
       PlaLineInt[] new_lines = new PlaLineInt[p_polyline.lines_arr.length];
-      new_lines[0] = p_polyline.lines_arr[0];
-      new_lines[1] = p_polyline.lines_arr[1];
+      new_lines[0] = p_polyline.plaline(0);
+      new_lines[1] = p_polyline.plaline(1);
 
       int new_line_index = 1;
 
@@ -537,7 +537,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             curr_lines[p_start_no + 2] = new_line;
             Polyline tmp = new Polyline(curr_lines);
 
-            if (tmp.lines_arr.length == curr_lines.length)
+            if (tmp.plalinelen() == curr_lines.length)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, p_start_no + 1);
                check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
@@ -745,10 +745,10 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             Polyline tmp = new Polyline(curr_lines);
 
-            if (tmp.lines_arr.length == curr_lines.length)
+            if (tmp.plalinelen() == curr_lines.length)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, p_start_no + 1);
-               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             
             delta_dist /= 2;
@@ -795,25 +795,25 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
    private Polyline skip_lines(Polyline p_polyline)
       {
-      for (int i = 1; i < p_polyline.lines_arr.length - 3; ++i)
+      for (int index = 1; index < p_polyline.lines_arr.length - 3; ++index)
          {
-         for (int j = 0; j <= 1; ++j)
+         for (int jndex = 0; jndex <= 1; ++jndex)
             {
             PlaPointFloat corner1;
             PlaPointFloat corner2;
             PlaLineInt curr_line;
-            if (j == 0) // try to skip the line before the i+2-th line
+            if (jndex == 0) // try to skip the line before the i+2-th line
                {
-               curr_line = p_polyline.lines_arr[i + 2];
-               corner1 = p_polyline.corner_approx(i);
-               corner2 = p_polyline.corner_approx(i - 1);
+               curr_line = p_polyline.plaline(index + 2);
+               corner1 = p_polyline.corner_approx(index);
+               corner2 = p_polyline.corner_approx(index - 1);
                }
             else
                // try to skip the line after i-th line
                {
-               curr_line = p_polyline.lines_arr[i];
-               corner1 = p_polyline.corner_approx(i + 1);
-               corner2 = p_polyline.corner_approx(i + 2);
+               curr_line = p_polyline.plaline(index);
+               corner1 = p_polyline.corner_approx(index + 1);
+               corner2 = p_polyline.corner_approx(index + 2);
                }
             boolean in_clip_shape = curr_clip_shape == null || curr_clip_shape.contains(corner1) && curr_clip_shape.contains(corner2);
             if (!in_clip_shape)
@@ -826,11 +826,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (side1 != side2)
             // the two corners are on different sides of the line
                {
-               Polyline reduced_polyline = p_polyline.skip_lines(i + 1, i + 1);
+               Polyline reduced_polyline = p_polyline.skip_lines(index + 1, index + 1);
                if (reduced_polyline.lines_arr.length == p_polyline.lines_arr.length - 1)
                   {
-                  int shape_no = i - 1;
-                  if (j == 0)
+                  int shape_no = index - 1;
+                  if (jndex == 0)
                      {
                      ++shape_no;
                      }
@@ -847,28 +847,28 @@ public final class AlgoPullTightAny extends AlgoPullTight
                   }
                }
             // now try skipping 2 lines
-            if (i >= p_polyline.lines_arr.length - 4)
+            if (index >= p_polyline.lines_arr.length - 4)
                {
                break;
                }
             PlaPointFloat corner3;
-            if (j == 1)
+            if (jndex == 1)
                {
-               corner3 = p_polyline.corner_approx(i + 3);
+               corner3 = p_polyline.corner_approx(index + 3);
                }
             else
                {
-               corner3 = p_polyline.corner_approx(i + 1);
+               corner3 = p_polyline.corner_approx(index + 1);
                }
             if (curr_clip_shape != null && !curr_clip_shape.contains(corner3))
                {
                continue;
                }
-            if (j == 0)
+            if (jndex == 0)
             // curr_line is 1 line later than in the case skipping 1 line
             // when coming from behind
                {
-               curr_line = p_polyline.lines_arr[i + 3];
+               curr_line = p_polyline.lines_arr[index + 3];
                side1 = curr_line.side_of(corner1);
                side2 = curr_line.side_of(corner2);
                }
@@ -879,11 +879,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (side1 != side2)
             // the two corners are on different sides of the line
                {
-               Polyline reduced_polyline = p_polyline.skip_lines(i + 1, i + 2);
+               Polyline reduced_polyline = p_polyline.skip_lines(index + 1, index + 2);
                if (reduced_polyline.lines_arr.length == p_polyline.lines_arr.length - 2)
                   {
-                  int shape_no = i - 1;
-                  if (j == 0)
+                  int shape_no = index - 1;
+                  if (jndex == 0)
                      {
                      ++shape_no;
                      }
@@ -937,8 +937,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
          }
       
       PlaSide prev_corner_side = null;
-      PlaDirection line_direction = trace_polyline.lines_arr[start_line_no].direction();
-      PlaDirection prev_line_direction = trace_polyline.lines_arr[start_line_no + 1].direction();
+      PlaDirection line_direction = trace_polyline.plaline(start_line_no).direction();
+      PlaDirection prev_line_direction = trace_polyline.plaline(start_line_no + 1).direction();
 
       java.util.Collection<BrdItem> contact_list = p_trace.get_start_contacts();
       for (BrdItem curr_contact : contact_list)

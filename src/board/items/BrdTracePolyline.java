@@ -689,15 +689,15 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    private boolean split_inside_drill_pad_prohibited(int p_line_no, PlaLineInt p_line)
       {
-      PlaPoint intersection = polyline.lines_arr[p_line_no].intersection(p_line);
+      PlaPoint intersection = polyline.plaline(p_line_no).intersection(p_line);
+      
       java.util.Collection<BrdItem> overlap_items = r_board.pick_items(intersection, get_layer() );
       boolean pad_found = false;
+      
       for (BrdItem curr_item : overlap_items)
          {
-         if (!curr_item.shares_net(this))
-            {
-            continue;
-            }
+         if (!curr_item.shares_net(this)) continue;
+
          if (curr_item instanceof BrdAbitPin)
             {
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
@@ -998,13 +998,14 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
 
       // look for the first line in p_new_polyline different from
       // the lines of the existung trace
-      int last_index = Math.min(p_new_polyline.lines_arr.length, polyline.lines_arr.length);
+      int last_index = Math.min(p_new_polyline.plalinelen(), polyline.plalinelen());
       int index_of_first_different_line = last_index;
-      for (int i = 0; i < last_index; ++i)
+
+      for (int index = 0; index < last_index; ++index)
          {
-         if (p_new_polyline.lines_arr[i] != polyline.lines_arr[i])
+         if (p_new_polyline.plaline(index) != polyline.plaline(index) )
             {
-            index_of_first_different_line = i;
+            index_of_first_different_line = index;
             break;
             }
          }
@@ -1200,7 +1201,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       if (entries.length == 0) return false;
 
       int[] latest_entry_tuple = entries[entries.length - 1];
-      PlaPointFloat trace_entry_location_approx = trace_polyline.lines_arr[latest_entry_tuple[0]].intersection_approx(offset_pin_shape.border_line(latest_entry_tuple[1]));
+      
+      PlaPointFloat trace_entry_location_approx = trace_polyline.plaline(latest_entry_tuple[0]).intersection_approx(offset_pin_shape.border_line(latest_entry_tuple[1]));
 
       if ( trace_entry_location_approx.is_NaN() ) return false;
       
@@ -1354,7 +1356,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       Polyline contact_polyline = contact_trace.polyline();
       PlaLineInt contact_last_line = contact_polyline.lines_arr[contact_polyline.lines_arr.length - 2];
       // look, if this trace has a sharp angle with the contact trace.
-      PlaLineInt first_line = trace_polyline.lines_arr[1];
+      PlaLineInt first_line = trace_polyline.plaline(1);
       // check for sharp angle
       boolean check_swap = contact_last_line.direction().projection(first_line.direction()) == Signum.NEGATIVE;
       if (!check_swap)

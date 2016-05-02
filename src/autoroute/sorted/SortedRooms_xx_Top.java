@@ -324,7 +324,7 @@ public final class SortedRooms_xx_Top
          BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
          if (room_index == 0 || room_index == curr_trace.tile_shape_count() - 1)
             {
-            PlaLineInt curr_trace_line = curr_trace.polyline().lines_arr[room_index + 1];
+            PlaLineInt curr_trace_line = curr_trace.polyline().plaline(room_index + 1);
             if (!curr_trace_line.is_parallel(p_door_line))
                {
                return false;

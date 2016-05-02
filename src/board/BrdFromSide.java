@@ -84,7 +84,7 @@ public final class BrdFromSide
          // Calculate the nearest intersection point of p_polyline.arr[1]
          // with the border of p_shape to the first corner of p_polyline
          PlaPointFloat from_point = p_polyline.corner_approx(0);
-         PlaLineInt check_line = p_polyline.lines_arr[1];
+         PlaLineInt check_line = p_polyline.plaline(1);
          double min_dist = Double.MAX_VALUE;
          
          int edge_count = p_shape.border_line_count();

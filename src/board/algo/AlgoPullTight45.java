@@ -564,8 +564,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner(1);
       PlaSide prev_corner_side = null;
-      PlaDirection line_direction = trace_polyline.lines_arr[1].direction();
-      PlaDirection prev_line_direction = trace_polyline.lines_arr[2].direction();
+      PlaDirection line_direction = trace_polyline.plaline(1).direction();
+      PlaDirection prev_line_direction = trace_polyline.plaline(2).direction();
 
       java.util.Collection<BrdItem> contact_list = p_trace.get_start_contacts();
       for (BrdItem curr_contact : contact_list)

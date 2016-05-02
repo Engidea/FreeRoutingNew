@@ -140,7 +140,7 @@ public final class MazeShoveTraceAlgo
          {
          ExpandRoomComplete from_room = from_door.other_room(p_obstacle_room);
          PlaPointFloat from_point = from_room.get_shape().centre_of_gravity();
-         PlaLineInt shove_trace_line = trace_polyline.lines_arr[trace_corner_no + 1];
+         PlaLineInt shove_trace_line = trace_polyline.plaline(trace_corner_no + 1);
          PlaSegmentFloat door_line_segment = from_door_shape.diagonal_corner_segment();
          
          PlaSide side_of_trace_line = shove_trace_line.side_of(door_line_segment.point_a, 0);
@@ -180,12 +180,12 @@ public final class MazeShoveTraceAlgo
             if (p_shove_to_the_left)
                {
                PlaLineInt start_closing_line = new PlaLineInt(shrinked_line_segment.point_b.round(), perpendicular_direction);
-               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.lines_arr[trace_corner_no + 1], trace_polyline.lines_arr[trace_corner_no + 2]);
+               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.plaline(trace_corner_no + 1), trace_polyline.plaline(trace_corner_no + 2));
                }
             else
                {
                PlaLineInt start_closing_line = new PlaLineInt(shrinked_line_segment.point_a.round(), perpendicular_direction);
-               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.lines_arr[trace_corner_no + 1].opposite(), trace_polyline.lines_arr[trace_corner_no].opposite());
+               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.plaline(trace_corner_no + 1).opposite(), trace_polyline.plaline(trace_corner_no).opposite());
                }
             }
          else
@@ -193,12 +193,12 @@ public final class MazeShoveTraceAlgo
             if (p_shove_to_the_left)
                {
                PlaLineInt start_closing_line = new PlaLineInt(shrinked_line_segment.point_b.round(), perpendicular_direction);
-               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.lines_arr[trace_corner_no + 1].opposite(), trace_polyline.lines_arr[trace_corner_no].opposite());
+               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.plaline(trace_corner_no + 1).opposite(), trace_polyline.plaline(trace_corner_no).opposite());
                }
             else
                {
                PlaLineInt start_closing_line = new PlaLineInt(shrinked_line_segment.point_a.round(), perpendicular_direction);
-               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.lines_arr[trace_corner_no + 1], trace_polyline.lines_arr[trace_corner_no + 2]);
+               shove_line_segment = new PlaSegmentInt(start_closing_line, trace_polyline.plaline(trace_corner_no + 1), trace_polyline.plaline(trace_corner_no + 2));
                }
             }
          }

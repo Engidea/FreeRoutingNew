@@ -68,10 +68,10 @@ public final class AlgoPullTight90 extends AlgoPullTight
          return p_polyline;
          }
       PlaLineInt[] check_lines = new PlaLineInt[4];
-      check_lines[0] = p_polyline.lines_arr[1];
-      check_lines[1] = p_polyline.lines_arr[0];
-      check_lines[2] = p_polyline.lines_arr[3];
-      check_lines[3] = p_polyline.lines_arr[4];
+      check_lines[0] = p_polyline.plaline(1);
+      check_lines[1] = p_polyline.plaline(0);
+      check_lines[2] = p_polyline.plaline(3);
+      check_lines[3] = p_polyline.plaline(4);
       Polyline check_polyline = new Polyline(check_lines);
       if (check_polyline.lines_arr.length != 4 || curr_clip_shape != null && !curr_clip_shape.contains(check_polyline.corner_approx(1)))
          {
@@ -102,8 +102,8 @@ public final class AlgoPullTight90 extends AlgoPullTight
    private Polyline try_skip_corners(Polyline p_polyline)
       {
       PlaLineInt[] new_lines = new PlaLineInt[p_polyline.lines_arr.length];
-      new_lines[0] = p_polyline.lines_arr[0];
-      new_lines[1] = p_polyline.lines_arr[1];
+      new_lines[0] = p_polyline.plaline(0);
+      new_lines[1] = p_polyline.plaline(1);
       int new_line_index = 1;
       boolean polyline_changed = false;
       PlaLineInt[] check_lines = new PlaLineInt[4];
@@ -116,15 +116,15 @@ public final class AlgoPullTight90 extends AlgoPullTight
             {
             check_lines[0] = new_lines[new_line_index - 1];
             check_lines[1] = new_lines[new_line_index];
-            check_lines[2] = p_polyline.lines_arr[index - 1];
+            check_lines[2] = p_polyline.plaline(index - 1);
             if (index < p_polyline.lines_arr.length)
                {
-               check_lines[3] = p_polyline.lines_arr[index];
+               check_lines[3] = p_polyline.plaline(index);
                }
             else
                {
                // use as concluding line the second last line
-               check_lines[3] = p_polyline.lines_arr[index - 2];
+               check_lines[3] = p_polyline.plaline(index - 2);
                }
             Polyline check_polyline = new Polyline(check_lines);
             skip_lines = check_polyline.lines_arr.length == 4 && (curr_clip_shape == null || curr_clip_shape.contains(check_polyline.corner_approx(1)));

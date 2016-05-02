@@ -18,13 +18,13 @@
 
 package board;
 
+import board.items.BrdTracePolyline;
+import board.shape.ShapeSearchTree;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
-import board.items.BrdTracePolyline;
-import board.shape.ShapeSearchTree;
 
 /**
  * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the trace shape.
@@ -113,14 +113,14 @@ public final class BrdShapeAndFromSide
 
    private static PlaLineInt calc_cutline_at_end(int p_index, BrdTracePolyline p_trace)
       {
-      Polyline trace_lines = p_trace.polyline();
+      Polyline polyline = p_trace.polyline();
       ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
-      if (p_index == trace_lines.lines_arr.length - 3
-            || trace_lines.corner_approx(trace_lines.lines_arr.length - 2).distance(trace_lines.corner_approx(p_index + 1)) < p_trace.get_compensated_half_width(search_tree))
+      if (p_index == polyline.plalinelen() - 3
+            || polyline.corner_approx(polyline.lines_arr.length - 2).distance(polyline.corner_approx(p_index + 1)) < p_trace.get_compensated_half_width(search_tree))
          {
 
-         PlaLineInt curr_line = trace_lines.lines_arr[trace_lines.lines_arr.length - 1];
-         PlaPointFloat is = trace_lines.corner_approx(trace_lines.lines_arr.length - 3);
+         PlaLineInt curr_line = polyline.plaline(polyline.lines_arr.length - 1);
+         PlaPointFloat is = polyline.corner_approx(polyline.lines_arr.length - 3);
          PlaLineInt cut_line;
          if (curr_line.side_of(is) == PlaSide.ON_THE_LEFT)
             {
@@ -141,7 +141,7 @@ public final class BrdShapeAndFromSide
       ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
       if (p_index == 0 || trace_lines.corner_approx(0).distance(trace_lines.corner_approx(p_index)) < p_trace.get_compensated_half_width(search_tree))
          {
-         PlaLineInt curr_line = trace_lines.lines_arr[0];
+         PlaLineInt curr_line = trace_lines.plaline(0);
          PlaPointFloat is = trace_lines.corner_approx(1);
          PlaLineInt cut_line;
          if (curr_line.side_of(is) == PlaSide.ON_THE_LEFT)

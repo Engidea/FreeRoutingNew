@@ -1132,4 +1132,27 @@ public final class Polyline implements java.io.Serializable, PlaObject
       new_lines[p_new_line_count - 1] = new PlaLineInt(new_last_corner, new_prev_last_line.direction().turn_45_degree(6));
       return new Polyline(new_lines);
       }
+   
+   /**
+    * Replacement for direct indexing in the array
+    * @param index
+    * @return
+    */
+   public PlaLineInt plaline ( int index )
+      {
+      return lines_arr[index];
+      }
+   
+   /**
+    * replacement for getting len instead of using direct array
+    * @return
+    */
+   public int plalinelen ( )
+      {
+      return lines_arr.length;
+      }
+   
+   
+   
+   
    }

@@ -922,7 +922,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
     */
    public int[][] entrance_points(Polyline p_polyline)
       {
-      int[][] result = new int[2 * p_polyline.lines_arr.length][2];
+      int[][] result = new int[2 * p_polyline.plalinelen()][2];
       int intersection_count = 0;
       int prev_intersection_line_no = -1;
       int prev_intersection_edge_no = -1;
@@ -979,7 +979,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       Collection<Polyline> pieces = new LinkedList<Polyline>();
       int curr_intersection_no = 0;
       int[] curr_intersection_tuple = intersection_no[curr_intersection_no];
-      PlaPoint first_intersection = p_polyline.lines_arr[curr_intersection_tuple[0]].intersection(border_line(curr_intersection_tuple[1]));
+      PlaPoint first_intersection = p_polyline.plaline(curr_intersection_tuple[0]).intersection(border_line(curr_intersection_tuple[1]));
       if (!first_corner_is_inside)
          {
          // calculate outside piece at start

@@ -723,7 +723,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       if (entries.length == 0) return null;
 
       int[] latest_entry_tuple = entries[entries.length - 1];
-      PlaPointFloat trace_entry_location_approx = p_trace_polyline.lines_arr[latest_entry_tuple[0]].intersection_approx(offset_pin_shape.border_line(latest_entry_tuple[1]));
+      PlaPointFloat trace_entry_location_approx = p_trace_polyline.plaline(latest_entry_tuple[0]).intersection_approx(offset_pin_shape.border_line(latest_entry_tuple[1]));
 
       // it means that the location is an impossible one
       if ( trace_entry_location_approx.is_NaN() ) return null;

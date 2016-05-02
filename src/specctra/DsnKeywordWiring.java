@@ -224,7 +224,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          }
       else
          {
-         double[] coors = p_par.coordinate_transform.board_to_dsn(curr_wire.polyline().lines_arr);
+         double[] coors = p_par.coordinate_transform.board_to_dsn(curr_wire.polyline());
          DsnPolylinePath curr_path = new DsnPolylinePath(curr_layer, wire_width, coors);
          curr_path.write_scope(p_par.file, p_par.identifier_type);
          }

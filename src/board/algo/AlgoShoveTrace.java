@@ -214,7 +214,7 @@ public final class AlgoShoveTrace
          
          for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
-            PlaDirection curr_dir = curr_substitute_trace.polyline().lines_arr[index + 1].direction();
+            PlaDirection curr_dir = curr_substitute_trace.polyline().plaline(index + 1).direction();
             boolean is_in_front = p_dir == null || p_dir.equals(curr_dir);
             if (is_in_front)
                {

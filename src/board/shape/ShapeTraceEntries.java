@@ -18,12 +18,6 @@ package board.shape;
 
 import java.util.Collection;
 import java.util.Iterator;
-import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.Polyline;
-import freert.planar.ShapeConvex;
-import freert.planar.ShapeTile;
 import board.BrdFromSide;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;
@@ -36,6 +30,12 @@ import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
 import board.varie.ShapeTraceEntryPoint;
+import freert.planar.PlaLineInt;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.Polyline;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapeTile;
 
 /**
  * Auxiliary class used by the shove functions
@@ -156,12 +156,10 @@ public class ShapeTraceEntries
     */
    public BrdTracePolyline next_substitute_trace_piece()
       {
-
       ShapeTraceEntryPoint[] entries = pop_piece();
-      if (entries == null)
-         {
-         return null;
-         }
+
+      if (entries == null) return null;
+
       BrdTracePolyline curr_trace = entries[0].trace;
       ShapeTile offset_shape;
       ShapeSearchTree search_tree = this.board.search_tree_manager.get_default_tree();
@@ -184,7 +182,7 @@ public class ShapeTraceEntries
 
       PlaLineInt[] piece_lines = new PlaLineInt[edge_diff + 3];
       // start with the intersecting line of the trace at the start entry.
-      piece_lines[0] = entries[0].trace.polyline().lines_arr[entries[0].trace_line_no];
+      piece_lines[0] = entries[0].trace.polyline().plaline(entries[0].trace_line_no);
       // end with the intersecting line of the trace at the end entry
       piece_lines[piece_lines.length - 1] = entries[1].trace.polyline().lines_arr[entries[1].trace_line_no];
       // fill the interiour lines of piece_lines with the appropriate edge
@@ -364,7 +362,7 @@ public class ShapeTraceEntries
       for (int i = 0; i < entries.length; ++i)
          {
          int[] entry_tuple = entries[i];
-         PlaPointFloat entry_approx = p_trace.polyline().lines_arr[entry_tuple[0]].intersection_approx(offset_shape.border_line(entry_tuple[1]));
+         PlaPointFloat entry_approx = p_trace.polyline().plaline(entry_tuple[0]).intersection_approx(offset_shape.border_line(entry_tuple[1]));
          
          if ( entry_approx.is_NaN() ) System.err.println("store_trace entry_approx.isNaN, fix it !");
          
