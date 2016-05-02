@@ -309,14 +309,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
    @Override
    protected Polyline reposition_lines(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 5)
-         {
-         return p_polyline;
-         }
+      if (p_polyline.plalinelen() < 5) return p_polyline;
+
       boolean polyline_changed = false;
       
-      PlaLineInt[] line_arr = new PlaLineInt[p_polyline.plalinelen()];
-      System.arraycopy(p_polyline.lines_arr, 0, line_arr, 0, line_arr.length);
+      PlaLineInt[] line_arr = p_polyline.plaline_copy();
       
       for (int index = 0; index < line_arr.length - 4; ++index)
          {
@@ -333,10 +330,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             }
          }
-      if (!polyline_changed)
-         {
-         return p_polyline;
-         }
+      
+      if ( ! polyline_changed) return p_polyline;
+
       return new Polyline(line_arr);
       }
 
