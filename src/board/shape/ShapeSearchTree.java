@@ -114,7 +114,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       // calculate the shapes of p_new_polyline from keep_at_start_count to
       // new_shape_count - keep_at_end_count - 1;
       int compensated_half_width = p_obj.get_half_width() + get_clearance_compensation(p_obj.clearance_class_no(), p_obj.get_layer());
-      ShapeTile[] changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.lines_arr.length - 1 - p_keep_at_end_count);
+      ShapeTile[] changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plalinelen(-1) - p_keep_at_end_count);
       int old_shape_count = p_obj.tree_shape_count(this);
       int new_shape_count = changed_shapes.length + p_keep_at_start_count + p_keep_at_end_count;
       ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
@@ -234,7 +234,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       {
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
       ShapeTile[] link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
-      boolean change_order = p_from_trace.last_corner().equals(p_to_trace.last_corner());
+      boolean change_order = p_from_trace.corner_last().equals(p_to_trace.corner_last());
       ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
       ShapeTreeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
       // remove the last or first tree entry from p_from_trace and the
@@ -304,7 +304,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    public final void reuse_entries_after_cutout(BrdTracePolyline p_from_trace, BrdTracePolyline p_start_piece, BrdTracePolyline p_end_piece)
       {
-      ShapeTreeLeaf[] start_piece_leaf_arr = new ShapeTreeLeaf[p_start_piece.polyline().lines_arr.length - 2];
+      ShapeTreeLeaf[] start_piece_leaf_arr = new ShapeTreeLeaf[p_start_piece.polyline().plalinelen(-2)];
       ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
       // transfer the entries at the start of p_from_trace to p_start_piece.
       for (int i = 0; i < start_piece_leaf_arr.length - 1; ++i)
@@ -837,7 +837,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          compare_corner = p_trace.polyline().corner_approx(1);
 
          }
-      else if (p_trace.last_corner().equals(p_tie_pin.get_center()))
+      else if (p_trace.corner_last().equals(p_tie_pin.get_center()))
          {
          trace_shape_no = p_trace.corner_count() - 2;
          compare_corner = p_trace.polyline().corner_approx(p_trace.corner_count() - 2);

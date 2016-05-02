@@ -431,7 +431,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
             
          if (!contact_found)
             {
-            contact_point = this_trace.last_corner();
+            contact_point = this_trace.corner_last();
             curr_contacts = this_trace.get_normal_contacts(contact_point, true);
                {
                if (curr_contacts.contains(curr_item))

@@ -90,7 +90,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
                if (curr_item instanceof BrdTrace)
                   {
                   BrdTrace curr_trace = (BrdTrace) curr_item;
-                  if (curr_shape.contains(curr_trace.first_corner()) || curr_shape.contains(curr_trace.last_corner()))
+                  if (curr_shape.contains(curr_trace.first_corner()) || curr_shape.contains(curr_trace.corner_last()))
                      {
                      result.add(curr_item);
                      }

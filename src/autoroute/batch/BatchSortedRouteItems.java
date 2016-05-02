@@ -89,7 +89,7 @@ public class BatchSortedRouteItems
             if (!curr_trace.is_shove_fixed())
                {
                PlaPointFloat first_corner = curr_trace.first_corner().to_float();
-               PlaPointFloat last_corner = curr_trace.last_corner().to_float();
+               PlaPointFloat last_corner = curr_trace.corner_last().to_float();
                PlaPointFloat compare_corner;
                if (first_corner.v_x < last_corner.v_x || first_corner.v_x == last_corner.v_x && first_corner.v_y < last_corner.v_y)
                   {

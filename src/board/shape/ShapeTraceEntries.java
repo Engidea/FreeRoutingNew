@@ -184,7 +184,7 @@ public class ShapeTraceEntries
       // start with the intersecting line of the trace at the start entry.
       piece_lines[0] = entries[0].trace.polyline().plaline(entries[0].trace_line_no);
       // end with the intersecting line of the trace at the end entry
-      piece_lines[piece_lines.length - 1] = entries[1].trace.polyline().lines_arr[entries[1].trace_line_no];
+      piece_lines[piece_lines.length - 1] = entries[1].trace.polyline().plaline(entries[1].trace_line_no);
       // fill the interiour lines of piece_lines with the appropriate edge
       // lines of the offset shape
       int curr_edge_no = entries[0].edge_no % edge_count;
@@ -459,7 +459,7 @@ public class ShapeTraceEntries
                         }
                      else
                         {
-                        trace_line_segment_no = p_trace.polyline().lines_arr.length - 1;
+                        trace_line_segment_no = p_trace.polyline().plalinelen(-1);
                         }
 
                      if (projection_side >= 0)
@@ -473,10 +473,11 @@ public class ShapeTraceEntries
                   shape_contains_trace_tails = true;
                   }
                }
-            end_corner = p_trace.last_corner();
+            end_corner = p_trace.corner_last();
             }
          }
-      this.found_obstacle = p_trace;
+      
+      found_obstacle = p_trace;
       return true;
       }
 

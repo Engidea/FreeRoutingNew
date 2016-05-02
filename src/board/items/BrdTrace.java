@@ -72,7 +72,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
    /**
     * returns the last corner of the trace
     */
-   public abstract PlaPoint last_corner();
+   public abstract PlaPoint corner_last();
 
    public int first_layer()
       {
@@ -148,7 +148,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
     */
    public Set<BrdItem> get_end_contacts()
       {
-      return get_normal_contacts(last_corner(), false);
+      return get_normal_contacts(corner_last(), false);
       }
 
    public PlaPoint normal_contact_point(BrdItem p_other)
@@ -164,7 +164,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          {
          result.addAll(get_normal_contacts(start_corner, false));
          }
-      PlaPoint end_corner = last_corner();
+      PlaPoint end_corner = corner_last();
       if (end_corner != null)
          {
          result.addAll(get_normal_contacts(end_corner, false));
@@ -220,7 +220,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       if ( p_point == null ) return result;
 
       // point should land on either first or last corner
-      if ( !(p_point.equals(first_corner()) || p_point.equals(last_corner()))) return result;
+      if ( !(p_point.equals(first_corner()) || p_point.equals(corner_last()))) return result;
 
       ShapeTile search_shape = new ShapeTileBox(p_point);
 
@@ -244,7 +244,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          if (curr_item instanceof BrdTrace)
             {
             BrdTrace curr_trace = (BrdTrace) curr_item;
-            if (p_point.equals(curr_trace.first_corner()) || p_point.equals(curr_trace.last_corner()))
+            if (p_point.equals(curr_trace.first_corner()) || p_point.equals(curr_trace.corner_last()))
                {
                result.add(curr_item);
                }
@@ -278,8 +278,8 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       {
       if ( layer_no != p_other.layer_no) return null;
 
-      boolean contact_at_first_corner = first_corner().equals(p_other.first_corner()) || first_corner().equals(p_other.last_corner());
-      boolean contact_at_last_corner = last_corner().equals(p_other.first_corner()) || last_corner().equals(p_other.last_corner());
+      boolean contact_at_first_corner = first_corner().equals(p_other.first_corner()) || first_corner().equals(p_other.corner_last());
+      boolean contact_at_last_corner = corner_last().equals(p_other.first_corner()) || corner_last().equals(p_other.corner_last());
       PlaPoint result;
       if (!(contact_at_first_corner || contact_at_last_corner) || contact_at_first_corner && contact_at_last_corner)
          {
@@ -293,7 +293,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       else
          // contact at last corner
          {
-         result = last_corner();
+         result = corner_last();
          }
       return result;
       }
@@ -350,7 +350,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
    public PlaPoint nearest_end_point(PlaPoint p_from_point)
       {
       PlaPoint p1 = first_corner();
-      PlaPoint p2 = last_corner();
+      PlaPoint p2 = corner_last();
       PlaPointFloat from_point = p_from_point.to_float();
       double d1 = from_point.distance(p1.to_float());
       double d2 = from_point.distance(p2.to_float());
@@ -439,7 +439,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          }
       if (stub_at_end)
          {
-         result[stub_no] = last_corner();
+         result[stub_no] = corner_last();
          }
       for (int i = 0; i < result.length; ++i)
          {
@@ -488,7 +488,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
                result.add((BrdAbitPin) curr_item);
                }
             }
-         curr_end_point = last_corner();
+         curr_end_point = corner_last();
          }
       return result;
       }
@@ -500,7 +500,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       p_window.append(" " + resources.getString("from"));
       p_window.append(first_corner().to_float());
       p_window.append(resources.getString("to"));
-      p_window.append(last_corner().to_float());
+      p_window.append(corner_last().to_float());
       p_window.append(resources.getString("on_layer") + " ");
       p_window.append(r_board.layer_structure.get_name(layer_no));
       p_window.append(", " + resources.getString("width") + " ");
@@ -516,7 +516,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       {
       boolean result = super.validate_ok();
 
-      if (first_corner().equals( last_corner()))
+      if (first_corner().equals( corner_last()))
          {
          System.out.println("Trace.validate: first and last corner are equal");
          result = false;

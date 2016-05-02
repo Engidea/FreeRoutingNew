@@ -126,7 +126,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
                }
             else if (curr_trace.get_end_contacts().isEmpty())
                {
-               stub_location = curr_trace.last_corner().to_float();
+               stub_location = curr_trace.corner_last().to_float();
                }
             else
                {

@@ -486,7 +486,7 @@ public final class AlgoShoveTrace
       
          if (curr_substitute_trace == null)  break;
 
-         if (curr_substitute_trace.first_corner().equals(curr_substitute_trace.last_corner()))
+         if (curr_substitute_trace.first_corner().equals(curr_substitute_trace.corner_last()))
             {
             continue;
             }
@@ -526,7 +526,7 @@ public final class AlgoShoveTrace
             {
             end_corners = new PlaPoint[2];
             end_corners[0] = curr_substitute_trace.first_corner();
-            end_corners[1] = curr_substitute_trace.last_corner();
+            end_corners[1] = curr_substitute_trace.corner_last();
             }
          
          r_board.insert_item(curr_substitute_trace);
@@ -594,7 +594,7 @@ public final class AlgoShoveTrace
       else
          check_net_no_arr = new int[0];
       
-      for (int index = 0; index < p_polyline.lines_arr.length - 2; ++index)
+      for (int index = 0; index < p_polyline.plalinelen(-2); ++index)
          {
          ShapeTile curr_shape = p_polyline.offset_shape(p_half_width, index);
          
@@ -792,15 +792,15 @@ public final class AlgoShoveTrace
       else if (side_diff == 0)
          {
          PlaPointFloat compare_corner = offset_shape.corner_approx(first_intersection_side_no);
-         PlaPointFloat first_intersection = p_polyline.lines_arr[first_intersection_line_no].intersection_approx(offset_shape.border_line(first_intersection_side_no));
-         PlaPointFloat second_intersection = p_polyline.lines_arr[last_intersection_line_no].intersection_approx(offset_shape.border_line(last_intersection_side_no));
+         PlaPointFloat first_intersection = p_polyline.plaline(first_intersection_line_no).intersection_approx(offset_shape.border_line(first_intersection_side_no));
+         PlaPointFloat second_intersection = p_polyline.plaline(last_intersection_line_no).intersection_approx(offset_shape.border_line(last_intersection_side_no));
          if (compare_corner.distance(second_intersection) < compare_corner.distance(first_intersection))
             {
             side_diff += offset_shape.border_line_count();
             }
          }
       PlaLineInt[] substitute_lines = new PlaLineInt[side_diff + 3];
-      substitute_lines[0] = p_polyline.lines_arr[first_intersection_line_no];
+      substitute_lines[0] = p_polyline.plaline(first_intersection_line_no);
       int curr_edge_line_no = first_intersection_side_no;
 
       for (int i = 1; i <= side_diff + 1; ++i)
@@ -815,7 +815,7 @@ public final class AlgoShoveTrace
             ++curr_edge_line_no;
             }
          }
-      substitute_lines[side_diff + 2] = p_polyline.lines_arr[last_intersection_line_no];
+      substitute_lines[side_diff + 2] = p_polyline.plaline(last_intersection_line_no);
       Polyline substitute_polyline = new Polyline(substitute_lines);
       Polyline result = substitute_polyline;
 

@@ -229,7 +229,7 @@ public final class AlgoShovePad
             {
             break;
             }
-         if (curr_substitute_trace.first_corner().equals(curr_substitute_trace.last_corner()))
+         if (curr_substitute_trace.first_corner().equals(curr_substitute_trace.corner_last()))
             {
             continue;
             }
@@ -252,7 +252,7 @@ public final class AlgoShovePad
             {
             end_corners = new PlaPoint[2];
             end_corners[0] = curr_substitute_trace.first_corner();
-            end_corners[1] = curr_substitute_trace.last_corner();
+            end_corners[1] = curr_substitute_trace.corner_last();
             }
          
          r_board.insert_item(curr_substitute_trace);

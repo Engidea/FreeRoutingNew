@@ -368,7 +368,7 @@ public final class MazeShoveTraceAlgo
          PlaPoint from_center = ((BrdAbit) p_from_item).get_center();
          if ( from_center.equals(p_trace.first_corner()) ) return true;
          
-         if ( from_center.equals(p_trace.last_corner()) ) return true;
+         if ( from_center.equals(p_trace.corner_last()) ) return true;
          }
       else if (p_from_item instanceof BrdTracePolyline)
          {
@@ -376,11 +376,11 @@ public final class MazeShoveTraceAlgo
          
          if ( p_trace.first_corner().equals(from_trace.first_corner()) ) return true;
          
-         if (  p_trace.first_corner().equals(from_trace.last_corner()) ) return true;
+         if (  p_trace.first_corner().equals(from_trace.corner_last()) ) return true;
          
-         if ( p_trace.last_corner().equals(from_trace.first_corner()) ) return true;
+         if ( p_trace.corner_last().equals(from_trace.first_corner()) ) return true;
          
-         if ( p_trace.last_corner().equals(from_trace.last_corner()) ) return true;
+         if ( p_trace.corner_last().equals(from_trace.corner_last()) ) return true;
          }
 
       return false;

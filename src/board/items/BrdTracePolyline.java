@@ -96,9 +96,9 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     * returns the last corner of this trace, which is the intersection of the
     * last two lines of its polyline
     */
-   public PlaPoint last_corner()
+   public PlaPoint corner_last()
       {
-      return polyline.corner(polyline.lines_arr.length - 2);
+      return polyline.corner_last();
       }
 
    /**
@@ -153,7 +153,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    public int tile_shape_count()
       {
-      return Math.max(polyline.lines_arr.length - 2, 0);
+      return Math.max(polyline.plalinelen(-2), 0);
       }
 
    public void translate_by(PlaVector p_vector)
@@ -254,7 +254,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             other_trace = (BrdTracePolyline) curr_ob;
             if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == get_fixed_state())
                {
-               if (start_corner.equals(other_trace.last_corner()))
+               if (start_corner.equals(other_trace.corner_last()))
                   {
                   trace_found = true;
                   break;
@@ -279,7 +279,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       PlaLineInt[] other_lines;
       if (reverse_order)
          {
-         other_lines = new PlaLineInt[other_trace.polyline.lines_arr.length];
+         other_lines = new PlaLineInt[other_trace.polyline.plalinelen()];
          for (int i = 0; i < other_lines.length; ++i)
             {
             other_lines[i] = other_trace.polyline.lines_arr[other_lines.length - 1 - i].opposite();
@@ -345,7 +345,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    private boolean combine_at_end(boolean p_ignore_areas)
       {
-      PlaPoint end_corner = last_corner();
+      PlaPoint end_corner = corner_last();
       Collection<BrdItem> contacts = get_normal_contacts(end_corner, false);
       if (p_ignore_areas)
          {
@@ -380,7 +380,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                   trace_found = true;
                   break;
                   }
-               else if (end_corner.equals(other_trace.last_corner()))
+               else if (end_corner.equals(other_trace.corner_last()))
                   {
                   reverse_order = true;
                   trace_found = true;
@@ -400,7 +400,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       PlaLineInt[] other_lines;
       if (reverse_order)
          {
-         other_lines = new PlaLineInt[other_trace.polyline.lines_arr.length];
+         other_lines = new PlaLineInt[other_trace.polyline.plalinelen()];
          for (int i = 0; i < other_lines.length; ++i)
             {
             other_lines[i] = other_trace.polyline.lines_arr[other_lines.length - 1 - i].opposite();
@@ -479,7 +479,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       boolean own_trace_split = false;
       ShapeSearchTree default_tree = r_board.search_tree_manager.get_default_tree();
-      for (int i = 0; i < polyline.lines_arr.length - 2; ++i)
+      for (int i = 0; i < polyline.plalinelen(-2); ++i)
          {
          if (p_clip_shape != null)
             {
@@ -710,7 +710,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          else if (curr_item instanceof BrdTrace)
             {
             BrdTrace curr_trace = (BrdTrace) curr_item;
-            if (curr_trace != this && curr_trace.first_corner().equals(intersection) || curr_trace.last_corner().equals(intersection))
+            if (curr_trace != this && curr_trace.first_corner().equals(intersection) || curr_trace.corner_last().equals(intersection))
                {
                return false;
                }
@@ -721,7 +721,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
 
    public final BrdTrace[] split(PlaPointInt p_point)
       {
-      for (int index = 0; index < polyline.lines_arr.length - 2; index++)
+      for (int index = 0; index < polyline.plalinelen(-2); index++)
          {
          PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, index + 1);
          
@@ -804,7 +804,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          if ( ! curr_split_trace.is_on_the_board()) continue;
          
          boolean trace_combined = curr_split_trace.combine();
-         if (curr_split_trace.corner_count() == 2 && curr_split_trace.first_corner().equals(curr_split_trace.last_corner()))
+         if (curr_split_trace.corner_count() == 2 && curr_split_trace.first_corner().equals(curr_split_trace.corner_last()))
             {
             // remove trace with only 1 corner
             r_board.remove_item(curr_split_trace);
@@ -1016,11 +1016,12 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       // look for the last line in p_new_polyline different from
       // the lines of the existung trace
       int index_of_last_different_line = -1;
-      for (int i = 1; i <= last_index; ++i)
+
+      for (int index = 1; index <= last_index; ++index)
          {
-         if (p_new_polyline.lines_arr[p_new_polyline.lines_arr.length - i] != polyline.lines_arr[polyline.lines_arr.length - i])
+         if (p_new_polyline.lines_arr[p_new_polyline.plalinelen(-index)] != polyline.lines_arr[polyline.plalinelen(-index)])
             {
-            index_of_last_different_line = p_new_polyline.lines_arr.length - i;
+            index_of_last_different_line = p_new_polyline.plalinelen() - index;
             break;
             }
          }
@@ -1029,7 +1030,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          return; // both polylines are equal, no change nessesary
          }
       int keep_at_start_count = Math.max(index_of_first_different_line - 2, 0);
-      int keep_at_end_count = Math.max(p_new_polyline.lines_arr.length - index_of_last_different_line - 3, 0);
+      int keep_at_end_count = Math.max(p_new_polyline.plalinelen() - index_of_last_different_line - 3, 0);
       r_board.search_tree_manager.change_entries(this, p_new_polyline, keep_at_start_count, keep_at_end_count);
       polyline = p_new_polyline;
 
@@ -1096,7 +1097,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
       else
          {
-         end_corner = last_corner();
+         end_corner = corner_last();
          prev_end_corner = polyline.corner(polyline.corner_count() - 2);
          }
       
@@ -1354,7 +1355,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
       BrdTracePolyline contact_trace = (BrdTracePolyline) curr_contact;
       Polyline contact_polyline = contact_trace.polyline();
-      PlaLineInt contact_last_line = contact_polyline.lines_arr[contact_polyline.lines_arr.length - 2];
+      PlaLineInt contact_last_line = contact_polyline.plaline(contact_polyline.plalinelen(-2));
       // look, if this trace has a sharp angle with the contact trace.
       PlaLineInt first_line = trace_polyline.plaline(1);
       // check for sharp angle
@@ -1362,10 +1363,10 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       if (!check_swap)
          {
          double half_width = get_half_width();
-         if (trace_polyline.lines_arr.length > 3 && trace_polyline.corner_approx(0).length_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
+         if (trace_polyline.plalinelen() > 3 && trace_polyline.corner_approx(0).length_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
             {
             // check also for sharp angle with the second line
-            check_swap = (contact_last_line.direction().projection(trace_polyline.lines_arr[2].direction()) == Signum.NEGATIVE);
+            check_swap = (contact_last_line.direction().projection(trace_polyline.plaline(2).direction()) == Signum.NEGATIVE);
             }
          }
       if (!check_swap)
@@ -1388,7 +1389,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
       Polyline combined_polyline = contact_polyline.combine(trace_polyline);
       PlaDirection nearest_pin_exit_direction = contact_pin.calc_nearest_exit_restriction_direction(combined_polyline, get_half_width(), get_layer());
-      if (nearest_pin_exit_direction == null || nearest_pin_exit_direction.equals(contact_polyline.lines_arr[1].direction()))
+      if (nearest_pin_exit_direction == null || nearest_pin_exit_direction.equals(contact_polyline.plaline(1).direction()))
          {
          return false; // direction would not be changed
          }

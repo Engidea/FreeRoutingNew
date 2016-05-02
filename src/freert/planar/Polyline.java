@@ -741,7 +741,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    public ShapeTileBox bounding_box(int p_from_corner_no, int p_to_corner_no)
       {
       int from_corner_no = Math.max(p_from_corner_no, 0);
-      int to_corner_no = Math.min(p_to_corner_no, lines_arr.length - 2);
+      int to_corner_no = Math.min(p_to_corner_no, plalinelen(-2));
       double llx = Integer.MAX_VALUE;
       double lly = llx;
       double urx = Integer.MIN_VALUE;
@@ -1152,6 +1152,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return lines_arr.length;
       }
    
+   /**
+    * return the plalinelen plus or minus the given offset
+    * @param offset
+    * @return
+    */
+   public int plalinelen ( int offset )
+      {
+      return lines_arr.length + offset;
+      }
    
    
    

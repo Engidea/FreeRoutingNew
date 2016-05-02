@@ -179,7 +179,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       BrdTracePolyline new_trace = new BrdTracePolyline(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, this);
       
-      if (new_trace.first_corner().equals(new_trace.last_corner()))
+      if (new_trace.first_corner().equals(new_trace.corner_last()))
          {
          if (p_fixed_state.ordinal() < ItemFixState.USER_FIXED.ordinal())
             {
@@ -1538,7 +1538,7 @@ public final class RoutingBoard implements java.io.Serializable
             if (contacts.size() == 0)  return curr_trace;
             }
 
-         if (curr_trace.last_corner().equals(p_location))
+         if (curr_trace.corner_last().equals(p_location))
             {
             Collection<BrdItem> contacts = curr_trace.get_end_contacts();
 
@@ -1566,7 +1566,7 @@ public final class RoutingBoard implements java.io.Serializable
       int[] curr_net_no_arr = p_trace.net_no_arr;
       end_corners = new PlaPoint[2];
       end_corners[0] = p_trace.first_corner();
-      end_corners[1] = p_trace.last_corner();
+      end_corners[1] = p_trace.corner_last();
       tail_at_endpoint_before = new boolean[2];
       for (int i = 0; i < 2; ++i)
          {
@@ -2253,9 +2253,9 @@ public final class RoutingBoard implements java.io.Serializable
          return from_corner;
          }
       
-      int start_shape_no = combined_polyline.lines_arr.length - new_polyline.lines_arr.length;
+      int start_shape_no = combined_polyline.plalinelen() - new_polyline.plalinelen();
       // calculate the last shapes of combined_polyline for checking
-      ShapeTile[] trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.lines_arr.length - 1);
+      ShapeTile[] trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.plalinelen(-1));
       int last_shape_no = trace_shapes.length;
       boolean orthogonal_mode = (brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE);
       for (int i = 0; i < trace_shapes.length; ++i)
@@ -2306,13 +2306,16 @@ public final class RoutingBoard implements java.io.Serializable
          int shape_index = combined_polyline.corner_count() - trace_shapes.length - 1 + last_shape_no;
          if (last_segment_length > sample_width)
             {
-            new_polyline = new_polyline.shorten(new_polyline.lines_arr.length - (trace_shapes.length - last_shape_no - 1), sample_width);
+            new_polyline = new_polyline.shorten(new_polyline.plalinelen( - (trace_shapes.length - last_shape_no - 1)), sample_width);
+            
             PlaPoint curr_last_corner = new_polyline.corner_last();
+            
             if (!(curr_last_corner instanceof PlaPointInt))
                {
                System.out.println("insert_forced_trace_segment: IntPoint expected");
                return from_corner;
                }
+            
             new_corner = curr_last_corner;
             if (picked_trace == null)
                {
@@ -2323,11 +2326,11 @@ public final class RoutingBoard implements java.io.Serializable
                BrdTracePolyline combine_trace = (BrdTracePolyline) picked_trace;
                combined_polyline = new_polyline.combine(combine_trace.polyline());
                }
-            if (combined_polyline.lines_arr.length < 3)
+            if (combined_polyline.plalinelen() < 3)
                {
                return new_corner;
                }
-            shape_index = combined_polyline.lines_arr.length - 3;
+            shape_index = combined_polyline.plalinelen(-3);
             last_trace_shape = combined_polyline.offset_shape(compensated_half_width, shape_index);
             if (orthogonal_mode)
                {
@@ -2539,7 +2542,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       PlaPoint first_corner = p_to_trace.first_corner();
 
-      PlaPoint last_corner = p_to_trace.last_corner();
+      PlaPoint last_corner = p_to_trace.corner_last();
 
       int[] net_no_arr = p_to_trace.net_no_arr;
 

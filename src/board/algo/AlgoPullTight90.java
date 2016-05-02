@@ -63,7 +63,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
     */
    private Polyline try_skip_second_corner(Polyline p_polyline)
       {
-      if (p_polyline.lines_arr.length < 5)
+      if (p_polyline.plalinelen() < 5)
          {
          return p_polyline;
          }
@@ -73,25 +73,25 @@ public final class AlgoPullTight90 extends AlgoPullTight
       check_lines[2] = p_polyline.plaline(3);
       check_lines[3] = p_polyline.plaline(4);
       Polyline check_polyline = new Polyline(check_lines);
-      if (check_polyline.lines_arr.length != 4 || curr_clip_shape != null && !curr_clip_shape.contains(check_polyline.corner_approx(1)))
+      if (check_polyline.plalinelen() != 4 || curr_clip_shape != null && !curr_clip_shape.contains(check_polyline.corner_approx(1)))
          {
          return p_polyline;
          }
       for (int i = 0; i < 2; ++i)
          {
          ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, i);
-         if (!r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins))
+         if (!r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
             {
             return p_polyline;
             }
          }
       // now the second corner can be skipped.
-      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.lines_arr.length - 1];
-      new_lines[0] = p_polyline.lines_arr[1];
-      new_lines[1] = p_polyline.lines_arr[0];
-      for (int i = 2; i < new_lines.length; ++i)
+      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.plalinelen(-1)];
+      new_lines[0] = p_polyline.plaline(1);
+      new_lines[1] = p_polyline.plaline(0);
+      for (int index = 2; index < new_lines.length; ++index)
          {
-         new_lines[i] = p_polyline.lines_arr[i + 1];
+         new_lines[index] = p_polyline.plaline(index + 1);
          }
       return new Polyline(new_lines);
       }
@@ -101,14 +101,14 @@ public final class AlgoPullTight90 extends AlgoPullTight
     */
    private Polyline try_skip_corners(Polyline p_polyline)
       {
-      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.lines_arr.length];
+      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.plalinelen()];
       new_lines[0] = p_polyline.plaline(0);
       new_lines[1] = p_polyline.plaline(1);
       int new_line_index = 1;
       boolean polyline_changed = false;
       PlaLineInt[] check_lines = new PlaLineInt[4];
       boolean second_last_corner_skipped = false;
-      for (int index = 5; index <= p_polyline.lines_arr.length; ++index)
+      for (int index = 5; index <= p_polyline.plalinelen(); ++index)
          {
          boolean skip_lines = false;
          boolean in_clip_shape = curr_clip_shape == null || curr_clip_shape.contains(p_polyline.corner_approx(index - 3));
@@ -117,7 +117,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
             check_lines[0] = new_lines[new_line_index - 1];
             check_lines[1] = new_lines[new_line_index];
             check_lines[2] = p_polyline.plaline(index - 1);
-            if (index < p_polyline.lines_arr.length)
+            if (index < p_polyline.plalinelen())
                {
                check_lines[3] = p_polyline.plaline(index);
                }
@@ -127,7 +127,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
                check_lines[3] = p_polyline.plaline(index - 2);
                }
             Polyline check_polyline = new Polyline(check_lines);
-            skip_lines = check_polyline.lines_arr.length == 4 && (curr_clip_shape == null || curr_clip_shape.contains(check_polyline.corner_approx(1)));
+            skip_lines = check_polyline.plalinelen() == 4 && (curr_clip_shape == null || curr_clip_shape.contains(check_polyline.corner_approx(1)));
             if (skip_lines)
                {
                ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
@@ -141,7 +141,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
             }
          if (skip_lines)
             {
-            if (index == p_polyline.lines_arr.length)
+            if (index == p_polyline.plalinelen())
                {
                second_last_corner_skipped = true;
                }
@@ -151,7 +151,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
                PlaPointFloat new_corner = check_lines[1].intersection_approx(check_lines[2]);
                if ( ! new_corner.is_NaN() ) r_board.changed_area.join(new_corner, curr_layer);
                
-               PlaPointFloat skipped_corner = p_polyline.lines_arr[index - 2].intersection_approx(p_polyline.lines_arr[index - 3]);
+               PlaPointFloat skipped_corner = p_polyline.plaline(index - 2).intersection_approx(p_polyline.plaline(index - 3));
                if ( ! skipped_corner.is_NaN() ) r_board.changed_area.join(skipped_corner, curr_layer);
                }
             polyline_changed = true;
@@ -160,7 +160,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
          else
             {
             ++new_line_index;
-            new_lines[new_line_index] = p_polyline.lines_arr[index - 3];
+            new_lines[new_line_index] = p_polyline.plaline(index - 3);
             }
          }
       if (!polyline_changed)

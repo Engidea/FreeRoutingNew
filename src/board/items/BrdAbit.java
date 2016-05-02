@@ -364,7 +364,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
          if (curr_item instanceof BrdTrace)
             {
             BrdTrace curr_trace = (BrdTrace) curr_item;
-            if (drill_center.equals(curr_trace.first_corner()) || drill_center.equals(curr_trace.last_corner()))
+            if (drill_center.equals(curr_trace.first_corner()) || drill_center.equals(curr_trace.corner_last()))
                {
                result.add(curr_item);
                }
@@ -412,7 +412,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
       PlaPoint drill_center = get_center();
 
-      if (drill_center.equals(p_trace.first_corner()) || drill_center.equals(p_trace.last_corner()))
+      if (drill_center.equals(p_trace.first_corner()) || drill_center.equals(p_trace.corner_last()))
          {
          return drill_center;
          }

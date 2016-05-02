@@ -274,15 +274,15 @@ public abstract class AlgoPullTight
     */
    protected Polyline reposition_lines(Polyline p_polyline)
       {
-      if (p_polyline.lines_arr.length < 5) return p_polyline;
+      if (p_polyline.plalinelen() < 5) return p_polyline;
       
-      for (int index = 2; index < p_polyline.lines_arr.length - 2; ++index)
+      for (int index = 2; index < p_polyline.plalinelen(-2); ++index)
          {
          PlaLineInt new_line = reposition_line(p_polyline.lines_arr, index);
 
          if (new_line == null) continue;
 
-         PlaLineInt[] line_arr = new PlaLineInt[p_polyline.lines_arr.length];
+         PlaLineInt[] line_arr = new PlaLineInt[p_polyline.plalinelen()];
          System.arraycopy(p_polyline.lines_arr, 0, line_arr, 0, line_arr.length);
          line_arr[index] = new_line;
          
@@ -384,7 +384,7 @@ public abstract class AlgoPullTight
          
          Polyline tmp = new Polyline(check_lines);
 
-         if (tmp.lines_arr.length == 3)
+         if (tmp.plalinelen() == 3)
             {
             ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
             check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
@@ -438,7 +438,7 @@ public abstract class AlgoPullTight
       for (int index = 1; index < curr_polyline.corner_count(); index++)
          {
          boolean try_skip;
-         if (index == 1 || index == curr_polyline.lines_arr.length - 2)
+         if (index == 1 || index == curr_polyline.plalinelen(-2))
             {
             // the position of the first corner and the last corner must be retained exactly
             PlaPoint prev_corner = curr_polyline.corner(index - 1);
@@ -456,12 +456,12 @@ public abstract class AlgoPullTight
             {
             // check, if skipping the line of length 0 does not
             // result in a clearance violation
-            PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline.lines_arr.length - 1];
+            PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline.plalinelen(-1)];
             System.arraycopy(curr_polyline.lines_arr, 0, curr_lines, 0, index);
             System.arraycopy(curr_polyline.lines_arr, index + 1, curr_lines, index, curr_lines.length - index);
             Polyline tmp = new Polyline(curr_lines);
-            boolean check_ok = (tmp.lines_arr.length == curr_lines.length);
-            if (check_ok && !curr_polyline.lines_arr[index].is_multiple_of_45_degree())
+            boolean check_ok = (tmp.plalinelen() == curr_lines.length);
+            if (check_ok && !curr_polyline.plaline(index).is_multiple_of_45_degree())
                {
                // no check necessary for skipping 45 degree lines, because the check is performance critical and the line shapes
                // are intersected with the bounding octagon anyway.

@@ -926,7 +926,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       int intersection_count = 0;
       int prev_intersection_line_no = -1;
       int prev_intersection_edge_no = -1;
-      for (int line_no = 1; line_no < p_polyline.lines_arr.length - 1; ++line_no)
+      for (int line_no = 1; line_no < p_polyline.plalinelen(-1); ++line_no)
          {
          PlaSegmentInt curr_line_seg = new PlaSegmentInt(p_polyline, line_no);
          int[] curr_intersections = curr_line_seg.border_intersections(this);
@@ -990,7 +990,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline_intersection_no + 2];
             System.arraycopy(p_polyline.lines_arr, 0, curr_lines, 0, curr_polyline_intersection_no + 1);
             // close the polyline piece with the intersected edge line.
-            curr_lines[curr_polyline_intersection_no + 1] = this.border_line(curr_intersection_tuple[1]);
+            curr_lines[curr_polyline_intersection_no + 1] = border_line(curr_intersection_tuple[1]);
 
             try
                {
