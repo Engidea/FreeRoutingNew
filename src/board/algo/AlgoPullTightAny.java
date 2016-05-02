@@ -347,17 +347,14 @@ public final class AlgoPullTightAny extends AlgoPullTight
       {
       if (p_polyline.plalinelen() < 6) return p_polyline;
 
-      boolean polyline_changed = false;
-      PlaLineInt[] line_arr = p_polyline.lines_arr;
-
-      for (int index = 2; index < line_arr.length - 2; ++index)
+      for (int index = 2; index < p_polyline.plalinelen(- 2); ++index)
          {
-         PlaPointFloat prev_corner = line_arr[index - 2].intersection_approx(line_arr[index - 1]);
+         PlaPointFloat prev_corner = p_polyline.corner_approx(index-2);
          
          // surely if a corner is a NaN it cannot be in the clip shape
          if ( prev_corner.is_NaN() ) continue;
          
-         PlaPointFloat next_corner = line_arr[index + 1].intersection_approx(line_arr[index + 2]);
+         PlaPointFloat next_corner = p_polyline.corner_approx(index+1);
 
          if ( next_corner.is_NaN() ) continue;
          
@@ -365,7 +362,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          if (!in_clip_shape)  continue;
 
-         PlaLineInt translate_line = line_arr[index];
+         PlaLineInt translate_line = p_polyline.plaline(index);
+         
          double prev_dist = translate_line.signed_distance(prev_corner);
          double next_dist = translate_line.signed_distance(next_corner);
          if (Signum.of(prev_dist) != Signum.of(next_dist))
@@ -376,7 +374,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
          double translate_dist;
          if (Math.abs(prev_dist) < Math.abs(next_dist))
             {
-
             translate_dist = prev_dist;
             }
          else
@@ -388,6 +385,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             // line segment may have length 0
             continue;
             }
+
          PlaSide line_side = translate_line.side_of(prev_corner);
          PlaLineInt new_line = translate_line.translate(-translate_dist);
          // make shure, we have crossed the nearest_corner;
@@ -416,45 +414,46 @@ public final class AlgoPullTightAny extends AlgoPullTight
             {
             continue;
             }
-         // check, that next_nearest_corner and nearest_corner are on
-         // different sides of new_line;
+         // check, that next_nearest_corner and nearest_corner are on different sides of new_line;
          if (crossed_corners_before_count > 0)
             {
-            if (index < 3)
-               {
-               continue;
-               }
-            PlaPointFloat prev_prev_corner = line_arr[index - 3].intersection_approx(line_arr[index - 2]);
-            if (new_line.side_of(prev_prev_corner) != line_side)
-               {
-               continue;
-               }
+            if (index < 3) continue;
+            
+            PlaPointFloat prev_prev_corner = p_polyline.corner_approx(index - 3);
+
+            if (new_line.side_of(prev_prev_corner) != line_side) continue;
             }
+
          if (crossed_corners_after_count > 0)
             {
-            if (index >= line_arr.length - 3)
-               {
-               continue;
-               }
-            PlaPointFloat next_next_corner = line_arr[index + 2].intersection_approx(line_arr[index + 3]);
-            if (new_line.side_of(next_next_corner) != line_side)
-               {
-               continue;
-               }
+            if (index >= p_polyline.plalinelen(-3) ) continue;
+
+            PlaPointFloat next_next_corner = p_polyline.corner_approx(index + 2);
+
+            if (new_line.side_of(next_next_corner) != line_side) continue;
+
             }
-         PlaLineInt[] curr_lines = new PlaLineInt[line_arr.length - crossed_corners_before_count - crossed_corners_after_count];
+         
+         PlaLineInt[] curr_lines = new PlaLineInt[p_polyline.plalinelen( -crossed_corners_before_count -crossed_corners_after_count)];
+         
          int keep_before_ind = index - crossed_corners_before_count;
-         System.arraycopy(line_arr, 0, curr_lines, 0, keep_before_ind);
+
+         p_polyline.plaline_copy(0, curr_lines, 0, keep_before_ind);
+         
          curr_lines[keep_before_ind] = new_line;
-         System.arraycopy(line_arr, index + 1 + crossed_corners_after_count, curr_lines, keep_before_ind + 1, curr_lines.length - (keep_before_ind + 1));
+         
+         p_polyline.plaline_copy(index + 1 + crossed_corners_after_count, curr_lines, keep_before_ind + 1, curr_lines.length - (keep_before_ind + 1));
+         
          Polyline tmp = new Polyline(curr_lines);
+
          boolean check_ok = false;
+         
          if (tmp.plalinelen() == curr_lines.length)
             {
             ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, keep_before_ind - 1);
             check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
-
             }
+         
          if (check_ok)
             {
             if (r_board.changed_area != null)
@@ -462,16 +461,13 @@ public final class AlgoPullTightAny extends AlgoPullTight
                r_board.changed_area.join(prev_corner, curr_layer);
                r_board.changed_area.join(next_corner, curr_layer);
                }
-            polyline_changed = true;
-            line_arr = curr_lines;
+
+            p_polyline = tmp;
             --index;
             }
          }
-      if (!polyline_changed)
-         {
-         return p_polyline;
-         }
-      return new Polyline(line_arr);
+      
+      return p_polyline;
       }
 
    private PlaLineInt smoothen_corner(PlaLineInt[] p_line_arr, int p_start_no)

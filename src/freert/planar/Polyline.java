@@ -1204,5 +1204,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return risul;
       }
 
+   public void plaline_copy(int src_pos, PlaLineInt [] dest, int dest_pos, int length )
+      {
+      for (int index=0; index<length; index++)
+         dest[dest_pos+index] = lines_arr[src_pos+index];
+      }
+   
    
    }
