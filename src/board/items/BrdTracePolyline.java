@@ -28,6 +28,7 @@ import board.varie.BrdChangedArea;
 import board.varie.BrdTraceExitRestriction;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
+import freert.graphics.GdiContext;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -43,7 +44,6 @@ import freert.planar.ShapeTileOctagon;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimitStoppable;
-import graphics.GdiContext;
 
 /**
  * Objects of class Trace, whose geometry is described by a Polyline

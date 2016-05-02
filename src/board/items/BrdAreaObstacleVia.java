@@ -97,13 +97,13 @@ public final class BrdAreaObstacleVia extends BrdArea
       }
 
    @Override
-   public Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
+   public Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_via_obstacle_colors();
       }
 
    @Override
-   public double get_draw_intensity(graphics.GdiContext p_graphics_context)
+   public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_via_obstacle_color_intensity();
       }

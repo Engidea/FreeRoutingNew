@@ -190,7 +190,7 @@ public final class ExpandRoomObstacle implements ExpandRoomComplete
     * Draws the shape of this room.
     */
    @Override
-   public void draw(java.awt.Graphics p_graphics, graphics.GdiContext p_graphics_context, double p_intensity)
+   public void draw(java.awt.Graphics p_graphics, freert.graphics.GdiContext p_graphics_context, double p_intensity)
       {
       Color draw_color = java.awt.Color.WHITE;
 

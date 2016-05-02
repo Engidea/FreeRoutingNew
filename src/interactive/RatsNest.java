@@ -20,8 +20,8 @@
 
 package interactive;
 
+import freert.graphics.GdiContext;
 import freert.varie.UndoableObjectNode;
-import graphics.GdiContext;
 import gui.varie.GuiResources;
 import java.awt.Graphics;
 import java.util.Collection;

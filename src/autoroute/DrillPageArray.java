@@ -21,9 +21,9 @@
 
 package autoroute;
 
+import freert.graphics.GdiContext;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
-import graphics.GdiContext;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;

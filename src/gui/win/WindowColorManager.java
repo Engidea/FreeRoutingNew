@@ -20,7 +20,7 @@
 
 package gui.win;
 
-import graphics.GdiContext;
+import freert.graphics.GdiContext;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;

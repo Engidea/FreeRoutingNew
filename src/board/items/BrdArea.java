@@ -23,6 +23,7 @@ import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -30,7 +31,6 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
-import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -268,7 +268,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
 
    public int get_draw_priority()
       {
-      return graphics.GdiDrawable.MIN_DRAW_PRIORITY;
+      return freert.graphics.GdiDrawable.MIN_DRAW_PRIORITY;
       }
 
    public void draw(java.awt.Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)

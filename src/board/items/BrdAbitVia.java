@@ -241,7 +241,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       return p_filter.is_selected(ItemSelectionChoice.VIAS);
       }
 
-   public java.awt.Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
+   public java.awt.Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
       {
       if ( net_count() == 0)
          {
@@ -259,7 +259,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
          }
       }
 
-   public double get_draw_intensity(graphics.GdiContext p_graphics_context)
+   public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
       double result;
       if (this.net_count() == 0)

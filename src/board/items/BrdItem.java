@@ -15,6 +15,8 @@
  */
 package board.items;
 
+import freert.graphics.GdiContext;
+import freert.graphics.GdiDrawable;
 import freert.planar.PlaDimension;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -23,8 +25,6 @@ import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.rules.RuleNets;
-import graphics.GdiContext;
-import graphics.GdiDrawable;
 import gui.varie.ObjectInfoPanel;
 import gui.varie.UndoableObjectStorable;
 import java.awt.Color;

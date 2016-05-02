@@ -194,7 +194,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
     * Draws the shape of this room.
     */
    @Override
-   public void draw(java.awt.Graphics p_graphics, graphics.GdiContext p_graphics_context, double p_intensity)
+   public void draw(java.awt.Graphics p_graphics, freert.graphics.GdiContext p_graphics_context, double p_intensity)
       {
       Color draw_color = p_graphics_context.get_trace_colors(false)[get_layer()];
       

@@ -193,17 +193,17 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       return (contact_list.size() == 0);
       }
 
-   public java.awt.Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
+   public java.awt.Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_trace_colors(is_user_fixed());
       }
 
    public int get_draw_priority()
       {
-      return graphics.GdiDrawable.MAX_DRAW_PRIORITY;
+      return freert.graphics.GdiDrawable.MAX_DRAW_PRIORITY;
       }
 
-   public double get_draw_intensity(graphics.GdiContext p_graphics_context)
+   public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_trace_color_intensity();
       }

@@ -886,7 +886,7 @@ public final class GuiConfigFile
 
    private void write_colors_scope() throws java.io.IOException
       {
-      graphics.GdiContext graphics_context = board_handling.gdi_context;
+      freert.graphics.GdiContext graphics_context = board_handling.gdi_context;
       out_file.start_scope();
       out_file.write("colors");
       out_file.start_scope();

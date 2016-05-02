@@ -25,6 +25,7 @@ import board.RoutingBoard;
 import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionFilter;
+import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -32,7 +33,6 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
 import freert.varie.UnitMeasure;
-import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -149,7 +149,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
 
    public int get_draw_priority()
       {
-      return graphics.GdiDrawable.MIDDLE_DRAW_PRIORITY;
+      return freert.graphics.GdiDrawable.MIDDLE_DRAW_PRIORITY;
       }
 
    public void draw(java.awt.Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)

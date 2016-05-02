@@ -34,6 +34,8 @@ import board.shape.ShapeTreeObject;
 import board.varie.BrdTraceInfo;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
+import freert.graphics.GdiContext;
+import freert.graphics.GdiDrawable;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -41,8 +43,6 @@ import freert.planar.PlaShape;
 import freert.planar.PlaVector;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
-import graphics.GdiContext;
-import graphics.GdiDrawable;
 
 /**
  * Common superclass for Pins and Vias

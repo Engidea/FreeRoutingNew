@@ -20,7 +20,7 @@
 
 package interactive;
 
-import graphics.ColorIntensityTable;
+import freert.graphics.ColorIntensityTable;
 import gui.BoardPanel;
 import gui.varie.SnapshotAttributes;
 import gui.varie.SubwindowSelections;
@@ -42,7 +42,7 @@ public final class SnapShot implements java.io.Serializable
    private final String name;
    public final IteraSettings settings;
    private final int interactive_state_no;
-   public final graphics.GdiContext graphics_context;
+   public final freert.graphics.GdiContext graphics_context;
    private final java.awt.Point viewport_position;
    public final SubwindowSelections subwindow_filters;
 
@@ -67,7 +67,7 @@ public final class SnapShot implements java.io.Serializable
       name = p_name;
       settings = new IteraSettings(p_board_handling.itera_settings);
       interactive_state_no = get_no(p_board_handling.interactive_state);
-      graphics_context = new graphics.GdiContext(p_board_handling.gdi_context);
+      graphics_context = new freert.graphics.GdiContext(p_board_handling.gdi_context);
       viewport_position = new Point(b_panel.board_frame.get_viewport_position());
       subwindow_filters = b_panel.board_frame.get_snapshot_subwindow_selections();
       }

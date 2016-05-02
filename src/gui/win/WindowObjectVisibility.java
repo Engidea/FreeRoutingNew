@@ -20,7 +20,7 @@
 
 package gui.win;
 
-import graphics.ColorIntensityName;
+import freert.graphics.ColorIntensityName;
 import gui.BoardFrame;
 
 
@@ -61,7 +61,7 @@ public class WindowObjectVisibility extends WindowVisibility
     */
    public void refresh()
       {
-      graphics.ColorIntensityTable color_intensity_table = this.get_board_handling().gdi_context.color_intensity_table;
+      freert.graphics.ColorIntensityTable color_intensity_table = this.get_board_handling().gdi_context.color_intensity_table;
       for (int i = 0; i < ColorIntensityName.values().length; ++i)
          {
          this.set_slider_value(i, color_intensity_table.get_value(i));

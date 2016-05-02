@@ -262,7 +262,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(0);
          panel.repaint();
          }
@@ -272,7 +272,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(0.5 * Math.PI);
          panel.repaint();
          }
@@ -282,7 +282,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(Math.PI);
          panel.repaint();
          }
@@ -292,7 +292,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(1.5 * Math.PI);
          panel.repaint();
          }
@@ -302,7 +302,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
          if (!(coordinate_transform.is_mirror_left_right() || coordinate_transform.is_mirror_top_bottom()))
             {
             return; // mirroring already switched off
@@ -320,7 +320,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
          if (coordinate_transform.is_mirror_left_right())
             {
             return; // already mirrored
@@ -338,7 +338,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
          if (coordinate_transform.is_mirror_top_bottom())
             {
             return; // already mirrored

@@ -20,12 +20,12 @@
 
 package interactive;
 
+import freert.graphics.GdiContext;
 import freert.planar.PlaPointFloat;
 import freert.rules.RuleNet;
 import freert.varie.PlaDelTri;
 import freert.varie.PlaDelTriResultEdge;
 import freert.varie.PlaDelTriStorable;
-import graphics.GdiContext;
 import gui.varie.GuiResources;
 import interactive.varie.IteraEdge;
 import interactive.varie.IteraNetItem;

@@ -87,7 +87,7 @@ public final class WindowLayerVisibility extends WindowVisibility
     */
    public void refresh()
       {
-      graphics.GdiContext graphics_context = get_board_handling().gdi_context;
+      freert.graphics.GdiContext graphics_context = get_board_handling().gdi_context;
       for (int i = 0; i < graphics_context.layer_count(); ++i)
          {
          set_slider_value(i, graphics_context.get_raw_layer_visibility(i));

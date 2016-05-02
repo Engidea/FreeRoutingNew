@@ -180,13 +180,13 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
       }
 
    @Override
-   public java.awt.Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
+   public java.awt.Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_conduction_colors();
       }
 
    @Override
-   public double get_draw_intensity(graphics.GdiContext p_graphics_context)
+   public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_conduction_color_intensity();
       }

@@ -18,7 +18,7 @@
  * Created on 1. August 2004, 07:46
  */
 
-package graphics;
+package freert.graphics;
 
 /**
  * The color intensities for each item type. The values are between 0 (invisible) and 1 (full intensity).

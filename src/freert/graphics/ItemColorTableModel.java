@@ -18,7 +18,7 @@
  * Created on 4. August 2003, 08:26
  */
 
-package graphics;
+package freert.graphics;
 
 import java.awt.Color;
 import java.io.IOException;

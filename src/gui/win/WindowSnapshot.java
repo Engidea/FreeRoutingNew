@@ -20,9 +20,9 @@
 
 package gui.win;
 
-import graphics.GdiCoordinateTransform;
-import graphics.ItemColorTableModel;
-import graphics.OtherColorTableModel;
+import freert.graphics.GdiCoordinateTransform;
+import freert.graphics.ItemColorTableModel;
+import freert.graphics.OtherColorTableModel;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;

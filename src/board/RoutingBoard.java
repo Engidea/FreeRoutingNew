@@ -63,6 +63,8 @@ import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
+import freert.graphics.GdiContext;
+import freert.graphics.GdiDrawable;
 import freert.host.BrdObserverVoid;
 import freert.host.BrdObservers;
 import freert.host.HostCom;
@@ -85,8 +87,6 @@ import freert.varie.TimeLimit;
 import freert.varie.TimeLimitStoppable;
 import freert.varie.UndoableObjectNode;
 import freert.varie.UndoableObjects;
-import graphics.GdiContext;
-import graphics.GdiDrawable;
 import gui.varie.UndoableObjectStorable;
 
 /**

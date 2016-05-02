@@ -1,4 +1,4 @@
-package graphics;
+package freert.graphics;
 
 public enum ColorIntensityName
    {

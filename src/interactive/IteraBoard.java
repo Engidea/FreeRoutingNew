@@ -20,6 +20,7 @@
  */
 package interactive;
 
+import freert.graphics.GdiContext;
 import freert.host.HostCom;
 import freert.planar.PlaCoordTransform;
 import freert.planar.PlaPointFloat;
@@ -31,7 +32,6 @@ import freert.rules.NetClass;
 import freert.rules.RuleNet;
 import freert.varie.ItemClass;
 import freert.varie.UnitMeasure;
-import graphics.GdiContext;
 import gui.BoardPanel;
 import gui.varie.GuiResources;
 import interactive.state.StateCircleConstrut;

@@ -20,7 +20,7 @@
 
 package autoroute;
 
-import graphics.GdiContext;
+import freert.graphics.GdiContext;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import autoroute.expand.ExpandRoomObstacle;

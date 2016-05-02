@@ -15,6 +15,7 @@
  */
 package interactive;
 
+import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
 import freert.planar.PlaEllipse;
 import freert.planar.PlaPoint;
@@ -29,7 +30,6 @@ import freert.rules.RuleViaInfoList;
 import freert.varie.TimeLimit;
 import freert.varie.TimeLimitStoppable;
 import freert.varie.UnitMeasure;
-import graphics.GdiContext;
 import interactive.varie.IteraTargetPoint;
 import interactive.varie.PinSwappable;
 import java.awt.Color;

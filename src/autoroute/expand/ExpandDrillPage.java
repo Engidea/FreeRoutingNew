@@ -21,12 +21,12 @@
 
 package autoroute.expand;
 
+import freert.graphics.GdiContext;
 import freert.planar.PlaDimension;
 import freert.planar.PlaPoint;
 import freert.planar.PolylineArea;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
-import graphics.GdiContext;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;

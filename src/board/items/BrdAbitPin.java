@@ -541,7 +541,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       return p_filter.is_selected(ItemSelectionChoice.PINS);
       }
 
-   public Color[] get_draw_colors(graphics.GdiContext p_graphics_context)
+   public Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
       {
       if ( net_count() > 0)
          return p_graphics_context.get_pin_colors();
@@ -552,7 +552,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          }
       }
 
-   public double get_draw_intensity(graphics.GdiContext p_graphics_context)
+   public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_pin_color_intensity();
       }

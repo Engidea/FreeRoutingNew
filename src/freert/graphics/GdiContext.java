@@ -14,7 +14,7 @@
  *   for more details.
  */
 
-package graphics;
+package freert.graphics;
 
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;

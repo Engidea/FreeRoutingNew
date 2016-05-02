@@ -19,6 +19,7 @@
  */
 package board.items;
 
+import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -27,7 +28,6 @@ import freert.planar.PolylineArea;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
-import graphics.GdiContext;
 import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
 import board.RoutingBoard;
@@ -207,7 +207,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    @Override
    public int get_draw_priority()
       {
-      return graphics.GdiDrawable.MAX_DRAW_PRIORITY;
+      return freert.graphics.GdiDrawable.MAX_DRAW_PRIORITY;
       }
 
    public int shape_count()

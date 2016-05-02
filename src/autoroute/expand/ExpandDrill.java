@@ -162,7 +162,7 @@ public final class ExpandDrill implements ExpandObject
    /*
     * Test draw of the the shape of this drill.
     */
-   public void draw(java.awt.Graphics p_graphics, graphics.GdiContext p_graphics_context, double p_intensity)
+   public void draw(java.awt.Graphics p_graphics, freert.graphics.GdiContext p_graphics_context, double p_intensity)
       {
       Color draw_color = p_graphics_context.get_hilight_color();
 

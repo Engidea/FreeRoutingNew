@@ -215,7 +215,7 @@ public final class ArtEngine
    /**
     * Draws the shapes of the expansion rooms created so far.
     */
-   public void draw(java.awt.Graphics p_graphics, graphics.GdiContext p_graphics_context, double p_intensity)
+   public void draw(java.awt.Graphics p_graphics, freert.graphics.GdiContext p_graphics_context, double p_intensity)
       {
       for (ExpandRoomFreespaceComplete curr_room : complete_expansion_rooms)
          curr_room.draw(p_graphics, p_graphics_context, p_intensity);

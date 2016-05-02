@@ -306,7 +306,7 @@ public abstract class ArtConnectionLocate
    /** 
     * Test display of the baktrack rooms
     */
-   public void draw(java.awt.Graphics p_graphics, graphics.GdiContext p_graphics_context)
+   public void draw(java.awt.Graphics p_graphics, freert.graphics.GdiContext p_graphics_context)
       {
       for (int i = 0; i < backtrack_array.length; ++i)
          {

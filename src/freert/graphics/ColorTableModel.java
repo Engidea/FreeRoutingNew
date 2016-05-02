@@ -17,7 +17,7 @@
  *
  * Created on 5. August 2003, 10:18
  */
-package graphics;
+package freert.graphics;
 
 import gui.varie.GuiResources;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public abstract class ColorTableModel extends AbstractTableModel
 
    private GuiResources newResources ()
       {
-      return new GuiResources(stat, "graphics.resources.ColorTableModel");
+      return new GuiResources(stat, "freert.graphics.resources.ColorTableModel");
       }
    
    protected void write_object(java.io.ObjectOutputStream p_stream) throws java.io.IOException

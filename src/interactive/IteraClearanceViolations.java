@@ -20,7 +20,7 @@
 
 package interactive;
 
-import graphics.GdiContext;
+import freert.graphics.GdiContext;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Collection;
