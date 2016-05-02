@@ -1007,8 +1007,8 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          ++curr_intersection_no;
          }
       while (curr_intersection_no < intersection_no.length - 1)
-      // calculate the next outside polyline piece
          {
+         // calculate the next outside polyline piece
          curr_intersection_tuple = intersection_no[curr_intersection_no];
          int[] next_intersection_tuple = intersection_no[curr_intersection_no + 1];
          int curr_intersection_no_of_polyline = curr_intersection_tuple[0];
@@ -1031,7 +1031,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             PlaLineInt[] curr_lines = new PlaLineInt[next_intersection_no_of_polyline - curr_intersection_no_of_polyline + 3];
             curr_lines[0] = border_line(curr_intersection_tuple[1]);
             
-            System.arraycopy(p_polyline.lines_arr, curr_intersection_no_of_polyline, curr_lines, 1, curr_lines.length - 2);
+            p_polyline.plaline_copy(curr_intersection_no_of_polyline, curr_lines, 1, curr_lines.length - 2);
             
             curr_lines[curr_lines.length - 1] = border_line(next_intersection_tuple[1]);
 
@@ -1056,7 +1056,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
 
          curr_lines[0] = border_line(curr_intersection_tuple[1]);
          
-         System.arraycopy(p_polyline.lines_arr, curr_polyline_intersection_no, curr_lines, 1, curr_lines.length - 1);
+         p_polyline.plaline_copy(curr_polyline_intersection_no, curr_lines, 1, curr_lines.length - 1);
 
          try
             {

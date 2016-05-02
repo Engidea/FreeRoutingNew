@@ -276,13 +276,13 @@ public abstract class AlgoPullTight
       {
       if (p_polyline.plalinelen() < 5) return p_polyline;
       
+      PlaLineInt[] line_arr = p_polyline.plaline_copy();
+
       for (int index = 2; index < p_polyline.plalinelen(-2); ++index)
          {
-         PlaLineInt new_line = reposition_line(p_polyline.lines_arr, index);
+         PlaLineInt new_line = reposition_line(line_arr, index);
 
          if (new_line == null) continue;
-
-         PlaLineInt[] line_arr = p_polyline.plaline_copy();
          
          line_arr[index] = new_line;
          

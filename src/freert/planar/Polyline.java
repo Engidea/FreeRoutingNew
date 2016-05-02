@@ -39,7 +39,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private static final String classname="Polyline.";
 
    // the array of lines of this Polyline.
-   public final PlaLineInt[] lines_arr;
+   private final PlaLineInt[] lines_arr;
 
    transient private PlaPointFloat[] precalculated_float_corners = null;
    transient private PlaPoint[]      precalculated_corners = null;
