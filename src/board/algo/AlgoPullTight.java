@@ -282,8 +282,8 @@ public abstract class AlgoPullTight
 
          if (new_line == null) continue;
 
-         PlaLineInt[] line_arr = new PlaLineInt[p_polyline.plalinelen()];
-         System.arraycopy(p_polyline.lines_arr, 0, line_arr, 0, line_arr.length);
+         PlaLineInt[] line_arr = p_polyline.plaline_copy();
+         
          line_arr[index] = new_line;
          
          Polyline result = new Polyline(line_arr);
