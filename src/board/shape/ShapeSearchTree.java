@@ -318,7 +318,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
 
       // create the last tree entry of the start piece.
 
-      ShapeTreeLeaf[] end_piece_leaf_arr = new ShapeTreeLeaf[p_end_piece.polyline().lines_arr.length - 2];
+      ShapeTreeLeaf[] end_piece_leaf_arr = new ShapeTreeLeaf[p_end_piece.polyline().plalinelen(-2)];
 
       // create the first tree entry of the end piece.
       end_piece_leaf_arr[0] = insert(p_end_piece, 0);

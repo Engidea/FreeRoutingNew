@@ -171,16 +171,16 @@ public final class AlgoPullTight90 extends AlgoPullTight
          {
          // The second last corner of p_polyline was skipped
          ++new_line_index;
-         new_lines[new_line_index] = p_polyline.lines_arr[p_polyline.lines_arr.length - 1];
+         new_lines[new_line_index] = p_polyline.plaline(p_polyline.plalinelen(-1));
          ++new_line_index;
-         new_lines[new_line_index] = p_polyline.lines_arr[p_polyline.lines_arr.length - 2];
+         new_lines[new_line_index] = p_polyline.plaline(p_polyline.plalinelen(-2));
          }
       else
          {
-         for (int i = 3; i > 0; --i)
+         for (int index = 3; index > 0; --index)
             {
             ++new_line_index;
-            new_lines[new_line_index] = p_polyline.lines_arr[p_polyline.lines_arr.length - i];
+            new_lines[new_line_index] = p_polyline.plaline(p_polyline.plalinelen(-index));
             }
          }
 

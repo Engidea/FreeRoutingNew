@@ -457,8 +457,10 @@ public abstract class AlgoPullTight
             // check, if skipping the line of length 0 does not
             // result in a clearance violation
             PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline.plalinelen(-1)];
+            
             System.arraycopy(curr_polyline.lines_arr, 0, curr_lines, 0, index);
             System.arraycopy(curr_polyline.lines_arr, index + 1, curr_lines, index, curr_lines.length - index);
+            
             Polyline tmp = new Polyline(curr_lines);
             boolean check_ok = (tmp.plalinelen() == curr_lines.length);
             if (check_ok && !curr_polyline.plaline(index).is_multiple_of_45_degree())
@@ -470,7 +472,7 @@ public abstract class AlgoPullTight
                   ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 2);
                   check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                   }
-               if (check_ok && (index < curr_polyline.lines_arr.length - 2))
+               if (check_ok && (index < curr_polyline.plalinelen(-2)))
                   {
                   ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 1);
                   check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);

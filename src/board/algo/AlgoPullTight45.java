@@ -118,7 +118,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             ++corner_no;
             curr_corner[2] = curr_corner[3];
             curr_corner_in_clip_shape[2] = curr_corner_in_clip_shape[3];
-            if (corner_no < p_polyline.lines_arr.length - 1)
+            if (corner_no < p_polyline.plalinelen(-1))
                {
                curr_corner[3] = p_polyline.corner(corner_no);
                if (!(curr_corner[3] instanceof PlaPointInt))
@@ -144,7 +144,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
                curr_check_points[0] = new_corner;
                curr_check_points[1] = curr_corner[1];
                Polyline check_polyline = new Polyline(curr_check_points);
-               if (check_polyline.lines_arr.length == 3)
+               if (check_polyline.plalinelen() == 3)
                   {
                   ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
                   if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins))
@@ -157,7 +157,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
                      else
                         {
                         check_polyline = new Polyline(curr_check_points);
-                        if (check_polyline.lines_arr.length == 3)
+                        if (check_polyline.plalinelen() == 3)
                            {
                            shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
                            corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
@@ -191,14 +191,14 @@ public final class AlgoPullTight45 extends AlgoPullTight
                curr_check_points[0] = new_corner;
                curr_check_points[1] = curr_corner[0];
                Polyline check_polyline = new Polyline(curr_check_points);
-               if (check_polyline.lines_arr.length == 3)
+               if (check_polyline.plalinelen() == 3)
                   {
                   ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
                   if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins))
                      {
                      curr_check_points[1] = curr_corner[2];
                      check_polyline = new Polyline(curr_check_points);
-                     if (check_polyline.lines_arr.length == 3)
+                     if (check_polyline.plalinelen() == 3)
                         {
                         shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
                         corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
@@ -256,54 +256,56 @@ public final class AlgoPullTight45 extends AlgoPullTight
       }
 
    /**
-    * Smoothens the 90 degree corners of p_polyline to 45 degree by cutting of the 90 degree corner. The cutting of is so small,
-    * that no check is needed
+    * Smoothens the 90 degree corners of p_polyline to 45 degree by cutting of the 90 degree corner. 
+    * The cutting of is so small that no check is needed
     */
    private Polyline smoothen_corners(Polyline p_polyline)
       {
       Polyline result = p_polyline;
       boolean polyline_changed = true;
+
       while (polyline_changed)
          {
-         if (result.plalinelen() < 4)
-            {
-            return result;
-            }
+         if (result.plalinelen() < 4) return result;
+      
          polyline_changed = false;
+         
          PlaLineInt[] line_arr = new PlaLineInt[result.plalinelen()];
          System.arraycopy(result.lines_arr, 0, line_arr, 0, line_arr.length);
 
-         for (int i = 1; i < line_arr.length - 2; ++i)
+         for (int index = 1; index < line_arr.length - 2; ++index)
             {
-            PlaDirection d1 = line_arr[i].direction();
-            PlaDirection d2 = line_arr[i + 1].direction();
+            PlaDirection d1 = line_arr[index].direction();
+            PlaDirection d2 = line_arr[index + 1].direction();
             if (d1.is_multiple_of_45_degree() && d2.is_multiple_of_45_degree() && d1.projection(d2) != Signum.POSITIVE)
                {
                // there is a 90 degree or sharper angle
-               PlaLineInt new_line = smoothen_corner(line_arr, i);
+               PlaLineInt new_line = smoothen_corner(line_arr, index);
                if (new_line == null)
                   {
                   // the greedy smoothening couldn't change the polyline
-                  new_line = smoothen_sharp_corner(line_arr, i);
+                  new_line = smoothen_sharp_corner(line_arr, index);
                   }
                if (new_line != null)
                   {
                   polyline_changed = true;
                   // add the new line into the line array
                   PlaLineInt[] tmp_lines = new PlaLineInt[line_arr.length + 1];
-                  System.arraycopy(line_arr, 0, tmp_lines, 0, i + 1);
-                  tmp_lines[i + 1] = new_line;
-                  System.arraycopy(line_arr, i + 1, tmp_lines, i + 2, tmp_lines.length - (i + 2));
+                  System.arraycopy(line_arr, 0, tmp_lines, 0, index + 1);
+                  tmp_lines[index + 1] = new_line;
+                  System.arraycopy(line_arr, index + 1, tmp_lines, index + 2, tmp_lines.length - (index + 2));
                   line_arr = tmp_lines;
-                  ++i;
+                  ++index;
                   }
                }
             }
+         
          if (polyline_changed)
             {
             result = new Polyline(line_arr);
             }
          }
+      
       return result;
       }
 
@@ -786,11 +788,13 @@ public final class AlgoPullTight45 extends AlgoPullTight
                }
             PlaLineInt add_line = translate_line.translate(translate_dist);
             // constract the new trace polyline.
-            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.lines_arr.length + 1];
-            for (int i = 0; i < trace_polyline.lines_arr.length - 1; ++i)
+            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plalinelen(+1)];
+            
+            for (int index = 0; index < trace_polyline.plalinelen(-1); ++index)
                {
-               new_lines[i] = trace_polyline.lines_arr[i];
+               new_lines[index] = trace_polyline.plaline(index);
                }
+            
             new_lines[new_lines.length - 2] = add_line;
             new_lines[new_lines.length - 1] = other_trace_line;
             return new Polyline(new_lines);
@@ -798,21 +802,27 @@ public final class AlgoPullTight45 extends AlgoPullTight
          }
       else if (bend)
          {
-         PlaLineInt[] check_line_arr = new PlaLineInt[trace_polyline.lines_arr.length + 1];
-         for (int i = 0; i < trace_polyline.lines_arr.length - 1; ++i)
+         PlaLineInt[] check_line_arr = new PlaLineInt[trace_polyline.plalinelen(+1)];
+         
+         for (int index = 0; index < trace_polyline.plalinelen(-1); ++index)
             {
-            check_line_arr[i] = trace_polyline.lines_arr[i];
+            check_line_arr[index] = trace_polyline.plaline(index);
             }
+         
          check_line_arr[check_line_arr.length - 2] = other_trace_line;
          check_line_arr[check_line_arr.length - 1] = other_prev_trace_line;
-         PlaLineInt new_line = reposition_line(check_line_arr, trace_polyline.lines_arr.length - 2);
+
+         PlaLineInt new_line = reposition_line(check_line_arr, trace_polyline.plalinelen(-2));
+         
          if (new_line != null)
             {
-            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.lines_arr.length];
-            for (int i = 0; i < new_lines.length - 2; ++i)
+            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plalinelen()];
+            
+            for (int index = 0; index < new_lines.length - 2; ++index)
                {
-               new_lines[i] = trace_polyline.lines_arr[i];
+               new_lines[index] = trace_polyline.plaline(index);
                }
+            
             new_lines[new_lines.length - 2] = new_line;
             new_lines[new_lines.length - 1] = other_trace_line;
             return new Polyline(new_lines);

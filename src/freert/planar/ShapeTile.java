@@ -987,8 +987,10 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             {
             // otherwise skip 1 point outside polyline at the start
             int curr_polyline_intersection_no = curr_intersection_tuple[0];
+            
             PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline_intersection_no + 2];
             System.arraycopy(p_polyline.lines_arr, 0, curr_lines, 0, curr_polyline_intersection_no + 1);
+            
             // close the polyline piece with the intersected edge line.
             curr_lines[curr_polyline_intersection_no + 1] = border_line(curr_intersection_tuple[1]);
 
@@ -1011,16 +1013,13 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          int[] next_intersection_tuple = intersection_no[curr_intersection_no + 1];
          int curr_intersection_no_of_polyline = curr_intersection_tuple[0];
          int next_intersection_no_of_polyline = next_intersection_tuple[0];
-         // check that at least 1 corner of p_polyline with number between
-         // between curr_intersection_no_of_polyline and
-         // next_intersection_no_of_polyline
-         // is not contained in this shape. Otherwise the part of p_polyline
-         // between this intersections is completely contained in the border
-         // and can be ignored
+         // check that at least 1 corner of p_polyline with number betweencurr_intersection_no_of_polyline and
+         // next_intersection_no_of_polyline is not contained in this shape. Otherwise the part of p_polyline
+         // between this intersections is completely contained in the border and can be ignored
          boolean insert_piece = false;
-         for (int i = curr_intersection_no_of_polyline + 1; i < next_intersection_no_of_polyline; ++i)
+         for (int index = curr_intersection_no_of_polyline + 1; index < next_intersection_no_of_polyline; ++index)
             {
-            if (this.is_outside(p_polyline.corner(i)))
+            if (is_outside(p_polyline.corner(index)))
                {
                insert_piece = true;
                break;
@@ -1030,8 +1029,10 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          if (insert_piece)
             {
             PlaLineInt[] curr_lines = new PlaLineInt[next_intersection_no_of_polyline - curr_intersection_no_of_polyline + 3];
-            curr_lines[0] = this.border_line(curr_intersection_tuple[1]);
+            curr_lines[0] = border_line(curr_intersection_tuple[1]);
+            
             System.arraycopy(p_polyline.lines_arr, curr_intersection_no_of_polyline, curr_lines, 1, curr_lines.length - 2);
+            
             curr_lines[curr_lines.length - 1] = this.border_line(next_intersection_tuple[1]);
 
             try
@@ -1051,8 +1052,10 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          {
          curr_intersection_tuple = intersection_no[curr_intersection_no];
          int curr_polyline_intersection_no = curr_intersection_tuple[0];
-         PlaLineInt[] curr_lines = new PlaLineInt[p_polyline.lines_arr.length - curr_polyline_intersection_no + 1];
-         curr_lines[0] = this.border_line(curr_intersection_tuple[1]);
+         PlaLineInt[] curr_lines = new PlaLineInt[p_polyline.plalinelen(-curr_polyline_intersection_no + 1)];
+
+         curr_lines[0] = border_line(curr_intersection_tuple[1]);
+         
          System.arraycopy(p_polyline.lines_arr, curr_polyline_intersection_no, curr_lines, 1, curr_lines.length - 1);
 
          try
