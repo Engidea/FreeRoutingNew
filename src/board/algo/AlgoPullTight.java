@@ -454,15 +454,14 @@ public abstract class AlgoPullTight
 
          if (try_skip)
             {
-            // check, if skipping the line of length 0 does not
-            // result in a clearance violation
-            PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline.plalinelen(-1)];
+            // check, if skipping the line of length 0 does not result in a clearance violation
             
-            System.arraycopy(curr_polyline.lines_arr, 0, curr_lines, 0, index);
-            System.arraycopy(curr_polyline.lines_arr, index + 1, curr_lines, index, curr_lines.length - index);
+            PlaLineInt[] curr_lines = curr_polyline.plaline_copy(index);
             
             Polyline tmp = new Polyline(curr_lines);
+            
             boolean check_ok = (tmp.plalinelen() == curr_lines.length);
+            
             if (check_ok && !curr_polyline.plaline(index).is_multiple_of_45_degree())
                {
                // no check necessary for skipping 45 degree lines, because the check is performance critical and the line shapes
