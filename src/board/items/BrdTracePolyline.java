@@ -217,10 +217,10 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       }
 
    /**
-    * looks, if this trace can be combined at its first point with an other
-    * trace. Returns true, if somthing was combined. The corners of the other
-    * trace will be inserted in front of thie trace. In case of combine the
-    * other trace will be deleted and this trace will remain.
+    * looks, if this trace can be combined at its first point with an other trace. 
+    * Returns true, if somthing was combined. 
+    * The corners of the other trace will be inserted in front of thie trace. 
+    * In case of combine the other trace will be deleted and this trace will remain.
     */
    private boolean combine_at_start(boolean p_ignore_areas)
       {
@@ -274,35 +274,30 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
 
       r_board.item_list.save_for_undo(this);
+
       // create the lines of the joined polyline
-      PlaLineInt[] this_lines = polyline.lines_arr;
-      PlaLineInt[] other_lines;
+      Polyline other_lines;
+
       if (reverse_order)
-         {
-         other_lines = new PlaLineInt[other_trace.polyline.plalinelen()];
-         for (int index = 0; index < other_lines.length; ++index)
-            {
-            other_lines[index] = other_trace.polyline.plaline(other_lines.length - 1 - index).opposite();
-            }
-         }
+         other_lines = other_trace.polyline.reverse();
       else
-         {
-         other_lines = other_trace.polyline.lines_arr;
-         }
-      boolean skip_line = other_lines[other_lines.length - 2].is_equal_or_opposite(this_lines[1]);
-      int new_line_count = this_lines.length + other_lines.length - 2;
+         other_lines = other_trace.polyline;
+      
+      boolean skip_line = other_lines.plaline(other_lines.plalinelen(-2)).is_equal_or_opposite(polyline.plaline(1));
+      int new_line_count = polyline.plalinelen() + other_lines.plalinelen() - 2;
       if (skip_line)
          {
          --new_line_count;
          }
       PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
-      System.arraycopy(other_lines, 0, new_lines, 0, other_lines.length - 1);
-      int join_pos = other_lines.length - 1;
+      other_lines.plaline_copy(0, new_lines, 0, other_lines.plalinelen(-1));
+      int join_pos = other_lines.plalinelen(-1);
       if (skip_line)
          {
          --join_pos;
          }
-      System.arraycopy(this_lines, 1, new_lines, join_pos, this_lines.length - 1);
+      
+      polyline.plaline_copy(1, new_lines, join_pos, polyline.plalinelen(-1));
       Polyline joined_polyline = new Polyline(new_lines);
       if (joined_polyline.plalinelen() != new_line_count)
          {
@@ -317,16 +312,16 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          {
          // reuse the tree entries for better performance
          // create the changed line shape at the join location
-         int to_no = other_lines.length;
+         int to_no = other_lines.plalinelen();
          if (skip_line)
             {
             --to_no;
             }
-         r_board.search_tree_manager.merge_entries_in_front(other_trace, this, joined_polyline, other_lines.length - 3, to_no);
+         r_board.search_tree_manager.merge_entries_in_front(other_trace, this, joined_polyline, other_lines.plalinelen(-3), to_no);
          other_trace.clear_search_tree_entries();
          polyline = joined_polyline;
          }
-      if (polyline.plalinelen() < 3)
+      if ( ! polyline.is_valid() )
          {
          r_board.remove_item(this);
          }

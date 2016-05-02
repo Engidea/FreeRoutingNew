@@ -311,7 +311,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       PlaPointFloat[] corners = p_other.corner_approx_arr();
       for (PlaPointFloat curr_corner : corners)
          {
-         if (!this.contains(curr_corner))
+         if (!contains(curr_corner))
             {
             return false;
             }
@@ -326,7 +326,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       {
       for (int i = 0; i < p_other.border_line_count(); ++i)
          {
-         if (!this.contains(p_other.corner(i)))
+         if (!contains(p_other.corner(i)))
             {
             return false;
             }
@@ -372,7 +372,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
 
    public PlaPointFloat nearest_point_approx(PlaPointFloat p_from_point)
       {
-      if (this.contains(p_from_point))
+      if (contains(p_from_point))
          {
          return p_from_point;
          }
@@ -565,12 +565,12 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
     */
    public PlaSegmentFloat diagonal_corner_segment()
       {
-      if (this.is_empty())
+      if (is_empty())
          {
          return null;
          }
-      PlaPointFloat first_corner = this.corner_approx(0);
-      PlaPointFloat last_corner = this.corner_approx(this.border_line_count() / 2);
+      PlaPointFloat first_corner = corner_approx(0);
+      PlaPointFloat last_corner = corner_approx(border_line_count() / 2);
       return new PlaSegmentFloat(first_corner, last_corner);
       }
 
@@ -581,7 +581,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
    public PlaPointFloat[] nearest_relative_outside_locations(ShapeTile p_shape, int p_count)
       {
       int line_count = border_line_count();
-      if (p_count <= 0 || line_count < 3 || !this.intersects(p_shape))
+      if (p_count <= 0 || line_count < 3 || !intersects(p_shape))
          {
          return new PlaPointFloat[0];
          }
@@ -639,11 +639,11 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
 
    public ShapeConvex shrink(double p_offset)
       {
-      ShapeConvex result = this.offset(-p_offset);
+      ShapeConvex result = offset(-p_offset);
       if (result.is_empty())
          {
-         ShapeTileBox centre_box = this.centre_of_gravity().bounding_box();
-         result = this.intersection(centre_box);
+         ShapeTileBox centre_box = centre_of_gravity().bounding_box();
+         result = intersection(centre_box);
          }
       return result;
       }
@@ -671,7 +671,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       // now the shape is 2-dimensional
       double max_distance = -1;
       double max_distance_2 = -1;
-      PlaPointFloat gravity_point = this.centre_of_gravity();
+      PlaPointFloat gravity_point = centre_of_gravity();
       for (int i = 0; i < border_line_count(); ++i)
          {
          double curr_distance = Math.abs(border_line(i).signed_distance(gravity_point));
@@ -715,15 +715,15 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          return new int[0];
          }
       int side_no_1 = 0;
-      PlaDirection dir1 = this.border_line(0).direction();
-      final int max_ind = this.border_line_count() + p_other.border_line_count();
+      PlaDirection dir1 = border_line(0).direction();
+      final int max_ind = border_line_count() + p_other.border_line_count();
 
       for (int i = 0; i < max_ind; ++i)
          {
          int compare = dir2.compareTo(dir1);
          if (compare == 0)
             {
-            if (this.border_line(side_no_1).is_equal_or_opposite(p_other.border_line(side_no_2)))
+            if (border_line(side_no_1).is_equal_or_opposite(p_other.border_line(side_no_2)))
                {
                int[] result = new int[2];
                result[0] = side_no_1;
@@ -733,8 +733,8 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             }
          if (compare >= 0) // dir2 is bigger than dir1
             {
-            side_no_1 = (side_no_1 + 1) % this.border_line_count();
-            dir1 = this.border_line(side_no_1).direction();
+            side_no_1 = (side_no_1 + 1) % border_line_count();
+            dir1 = border_line(side_no_1).direction();
             }
          else
             // dir1 is bigger than dir2
@@ -753,13 +753,13 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
    public double distance_to_the_left(PlaLineInt p_line)
       {
       double result = Integer.MAX_VALUE;
-      for (int i = 0; i < this.border_line_count(); ++i)
+      for (int i = 0; i < border_line_count(); ++i)
          {
-         PlaPointFloat curr_corner = this.corner_approx(i);
+         PlaPointFloat curr_corner = corner_approx(i);
          PlaSide line_side = p_line.side_of(curr_corner, 1);
          if (line_side == PlaSide.COLLINEAR)
             {
-            line_side = p_line.side_of(this.corner(i));
+            line_side = p_line.side_of(corner(i));
             }
          if (line_side == PlaSide.ON_THE_RIGHT)
             {
@@ -780,9 +780,9 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       {
       boolean on_the_left = false;
       boolean on_the_right = false;
-      for (int i = 0; i < this.border_line_count(); ++i)
+      for (int i = 0; i < border_line_count(); ++i)
          {
-         PlaSide curr_side = p_line.side_of(this.corner(i));
+         PlaSide curr_side = p_line.side_of(corner(i));
          if (curr_side == PlaSide.ON_THE_LEFT)
             {
             on_the_right = true;
@@ -813,7 +813,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
       for (int i = 0; i < new_lines.length; ++i)
          {
-         new_lines[i] = this.border_line(i).turn_90_degree(p_factor, p_pole);
+         new_lines[i] = border_line(i).turn_90_degree(p_factor, p_pole);
          }
       return get_instance(new_lines);
       }
@@ -828,7 +828,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       for (int i = 0; i < new_corners.length; ++i)
          {
 
-         new_corners[i] = this.corner_approx(i).rotate(p_angle, p_pole).round();
+         new_corners[i] = corner_approx(i).rotate(p_angle, p_pole).round();
          }
       PlaPolygon corner_polygon = new PlaPolygon(new_corners);
       PlaPoint[] polygon_corners = corner_polygon.corner_array();
@@ -859,7 +859,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
       for (int i = 0; i < new_lines.length; ++i)
          {
-         new_lines[i] = this.border_line(i).mirror_vertical(p_pole);
+         new_lines[i] = border_line(i).mirror_vertical(p_pole);
          }
       return get_instance(new_lines);
       }
@@ -869,7 +869,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
       for (int i = 0; i < new_lines.length; ++i)
          {
-         new_lines[i] = this.border_line(i).mirror_horizontal(p_pole);
+         new_lines[i] = border_line(i).mirror_horizontal(p_pole);
          }
       return get_instance(new_lines);
       }
@@ -887,9 +887,9 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       PlaPointFloat second_line_point = intersection_line.point_b.to_float();
       int result = -1;
       double min_distance = Float.MAX_VALUE;
-      for (int index = 0; index < this.border_line_count(); ++index)
+      for (int index = 0; index < border_line_count(); ++index)
          {
-         PlaLineInt curr_border_line = this.border_line(index);
+         PlaLineInt curr_border_line = border_line(index);
          
          PlaPointFloat curr_intersection = curr_border_line.intersection_approx(intersection_line);
       
@@ -960,9 +960,9 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
     */
    public Polyline[] cutout(Polyline p_polyline)
       {
-      int[][] intersection_no = this.entrance_points(p_polyline);
+      int[][] intersection_no = entrance_points(p_polyline);
       PlaPoint first_corner = p_polyline.corner_first();
-      boolean first_corner_is_inside = this.contains_inside(first_corner);
+      boolean first_corner_is_inside = contains_inside(first_corner);
       if (intersection_no.length == 0)
       // no intersections
          {
@@ -989,7 +989,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             int curr_polyline_intersection_no = curr_intersection_tuple[0];
             
             PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline_intersection_no + 2];
-            System.arraycopy(p_polyline.lines_arr, 0, curr_lines, 0, curr_polyline_intersection_no + 1);
+            p_polyline.plaline_copy(0, curr_lines, 0, curr_polyline_intersection_no + 1);
             
             // close the polyline piece with the intersected edge line.
             curr_lines[curr_polyline_intersection_no + 1] = border_line(curr_intersection_tuple[1]);
@@ -1033,7 +1033,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             
             System.arraycopy(p_polyline.lines_arr, curr_intersection_no_of_polyline, curr_lines, 1, curr_lines.length - 2);
             
-            curr_lines[curr_lines.length - 1] = this.border_line(next_intersection_tuple[1]);
+            curr_lines[curr_lines.length - 1] = border_line(next_intersection_tuple[1]);
 
             try
                {
@@ -1089,17 +1089,17 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
     */
    public ShapeTile[] divide_into_sections(double p_max_section_width)
       {
-      if (this.is_empty())
+      if (is_empty())
          {
          ShapeTile[] result = new ShapeTile[1];
          result[0] = this;
          return result;
          }
-      ShapeTile[] section_boxes = this.bounding_box().divide_into_sections(p_max_section_width);
+      ShapeTile[] section_boxes = bounding_box().divide_into_sections(p_max_section_width);
       Collection<ShapeTile> section_list = new LinkedList<ShapeTile>();
       for (int i = 0; i < section_boxes.length; ++i)
          {
-         ShapeTile curr_section = this.intersection_with_simplify(section_boxes[i]);
+         ShapeTile curr_section = intersection_with_simplify(section_boxes[i]);
          if (curr_section.dimension() == PlaDimension.AREA)
             {
             section_list.add(curr_section);
@@ -1122,11 +1122,11 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       PlaPointFloat float_start_point = p_line_segment.start_point_approx();
       PlaPointFloat float_end_point = p_line_segment.end_point_approx();
 
-      PlaSide[] border_line_side_of_start_point_arr = new PlaSide[this.border_line_count()];
+      PlaSide[] border_line_side_of_start_point_arr = new PlaSide[border_line_count()];
       PlaSide[] border_line_side_of_end_point_arr = new PlaSide[border_line_side_of_start_point_arr.length];
       for (int i = 0; i < border_line_side_of_start_point_arr.length; ++i)
          {
-         PlaLineInt curr_border_line = this.border_line(i);
+         PlaLineInt curr_border_line = border_line(i);
          PlaSide border_line_side_of_start_point = curr_border_line.side_of(float_start_point, 1);
          if (border_line_side_of_start_point == PlaSide.COLLINEAR)
             {
@@ -1186,10 +1186,10 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
                // the interiour of p_shape is not intersected.
                continue;
                }
-            PlaSide prev_corner_side = segment_line.side_of(this.corner_approx(i), 1);
+            PlaSide prev_corner_side = segment_line.side_of(corner_approx(i), 1);
             if (prev_corner_side == PlaSide.COLLINEAR)
                {
-               prev_corner_side = segment_line.side_of(this.corner(i));
+               prev_corner_side = segment_line.side_of(corner(i));
                }
             int next_corner_index;
             if (i == border_line_side_of_start_point_arr.length - 1)
@@ -1200,10 +1200,10 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
                {
                next_corner_index = i + 1;
                }
-            PlaSide next_corner_side = segment_line.side_of(this.corner_approx(next_corner_index), 1);
+            PlaSide next_corner_side = segment_line.side_of(corner_approx(next_corner_index), 1);
             if (next_corner_side == PlaSide.COLLINEAR)
                {
-               next_corner_side = segment_line.side_of(this.corner(next_corner_index));
+               next_corner_side = segment_line.side_of(corner(next_corner_index));
                }
             if (prev_corner_side == PlaSide.ON_THE_LEFT && next_corner_side == PlaSide.ON_THE_RIGHT || prev_corner_side == PlaSide.ON_THE_RIGHT && next_corner_side == PlaSide.ON_THE_LEFT)
                {
