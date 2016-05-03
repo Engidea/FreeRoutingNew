@@ -42,9 +42,9 @@ public class DsnKeywordPlacement extends DsnKeywordScope
          p_par.file.new_line();
          p_par.file.write("(place_control (flip_style rotate_first))");
          }
-      for (int i = 1; i <= p_par.board.library.packages.count(); ++i)
+      for (int i = 1; i <= p_par.board.library.packages.pkg_count(); ++i)
          {
-         DsnKeywordPackage.write_placement_scope(p_par, p_par.board.library.packages.get(i));
+         DsnKeywordPackage.write_placement_scope(p_par, p_par.board.library.packages.pkg_get(i));
          }
       p_par.file.end_scope();
       }

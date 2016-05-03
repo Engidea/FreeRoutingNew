@@ -27,14 +27,14 @@ import board.infos.PrintableInfo;
  *
  * @author Alfons Wirtz
  */
-public class LogicalPart implements PrintableInfo, java.io.Serializable
+public class LibLogicalPart implements PrintableInfo, java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
    public final String name;
    public final int part_no;
    
-   private final LogicalPin[] part_pin_arr;
+   private final LibLogicalPin[] part_pin_arr;
 
    
    /**
@@ -42,7 +42,7 @@ public class LogicalPart implements PrintableInfo, java.io.Serializable
     * The pin_no's of the part pins must be the same number as in the
     * componnents library package.
     */
-   public LogicalPart(String p_name, int p_no, LogicalPin[] p_part_pin_arr)
+   public LibLogicalPart(String p_name, int p_no, LibLogicalPin[] p_part_pin_arr)
       {
       name = p_name;
       part_no = p_no;
@@ -57,7 +57,7 @@ public class LogicalPart implements PrintableInfo, java.io.Serializable
    /** 
     * @return the pim with index p_no. Pin numbers are from 0 to pin_count - 1 
     */
-   public LogicalPin get_pin(int p_no)
+   public LibLogicalPin get_pin(int p_no)
       {
       if (p_no < 0 || p_no >= part_pin_arr.length)
          {
@@ -76,7 +76,7 @@ public class LogicalPart implements PrintableInfo, java.io.Serializable
       p_window.append_bold(name);
       for (int i = 0; i < part_pin_arr.length; ++i)
          {
-         LogicalPin curr_pin = part_pin_arr[i];
+         LibLogicalPin curr_pin = part_pin_arr[i];
          p_window.newline();
          p_window.indent();
          p_window.append(resources.getString("pin") + " ");

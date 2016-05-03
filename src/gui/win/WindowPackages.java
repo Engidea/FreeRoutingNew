@@ -47,17 +47,17 @@ public class WindowPackages extends WindowObjectListWithFilter
    protected void fill_list()
       {
       LibPackages packages = this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
-      LibPackage[] sorted_arr = new LibPackage[packages.count()];
+      LibPackage[] sorted_arr = new LibPackage[packages.pkg_count()];
       for (int i = 0; i < sorted_arr.length; ++i)
          {
-         sorted_arr[i] = packages.get(i + 1);
+         sorted_arr[i] = packages.pkg_get(i + 1);
          }
       java.util.Arrays.sort(sorted_arr);
       for (int i = 0; i < sorted_arr.length; ++i)
          {
          this.add_to_list(sorted_arr[i]);
          }
-      this.gui_list.setVisibleRowCount(Math.min(packages.count(), DEFAULT_TABLE_SIZE));
+      this.gui_list.setVisibleRowCount(Math.min(packages.pkg_count(), DEFAULT_TABLE_SIZE));
       }
 
    protected void select_instances()

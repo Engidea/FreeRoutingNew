@@ -20,10 +20,12 @@
 
 package library;
 
-import gui.varie.UndoableObjectStorable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import board.RoutingBoard;
+import freert.varie.UndoableObjectNode;
+import gui.varie.UndoableObjectStorable;
 
 /**
  * Describes a board library of packages and padstacks.
@@ -38,22 +40,11 @@ public final class BrdLibrary implements java.io.Serializable
    public LibPackages packages = null;
    
    // Containes information for gate swap and pin swap in the Specctra-dsn format
-   public final LogicalParts logical_parts = new LogicalParts();
+   public final LibLogicalParts logical_parts = new LibLogicalParts();
 
    // The subset of padstacks in the board library, which can be used in routing for inserting vias
    private final List<LibPadstack> via_padstacks = new Vector<LibPadstack>();
-   
 
-   public BrdLibrary(LibPadstacks p_padstacks, LibPackages p_packages)
-      {
-      padstacks = p_padstacks;
-      packages = p_packages;
-      }
-
-   public BrdLibrary()
-      {
-
-      }
 
    /** 
     * Sets the subset of padstacks from this.padstacks, which can be used in routing for inserting vias
@@ -62,10 +53,9 @@ public final class BrdLibrary implements java.io.Serializable
       {
       via_padstacks.clear();
       
-      for (int i = 0; i < p_padstacks.length; ++i)
-         {
-         via_padstacks.add(p_padstacks[i]);
-         }
+      for (int index = 0; index < p_padstacks.length; ++index)
+         via_padstacks.add(p_padstacks[index]);
+
       }
 
    /** 
@@ -108,10 +98,9 @@ public final class BrdLibrary implements java.io.Serializable
       {
       LibPadstack[] result = new LibPadstack[via_padstacks.size()];
 
-      for (int i = 0; i < result.length; ++i)
-         {
-         result[i] = via_padstacks.get(i);
-         }
+      for (int index = 0; index < result.length; ++index)
+         result[index] = via_padstacks.get(index);
+      
       return result;
       }
 
@@ -166,10 +155,12 @@ public final class BrdLibrary implements java.io.Serializable
     */
    public boolean is_used(LibPadstack p_padstack, RoutingBoard p_board)
       {
-      java.util.Iterator<freert.varie.UndoableObjectNode> it = p_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = p_board.item_list.start_read_object();
+
       for (;;)
          {
          UndoableObjectStorable curr_item = p_board.item_list.read_object(it);
+      
          if (curr_item == null) break;
 
          if (curr_item instanceof board.items.BrdAbit)
@@ -180,12 +171,14 @@ public final class BrdLibrary implements java.io.Serializable
                }
             }
          }
-      for (int i = 1; i <= this.packages.count(); ++i)
+      
+      for (int index = 1; index <= packages.pkg_count(); ++index)
          {
-         LibPackage curr_package = this.packages.get(i);
-         for (int j = 0; j < curr_package.pin_count(); ++j)
+         LibPackage curr_package = packages.pkg_get(index);
+         
+         for (int jndex = 0; jndex < curr_package.pin_count(); ++jndex)
             {
-            if (curr_package.get_pin(j).padstack_no == p_padstack.pads_no)
+            if (curr_package.get_pin(jndex).padstack_no == p_padstack.pads_no)
                {
                return true;
                }

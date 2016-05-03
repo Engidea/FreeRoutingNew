@@ -204,9 +204,9 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       {
       p_par.file.start_scope();
       p_par.file.write("library");
-      for (int i = 1; i <= p_par.board.library.packages.count(); ++i)
+      for (int i = 1; i <= p_par.board.library.packages.pkg_count(); ++i)
          {
-         DsnKeywordPackage.write_scope(p_par, p_par.board.library.packages.get(i));
+         DsnKeywordPackage.write_scope(p_par, p_par.board.library.packages.pkg_get(i));
          }
       for (int i = 1; i <= p_par.board.library.padstacks.count(); ++i)
          {

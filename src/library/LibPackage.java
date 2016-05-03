@@ -20,8 +20,8 @@
 
 package library;
 
-import freert.planar.PlaShape;
 import board.infos.PrintableInfo;
+import freert.planar.PlaShape;
 
 /**
  * Component package templates describing the padstacks and relative locations of the packege pins, and optional other stuff like an
@@ -52,7 +52,14 @@ public final class LibPackage implements Comparable<LibPackage>, PrintableInfo, 
    /**
     * Creates a new instance of Package. p_package_list is the list of packages containing this package.
     */
-   public LibPackage(String p_name, int p_no, LibPackagePin[] p_pin_arr, PlaShape[] p_outline, LibPackageKeepout[] p_keepout_arr, LibPackageKeepout[] p_via_keepout_arr, LibPackageKeepout[] p_place_keepout_arr, boolean p_is_front,
+   public LibPackage(String p_name, 
+         int p_no, 
+         LibPackagePin[] p_pin_arr, 
+         PlaShape[] p_outline, 
+         LibPackageKeepout[] p_keepout_arr, 
+         LibPackageKeepout[] p_via_keepout_arr, 
+         LibPackageKeepout[] p_place_keepout_arr, 
+         boolean p_is_front,
          LibPackages p_package_list)
       {
       pkg_name = p_name;
@@ -66,6 +73,18 @@ public final class LibPackage implements Comparable<LibPackage>, PrintableInfo, 
       parent_package_list = p_package_list;
       }
 
+   /**
+    * Compare the given name with the package name in case indipendent way
+    * @param p_name
+    * @return true if they are equal
+    */
+   public boolean name_is_equal ( String p_name )
+      {
+      if ( p_name == null ) return false;
+      
+      return p_name.equalsIgnoreCase(pkg_name);
+      }
+   
    /**
     * Compares 2 packages by name. Useful for example to display packages in alphabetic order.
     */

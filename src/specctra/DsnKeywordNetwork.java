@@ -30,7 +30,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import library.LogicalPin;
+import library.LibLogicalPin;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.varie.ItemFixState;
@@ -1222,7 +1222,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             {
             return false;
             }
-         LogicalPin[] board_part_pins = new LogicalPin[next_part.part_pins.size()];
+         LibLogicalPin[] board_part_pins = new LibLogicalPin[next_part.part_pins.size()];
          int curr_index = 0;
          for (DsnPartPin curr_part_pin : next_part.part_pins)
             {
@@ -1232,7 +1232,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                System.out.println("Network.insert_logical_parts: package pin not found");
                return false;
                }
-            board_part_pins[curr_index] = new LogicalPin(pin_no, curr_part_pin.pin_name, curr_part_pin.gate_name, curr_part_pin.gate_swap_code, curr_part_pin.gate_pin_name,
+            board_part_pins[curr_index] = new LibLogicalPin(pin_no, curr_part_pin.pin_name, curr_part_pin.gate_name, curr_part_pin.gate_swap_code, curr_part_pin.gate_pin_name,
                   curr_part_pin.gate_pin_swap_code);
             ++curr_index;
             }
@@ -1241,7 +1241,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
 
       for (DsnLogicalPartMapping next_mapping : p_par.logical_part_mappings)
          {
-         library.LogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
+         library.LibLogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
             {
             if (curr_logical_part == null)
                {
@@ -1306,8 +1306,8 @@ public class DsnKeywordNetwork extends DsnKeywordScope
    private static void insert_component(DsnComponentLocation p_location, String p_lib_key, DsnReadScopeParameters p_par)
       {
       board.RoutingBoard routing_board = p_par.i_board.get_routing_board();
-      library.LibPackage curr_front_package = routing_board.library.packages.get(p_lib_key, true);
-      library.LibPackage curr_back_package = routing_board.library.packages.get(p_lib_key, false);
+      library.LibPackage curr_front_package = routing_board.library.packages.pkg_get(p_lib_key, true);
+      library.LibPackage curr_back_package = routing_board.library.packages.pkg_get(p_lib_key, false);
       if (curr_front_package == null || curr_back_package == null)
          {
          System.out.println("Network.insert_component: component package not found");

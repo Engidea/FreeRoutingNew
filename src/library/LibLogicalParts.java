@@ -27,16 +27,16 @@ import java.util.Vector;
  *
  * @author Alfons Wirtz
  */
-public final class LogicalParts implements java.io.Serializable
+public final class LibLogicalParts implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    
-   private final Vector<LogicalPart> part_arr = new Vector<LogicalPart>();
+   private final Vector<LibLogicalPart> part_arr = new Vector<LibLogicalPart>();
 
-   public LogicalPart add(String p_name, LogicalPin[] p_part_pin_arr)
+   public LibLogicalPart add(String p_name, LibLogicalPin[] p_part_pin_arr)
       {
       java.util.Arrays.sort(p_part_pin_arr);
-      LogicalPart new_part = new LogicalPart(p_name, part_arr.size() + 1, p_part_pin_arr);
+      LibLogicalPart new_part = new LibLogicalPart(p_name, part_arr.size() + 1, p_part_pin_arr);
       part_arr.add(new_part);
       return new_part;
       }
@@ -44,9 +44,9 @@ public final class LogicalParts implements java.io.Serializable
    /**
     * Returns the logical part with the input name or null, if no such package exists.
     */
-   public LogicalPart get(String p_name)
+   public LibLogicalPart get(String p_name)
       {
-      for (LogicalPart curr_part : this.part_arr)
+      for (LibLogicalPart curr_part : this.part_arr)
          {
          if (curr_part != null && curr_part.name.compareToIgnoreCase(p_name) == 0)
             {
@@ -59,9 +59,9 @@ public final class LogicalParts implements java.io.Serializable
    /**
     * Returns the logical part with index p_part_no. Part numbers are from 1 to part count.
     */
-   public LogicalPart get(int p_part_no)
+   public LibLogicalPart get(int p_part_no)
       {
-      LogicalPart result = part_arr.elementAt(p_part_no - 1);
+      LibLogicalPart result = part_arr.elementAt(p_part_no - 1);
       if (result != null && result.part_no != p_part_no)
          {
          System.out.println("LogicalParts.get: inconsistent part number");

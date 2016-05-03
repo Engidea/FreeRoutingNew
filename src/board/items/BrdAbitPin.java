@@ -26,7 +26,7 @@ import java.util.LinkedList;
 import library.LibPackage;
 import library.LibPackagePin;
 import library.LibPadstack;
-import library.LogicalPin;
+import library.LibLogicalPin;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.varie.BrdTraceExitRestriction;
@@ -495,12 +495,12 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          {
          return result;
          }
-      library.LogicalPart logical_part = component.get_logical_part();
+      library.LibLogicalPart logical_part = component.get_logical_part();
       if (logical_part == null)
          {
          return result;
          }
-      LogicalPin this_part_pin = logical_part.get_pin(this.pin_no);
+      LibLogicalPin this_part_pin = logical_part.get_pin(this.pin_no);
       if (this_part_pin == null)
          {
          return result;
@@ -516,7 +516,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
             {
             continue;
             }
-         LogicalPin curr_part_pin = logical_part.get_pin(i);
+         LibLogicalPin curr_part_pin = logical_part.get_pin(i);
          if (curr_part_pin != null && curr_part_pin.gate_pin_swap_code == this_part_pin.gate_pin_swap_code && curr_part_pin.gate_name.equals(this_part_pin.gate_name))
             {
             BrdAbitPin curr_swappeble_pin = this.r_board.get_pin(this.get_component_no(), curr_part_pin.pin_no);

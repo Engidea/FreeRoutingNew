@@ -322,16 +322,16 @@ public final class StateSelectedItem extends StateInteractive
       LibPackage new_package = r_brd.library.packages.add(pin_arr);
       BrdComponent new_component = r_brd.brd_components.add(gravity_point, 0, true, new_package);
       it = items_list.iterator();
-      for (int i = 0; i < pin_arr.length; ++i)
+      for (int index = 0; index < pin_arr.length; ++index)
          {
          BrdAbitVia curr_via = (BrdAbitVia) it.next();
          r_brd.remove_item(curr_via);
          int[] net_no_arr = new int[curr_via.net_count()];
-         for (int j = 0; j < net_no_arr.length; ++j)
+         for (int jndex = 0; jndex < net_no_arr.length; ++jndex)
             {
-            net_no_arr[j] = curr_via.get_net_no(j);
+            net_no_arr[jndex] = curr_via.get_net_no(jndex);
             }
-         r_brd.insert_pin(new_component.id_no, i, net_no_arr, curr_via.clearance_class_no(), curr_via.get_fixed_state());
+         r_brd.insert_pin(new_component.id_no, index, net_no_arr, curr_via.clearance_class_no(), curr_via.get_fixed_state());
          }
 
       actlog_start_scope(LogfileScope.ASSIGN_SELECTED_TO_NEW_GROUP);

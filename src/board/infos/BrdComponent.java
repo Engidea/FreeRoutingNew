@@ -26,7 +26,7 @@ import freert.planar.PlaVector;
 import gui.varie.ObjectInfoPanel;
 import gui.varie.UndoableObjectStorable;
 import library.LibPackage;
-import library.LogicalPart;
+import library.LibLogicalPart;
 
 /**
  * Describes board components consisting of an array of pins and other stuff like component keepouts.
@@ -44,7 +44,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    // The rotation of the library package of the component in degree
    private double rotation_in_degree;
    // Contains information for gate swapping and pin swapping, if != null
-   private LogicalPart logical_part = null;
+   private LibLogicalPart logical_part = null;
    // If false, the component will be placed on the back side of the board
    private boolean on_front;
    // The library package of the component if it is placed on the component side
@@ -208,7 +208,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Returns information for pin swap and gate swap, if != null.
     */
-   public LogicalPart get_logical_part()
+   public LibLogicalPart get_logical_part()
       {
       return logical_part;
       }
@@ -216,7 +216,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Sets the infomation for pin swap and gate swap.
     */
-   public void set_logical_part(LogicalPart p_logical_part)
+   public void set_logical_part(LibLogicalPart p_logical_part)
       {
       logical_part = p_logical_part;
       }

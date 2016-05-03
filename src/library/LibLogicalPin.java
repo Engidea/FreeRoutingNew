@@ -2,7 +2,7 @@ package library;
 
 import java.io.Serializable;
 
-public final class LogicalPin implements Comparable<LogicalPin>, Serializable
+public final class LibLogicalPin implements Comparable<LibLogicalPin>, Serializable
    {
    private static final long serialVersionUID = 1L;
 
@@ -19,7 +19,7 @@ public final class LogicalPin implements Comparable<LogicalPin>, Serializable
    // The pin swap code of the gate. Pins with the same pin swap code can be swapped inside a gate. Pins with swap code <= 0 are not swappable.
    public final int gate_pin_swap_code;
    
-   public LogicalPin(int p_pin_no, String p_pin_name, String p_gate_name, int p_gate_swap_code, String p_gate_pin_name, int p_gate_pin_swap_code)
+   public LibLogicalPin(int p_pin_no, String p_pin_name, String p_gate_name, int p_gate_swap_code, String p_gate_pin_name, int p_gate_pin_swap_code)
       {
       pin_no = p_pin_no;
       pin_name = p_pin_name;
@@ -29,7 +29,7 @@ public final class LogicalPin implements Comparable<LogicalPin>, Serializable
       gate_pin_swap_code = p_gate_pin_swap_code;
       }
 
-   public int compareTo(LogicalPin p_other)
+   public int compareTo(LibLogicalPin p_other)
       {
       return pin_no - p_other.pin_no;
       }

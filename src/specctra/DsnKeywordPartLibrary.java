@@ -20,7 +20,7 @@
 
 package specctra;
 
-import library.LogicalPin;
+import library.LibLogicalPin;
 
 /**
  *
@@ -91,7 +91,7 @@ public class DsnKeywordPartLibrary extends DsnKeywordScope
 
    public static void write_scope(DsnWriteScopeParameter p_par) throws java.io.IOException
       {
-      library.LogicalParts logical_parts = p_par.board.library.logical_parts;
+      library.LibLogicalParts logical_parts = p_par.board.library.logical_parts;
       if (logical_parts.count() <= 0)
          {
          return;
@@ -103,7 +103,7 @@ public class DsnKeywordPartLibrary extends DsnKeywordScope
 
       for (int i = 1; i <= logical_parts.count(); ++i)
          {
-         library.LogicalPart curr_part = logical_parts.get(i);
+         library.LibLogicalPart curr_part = logical_parts.get(i);
          p_par.file.start_scope();
          p_par.file.write("logical_part_mapping ");
          p_par.identifier_type.write(curr_part.name, p_par.file);
@@ -126,7 +126,7 @@ public class DsnKeywordPartLibrary extends DsnKeywordScope
 
       for (int i = 1; i <= logical_parts.count(); ++i)
          {
-         library.LogicalPart curr_part = logical_parts.get(i);
+         library.LibLogicalPart curr_part = logical_parts.get(i);
 
          p_par.file.start_scope();
          p_par.file.write("logical_part ");
@@ -135,7 +135,7 @@ public class DsnKeywordPartLibrary extends DsnKeywordScope
          for (int j = 0; j < curr_part.pin_count(); ++j)
             {
             p_par.file.new_line();
-            LogicalPin curr_pin = curr_part.get_pin(j);
+            LibLogicalPin curr_pin = curr_part.get_pin(j);
             p_par.file.write("(pin ");
             p_par.identifier_type.write(curr_pin.pin_name, p_par.file);
             p_par.file.write(" 0 ");

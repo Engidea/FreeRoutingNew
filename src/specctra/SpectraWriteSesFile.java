@@ -106,9 +106,9 @@ public final class SpectraWriteSesFile
       output_file.write("placement");
       DsnKeywordResolution.write_scope(output_file, r_board.host_com);
 
-      for (int i = 1; i <= r_board.library.packages.count(); ++i)
+      for (int i = 1; i <= r_board.library.packages.pkg_count(); ++i)
          {
-         write_components( p_identifier_type, p_coordinate_transform, r_board.library.packages.get(i));
+         write_components( p_identifier_type, p_coordinate_transform, r_board.library.packages.pkg_get(i));
          }
       output_file.end_scope();
       }
