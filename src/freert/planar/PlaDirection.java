@@ -264,10 +264,10 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     */
   public PlaDirection turn_45_degree(int p_factor)
      {
-     int n = p_factor % 8;
      long new_x;
      long new_y;
-     switch (n)
+
+     switch (p_factor % 8)
         {
         case 0: // 0 degree
            new_x = dir_x;
@@ -305,6 +305,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
            new_x = 0;
            new_y = 0;
         }
+     
      return new PlaDirection(new_x, new_y);
      }
 
@@ -379,7 +380,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     * @param p_other
     * @return
     */
-   private final double projection_value(PlaDirection p_other)
+   final double projection_value(PlaDirection p_other)
       {
       return (double) dir_x * p_other.dir_x + (double) dir_y * p_other.dir_y;
       }
@@ -422,15 +423,6 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       {
       return new PlaPointFloat(dir_x, dir_y);
       }
-   
-   /**
-    * return any Vector pointing into this direction
-    */
-   public PlaVectorInt to_vector()
-      {
-      return new PlaVectorInt(dir_x, dir_y);
-      }
-   
    
    /**
     * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 

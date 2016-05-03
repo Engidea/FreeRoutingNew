@@ -112,6 +112,11 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return new PlaPointInt(v_x + p_vector.point_x, v_y + p_vector.point_y);
       }
 
+   public final PlaPointInt translate_by(PlaDirection p_dir)
+      {
+      return new PlaPointInt(v_x + p_dir.dir_x, v_y + p_dir.dir_y);
+      }
+
    @Override
    public PlaPointRational translate_by(PlaVectorRational p_vector)
       {

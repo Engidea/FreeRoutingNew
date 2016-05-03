@@ -133,8 +133,8 @@ public final class ShapeTileSimplex extends ShapeTile
          prev_no = p_no - 1;
          }
       
-      PlaVectorInt prev_dir = arr[prev_no].direction().to_vector();
-      PlaVectorInt curr_dir = arr[p_no].direction().to_vector();
+      PlaDirection prev_dir = arr[prev_no].direction();
+      PlaDirection curr_dir = arr[p_no].direction();
       
       return prev_dir.determinant(curr_dir) > 0;
       }
@@ -950,19 +950,19 @@ public final class ShapeTileSimplex extends ShapeTile
                merge_prev_division_line = true;
                }
             }
+         
          if (!check_cross_first_line)
             {
-            check_cross_first_line = inner_corner_no > 0 && last_curr_dir.determinant(first_direction) > 0 && last_curr_dir.to_vector().scalar_product(first_direction.to_vector()) < 0;
-            // scalar_product checked to ignore backcrossing at
-            // small inner_corner_no
+            check_cross_first_line = inner_corner_no > 0 && last_curr_dir.determinant(first_direction) > 0 && last_curr_dir.projection_value(first_direction)  < 0;
+            // scalar_product checked to ignore backcrossing at small inner_corner_no
             }
+         
          if (check_cross_first_line)
             {
             PlaDirection next_dir = next_division_line.direction();
             if (next_dir.determinant(first_direction) < 0)
                {
-               // The current piece has an intersection area with the first piece.
-               // Add a line to tmp_polyline to prevent this
+               // The current piece has an intersection area with the first piece. Add a line to tmp_polyline to prevent this
                merge_first_division_line = true;
                }
             }

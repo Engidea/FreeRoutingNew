@@ -1041,7 +1041,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * Returns null, if the perpendicular line does not intersect the neares line segment inside its segment bounds or if p_from_point is
     * contained in this polyline.
     */
-   public PlaSegmentInt projection_line(PlaPoint p_from_point)
+   public PlaSegmentInt projection_line(PlaPointInt p_from_point)
       {
       if ( p_from_point == null ) return null;
       

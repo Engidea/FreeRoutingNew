@@ -77,7 +77,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
 
       point_a = (PlaPointInt)p_a;
       
-      point_b = (PlaPointInt)point_a.translate_by(p_dir.to_vector());
+      point_b = point_a.translate_by(p_dir);
       
       dir = p_dir;
       }
@@ -86,7 +86,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       {
       point_a = p_a;
       
-      point_b = point_a.translate_by(p_dir.to_vector());
+      point_b = point_a.translate_by(p_dir);
       
       dir = p_dir;
       }
@@ -699,7 +699,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     * Calculates the direction from p_from_point to the nearest point on this line to p_fro_point. 
     * Returns null, if p_from_point is contained in this line.
     */
-   public PlaDirection perpendicular_direction(PlaPoint p_from_point)
+   public PlaDirection perpendicular_direction(PlaPointInt p_from_point)
       {
       PlaSide line_side = side_of(p_from_point);
 
@@ -708,16 +708,14 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       PlaDirection dir1 = direction().turn_45_degree(2);
       PlaDirection dir2 = direction().turn_45_degree(6);
 
-      PlaPoint check_point_1 = p_from_point.translate_by(dir1.to_vector());
-      if (side_of(check_point_1) != line_side)
-         {
-         return dir1;
-         }
-      PlaPoint check_point_2 = p_from_point.translate_by(dir2.to_vector());
-      if (side_of(check_point_2) != line_side)
-         {
-         return dir2;
-         }
+      PlaPoint check_point_1 = p_from_point.translate_by(dir1);
+
+      if (side_of(check_point_1) != line_side) return dir1;
+
+      PlaPoint check_point_2 = p_from_point.translate_by(dir2);
+      
+      if (side_of(check_point_2) != line_side) return dir2;
+
       PlaPointFloat nearest_line_point = p_from_point.to_float().projection_approx(this);
       PlaDirection result;
       if (nearest_line_point.length_square(check_point_1.to_float()) <= nearest_line_point.length_square(check_point_2.to_float()))
