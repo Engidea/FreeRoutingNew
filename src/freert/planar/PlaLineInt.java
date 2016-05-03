@@ -44,7 +44,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaLineInt()
       {
-      is_nan = true;
+      is_nan  = true;
       point_a = new PlaPointInt ();
       point_b = new PlaPointInt ();
       }

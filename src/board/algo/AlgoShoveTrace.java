@@ -330,7 +330,7 @@ public final class AlgoShoveTrace
                return 0;
                }
             PlaVector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
-            Collection<BrdItem> ignore_items = new java.util.LinkedList<BrdItem>();
+            Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
             shove_via_ok = r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, null);
             }
 

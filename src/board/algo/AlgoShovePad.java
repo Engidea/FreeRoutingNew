@@ -52,6 +52,7 @@ import freert.varie.TimeLimit;
  */
 public final class AlgoShovePad
    {
+   private static final String classname="AlgoShovePad.";
    private final RoutingBoard r_board;
    
    public AlgoShovePad(RoutingBoard p_board)
@@ -65,15 +66,26 @@ public final class AlgoShovePad
     * p_check_only_front only trace obstacles in the direction from p_from_side are checked for performance reasons. This is the
     * cave when moving drill_items
     */
-   public ShoveDrillResult check_forced_pad(ShapeTile p_pad_shape, BrdFromSide p_from_side, int p_layer, int[] p_net_no_arr, int p_cl_type, boolean p_copper_sharing_allowed,
-         Collection<BrdItem> p_ignore_items, int p_max_recursion_depth, int p_max_via_recursion_depth, boolean p_check_only_front, TimeLimit p_time_limit)
+   public ShoveDrillResult check_forced_pad(
+         ShapeTile p_pad_shape, 
+         BrdFromSide p_from_side, 
+         int p_layer, 
+         int[] p_net_no_arr, 
+         int p_cl_type, 
+         boolean p_copper_sharing_allowed,
+         Collection<BrdItem> p_ignore_items, 
+         int p_max_recursion_depth, 
+         int p_max_via_recursion_depth, 
+         boolean p_check_only_front, 
+         TimeLimit p_time_limit)
       {
       if (!p_pad_shape.is_contained_in(r_board.get_bounding_box()))
          {
          r_board.set_shove_failing_obstacle(r_board.get_outline());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
-      ShapeSearchTree search_tree = this.r_board.search_tree_manager.get_default_tree();
+      
+      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, new int[0], p_cl_type);
 
@@ -81,10 +93,11 @@ public final class AlgoShovePad
          {
          obstacles.removeAll(p_ignore_items);
          }
+      
       boolean obstacles_shovable = shape_entries.store_items(obstacles, true, p_copper_sharing_allowed);
       if (!obstacles_shovable)
          {
-         this.r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
 
@@ -94,62 +107,66 @@ public final class AlgoShovePad
          {
          if (p_max_via_recursion_depth <= 0)
             {
-            this.r_board.set_shove_failing_obstacle(curr_shove_via);
+            r_board.set_shove_failing_obstacle(curr_shove_via);
             return ShoveDrillResult.NOT_DRILLABLE;
             }
          PlaPointInt[] new_via_center = r_board.move_drill_algo.try_shove_via_points(p_pad_shape, p_layer, curr_shove_via, p_cl_type, false);
 
          if (new_via_center.length <= 0)
             {
-            this.r_board.set_shove_failing_obstacle(curr_shove_via);
+            r_board.set_shove_failing_obstacle(curr_shove_via);
             return ShoveDrillResult.NOT_DRILLABLE;
             }
+      
          PlaVector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
          Collection<BrdItem> ignore_items = new java.util.LinkedList<BrdItem>();
+         
          if (!r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, p_time_limit))
             {
             return ShoveDrillResult.NOT_DRILLABLE;
             }
          }
+      
       ShoveDrillResult result = ShoveDrillResult.DRILLABLE;
+      
       if (p_copper_sharing_allowed)
          {
          for (BrdItem curr_obstacle : obstacles)
             {
-            if (curr_obstacle instanceof BrdAbitPin)
-               {
-               result = ShoveDrillResult.DRILLABLE_WITH_ATTACH_SMD;
-               break;
-               }
+            if ( ! ( curr_obstacle instanceof BrdAbitPin) ) continue;
+
+            result = ShoveDrillResult.DRILLABLE_WITH_ATTACH_SMD;
+            break;
             }
          }
+      
       int trace_piece_count = shape_entries.substitute_trace_count();
-      if (trace_piece_count == 0)
-         {
-         return result;
-         }
+
+      if (trace_piece_count == 0) return result;
+      
       if (p_max_recursion_depth <= 0)
          {
-         this.r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
+      
       if (shape_entries.stack_depth() > 1)
          {
-         this.r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
 
       boolean is_orthogonal_mode = p_pad_shape instanceof ShapeTileBox;
+      
       for (;;)
          {
          BrdTracePolyline curr_substitute_trace = shape_entries.next_substitute_trace_piece();
-         if (curr_substitute_trace == null)
+      
+         if (curr_substitute_trace == null)  break;
+
+         for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
-            break;
-            }
-         for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
-            {
-            PlaLineInt curr_line = curr_substitute_trace.polyline().plaline(i + 1);
+            PlaLineInt curr_line = curr_substitute_trace.polyline().plaline(index + 1);
             PlaDirection curr_dir = curr_line.direction();
             boolean is_in_front;
             if (p_check_only_front)
@@ -160,17 +177,28 @@ public final class AlgoShovePad
                {
                is_in_front = true;
                }
-            if (is_in_front)
+            
+            if ( ! is_in_front ) continue;
+
+            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, true);
+      
+            if (!r_board.shove_trace_algo.check(
+                  curr.shape, 
+                  curr.from_side, 
+                  curr_dir, 
+                  p_layer, 
+                  curr_substitute_trace.net_no_arr, 
+                  curr_substitute_trace.clearance_class_no(), 
+                  p_max_recursion_depth - 1,
+                  p_max_via_recursion_depth, 
+                  0, 
+                  p_time_limit) )
                {
-               BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, true);
-               if (!r_board.shove_trace_algo.check(curr.shape, curr.from_side, curr_dir, p_layer, curr_substitute_trace.net_no_arr, curr_substitute_trace.clearance_class_no(), p_max_recursion_depth - 1,
-                     p_max_via_recursion_depth, 0, p_time_limit))
-                  {
-                  return ShoveDrillResult.NOT_DRILLABLE;
-                  }
+               return ShoveDrillResult.NOT_DRILLABLE;
                }
             }
          }
+
       return result;
       }
 
@@ -178,45 +206,56 @@ public final class AlgoShovePad
     * Shoves aside traces, so that a pad with the input parameters can be inserted without clearance violations. Returns false, if
     * the shove failed. In this case the database may be damaged, so that an undo becomes necessesary.
     */
-   public boolean forced_pad(ShapeTile p_pad_shape, BrdFromSide p_from_side, int p_layer, int[] p_net_no_arr, int p_cl_type, boolean p_copper_sharing_allowed, Collection<BrdItem> p_ignore_items,
-         int p_max_recursion_depth, int p_max_via_recursion_depth)
+   public boolean forced_pad(
+         ShapeTile p_pad_shape, 
+         BrdFromSide p_from_side, 
+         int p_layer, 
+         int[] p_net_no_arr, 
+         int p_cl_type, 
+         boolean p_copper_sharing_allowed, 
+         Collection<BrdItem> p_ignore_items,
+         int p_max_recursion_depth, 
+         int p_max_via_recursion_depth)
       {
       if (p_pad_shape.is_empty())
          {
          System.out.println("ShoveTraceAux.forced_pad: p_pad_shape is empty");
          return true;
          }
+      
       if (!p_pad_shape.is_contained_in(r_board.get_bounding_box()))
          {
-         this.r_board.set_shove_failing_obstacle(r_board.get_outline());
+         r_board.set_shove_failing_obstacle(r_board.get_outline());
          return false;
          }
+      
       if (!r_board.move_drill_algo.shove_vias(p_pad_shape, p_from_side, p_layer, p_net_no_arr, p_cl_type, p_ignore_items, p_max_recursion_depth, p_max_via_recursion_depth, false))
          {
          return false;
          }
-      ShapeSearchTree search_tree = this.r_board.search_tree_manager.get_default_tree();
+      
+      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, new int[0], p_cl_type);
-      if (p_ignore_items != null)
-         {
-         obstacles.removeAll(p_ignore_items);
-         }
+      
+      if (p_ignore_items != null) obstacles.removeAll(p_ignore_items);
+      
       boolean obstacles_shovable = shape_entries.store_items(obstacles, true, p_copper_sharing_allowed) && shape_entries.shove_via_list.isEmpty();
       if (!obstacles_shovable)
          {
-         this.r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
          return false;
          }
+
       int trace_piece_count = shape_entries.substitute_trace_count();
-      if (trace_piece_count == 0)
-         {
-         return true;
-         }
+      
+      if (trace_piece_count == 0) return true;
+
       if (p_max_recursion_depth <= 0)
          {
-         this.r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
          return false;
+
          }
       boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr);
       shape_entries.cutout_traces(obstacles);
@@ -225,28 +264,40 @@ public final class AlgoShovePad
       for (;;)
          {
          BrdTracePolyline curr_substitute_trace = shape_entries.next_substitute_trace_piece();
-         if (curr_substitute_trace == null)
-            {
-            break;
-            }
+         
+         if (curr_substitute_trace == null) break;
+
          if (curr_substitute_trace.first_corner().equals(curr_substitute_trace.corner_last()))
             {
             continue;
             }
+
          int[] curr_net_no_arr = curr_substitute_trace.net_no_arr;
-         for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+         for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
-            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, false);
-            if (!r_board.shove_trace_algo.insert(curr.shape, curr.from_side, p_layer, curr_net_no_arr, curr_substitute_trace.clearance_class_no(), p_ignore_items, p_max_recursion_depth - 1,
-                  p_max_via_recursion_depth, 0))
+            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, false);
+            
+            if (!r_board.shove_trace_algo.insert(
+                  curr.shape, 
+                  curr.from_side, 
+                  p_layer, 
+                  curr_net_no_arr, 
+                  curr_substitute_trace.clearance_class_no(), 
+                  p_ignore_items, 
+                  p_max_recursion_depth - 1,
+                  p_max_via_recursion_depth, 
+                  0))
                {
                return false;
                }
             }
-         for (int i = 0; i < curr_substitute_trace.corner_count(); ++i)
+         
+         
+         for (int index = 0; index < curr_substitute_trace.corner_count(); ++index)
             {
-            r_board.join_changed_area(curr_substitute_trace.polyline().corner_approx(i), p_layer);
+            r_board.join_changed_area(curr_substitute_trace.polyline().corner_approx(index), p_layer);
             }
+
          PlaPoint[] end_corners = null;
          if (!tails_exist_before)
             {
@@ -257,32 +308,29 @@ public final class AlgoShovePad
          
          r_board.insert_item(curr_substitute_trace);
          
-         ShapeTileOctagon opt_area;
-         if (r_board.changed_area != null)
-            {
-            opt_area = r_board.changed_area.get_area(p_layer);
-            }
-         else
-            {
-            opt_area = null;
-            }
+         ShapeTileOctagon opt_area = r_board.changed_area != null ? r_board.changed_area.get_area(p_layer) : null;
+         
          curr_substitute_trace.normalize(opt_area);
-         if (!tails_exist_before)
+         
+         if ( tails_exist_before ) continue;
+         
+         for (int index = 0; index < 2; ++index)
             {
-            for (int i = 0; i < 2; ++i)
+            BrdTrace tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
+            
+            if (tail == null) continue;
+
+            r_board.remove_items_unfixed(tail.get_connection_items(BrdStopConnection.VIA));
+
+            for (int curr_net_no : curr_net_no_arr)
                {
-               BrdTrace tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
-               if (tail != null)
-                  {
-                  r_board.remove_items_unfixed(tail.get_connection_items(BrdStopConnection.VIA));
-                  for (int curr_net_no : curr_net_no_arr)
-                     {
-                     r_board.combine_traces(curr_net_no);
-                     }
-                  }
+               r_board.combine_traces(curr_net_no);
                }
+
             }
+         
          }
+
       return true;
       }
 
@@ -338,15 +386,17 @@ public final class AlgoShovePad
       {
       if (!p_pad_shape.is_IntOctagon())
          {
-         // only implemented for octagons
+         System.out.println(classname+"in_front_of_pad NOT IntOctagon");
          return true;
          }
+      
       ShapeTileOctagon pad_octagon = p_pad_shape.bounding_octagon();
       if (!(p_line.point_a instanceof PlaPointInt && p_line.point_b instanceof PlaPointInt))
          {
-         // not implemented
+         System.out.println(classname+"in_front_of_pad NOT PlaPointInt");
          return true;
          }
+      
       PlaPointInt line_a = (PlaPointInt) p_line.point_a;
       PlaPointInt line_b = (PlaPointInt) p_line.point_b;
 

@@ -22,6 +22,7 @@
 package board.algo;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import board.BrdFromSide;
 import board.RoutingBoard;
 import board.items.BrdAbit;
@@ -37,6 +38,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -58,24 +60,28 @@ public final class AlgoMoveDrillItem
       r_board = p_board;
       }
    
+   
+   private boolean is_stop_requested ( TimeLimit p_time_limit )
+      {
+      if (p_time_limit == null ) return false;
+      
+      return p_time_limit.is_stop_requested();
+      }
+   
+   
    /**
     * checks, if p_drill_item can be translated by p_vector by shoving obstacle traces and vias aside, so that no clearance
     * violations occur.
     */
    public boolean check(BrdAbit p_drill_item, PlaVector p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, Collection<BrdItem> p_ignore_items, TimeLimit p_time_limit)
       {
-      if (p_time_limit != null && p_time_limit.is_stop_requested())
-         {
-         return false;
-         }
+      if (is_stop_requested(p_time_limit)) return false;
 
-      if (p_drill_item.is_shove_fixed())
-         {
-         return false;
-         }
+      if (p_drill_item.is_shove_fixed()) return false;
 
       // Check, that p_drillitem is only connected to traces.
       Collection<BrdItem> contact_list = p_drill_item.get_normal_contacts();
+      
       for (BrdItem curr_contact : contact_list)
          {
          if (!(curr_contact instanceof BrdTrace || curr_contact instanceof BrdAreaConduction))
@@ -83,33 +89,30 @@ public final class AlgoMoveDrillItem
             return false;
             }
          }
-      Collection<BrdItem> ignore_items;
-      if (p_ignore_items == null)
-         {
-         ignore_items = new java.util.LinkedList<BrdItem>();
-         }
-      else
-         {
-         ignore_items = p_ignore_items;
-         }
+
+      Collection<BrdItem> ignore_items = p_ignore_items == null ? new LinkedList<BrdItem>() :  p_ignore_items;
+      
       ignore_items.add(p_drill_item);
 
       boolean attach_allowed = false;
+
       if (p_drill_item instanceof BrdAbitVia)
          {
          attach_allowed = ((BrdAbitVia) p_drill_item).attach_allowed;
          }
+      
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+      
       for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); ++curr_layer)
          {
          int curr_ind = curr_layer - p_drill_item.first_layer();
          ShapeTile curr_shape = p_drill_item.get_tree_shape(search_tree, curr_ind);
-         if (curr_shape == null)
-            {
-            continue;
-            }
+      
+         if (curr_shape == null) continue;
+
          ShapeConvex new_shape = (ShapeConvex) curr_shape.translate_by(p_vector);
          ShapeTile curr_tile_shape;
+
          if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
             {
             curr_tile_shape = new_shape.bounding_box();
@@ -118,13 +121,25 @@ public final class AlgoMoveDrillItem
             {
             curr_tile_shape = new_shape.bounding_octagon();
             }
+         
          BrdFromSide from_side = new BrdFromSide(p_drill_item.get_center(), curr_tile_shape);
-         if (r_board.shove_pad_algo.check_forced_pad(curr_tile_shape, from_side, curr_layer, p_drill_item.net_no_arr, p_drill_item.clearance_class_no(), attach_allowed, ignore_items, p_max_recursion_depth,
-               p_max_via_recursion_depth, true, p_time_limit) == ShoveDrillResult.NOT_DRILLABLE)
+         if (r_board.shove_pad_algo.check_forced_pad(
+               curr_tile_shape, 
+               from_side, 
+               curr_layer, 
+               p_drill_item.net_no_arr, 
+               p_drill_item.clearance_class_no(), 
+               attach_allowed, 
+               ignore_items, 
+               p_max_recursion_depth,
+               p_max_via_recursion_depth, 
+               true, 
+               p_time_limit) == ShoveDrillResult.NOT_DRILLABLE)
             {
             return false;
             }
          }
+      
       return true;
       }
 
@@ -205,46 +220,46 @@ public final class AlgoMoveDrillItem
          return true;
          }
       double shape_radius = 0.5 * p_obstacle_shape.bounding_box().min_width();
+
       for (BrdAbitVia curr_via : shape_entries.shove_via_list)
          {
-         if (curr_via.shares_net_no(p_net_no_arr))
-            {
-            continue;
-            }
-         if (p_max_via_recursion_depth <= 0)
-            {
-            return true;
-            }
+         if (curr_via.shares_net_no(p_net_no_arr)) continue;
+
+         if (p_max_via_recursion_depth <= 0) return true;
+
          PlaPointInt[] try_via_centers = try_shove_via_points(p_obstacle_shape, p_layer, curr_via, p_cl_type, true);
          PlaPointInt new_via_center = null;
          double max_dist = 0.5 * curr_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
          double max_dist_square = max_dist * max_dist;
          PlaPointInt curr_via_center = (PlaPointInt) curr_via.get_center();
          PlaPointFloat check_via_center = curr_via_center.to_float();
-         PlaVector rel_coor = null;
-         for (int i = 0; i < try_via_centers.length; ++i)
+         PlaVectorInt rel_coor = null;
+
+         for (int index = 0; index < try_via_centers.length; ++index)
             {
-            if (i == 0 || check_via_center.length_square(try_via_centers[i].to_float()) <= max_dist_square)
+            if (index != 0 ) continue;
+            
+            if ( check_via_center.length_square(try_via_centers[index].to_float()) > max_dist_square) continue;
+            
+            LinkedList<BrdItem> ignore_items = new LinkedList<BrdItem>();
+          
+            if (p_ignore_items != null) ignore_items.addAll(p_ignore_items);
+
+            rel_coor = try_via_centers[index].difference_by(curr_via_center);
+            
+            // No time limit here because the item database is already changed.
+            
+            boolean shove_ok = check(curr_via, rel_coor, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, null);
+            
+            if (shove_ok)
                {
-               Collection<BrdItem> ignore_items = new java.util.LinkedList<BrdItem>();
-               if (p_ignore_items != null)
-                  {
-                  ignore_items.addAll(p_ignore_items);
-                  }
-               rel_coor = try_via_centers[i].difference_by(curr_via_center);
-               // No time limit here because the item database is already changed.
-               boolean shove_ok = check(curr_via, rel_coor, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, null);
-               if (shove_ok)
-                  {
-                  new_via_center = try_via_centers[i];
-                  break;
-                  }
+               new_via_center = try_via_centers[index];
+               break;
                }
             }
-         if (new_via_center == null)
-            {
-            continue;
-            }
+         
+         if (new_via_center == null) continue;
+         
          if (!insert(curr_via, rel_coor, p_max_recursion_depth, p_max_via_recursion_depth - 1, null ))
             {
             return false;
