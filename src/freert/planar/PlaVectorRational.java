@@ -139,6 +139,13 @@ public final class PlaVectorRational extends PlaVector
       return new PlaPointFloat(xd / zd, yd / zd);
       }
 
+   
+   public final PlaVectorInt round()
+      {
+      return to_float().to_vector();
+      }
+   
+   
    public PlaVector turn_90_degree(int p_factor)
       {
       while (p_factor < 0) p_factor += 4;

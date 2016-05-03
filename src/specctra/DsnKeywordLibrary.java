@@ -23,13 +23,13 @@ package specctra;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import freert.planar.PlaVector;
-import freert.planar.PlaVectorInt;
-import freert.planar.ShapePolygon;
-import freert.planar.ShapeTileSimplex;
+import library.LibPackagePin;
 import library.LibPadstack;
 import specctra.varie.DsnReadUtils;
 import board.BrdLayer;
+import freert.planar.PlaVectorInt;
+import freert.planar.ShapePolygon;
+import freert.planar.ShapeTileSimplex;
 
 /**
  * Class for reading and writing library scopes from dsn-files.
@@ -135,20 +135,20 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       while (it.hasNext())
          {
          DsnKeywordPackage curr_package = it.next();
-         library.LibPackagePin[] pin_arr = new library.LibPackagePin[curr_package.pin_info_arr.length];
+         LibPackagePin[] pin_arr = new LibPackagePin[curr_package.pin_info_arr.length];
          for (int i = 0; i < pin_arr.length; ++i)
             {
             DsnKeywordPackage.PinInfo pin_info = curr_package.pin_info_arr[i];
             int rel_x = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[0]));
             int rel_y = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[1]));
-            PlaVector rel_coor = new PlaVectorInt(rel_x, rel_y);
+            PlaVectorInt rel_coor = new PlaVectorInt(rel_x, rel_y);
             library.LibPadstack board_padstack = board.library.padstacks.get(pin_info.padstack_name);
             if (board_padstack == null)
                {
                System.out.println("Library.read_scope: board padstack not found");
                return false;
                }
-            pin_arr[i] = new library.LibPackagePin(pin_info.pin_name, board_padstack.pads_no, rel_coor, pin_info.rotation);
+            pin_arr[i] = new LibPackagePin(pin_info.pin_name, board_padstack.pads_no, rel_coor, pin_info.rotation);
             }
          freert.planar.PlaShape[] outline_arr = new freert.planar.PlaShape[curr_package.outline.size()];
 

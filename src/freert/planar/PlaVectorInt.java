@@ -64,6 +64,12 @@ public final class PlaVectorInt extends PlaVector
       point_y = (int) along;
       }
    
+   
+   public final PlaVectorInt round()
+      {
+      return this;
+      }
+   
    @Override
    public final boolean is_NaN ()
       {

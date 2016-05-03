@@ -143,6 +143,11 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       return new PlaPointInt(Math.round(v_x), Math.round(v_y));
       }
 
+   public PlaVectorInt to_vector()
+      {
+      return new PlaVectorInt(Math.round(v_x), Math.round(v_y));
+      }
+
    /**
     * Rounds this point, so that if this point is on the right side of any directed line with direction p_dir, the result point will
     * also be on the right side.

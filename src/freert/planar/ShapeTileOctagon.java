@@ -407,20 +407,25 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       return new PlaLineInt(p_a, p_b);
       }
 
+   /**
+    * This function is at the moment only implemented for Vectors with integer coordinates.
+    */
    @Override   
    public ShapeTileOctagon translate_by(PlaVector p_rel_coor)
       {
-      // This function is at the moment only implemented for Vectors
-      // with integer coordinates.
-      // The general implementation is still missing.
+      if (p_rel_coor.equals(PlaVector.ZERO)) return this;
 
-      if (p_rel_coor.equals(PlaVector.ZERO))
-         {
-         return this;
-         }
       PlaVectorInt rel_coor = (PlaVectorInt) p_rel_coor;
-      return new ShapeTileOctagon(oct_lx + rel_coor.point_x, oct_ly + rel_coor.point_y, oct_rx + rel_coor.point_x, oct_uy + rel_coor.point_y, oct_ulx + rel_coor.point_x - rel_coor.point_y, oct_lrx + rel_coor.point_x
-            - rel_coor.point_y, oct_llx + rel_coor.point_x + rel_coor.point_y, oct_urx + rel_coor.point_x + rel_coor.point_y);
+
+      return new ShapeTileOctagon(
+            oct_lx + rel_coor.point_x, 
+            oct_ly + rel_coor.point_y, 
+            oct_rx + rel_coor.point_x, 
+            oct_uy + rel_coor.point_y, 
+            oct_ulx + rel_coor.point_x - rel_coor.point_y, 
+            oct_lrx + rel_coor.point_x - rel_coor.point_y, 
+            oct_llx + rel_coor.point_x + rel_coor.point_y, 
+            oct_urx + rel_coor.point_x + rel_coor.point_y);
       }
 
    @Override   

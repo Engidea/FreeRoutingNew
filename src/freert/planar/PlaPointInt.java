@@ -76,7 +76,6 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       v_x = (int)p_x;
       v_y = (int)p_y;
       }
-
    
    public final boolean is_NaN ()
       {

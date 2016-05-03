@@ -79,11 +79,11 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       BrdComponent component = r_board.brd_components.get(this.get_component_no());
       LibPackage lib_package = component.get_package();
       LibPackagePin package_pin = lib_package.get_pin(this.pin_no);
-      PlaVector rel_location = package_pin.relative_location;
+      PlaVector rel_location = package_pin.relative_location();
       double component_rotation = component.get_rotation_in_degree();
       if (!component.is_on_front() && !r_board.brd_components.get_flip_style_rotate_first())
          {
-         rel_location = package_pin.relative_location.mirror_at_y_axis();
+         rel_location = package_pin.relative_location().mirror_at_y_axis();
          }
       if (component_rotation % 90 == 0)
          {
@@ -225,7 +225,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          return null;
          }
       
-      PlaVector rel_location = package_pin.relative_location;
+      PlaVector rel_location = package_pin.relative_location();
       double component_rotation = component.get_rotation_in_degree();
 
       boolean mirror_at_y_axis = !component.is_on_front() && !r_board.brd_components.get_flip_style_rotate_first();

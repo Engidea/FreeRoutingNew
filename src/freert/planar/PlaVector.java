@@ -43,6 +43,10 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
     * returns the Vector such that this plus negate() is zero
     */
    public abstract PlaVector negate();
+   
+   
+   public abstract PlaVectorInt round ();
+
 
    /**
     * adds p_other to this vector

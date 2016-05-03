@@ -32,7 +32,7 @@ import board.items.BrdItem;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 
 /**
  * Class for interactive dragging items with the mouse on a routing board
@@ -61,7 +61,7 @@ public class StateDragItem extends StateDrag
    public StateInteractive move_to(PlaPointFloat p_to_location)
       {
       PlaPointInt to_location = p_to_location.round();
-      PlaPointInt from_location = this.previous_location.round();
+      PlaPointInt from_location = previous_location.round();
       
       if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
          {
@@ -81,7 +81,7 @@ public class StateDragItem extends StateDrag
          }
 
       MoveComponent move_component = null;
-      PlaVector rel_coor = to_location.difference_by(from_location);
+      PlaVectorInt rel_coor = to_location.difference_by(from_location);
       
       double length = rel_coor.distance();
       

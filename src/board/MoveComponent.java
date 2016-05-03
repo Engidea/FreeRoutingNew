@@ -33,6 +33,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.varie.TimeLimit;
 
 /**
@@ -44,7 +45,7 @@ public final class MoveComponent
    {
    private static final int s_TIGHT_TIME_ms = 2;
 
-   private final PlaVector translate_vector;
+   private final PlaVectorInt translate_vector;
    private final int max_recursion_depth;
    private final int max_via_recursion_depth;
    private final RoutingBoard r_board;
@@ -52,7 +53,7 @@ public final class MoveComponent
    private SortedItemDouble[] item_group_arr;
    private BrdComponent component = null;
 
-   public MoveComponent(BrdItem p_item, PlaVector p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
+   public MoveComponent(BrdItem p_item, PlaVectorInt p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
       {
       r_board = p_item.r_board;
       translate_vector = p_translate_vector;
@@ -156,7 +157,7 @@ public final class MoveComponent
             }
          else
             {
-            move_ok = r_board.check_item_move(item_group_arr[index].item, this.translate_vector, ignore_items);
+            move_ok = r_board.check_item_move(item_group_arr[index].item, translate_vector, ignore_items);
             }
          
          if (!move_ok) return false;
@@ -166,7 +167,7 @@ public final class MoveComponent
       }
 
    /**
-    * Moves all items in the group by this.translate_vector and shoves aside obstacle traces.
+    * Moves all items in the group by translate_vector and shoves aside obstacle traces.
     * @return false, if that was not possible without creating clearance violations. In this case an undo may be necessary.
     */
    public boolean insert(int p_tidy_width, int p_pull_tight_accuracy)
@@ -189,9 +190,9 @@ public final class MoveComponent
             boolean move_ok = r_board.move_drill_item(curr_drill_item, translate_vector, max_recursion_depth, max_via_recursion_depth, p_tidy_width, p_pull_tight_accuracy, s_TIGHT_TIME_ms);
             if (!move_ok)
                {
-               if (this.component != null)
+               if (component != null)
                   {
-                  this.component.translate_by(translate_vector.negate());
+                  component.translate_by(translate_vector.negate());
                   // Otherwise the component outline is not restored correctly by the undo algorithm.
                   }
                return false;

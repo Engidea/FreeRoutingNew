@@ -22,7 +22,7 @@ package interactive.state;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.rules.RuleNet;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimitStoppable;
@@ -279,7 +279,9 @@ public final class StateSelectedItem extends StateInteractive
       double gravity_x = 0;
       double gravity_y = 0;
       int pin_count = 0;
-      java.util.Iterator<BrdItem> it = items_list.iterator();
+      
+      Iterator<BrdItem> it = items_list.iterator();
+      
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
@@ -296,23 +298,27 @@ public final class StateSelectedItem extends StateInteractive
             it.remove();
             }
          }
-      if (pin_count == 0)
-         {
-         return return_state;
-         }
+      
+      if (pin_count == 0) return return_state;
+      
       gravity_x /= pin_count;
       gravity_y /= pin_count;
       PlaPoint gravity_point = new PlaPointInt(Math.round(gravity_x), Math.round(gravity_y));
       // create a new package
       LibPackagePin[] pin_arr = new LibPackagePin[items_list.size()];
       it = items_list.iterator();
-      for (int i = 0; i < pin_arr.length; ++i)
+      
+      for (int index = 0; index < pin_arr.length; ++index)
          {
          BrdAbitVia curr_via = (BrdAbitVia) it.next();
-         PlaVector rel_coor = curr_via.get_center().difference_by(gravity_point);
-         String pin_name = (new Integer(i + 1)).toString();
-         pin_arr[i] = new LibPackagePin(pin_name, curr_via.get_padstack().pads_no, rel_coor, 0);
+         
+         PlaVectorInt rel_coor = curr_via.get_center().difference_by(gravity_point).round();
+         
+         String pin_name = Integer.toString(index + 1);
+         
+         pin_arr[index] = new LibPackagePin(pin_name, curr_via.get_padstack().pads_no, rel_coor, 0);
          }
+      
       LibPackage new_package = r_brd.library.packages.add(pin_arr);
       BrdComponent new_component = r_brd.brd_components.add(gravity_point, 0, true, new_package);
       it = items_list.iterator();
