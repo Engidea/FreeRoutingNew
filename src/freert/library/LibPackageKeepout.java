@@ -1,4 +1,4 @@
-package library;
+package freert.library;
 
 import freert.planar.PlaArea;
 

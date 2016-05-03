@@ -116,7 +116,7 @@ public final class SpectraWriteSesFile
    /**
     * Writes all components with the package p_package to the session file.
     */
-   private void write_components( DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform, library.LibPackage p_package) throws IOException
+   private void write_components( DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform, freert.library.LibPackage p_package) throws IOException
       {
       Collection<BrdItem> board_items = r_board.get_items();
       boolean component_found = false;
@@ -205,7 +205,7 @@ public final class SpectraWriteSesFile
                {
                p_identifier_type.write(curr_cmp.name, output_file);
                output_file.write("-");
-               library.LibPackagePin package_pin = curr_cmp.get_package().get_pin(curr_pin.get_index_in_package());
+               freert.library.LibPackagePin package_pin = curr_cmp.get_package().get_pin(curr_pin.get_index_in_package());
                p_identifier_type.write(package_pin.name, output_file);
                }
             else
@@ -218,7 +218,7 @@ public final class SpectraWriteSesFile
                {
                p_identifier_type.write(swap_cmp.name, output_file);
                output_file.write("-");
-               library.LibPackagePin package_pin = swap_cmp.get_package().get_pin(swapped_with.get_index_in_package());
+               freert.library.LibPackagePin package_pin = swap_cmp.get_package().get_pin(swapped_with.get_index_in_package());
                p_identifier_type.write(package_pin.name, output_file);
                }
             else
@@ -253,7 +253,7 @@ public final class SpectraWriteSesFile
       output_file.end_scope();
       }
 
-   private void write_padstack(library.LibPadstack p_padstack, DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform ) throws IOException
+   private void write_padstack(freert.library.LibPadstack p_padstack, DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform ) throws IOException
       {
       // search the layer range of the padstack
       int first_layer_no = 0;
@@ -410,7 +410,7 @@ public final class SpectraWriteSesFile
 
    private void write_via(BrdAbitVia p_via, DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform ) throws IOException
       {
-      library.LibPadstack via_padstack = p_via.get_padstack();
+      freert.library.LibPadstack via_padstack = p_via.get_padstack();
       PlaPointFloat via_location = p_via.get_center().to_float();
       output_file.start_scope();
       output_file.write("via ");

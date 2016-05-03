@@ -80,7 +80,7 @@ public class DsnNet
          System.out.println("Net.write_scope: component not found");
          return;
          }
-      library.LibPackagePin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
+      freert.library.LibPackagePin lib_pin = curr_component.get_package().get_pin(p_pin.get_index_in_package());
       if (lib_pin == null)
          {
          System.out.println("Net.write_scope:  pin number out of range");

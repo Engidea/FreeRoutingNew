@@ -18,7 +18,7 @@
  * Created on 4. Juni 2004, 06:37
  */
 
-package library;
+package freert.library;
 
 import java.util.Iterator;
 import java.util.List;

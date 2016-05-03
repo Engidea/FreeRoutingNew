@@ -96,7 +96,7 @@ public final class RuleViaInfoList implements java.io.Serializable, PrintableInf
    /**
     * Returns true, if this rule contains a via with padstack p_padstack
     */
-   public boolean contains_padstack(library.LibPadstack p_padstack)
+   public boolean contains_padstack(freert.library.LibPadstack p_padstack)
       {
       for (BrdViaInfo curr_info : this.vinfo_list)
          {

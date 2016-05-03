@@ -18,7 +18,7 @@
  * Created on 27. Mai 2004, 06:35
  */
 
-package library;
+package freert.library;
 
 import java.util.Collection;
 import java.util.LinkedList;

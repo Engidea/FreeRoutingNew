@@ -20,6 +20,7 @@
 
 package freert.rules;
 
+import freert.library.LibPadstack;
 import freert.planar.ShapeConvex;
 import freert.varie.ItemClass;
 import interactive.IteraBoard;
@@ -27,7 +28,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.util.Vector;
-import library.LibPadstack;
 import board.BrdLayerStructure;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
@@ -209,7 +209,7 @@ public final class BoardRules implements Serializable
          BrdViaInfo curr_via_info = via_infos.get(i);
          if (curr_via_info.get_clearance_class() == default_via_cl_class)
             {
-            library.LibPadstack curr_padstack = curr_via_info.get_padstack();
+            freert.library.LibPadstack curr_padstack = curr_via_info.get_padstack();
             int curr_from_layer = curr_padstack.from_layer();
             int curr_to_layer = curr_padstack.to_layer();
             BrdViaInfo existing_via = default_rule.get_layer_range(curr_from_layer, curr_to_layer);

@@ -215,7 +215,7 @@ public final class ArtControl
             {
             attach_smd_allowed = true;
             }
-         library.LibPadstack curr_via_padstack = curr_via.get_padstack();
+         freert.library.LibPadstack curr_via_padstack = curr_via.get_padstack();
          int from_layer = curr_via_padstack.from_layer();
          int to_layer = curr_via_padstack.to_layer();
          for (int j = from_layer; j <= to_layer; ++j)

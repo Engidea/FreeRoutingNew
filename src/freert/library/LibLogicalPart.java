@@ -18,7 +18,7 @@
  * Created on 26. Maerz 2005, 06:14
  */
 
-package library;
+package freert.library;
 
 import board.infos.PrintableInfo;
 

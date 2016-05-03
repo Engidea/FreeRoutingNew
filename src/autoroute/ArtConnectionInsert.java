@@ -18,7 +18,6 @@
 package autoroute;
 
 import java.util.Set;
-import library.LibPadstack;
 import main.Ldbg;
 import main.Mdbg;
 import autoroute.varie.ArtLocateResult;
@@ -30,6 +29,7 @@ import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.library.LibPadstack;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;

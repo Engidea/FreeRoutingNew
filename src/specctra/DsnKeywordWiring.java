@@ -153,7 +153,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
 
    private static void write_via_scope(DsnWriteScopeParameter p_par, BrdAbitVia p_via) throws java.io.IOException
       {
-      library.LibPadstack via_padstack = p_via.get_padstack();
+      freert.library.LibPadstack via_padstack = p_via.get_padstack();
       PlaPointFloat via_location = p_via.get_center().to_float();
       double[] via_coor = p_par.coordinate_transform.board_to_dsn(via_location);
       int net_no;
@@ -653,7 +653,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
                }
             }
          RoutingBoard board = p_par.i_board.get_routing_board();
-         library.LibPadstack curr_padstack = board.library.padstacks.get(padstack_name);
+         freert.library.LibPadstack curr_padstack = board.library.padstacks.get(padstack_name);
          if (curr_padstack == null)
             {
             System.out.println("Wiring.read_via_scope: via padstack not found");
@@ -703,7 +703,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          }
       }
 
-   private static boolean via_exists(PlaPointInt p_location, library.LibPadstack p_padstack, int[] p_net_no_arr, RoutingBoard p_board)
+   private static boolean via_exists(PlaPointInt p_location, freert.library.LibPadstack p_padstack, int[] p_net_no_arr, RoutingBoard p_board)
       {
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
       int from_layer = p_padstack.from_layer();

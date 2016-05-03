@@ -18,7 +18,7 @@
  * Created on 27. Mai 2004, 06:53
  */
 
-package library;
+package freert.library;
 
 import board.infos.PrintableInfo;
 import freert.planar.PlaShape;

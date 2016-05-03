@@ -20,9 +20,9 @@
 
 package gui.win;
 
+import freert.library.LibPackage;
+import freert.library.LibPackages;
 import gui.BoardFrame;
-import library.LibPackage;
-import library.LibPackages;
 
 /**
  * Window displaying the library packagess.

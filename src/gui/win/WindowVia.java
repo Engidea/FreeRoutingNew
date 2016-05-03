@@ -229,7 +229,7 @@ public class WindowVia extends GuiSubWindowSavable
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
          java.util.Collection<PrintableInfo> object_list = new java.util.LinkedList<PrintableInfo>();
-         library.BrdLibrary board_library = board_frame.board_panel.board_handling.get_routing_board().library;
+         freert.library.BrdLibrary board_library = board_frame.board_panel.board_handling.get_routing_board().library;
          for (int i = 0; i < board_library.via_padstack_count(); ++i)
             {
             object_list.add(board_library.get_via_padstack(i));
@@ -359,7 +359,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             return;
             }
-         library.LibPadstack new_padstack = pcb.library.padstacks.add(padstack_name, padstack_shapes, true, true);
+         freert.library.LibPadstack new_padstack = pcb.library.padstacks.add(padstack_name, padstack_shapes, true, true);
          pcb.library.add_via_padstack(new_padstack);
          }
       }
@@ -410,14 +410,14 @@ public class WindowVia extends GuiSubWindowSavable
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
          RoutingBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
-         library.LibPadstack[] via_padstacks = pcb.library.get_via_padstacks();
+         freert.library.LibPadstack[] via_padstacks = pcb.library.get_via_padstacks();
          Object selected_value = javax.swing.JOptionPane.showInputDialog(null, resources.getString("choose_padstack_to_remove"), resources.getString("remove_via_padstack"),
                javax.swing.JOptionPane.INFORMATION_MESSAGE, null, via_padstacks, via_padstacks[0]);
          if (selected_value == null)
             {
             return;
             }
-         library.LibPadstack selected_padstack = (library.LibPadstack) selected_value;
+         freert.library.LibPadstack selected_padstack = (freert.library.LibPadstack) selected_value;
          board.infos.BrdViaInfo via_with_selected_padstack = null;
          for (int i = 0; i < pcb.brd_rules.via_infos.count(); ++i)
             {

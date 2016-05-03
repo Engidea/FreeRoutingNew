@@ -834,7 +834,7 @@ public final class MazeSearch
             {
             return;
             }
-         library.LibPadstack curr_obstacle_padstack = ((board.items.BrdAbitVia) curr_obstacle_item).get_padstack();
+         freert.library.LibPadstack curr_obstacle_padstack = ((board.items.BrdAbitVia) curr_obstacle_item).get_padstack();
          if (! art_ctrl.via_rule.contains_padstack(curr_obstacle_padstack) || curr_obstacle_item.clearance_class_no() != this.art_ctrl.via_clearance_class)
             {
             return;

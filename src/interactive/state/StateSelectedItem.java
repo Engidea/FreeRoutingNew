@@ -19,6 +19,8 @@
  */
 package interactive.state;
 
+import freert.library.LibPackage;
+import freert.library.LibPackagePin;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -39,8 +41,6 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JPopupMenu;
-import library.LibPackage;
-import library.LibPackagePin;
 import main.Ldbg;
 import main.Mdbg;
 import autoroute.varie.ArtResult;

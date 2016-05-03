@@ -155,7 +155,7 @@ public class DsnKeywordPackage
          }
       }
 
-   public static void write_scope(DsnWriteScopeParameter p_par, library.LibPackage p_package) throws java.io.IOException
+   public static void write_scope(DsnWriteScopeParameter p_par, freert.library.LibPackage p_package) throws java.io.IOException
       {
       p_par.file.start_scope();
       p_par.file.write("image ");
@@ -174,10 +174,10 @@ public class DsnKeywordPackage
       // write the pins of the package
       for (int i = 0; i < p_package.pin_count(); ++i)
          {
-         library.LibPackagePin curr_pin = p_package.get_pin(i);
+         freert.library.LibPackagePin curr_pin = p_package.get_pin(i);
          p_par.file.new_line();
          p_par.file.write("(pin ");
-         library.LibPadstack curr_padstack = p_par.board.library.padstacks.get(curr_pin.padstack_no);
+         freert.library.LibPadstack curr_padstack = p_par.board.library.padstacks.get(curr_pin.padstack_no);
          p_par.identifier_type.write(curr_padstack.pads_name, p_par.file);
          p_par.file.write(" ");
          p_par.identifier_type.write(curr_pin.name, p_par.file);
@@ -217,7 +217,7 @@ public class DsnKeywordPackage
       p_par.file.end_scope();
       }
 
-   private static void write_package_keepout(library.LibPackageKeepout p_keepout, DsnWriteScopeParameter p_par, boolean p_is_via_keepout) throws java.io.IOException
+   private static void write_package_keepout(freert.library.LibPackageKeepout p_keepout, DsnWriteScopeParameter p_par, boolean p_is_via_keepout) throws java.io.IOException
       {
       DsnLayer keepout_layer;
       if (p_keepout.layer >= 0)
@@ -410,7 +410,7 @@ public class DsnKeywordPackage
    /**
     * Writes the placements of p_package to a Specctra dsn-file.
     */
-   public static void write_placement_scope(DsnWriteScopeParameter p_par, library.LibPackage p_package) throws java.io.IOException
+   public static void write_placement_scope(DsnWriteScopeParameter p_par, freert.library.LibPackage p_package) throws java.io.IOException
       {
       Collection<BrdItem> board_items = p_par.board.get_items();
       boolean component_found = false;

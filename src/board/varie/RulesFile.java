@@ -203,7 +203,7 @@ public class RulesFile
       // write the via padstacks
       for (int i = 1; i <= p_par.board.library.padstacks.count(); ++i)
          {
-         library.LibPadstack curr_padstack = p_par.board.library.padstacks.get(i);
+         freert.library.LibPadstack curr_padstack = p_par.board.library.padstacks.get(i);
          if (p_par.board.library.get_via_padstack(curr_padstack.pads_name) != null)
             {
             DsnKeywordLibrary.write_padstack_scope(p_par, curr_padstack);

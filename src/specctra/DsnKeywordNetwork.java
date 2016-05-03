@@ -19,6 +19,7 @@
  */
 package specctra;
 
+import freert.library.LibLogicalPin;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
@@ -30,7 +31,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
-import library.LibLogicalPin;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.varie.ItemFixState;
@@ -565,7 +565,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             return null;
             }
          String padstack_name = (String) next_token;
-         library.LibPadstack via_padstack = p_board.library.get_via_padstack(padstack_name);
+         freert.library.LibPadstack via_padstack = p_board.library.get_via_padstack(padstack_name);
          if (via_padstack == null)
             {
             // The padstack may not yet be inserted into the list of via padstacks
@@ -667,7 +667,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       boolean is_default_class = (p_net_class == p_board.brd_rules.get_default_net_class());
       for (int i = 0; i < p_board.library.via_padstack_count(); ++i)
          {
-         library.LibPadstack curr_padstack = p_board.library.get_via_padstack(i);
+         freert.library.LibPadstack curr_padstack = p_board.library.get_via_padstack(i);
          boolean attach_allowed = p_attach_allowed && curr_padstack.attach_allowed;
          String via_name;
          if (is_default_class)
@@ -1217,7 +1217,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       RoutingBoard routing_board = p_par.i_board.get_routing_board();
       for (DsnLogicalPart next_part : p_par.logical_parts)
          {
-         library.LibPackage lib_package = search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
+         freert.library.LibPackage lib_package = search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
          if (lib_package == null)
             {
             return false;
@@ -1241,7 +1241,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
 
       for (DsnLogicalPartMapping next_mapping : p_par.logical_part_mappings)
          {
-         library.LibLogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
+         freert.library.LibLogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
             {
             if (curr_logical_part == null)
                {
@@ -1268,7 +1268,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
     * Calculates the library package belonging to the logical part with name p_part_name. Returns null, if the package was not
     * found.
     */
-   private static library.LibPackage search_lib_package(String p_part_name, java.util.Collection<DsnLogicalPartMapping> p_logical_part_mappings, RoutingBoard p_board)
+   private static freert.library.LibPackage search_lib_package(String p_part_name, java.util.Collection<DsnLogicalPartMapping> p_logical_part_mappings, RoutingBoard p_board)
       {
       for (DsnLogicalPartMapping curr_mapping : p_logical_part_mappings)
          {
@@ -1306,8 +1306,8 @@ public class DsnKeywordNetwork extends DsnKeywordScope
    private static void insert_component(DsnComponentLocation p_location, String p_lib_key, DsnReadScopeParameters p_par)
       {
       board.RoutingBoard routing_board = p_par.i_board.get_routing_board();
-      library.LibPackage curr_front_package = routing_board.library.packages.pkg_get(p_lib_key, true);
-      library.LibPackage curr_back_package = routing_board.library.packages.pkg_get(p_lib_key, false);
+      freert.library.LibPackage curr_front_package = routing_board.library.packages.pkg_get(p_lib_key, true);
+      freert.library.LibPackage curr_back_package = routing_board.library.packages.pkg_get(p_lib_key, false);
       if (curr_front_package == null || curr_back_package == null)
          {
          System.out.println("Network.insert_component: component package not found");
@@ -1343,11 +1343,11 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          {
          fixed_state = ItemFixState.UNFIXED;
          }
-      library.LibPackage curr_package = new_component.get_package();
+      freert.library.LibPackage curr_package = new_component.get_package();
       for (int i = 0; i < curr_package.pin_count(); ++i)
          {
-         library.LibPackagePin curr_pin = curr_package.get_pin(i);
-         library.LibPadstack curr_padstack = routing_board.library.padstacks.get(curr_pin.padstack_no);
+         freert.library.LibPackagePin curr_pin = curr_package.get_pin(i);
+         freert.library.LibPadstack curr_padstack = routing_board.library.padstacks.get(curr_pin.padstack_no);
          if (curr_padstack == null)
             {
             System.out.println("Network.insert_component: pin padstack not found");
@@ -1416,7 +1416,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       // insert the keepouts belonging to the package (k = 1 for via keepouts)
       for (int k = 0; k <= 2; ++k)
          {
-         library.LibPackageKeepout[] keepout_arr;
+         freert.library.LibPackageKeepout[] keepout_arr;
          java.util.Map<String, DsnClearanceInfo> curr_keepout_infos;
          if (k == 0)
             {
@@ -1435,7 +1435,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             }
          for (int i = 0; i < keepout_arr.length; ++i)
             {
-            library.LibPackageKeepout curr_keepout = keepout_arr[i];
+            freert.library.LibPackageKeepout curr_keepout = keepout_arr[i];
             int layer = curr_keepout.layer;
             if (layer >= routing_board.get_layer_count())
                {

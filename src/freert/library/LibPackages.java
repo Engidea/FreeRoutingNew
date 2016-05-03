@@ -18,7 +18,7 @@
  * Created on 3. Juni 2004, 09:29
  */
 
-package library;
+package freert.library;
 
 import java.util.Vector;
 import freert.planar.PlaShape;

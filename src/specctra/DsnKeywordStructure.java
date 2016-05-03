@@ -408,13 +408,13 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          }
       }
 
-   private static void write_via_padstacks(library.BrdLibrary p_library, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
+   private static void write_via_padstacks(freert.library.BrdLibrary p_library, IndentFileWriter p_file, DsnIdentifier p_identifier_type) throws java.io.IOException
       {
       p_file.new_line();
       p_file.write("(via");
       for (int i = 0; i < p_library.via_padstack_count(); ++i)
          {
-         library.LibPadstack curr_padstack = p_library.get_via_padstack(i);
+         freert.library.LibPadstack curr_padstack = p_library.get_via_padstack(i);
          if (curr_padstack != null)
             {
             p_file.write(" ");

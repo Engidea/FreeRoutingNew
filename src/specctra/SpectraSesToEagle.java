@@ -550,7 +550,7 @@ public class SpectraSesToEagle extends javax.swing.JFrame
          }
 
 
-      library.LibPadstack via_padstack = board.library.padstacks.get(padstack_name);
+      freert.library.LibPadstack via_padstack = board.library.padstacks.get(padstack_name);
 
       if (via_padstack == null)
          {

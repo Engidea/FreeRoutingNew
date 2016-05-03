@@ -20,13 +20,13 @@
 
 package board.algo;
 
-import library.LibPadstack;
 import board.BrdFromSide;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;
 import board.varie.ItemFixState;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
+import freert.library.LibPadstack;
 import freert.planar.PlaCircle;
 import freert.planar.PlaLimits;
 import freert.planar.PlaPoint;

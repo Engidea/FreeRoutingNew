@@ -23,9 +23,9 @@ package board;
 
 import java.util.Iterator;
 import java.util.Vector;
-import library.LibPackage;
 import board.infos.BrdComponent;
 import freert.host.BrdObservers;
+import freert.library.LibPackage;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;

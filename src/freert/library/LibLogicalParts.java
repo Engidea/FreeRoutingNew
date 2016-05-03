@@ -18,7 +18,7 @@
  * Created on 26. Maerz 2005, 06:08
  */
 
-package library;
+package freert.library;
 
 import java.util.Vector;
 

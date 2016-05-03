@@ -23,16 +23,16 @@ package board.items;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.LinkedList;
-import library.LibPackage;
-import library.LibPackagePin;
-import library.LibPadstack;
-import library.LibLogicalPin;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.varie.BrdTraceExitRestriction;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.library.LibLogicalPin;
+import freert.library.LibPackage;
+import freert.library.LibPackagePin;
+import freert.library.LibPadstack;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -495,7 +495,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          {
          return result;
          }
-      library.LibLogicalPart logical_part = component.get_logical_part();
+      freert.library.LibLogicalPart logical_part = component.get_logical_part();
       if (logical_part == null)
          {
          return result;
@@ -689,7 +689,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       p_window.append(", " + resources.getString("pin_2") + " ");
       p_window.append(component.get_package().get_pin(this.pin_no).name);
       p_window.append(", " + resources.getString("padstack") + " ");
-      library.LibPadstack padstack = this.get_padstack();
+      freert.library.LibPadstack padstack = this.get_padstack();
       p_window.append(padstack.pads_name, resources.getString("padstack_info"), padstack);
       p_window.append(" " + resources.getString("at") + " ");
       p_window.append(this.get_center().to_float());

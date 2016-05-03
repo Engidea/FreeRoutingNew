@@ -136,7 +136,7 @@ public final class DsnKeywordComponent extends DsnKeywordScope
          {
          return;
          }
-      library.LibPackagePin package_pin = p_component.get_package().get_pin(p_pin_no);
+      freert.library.LibPackagePin package_pin = p_component.get_package().get_pin(p_pin_no);
       if (package_pin == null)
          {
          System.out.println("Component.write_pin_info: package pin not found");
@@ -168,7 +168,7 @@ public final class DsnKeywordComponent extends DsnKeywordScope
          {
          return;
          }
-      library.LibPackageKeepout[] curr_keepout_arr;
+      freert.library.LibPackageKeepout[] curr_keepout_arr;
       String keepout_type;
       for (int j = 0; j < 3; ++j)
          {
@@ -189,7 +189,7 @@ public final class DsnKeywordComponent extends DsnKeywordScope
             }
          for (int i = 0; i < curr_keepout_arr.length; ++i)
             {
-            library.LibPackageKeepout curr_keepout = curr_keepout_arr[i];
+            freert.library.LibPackageKeepout curr_keepout = curr_keepout_arr[i];
             board.items.BrdArea curr_obstacle_area = get_keepout(p_par.board, p_component.id_no, curr_keepout.name);
             if (curr_obstacle_area == null || curr_obstacle_area.clearance_class_no() == 0)
                {
