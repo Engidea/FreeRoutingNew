@@ -436,12 +436,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       if (shape_count == 0) return shape_arr;
       
-      PlaVector prev_dir = plaline(from_no).direction().get_vector();
-      PlaVector curr_dir = plaline(from_no + 1).direction().get_vector();
+      PlaDirection prev_dir = plaline(from_no).direction();
+      PlaDirection curr_dir = plaline(from_no + 1).direction();
       
       for (int index = from_no + 1; index < to_no; ++index)
          {
-         PlaVector next_dir = plaline(index + 1).direction().get_vector();
+         PlaDirection next_dir = plaline(index + 1).direction();
 
          PlaLineInt[] lines = new PlaLineInt[4];
 
@@ -493,7 +493,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          PlaPointFloat check_distance_corner = corner_approx(index);
          final double check_dist_square = 2.0 * p_half_width * p_half_width;
          Collection<PlaLineInt> cut_dog_ear_lines = new LinkedList<PlaLineInt>();
-         PlaVector tmp_curr_dir = next_dir;
+         PlaDirection tmp_curr_dir = next_dir;
          boolean direction_changed = false;
          
          for (int jndex = index + 2; jndex < plalinelen(-1); ++jndex)
@@ -506,7 +506,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                corner_to_check = curr_line.intersection_approx(check_line);
                }
-            PlaVector tmp_next_dir = plaline(jndex).direction().get_vector();
+            PlaDirection tmp_next_dir = plaline(jndex).direction();
             PlaLineInt next_border_line = null;
             PlaSide tmp_next_dir_from_tmp_curr_dir = tmp_next_dir.side_of(tmp_curr_dir);
             direction_changed = tmp_next_dir_from_tmp_curr_dir != next_dir_from_curr_dir;
@@ -554,7 +554,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                corner_to_check = curr_line.intersection_approx(check_line);
                }
-            PlaVector tmp_prev_dir = plaline(jndex).direction().get_vector();
+            PlaDirection tmp_prev_dir = plaline(jndex).direction();
             PlaLineInt prev_border_line = null;
             PlaSide tmp_curr_dir_from_tmp_prev_dir = tmp_curr_dir.side_of(tmp_prev_dir);
             direction_changed = tmp_curr_dir_from_tmp_prev_dir != curr_dir_from_prev_dir;
