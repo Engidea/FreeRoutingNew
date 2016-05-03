@@ -134,6 +134,18 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       oct_urx = p_urx;
       }
 
+   public ShapeTileOctagon(double p_lx, double p_ly, double p_rx, double p_uy, double p_ulx, double p_lrx, double p_llx, double p_urx)
+      {
+      oct_lx  = (int)p_lx;
+      oct_ly  = (int)p_ly;
+      oct_rx  = (int)p_rx;
+      oct_uy  = (int)p_uy;
+      oct_ulx = (int)p_ulx;
+      oct_lrx = (int)p_lrx;
+      oct_llx = (int)p_llx;
+      oct_urx = (int)p_urx;
+      }
+
    // WARNING thisimplementation is not strictly always correct
    @Override   
    public boolean is_empty()

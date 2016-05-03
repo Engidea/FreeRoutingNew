@@ -39,11 +39,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private static final String classname="Polyline.";
 
    // the array of lines of this Polyline.
-   private final PlaLineInt[] lines_arr;
+   private final ArrayList<PlaLineInt> lines_arr;
 
-   transient private PlaPointFloat[] precalculated_float_corners = null;
-   transient private PlaPoint[]      precalculated_corners = null;
-   transient private ShapeTileBox    precalculated_bounding_box = null;
+   private transient PlaPointFloat[] precalculated_float_corners = null;
+   private transient PlaPoint[]      precalculated_corners = null;
+   private transient ShapeTileBox    precalculated_bounding_box = null;
    
    /**
     * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so that the i-th corner of p_polygon will be the
@@ -57,21 +57,18 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (point_arr.length < 2)
          throw new IllegalArgumentException(classname+"A must contain at least 2 different points");
       
-      lines_arr = new PlaLineInt[point_arr.length + 1];
-      
-      for (int index = 1; index < point_arr.length; ++index)
-         {
-         lines_arr[index] = new PlaLineInt(point_arr[index - 1], point_arr[index]);
-         }
+      lines_arr = new ArrayList<PlaLineInt>(point_arr.length + 1);
       
       // construct perpendicular lines at the start and at the end to represent
-      // the first and the last point of point_arr as intersection of lines.
-
       PlaDirection dir = PlaDirection.get_instance(point_arr[0], point_arr[1]);
-      lines_arr[0] = new PlaLineInt(point_arr[0], dir.turn_45_degree(2));
+      lines_arr.add(new PlaLineInt(point_arr[0], dir.turn_45_degree(2)) );
 
+      for (int index = 1; index < point_arr.length; ++index)
+         lines_arr.add( new PlaLineInt(point_arr[index - 1], point_arr[index] ) );
+      
+      // the first and the last point of point_arr as intersection of lines.
       dir = PlaDirection.get_instance(point_arr[point_arr.length - 1], point_arr[point_arr.length - 2]);
-      lines_arr[point_arr.length] = new PlaLineInt(point_arr[point_arr.length - 1], dir.turn_45_degree(2));
+      lines_arr.add( new PlaLineInt(point_arr[point_arr.length - 1], dir.turn_45_degree(2) ) );
       }
 
    public Polyline(PlaPoint[] p_points)
@@ -87,12 +84,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (p_from_corner.equals(p_to_corner))
          throw new IllegalArgumentException(classname+"B must contain at least 2 different points");
       
-      lines_arr = new PlaLineInt[3];
+      lines_arr = new ArrayList<PlaLineInt>(3);
       PlaDirection dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      lines_arr[0] = new PlaLineInt(p_from_corner, dir.turn_45_degree(2));
-      lines_arr[1] = new PlaLineInt(p_from_corner, p_to_corner);
+      lines_arr.add( new PlaLineInt(p_from_corner, dir.turn_45_degree(2)) );
+      lines_arr.add( new PlaLineInt(p_from_corner, p_to_corner) );
       dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      lines_arr[2] = new PlaLineInt(p_to_corner, dir.turn_45_degree(2));
+      lines_arr.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
       }
 
    /**
@@ -106,17 +103,17 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       int have_len = p_line_arr.length;
       
+      lines_arr = new ArrayList<PlaLineInt>(have_len);
+      
       if ( have_len < 3)
          {
          System.err.println(classname+"IntLine[] A < 3");
-         lines_arr = new PlaLineInt[0];
          return;
          }
       
       // this part will remove all lines that are colinear with the previous one
-      ArrayList<PlaLineInt> lines = new ArrayList<PlaLineInt>(have_len);
       PlaLineInt ref_line = p_line_arr[0];
-      lines.add(ref_line);
+      lines_arr.add(ref_line);
       
       for (int index = 1; index < have_len; ++index)
          {
@@ -125,39 +122,32 @@ public final class Polyline implements java.io.Serializable, PlaObject
          
          ref_line = p_line_arr[index];
          
-         lines.add(ref_line);
+         lines_arr.add(ref_line);
          }
 
-      int lines_len = lines.size();
-
-      if (lines.size() < 3)
+      if (plalinelen() < 3)
          {
          System.err.println(classname+"IntLine[] B < 3");
-         lines_arr = new PlaLineInt[0];
          return;
          }
       
       // corners are one less than the lines
-      precalculated_float_corners = new PlaPointFloat[lines_len - 1];
+      precalculated_float_corners = new PlaPointFloat[plalinelen() - 1];
 
       for (int index = 0; index < precalculated_float_corners.length; ++index)
          {
-         PlaLineInt cur_l = lines.get(index);
-         PlaLineInt nxt_l = lines.get(index+1);
+         PlaLineInt cur_l = plaline(index);
+         PlaLineInt nxt_l = plaline(index+1);
          
          precalculated_float_corners[index] = cur_l.intersection_approx(nxt_l);
          }
-       
-      PlaLineInt[] new_arr = new PlaLineInt[lines_len];
-      
-      new_arr[0] = lines.get(0);
       
       // turn  the direction of the lines that they point always from the previous corner to the next corner
       // Now, why is not the first and last line checked ? first should point to first and last should point away, no ?
-      for (int index = 1; index < lines_len-1; index++)
+      for (int index = 1; index < plalinelen(-1); index++)
          {
-         PlaLineInt pre_l = lines.get(index-1);
-         PlaLineInt cur_l = lines.get(index);
+         PlaLineInt pre_l = plaline(index-1);
+         PlaLineInt cur_l = plaline(index);
          
          PlaSide side_of_line = pre_l.side_of(precalculated_float_corners[index]);
 
@@ -168,18 +158,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
 
             PlaSide side1 = d0.side_of(d1);
          
-            if (side1 != side_of_line)
-               {
-               cur_l = cur_l.opposite();
-               }
-            }
+            if (side1 == side_of_line) continue;
 
-         new_arr[index] = cur_l;
+            lines_arr.set(index, cur_l.opposite() );
+            }
          }
-      
-      new_arr[lines_len-1] = lines.get(lines_len-1);
-      
-      lines_arr = new_arr;
       }
    
    @Override
@@ -194,15 +177,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public boolean is_valid ()
       {
-      return lines_arr.length >= 3;
+      return plalinelen() >= 3;
       }
 
    /**
     * Returns the number of lines minus 1
+    * This MUST use the base datastructure since it is used to build the actualcorners
     */
    public int corner_count()
       {
-      return lines_arr.length - 1;
+      return plalinelen() - 1;
       }
 
    /**
@@ -228,12 +212,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public boolean is_orthogonal()
       {
-      for (int index = 0; index < lines_arr.length; ++index)
+      int lmax = plalinelen();
+      
+      for (int index = 0; index < lmax; ++index)
          {
-         if ( lines_arr[index].is_orthogonal() ) continue;
+         if ( plaline(index).is_orthogonal() ) continue;
 
          return false;
          }
+      
       return true;
       }
 
@@ -242,13 +229,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public boolean is_multiple_of_45_degree()
       {
-      for (int index = 0; index < lines_arr.length; ++index)
+      int lmax = plalinelen();
+
+      for (int index = 0; index < lmax; ++index)
          {
-         if (!lines_arr[index].is_multiple_of_45_degree())
-            {
-            return false;
-            }
+         if ( plaline(index).is_multiple_of_45_degree()) continue;
+
+         return false;
          }
+
       return true;
       }
 
@@ -274,20 +263,19 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaPoint[] corner_arr()
       {
-      if (lines_arr.length < 2)
-         {
-         return new PlaPoint[0];
-         }
+      int corner_max = corner_count();
+
       if (precalculated_corners == null)
          {
          // corner array is not yet allocated
-         precalculated_corners = new PlaPoint[corner_count()];
+         precalculated_corners = new PlaPoint[corner_max];
          }
 
-      for (int index = 0; index < precalculated_corners.length; ++index)
+      for (int index = 0; index < corner_max; ++index)
          {
-         if (precalculated_corners[index] == null)
-            precalculated_corners[index] = lines_arr[index].intersection(lines_arr[index + 1]);
+         if (precalculated_corners[index] != null) continue;
+
+         precalculated_corners[index] = plaline(index).intersection(plaline(index + 1));
          }
       
       return precalculated_corners;
@@ -298,21 +286,19 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaPointFloat[] corner_approx_arr()
       {
-      if (lines_arr.length < 2)
-         {
-         return new PlaPointFloat[0];
-         }
+      int corner_max = corner_count();
       
       if (precalculated_float_corners == null)
          {
          // corner array is not yet allocated
-         precalculated_float_corners = new PlaPointFloat[corner_count()];
+         precalculated_float_corners = new PlaPointFloat[corner_max];
          }
 
-      for (int index = 0; index < precalculated_float_corners.length; ++index)
+      for (int index = 0; index < corner_max; ++index)
          {
-         if (precalculated_float_corners[index] == null)
-            precalculated_float_corners[index] = lines_arr[index].intersection_approx(lines_arr[index + 1]);
+         if (precalculated_float_corners[index] != null) continue;
+         
+         precalculated_float_corners[index] = plaline(index).intersection_approx(plaline(index + 1));
          }
       
       return precalculated_float_corners;
@@ -323,13 +309,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaPointFloat corner_approx(int p_no)
       {
-      int corners_count = lines_arr.length -1;
-
-      if (corners_count < 1)
-         {
-         System.err.println(classname+"corner: corners_count < 1");
-         return null;
-         }
+      int corners_count = corner_count();
       
       if (p_no < 0)
          {
@@ -351,7 +331,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (precalculated_float_corners[p_no] == null)
          {
          // corner is not yet calculated
-         precalculated_float_corners[p_no] = lines_arr[p_no].intersection_approx(lines_arr[p_no + 1]);
+         precalculated_float_corners[p_no] = plaline(p_no).intersection_approx(plaline(p_no + 1));
          }
 
       return precalculated_float_corners[p_no];
@@ -362,13 +342,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaPoint corner(int p_no)
       {
-      int corners_count = lines_arr.length -1;
-      
-      if (corners_count < 1)
-         {
-         System.err.println(classname+"corner: corners_count < 1");
-         return null;
-         }
+      int corners_count = corner_count();
       
       if (p_no < 0)
          {
@@ -390,7 +364,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (precalculated_corners[p_no] == null)
          {
          // corner is not yet calculated
-         precalculated_corners[p_no] = lines_arr[p_no].intersection(lines_arr[p_no + 1]);
+         precalculated_corners[p_no] = plaline(p_no).intersection(plaline(p_no + 1));
          }
       
       return precalculated_corners[p_no];
@@ -401,11 +375,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline reverse()
       {
-      PlaLineInt[] reversed_lines = new PlaLineInt[lines_arr.length];
+      int lines_max = plalinelen();
+            
+      PlaLineInt[] reversed_lines = new PlaLineInt[lines_max];
       
-      for (int index = 0; index < lines_arr.length; ++index)
+      int index_down = lines_max-1;
+      
+      for (int index = 0; index < lines_max; ++index)
          {
-         reversed_lines[index] = lines_arr[lines_arr.length - index - 1].opposite();
+         reversed_lines[index] = plaline(index_down--).opposite();
          }
       
       return new Polyline(reversed_lines);
@@ -417,11 +395,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
    public double length_approx(int p_from_corner, int p_to_corner)
       {
       int from_corner = Math.max(p_from_corner, 0);
-      int to_corner = Math.min(p_to_corner, lines_arr.length - 2);
+      int to_corner = Math.min(p_to_corner, plalinelen(-2));
       double result = 0;
-      for (int i = from_corner; i < to_corner; ++i)
+      for (int iindex = from_corner; iindex < to_corner; ++iindex)
          {
-         result += corner_approx(i + 1).distance(corner_approx(i));
+         result += corner_approx(iindex + 1).distance(corner_approx(iindex));
          }
       return result;
       }
@@ -431,7 +409,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public double length_approx()
       {
-      return length_approx(0, lines_arr.length - 2);
+      return length_approx(0, plalinelen(-2));
       }
 
    /**
@@ -440,7 +418,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public ShapeTile[] offset_shapes(int p_half_width)
       {
-      return offset_shapes(p_half_width, 0, lines_arr.length - 1);
+      return offset_shapes(p_half_width, 0, plalinelen(-1));
       }
 
    /**
@@ -450,27 +428,24 @@ public final class Polyline implements java.io.Serializable, PlaObject
    public ShapeTile[] offset_shapes(int p_half_width, int p_from_no, int p_to_no)
       {
       int from_no = Math.max(p_from_no, 0);
-      int to_no = Math.min(p_to_no, lines_arr.length - 1);
+      int to_no = Math.min(p_to_no, plalinelen(-1));
       
       int shape_count = Math.max(to_no - from_no - 1, 0);
       
       ShapeTile[] shape_arr = new ShapeTile[shape_count];
       
-      if (shape_count == 0)
-         {
-         return shape_arr;
-         }
+      if (shape_count == 0) return shape_arr;
       
-      PlaVector prev_dir = lines_arr[from_no].direction().get_vector();
-      PlaVector curr_dir = lines_arr[from_no + 1].direction().get_vector();
+      PlaVector prev_dir = plaline(from_no).direction().get_vector();
+      PlaVector curr_dir = plaline(from_no + 1).direction().get_vector();
       
       for (int index = from_no + 1; index < to_no; ++index)
          {
-         PlaVector next_dir = lines_arr[index + 1].direction().get_vector();
+         PlaVector next_dir = plaline(index + 1).direction().get_vector();
 
          PlaLineInt[] lines = new PlaLineInt[4];
 
-         lines[0] = lines_arr[index].translate(-p_half_width);
+         lines[0] = plaline(index).translate(-p_half_width);
          // current center line translated to the right
 
          // create the front line of the offset shape
@@ -478,16 +453,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
          // left turn from curr_line to next_line
          if (next_dir_from_curr_dir == PlaSide.ON_THE_LEFT)
             {
-            lines[1] = lines_arr[index + 1].translate(-p_half_width);
+            lines[1] = plaline(index + 1).translate(-p_half_width);
             // next right line
             }
          else
             {
-            lines[1] = lines_arr[index + 1].opposite().translate(-p_half_width);
+            lines[1] = plaline(index + 1).opposite().translate(-p_half_width);
             // next left line in opposite direction
             }
 
-         lines[2] = lines_arr[index].opposite().translate(-p_half_width);
+         lines[2] = plaline(index).opposite().translate(-p_half_width);
          // current left line in opposite direction
 
          // create the back line of the offset shape
@@ -495,12 +470,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
          // left turn from prev_line to curr_line
          if (curr_dir_from_prev_dir == PlaSide.ON_THE_LEFT)
             {
-            lines[3] = lines_arr[index - 1].translate(-p_half_width);
+            lines[3] = plaline(index - 1).translate(-p_half_width);
             // previous line translated to the right
             }
          else
             {
-            lines[3] = lines_arr[index - 1].opposite().translate(-p_half_width);
+            lines[3] = plaline(index - 1).opposite().translate(-p_half_width);
             // previous left line in opposite direction
             }
          // cut off outstanding corners with following shapes
@@ -521,7 +496,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          PlaVector tmp_curr_dir = next_dir;
          boolean direction_changed = false;
          
-         for (int jndex = index + 2; jndex < lines_arr.length - 1; ++jndex)
+         for (int jndex = index + 2; jndex < plalinelen(-1); ++jndex)
             {
             if (corner_approx(jndex - 1).length_square(check_distance_corner) > check_dist_square)
                {
@@ -531,7 +506,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                corner_to_check = curr_line.intersection_approx(check_line);
                }
-            PlaVector tmp_next_dir = lines_arr[jndex].direction().get_vector();
+            PlaVector tmp_next_dir = plaline(jndex).direction().get_vector();
             PlaLineInt next_border_line = null;
             PlaSide tmp_next_dir_from_tmp_curr_dir = tmp_next_dir.side_of(tmp_curr_dir);
             direction_changed = tmp_next_dir_from_tmp_curr_dir != next_dir_from_curr_dir;
@@ -539,11 +514,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                if (tmp_next_dir_from_tmp_curr_dir == PlaSide.ON_THE_LEFT)
                   {
-                  next_border_line = lines_arr[jndex].translate(-p_half_width);
+                  next_border_line = plaline(jndex).translate(-p_half_width);
                   }
                else
                   {
-                  next_border_line = lines_arr[jndex].opposite().translate(-p_half_width);
+                  next_border_line = plaline(jndex).opposite().translate(-p_half_width);
                   }
 
                if (next_border_line.side_of(corner_to_check) == PlaSide.ON_THE_LEFT && next_border_line.side_of(corner(index)) == PlaSide.ON_THE_RIGHT
@@ -579,7 +554,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                corner_to_check = curr_line.intersection_approx(check_line);
                }
-            PlaVector tmp_prev_dir = lines_arr[jndex].direction().get_vector();
+            PlaVector tmp_prev_dir = plaline(jndex).direction().get_vector();
             PlaLineInt prev_border_line = null;
             PlaSide tmp_curr_dir_from_tmp_prev_dir = tmp_curr_dir.side_of(tmp_prev_dir);
             direction_changed = tmp_curr_dir_from_tmp_prev_dir != curr_dir_from_prev_dir;
@@ -587,11 +562,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                if (tmp_curr_dir.side_of(tmp_prev_dir) == PlaSide.ON_THE_LEFT)
                   {
-                  prev_border_line = lines_arr[jndex].translate(-p_half_width);
+                  prev_border_line = plaline(jndex).translate(-p_half_width);
                   }
                else
                   {
-                  prev_border_line = lines_arr[jndex].opposite().translate(-p_half_width);
+                  prev_border_line = plaline(jndex).opposite().translate(-p_half_width);
                   }
                if (prev_border_line.side_of(corner_to_check) == PlaSide.ON_THE_LEFT && prev_border_line.side_of(corner(index)) == PlaSide.ON_THE_RIGHT
                      && prev_border_line.side_of(corner(index - 1)) == PlaSide.ON_THE_RIGHT)
@@ -649,11 +624,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public ShapeTile offset_shape(int p_half_width, int p_no)
       {
-      if (p_no < 0 || p_no > lines_arr.length - 3)
+      if (p_no < 0 || p_no > plalinelen(-3) )
          {
          System.out.println("Polyline.offset_shape: p_no out of range");
          return null;
          }
+      
       ShapeTile[] result = offset_shapes(p_half_width, p_no, p_no + 2);
       return result[0];
       }
@@ -676,10 +652,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       if (p_vector.equals(PlaVector.ZERO)) return this;
       
-      PlaLineInt[] new_arr = new PlaLineInt[lines_arr.length];
-      for (int i = 0; i < new_arr.length; ++i)
+      PlaLineInt[] new_arr = new PlaLineInt[plalinelen()];
+      for (int index = 0; index < new_arr.length; ++index)
          {
-         new_arr[i] = lines_arr[i].translate_by(p_vector);
+         new_arr[index] = plaline(index).translate_by(p_vector);
          }
       
       return new Polyline(new_arr);
@@ -690,47 +666,51 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaLineInt[] new_arr = new PlaLineInt[lines_arr.length];
-      for (int i = 0; i < new_arr.length; ++i)
+      PlaLineInt[] new_arr = new PlaLineInt[plalinelen()];
+      for (int index = 0; index < new_arr.length; ++index)
          {
-         new_arr[i] = lines_arr[i].turn_90_degree(p_factor, p_pole);
+         new_arr[index] = plaline(index).turn_90_degree(p_factor, p_pole);
          }
+      
       return new Polyline(new_arr);
       }
 
    public Polyline rotate_approx(double p_angle, PlaPointFloat p_pole)
       {
-      if (p_angle == 0)
-         {
-         return this;
-         }
+      if (p_angle == 0) return this;
+
       PlaPointInt[] new_corners = new PlaPointInt[corner_count()];
       for (int i = 0; i < new_corners.length; ++i)
          {
-
          new_corners[i] = corner_approx(i).rotate(p_angle, p_pole).round();
          }
+
       return new Polyline(new_corners);
       }
 
-   /** Mirrors this polyline at the vertical line through p_pole */
+   /** 
+    * Mirrors this polyline at the vertical line through p_pole 
+    */
    public Polyline mirror_vertical(PlaPointInt p_pole)
       {
-      PlaLineInt[] new_arr = new PlaLineInt[lines_arr.length];
-      for (int i = 0; i < new_arr.length; ++i)
+      PlaLineInt[] new_arr = new PlaLineInt[plalinelen()];
+    
+      for (int index = 0; index < new_arr.length; ++index)
          {
-         new_arr[i] = lines_arr[i].mirror_vertical(p_pole);
+         new_arr[index] = plaline(index).mirror_vertical(p_pole);
          }
       return new Polyline(new_arr);
       }
 
-   /** Mirrors this polyline at the horizontal line through p_pole */
+   /** 
+    * Mirrors this polyline at the horizontal line through p_pole 
+    */
    public Polyline mirror_horizontal(PlaPointInt p_pole)
       {
-      PlaLineInt[] new_arr = new PlaLineInt[lines_arr.length];
-      for (int i = 0; i < new_arr.length; ++i)
+      PlaLineInt[] new_arr = new PlaLineInt[plalinelen()];
+      for (int index = 0; index < new_arr.length; ++index)
          {
-         new_arr[i] = lines_arr[i].mirror_horizontal(p_pole);
+         new_arr[index] = plaline(index).mirror_horizontal(p_pole);
          }
       return new Polyline(new_arr);
       }
@@ -779,7 +759,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    public ShapeTileOctagon bounding_octagon(int p_from_corner_no, int p_to_corner_no)
       {
       int from_corner_no = Math.max(p_from_corner_no, 0);
-      int to_corner_no = Math.min(p_to_corner_no, lines_arr.length - 2);
+      int to_corner_no = Math.min(p_to_corner_no, plalinelen(-2));
       double lx = Integer.MAX_VALUE;
       double ly = Integer.MAX_VALUE;
       double rx = Integer.MIN_VALUE;
@@ -788,9 +768,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       double lrx = Integer.MIN_VALUE;
       double llx = Integer.MAX_VALUE;
       double urx = Integer.MIN_VALUE;
-      for (int i = from_corner_no; i <= to_corner_no; ++i)
+      for (int index = from_corner_no; index <= to_corner_no; ++index)
          {
-         PlaPointFloat curr = corner_approx(i);
+         PlaPointFloat curr = corner_approx(index);
          lx = Math.min(lx, curr.v_x);
          ly = Math.min(ly, curr.v_y);
          rx = Math.max(rx, curr.v_x);
@@ -802,8 +782,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
          llx = Math.min(llx, tmp);
          urx = Math.max(urx, tmp);
          }
-      ShapeTileOctagon surrounding_octagon = new ShapeTileOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx),
-            (int) Math.floor(llx), (int) Math.ceil(urx));
+      ShapeTileOctagon surrounding_octagon = new ShapeTileOctagon(
+            Math.floor(lx), 
+            Math.floor(ly), 
+            Math.ceil(rx), 
+            Math.ceil(uy), 
+            Math.floor(ulx), 
+            Math.ceil(lrx),
+            Math.floor(llx), 
+            Math.ceil(urx));
       return surrounding_octagon;
       }
 
@@ -826,15 +813,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
             }
          }
       final double c_tolerance = 1;
-      for (int i = 1; i < lines_arr.length - 1; ++i)
+      for (int index = 1; index < plalinelen(-1); ++index)
          {
-         PlaPointFloat projection = p_from_point.projection_approx(lines_arr[i]);
+         PlaPointFloat projection = p_from_point.projection_approx(plaline(index));
          double curr_distance = projection.distance(p_from_point);
          if (curr_distance < min_distance)
             {
             // look, if the projection is inside the segment
-            double segment_length = corners[i].distance(corners[i - 1]);
-            if (projection.distance(corners[i]) + projection.distance(corners[i - 1]) < segment_length + c_tolerance)
+            double segment_length = corners[index].distance(corners[index - 1]);
+            if (projection.distance(corners[index]) + projection.distance(corners[index - 1]) < segment_length + c_tolerance)
                {
                min_distance = curr_distance;
                nearest_point = projection;
@@ -863,10 +850,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       if ( p_other == null ) return this;
       
-      if ( lines_arr.length < 3 )
+      if ( plalinelen() < 3 )
          throw new IllegalArgumentException(classname+"what A");
       
-      if ( p_other.lines_arr.length < 3)
+      if ( p_other.plalinelen() < 3)
          throw new IllegalArgumentException(classname+"what B");
       
       boolean combine_at_start;
@@ -897,60 +884,54 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return this; // no common end point
          }
       
-      
-      
-      
-      
-      
-      
-      
-      PlaLineInt[] line_arr = new PlaLineInt[lines_arr.length + p_other.lines_arr.length - 2];
+      PlaLineInt[] line_arr = new PlaLineInt[plalinelen() + p_other.plalinelen() - 2];
       if (combine_at_start)
          {
          // insert the lines of p_other in front
          if (combine_other_at_start)
             {
             // insert in reverse order, skip the first line of p_other
-            for (int i = 0; i < p_other.lines_arr.length - 1; ++i)
+            for (int i = 0; i < p_other.plalinelen(-1); ++i)
                {
-               line_arr[i] = p_other.lines_arr[p_other.lines_arr.length - i - 1].opposite();
+               line_arr[i] = p_other.plaline(p_other.plalinelen() - i - 1).opposite();
                }
             }
          else
             {
             // skip the last line of p_other
-            for (int i = 0; i < p_other.lines_arr.length - 1; ++i)
+            for (int index = 0; index < p_other.plalinelen(-1); ++index)
                {
-               line_arr[i] = p_other.lines_arr[i];
+               line_arr[index] = p_other.plaline(index);
                }
             }
+         
          // append the lines of this polyline, skip the first line
-         for (int i = 1; i < lines_arr.length; ++i)
+         for (int iindex = 1; iindex < plalinelen(); ++iindex)
             {
-            line_arr[p_other.lines_arr.length + i - 2] = lines_arr[i];
+            line_arr[p_other.plalinelen() + iindex - 2] = plaline(iindex);
             }
          }
       else
          {
          // insert the lines of this polyline in front, skip the last line
-         for (int i = 0; i < lines_arr.length - 1; ++i)
+         for (int index = 0; index < plalinelen() - 1; ++index)
             {
-            line_arr[i] = lines_arr[i];
+            line_arr[index] = plaline(index);
             }
          if (combine_other_at_start)
             {
             // skip the first line of p_other
-            for (int i = 1; i < p_other.lines_arr.length; ++i)
+            for (int index = 1; index < p_other.plalinelen(); ++index)
                {
-               line_arr[lines_arr.length + i - 2] = p_other.lines_arr[i];
+               line_arr[plalinelen() + index - 2] = p_other.plaline(index);
                }
             }
          else
             {
             // insert in reverse order, skip the last line of p_other
-            for (int i = 1; i < p_other.lines_arr.length; ++i)
+            for (int index = 1; index < p_other.plalinelen(); ++index)
                {
-               line_arr[lines_arr.length + i - 2] = p_other.lines_arr[p_other.lines_arr.length - i - 1].opposite();
+               line_arr[plalinelen() + index - 2] = p_other.plaline(p_other.plalinelen() - index - 1).opposite();
                }
             }
          }
@@ -969,19 +950,19 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline[] split(int p_line_no, PlaLineInt p_end_line)
       {
-      if (p_line_no < 1 || p_line_no > lines_arr.length - 2)
+      if (p_line_no < 1 || p_line_no > plalinelen(-2) )
          {
          System.out.println("Polyline.split: p_line_no out of range");
          return null;
          }
       
-      if (lines_arr[p_line_no].is_parallel(p_end_line)) return null;
+      if (plaline(p_line_no).is_parallel(p_end_line)) return null;
       
-      PlaPoint new_end_corner = lines_arr[p_line_no].intersection(p_end_line);
+      PlaPoint new_end_corner = plaline(p_line_no).intersection(p_end_line);
       
       if ( new_end_corner.is_NaN() ) return null;
 
-      if (p_line_no <= 1 && new_end_corner.equals(corner_first()) || p_line_no >= lines_arr.length - 2 && new_end_corner.equals(corner_last()))
+      if (p_line_no <= 1 && new_end_corner.equals(corner_first()) || p_line_no >= plalinelen(-2) && new_end_corner.equals(corner_last()))
          {
          // No split, if p_end_line does not intersect, but touches only tnis Polyline at an end point.
          return null;
@@ -992,29 +973,29 @@ public final class Polyline implements java.io.Serializable, PlaObject
          {
          // skip line segment of length 0 at the end of the first piece
          first_piece = new PlaLineInt[p_line_no + 1];
-         System.arraycopy(lines_arr, 0, first_piece, 0, first_piece.length);
-
+         plaline_copy(0, first_piece, 0, first_piece.length);
          }
       else
          {
          first_piece = new PlaLineInt[p_line_no + 2];
-         System.arraycopy(lines_arr, 0, first_piece, 0, p_line_no + 1);
+         plaline_copy(0, first_piece, 0, p_line_no + 1);
          first_piece[p_line_no + 1] = p_end_line;
          }
+      
       PlaLineInt[] second_piece;
       if (corner(p_line_no).equals(new_end_corner))
          {
          // skip line segment of length 0 at the beginning of the second piece
-         second_piece = new PlaLineInt[lines_arr.length - p_line_no];
-         System.arraycopy(lines_arr, p_line_no, second_piece, 0, second_piece.length);
-
+         second_piece = new PlaLineInt[plalinelen() - p_line_no];
+         plaline_copy(p_line_no, second_piece, 0, second_piece.length);
          }
       else
          {
-         second_piece = new PlaLineInt[lines_arr.length - p_line_no + 1];
+         second_piece = new PlaLineInt[plalinelen() - p_line_no + 1];
          second_piece[0] = p_end_line;
-         System.arraycopy(lines_arr, p_line_no, second_piece, 1, second_piece.length - 1);
+         plaline_copy(p_line_no, second_piece, 1, second_piece.length - 1);
          }
+      
       Polyline[] result = new Polyline[2];
       result[0] = new Polyline(first_piece);
       result[1] = new Polyline(second_piece);
@@ -1032,19 +1013,20 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline skip_lines(int p_from_no, int p_to_no)
       {
-      if (p_from_no < 0 || p_to_no > lines_arr.length - 1 || p_from_no > p_to_no)
+      if (p_from_no < 0 || p_to_no > plalinelen(-1) || p_from_no > p_to_no)
          {
          return this;
          }
-      PlaLineInt[] new_lines = new PlaLineInt[lines_arr.length - (p_to_no - p_from_no + 1)];
-      System.arraycopy(lines_arr, 0, new_lines, 0, p_from_no);
-      System.arraycopy(lines_arr, p_to_no + 1, new_lines, p_from_no, new_lines.length - p_from_no);
+      
+      PlaLineInt[] new_lines = new PlaLineInt[plalinelen() - (p_to_no - p_from_no + 1)];
+      plaline_copy(0, new_lines, 0, p_from_no);
+      plaline_copy(p_to_no + 1, new_lines, p_from_no, new_lines.length - p_from_no);
       return new Polyline(new_lines);
       }
 
    public boolean contains(PlaPointInt p_point)
       {
-      for (int index = 1; index < lines_arr.length - 1; ++index)
+      for (int index = 1; index < plalinelen(-1); ++index)
          {
          PlaSegmentInt curr_segment = new PlaSegmentInt(this, index);
          
@@ -1068,14 +1050,14 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaLineInt result_line = null;
       PlaLineInt nearest_line = null;
       
-      for (int index = 1; index < lines_arr.length - 1; ++index)
+      for (int index = 1; index < plalinelen(-1); ++index)
          {
-         PlaPointFloat projection = from_point.projection_approx(lines_arr[index]);
+         PlaPointFloat projection = from_point.projection_approx(plaline(index));
          double curr_distance = projection.distance(from_point);
          
          if (curr_distance >= min_distance) continue;
 
-         PlaDirection direction_towards_line = lines_arr[index].perpendicular_direction(p_from_point);
+         PlaDirection direction_towards_line = plaline(index).perpendicular_direction(p_from_point);
         
          if (direction_towards_line == null) continue;
 
@@ -1091,7 +1073,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
             continue;
             }
          
-         nearest_line = lines_arr[index];
+         nearest_line = plaline(index);
          min_distance = curr_distance;
          result_line = curr_result_line;
          }
@@ -1121,12 +1103,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return skip_lines(p_new_line_count - 1, p_new_line_count - 1);
          }
       PlaLineInt[] new_lines = new PlaLineInt[p_new_line_count];
-      System.arraycopy(lines_arr, 0, new_lines, 0, p_new_line_count - 2);
+      plaline_copy(0, new_lines, 0, p_new_line_count - 2);
       // create the last 2 lines of the new polyline
-      PlaPoint first_line_point = lines_arr[p_new_line_count - 2].point_a;
+      PlaPoint first_line_point = plaline(p_new_line_count - 2).point_a;
       if (first_line_point.equals(new_last_corner))
          {
-         first_line_point = lines_arr[p_new_line_count - 2].point_b;
+         first_line_point = plaline(p_new_line_count - 2).point_b;
          }
       PlaLineInt new_prev_last_line = new PlaLineInt(first_line_point, new_last_corner);
       new_lines[p_new_line_count - 2] = new_prev_last_line;
@@ -1141,7 +1123,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaLineInt plaline ( int index )
       {
-      return lines_arr[index];
+      return lines_arr.get(index);
       }
    
    /**
@@ -1150,7 +1132,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public int plalinelen ( )
       {
-      return lines_arr.length;
+      return lines_arr.size();
       }
    
    /**
@@ -1160,7 +1142,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public int plalinelen ( int offset )
       {
-      return lines_arr.length + offset;
+      return lines_arr.size() + offset;
       }
    
    /**
@@ -1175,7 +1157,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaLineInt [] risul = new PlaLineInt[arr_len];
       
       for (int index=0; index<arr_len; index++)
-         risul[index] = lines_arr[index];
+         risul[index] = plaline(index);
       
       return risul;
       }
@@ -1195,12 +1177,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaLineInt [] risul = new PlaLineInt[risul_len];
       
       for (index=0; index<skip_index; index++)
-         risul[index] = lines_arr[index];
+         risul[index] = plaline(index);
       
       index++; // skip the skip_index
       
       for (; index<src_len; index++)
-         risul[index-1] = lines_arr[index];
+         risul[index-1] = plaline(index);
       
       return risul;
       }
@@ -1208,7 +1190,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    public void plaline_copy(int src_pos, PlaLineInt [] dest, int dest_pos, int length )
       {
       for (int index=0; index<length; index++)
-         dest[dest_pos+index] = lines_arr[src_pos+index];
+         dest[dest_pos+index] = plaline(src_pos+index);
       }
    
    
