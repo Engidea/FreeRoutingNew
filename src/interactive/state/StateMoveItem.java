@@ -38,7 +38,7 @@ import freert.library.BrdLibrary;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import gui.varie.IteraNetItems;
 
 /**
@@ -346,7 +346,7 @@ public class StateMoveItem extends StateInteractive
       current_position = p_new_position.round();
       if (!current_position.equals(previous_position))
          {
-         PlaVector translate_vector = current_position.difference_by(previous_position);
+         PlaVectorInt translate_vector = current_position.difference_by(previous_position);
          if (grid_snap_component != null)
             {
             translate_vector = adjust_to_placement_grid(translate_vector);
@@ -371,13 +371,13 @@ public class StateMoveItem extends StateInteractive
          }
       }
 
-   private PlaVector adjust_to_placement_grid(PlaVector p_vector)
+   private PlaVectorInt adjust_to_placement_grid(PlaVectorInt p_vector)
       {
       PlaPoint new_component_location = grid_snap_component.get_location().translate_by(p_vector);
       PlaPointInt rounded_component_location = new_component_location.to_float().round_to_grid(i_brd.itera_settings.horizontal_component_grid, i_brd.itera_settings.vertical_component_grid);
-      PlaVector adjustment = rounded_component_location.difference_by(new_component_location);
-      PlaVector result = p_vector.add(adjustment);
-      current_position = previous_position.translate_by(result).to_float().round();
+      PlaVectorInt adjustment = rounded_component_location.difference_by(new_component_location).round();
+      PlaVectorInt result = p_vector.add(adjustment);
+      current_position = previous_position.translate_by(result);
       return p_vector.add(adjustment);
       }
 

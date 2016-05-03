@@ -255,7 +255,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       {
       if (!(p_point instanceof PlaPointInt))
          {
-         System.out.println("LineSegments.contains currently only implementet for IntPoints");
+         System.err.println("LineSegments.contains currently only implementet for IntPoints");
          return false;
          }
       
@@ -297,7 +297,15 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       double end_x_plus_y = end_corner.v_x + end_corner.v_y;
       double llx = Math.floor(Math.min(start_x_plus_y, end_x_plus_y));
       double urx = Math.ceil(Math.max(start_x_plus_y, end_x_plus_y));
-      ShapeTileOctagon result = new ShapeTileOctagon((int) lx, (int) ly, (int) rx, (int) uy, (int) ulx, (int) lrx, (int) llx, (int) urx);
+      ShapeTileOctagon result = new ShapeTileOctagon(
+            lx, 
+            ly, 
+            rx, 
+            uy, 
+            ulx,
+            lrx, 
+            llx, 
+            urx);
       return result.normalize();
       }
 
@@ -515,11 +523,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       {
       PlaPointInt start_point = start_point().to_float().round();
       PlaPointInt end_point = end_point().to_float().round();
-      if (start_point.equals(end_point))
-         {
-         return new PlaPointInt[0];
 
-         }
+      if (start_point.equals(end_point)) return new PlaPointInt[0];
+      
       PlaVectorInt delta = end_point.difference_by(start_point);
       if (delta.is_multiple_of_45_degree())
          {

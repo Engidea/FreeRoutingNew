@@ -341,10 +341,11 @@ public final class AlgoMoveDrillItem
             }
          PlaPointFloat[] shove_deltas = curr_offset_shape.nearest_relative_outside_locations(curr_via_shape, try_count);
          try_via_centers = new PlaPointInt[shove_deltas.length];
-         for (int i = 0; i < try_via_centers.length; ++i)
+         
+         for (int index = 0; index < try_via_centers.length; ++index)
             {
-            PlaVector curr_delta = shove_deltas[i].round().difference_by(PlaPoint.ZERO);
-            try_via_centers[i] = (PlaPointInt) curr_via_center.translate_by(curr_delta);
+            PlaVectorInt curr_delta = shove_deltas[index].round().difference_by(PlaPoint.ZERO);
+            try_via_centers[index] = curr_via_center.translate_by(curr_delta);
             }
          }
       

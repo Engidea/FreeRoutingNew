@@ -218,8 +218,11 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
          {
          rotation_in_degree += 360;
          }
+      
       PlaPoint rel_location = PlaPoint.ZERO.translate_by(translation);
+      
       translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPoint.ZERO);
+      
       clear_derived_data();
       }
 

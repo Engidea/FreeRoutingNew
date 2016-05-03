@@ -74,6 +74,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentInt;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapePolyline;
@@ -1844,7 +1845,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Checks, if p_item can be translated by p_vector without producing overlaps or clearance violations.
     */
-   public final boolean check_item_move(BrdItem p_item, PlaVector p_vector, Collection<BrdItem> p_ignore_items)
+   public final boolean check_item_move(BrdItem p_item, PlaVectorInt p_vector, Collection<BrdItem> p_ignore_items)
       {
       int net_count = p_item.net_no_arr.length;
       

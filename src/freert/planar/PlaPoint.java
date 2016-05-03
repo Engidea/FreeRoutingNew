@@ -36,6 +36,9 @@ public abstract class PlaPoint implements PlaObject, Serializable
    // Standard implementation of the zero point .
    public static final PlaPointInt ZERO = new PlaPointInt(0, 0);
    
+   
+   public abstract PlaPointInt round();
+   
    /**
     * returns the translation of this point by p_vector
     */

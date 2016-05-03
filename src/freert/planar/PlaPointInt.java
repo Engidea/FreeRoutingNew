@@ -77,6 +77,13 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       v_y = (int)p_y;
       }
    
+   @Override
+   public final PlaPointInt round()
+      {
+      return this;
+      }
+   
+   
    public final boolean is_NaN ()
       {
       return is_nan;

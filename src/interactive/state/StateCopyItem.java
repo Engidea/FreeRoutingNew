@@ -37,9 +37,10 @@ import board.items.BrdItem;
 import freert.library.LibPackage;
 import freert.library.LibPackagePin;
 import freert.library.LibPadstack;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeConvex;
 
 /**
@@ -50,11 +51,9 @@ import freert.planar.ShapeConvex;
 public class StateCopyItem extends StateInteractive
    {
    private Collection<BrdItem> item_list;
-   private PlaPoint start_position;
-   private PlaPoint current_position;
+   private PlaPointInt start_position,current_position,previous_position;
    private int current_layer;
    private boolean layer_changed;
-   private PlaPoint previous_position;
    
    
    /**
@@ -80,6 +79,7 @@ public class StateCopyItem extends StateInteractive
       layer_changed = false;
       current_position = start_position;
       previous_position = current_position;
+      
       Iterator<BrdItem> it = p_item_list.iterator();
       while (it.hasNext())
          {
@@ -90,6 +90,8 @@ public class StateCopyItem extends StateInteractive
             item_list.add(new_item);
             }
          }
+      
+      
       if (actlog != null)
          {
          actlog.start_scope(LogfileScope.COPYING_ITEMS, p_location);
@@ -172,7 +174,7 @@ public class StateCopyItem extends StateInteractive
       /** Contains the new created components after copying. */
       Collection<BrdComponent> copied_components = new LinkedList<BrdComponent>();
 
-      PlaVector translate_vector = current_position.difference_by(start_position);
+      PlaVectorInt translate_vector = current_position.difference_by(start_position);
       Iterator<BrdItem> it = item_list.iterator();
       while (it.hasNext())
          {
@@ -197,7 +199,9 @@ public class StateCopyItem extends StateInteractive
                   System.out.println("CopyItemState: component not found");
                   continue;
                   }
-               PlaPoint new_location = old_component.get_location().translate_by(translate_vector);
+               
+               PlaPointInt new_location = old_component.get_location().translate_by(translate_vector).round();
+               
                LibPackage new_package;
                if (layer_changed)
                   {

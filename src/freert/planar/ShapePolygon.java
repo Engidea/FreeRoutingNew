@@ -297,10 +297,12 @@ public final class ShapePolygon extends ShapePolyline
       if (p_vector.equals(PlaVector.ZERO)) return this;
       
       PlaPoint[] new_corners = new PlaPoint[corners.length];
-      for (int i = 0; i < corners.length; ++i)
+      
+      for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[i] = corners[i].translate_by(p_vector);
+         new_corners[index] = corners[index].translate_by(p_vector);
          }
+      
       return new ShapePolygon(new_corners);
       }
 

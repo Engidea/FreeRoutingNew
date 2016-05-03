@@ -111,12 +111,13 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    public PlaPoint get_center()
       {
       PlaPoint pin_center = super.get_center();
+      
       if (pin_center == null)
          {
-
          // Calculate the pin center.
-         BrdComponent component = r_board.brd_components.get(this.get_component_no());
-         pin_center = component.get_location().translate_by(this.relative_location());
+         BrdComponent component = r_board.brd_components.get(get_component_no());
+         
+         pin_center = component.get_location().translate_by(relative_location());
 
          // check that the pin center is inside the pin shape and correct it eventually
 
@@ -140,8 +141,9 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
             {
             pin_center = curr_shape.centre_of_gravity().round();
             }
-         this.set_center(pin_center);
+         set_center(pin_center);
          }
+      
       return pin_center;
       }
 

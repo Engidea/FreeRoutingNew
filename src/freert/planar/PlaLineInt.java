@@ -20,8 +20,8 @@ import java.math.BigInteger;
 import freert.varie.Signum;
 
 /**
- *
  * Implements functionality for lines in the plane.
+ * Now, really, the difference between a line and a segment is "hairy"....
  *
  * @author Alfons Wirtz
  */
@@ -522,12 +522,11 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaLineInt translate_by(PlaVector p_vector)
       {
-      if (p_vector.equals(PlaVector.ZERO))
-         {
-         return this;
-         }
+      if (p_vector.equals(PlaVector.ZERO)) return this;
+
       PlaPoint new_a = point_a.translate_by(p_vector);
       PlaPoint new_b = point_b.translate_by(p_vector);
+      
       return new PlaLineInt(new_a, new_b);
       }
 

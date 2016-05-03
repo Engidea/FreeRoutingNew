@@ -278,9 +278,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
       if (p_polyline.plalinelen() < 4) return p_polyline;
 
       boolean polyline_changed = false;
-      
-//      PlaLineInt[] line_arr = new PlaLineInt[p_polyline.plalinelen()];
-//      System.arraycopy(p_polyline.lines_arr, 0, line_arr, 0, line_arr.length);
 
       PlaLineInt[] line_arr = p_polyline.plaline_copy();
       

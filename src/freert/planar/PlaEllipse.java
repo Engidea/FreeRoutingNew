@@ -13,10 +13,7 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * Ellipse.java
- *
  * Created on 27. Mai 2005, 07:17
- *
  */
 
 package freert.planar;

@@ -28,7 +28,7 @@ import freert.host.BrdObservers;
 import freert.library.LibPackage;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.varie.UndoableObjectNode;
 import freert.varie.UndoableObjects;
 
@@ -167,7 +167,7 @@ public final class BrdComponents implements java.io.Serializable
     * Moves the component with number p_component_no. 
     * Works contrary to Component.translate_by with the undo algorithm of the board.
     */
-   public void move(int p_component_no, PlaVector p_vector)
+   public void move(int p_component_no, PlaVectorInt p_vector)
       {
       BrdComponent curr_component = get(p_component_no);
       undo_list.save_for_undo(curr_component);

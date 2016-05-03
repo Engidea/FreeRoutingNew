@@ -30,7 +30,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.varie.Signum;
@@ -66,35 +66,41 @@ public final class AlgoPullTight45 extends AlgoPullTight
       }
 
    /**
-    * Tries to reduce the amount of corners of p_polyline. Return p_polyline, if nothing was changed.
+    * Tries to reduce the amount of corners of p_polyline. 
+    * Return p_polyline, if nothing was changed.
+    * Ack this one will kind of fails if the result is not an int....
     */
    private Polyline reduce_corners(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() <= 4)
-         {
-         return p_polyline;
-         }
+      if (p_polyline.plalinelen() <= 4) return p_polyline;
+      
       int new_corner_count = 1;
-      PlaPoint[] curr_corner = new PlaPoint[4];
-      for (int i = 0; i < 4; ++i)
+      PlaPointInt[] curr_corner = new PlaPointInt[4];
+      
+      for (int index = 0; index < 4; ++index)
          {
-         curr_corner[i] = p_polyline.corner(i);
-         if (!(curr_corner[i] instanceof PlaPointInt))
+         PlaPoint a_point = p_polyline.corner(index);
+         
+         if (!(a_point instanceof PlaPointInt))
             {
+            // Need really to understand WHY the reational is present
             return p_polyline;
             }
+         
+         curr_corner[index] = (PlaPointInt)a_point; 
          }
+      
       boolean[] curr_corner_in_clip_shape = new boolean[4];
 
-      for (int i = 0; i < 4; ++i)
+      for (int index = 0; index < 4; ++index)
          {
          if (curr_clip_shape == null)
             {
-            curr_corner_in_clip_shape[i] = true;
+            curr_corner_in_clip_shape[index] = true;
             }
          else
             {
-            curr_corner_in_clip_shape[i] = !curr_clip_shape.is_outside(curr_corner[i]);
+            curr_corner_in_clip_shape[index] = !curr_clip_shape.is_outside(curr_corner[index]);
             }
          }
 
@@ -102,37 +108,48 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaPoint[] new_corners = new PlaPoint[p_polyline.plalinelen(-3)];
       new_corners[0] = curr_corner[0];
       PlaPoint[] curr_check_points = new PlaPoint[2];
-      PlaPoint new_corner = null;
+      PlaPointInt new_corner = null;
       int corner_no = 3;
+      
       while (corner_no < p_polyline.plalinelen(-1))
          {
          boolean corner_removed = false;
-         curr_corner[3] = p_polyline.corner(corner_no);
-         if (!(curr_corner[3] instanceof PlaPointInt))
+         
+         PlaPoint a_point = p_polyline.corner(corner_no);
+         
+         if (!(a_point instanceof PlaPointInt))
             {
             return p_polyline;
             }
+      
+         curr_corner[3] = (PlaPointInt)a_point;
+               
          if (curr_corner[1].equals(curr_corner[2]) || corner_no < p_polyline.plalinelen(-2) && curr_corner[3].side_of(curr_corner[1], curr_corner[2]) == PlaSide.COLLINEAR)
             {
             // corners in the middle af a line can be skipped
             ++corner_no;
             curr_corner[2] = curr_corner[3];
             curr_corner_in_clip_shape[2] = curr_corner_in_clip_shape[3];
+
             if (corner_no < p_polyline.plalinelen(-1))
                {
-               curr_corner[3] = p_polyline.corner(corner_no);
-               if (!(curr_corner[3] instanceof PlaPointInt))
+               a_point = p_polyline.corner(corner_no);
+            
+               if (!(a_point instanceof PlaPointInt))
                   {
                   return p_polyline;
                   }
+               
+               curr_corner[3] = (PlaPointInt) a_point; 
                }
             polyline_changed = true;
             }
+         
          curr_corner_in_clip_shape[3] = curr_clip_shape == null || !curr_clip_shape.is_outside(curr_corner[3]);
          if (curr_corner_in_clip_shape[1] && curr_corner_in_clip_shape[2] && curr_corner_in_clip_shape[3])
             {
             // translate the line from curr_corner[2] to curr_corner[1] to curr_corner[3]
-            PlaVector delta = curr_corner[3].difference_by(curr_corner[2]);
+            PlaVectorInt delta = curr_corner[3].difference_by(curr_corner[2]);
             new_corner = curr_corner[1].translate_by(delta);
             if (curr_corner[3].equals(curr_corner[2]))
                {
@@ -179,7 +196,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             {
             // the first try has failed. Try to translate the line from
             // corner_2 to corner_1 to corner_0
-            PlaVector delta = curr_corner[0].difference_by(curr_corner[1]);
+            PlaVectorInt delta = curr_corner[0].difference_by(curr_corner[1]);
             new_corner = curr_corner[2].translate_by(delta);
             if (curr_corner[0].equals(curr_corner[1]))
                {

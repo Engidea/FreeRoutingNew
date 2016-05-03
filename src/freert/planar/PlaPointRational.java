@@ -97,6 +97,14 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
 
       return new PlaPointFloat(xd, yd);
       }
+   
+   
+   public final PlaPointInt round()
+      {
+      return to_float().round();
+      }
+
+   
 
    @Override
    public final boolean is_NaN ()

@@ -13,8 +13,6 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * Direction.java
- *
  * Created on 3. Februar 2003, 15:36
  */
 
