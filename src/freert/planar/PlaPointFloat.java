@@ -41,6 +41,9 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
    public  final double v_x;
    public  final double v_y;
 
+   public final double v_x_square;
+   public final double v_y_square;
+   
    private final double dist_square;  // calculated on constructor
    
    private boolean is_nan = false;
@@ -50,6 +53,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       is_nan = true;
       v_x = Integer.MAX_VALUE;   // this will retain most of the previous behavior
       v_y = Integer.MAX_VALUE;   // but I also have a clear indication that this is a NaN
+      v_x_square  = 0;
+      v_y_square  = 0;
       dist_square = 0;
       }
    
@@ -63,7 +68,10 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       v_x = p_x;
       v_y = p_y;
       
-      dist_square = v_x * v_x + v_y * v_y;
+      v_x_square  = v_x * v_x;
+      v_y_square  = v_y * v_y;
+
+      dist_square = v_x_square + v_y_square;
       }
 
    public PlaPointFloat(PlaPointInt p_pt)
@@ -71,7 +79,10 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       v_x = p_pt.v_x;
       v_y = p_pt.v_y;
       
-      dist_square = v_x * v_x + v_y * v_y;
+      v_x_square  = v_x * v_x;
+      v_y_square  = v_y * v_y;
+
+      dist_square = v_x_square + v_y_square;
       }
 
    /**

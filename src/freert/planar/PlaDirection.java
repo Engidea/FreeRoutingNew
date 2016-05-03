@@ -195,13 +195,6 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      }
   
   
-  /**
-   * return any Vector pointing into this direction
-   */
-  public PlaVectorInt get_vector()
-     {
-     return new PlaVectorInt(dir_x, dir_y);
-     }
 
   @Override
   public int compareTo(PlaDirection p_other)
@@ -429,6 +422,15 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       {
       return new PlaPointFloat(dir_x, dir_y);
       }
+   
+   /**
+    * return any Vector pointing into this direction
+    */
+   public PlaVectorInt to_vector()
+      {
+      return new PlaVectorInt(dir_x, dir_y);
+      }
+   
    
    /**
     * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 

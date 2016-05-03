@@ -77,7 +77,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
 
       point_a = (PlaPointInt)p_a;
       
-      point_b = (PlaPointInt)point_a.translate_by(p_dir.get_vector());
+      point_b = (PlaPointInt)point_a.translate_by(p_dir.to_vector());
       
       dir = p_dir;
       }
@@ -86,7 +86,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       {
       point_a = p_a;
       
-      point_b = point_a.translate_by(p_dir.get_vector());
+      point_b = point_a.translate_by(p_dir.to_vector());
       
       dir = p_dir;
       }
@@ -488,28 +488,30 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * translates the line perpendicular at about p_dist. If p_dist > 0, the line will be translated to the left, else to the right
+    * translates the line perpendicular at about p_dist. 
+    * If p_dist > 0, the line will be translated to the left, else to the right
     */
    public PlaLineInt translate(double p_dist)
       {
       // this function is at the moment only implemented for lines consisting of IntPoints.
-      PlaPointInt ai = point_a;
-      PlaVectorInt v = direction().get_vector();
-      double vxvx = (double) v.point_x * v.point_x;
-      double vyvy = (double) v.point_y * v.point_y;
-      double lenght = Math.sqrt(vxvx + vyvy);
+
+      PlaPointFloat v = direction().to_float();
+      
+      double lenght = v.distance();
+      
       PlaPointInt new_a;
-      if (vxvx <= vyvy)
+      
+      if ( v.v_x_square <= v.v_y_square)
          {
          // translate along the x axis
-         int rel_x = (int) Math.round((p_dist * lenght) / v.point_y);
-         new_a = new PlaPointInt(ai.v_x - rel_x, ai.v_y);
+         int rel_x = (int) Math.round((p_dist * lenght) / v.v_y);
+         new_a = new PlaPointInt(point_a.v_x - rel_x, point_a.v_y);
          }
       else
          {
          // translate along the y axis
-         int rel_y = (int) Math.round((p_dist * lenght) / v.point_x);
-         new_a = new PlaPointInt(ai.v_x, ai.v_y + rel_y);
+         int rel_y = (int) Math.round((p_dist * lenght) / v.v_x);
+         new_a = new PlaPointInt(point_a.v_x, point_a.v_y + rel_y);
          }
       
       return new PlaLineInt(new_a, direction());
@@ -706,12 +708,12 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       PlaDirection dir1 = direction().turn_45_degree(2);
       PlaDirection dir2 = direction().turn_45_degree(6);
 
-      PlaPoint check_point_1 = p_from_point.translate_by(dir1.get_vector());
+      PlaPoint check_point_1 = p_from_point.translate_by(dir1.to_vector());
       if (side_of(check_point_1) != line_side)
          {
          return dir1;
          }
-      PlaPoint check_point_2 = p_from_point.translate_by(dir2.get_vector());
+      PlaPoint check_point_2 = p_from_point.translate_by(dir2.to_vector());
       if (side_of(check_point_2) != line_side)
          {
          return dir2;

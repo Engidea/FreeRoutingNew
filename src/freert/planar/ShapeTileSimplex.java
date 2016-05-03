@@ -133,8 +133,8 @@ public final class ShapeTileSimplex extends ShapeTile
          prev_no = p_no - 1;
          }
       
-      PlaVectorInt prev_dir = arr[prev_no].direction().get_vector();
-      PlaVectorInt curr_dir = arr[p_no].direction().get_vector();
+      PlaVectorInt prev_dir = arr[prev_no].direction().to_vector();
+      PlaVectorInt curr_dir = arr[p_no].direction().to_vector();
       
       return prev_dir.determinant(curr_dir) > 0;
       }
@@ -952,7 +952,7 @@ public final class ShapeTileSimplex extends ShapeTile
             }
          if (!check_cross_first_line)
             {
-            check_cross_first_line = inner_corner_no > 0 && last_curr_dir.determinant(first_direction) > 0 && last_curr_dir.get_vector().scalar_product(first_direction.get_vector()) < 0;
+            check_cross_first_line = inner_corner_no > 0 && last_curr_dir.determinant(first_direction) > 0 && last_curr_dir.to_vector().scalar_product(first_direction.to_vector()) < 0;
             // scalar_product checked to ignore backcrossing at
             // small inner_corner_no
             }
