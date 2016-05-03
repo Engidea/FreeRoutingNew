@@ -20,7 +20,6 @@
 
 package freert.planar;
 
-import freert.varie.Signum;
 
 /**
  *
@@ -224,18 +223,19 @@ public final class PlaVectorInt extends PlaVector
       }
 
    @Override
-   PlaDirection to_normalized_direction()
+   PlaDirection to_direction()
       {
       return new PlaDirection(this);
       }
 
+   /*
    @Override
    public Signum projection(PlaVectorInt p_other)
       {
       double tmp = (double) point_x * p_other.point_x + (double) point_y * p_other.point_y;
       return Signum.of(tmp);
       }
-
+*/
    @Override
    public double scalar_product(PlaVectorInt p_other)
       {
@@ -247,13 +247,6 @@ public final class PlaVectorInt extends PlaVector
       {
       return p_other.scalar_product(this);
       }
-
-   @Override
-   public Signum projection(PlaVectorRational p_other)
-      {
-      return p_other.projection(this);
-      }
-   
    
    /**
     * Returns an approximation of the cosinus of the angle between this vector and p_other by a double.

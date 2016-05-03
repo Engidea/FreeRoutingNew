@@ -148,7 +148,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
 
       PlaVector p_vector = p_to.difference_by(p_from);
       
-      return p_vector.to_normalized_direction();
+      return p_vector.to_direction();
       }
 
 
@@ -350,9 +350,8 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       if ( side_of(p_other) != PlaSide.COLLINEAR) return false;
         
       // check, that dir and other_dir do not point into opposite directions
-      PlaVector this_vector = get_vector();
-      PlaVector other_vector = p_other.get_vector();
-      return this_vector.projection(other_vector) == Signum.POSITIVE;
+
+      return projection(p_other) == Signum.POSITIVE;
       }
 
    /**
@@ -379,6 +378,20 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    
    
    /**
+    * Projection is defined as finding the component of one vector in the direction of another
+    * So the projection of b onto a can be found by taking the scalar product of b and a unit vector
+    * in the direction of a, i.e. l = b · a 
+    * It happens that a Direction is a unit vector, by definition, so, the projection of b into a is just the scalar product
+    * of this direction by the other direction
+    * @param p_other
+    * @return
+    */
+   private final double projection_value(PlaDirection p_other)
+      {
+      return (double) dir_x * p_other.dir_x + (double) dir_y * p_other.dir_y;
+      }
+   
+   /**
     * The function returns Signum.POSITIVE, if the scalar product of of a vector representing this direction and a vector
     * representing p_other is > 0, 
     * Signum.NEGATIVE, if the scalar product is < 0, and 
@@ -386,7 +399,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     */
    public final Signum projection(PlaDirection p_other)
       {
-      return get_vector().projection(p_other.get_vector());
+      return Signum.of(projection_value(p_other));
       }
 
    /**
@@ -418,8 +431,9 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       }
    
    /**
-    * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 0, if p_1 is equal
-    * to p_2, * and -1 otherwise.
+    * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 
+    * 0, if p_1 is equal to p_2, 
+    * -1 otherwise.
     */
    public int compare_from(PlaDirection p_1, PlaDirection p_2)
       {

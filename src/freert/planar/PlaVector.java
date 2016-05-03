@@ -20,7 +20,6 @@
 
 package freert.planar;
 
-import freert.varie.Signum;
 
 /**
  * Abstract class describing functionality of Vectors. Vectors are used for translating Points in the plane.
@@ -105,27 +104,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
       return is_orthogonal() || is_diagonal();
       }
 
-   /**
-    * The function returns Signum.POSITIVE, if the scalar product of this vector and p_other > 0, 
-    * Signum.NEGATIVE, if the scalar product Vector is < 0, and 
-    * Signum.ZERO, if the scalar product is equal 0.
-    */
-   public final Signum projection(PlaVector p_other)
-      {
-      if ( p_other == null ) throw new IllegalArgumentException("p_other is null");
-
-      if ( p_other instanceof PlaVectorInt )
-         return projection((PlaVectorInt)p_other);
-      else if ( p_other instanceof PlaVectorRational )
-         return projection((PlaVectorRational)p_other);
-      else 
-         throw new IllegalArgumentException("p_other is unsupported");
-
-      }
-   
-   public abstract Signum projection(PlaVectorInt p_other);
-   public abstract Signum projection(PlaVectorRational p_other);
-   
    
    /**
     * Returns an approximation of the scalar product of this vector with p_other by a double.
@@ -219,7 +197,7 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
       return new_point.round().difference_by(PlaPoint.ZERO);
       }
 
-   abstract PlaDirection to_normalized_direction();
+   abstract PlaDirection to_direction();
 
    
    abstract PlaPoint add_to(PlaPointInt p_point);

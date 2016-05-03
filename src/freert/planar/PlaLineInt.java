@@ -566,9 +566,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public boolean is_perpendicular(PlaLineInt p_other)
       {
-      PlaVector v1 = direction().get_vector();
-      PlaVector v2 = p_other.direction().get_vector();
-      return v1.projection(v2) == Signum.ZERO;
+      return direction().projection(p_other.direction()) == Signum.ZERO;
       }
 
    /**

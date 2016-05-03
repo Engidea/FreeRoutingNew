@@ -22,7 +22,6 @@ package freert.planar;
 
 import java.math.BigInteger;
 import freert.varie.BigIntAux;
-import freert.varie.Signum;
 
 /**
  *
@@ -183,7 +182,7 @@ public final class PlaVectorRational extends PlaVector
       }
 
    @Override
-   PlaDirection to_normalized_direction()
+   PlaDirection to_direction()
       {
       return new PlaDirection(rp_x, rp_y);
       }
@@ -202,24 +201,7 @@ public final class PlaVectorRational extends PlaVector
       PlaPointFloat v2 = p_other.to_float();
       return v1.v_x * v2.v_x + v1.v_y * v2.v_y;
       }
-
-   @Override
-   public Signum projection(PlaVectorInt p_other)
-      {
-      PlaVector other = new PlaVectorRational(p_other);
-      return other.projection(this);
-      }
-
-   @Override
-   public Signum projection(PlaVectorRational p_other)
-      {
-      BigInteger tmp1 = rp_x.multiply(p_other.rp_x);
-      BigInteger tmp2 = rp_y.multiply(p_other.rp_y);
-      BigInteger tmp3 = tmp1.add(tmp2);
-      int result = tmp3.signum();
-      return Signum.of(result);
-      }
-
+   
    @Override
    public final PlaVectorRational add(PlaVectorInt p_other)
       {
