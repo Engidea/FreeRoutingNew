@@ -161,6 +161,21 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return true;
       }
 
+   @Override
+   public final PlaPointInt turn_90_degree(int p_factor, PlaPointInt p_pole)
+      {
+      PlaVector v = difference_by(p_pole);
+      v = v.turn_90_degree(p_factor);
+      return p_pole.translate_by(v).round();
+      }
+   
+   @Override
+   public final PlaPointInt mirror_vertical(PlaPointInt p_pole)
+      {
+      PlaVector v = difference_by(p_pole);
+      v = v.mirror_at_y_axis();
+      return p_pole.translate_by(v).round();
+      }
 
    @Override
    public PlaPointRational translate_by(PlaVectorInt p_vector)

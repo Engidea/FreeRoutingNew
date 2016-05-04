@@ -246,11 +246,12 @@ public final class RoutingBoard implements java.io.Serializable
       insert_item(new_via);
       int from_layer = p_padstack.from_layer();
       int to_layer = p_padstack.to_layer();
-      for (int i = from_layer; i < to_layer; ++i)
+      
+      for (int index = from_layer; index < to_layer; ++index)
          {
          for (int curr_net_no : p_net_no_arr)
             {
-            split_traces(p_center, i, curr_net_no);
+            split_traces(p_center, index, curr_net_no);
             }
          }
       }

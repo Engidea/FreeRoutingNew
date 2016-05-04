@@ -54,7 +54,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    private static final long serialVersionUID = 1L;
    
    // The center point of the drill item, can be null, what is the reasons for a rational ??? 
-   private PlaPoint abit_center;
+   private PlaPointInt abit_center;
    // pre calculated minimal width of the shapes of this DrillItem on all layers
    private Double precalculated_min_width = null;
    // Pre calculated first layer, where this DrillItem contains a pad shape. If < 0, the value is not yet calculated
@@ -66,7 +66,8 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       {
       super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
 
-      abit_center = p_center;
+      if ( p_center != null )
+         abit_center = p_center.round();
       }
 
    /**
@@ -286,7 +287,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
    protected void set_center(PlaPoint p_center)
       {
-      abit_center = p_center;
+      abit_center = p_center != null ? p_center.round() : null ;
       }
 
    /**

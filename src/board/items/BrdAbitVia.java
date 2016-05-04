@@ -66,7 +66,16 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
    @Override
    public BrdAbitVia copy(int p_id_no)
       {
-      return new BrdAbitVia(padstack, get_center(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), attach_allowed, r_board);
+      return new BrdAbitVia(
+            padstack, 
+            get_center(), 
+            net_no_arr, 
+            clearance_class_no(), 
+            p_id_no, 
+            get_component_no(), 
+            get_fixed_state(), 
+            attach_allowed, 
+            r_board);
       }
 
    @Override

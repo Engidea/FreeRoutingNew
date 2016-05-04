@@ -148,6 +148,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
       return p_pole.translate_by(v);
       }
 
+   public abstract PlaPointInt turn_90_degree(int p_factor, PlaPointInt p_pole);
+
    /**
     * Mirrors this point at the vertical line through p_pole.
     */
@@ -157,6 +159,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
       v = v.mirror_at_y_axis();
       return p_pole.translate_by(v);
       }
+
+   public abstract PlaPointInt mirror_vertical(PlaPointInt p_pole);
 
    /**
     * Mirrors this point at the horizontal line through p_pole.

@@ -133,7 +133,7 @@ public final class PlaVectorInt extends PlaVector
       }
 
    @Override
-   public PlaVector turn_90_degree(int p_factor)
+   public PlaVectorInt turn_90_degree(int p_factor)
       {
       while (p_factor < 0)
          p_factor += 4;
