@@ -33,6 +33,7 @@ import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.library.LibPadstack;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -703,7 +704,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          }
       }
 
-   private static boolean via_exists(PlaPointInt p_location, freert.library.LibPadstack p_padstack, int[] p_net_no_arr, RoutingBoard p_board)
+   private boolean via_exists(PlaPointInt p_location, LibPadstack p_padstack, int[] p_net_no_arr, RoutingBoard p_board)
       {
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
       int from_layer = p_padstack.from_layer();

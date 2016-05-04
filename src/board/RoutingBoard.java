@@ -2134,10 +2134,22 @@ public final class RoutingBoard implements java.io.Serializable
       
       Polyline insert_polyline = new Polyline(p_from_corner, p_to_corner);
       
-      PlaPoint ok_point = insert_trace_polyline(insert_polyline, p_half_width, p_layer, p_net_no_arr, p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
-            p_max_spring_over_recursion_depth, p_tidy_width, p_pull_tight_accuracy, p_with_check, p_time_limit);
+      PlaPoint ok_point = insert_trace_polyline(
+            insert_polyline, 
+            p_half_width, 
+            p_layer, 
+            p_net_no_arr, 
+            p_clearance_class_no,
+            p_max_recursion_depth, 
+            p_max_via_recursion_depth,
+            p_max_spring_over_recursion_depth, 
+            p_tidy_width, 
+            p_pull_tight_accuracy, 
+            p_with_check, 
+            p_time_limit);
       
       PlaPoint result;
+      
       if (ok_point == insert_polyline.corner_first())
          {
          result = p_from_corner;

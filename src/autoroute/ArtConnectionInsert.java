@@ -149,7 +149,7 @@ public final class ArtConnectionInsert
             Set<BrdItem> picked_items = r_board.pick_items(curr_end_corner, p_trace.layer, item_filter);
             for (BrdItem curr_item : picked_items)
                {
-               board.items.BrdAbitPin curr_pin = (board.items.BrdAbitPin) curr_item;
+               BrdAbitPin curr_pin = (BrdAbitPin) curr_item;
                if (curr_pin.contains_net(ctrl.net_no) && curr_pin.center_get().equals(curr_end_corner))
                   {
                   if (index == 0)
@@ -171,26 +171,40 @@ public final class ArtConnectionInsert
       net_no_arr[0] = ctrl.net_no;
 
       int from_corner_no = 0;
-      for (int i = 1; i < p_trace.corners.length; ++i)
+      for (int index = 1; index < p_trace.corners.length; ++index)
          {
-         PlaPoint[] curr_corner_arr = new PlaPoint[i - from_corner_no + 1];
-         for (int j = from_corner_no; j <= i; ++j)
+         PlaPoint[] curr_corner_arr = new PlaPoint[index - from_corner_no + 1];
+         for (int j = from_corner_no; j <= index; ++j)
             {
             curr_corner_arr[j - from_corner_no] = p_trace.corners[j];
             }
+         
          Polyline insert_polyline = new Polyline(curr_corner_arr);
-         PlaPoint ok_point = r_board.insert_trace_polyline(insert_polyline, ctrl.trace_half_width[p_trace.layer], p_trace.layer, net_no_arr, ctrl.trace_clearance_class_no,
-               ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+         PlaPoint ok_point = r_board.insert_trace_polyline(
+               insert_polyline, 
+               ctrl.trace_half_width[p_trace.layer], 
+               p_trace.layer, 
+               net_no_arr, 
+               ctrl.trace_clearance_class_no,
+               ctrl.max_shove_trace_recursion_depth, 
+               ctrl.max_shove_via_recursion_depth, 
+               ctrl.max_spring_over_recursion_depth, 
+               Integer.MAX_VALUE, 
+               ctrl.pull_tight_accuracy, 
+               true, 
+               null);
+         
          boolean neckdown_inserted = false;
+         
          if (ok_point != null && ok_point != insert_polyline.corner_last() && ctrl.with_neckdown && curr_corner_arr.length == 2)
             {
             neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
             }
          if (ok_point == insert_polyline.corner_last() || neckdown_inserted)
             {
-            from_corner_no = i;
+            from_corner_no = index;
             }
-         else if (ok_point == insert_polyline.corner_first() && i != p_trace.corners.length - 1)
+         else if (ok_point == insert_polyline.corner_first() && index != p_trace.corners.length - 1)
             {
             // if ok_point == insert_polyline.first_corner() the spring over may have failed.
             // Spring over may correct the situation because an insertion, which is ok with clearance compensation

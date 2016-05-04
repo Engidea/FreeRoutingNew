@@ -572,8 +572,15 @@ public final class MazeSearch
             if (!check_points[0].equals(check_points[1]))
                {
                Polyline check_polyline = new Polyline(check_points);
-               boolean check_ok = r_board.check_trace_polyline(check_polyline, art_ctrl.trace_half_width[curr_layer], curr_layer, curr_net_no_arr, art_ctrl.trace_clearance_class_no,
-                     art_ctrl.max_shove_trace_recursion_depth, art_ctrl.max_shove_via_recursion_depth, art_ctrl.max_spring_over_recursion_depth);
+               boolean check_ok = r_board.check_trace_polyline(
+                     check_polyline, 
+                     art_ctrl.trace_half_width[curr_layer], 
+                     curr_layer, 
+                     curr_net_no_arr, 
+                     art_ctrl.trace_clearance_class_no,
+                     art_ctrl.max_shove_trace_recursion_depth, 
+                     art_ctrl.max_shove_via_recursion_depth, 
+                     art_ctrl.max_spring_over_recursion_depth);
                if (!check_ok)
                   {
                   continue;

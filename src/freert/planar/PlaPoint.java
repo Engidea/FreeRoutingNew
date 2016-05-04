@@ -77,6 +77,23 @@ public abstract class PlaPoint implements PlaObject, Serializable
    public abstract PlaVector difference_by(PlaPointInt p_other);
    public abstract PlaVector difference_by(PlaPointRational p_other);
    
+   @Override
+   public boolean equals (Object p_other )
+      {
+      if ( p_other == null ) return false;
+      
+      if ( p_other instanceof PlaPointInt )
+         return equals((PlaPointInt)p_other);
+      else if ( p_other instanceof PlaPointRational )
+         return equals((PlaPointRational)p_other);
+      else 
+         return false;
+      }
+   
+   public abstract boolean equals(PlaPointInt p_other);
+   public abstract boolean equals(PlaPointRational p_other);
+
+   
    
    /**
     * approximates the coordinates of this point by float coordinates

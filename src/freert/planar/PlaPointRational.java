@@ -118,9 +118,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
    @Override
    public final boolean equals(Object p_ob)
       {
-      if (p_ob == null) return false;
-
-      if (this == p_ob) return true;
 
       if ( ! (p_ob instanceof PlaPointRational) ) return false;
 
@@ -134,7 +131,29 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
 
       return (det.signum() == 0);
       }
+   
+   @Override
+   public final boolean equals(PlaPointInt p_ob)
+      {
+      return false;
+      }
 
+   @Override
+   public final boolean equals(PlaPointRational p_ob)
+      {
+      if ( p_ob == null ) return false;
+      
+      if (this == p_ob) return true;
+      
+      BigInteger det = BigIntAux.determinant(rp_x, p_ob.rp_x, rp_z, p_ob.rp_z);
+      
+      if (det.signum() != 0) return false;
+
+      det = BigIntAux.determinant(rp_y, p_ob.rp_y, rp_z, p_ob.rp_z);
+
+      return det.signum() == 0;
+      }
+   
    @Override
    public boolean is_contained_in(ShapeTileBox p_box)
       {

@@ -75,7 +75,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    /**
     * Calculates the relative location of this pin to its component.
     */
-   public PlaVector relative_location()
+   public final PlaVectorInt relative_location()
       {
       BrdComponent component = r_board.brd_components.get(get_component_no());
       
@@ -88,6 +88,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          {
          rel_location = package_pin.relative_location().mirror_at_y_axis();
          }
+      
       if (component_rotation % 90 == 0)
          {
          int component_ninety_degree_factor = ((int) component_rotation) / 90;
@@ -103,10 +104,12 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          location_approx = location_approx.rotate(Math.toRadians(component_rotation), PlaPointFloat.ZERO);
          rel_location = location_approx.round().difference_by(PlaPoint.ZERO);
          }
+      
       if (!component.is_on_front() && r_board.brd_components.get_flip_style_rotate_first())
          {
          rel_location = rel_location.mirror_at_y_axis();
          }
+      
       return rel_location;
       }
 
@@ -120,7 +123,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       // Calculate the pin center.
       BrdComponent component = r_board.brd_components.get(get_component_no());
       
-      a_center = component.get_location().translate_by(relative_location()).round();
+      a_center = component.get_location().translate_by(relative_location());
 
       // check that the pin center is inside the pin shape and correct it eventually
 

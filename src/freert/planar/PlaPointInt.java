@@ -28,6 +28,7 @@ import java.math.BigInteger;
 public final class PlaPointInt extends PlaPoint implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
+   private static final String classname="PlaPointInt.";
 
    public final int v_x;
    public final int v_y;
@@ -89,23 +90,23 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return is_nan;
       }
 
-   /**
-    * @return true, if this IntPoint is equal to p_ob
-    */
    @Override
-   public final boolean equals(Object p_ob)
+   public final boolean equals(PlaPointInt p_ob)
       {
-      if (p_ob == null) return false;
-
-      if (this == p_ob) return true;
-
-      if ( ! (p_ob instanceof PlaPointInt) )  return false;
-
-      PlaPointInt other = (PlaPointInt) p_ob;
+      if ( p_ob == null ) return false;
       
-      return (v_x == other.v_x && v_y == other.v_y);
+      if (this == p_ob) return true;
+      
+      return (v_x == p_ob.v_x && v_y == p_ob.v_y);
       }
 
+   @Override
+   public final boolean equals(PlaPointRational p_ob)
+      {
+      return false;
+      }
+
+   
    @Override
    public boolean is_contained_in(ShapeTileBox p_box)
       {

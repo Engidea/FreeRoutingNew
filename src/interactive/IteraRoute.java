@@ -397,16 +397,14 @@ public final class IteraRoute
          {
          return false;
          }
-      PlaPoint pin_center = found_smd_pin.center_get();
-      if (!(pin_center instanceof PlaPointInt))
+      
+      PlaPointInt pin_center = found_smd_pin.center_get();
+
+      if (connect(prev_corner, pin_center))
          {
-         return false;
+         prev_corner = pin_center;
          }
-      PlaPointInt to_corner = (PlaPointInt) pin_center;
-      if (connect(prev_corner, to_corner))
-         {
-         prev_corner = to_corner;
-         }
+      
       return true;
       }
 
@@ -444,6 +442,7 @@ public final class IteraRoute
          {
          route_completed = connect(p_from_point, (PlaPointInt) connection_point);
          }
+      
       return route_completed;
       }
 
@@ -455,10 +454,12 @@ public final class IteraRoute
       {
       PlaPoint[] corners = angled_connection(p_from_point, p_to_point);
       boolean connection_succeeded = true;
+      
       for (int i = 1; i < corners.length; ++i)
          {
          PlaPoint from_corner = corners[i - 1];
          PlaPoint to_corner = corners[i];
+         
          TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
          while (!from_corner.equals(to_corner))
             {
@@ -694,32 +695,38 @@ public final class IteraRoute
    /**
     * Makes a connection polygon from p_from_point to p_to_point whose lines fulfill the angle restriction.
     */
-   private PlaPoint[] angled_connection(PlaPoint p_from_point, PlaPoint p_to_point)
+   private PlaPoint[] angled_connection(PlaPoint p_from_point, PlaPointInt p_to_point)
       {
       PlaPointInt add_corner = null;
-      if (p_from_point instanceof PlaPointInt && p_to_point instanceof PlaPointInt)
+      
+      if (p_from_point instanceof PlaPointInt )
          {
          TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
          if (angle_restriction == TraceAngleRestriction.NINETY_DEGREE)
             {
-            add_corner = ((PlaPointInt) p_from_point).ninety_degree_corner((PlaPointInt) p_to_point, true);
+            add_corner = ((PlaPointInt) p_from_point).ninety_degree_corner(p_to_point, true);
             }
          else if (angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE)
             {
-            add_corner = ((PlaPointInt) p_from_point).fortyfive_degree_corner((PlaPointInt) p_to_point, true);
+            add_corner = ((PlaPointInt) p_from_point).fortyfive_degree_corner(p_to_point, true);
             }
          }
+      
+      
+      
       int new_corner_count = 2;
       if (add_corner != null)
          {
          ++new_corner_count;
          }
+      
       PlaPoint[] result = new PlaPoint[new_corner_count];
       result[0] = p_from_point;
       if (add_corner != null)
          {
          result[1] = add_corner;
          }
+      
       result[result.length - 1] = p_to_point;
       return result;
       }
