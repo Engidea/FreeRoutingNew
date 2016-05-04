@@ -47,23 +47,8 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    
    public abstract PlaVectorInt round ();
 
-
-   /**
-    * adds p_other to this vector
-    */
-   public final PlaVector add(PlaVector p_other)
-      {
-      if ( p_other == null ) return null;
-
-      if ( p_other instanceof PlaVectorInt )
-         return add((PlaVectorInt)p_other);
-      else if ( p_other instanceof PlaVectorRational )
-         return add((PlaVectorRational)p_other);
-      else 
-         return null;
-      }
-
    public abstract PlaVector add(PlaVectorInt p_other);
+
    public abstract PlaVector add(PlaVectorRational p_other);
 
    

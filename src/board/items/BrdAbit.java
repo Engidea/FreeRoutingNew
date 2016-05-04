@@ -53,7 +53,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    {
    private static final long serialVersionUID = 1L;
    
-   // The center point of the drill item, can be null 
+   // The center point of the drill item, can be null, what is the reasons for a rational ??? 
    private PlaPoint abit_center;
    // pre calculated minimal width of the shapes of this DrillItem on all layers
    private Double precalculated_min_width = null;

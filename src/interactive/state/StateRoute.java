@@ -567,18 +567,16 @@ public class StateRoute extends StateInteractive
 
    public void draw(java.awt.Graphics p_graphics)
       {
-      if (route != null)
-         {
-         route.draw(p_graphics, i_brd.gdi_context);
-         }
+      if (route == null) return;
+
+      route.draw(p_graphics, i_brd.gdi_context);
       }
 
    public void display_default_message()
       {
-      if (route != null)
-         {
-         freert.rules.RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_no_arr[0]);
-         i_brd.screen_messages.set_status_message(resources.getString("routing_net") + " " + curr_net.name);
-         }
+      if (route == null) return;
+      
+      RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_no_arr[0]);
+      i_brd.screen_messages.set_status_message(resources.getString("routing_net") + " " + curr_net.name);
       }
    }

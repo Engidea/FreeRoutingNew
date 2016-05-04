@@ -191,8 +191,9 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Returns the winding number of this polygon, treated as closed. It will be > 0, if the corners are in countercock sense, and <
-    * 0, if the corners are in clockwise sense.
+    * Returns the winding number of this polygon, treated as closed. 
+    * It will be > 0, if the corners are in countercock sense
+    * < 0 if the corners are in clockwise sense.
     */
    public int winding_number_after_closing()
       {
@@ -212,20 +213,22 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
          }
       
       double angle_sum = 0;
-      for (int i = 1; i <= corner_count; ++i)
+      
+      for (int index = 1; index <= corner_count; ++index)
          {
          PlaVectorInt next_side_vector;
-         if (i == corner_count - 1)
+         if (index == corner_count - 1)
             {
-            next_side_vector = corner_arr[0].difference_by(corner_arr[i]);
+            next_side_vector = corner_arr[0].difference_by(corner_arr[index]);
             }
-         else if (i == corner_count)
+         
+         else if (index == corner_count)
             {
             next_side_vector = first_side_vector;
             }
          else
             {
-            next_side_vector = corner_arr[i + 1].difference_by(corner_arr[i]);
+            next_side_vector = corner_arr[index + 1].difference_by(corner_arr[index]);
             }
          angle_sum += prev_side_vector.angle_approx(next_side_vector);
          prev_side_vector = next_side_vector;
