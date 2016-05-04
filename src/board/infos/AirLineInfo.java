@@ -1,9 +1,10 @@
 package board.infos;
 
+import board.items.BrdAbitPin;
+import board.items.BrdItem;
 import freert.planar.PlaPointFloat;
 import freert.rules.RuleNet;
 import gui.varie.GuiResources;
-import board.items.BrdItem;
 
 /**
  * Describes a single incomplete connection of the rats nest
@@ -41,29 +42,27 @@ public final class AirLineInfo implements Comparable<AirLineInfo>, PrintableInfo
 
    private String item_info(BrdItem p_item)
       {
-      String result;
-      if (p_item instanceof board.items.BrdAbitPin)
+      if (p_item instanceof BrdAbitPin)
          {
-         board.items.BrdAbitPin curr_pin = (board.items.BrdAbitPin) p_item;
-         result = curr_pin.component_name() + ", " + curr_pin.name();
+         BrdAbitPin curr_pin = (BrdAbitPin) p_item;
+         return curr_pin.component_name() + ", " + curr_pin.get_name();
          }
       else if (p_item instanceof board.items.BrdAbitVia)
          {
-         result = resources.getString("via");
+         return resources.getString("via");
          }
       else if (p_item instanceof board.items.BrdTrace)
          {
-         result = resources.getString("trace");
+         return resources.getString("trace");
          }
       else if (p_item instanceof board.items.BrdAreaConduction)
          {
-         result = resources.getString("conduction_area");
+         return resources.getString("conduction_area");
          }
       else
          {
-         result = resources.getString("unknown");
+         return resources.getString("unknown");
          }
-      return result;
       }
 
    public void print_info(gui.varie.ObjectInfoPanel p_window, java.util.Locale p_locale)

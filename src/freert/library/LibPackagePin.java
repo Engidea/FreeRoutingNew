@@ -1,6 +1,5 @@
 package freert.library;
 
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 
 /**
@@ -30,7 +29,7 @@ public class LibPackagePin implements java.io.Serializable
       rotation_in_degree = p_rotation_in_degree;
       }
    
-   public PlaVector relative_location()
+   public PlaVectorInt relative_location()
       {
       return relative_location;
       }

@@ -40,6 +40,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
@@ -77,9 +78,11 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    public PlaVector relative_location()
       {
       BrdComponent component = r_board.brd_components.get(get_component_no());
+      
       LibPackage lib_package = component.get_package();
       LibPackagePin package_pin = lib_package.get_pin(pin_no);
-      PlaVector rel_location = package_pin.relative_location();
+      PlaVectorInt rel_location = package_pin.relative_location();
+      
       double component_rotation = component.get_rotation_in_degree();
       if (!component.is_on_front() && !r_board.brd_components.get_flip_style_rotate_first())
          {
@@ -108,54 +111,60 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    @Override
-   public PlaPoint get_center()
+   public PlaPointInt get_center()
       {
-      PlaPoint pin_center = super.get_center();
+      PlaPointInt pin_center = super.get_center();
       
-      if (pin_center == null)
+      if ( pin_center != null ) return pin_center;
+      
+      // Calculate the pin center.
+      BrdComponent component = r_board.brd_components.get(get_component_no());
+      
+      pin_center = component.get_location().translate_by(relative_location()).round();
+
+      // check that the pin center is inside the pin shape and correct it eventually
+
+      LibPadstack padstack = get_padstack();
+      
+      int from_layer = padstack.from_layer();
+      int to_layer = padstack.to_layer();
+      
+      PlaShape curr_shape = null;
+      
+      for (int index = 0; index < to_layer - from_layer + 1; ++index)
          {
-         // Calculate the pin center.
-         BrdComponent component = r_board.brd_components.get(get_component_no());
-         
-         pin_center = component.get_location().translate_by(relative_location());
+         curr_shape = get_shape(index);
 
-         // check that the pin center is inside the pin shape and correct it eventually
+         if (curr_shape != null) break;
+         }
 
-         LibPadstack padstack = get_padstack();
-         int from_layer = padstack.from_layer();
-         int to_layer = padstack.to_layer();
-         PlaShape curr_shape = null;
-         for (int i = 0; i < to_layer - from_layer + 1; ++i)
-            {
-            curr_shape = get_shape(i);
-            if (curr_shape != null)
-               {
-               break;
-               }
-            }
-         if (curr_shape == null)
-            {
-            System.out.println("Pin: At least 1 shape != null expected");
-            }
-         else if (!curr_shape.contains_inside(pin_center))
-            {
-            pin_center = curr_shape.centre_of_gravity().round();
-            }
-         set_center(pin_center);
+      if (curr_shape == null)
+         {
+         System.out.println("Pin: At least 1 shape != null expected");
+         }
+      else if ( ! curr_shape.contains_inside(pin_center))
+         {
+         pin_center = curr_shape.centre_of_gravity().round();
          }
       
-      return pin_center;
+      // this will possibly adjust something
+      super.set_center(pin_center);
+      
+      // and this will pick the changes back
+      return super.get_center();
       }
 
    @Override
    public LibPadstack get_padstack()
       {
       BrdComponent component = r_board.brd_components.get(get_component_no());
+      
       if (component == null)
          {
          System.out.println("Pin.get_padstack; component not found");
          return null;
          }
+      
       int padstack_no = component.get_package().get_pin(pin_no).padstack_no;
       return r_board.library.padstacks.get(padstack_no);
       }
@@ -164,17 +173,19 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    public BrdAbitPin copy(int p_id_no)
       {
       int[] curr_net_no_arr = new int[net_count()];
-      for (int i = 0; i < curr_net_no_arr.length; ++i)
+      
+      for (int index = 0; index < curr_net_no_arr.length; ++index)
          {
-         curr_net_no_arr[i] = get_net_no(i);
+         curr_net_no_arr[index] = get_net_no(index);
          }
+      
       return new BrdAbitPin(get_component_no(), pin_no, curr_net_no_arr, clearance_class_no(), p_id_no, get_fixed_state(), r_board);
       }
 
    /**
     * Return the name of this pin in the package of this component.
     */
-   public String name()
+   public String get_name()
       {
       BrdComponent component = r_board.brd_components.get(get_component_no());
 
@@ -227,7 +238,8 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          return null;
          }
       
-      PlaVector rel_location = package_pin.relative_location();
+      PlaVectorInt rel_location = package_pin.relative_location();
+      
       double component_rotation = component.get_rotation_in_degree();
 
       boolean mirror_at_y_axis = !component.is_on_front() && !r_board.brd_components.get_flip_style_rotate_first();
@@ -462,24 +474,28 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       return true;
       }
 
+   @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       set_center(null);
       clear_derived_data();
       }
 
+   @Override
    public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
       {
       set_center(null);
       clear_derived_data();
       }
 
+   @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
       set_center(null);
       clear_derived_data();
       }
 
+   @Override
    public void clear_derived_data()
       {
       super.clear_derived_data();
