@@ -15,18 +15,6 @@
  */
 package board.items;
 
-import freert.graphics.GdiContext;
-import freert.graphics.GdiDrawable;
-import freert.planar.PlaDimension;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
-import freert.rules.RuleNets;
-import gui.varie.ObjectInfoPanel;
-import gui.varie.UndoableObjectStorable;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.io.ObjectOutputStream;
@@ -51,6 +39,19 @@ import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.SearchTreesInfo;
+import freert.graphics.GdiContext;
+import freert.graphics.GdiDrawable;
+import freert.planar.PlaDimension;
+import freert.planar.PlaPoint;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import freert.rules.RuleNets;
+import gui.varie.ObjectInfoPanel;
+import gui.varie.UndoableObjectStorable;
 
 /**
  * Basic class of the items on a board.
@@ -335,7 +336,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Translates this item by p_vector in the board.
     * Override in subclasses
     */
-   public void move_by(PlaVector p_vector)
+   public void move_by(PlaVectorInt p_vector)
       {
       r_board.item_list.save_for_undo(this);
       r_board.search_tree_manager.remove(this);

@@ -1922,7 +1922,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Returns false, if that was not possible without creating clearance violations. 
     * In this case the database may be damaged, so that an undo becomes necessary.
     */
-   public boolean move_drill_item(BrdAbit p_drill_item, PlaVector p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, int p_tidy_width, int p_pull_tight_accuracy,
+   public boolean move_drill_item(BrdAbit p_drill_item, PlaVectorInt p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, int p_tidy_width, int p_pull_tight_accuracy,
          int p_pull_tight_time_limit)
       {
       clear_shove_failing_obstacle();

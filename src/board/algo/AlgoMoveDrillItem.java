@@ -147,7 +147,7 @@ public final class AlgoMoveDrillItem
     * Translates p_drill_item by p_vector by shoving obstacle traces and vias aside, so that no clearance violations occur. If
     * p_tidy_region != null, it will be joined by the bounding octagons of the translated shapes.
     */
-   public boolean insert(BrdAbit p_drill_item, PlaVector p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, ShapeTileOctagon p_tidy_region )
+   public boolean insert(BrdAbit p_drill_item, PlaVectorInt p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, ShapeTileOctagon p_tidy_region )
       {
       if (p_drill_item.is_shove_fixed()) return false;
 
@@ -156,7 +156,8 @@ public final class AlgoMoveDrillItem
          {
          attach_allowed = ((BrdAbitVia) p_drill_item).attach_allowed;
          }
-      Collection<BrdItem> ignore_items = new java.util.LinkedList<BrdItem>();
+      
+      Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
       ignore_items.add(p_drill_item);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); ++curr_layer)

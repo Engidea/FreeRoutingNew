@@ -40,6 +40,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentFloat;
 import freert.planar.PlaSide;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 
 /**
@@ -168,29 +169,45 @@ public final class AlgoOptimizeVia
          second_layer_trace_costs = first_layer_trace_costs;
          }
 
-      PlaPoint new_location = reposition_via( p_via, first_trace.get_half_width(), first_trace.clearance_class_no(), first_trace.get_layer(), first_layer_trace_costs, first_trace_from_corner,
-            second_trace.get_half_width(), second_trace.clearance_class_no(), second_trace.get_layer(), second_layer_trace_costs, second_trace_from_corner);
+      PlaPoint new_location = reposition_via( 
+            p_via, 
+            first_trace.get_half_width(), 
+            first_trace.clearance_class_no(), 
+            first_trace.get_layer(), 
+            first_layer_trace_costs, 
+            first_trace_from_corner,
+            second_trace.get_half_width(), 
+            second_trace.clearance_class_no(), 
+            second_trace.get_layer(), 
+            second_layer_trace_costs, 
+            second_trace_from_corner);
+      
       if (new_location == null || new_location.equals(via_center))
          {
          return false;
          }
-      PlaVector delta = new_location.difference_by(via_center);
+      
+      PlaVectorInt delta = new_location.difference_by(via_center).round();   // does rounding here has some issues ?
+      
       if ( ! r_board.move_drill_algo.insert(p_via, delta, 9, 9, null))
          {
          System.out.println("OptViaAlgo.opt_via_location: move via failed");
          return false;
          }
+      
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.TRACES);
       Collection<BrdItem> picked_items = r_board.pick_items(new_location, first_trace.get_layer(), filter);
       for (BrdItem curr_item : picked_items)
          {
          ((BrdTracePolyline) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
          }
+      
       picked_items = r_board.pick_items(new_location, second_trace.get_layer(), filter);
       for (BrdItem curr_item : picked_items)
          {
          ((BrdTracePolyline) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
          }
+      
       filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
       picked_items = r_board.pick_items(new_location, first_trace.get_layer(), filter);
       for (BrdItem curr_item : picked_items)
@@ -269,7 +286,7 @@ public final class AlgoOptimizeVia
          check_corner = trace_polyline.corner(trace_polyline.corner_count() - 2);
          }
       
-      PlaPointInt rounded_check_corner = check_corner.to_float().round();
+      PlaPointInt rounded_check_corner = check_corner.round();
       int trace_half_width = contact_trace.get_half_width();
       int trace_layer = contact_trace.get_layer();
       int trace_cl_class_no = contact_trace.clearance_class_no();
@@ -337,7 +354,8 @@ public final class AlgoOptimizeVia
          if (!contact_ok) return false;
          }
 
-      PlaVector diff_vector = new_via_location.difference_by(via_center);
+      PlaVectorInt diff_vector = new_via_location.difference_by(via_center).round();  // does this rounding makes any difference ?
+      
       if ( ! r_board.move_drill_algo.insert(p_via, diff_vector, 9, 9, null))
          {
          System.out.println("OptViaAlgo.opt_plane_or_fanout_via: move via failed");

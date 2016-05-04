@@ -41,6 +41,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 
@@ -118,7 +119,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public void move_by(PlaVector p_vector)
+   public void move_by(PlaVectorInt p_vector)
       {
       PlaPoint old_center = get_center();
       
