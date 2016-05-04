@@ -342,7 +342,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
 
-      PlaPoint drill_center = center_get();
+      PlaPointInt drill_center = center_get();
 
       ShapeTile search_shape = new ShapeTileBox(drill_center);
       
@@ -428,9 +428,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public PlaPoint[] get_ratsnest_corners()
+   public PlaPointInt[] get_ratsnest_corners()
       {
-      PlaPoint[] result = new PlaPoint[1];
+      PlaPointInt[] result = new PlaPointInt[1];
       result[0] = center_get();
       return result;
       }

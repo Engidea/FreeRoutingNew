@@ -897,9 +897,9 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns all corners of this item, which are used for displaying the ratsnest. 
     * To be overwritten in derived classes implementing the Connectable interface.
     */
-   public PlaPoint[] get_ratsnest_corners()
+   public PlaPointInt[] get_ratsnest_corners()
       {
-      return new PlaPoint[0];
+      return new PlaPointInt[0];
       }
 
    @Override

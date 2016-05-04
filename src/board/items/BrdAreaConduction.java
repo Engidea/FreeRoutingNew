@@ -20,12 +20,6 @@
 
 package board.items;
 
-import freert.planar.PlaArea;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaVector;
-import freert.planar.ShapeTile;
-import gui.varie.ObjectInfoPanel;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -36,6 +30,12 @@ import board.shape.ShapeTreeObject;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaArea;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVector;
+import freert.planar.ShapeTile;
+import gui.varie.ObjectInfoPanel;
 
 /**
  * A ObstacleArea, which can be electrically connected to other items.
@@ -122,14 +122,15 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
       }
 
    @Override
-   public PlaPoint[] get_ratsnest_corners()
+   public PlaPointInt[] get_ratsnest_corners()
       {
-      PlaPoint[] result;
       PlaPointFloat[] corners = get_area().corner_approx_arr();
-      result = new PlaPoint[corners.length];
-      for (int i = 0; i < corners.length; ++i)
+
+      PlaPointInt[] result = new PlaPointInt[corners.length];
+      
+      for (int index = 0; index < corners.length; ++index)
          {
-         result[i] = corners[i].round();
+         result[index] = corners[index].round();
          }
 
       return result;

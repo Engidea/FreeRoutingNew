@@ -28,7 +28,6 @@ import board.items.BrdArea;
 import board.items.BrdComponentOutline;
 import board.items.BrdItem;
 import board.varie.SortedItemDouble;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
@@ -101,11 +100,11 @@ public final class MoveComponent
       
       gravity_x /= item_centers.size();
       gravity_y /= item_centers.size();
-      PlaPoint gravity_point = new PlaPointInt(Math.round(gravity_x), Math.round(gravity_y));
+      PlaPointInt gravity_point = new PlaPointInt(Math.round(gravity_x), Math.round(gravity_y));
       
       for (BrdItem curr_item : item_group_list )
          {
-         PlaPoint item_center;
+         PlaPointInt item_center;
 
          if (curr_item instanceof BrdAbit)
             {

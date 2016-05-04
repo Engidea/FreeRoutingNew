@@ -30,6 +30,7 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
@@ -412,7 +413,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       }
 
    @Override
-   public PlaPoint[] get_ratsnest_corners()
+   public PlaPointInt[] get_ratsnest_corners()
       {
       // Use only uncontacted enpoints of the trace.
       // Otherwise the allocated memory in the calculation of the incompletes
@@ -425,27 +426,32 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          ++stub_count;
          stub_at_start = true;
          }
+      
       if (get_end_contacts().isEmpty())
          {
          ++stub_count;
          stub_at_end = true;
          }
-      PlaPoint[] result = new PlaPoint[stub_count];
+      
+      PlaPointInt[] result = new PlaPointInt[stub_count];
       int stub_no = 0;
       if (stub_at_start)
          {
-         result[stub_no] = first_corner();
+         result[stub_no] = first_corner().round();
          ++stub_no;
          }
+      
       if (stub_at_end)
          {
-         result[stub_no] = corner_last();
+         result[stub_no] = corner_last().round();
          }
-      for (int i = 0; i < result.length; ++i)
+      
+      for (int index = 0; index < result.length; ++index)
          {
-         if (result[i] == null)
+         if (result[index] == null)
             {
-            return new PlaPoint[0];// Trace is inconsistent
+            System.err.println("Trace is inconsistent");
+            return new PlaPointInt[0];// Trace is inconsistent
             }
          }
       return result;

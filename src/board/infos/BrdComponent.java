@@ -22,7 +22,6 @@ package board.infos;
 
 import freert.library.LibLogicalPart;
 import freert.library.LibPackage;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import gui.varie.ObjectInfoPanel;
@@ -105,7 +104,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Returns the location of this component.
     */
-   public PlaPoint get_location()
+   public final PlaPointInt get_location()
       {
       return location;
       }
