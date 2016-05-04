@@ -36,7 +36,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentInt;
 import freert.planar.PlaShape;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -65,37 +65,41 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       polyline = p_polyline;
       }
 
+   @Override
    public BrdItem copy(int p_id_no)
       {
       int[] curr_net_no_arr = new int[net_count()];
-      for (int i = 0; i < curr_net_no_arr.length; ++i)
+
+      for (int index = 0; index < curr_net_no_arr.length; ++index)
          {
-         curr_net_no_arr[i] = get_net_no(i);
+         curr_net_no_arr[index] = get_net_no(index);
          }
+      
       return new BrdTracePolyline(polyline, get_layer(), get_half_width(), curr_net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), r_board);
       }
 
    /**
     * checks, if this trace is on layer p_layer
     */
+   @Override
    public boolean is_on_layer(int p_layer)
       {
       return get_layer() == p_layer;
       }
 
    /**
-    * returns the first corner of this trace, which is the intersection of the
-    * first and second lines of its polyline
+    * returns the first corner of this trace, which is the intersection of the first and second lines of its polyline
     */
+   @Override
    public PlaPoint first_corner()
       {
       return polyline.corner(0);
       }
 
    /**
-    * returns the last corner of this trace, which is the intersection of the
-    * last two lines of its polyline
+    * returns the last corner of this trace, which is the intersection of the last two lines of its polyline
     */
+   @Override
    public PlaPoint corner_last()
       {
       return polyline.corner_last();
@@ -109,11 +113,13 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       return polyline.corner_count();
       }
 
+   @Override
    public double get_length()
       {
       return polyline.length_approx();
       }
 
+   @Override
    public ShapeTileBox bounding_box()
       {
       ShapeTileBox result = polyline.bounding_box();
@@ -151,28 +157,33 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
    /**
     * returns the count of tile shapes of this polyline
     */
+   @Override
    public int tile_shape_count()
       {
       return Math.max(polyline.plalinelen(-2), 0);
       }
 
-   public void translate_by(PlaVector p_vector)
+   @Override
+   public void translate_by(PlaVectorInt p_vector)
       {
       polyline = polyline.translate_by(p_vector);
       clear_derived_data();
       }
 
+   @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       polyline = polyline.turn_90_degree(p_factor, p_pole);
       clear_derived_data();
       }
 
+   @Override
    public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
       {
       polyline = polyline.rotate_approx(Math.toRadians(p_angle_in_degree), p_pole);
       }
 
+   @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
       polyline = polyline.mirror_vertical(p_pole);

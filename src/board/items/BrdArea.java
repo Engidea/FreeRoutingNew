@@ -29,6 +29,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import gui.varie.ObjectInfoPanel;
@@ -61,8 +62,19 @@ public class BrdArea extends BrdItem implements java.io.Serializable
     * Creates a new relative_area item which may belong to several nets. 
     * p_name is null, if the ObstacleArea does not belong to a component.
     */
-   public BrdArea(PlaArea p_area, int p_layer_no, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_cmp_no, String p_name,
-         ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdArea(
+         PlaArea p_area, 
+         int p_layer_no, 
+         PlaVector p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int[] p_net_no_arr, 
+         int p_clearance_type, 
+         int p_id_no, 
+         int p_cmp_no, 
+         String p_name,
+         ItemFixState p_fixed_state, 
+         RoutingBoard p_board)
       {
       super(p_net_no_arr, p_clearance_type, p_id_no, p_cmp_no, p_fixed_state, p_board);
       relative_area = p_area;
@@ -129,16 +141,19 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       return relative_area;
       }
 
+   @Override
    public boolean is_on_layer(int p_layer)
       {
       return layer_no == p_layer;
       }
 
+   @Override
    public int first_layer()
       {
       return layer_no;
       }
 
+   @Override
    public int last_layer()
       {
       return layer_no;
@@ -149,11 +164,13 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       return layer_no;
       }
 
+   @Override
    public ShapeTileBox bounding_box()
       {
       return get_area().bounding_box();
       }
 
+   @Override
    public boolean is_obstacle(BrdItem p_other)
       {
       if (p_other.shares_net(this))
@@ -169,6 +186,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       return p_search_tree.calculate_tree_shapes(this);
       }
 
+   @Override
    public int tile_shape_count()
       {
       ShapeTile[] tile_shapes = split_to_convex();
@@ -180,6 +198,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       return tile_shapes.length;
       }
 
+   @Override
    public ShapeTile get_tile_shape(int p_no)
       {
       ShapeTile[] tile_shapes = split_to_convex();
@@ -188,10 +207,12 @@ public class BrdArea extends BrdItem implements java.io.Serializable
          System.out.println("ConvexObstacle.get_tile_shape: p_no out of range");
          return null;
          }
+
       return tile_shapes[p_no];
       }
 
-   public void translate_by(PlaVector p_vector)
+   @Override
+   public void translate_by(PlaVectorInt p_vector)
       {
       translation = translation.add(p_vector);
       clear_derived_data();

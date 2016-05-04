@@ -19,22 +19,22 @@
  */
 package board.items;
 
-import freert.graphics.GdiContext;
-import freert.planar.PlaArea;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
-import freert.planar.PolylineArea;
-import freert.planar.ShapePolyline;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
-import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
 import board.RoutingBoard;
 import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.graphics.GdiContext;
+import freert.planar.PlaArea;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaVectorInt;
+import freert.planar.PolylineArea;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
+import gui.varie.ObjectInfoPanel;
 
 /**
  * Class describing a board outline.
@@ -140,7 +140,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       }
 
    @Override
-   public void translate_by(PlaVector p_vector)
+   public void translate_by(PlaVectorInt p_vector)
       {
       for (ShapePolyline curr_shape : shapes)
          {

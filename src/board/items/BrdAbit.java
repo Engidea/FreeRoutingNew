@@ -40,7 +40,6 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -74,7 +73,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
     * Works only for symmetric DrillItems
     */
    @Override
-   public void translate_by(PlaVector p_vector)
+   public void translate_by(PlaVectorInt p_vector)
       {
       if (abit_center != null)
          {

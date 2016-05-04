@@ -45,7 +45,6 @@ import freert.planar.PlaDimension;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -309,7 +308,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Translates the shapes of this item by p_vector. Does not move the item in the board.
     */
-   public abstract void translate_by(PlaVector p_vector);
+   public abstract void translate_by(PlaVectorInt p_vector);
 
    /**
     * Turns this Item by p_factor times 90 degree around p_pole. Does not update the item in the board.

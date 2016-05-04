@@ -31,7 +31,9 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import freert.varie.UnitMeasure;
 import gui.varie.ObjectInfoPanel;
 
@@ -74,28 +76,22 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
 
    public int get_layer()
       {
-      int result;
-      if (is_front)
-         {
-         result = 0;
-         }
-      else
-         {
-         result = r_board.get_layer_count() - 1;
-         }
-      return result;
+      return is_front ?  0 : r_board.get_layer_count() - 1;
       }
 
+   @Override
    public int first_layer()
       {
       return get_layer();
       }
 
+   @Override
    public int last_layer()
       {
       return get_layer();
       }
 
+   @Override
    public boolean is_on_layer(int p_layer)
       {
       return get_layer() == p_layer;
@@ -113,6 +109,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       return get_layer();
       }
 
+   @Override
    public int tile_shape_count()
       {
       return 0;
@@ -127,11 +124,13 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       return new ShapeTile[0];
       }
 
+   @Override
    public double get_draw_intensity(GdiContext p_graphics_context)
       {
       return p_graphics_context.get_component_outline_color_intensity();
       }
 
+   @Override
    public Color[] get_draw_colors(GdiContext p_graphics_context)
       {
       Color[] color_arr = new Color[r_board.layer_structure.size()];
@@ -147,17 +146,17 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       return color_arr;
       }
 
+   @Override
    public int get_draw_priority()
       {
       return freert.graphics.GdiDrawable.MIDDLE_DRAW_PRIORITY;
       }
 
+   @Override
    public void draw(java.awt.Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)
       {
-      if (p_graphics_context == null || p_intensity <= 0)
-         {
-         return;
-         }
+      if (p_graphics_context == null || p_intensity <= 0)  return;
+
       Color color = p_color_arr[get_layer()];
       double intensity = p_graphics_context.get_layer_visibility(get_layer()) * p_intensity;
 
@@ -165,12 +164,14 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       p_graphics_context.draw_boundary(get_area(), draw_width, color, p_g, intensity);
       }
 
-   public freert.planar.ShapeTileBox bounding_box()
+   @Override
+   public ShapeTileBox bounding_box()
       {
       return get_area().bounding_box();
       }
 
-   public void translate_by(PlaVector p_vector)
+   @Override
+   public void translate_by(PlaVectorInt p_vector)
       {
       translation = translation.add(p_vector);
       clear_derived_data();

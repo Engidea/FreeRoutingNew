@@ -39,7 +39,6 @@ import freert.library.LibPackagePin;
 import freert.library.LibPadstack;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeConvex;
 
@@ -113,7 +112,7 @@ public class StateCopyItem extends StateInteractive
       current_position = p_new_position.round();
       if (!current_position.equals(previous_position))
          {
-         PlaVector translate_vector = current_position.difference_by(previous_position);
+         PlaVectorInt translate_vector = current_position.difference_by(previous_position);
          Iterator<board.items.BrdItem> it = item_list.iterator();
          while (it.hasNext())
             {
