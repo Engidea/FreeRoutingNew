@@ -8,7 +8,7 @@ import autoroute.expand.ExpandRoomComplete;
  * Type of the elements of the list returned by this.backtrack(). 
  * Next_room is the common room of the current door and the next door in the backtrack list.
  */
-public class ArtBacktrackElement
+public final class ArtBacktrackElement
    {
    public final ExpandObject door;
    public final int section_no_of_door;

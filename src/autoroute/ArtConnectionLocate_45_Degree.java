@@ -54,12 +54,12 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
       {
       Collection<PlaPointFloat> result = new LinkedList<PlaPointFloat>();
 
-      if (this.current_to_door_index > this.current_target_door_index)
+      if (current_to_door_index > current_target_door_index)
          {
          return result;
          } 
 
-      ArtBacktrackElement curr_from_info = this.backtrack_array[this.current_to_door_index - 1];
+      ArtBacktrackElement curr_from_info = backtrack_array[current_to_door_index - 1];
 
       if (curr_from_info.next_room == null)
          {
@@ -69,7 +69,7 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
 
       ShapeTile room_shape = curr_from_info.next_room.get_shape();
 
-      int trace_halfwidth = this.art_ctrl.compensated_trace_half_width[this.current_trace_layer];
+      int trace_halfwidth = art_ctrl.compensated_trace_half_width[current_trace_layer];
       int trace_halfwidth_add = trace_halfwidth + ArtEngine.TRACE_WIDTH_TOLERANCE; // add some tolerance for free space
                                                                                          // expansion rooms.
       int shrink_offset;
@@ -87,34 +87,34 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
       if (!shrinked_room_shape.is_empty())
          {
          // enter the shrinked room shape by a 45 degree angle first
-         PlaPointFloat nearest_room_point = shrinked_room_shape.nearest_point_approx(this.current_from_point);
-         boolean horizontal_first = calc_horizontal_first_from_door(curr_from_info.door, this.current_from_point, nearest_room_point);
+         PlaPointFloat nearest_room_point = shrinked_room_shape.nearest_point_approx(current_from_point);
+         boolean horizontal_first = calc_horizontal_first_from_door(curr_from_info.door, current_from_point, nearest_room_point);
          nearest_room_point = round_to_integer(nearest_room_point);
-         result.add(calculate_additional_corner(this.current_from_point, nearest_room_point, horizontal_first, this.angle_restriction));
+         result.add(calculate_additional_corner(current_from_point, nearest_room_point, horizontal_first, angle_restriction));
          result.add(nearest_room_point);
-         this.current_from_point = nearest_room_point;
+         current_from_point = nearest_room_point;
          }
       else
          {
          shrinked_room_shape = room_shape;
          }
 
-      if (this.current_to_door_index == this.current_target_door_index)
+      if (current_to_door_index == current_target_door_index)
          {
-         PlaPointFloat nearest_point = this.current_target_shape.nearest_point_approx(this.current_from_point);
+         PlaPointFloat nearest_point = current_target_shape.nearest_point_approx(current_from_point);
          nearest_point = round_to_integer(nearest_point);
-         PlaPointFloat add_corner = calculate_additional_corner(this.current_from_point, nearest_point, true, this.angle_restriction);
+         PlaPointFloat add_corner = calculate_additional_corner(current_from_point, nearest_point, true, angle_restriction);
          if (!shrinked_room_shape.contains(add_corner))
             {
-            add_corner = calculate_additional_corner(this.current_from_point, nearest_point, false, this.angle_restriction);
+            add_corner = calculate_additional_corner(current_from_point, nearest_point, false, angle_restriction);
             }
          result.add(add_corner);
          result.add(nearest_point);
-         ++this.current_to_door_index;
+         ++current_to_door_index;
          return result;
          }
 
-      ArtBacktrackElement curr_to_info = this.backtrack_array[this.current_to_door_index];
+      ArtBacktrackElement curr_to_info = backtrack_array[current_to_door_index];
       if (!(curr_to_info.door instanceof ExpandDoor))
          {
          System.out.println("LocateFoundConnectionAlgo45Degree.calculate_next_trace_corners: ExpansionDoor expected");
@@ -129,7 +129,7 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
          ShapeTile to_door_shape = curr_to_door.get_shape();
 
          ShapeTile shrinked_to_door_shape = (ShapeTile) to_door_shape.shrink(shrink_offset);
-         nearest_to_door_point = shrinked_to_door_shape.nearest_point_approx(this.current_from_point);
+         nearest_to_door_point = shrinked_to_door_shape.nearest_point_approx(current_from_point);
          nearest_to_door_point = round_to_integer(nearest_to_door_point);
          }
       else
@@ -141,7 +141,7 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
             return result;
             }
          PlaSegmentFloat curr_line_section = line_sections[curr_to_info.section_no_of_door];
-         nearest_to_door_point = curr_line_section.nearest_segment_point(this.current_from_point);
+         nearest_to_door_point = curr_line_section.nearest_segment_point(current_from_point);
 
          boolean nearest_to_door_point_ok = true;
          if (curr_to_info.next_room != null)
@@ -162,14 +162,14 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
             }
          }
       nearest_to_door_point = round_to_integer(nearest_to_door_point);
-      boolean horizontal_first = calc_horizontal_first_to_door(curr_to_info.door, this.current_from_point, nearest_to_door_point);
-      result.add(calculate_additional_corner(this.current_from_point, nearest_to_door_point, horizontal_first, this.angle_restriction));
+      boolean horizontal_first = calc_horizontal_first_to_door(curr_to_info.door, current_from_point, nearest_to_door_point);
+      result.add(calculate_additional_corner(current_from_point, nearest_to_door_point, horizontal_first, angle_restriction));
       result.add(nearest_to_door_point);
-      ++this.current_to_door_index;
+      ++current_to_door_index;
       return result;
       }
 
-   private static PlaPointFloat round_to_integer(PlaPointFloat p_point)
+   private PlaPointFloat round_to_integer(PlaPointFloat p_point)
       {
       return p_point.round().to_float();
       }

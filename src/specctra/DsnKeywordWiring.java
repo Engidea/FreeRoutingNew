@@ -480,17 +480,17 @@ final class DsnKeywordWiring extends DsnKeywordScope
          
          PlaPointInt[] corner_arr = new PlaPointInt[path.coordinate_arr.length / 2];
          double[] curr_point = new double[2];
-         for (int i = 0; i < corner_arr.length; ++i)
+         for (int index = 0; index < corner_arr.length; ++index)
             {
-            curr_point[0] = path.coordinate_arr[2 * i];
-            curr_point[1] = path.coordinate_arr[2 * i + 1];
+            curr_point[0] = path.coordinate_arr[2 * index];
+            curr_point[1] = path.coordinate_arr[2 * index + 1];
             PlaPointFloat curr_corner = p_par.coordinate_transform.dsn_to_board(curr_point);
             if (!bounding_box.contains(curr_corner))
                {
                System.out.println("Wiring.read_wire_scope: wire corner outside board");
                return;
                }
-            corner_arr[i] = curr_corner.round();
+            corner_arr[index] = curr_corner.round();
             }
          
          try

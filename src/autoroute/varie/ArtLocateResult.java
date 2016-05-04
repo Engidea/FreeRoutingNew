@@ -5,7 +5,7 @@ import freert.planar.PlaPointInt;
 /**
  * Type of a single item in the result list connection_items. Used to create a new PolylineTrace.
  */
-public class ArtLocateResult
+public final class ArtLocateResult
    {
    public final int layer;
    public final PlaPointInt[] corners;

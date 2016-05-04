@@ -864,13 +864,12 @@ public class ShapeTraceEntries
       ShapeTraceEntryPoint new_entry = new ShapeTraceEntryPoint(p_trace, p_trace_line_no, p_edge_no, p_entry_approx);
       ShapeTraceEntryPoint curr_prev = null;
       ShapeTraceEntryPoint curr_next = list_anchor;
+
       // insert the new entry into the sorted list
       while (curr_next != null)
          {
-         if (curr_next.edge_no > new_entry.edge_no)
-            {
-            break;
-            }
+         if (curr_next.edge_no > new_entry.edge_no)  break;
+         
          if (curr_next.edge_no == new_entry.edge_no)
             {
             PlaPointFloat prev_corner = shape.corner_approx(p_edge_no);
@@ -883,6 +882,7 @@ public class ShapeTraceEntries
                {
                next_corner = shape.corner_approx(new_entry.edge_no + 1);
                }
+            
             if (prev_corner.scalar_product(p_entry_approx, next_corner) <= prev_corner.scalar_product(curr_next.entry_approx, next_corner))
             // the projection of the line from prev_corner to p_entry_approx
             // onto the line from prev_corner to next_corner is smaller
@@ -895,7 +895,9 @@ public class ShapeTraceEntries
          curr_prev = curr_next;
          curr_next = curr_next.next;
          }
+      
       new_entry.next = curr_next;
+      
       if (curr_prev != null)
          {
          curr_prev.next = new_entry;

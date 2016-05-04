@@ -44,11 +44,11 @@ public class DsnPolygon extends DsnShape
       {
       PlaPointInt[] corner_arr = new PlaPointInt[coor.length / 2];
       double[] curr_point = new double[2];
-      for (int i = 0; i < corner_arr.length; ++i)
+      for (int index = 0; index < corner_arr.length; ++index)
          {
-         curr_point[0] = coor[2 * i];
-         curr_point[1] = coor[2 * i + 1];
-         corner_arr[i] = p_coordinate_transform.dsn_to_board(curr_point).round();
+         curr_point[0] = coor[2 * index];
+         curr_point[1] = coor[2 * index + 1];
+         corner_arr[index] = p_coordinate_transform.dsn_to_board(curr_point).round();
          }
       return new freert.planar.ShapePolygon(corner_arr);
       }

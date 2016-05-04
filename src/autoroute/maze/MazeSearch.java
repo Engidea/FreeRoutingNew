@@ -1109,6 +1109,7 @@ public final class MazeSearch
 
       double ripup_cost = art_ctrl.ripup_costs * cost_factor;
       double detour = 1;
+      
       if (fanout_via_cost_factor <= 1) // p_obstacle_item does not belong to a fanout
          {
          ArtConnection obstacle_connection = ArtConnection.get(p_obstacle_item);
@@ -1117,6 +1118,7 @@ public final class MazeSearch
             detour = obstacle_connection.get_detour();
             }
          }
+      
       boolean randomize = art_ctrl.ripup_pass_no >= 4 && art_ctrl.ripup_pass_no % 3 != 0;
       if (randomize)
          {

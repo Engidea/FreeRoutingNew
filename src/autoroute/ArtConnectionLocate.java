@@ -427,6 +427,8 @@ public abstract class ArtConnectionLocate
          return current_from_point;
          }
       
+      // this may be correct rounded, otherwise it would never match another point exactly
+      // TODO move all of this to int points, so the matching becomes exact
       return shrinked_room_shape.nearest_point_approx(current_from_point).round().to_float();
       }
 

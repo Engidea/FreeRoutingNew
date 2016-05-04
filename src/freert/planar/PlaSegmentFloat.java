@@ -31,6 +31,7 @@ package freert.planar;
 public final class PlaSegmentFloat implements PlaObject
    {
    private static final String classname = "PlaSegmentFloat.";
+   
    public final PlaPointFloat point_a;
    public final PlaPointFloat point_b;
 

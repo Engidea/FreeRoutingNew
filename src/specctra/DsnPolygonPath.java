@@ -22,6 +22,8 @@ package specctra;
 
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.ShapePolygon;
 import freert.planar.ShapeTileOctagon;
 import gui.varie.IndentFileWriter;
 
@@ -46,9 +48,9 @@ public class DsnPolygonPath extends DsnPath
       {
       p_file.start_scope();
       p_file.write("path ");
-      p_identifier_type.write(this.layer.name, p_file);
+      p_identifier_type.write(layer.name, p_file);
       p_file.write(" ");
-      p_file.write((new Double(this.width)).toString());
+      p_file.write((new Double(width)).toString());
       int corner_count = coordinate_arr.length / 2;
       for (int i = 0; i < corner_count; ++i)
          {
@@ -64,9 +66,9 @@ public class DsnPolygonPath extends DsnPath
       {
       p_file.start_scope();
       p_file.write("path ");
-      p_identifier_type.write(this.layer.name, p_file);
+      p_identifier_type.write(layer.name, p_file);
       p_file.write(" ");
-      p_file.write((new Double(this.width)).toString());
+      p_file.write((new Double(width)).toString());
       int corner_count = coordinate_arr.length / 2;
       for (int i = 0; i < corner_count; ++i)
          {
@@ -80,28 +82,31 @@ public class DsnPolygonPath extends DsnPath
       p_file.end_scope();
       }
 
-   public freert.planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
+   public PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
       {
-      PlaPointFloat[] corner_arr = new PlaPointFloat[this.coordinate_arr.length / 2];
+      PlaPointFloat[] corner_arr = new PlaPointFloat[coordinate_arr.length / 2];
       double[] curr_point = new double[2];
-      for (int i = 0; i < corner_arr.length; ++i)
+      for (int index = 0; index < corner_arr.length; ++index)
          {
-         curr_point[0] = this.coordinate_arr[2 * i];
-         curr_point[1] = this.coordinate_arr[2 * i + 1];
-         corner_arr[i] = p_coordinate_transform.dsn_to_board(curr_point);
+         curr_point[0] = coordinate_arr[2 * index];
+         curr_point[1] = coordinate_arr[2 * index + 1];
+         corner_arr[index] = p_coordinate_transform.dsn_to_board(curr_point);
          }
-      double offset = p_coordinate_transform.dsn_to_board(this.width) / 2;
+      
+      double offset = p_coordinate_transform.dsn_to_board(width) / 2;
       if (corner_arr.length <= 2)
          {
          ShapeTileOctagon bounding_oct = bounding_octagon(corner_arr);
          return bounding_oct.enlarge(offset);
          }
+      
       PlaPointInt[] rounded_corner_arr = new PlaPointInt[corner_arr.length];
       for (int i = 0; i < corner_arr.length; ++i)
          {
          rounded_corner_arr[i] = corner_arr[i].round();
          }
-      freert.planar.PlaShape result = new freert.planar.ShapePolygon(rounded_corner_arr);
+      
+      PlaShape result = new ShapePolygon(rounded_corner_arr);
       if (offset > 0)
          {
          result = result.bounding_tile().enlarge(offset);
@@ -111,15 +116,15 @@ public class DsnPolygonPath extends DsnPath
 
    public freert.planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
       {
-      PlaPointFloat[] corner_arr = new PlaPointFloat[this.coordinate_arr.length / 2];
+      PlaPointFloat[] corner_arr = new PlaPointFloat[coordinate_arr.length / 2];
       double[] curr_point = new double[2];
       for (int i = 0; i < corner_arr.length; ++i)
          {
-         curr_point[0] = this.coordinate_arr[2 * i];
-         curr_point[1] = this.coordinate_arr[2 * i + 1];
+         curr_point[0] = coordinate_arr[2 * i];
+         curr_point[1] = coordinate_arr[2 * i + 1];
          corner_arr[i] = p_coordinate_transform.dsn_to_board_rel(curr_point);
          }
-      double offset = p_coordinate_transform.dsn_to_board(this.width) / 2;
+      double offset = p_coordinate_transform.dsn_to_board(width) / 2;
       if (corner_arr.length <= 2)
          {
          ShapeTileOctagon bounding_oct = bounding_octagon(corner_arr);
@@ -140,7 +145,7 @@ public class DsnPolygonPath extends DsnPath
 
    public DsnRectangle bounding_box()
       {
-      double offset = this.width / 2;
+      double offset = width / 2;
       double[] bounds = new double[4];
       bounds[0] = Integer.MAX_VALUE;
       bounds[1] = Integer.MAX_VALUE;

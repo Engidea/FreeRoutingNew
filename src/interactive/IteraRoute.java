@@ -588,7 +588,7 @@ public final class IteraRoute
       // Highlight the swapppable pins and their incomplete
       for (PinSwappable curr_info : swap_pin_infos)
          {
-         curr_info.pin.draw(p_graphics, p_graphics_context, highlight_color, 0.3 * highligt_color_intensity);
+         curr_info.my_pin.draw(p_graphics, p_graphics_context, highlight_color, 0.3 * highligt_color_intensity);
          if (curr_info.incomplete != null)
             {
             // draw the swap pin incomplete

@@ -24,9 +24,9 @@ package autoroute;
 import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
-import freert.planar.PlaPoint;
 import board.items.BrdItem;
 import board.items.BrdTrace;
+import freert.planar.PlaPoint;
 
 /**
  * Describes a routing connection ending at the next fork or terminal item.
@@ -85,18 +85,20 @@ public final class ArtConnection
       for (BrdItem curr_item : contacts)
          {
          PlaPoint prev_contact_point = p_item.normal_contact_point(curr_item);
+
          if (prev_contact_point == null)
             {
             // no unique contact point
             continue;
             }
+         
          int prev_contact_layer = p_item.first_common_layer(curr_item);
          boolean fork_found = false;
+         
          if (p_item instanceof BrdTrace)
             {
             // Check, that there is only 1 contact at this location.
-            // Only for pins and vias items of more than 1 connection
-            // are collected
+            // Only for pins and vias items of more than 1 connection are collected
             BrdTrace start_trace = (BrdTrace) p_item;
             Collection<BrdItem> check_contacts = start_trace.get_normal_contacts(prev_contact_point, false);
             if (check_contacts.size() != 1)
@@ -105,9 +107,10 @@ public final class ArtConnection
                }
             }
          
-         // Search from curr_item along the contacts until the next fork or non route item.
          for (;;)
             {
+            // Search from curr_item along the contacts until the next fork or non route item.
+
             if (!curr_item.is_route() || fork_found)
                {
                // connection ends
@@ -165,11 +168,14 @@ public final class ArtConnection
             prev_contact_layer = next_contact_layer;
             }
          }
+      
       ArtConnection result = new ArtConnection(start_point, start_layer, end_point, end_layer, connection_items);
+      
       for (BrdItem curr_item : connection_items)
          {
          curr_item.art_item_get().set_precalculated_connection(result);
          }
+      
       return result;
       }
 
