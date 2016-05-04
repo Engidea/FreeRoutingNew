@@ -237,8 +237,8 @@ public final class ExpandDrillPage implements ExpandObject
 
          BrdAbitPin curr_pin = (BrdAbitPin) curr_item;
       
-         if (curr_pin.drill_allowed() && p_drill_shape.contains_inside(curr_pin.get_center()))
-            return curr_pin.get_center();
+         if (curr_pin.drill_allowed() && p_drill_shape.contains_inside(curr_pin.center_get()))
+            return curr_pin.center_get();
          }
 
       return null;

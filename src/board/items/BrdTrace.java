@@ -252,7 +252,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          else if (curr_item instanceof BrdAbit)
             {
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
-            if (p_point.equals(curr_drill_item.get_center()))
+            if (p_point.equals(curr_drill_item.center_get()))
                {
                result.add(curr_item);
                }

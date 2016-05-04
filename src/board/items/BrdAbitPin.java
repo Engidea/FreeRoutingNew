@@ -111,16 +111,16 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    @Override
-   public PlaPointInt get_center()
+   public PlaPointInt center_get()
       {
-      PlaPointInt pin_center = super.get_center();
+      PlaPointInt a_center = super.center_get();
       
-      if ( pin_center != null ) return pin_center;
+      if ( a_center != null ) return a_center;
       
       // Calculate the pin center.
       BrdComponent component = r_board.brd_components.get(get_component_no());
       
-      pin_center = component.get_location().translate_by(relative_location()).round();
+      a_center = component.get_location().translate_by(relative_location()).round();
 
       // check that the pin center is inside the pin shape and correct it eventually
 
@@ -128,10 +128,11 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       
       int from_layer = padstack.from_layer();
       int to_layer = padstack.to_layer();
+      int layers_count = to_layer - from_layer + 1;
       
       PlaShape curr_shape = null;
       
-      for (int index = 0; index < to_layer - from_layer + 1; ++index)
+      for (int index = 0; index < layers_count; ++index)
          {
          curr_shape = get_shape(index);
 
@@ -141,17 +142,19 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       if (curr_shape == null)
          {
          System.out.println("Pin: At least 1 shape != null expected");
+         return null;
          }
-      else if ( ! curr_shape.contains_inside(pin_center))
+      
+      else if ( ! curr_shape.contains_inside(a_center))
          {
-         pin_center = curr_shape.centre_of_gravity().round();
+         a_center = curr_shape.centre_of_gravity().round();
          }
       
       // this will possibly adjust something
-      super.set_center(pin_center);
+      super.center_set(a_center);
       
       // and this will pick the changes back
-      return super.get_center();
+      return super.center_get();
       }
 
    @Override
@@ -358,7 +361,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       
       ShapeTile pad_shape = (ShapeTile) curr_shape;
       double component_rotation = component.get_rotation_in_degree();
-      PlaPoint pin_center = get_center();
+      PlaPoint pin_center = center_get();
       PlaPointFloat center_approx = pin_center.to_float();
 
       for (PlaDirection curr_padstack_exit_direction : padstack_exit_directions)
@@ -477,21 +480,21 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      set_center(null);
+      center_clear();
       clear_derived_data();
       }
 
    @Override
    public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
       {
-      set_center(null);
+      center_clear();
       clear_derived_data();
       }
 
    @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
-      set_center(null);
+      center_clear();
       clear_derived_data();
       }
 
@@ -710,7 +713,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       freert.library.LibPadstack padstack = get_padstack();
       p_window.append(padstack.pads_name, resources.getString("padstack_info"), padstack);
       p_window.append(" " + resources.getString("at") + " ");
-      p_window.append(get_center().to_float());
+      p_window.append(center_get().to_float());
       print_connectable_item_info(p_window, p_locale);
       p_window.newline();
       }
@@ -727,7 +730,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       if (trace_exit_restrictions.isEmpty()) return null;
 
       PlaShape pin_shape = get_shape(p_layer - first_layer());
-      PlaPoint pin_center = get_center();
+      PlaPoint pin_center = center_get();
 
       if (!(pin_shape instanceof ShapeTile)) return null;
 
@@ -801,7 +804,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       if (trace_exit_restrictions.isEmpty()) return null;
   
       PlaShape pin_shape = get_shape(p_layer - first_layer());
-      PlaPoint pin_center = get_center();
+      PlaPoint pin_center = center_get();
 
       if (!(pin_shape instanceof ShapeTile)) return null;
       

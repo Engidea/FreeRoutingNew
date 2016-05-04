@@ -831,13 +831,13 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       ShapeTile pin_shape = p_tie_pin.get_tree_shape_on_layer(this, p_trace.get_layer());
       PlaPointFloat compare_corner;
       int trace_shape_no;
-      if (p_trace.first_corner().equals(p_tie_pin.get_center()))
+      if (p_trace.first_corner().equals(p_tie_pin.center_get()))
          {
          trace_shape_no = 0;
          compare_corner = p_trace.polyline().corner_approx(1);
 
          }
-      else if (p_trace.corner_last().equals(p_tie_pin.get_center()))
+      else if (p_trace.corner_last().equals(p_tie_pin.center_get()))
          {
          trace_shape_no = p_trace.corner_count() - 2;
          compare_corner = p_trace.polyline().corner_approx(p_trace.corner_count() - 2);

@@ -391,7 +391,7 @@ public class BatchAutorouter
          {
          if (!(curr_from_item instanceof BrdAbit)) continue;
 
-         PlaPointFloat curr_from_corner = ((BrdAbit) curr_from_item).get_center().to_float();
+         PlaPointFloat curr_from_corner = ((BrdAbit) curr_from_item).center_get().to_float();
 
          if ( curr_from_corner == null ) continue;
          
@@ -399,7 +399,7 @@ public class BatchAutorouter
             {
             if (!(curr_to_item instanceof BrdAbit)) continue;
                
-            PlaPointFloat curr_to_corner = ((BrdAbit) curr_to_item).get_center().to_float();
+            PlaPointFloat curr_to_corner = ((BrdAbit) curr_to_item).center_get().to_float();
             
             if ( curr_to_corner == null ) continue;
             

@@ -17,7 +17,7 @@ public final class ArtPin implements Comparable<ArtPin>
    ArtPin(BrdAbitPin p_board_pin, PlaPointFloat gravity_center_of_smd_pins)
       {
       board_pin = p_board_pin;
-      PlaPointFloat pin_location = p_board_pin.get_center().to_float();
+      PlaPointFloat pin_location = p_board_pin.center_get().to_float();
       distance_to_component_center = pin_location.distance(gravity_center_of_smd_pins);
       }
 

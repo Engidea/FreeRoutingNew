@@ -192,7 +192,7 @@ public final class NetIncompletes
       Collection<BrdAbitPin> net_pins = rule_net.get_pins();
       for ( BrdAbitPin curr_pin : net_pins)
          {
-         draw_length_violation_marker(curr_pin.get_center().to_float(), length_violation, p_graphics, p_graphics_context);
+         draw_length_violation_marker(curr_pin.center_get().to_float(), length_violation, p_graphics, p_graphics_context);
          }
       }
 

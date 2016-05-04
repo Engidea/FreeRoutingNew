@@ -164,7 +164,7 @@ public final class IteraRoute
          BrdAbit target = (BrdAbit) nearest_target_item;
          
          // connection already completed at prev_corner.         
-         if ( prev_corner.equals(target.get_center())) return true; 
+         if ( prev_corner.equals(target.center_get())) return true; 
          }
       
       shove_failing_obstacle = null;
@@ -397,7 +397,7 @@ public final class IteraRoute
          {
          return false;
          }
-      PlaPoint pin_center = found_smd_pin.get_center();
+      PlaPoint pin_center = found_smd_pin.center_get();
       if (!(pin_center instanceof PlaPointInt))
          {
          return false;
@@ -430,7 +430,7 @@ public final class IteraRoute
       if (nearest_target_item instanceof BrdAbit)
          {
          BrdAbit target = (BrdAbit) nearest_target_item;
-         connection_point = target.get_center();
+         connection_point = target.center_get();
          }
       else if (nearest_target_item instanceof BrdTracePolyline)
          {
@@ -741,7 +741,7 @@ public final class IteraRoute
          BrdItem curr_ob = it.next();
          if (curr_ob instanceof BrdAbit)
             {
-            PlaPoint curr_point = ((BrdAbit) curr_ob).get_center();
+            PlaPoint curr_point = ((BrdAbit) curr_ob).center_get();
             target_points.add(new IteraTargetPoint(curr_point.to_float(), curr_ob));
             }
          else if (curr_ob instanceof BrdTrace || curr_ob instanceof BrdAreaConduction)
@@ -856,7 +856,7 @@ public final class IteraRoute
          {
          return prev_corner;
          }
-      PlaPointFloat pin_center = start_pin.get_center().to_float();
+      PlaPointFloat pin_center = start_pin.center_get().to_float();
       double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, start_pin.clearance_class_no(), layer_active_no);
       double pin_neck_down_distance = 2 * (0.5 * start_pin.get_max_width(layer_active_no) + curr_clearance);
       if (pin_center.distance(prev_corner.to_float()) >= pin_neck_down_distance)
@@ -871,7 +871,7 @@ public final class IteraRoute
          }
 
       // check, that the neck_down started inside the pin shape
-      if (!prev_corner.equals(start_pin.get_center()))
+      if (!prev_corner.equals(start_pin.center_get()))
          {
          BrdItem picked_item = r_board.pick_nearest_routing_item(prev_corner, layer_active_no, null);
          if (picked_item instanceof BrdTrace)
@@ -915,7 +915,7 @@ public final class IteraRoute
          {
          return p_from_corner;
          }
-      PlaPointFloat pin_center = target_pin.get_center().to_float();
+      PlaPointFloat pin_center = target_pin.center_get().to_float();
       double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, target_pin.clearance_class_no(), layer_active_no);
       double pin_neck_down_distance = 2 * (0.5 * target_pin.get_max_width(layer_active_no) + curr_clearance);
       if (pin_center.distance(p_from_corner.to_float()) >= pin_neck_down_distance)

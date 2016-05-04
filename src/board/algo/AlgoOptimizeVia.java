@@ -120,7 +120,7 @@ public final class AlgoOptimizeVia
          {
          return opt_plane_or_fanout_via( p_via, p_trace_pull_tight_accuracy, p_max_recursion_depth); // pippo
          }
-      PlaPoint via_center = p_via.get_center();
+      PlaPoint via_center = p_via.center_get();
       int first_layer = first_trace.get_layer();
       int second_layer = second_trace.get_layer();
       PlaPoint first_trace_from_corner;
@@ -257,7 +257,7 @@ public final class AlgoOptimizeVia
 
       if (contact_trace == null) return false;
 
-      PlaPoint via_center = p_via.get_center();
+      PlaPoint via_center = p_via.center_get();
       
       boolean at_first_corner;
 
@@ -383,7 +383,7 @@ public final class AlgoOptimizeVia
     */
    private PlaPoint reposition_via( BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width, int p_trace_layer, int p_trace_cl_class)
       {
-      PlaPoint from_location = p_via.get_center();
+      PlaPoint from_location = p_via.center_get();
 
       if (from_location.equals(p_to_location)) return null;
 
@@ -439,7 +439,7 @@ public final class AlgoOptimizeVia
          PlaPointInt p_connect_location, int p_trace_half_width_2, int p_trace_layer_2, int p_trace_cl_class_2)
 
       {
-      PlaPoint from_location = p_via.get_center();
+      PlaPoint from_location = p_via.center_get();
 
       if (from_location.equals(p_to_location))
          {
@@ -488,7 +488,7 @@ public final class AlgoOptimizeVia
          ExpandCostFactor p_first_trace_costs, PlaPoint p_first_trace_from_corner, int p_second_trace_half_width, int p_second_trace_cl_class, int p_second_trace_layer,
          ExpandCostFactor p_second_trace_costs, PlaPoint p_second_trace_from_corner)
       {
-      PlaPoint via_location = p_via.get_center();
+      PlaPoint via_location = p_via.center_get();
 
       PlaVector first_delta = p_first_trace_from_corner.difference_by(via_location);
       PlaVector second_delta = p_second_trace_from_corner.difference_by(via_location);

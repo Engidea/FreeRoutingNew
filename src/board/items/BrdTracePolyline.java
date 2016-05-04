@@ -642,7 +642,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             else if (found_item instanceof BrdAbit)
                {
                BrdAbit curr_drill_item = (BrdAbit) found_item;
-               PlaPoint split_point = curr_drill_item.get_center();
+               PlaPoint split_point = curr_drill_item.center_get();
                if (curr_line_segment.contains(split_point))
                   {
                   PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
@@ -713,7 +713,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          if (curr_item instanceof BrdAbitPin)
             {
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
-            if (curr_drill_item.get_center().equals(intersection))
+            if (curr_drill_item.center_get().equals(intersection))
                {
                return false; // split always at the center of a drill item.
                }
@@ -1187,7 +1187,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       ShapeTile a_pin_tile = (ShapeTile)pin_shape;
       
-      PlaPoint pin_center = contact_pin.get_center();
+      PlaPoint pin_center = contact_pin.center_get();
 
       final double edge_to_turn_dist = r_board.brd_rules.get_pin_edge_to_turn_dist();
 

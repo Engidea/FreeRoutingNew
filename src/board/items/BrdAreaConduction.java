@@ -98,7 +98,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
                else if (curr_item instanceof BrdAbit)
                   {
                   BrdAbit curr_drill_item = (BrdAbit) curr_item;
-                  if (curr_shape.contains(curr_drill_item.get_center()))
+                  if (curr_shape.contains(curr_drill_item.center_get()))
                      {
                      result.add(curr_item);
                      }

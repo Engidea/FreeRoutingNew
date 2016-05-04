@@ -154,7 +154,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
    private static void write_via_scope(DsnWriteScopeParameter p_par, BrdAbitVia p_via) throws java.io.IOException
       {
       freert.library.LibPadstack via_padstack = p_via.get_padstack();
-      PlaPointFloat via_location = p_via.get_center().to_float();
+      PlaPointFloat via_location = p_via.center_get().to_float();
       double[] via_coor = p_par.coordinate_transform.board_to_dsn(via_location);
       int net_no;
       freert.rules.RuleNet via_net;
@@ -712,7 +712,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       for (BrdItem curr_item : picked_items)
          {
          BrdAbitVia curr_via = (BrdAbitVia) curr_item;
-         if (curr_via.nets_equal(p_net_no_arr) && curr_via.get_center().equals(p_location) && curr_via.first_layer() == from_layer && curr_via.last_layer() == to_layer)
+         if (curr_via.nets_equal(p_net_no_arr) && curr_via.center_get().equals(p_location) && curr_via.first_layer() == from_layer && curr_via.last_layer() == to_layer)
             {
             return true;
             }

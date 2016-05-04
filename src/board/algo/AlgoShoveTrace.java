@@ -150,7 +150,7 @@ public final class AlgoShoveTrace
             return false;
             }
 
-         PlaPointFloat curr_shove_via_center = curr_shove_via.get_center().to_float();
+         PlaPointFloat curr_shove_via_center = curr_shove_via.center_get().to_float();
          PlaPointInt[] try_via_centers = r_board.move_drill_algo.try_shove_via_points(p_trace_shape, p_layer, curr_shove_via, p_cl_type, true);
 
          double max_dist = 0.5 * curr_shove_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
@@ -160,7 +160,7 @@ public final class AlgoShoveTrace
             {
             if (i == 0 || curr_shove_via_center.length_square(try_via_centers[i].to_float()) <= max_dist_square)
                {
-               PlaVector delta = try_via_centers[i].difference_by(curr_shove_via.get_center());
+               PlaVector delta = try_via_centers[i].difference_by(curr_shove_via.center_get());
                Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
                if (r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items,  p_time_limit))
                   {
@@ -329,14 +329,14 @@ public final class AlgoShoveTrace
                {
                return 0;
                }
-            PlaVector delta = new_via_center[0].difference_by(curr_shove_via.get_center());
+            PlaVector delta = new_via_center[0].difference_by(curr_shove_via.center_get());
             Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
             shove_via_ok = r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, null);
             }
 
          if (!shove_via_ok)
             {
-            PlaPointFloat via_center_appprox = curr_shove_via.get_center().to_float();
+            PlaPointFloat via_center_appprox = curr_shove_via.center_get().to_float();
             double projection = start_corner_appprox.scalar_product(end_corner_appprox, via_center_appprox);
             projection /= segment_length;
             ShapeTileBox via_box = curr_shove_via.get_tree_shape_on_layer(search_tree, p_layer).bounding_box();

@@ -58,7 +58,7 @@ public class BatchSortedRouteItems
             BrdAbitVia curr_via = (BrdAbitVia) curr_item;
             if (!curr_via.is_user_fixed())
                {
-               PlaPointFloat curr_via_center = curr_via.get_center().to_float();
+               PlaPointFloat curr_via_center = curr_via.center_get().to_float();
                int curr_via_min_layer = curr_via.first_layer();
                if (curr_via_center.v_x > min_item_coor.v_x || curr_via_center.v_x == min_item_coor.v_x
                      && (curr_via_center.v_y > min_item_coor.v_y || curr_via_center.v_y == min_item_coor.v_y && curr_via_min_layer > min_item_layer))

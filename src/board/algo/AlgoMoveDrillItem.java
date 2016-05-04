@@ -122,7 +122,7 @@ public final class AlgoMoveDrillItem
             curr_tile_shape = new_shape.bounding_octagon();
             }
          
-         BrdFromSide from_side = new BrdFromSide(p_drill_item.get_center(), curr_tile_shape);
+         BrdFromSide from_side = new BrdFromSide(p_drill_item.center_get(), curr_tile_shape);
          if (r_board.shove_pad_algo.check_forced_pad(
                curr_tile_shape, 
                from_side, 
@@ -182,7 +182,7 @@ public final class AlgoMoveDrillItem
             {
             p_tidy_region = p_tidy_region.union(curr_tile_shape.bounding_octagon());
             }
-         BrdFromSide from_side = new BrdFromSide(p_drill_item.get_center(), curr_tile_shape);
+         BrdFromSide from_side = new BrdFromSide(p_drill_item.center_get(), curr_tile_shape);
          if (!r_board.shove_pad_algo.forced_pad(curr_tile_shape, from_side, curr_layer, p_drill_item.net_no_arr, p_drill_item.clearance_class_no(), attach_allowed, ignore_items, p_max_recursion_depth,
                p_max_via_recursion_depth))
             {
@@ -232,7 +232,7 @@ public final class AlgoMoveDrillItem
          PlaPointInt new_via_center = null;
          double max_dist = 0.5 * curr_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
          double max_dist_square = max_dist * max_dist;
-         PlaPointInt curr_via_center = (PlaPointInt) curr_via.get_center();
+         PlaPointInt curr_via_center = (PlaPointInt) curr_via.center_get();
          PlaPointFloat check_via_center = curr_via_center.to_float();
          PlaVectorInt rel_coor = null;
 
@@ -307,7 +307,7 @@ public final class AlgoMoveDrillItem
       // The additional constant 2 is an empirical value for the tolerance in case of diagonal shoving.
       shove_distance += 2;
 
-      PlaPointInt curr_via_center = (PlaPointInt) p_via.get_center();
+      PlaPointInt curr_via_center = (PlaPointInt) p_via.center_get();
       PlaPointInt[] try_via_centers;
 
       int try_count = 1;

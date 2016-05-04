@@ -68,7 +68,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       {
       return new BrdAbitVia(
             padstack, 
-            get_center(), 
+            center_get(), 
             net_no_arr, 
             clearance_class_no(), 
             p_id_no, 
@@ -89,7 +89,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       for (int index = 0; index < precalculated_shapes.length; ++index)
          {
          int padstack_layer = index + first_layer();
-         PlaVector translate_vector = get_center().difference_by(PlaPoint.ZERO);
+         PlaVector translate_vector = center_get().difference_by(PlaPoint.ZERO);
          PlaShape curr_shape = padstack.get_shape(padstack_layer);
 
          if (curr_shape == null)
@@ -211,9 +211,9 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       
       ArtItem via_autoroute_info = art_item_get();
       
-      ShapeTile curr_drill_shape = new ShapeTileBox(get_center());
+      ShapeTile curr_drill_shape = new ShapeTileBox(center_get());
       
-      autoroute_drill_info = new ExpandDrill(curr_drill_shape, get_center(), first_layer(), last_layer());
+      autoroute_drill_info = new ExpandDrill(curr_drill_shape, center_get(), first_layer(), last_layer());
       
       int via_layer_count = last_layer() - first_layer() + 1;
       
@@ -294,7 +294,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
       p_window.append_bold(resources.getString("via"));
       p_window.append(" " + resources.getString("at"));
-      p_window.append(this.get_center().to_float());
+      p_window.append(this.center_get().to_float());
       p_window.append(", " + resources.getString("padstack"));
       p_window.append(padstack.pads_name, resources.getString("padstack_info"), padstack);
       this.print_connectable_item_info(p_window, p_locale);

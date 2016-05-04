@@ -697,8 +697,8 @@ public class SpectraSesToEagle extends javax.swing.JFrame
       out_file.write(layer_name);
       out_file.write(";\n");
 
-      double[] location_1 = board.host_com.coordinate_transform.board_to_dsn(p_pin_1.get_center().to_float());
-      double[] location_2 = board.host_com.coordinate_transform.board_to_dsn(p_pin_2.get_center().to_float());
+      double[] location_1 = board.host_com.coordinate_transform.board_to_dsn(p_pin_1.center_get().to_float());
+      double[] location_2 = board.host_com.coordinate_transform.board_to_dsn(p_pin_2.center_get().to_float());
 
       out_file.write("PINSWAP ");
       out_file.write(" (");

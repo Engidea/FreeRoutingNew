@@ -150,7 +150,7 @@ public final class ArtConnectionInsert
             for (BrdItem curr_item : picked_items)
                {
                board.items.BrdAbitPin curr_pin = (board.items.BrdAbitPin) curr_item;
-               if (curr_pin.contains_net(ctrl.net_no) && curr_pin.get_center().equals(curr_end_corner))
+               if (curr_pin.contains_net(ctrl.net_no) && curr_pin.center_get().equals(curr_end_corner))
                   {
                   if (index == 0)
                      {
@@ -264,7 +264,7 @@ public final class ArtConnectionInsert
       {
       if (!p_pin.is_on_layer(p_layer)) return null;
 
-      PlaPointFloat pin_center = p_pin.get_center().to_float();
+      PlaPointFloat pin_center = p_pin.center_get().to_float();
       double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(ctrl.trace_clearance_class_no, p_pin.clearance_class_no(), p_layer);
       double pin_neck_down_distance = 2 * (0.5 * p_pin.get_max_width(p_layer) + curr_clearance);
 

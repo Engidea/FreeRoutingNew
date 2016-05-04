@@ -86,7 +86,7 @@ public final class MoveComponent
             }
          if (curr_item instanceof BrdAbit)
             {
-            item_centers.add(((BrdAbit) curr_item).get_center().to_float());
+            item_centers.add(((BrdAbit) curr_item).center_get().to_float());
             }
          }
       
@@ -112,7 +112,7 @@ public final class MoveComponent
          PlaPoint item_center;
          if (curr_item instanceof BrdAbit)
             {
-            item_center = ((BrdAbit) curr_item).get_center();
+            item_center = ((BrdAbit) curr_item).center_get();
             }
          else
             {

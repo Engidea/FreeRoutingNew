@@ -287,7 +287,7 @@ public final class StateSelectedItem extends StateInteractive
          BrdItem curr_ob = it.next();
          if (curr_ob instanceof BrdAbitVia)
             {
-            PlaPointFloat curr_center = ((BrdAbit) curr_ob).get_center().to_float();
+            PlaPointFloat curr_center = ((BrdAbit) curr_ob).center_get().to_float();
             gravity_x += curr_center.v_x;
             gravity_y += curr_center.v_y;
             ++pin_count;
@@ -312,7 +312,7 @@ public final class StateSelectedItem extends StateInteractive
          {
          BrdAbitVia curr_via = (BrdAbitVia) it.next();
          
-         PlaVectorInt rel_coor = curr_via.get_center().difference_by(gravity_point).round();
+         PlaVectorInt rel_coor = curr_via.center_get().difference_by(gravity_point).round();
          
          String pin_name = Integer.toString(index + 1);
          

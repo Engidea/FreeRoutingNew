@@ -121,7 +121,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public void move_by(PlaVectorInt p_vector)
       {
-      PlaPoint old_center = get_center();
+      PlaPoint old_center = center_get();
       
       // remember the contact situation of this drillitem to traces on each layer
       Set<BrdTraceInfo> contact_trace_info = new TreeSet<BrdTraceInfo>();
@@ -144,7 +144,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       
       connect_point_list.add(old_center);
       
-      PlaPoint new_center = get_center();
+      PlaPoint new_center = center_get();
       
       PlaPointInt add_corner = null;
       
@@ -265,7 +265,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    public final double smallest_radius()
       {
       double result = Double.MAX_VALUE;
-      PlaPointFloat c = get_center().to_float();
+      PlaPointFloat c = center_get().to_float();
       for (int i = 0; i < tile_shape_count(); ++i)
          {
          PlaShape curr_shape = get_shape(i);
@@ -280,16 +280,22 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    /** 
     * @return the center point of this DrillItem
     */
-   public PlaPointInt get_center()
+   public PlaPointInt center_get()
       {
       return abit_center;
       }
 
-   protected void set_center(PlaPoint p_center)
+   protected final void center_set(PlaPointInt p_center)
       {
-      abit_center = p_center != null ? p_center.round() : null ;
+      abit_center = p_center;
       }
 
+   protected final void center_clear()
+      {
+      abit_center = null;
+      }
+   
+   
    /**
     * Returns the padstack of this drillitem.
     */
@@ -336,7 +342,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
 
-      PlaPoint drill_center = get_center();
+      PlaPoint drill_center = center_get();
 
       ShapeTile search_shape = new ShapeTileBox(drill_center);
       
@@ -373,7 +379,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
          else if (curr_item instanceof BrdAbit)
             {
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
-            if (drill_center.equals(curr_drill_item.get_center()))
+            if (drill_center.equals(curr_drill_item.center_get()))
                {
                result.add(curr_item);
                }
@@ -399,9 +405,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public PlaPoint normal_contact_point(BrdAbit p_other)
       {
-      if (shares_layer(p_other) && get_center().equals(p_other.get_center()))
+      if (shares_layer(p_other) && center_get().equals(p_other.center_get()))
          {
-         return get_center();
+         return center_get();
          }
       return null;
       }
@@ -411,7 +417,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       {
       if ( ! shares_layer(p_trace)) return null;
 
-      PlaPoint drill_center = get_center();
+      PlaPoint drill_center = center_get();
 
       if (drill_center.equals(p_trace.first_corner()) || drill_center.equals(p_trace.corner_last()))
          {
@@ -425,14 +431,14 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    public PlaPoint[] get_ratsnest_corners()
       {
       PlaPoint[] result = new PlaPoint[1];
-      result[0] = get_center();
+      result[0] = center_get();
       return result;
       }
 
    @Override
    public ShapeTile get_trace_connection_shape(ShapeSearchTree p_search_tree, int p_index)
       {
-      return new ShapeTileBox(get_center());
+      return new ShapeTileBox(center_get());
       }
 
    /** 

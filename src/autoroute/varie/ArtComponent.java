@@ -44,7 +44,7 @@ public final class ArtComponent implements Comparable<ArtComponent>
       
       for ( BrdAbitPin curr_pin : curr_pin_list)
          {
-         PlaPointFloat curr_point = curr_pin.get_center().to_float();
+         PlaPointFloat curr_point = curr_pin.center_get().to_float();
          x += curr_point.v_x;
          y += curr_point.v_y;
          }

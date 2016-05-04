@@ -2025,7 +2025,7 @@ public final class RoutingBoard implements java.io.Serializable
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
             if (p_layer < 0 || curr_drill_item.is_on_layer(p_layer))
                {
-               PlaPointFloat drill_item_center = curr_drill_item.get_center().to_float();
+               PlaPointFloat drill_item_center = curr_drill_item.center_get().to_float();
                curr_dist = drill_item_center.distance(pick_location);
                if (curr_dist < min_dist || nearest_item instanceof BrdTrace)
                   {

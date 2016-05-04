@@ -411,7 +411,7 @@ public final class SpectraWriteSesFile
    private void write_via(BrdAbitVia p_via, DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform ) throws IOException
       {
       freert.library.LibPadstack via_padstack = p_via.get_padstack();
-      PlaPointFloat via_location = p_via.get_center().to_float();
+      PlaPointFloat via_location = p_via.center_get().to_float();
       output_file.start_scope();
       output_file.write("via ");
       p_identifier_type.write(via_padstack.pads_name, output_file);

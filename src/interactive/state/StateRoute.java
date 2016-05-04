@@ -159,7 +159,7 @@ public class StateRoute extends StateInteractive
       else if (picked_item instanceof BrdAbit)
          {
          BrdAbit drill_item = (BrdAbit) picked_item;
-         PlaPoint center = drill_item.get_center();
+         PlaPoint center = drill_item.center_get();
          if (center instanceof PlaPointInt)
             {
             location = (PlaPointInt) center;

@@ -365,7 +365,7 @@ public final class MazeShoveTraceAlgo
       
       if (p_from_item instanceof BrdAbit)
          {
-         PlaPoint from_center = ((BrdAbit) p_from_item).get_center();
+         PlaPoint from_center = ((BrdAbit) p_from_item).center_get();
          if ( from_center.equals(p_trace.first_corner()) ) return true;
          
          if ( from_center.equals(p_trace.corner_last()) ) return true;

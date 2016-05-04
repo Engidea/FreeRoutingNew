@@ -115,7 +115,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
                   stub_layer = first_contact_last_layer;
                   }
                }
-            stub_location = ((board.items.BrdAbitVia) curr_item).get_center().to_float();
+            stub_location = ((board.items.BrdAbitVia) curr_item).center_get().to_float();
             }
          else
             {
