@@ -61,7 +61,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
     * Creates a new instance of Component with the input parameters. 
     * If p_on_front is false, the component will be placed on the back side.
     */
-   public BrdComponent(String p_name, PlaPoint p_location, double p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, int p_no, boolean p_position_fixed)
+   public BrdComponent(String p_name, PlaPointInt p_location, double p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, int p_no, boolean p_position_fixed)
       {
       id_no = p_no;
       name = p_name;
@@ -74,6 +74,22 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       rotation_in_degree = normalize_rotation(p_rotation_in_degree);
       }
 
+   /**
+    * Copy constructor
+    * @param p_other
+    */
+   private BrdComponent(BrdComponent p_other)
+      {
+      id_no = p_other.id_no;
+      name = p_other.name;
+      location = p_other.location;
+      on_front = p_other.on_front;
+      lib_package_front = p_other.lib_package_front;
+      lib_package_back = p_other.lib_package_back;
+      position_fixed = p_other.position_fixed;
+      logical_part = p_other.logical_part;
+      }
+   
 
    private double normalize_rotation (double p_rotation_degrees)
       {
@@ -151,7 +167,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       if (p_angle_in_degree == 0) return;
 
       double turn_angle = p_angle_in_degree;
-      if (p_flip_style_rotate_first && !this.is_on_front())
+      if (p_flip_style_rotate_first && !is_on_front())
          {
          // take care of the order of mirroring and rotating on the back side of the board
          turn_angle = 360 - p_angle_in_degree;
@@ -193,11 +209,10 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Creates a copy of this component.
     */
+   @Override
    public BrdComponent clone()
       {
-      BrdComponent result = new BrdComponent(name, location, rotation_in_degree, on_front, lib_package_front, lib_package_back, id_no, position_fixed);
-      result.logical_part = logical_part;
-      return result;
+      return new BrdComponent(this);
       }
 
    public String toString()
@@ -221,6 +236,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       logical_part = p_logical_part;
       }
 
+   @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
@@ -231,7 +247,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       if (location != null)
          {
          p_window.append(" " + resources.getString("at") + " ");
-         p_window.append(this.location.to_float());
+         p_window.append(location.to_float());
 
          p_window.append(", " + resources.getString("rotation") + " ");
          p_window.append_without_transforming(rotation_in_degree);
@@ -250,12 +266,12 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
          p_window.append(" " + resources.getString("not_yet_placed"));
          }
       p_window.append(", " + resources.getString("package"));
-      LibPackage lib_package = this.get_package();
+      LibPackage lib_package = get_package();
       p_window.append(lib_package.pkg_name, resources.getString("package_info"), lib_package);
-      if (this.logical_part != null)
+      if (logical_part != null)
          {
          p_window.append(", " + resources.getString("logical_part") + " ");
-         p_window.append(this.logical_part.name, resources.getString("logical_part_info"), this.logical_part);
+         p_window.append(logical_part.name, resources.getString("logical_part_info"), logical_part);
          }
       p_window.newline();
       }

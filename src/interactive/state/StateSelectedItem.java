@@ -21,7 +21,6 @@ package interactive.state;
 
 import freert.library.LibPackage;
 import freert.library.LibPackagePin;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -303,7 +302,7 @@ public final class StateSelectedItem extends StateInteractive
       
       gravity_x /= pin_count;
       gravity_y /= pin_count;
-      PlaPoint gravity_point = new PlaPointInt(Math.round(gravity_x), Math.round(gravity_y));
+      PlaPointInt gravity_point = new PlaPointInt(Math.round(gravity_x), Math.round(gravity_y));
       // create a new package
       LibPackagePin[] pin_arr = new LibPackagePin[items_list.size()];
       it = items_list.iterator();
@@ -321,7 +320,9 @@ public final class StateSelectedItem extends StateInteractive
       
       LibPackage new_package = r_brd.library.packages.add(pin_arr);
       BrdComponent new_component = r_brd.brd_components.add(gravity_point, 0, true, new_package);
+      
       it = items_list.iterator();
+      
       for (int index = 0; index < pin_arr.length; ++index)
          {
          BrdAbitVia curr_via = (BrdAbitVia) it.next();

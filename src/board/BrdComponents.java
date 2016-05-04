@@ -26,7 +26,6 @@ import java.util.Vector;
 import board.infos.BrdComponent;
 import freert.host.BrdObservers;
 import freert.library.LibPackage;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.varie.UndoableObjectNode;
@@ -53,7 +52,7 @@ public final class BrdComponents implements java.io.Serializable
     * The items of the component have to be inserted seperately into the board. 
     * If p_on_front is false, the component will be placed on the back side, and p_package_back is used instead of p_package_front.
     */
-   public BrdComponent add(String p_name, PlaPoint p_location, double p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, boolean p_position_fixed)
+   public BrdComponent add(String p_name, PlaPointInt p_location, double p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, boolean p_position_fixed)
       {
       BrdComponent new_component = new BrdComponent(
             p_name, 
@@ -74,10 +73,12 @@ public final class BrdComponents implements java.io.Serializable
     * The items of the component have to be inserted seperately into the board. 
     * If p_on_front is false, the component will be placed on the back side. The component name is generated internally.
     */
-   public BrdComponent add(PlaPoint p_location, double p_rotation, boolean p_on_front, LibPackage p_package)
+   public BrdComponent add(PlaPointInt p_location, double p_rotation, boolean p_on_front, LibPackage p_package)
       {
       int an_index = component_list.size() + 1;
+      
       String component_name = "Component#" + an_index;
+      
       return add(component_name, p_location, p_rotation, p_on_front, p_package, p_package, false);
       }
 
