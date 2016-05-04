@@ -24,7 +24,7 @@ import freert.library.LibLogicalPart;
 import freert.library.LibPackage;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import gui.varie.ObjectInfoPanel;
 import gui.varie.UndoableObjectStorable;
 
@@ -40,7 +40,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    // The name of the component
    public final String name;
    // The location of the component
-   private PlaPoint location;
+   private PlaPointInt location;
    // The rotation of the library package of the component in degree
    private double rotation_in_degree;
    // Contains information for gate swapping and pin swapping, if != null
@@ -65,7 +65,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       {
       id_no = p_no;
       name = p_name;
-      location = p_location;
+      location = p_location.round();
       on_front = p_on_front;
       lib_package_front = p_package_front;
       lib_package_back = p_package_back;
@@ -118,7 +118,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Translates the location of this Component by p_p_vector. The Pins in the board must be moved seperately.
     */
-   public void translate_by(PlaVector p_vector)
+   public void translate_by(PlaVectorInt p_vector)
       {
       if ( p_vector == null ) return;
       

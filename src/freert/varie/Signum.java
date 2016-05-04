@@ -63,9 +63,12 @@ public final class Signum
     */
    public static final int as_int(double p_value)
       {
-      if      (p_value > 0) return 1;
-      else if (p_value < 0) return -1;
-      else                  return 0;
+      if (p_value > 0) 
+         return 1;
+      else if (p_value < 0) 
+         return -1;
+      else
+         return 0;
       }
 
    /**

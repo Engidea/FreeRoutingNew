@@ -19,10 +19,9 @@
  */
 package board;
 
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.TreeSet;
 import board.infos.BrdComponent;
 import board.items.BrdAbit;
 import board.items.BrdArea;
@@ -50,7 +49,7 @@ public final class MoveComponent
    private final int max_via_recursion_depth;
    private final RoutingBoard r_board;
    private boolean all_items_movable = true;
-   private SortedItemDouble[] item_group_arr;
+   private final TreeSet<SortedItemDouble> item_group_arr = new TreeSet<SortedItemDouble>();
    private BrdComponent component = null;
 
    public MoveComponent(BrdItem p_item, PlaVectorInt p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
@@ -103,13 +102,11 @@ public final class MoveComponent
       gravity_x /= item_centers.size();
       gravity_y /= item_centers.size();
       PlaPoint gravity_point = new PlaPointInt(Math.round(gravity_x), Math.round(gravity_y));
-      item_group_arr = new SortedItemDouble[item_group_list.size()];
-      Iterator<BrdItem> it = item_group_list.iterator();
       
-      for (int i = 0; i < item_group_arr.length; ++i)
+      for (BrdItem curr_item : item_group_list )
          {
-         BrdItem curr_item = it.next();
          PlaPoint item_center;
+
          if (curr_item instanceof BrdAbit)
             {
             item_center = ((BrdAbit) curr_item).center_get();
@@ -120,12 +117,12 @@ public final class MoveComponent
             }
       
          PlaVector compare_vector = gravity_point.difference_by(item_center);
+         
          double curr_projection = compare_vector.scalar_product(translate_vector);
-         item_group_arr[i] = new SortedItemDouble(curr_item, curr_projection);
-         }
 
-      // sort the items, in the direction of p_translate_vector, so that the items in front come first.
-      Arrays.sort(item_group_arr);
+         // sort the items, in the direction of p_translate_vector, so that the items in front come first.
+         item_group_arr.add( new SortedItemDouble(curr_item, curr_projection) );
+         }
       }
 
    /**
@@ -138,13 +135,15 @@ public final class MoveComponent
       TimeLimit time_limit = new TimeLimit(3);
       
       Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
-
-      for (int index = 0; index < item_group_arr.length; ++index)
+      
+      for (SortedItemDouble an_item : item_group_arr )
          {
          boolean move_ok;
-         if (item_group_arr[index].item instanceof BrdAbit)
+
+         if (an_item.item instanceof BrdAbit)
             {
-            BrdAbit curr_drill_item = (BrdAbit) item_group_arr[index].item;
+            BrdAbit curr_drill_item = (BrdAbit) an_item.item;
+            
             if (translate_vector.distance() >= curr_drill_item.min_width())
                {
                // a clearance violation with a connecting trace may occur
@@ -157,7 +156,7 @@ public final class MoveComponent
             }
          else
             {
-            move_ok = r_board.check_item_move(item_group_arr[index].item, translate_vector, ignore_items);
+            move_ok = r_board.check_item_move(an_item.item, translate_vector, ignore_items);
             }
          
          if (!move_ok) return false;
@@ -182,27 +181,30 @@ public final class MoveComponent
          r_board.observers.notify_moved(component);
          }
       
-      for (int index = 0; index < item_group_arr.length; ++index)
+      for (SortedItemDouble an_item : item_group_arr )
          {
-         if (item_group_arr[index].item instanceof BrdAbit)
+         if (an_item.item instanceof BrdAbit)
             {
-            BrdAbit curr_drill_item = (BrdAbit) item_group_arr[index].item;
+            BrdAbit curr_drill_item = (BrdAbit) an_item.item;
+
             boolean move_ok = r_board.move_drill_item(curr_drill_item, translate_vector, max_recursion_depth, max_via_recursion_depth, p_tidy_width, p_pull_tight_accuracy, s_TIGHT_TIME_ms);
-            if (!move_ok)
+
+            if ( move_ok) continue;
+
+            if (component != null)
                {
-               if (component != null)
-                  {
-                  component.translate_by(translate_vector.negate());
-                  // Otherwise the component outline is not restored correctly by the undo algorithm.
-                  }
-               return false;
+               // Otherwise the component outline is not restored correctly by the undo algorithm.
+               component.translate_by(translate_vector.negate());
                }
+
+            return false;
             }
          else
             {
-            item_group_arr[index].item.move_by(translate_vector);
+            an_item.item.move_by(translate_vector);
             }
          }
+      
       return true;
       }
 

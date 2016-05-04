@@ -18,6 +18,7 @@ public final class SortedItemDouble implements Comparable<SortedItemDouble>
       projection = p_projection;
       }
 
+   @Override
    public int compareTo(SortedItemDouble p_other)
       {
       return Signum.as_int(projection - p_other.projection);

@@ -55,7 +55,15 @@ public final class BrdComponents implements java.io.Serializable
     */
    public BrdComponent add(String p_name, PlaPoint p_location, double p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, boolean p_position_fixed)
       {
-      BrdComponent new_component = new BrdComponent(p_name, p_location, p_rotation_in_degree, p_on_front, p_package_front, p_package_back, component_list.size() + 1, p_position_fixed);
+      BrdComponent new_component = new BrdComponent(
+            p_name, 
+            p_location, 
+            p_rotation_in_degree, 
+            p_on_front, 
+            p_package_front, 
+            p_package_back, 
+            component_list.size() + 1, 
+            p_position_fixed);
       component_list.add(new_component);
       undo_list.insert(new_component);
       return new_component;
