@@ -236,13 +236,14 @@ public abstract class ArtConnectionLocate
          }
       
       PlaPointFloat prev_corner = current_from_point;
-      for (;;)
+
+      for (int c_limit=0;c_limit < 1000;c_limit++)
          {
          Collection<PlaPointFloat> next_corners = calculate_next_trace_corners();
-         if (next_corners.isEmpty())
-            {
-            break;
-            }
+      
+         // TODO check why it is not terminating anymore
+         if (next_corners.isEmpty()) break;
+
          Iterator<PlaPointFloat> it = next_corners.iterator();
          while (it.hasNext())
             {

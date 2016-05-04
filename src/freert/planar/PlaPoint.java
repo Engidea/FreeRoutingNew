@@ -32,6 +32,7 @@ import java.io.Serializable;
 public abstract class PlaPoint implements PlaObject, Serializable
    {
    private static final long serialVersionUID = 1L;
+   private static final String classname="PlaPoint.";
 
    // Standard implementation of the zero point .
    public static final PlaPointInt ZERO = new PlaPointInt(0, 0);
@@ -87,7 +88,11 @@ public abstract class PlaPoint implements PlaObject, Serializable
       else if ( p_other instanceof PlaPointRational )
          return equals((PlaPointRational)p_other);
       else 
+         {
+         // this is really quite serious, better pick it up
+         System.err.println(classname+"equals: BAD class="+p_other.getClass());
          return false;
+         }
       }
    
    public abstract boolean equals(PlaPointInt p_other);

@@ -54,7 +54,7 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
     * If there are several corners with the smallest y-coordinate, the corner with the smallest x-coordinate comes first. 
     * Consecutive corners may be equal.
     */
-   public abstract PlaPoint corner(int p_no);
+   public abstract PlaPointInt corner(int p_no);
 
    /**
     * Turns this shape by p_factor times 90 degree around p_pole.

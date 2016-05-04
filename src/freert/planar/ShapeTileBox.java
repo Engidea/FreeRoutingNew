@@ -155,6 +155,7 @@ public final class ShapeTileBox extends ShapeTileRegular
          {
          return new PlaPointInt(box_ll.v_x, box_ur.v_y);
          }
+      
       throw new IllegalArgumentException("IntBox.corner: p_no out of range");
       }
 

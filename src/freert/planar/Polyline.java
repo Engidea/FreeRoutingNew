@@ -76,6 +76,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
       this(new PlaPolygon(p_points));
       }
 
+   public Polyline(PlaPointInt[] p_points)
+      {
+      this(new PlaPolygon(p_points));
+      }
+
    /**
     * creates a polyline consisting of 3 lines
     */

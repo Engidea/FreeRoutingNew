@@ -26,9 +26,10 @@ import java.util.LinkedList;
 import java.util.Random;
 
 /**
- * Shape described bei a closed polygon of corner points. The corners are ordered in counterclock sense around the border of the
- * shape. The corners are normalysed, so that the corner with the lowest y-value comes first. In case of equal y-value the corner
- * with the lowest x-value comes first.
+ * Shape described bei a closed polygon of corner points. 
+ * The corners are ordered in counterclock sense around the border of the shape. 
+ * The corners are normalysed, so that the corner with the lowest y-value comes first. 
+ * In case of equal y-value the corner with the lowest x-value comes first.
  *
  * @author Alfons Wirtz
  */
@@ -38,7 +39,7 @@ public final class ShapePolygon extends ShapePolyline
    private static final int seed = 99;
    private static Random random_generator = new Random(seed);
 
-   public final PlaPoint[] corners;
+   public final PlaPointInt[] corners;
 
    // the following fields are for storing pre calculated data
    transient private ShapeTileBox precalculated_bounding_box = null;
@@ -55,7 +56,7 @@ public final class ShapePolygon extends ShapePolyline
          curr_polygon = p_polygon.revert_corners();
          }
       
-      PlaPoint[] curr_corners = curr_polygon.corner_array();
+      PlaPointInt[] curr_corners = curr_polygon.corner_array();
 
       int last_corner_no = curr_corners.length - 1;
 
@@ -109,12 +110,12 @@ public final class ShapePolygon extends ShapePolyline
          }
       
       int new_corner_count = last_corner_no - first_corner_no + 1;
-      PlaPoint[] result = new PlaPoint[new_corner_count];
+      PlaPointInt[] result = new PlaPointInt[new_corner_count];
       int curr_corner_no = 0;
       
-      for (int i = start_corner_no; i <= last_corner_no; ++i)
+      for (int index = start_corner_no; index <= last_corner_no; ++index)
          {
-         result[curr_corner_no] = curr_corners[i];
+         result[curr_corner_no] = curr_corners[index];
          ++curr_corner_no;
          }
       
@@ -135,7 +136,7 @@ public final class ShapePolygon extends ShapePolyline
 
    
    @Override
-   public PlaPoint corner(int p_no)
+   public PlaPointInt corner(int p_no)
       {
       // it will throw exception if out of bounds
       return corners[p_no];
@@ -368,8 +369,15 @@ public final class ShapePolygon extends ShapePolyline
          urx = Math.max(urx, tmp);
          }
       
-      precalculated_bounding_octagon = new ShapeTileOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx),
-            (int) Math.floor(llx), (int) Math.ceil(urx));
+      precalculated_bounding_octagon = new ShapeTileOctagon(
+            Math.floor(lx), 
+            Math.floor(ly), 
+            Math.ceil(rx), 
+            Math.ceil(uy), 
+            Math.floor(ulx), 
+            Math.ceil(lrx),
+            Math.floor(llx), 
+            Math.ceil(urx));
 
       return precalculated_bounding_octagon;
       }
@@ -460,11 +468,12 @@ public final class ShapePolygon extends ShapePolyline
       {
       ShapePolygon hull = convex_hull();
       PlaLineInt[] bounding_lines = new PlaLineInt[hull.corners.length];
-      for (int i = 0; i < bounding_lines.length - 1; ++i)
+      for (int index = 0; index < bounding_lines.length - 1; ++index)
          {
-         bounding_lines[i] = new PlaLineInt(hull.corners[i], hull.corners[i + 1]);
+         bounding_lines[index] = new PlaLineInt(hull.corners[index], hull.corners[index + 1]);
          }
       bounding_lines[bounding_lines.length - 1] = new PlaLineInt(hull.corners[hull.corners.length - 1], hull.corners[0]);
+      
       return ShapeTile.get_instance(bounding_lines);
       }
 
@@ -533,6 +542,7 @@ public final class ShapePolygon extends ShapePolyline
          {
          next_corner = corners[p_no + 1];
          }
+      
       return new PlaLineInt(corners[p_no], next_corner);
       }
 

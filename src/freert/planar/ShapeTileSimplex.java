@@ -36,7 +36,7 @@ public final class ShapeTileSimplex extends ShapeTile
    private final PlaLineInt[] lines_arr;
 
    // the following fields are for storing pre calculated data
-   transient private PlaPoint[]       precalc_corners_int = null;
+   transient private PlaPointInt[]    precalc_corners_int = null;
    transient private PlaPointFloat[]  precalc_corners_float = null;
    transient private ShapeTileBox     precalc_bounding_box = null;
    transient private ShapeTileOctagon precalc_bounding_octagon = null;
@@ -167,7 +167,7 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    @Override
-   public PlaPoint corner(int p_no)
+   public PlaPointInt corner(int p_no)
       {
       if (p_no < 0)
          {
@@ -180,7 +180,7 @@ public final class ShapeTileSimplex extends ShapeTile
          p_no = lines_arr.length - 1;
          }
 
-      if (precalc_corners_int == null)  precalc_corners_int = new PlaPoint[lines_arr.length];
+      if (precalc_corners_int == null)  precalc_corners_int = new PlaPointInt[lines_arr.length];
       
       if (precalc_corners_int[p_no] != null) return precalc_corners_int[p_no];
 
@@ -194,7 +194,7 @@ public final class ShapeTileSimplex extends ShapeTile
          {
          prev = lines_arr[p_no - 1];
          }
-      precalc_corners_int[p_no] = lines_arr[p_no].intersection(prev);
+      precalc_corners_int[p_no] = lines_arr[p_no].intersection(prev).round();
 
       return precalc_corners_int[p_no];
       }
