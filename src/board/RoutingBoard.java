@@ -2235,9 +2235,9 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Tries to insert a trace polyline with the input parameters from while shoving aside obstacle traces and vias. 
     * Returns the last corner on the polyline, to which the shove succeeded. 
-    * Returns null, if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
+    * Returns null if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
     */
-   public final PlaPoint insert_trace_polyline(
+   public final PlaPointInt insert_trace_polyline(
          Polyline p_polyline, 
          int p_half_width, 
          int p_layer, 
@@ -2259,7 +2259,7 @@ public final class RoutingBoard implements java.io.Serializable
          {
          System.err.println(classname+"insert_trace_polyline: from_corner_point NOT int");
          // really. what is the point of returning this ? I did not actually route up to this !
-         return from_corner_point;
+         return null;
          }      
       
       PlaPointInt from_corner = (PlaPointInt)from_corner_point; 
@@ -2313,7 +2313,7 @@ public final class RoutingBoard implements java.io.Serializable
          combined_polyline = new_polyline.combine(combine_trace.polyline());
          }
       
-      if ( ! combined_polyline.is_valid() ) //lines_arr.length < 3)
+      if ( ! combined_polyline.is_valid() ) 
          {
          return from_corner;
          }
@@ -2322,43 +2322,68 @@ public final class RoutingBoard implements java.io.Serializable
       // calculate the last shapes of combined_polyline for checking
       ShapeTile[] trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.plalinelen(-1));
       int last_shape_no = trace_shapes.length;
-      boolean orthogonal_mode = (brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE);
-      for (int i = 0; i < trace_shapes.length; ++i)
+      boolean orthogonal_mode = brd_rules.is_trace_snap_90();
+      for (int index = 0; index < trace_shapes.length; ++index)
          {
-         ShapeTile curr_trace_shape = trace_shapes[i];
+         ShapeTile curr_trace_shape = trace_shapes[index];
+         
          if (orthogonal_mode)
             {
+            // What is this doing here ?
             curr_trace_shape = curr_trace_shape.bounding_box();
             }
-         BrdFromSide from_side = new BrdFromSide(combined_polyline, combined_polyline.corner_count() - trace_shapes.length - 1 + i, curr_trace_shape);
+         
+         BrdFromSide from_side = new BrdFromSide(combined_polyline, combined_polyline.corner_count() - trace_shapes.length - 1 + index, curr_trace_shape);
 
          if (p_with_check)
             {
-            boolean check_shove_ok = shove_trace_algo.check(curr_trace_shape, from_side, null, p_layer, p_net_no_arr, p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
-                  p_max_spring_over_recursion_depth, p_time_limit);
+            boolean check_shove_ok = shove_trace_algo.check(
+                  curr_trace_shape, 
+                  from_side, 
+                  null, 
+                  p_layer, 
+                  p_net_no_arr, 
+                  p_clearance_class_no, 
+                  p_max_recursion_depth, 
+                  p_max_via_recursion_depth,
+                  p_max_spring_over_recursion_depth, 
+                  p_time_limit);
+
             if (!check_shove_ok)
                {
-               last_shape_no = i;
+               last_shape_no = index;
                break;
                }
             }
-         boolean insert_ok = shove_trace_algo.insert(curr_trace_shape, from_side, p_layer, p_net_no_arr, p_clearance_class_no, null, p_max_recursion_depth, p_max_via_recursion_depth,
+         
+         boolean insert_ok = shove_trace_algo.insert(
+               curr_trace_shape, 
+               from_side, 
+               p_layer, 
+               p_net_no_arr, 
+               p_clearance_class_no, 
+               null, 
+               p_max_recursion_depth, 
+               p_max_via_recursion_depth,
                p_max_spring_over_recursion_depth);
-         if (!insert_ok)
-            {
-            return null;
-            }
+
+         if ( ! insert_ok) return null;
          }
-      PlaPoint new_corner = to_corner;
+
+      PlaPointInt new_corner = to_corner;
+      
       if (last_shape_no < trace_shapes.length)
          {
          // the shove with index last_shape_no failed.
          // Sample the shove line to a shorter shove distance and try again.
          ShapeTile last_trace_shape = trace_shapes[last_shape_no];
+         
          if (orthogonal_mode)
             {
+            // what is this doing here ?
             last_trace_shape = last_trace_shape.bounding_box();
             }
+         
          int sample_width = 2 * get_min_trace_half_width();
          PlaPointFloat last_corner = new_polyline.corner_approx(last_shape_no + 1);
          PlaPointFloat prev_last_corner = new_polyline.corner_approx(last_shape_no);
@@ -2368,20 +2393,25 @@ public final class RoutingBoard implements java.io.Serializable
             // to many cycles to sample
             return from_corner;
             }
+         
          int shape_index = combined_polyline.corner_count() - trace_shapes.length - 1 + last_shape_no;
+         
          if (last_segment_length > sample_width)
             {
             new_polyline = new_polyline.shorten(new_polyline.plalinelen( - (trace_shapes.length - last_shape_no - 1)), sample_width);
             
-            PlaPoint curr_last_corner = new_polyline.corner_last();
+            PlaPoint new_last_corner_point = new_polyline.corner_last();
             
-            if (!(curr_last_corner instanceof PlaPointInt))
+            if (!(new_last_corner_point instanceof PlaPointInt))
                {
-               System.out.println("insert_forced_trace_segment: IntPoint expected");
+               System.out.println("insert_forced_trace_segment: IntPoint wanted");
                return from_corner;
                }
             
-            new_corner = curr_last_corner;
+            PlaPointInt new_last_corner = new_last_corner_point.round();
+            
+            new_corner = new_last_corner;
+            
             if (picked_trace == null)
                {
                combined_polyline = new_polyline;
@@ -2391,10 +2421,9 @@ public final class RoutingBoard implements java.io.Serializable
                BrdTracePolyline combine_trace = (BrdTracePolyline) picked_trace;
                combined_polyline = new_polyline.combine(combine_trace.polyline());
                }
-            if (combined_polyline.plalinelen() < 3)
-               {
-               return new_corner;
-               }
+            
+            if ( ! combined_polyline.is_valid() ) return new_corner;
+            
             shape_index = combined_polyline.plalinelen(-3);
             last_trace_shape = combined_polyline.offset_shape(compensated_half_width, shape_index);
             if (orthogonal_mode)
@@ -2404,25 +2433,45 @@ public final class RoutingBoard implements java.io.Serializable
             }
          BrdFromSide from_side = new BrdFromSide(combined_polyline, shape_index, last_trace_shape);
          boolean check_shove_ok = shove_trace_algo.check(
-               last_trace_shape, from_side, null, p_layer, p_net_no_arr, p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,p_max_spring_over_recursion_depth, p_time_limit);
+               last_trace_shape, 
+               from_side, 
+               null, 
+               p_layer, 
+               p_net_no_arr, 
+               p_clearance_class_no, 
+               p_max_recursion_depth, 
+               p_max_via_recursion_depth, 
+               p_max_spring_over_recursion_depth, 
+               p_time_limit);
 
          if (!check_shove_ok) return from_corner;
 
          boolean insert_ok = shove_trace_algo.insert(
-               last_trace_shape, from_side, p_layer, p_net_no_arr, p_clearance_class_no, null, p_max_recursion_depth, p_max_via_recursion_depth, p_max_spring_over_recursion_depth);
+               last_trace_shape, 
+               from_side, 
+               p_layer, 
+               p_net_no_arr, 
+               p_clearance_class_no, 
+               null, 
+               p_max_recursion_depth, 
+               p_max_via_recursion_depth, 
+               p_max_spring_over_recursion_depth);
 
          if (!insert_ok)
             {
             System.out.println("shove trace failed");
             return null;
             }
-         
          }
+      
+      
+      
       // insert the new trace segment
       for (int index = 0; index < new_polyline.corner_count(); ++index)
          {
          join_changed_area(new_polyline.corner_approx(index), p_layer);
          }
+      
       BrdTracePolyline new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class_no, ItemFixState.UNFIXED);
       new_trace.combine();
 
@@ -2431,6 +2480,7 @@ public final class RoutingBoard implements java.io.Serializable
          {
          tidy_region = new ShapeTileOctagon(new_corner).enlarge(p_tidy_width);
          }
+      
       int[] opt_net_no_arr;
       if (p_max_recursion_depth <= 0)
          {
@@ -2469,6 +2519,7 @@ public final class RoutingBoard implements java.io.Serializable
          {
          new_trace.pull_tight(pull_tight_algo);
          }
+      
       return new_corner;
       }
 

@@ -462,6 +462,20 @@ public final class BoardRules implements Serializable
       return trace_angle_restriction;
       }
 
+   public final boolean is_trace_snap_none ()
+      {
+      return trace_angle_restriction.is_limit_none();
+      }
+
+   public final boolean is_trace_snap_45 ()
+      {
+      return trace_angle_restriction.is_limit_45();
+      }
+
+   public final boolean is_trace_snap_90 ()
+      {
+      return trace_angle_restriction.is_limit_90();
+      }
 
    public void set_trace_snap_angle(board.varie.TraceAngleRestriction p_angle_restriction)
       {

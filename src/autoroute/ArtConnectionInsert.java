@@ -174,13 +174,14 @@ public final class ArtConnectionInsert
       for (int index = 1; index < p_trace.corners.length; ++index)
          {
          PlaPoint[] curr_corner_arr = new PlaPoint[index - from_corner_no + 1];
-         for (int j = from_corner_no; j <= index; ++j)
+         for (int jndex = from_corner_no; jndex <= index; ++jndex)
             {
-            curr_corner_arr[j - from_corner_no] = p_trace.corners[j];
+            curr_corner_arr[jndex - from_corner_no] = p_trace.corners[jndex];
             }
          
          Polyline insert_polyline = new Polyline(curr_corner_arr);
-         PlaPoint ok_point = r_board.insert_trace_polyline(
+         
+         PlaPointInt ok_point = r_board.insert_trace_polyline(
                insert_polyline, 
                ctrl.trace_half_width[p_trace.layer], 
                p_trace.layer, 
@@ -196,7 +197,13 @@ public final class ArtConnectionInsert
          
          boolean neckdown_inserted = false;
          
-         if (ok_point != null && ok_point != insert_polyline.corner_last() && ctrl.with_neckdown && curr_corner_arr.length == 2)
+         if ( ok_point == null )
+            {
+            result = false;
+            break;
+            }
+         
+         if ( ok_point != insert_polyline.corner_last() && ctrl.with_neckdown && curr_corner_arr.length == 2)
             {
             neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
             }
@@ -256,6 +263,9 @@ public final class ArtConnectionInsert
       return result;
       }
 
+   /**
+    * 
+    */
    boolean insert_neckdown(PlaPoint p_from_corner, PlaPoint p_to_corner, int p_layer, BrdAbitPin p_start_pin, BrdAbitPin p_end_pin)
       {
       if (p_start_pin != null)
