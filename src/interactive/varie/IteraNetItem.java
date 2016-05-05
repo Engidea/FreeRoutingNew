@@ -2,23 +2,25 @@ package interactive.varie;
 
 import java.util.Collection;
 import board.items.BrdItem;
-import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
 import freert.varie.PlaDelTriStorable;
 
-public class IteraNetItem implements PlaDelTriStorable
+public final class IteraNetItem implements PlaDelTriStorable
    {
+   public final BrdItem item;
+   public Collection<BrdItem> connected_set;
+
+
    public IteraNetItem(BrdItem p_item, Collection<BrdItem> p_connected_set)
       {
       item = p_item;
       connected_set = p_connected_set;
       }
 
-   public PlaPoint[] get_triangulation_corners()
+   @Override
+   public PlaPointInt[] get_triangulation_corners()
       {
-      return this.item.get_ratsnest_corners();
+      return item.get_ratsnest_corners();
       }
-
-   public final BrdItem item;
-   public Collection<BrdItem> connected_set;
 
    }

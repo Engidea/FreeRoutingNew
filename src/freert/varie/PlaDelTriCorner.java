@@ -1,6 +1,6 @@
 package freert.varie;
 
-import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 
 /**
@@ -9,9 +9,9 @@ import freert.planar.PlaSide;
 public final class PlaDelTriCorner
    {
    public final PlaDelTriStorable object;
-   public final PlaPoint coor;
+   public final PlaPointInt coor;
 
-   public PlaDelTriCorner(PlaDelTriStorable p_object, PlaPoint p_coor)
+   public PlaDelTriCorner(PlaDelTriStorable p_object, PlaPointInt p_coor)
       {
       object = p_object;
       coor = p_coor;

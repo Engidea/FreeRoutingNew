@@ -1,6 +1,6 @@
 package freert.varie;
 
-import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
 
 
 /**
@@ -9,15 +9,15 @@ import freert.planar.PlaPoint;
 public final class PlaDelTriResultEdge
    {
    // The start point of the line segment
-   public final PlaPoint start_point;
+   public final PlaPointInt start_point;
    // The object at the start point of the line segment
    public final PlaDelTriStorable start_object;
    // The end point of the line segment
-   public final PlaPoint end_point;
+   public final PlaPointInt end_point;
    // The object at the end point of the line segment 
    public final PlaDelTriStorable end_object;
 
-   public PlaDelTriResultEdge(PlaPoint p_start_point, PlaDelTriStorable p_start_object, PlaPoint p_end_point, PlaDelTriStorable p_end_object)
+   public PlaDelTriResultEdge(PlaPointInt p_start_point, PlaDelTriStorable p_start_object, PlaPointInt p_end_point, PlaDelTriStorable p_end_object)
       {
       start_point = p_start_point;
       start_object = p_start_object;

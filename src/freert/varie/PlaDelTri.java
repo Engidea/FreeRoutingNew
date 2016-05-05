@@ -25,11 +25,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeSet;
+import board.varie.IdGenerator;
 import freert.planar.PlaLimits;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
-import board.varie.IdGenerator;
 
 /**
  * Creates a Delaunay triangulation in the plane for the input objects. 
@@ -61,8 +60,9 @@ public final class PlaDelTri
       List<PlaDelTriCorner> corner_list = new LinkedList<PlaDelTriCorner>();
       for (PlaDelTriStorable curr_object : p_object_list)
          {
-         PlaPoint[] curr_corners = curr_object.get_triangulation_corners();
-         for (PlaPoint curr_corner : curr_corners)
+         PlaPointInt[] curr_corners = curr_object.get_triangulation_corners();
+
+         for (PlaPointInt curr_corner : curr_corners)
             {
             corner_list.add(new PlaDelTriCorner(curr_object, curr_corner));
             }
