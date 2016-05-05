@@ -119,7 +119,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
 
       if ( side_changed && ! r_board.brd_components.get_flip_style_rotate_first())
          {
-         turned_area = turned_area.mirror_vertical(PlaPoint.ZERO);
+         turned_area = turned_area.mirror_vertical(PlaPointInt.ZERO);
          }
       
       if ( rotation_in_degree != 0)
@@ -127,7 +127,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
          double rotation = rotation_in_degree;
          if (rotation % 90 == 0)
             {
-            turned_area = turned_area.turn_90_degree(((int) rotation) / 90, PlaPoint.ZERO);
+            turned_area = turned_area.turn_90_degree(((int) rotation) / 90, PlaPointInt.ZERO);
             }
          else
             {
@@ -137,7 +137,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
 
       if ( side_changed && r_board.brd_components.get_flip_style_rotate_first())
          {
-         turned_area = turned_area.mirror_vertical(PlaPoint.ZERO);
+         turned_area = turned_area.mirror_vertical(PlaPointInt.ZERO);
          }
       
       precalculated_absolute_area = turned_area.translate_by(translation);
@@ -239,8 +239,8 @@ public class BrdArea extends BrdItem implements java.io.Serializable
          {
          rotation_in_degree += 360;
          }
-      PlaPoint rel_location = PlaPoint.ZERO.translate_by(translation);
-      translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPoint.ZERO);
+      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
+      translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
 
@@ -261,7 +261,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
          rotation_in_degree += 360;
          }
       PlaPointFloat new_translation = translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
-      translation = new_translation.round().difference_by(PlaPoint.ZERO);
+      translation = new_translation.round().difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
 
@@ -273,8 +273,8 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       // why is it changing layer ? damiano
       layer_no = r_board.get_layer_count() - layer_no - 1;
 
-      PlaPoint rel_location = PlaPoint.ZERO.translate_by(translation);
-      translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPoint.ZERO);
+      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
+      translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
 

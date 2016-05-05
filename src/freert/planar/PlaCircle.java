@@ -425,7 +425,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
    public String to_string(java.util.Locale p_locale)
       {
       String result = "Circle: ";
-      if (!(center.equals(PlaPoint.ZERO)))
+      if (! center.equals(PlaPointInt.ZERO) )
          {
          String center_string = "center " + center.toString();
          result += center_string;

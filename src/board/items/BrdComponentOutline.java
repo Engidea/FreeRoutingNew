@@ -180,8 +180,8 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    public void change_placement_side(PlaPointInt p_pole)
       {
       is_front = !is_front;
-      PlaPoint rel_location = PlaPoint.ZERO.translate_by(translation);
-      translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPoint.ZERO);
+      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
+      translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
 
@@ -202,7 +202,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
          rotation_in_degree += 360;
          }
       PlaPointFloat new_translation = translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
-      translation = new_translation.round().difference_by(PlaPoint.ZERO);
+      translation = new_translation.round().difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
 
@@ -219,9 +219,9 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
          rotation_in_degree += 360;
          }
       
-      PlaPoint rel_location = PlaPoint.ZERO.translate_by(translation);
+      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
       
-      translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPoint.ZERO);
+      translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPointInt.ZERO);
       
       clear_derived_data();
       }
@@ -234,14 +234,14 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
 
       if (!is_front && !r_board.brd_components.get_flip_style_rotate_first())
          {
-         turned_area = turned_area.mirror_vertical(PlaPoint.ZERO);
+         turned_area = turned_area.mirror_vertical(PlaPointInt.ZERO);
          }
       if (rotation_in_degree != 0)
          {
          double rotation = rotation_in_degree;
          if (rotation % 90 == 0)
             {
-            turned_area = turned_area.turn_90_degree(((int) rotation) / 90, PlaPoint.ZERO);
+            turned_area = turned_area.turn_90_degree(((int) rotation) / 90, PlaPointInt.ZERO);
             }
          else
             {
@@ -251,7 +251,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
          }
       if (!is_front && r_board.brd_components.get_flip_style_rotate_first())
          {
-         turned_area = turned_area.mirror_vertical(PlaPoint.ZERO);
+         turned_area = turned_area.mirror_vertical(PlaPointInt.ZERO);
          }
       precalculated_absolute_area = turned_area.translate_by(translation);
 

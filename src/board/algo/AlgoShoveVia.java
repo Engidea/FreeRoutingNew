@@ -109,7 +109,7 @@ public final class AlgoShoveVia
     */
    public boolean check(BrdViaInfo p_via_info, PlaPoint p_location, int[] p_net_no_arr, int p_max_recursion_depth, int p_max_via_recursion_depth )
       {
-      PlaVector translate_vector = p_location.difference_by(PlaPoint.ZERO);
+      PlaVector translate_vector = p_location.difference_by(PlaPointInt.ZERO);
       
       int calc_from_side_offset = r_board.get_min_trace_half_width();
 
@@ -166,7 +166,7 @@ public final class AlgoShoveVia
          int p_max_recursion_depth,
          int p_max_via_recursion_depth )
       {
-      PlaVector translate_vector = p_location.difference_by(PlaPoint.ZERO);
+      PlaVector translate_vector = p_location.difference_by(PlaPointInt.ZERO);
       
       int calc_from_side_offset = r_board.get_min_trace_half_width();
 

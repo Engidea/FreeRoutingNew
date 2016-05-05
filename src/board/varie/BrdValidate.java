@@ -210,9 +210,9 @@ public class BrdValidate
 
    static public boolean corners_on_grid(String p_s, Polyline p_polyline)
       {
-      for (int i = 0; i < p_polyline.corner_count(); ++i)
+      for (int index = 0; index < p_polyline.corner_count(); ++index)
          {
-         if (!(p_polyline.corner(i) instanceof PlaPointInt))
+         if (!(p_polyline.corner(index) instanceof PlaPointInt))
             {
             System.out.print(p_s);
             System.out.println(": corner not on grid");

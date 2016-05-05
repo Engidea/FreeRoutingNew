@@ -164,7 +164,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
                if (check_polyline.plalinelen() == 3)
                   {
                   ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins))
+                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
                      curr_check_points[1] = curr_corner[3];
                      if (curr_check_points[0].equals(curr_check_points[1]))
@@ -177,7 +177,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
                         if (check_polyline.plalinelen() == 3)
                            {
                            shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                           corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+                           corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                            }
                         else
                            {
@@ -211,14 +211,14 @@ public final class AlgoPullTight45 extends AlgoPullTight
                if (check_polyline.plalinelen() == 3)
                   {
                   ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins))
+                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
                      curr_check_points[1] = curr_corner[2];
                      check_polyline = new Polyline(curr_check_points);
                      if (check_polyline.plalinelen() == 3)
                         {
                         shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                        corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+                        corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                         }
                      else
                         {
@@ -352,7 +352,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaDirection new_line_dir = prev_dir.add(next_dir);
       
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
-      double translate_dist = (PlaLimits.sqrt2 - 1) * this.curr_half_width;
+      double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
       double prev_dist = Math.abs(translate_line.signed_distance(prev_corner));
       double next_dist = Math.abs(translate_line.signed_distance(next_corner));
       translate_dist = Math.min(translate_dist, prev_dist);
@@ -511,7 +511,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaSide side_of_nearest_corner = translate_line.side_of(nearest_corner);
       int sign = Signum.as_int(max_translate_dist);
       PlaLineInt result = null;
-      while (Math.abs(delta_dist) > this.min_translate_dist)
+      while (Math.abs(delta_dist) > min_translate_dist)
          {
          boolean check_ok = false;
          PlaLineInt new_line = translate_line.translate(translate_dist);
@@ -524,7 +524,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             if (tmp.plalinelen() == 3)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
-               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
 
                }
             delta_dist /= 2;
@@ -572,9 +572,10 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaLineInt other_trace_line = null;
       PlaLineInt other_prev_trace_line = null;
       Polyline trace_polyline = p_trace.polyline();
-      PlaPoint curr_end_corner = trace_polyline.corner(0);
+      
+      PlaPoint curr_end_corner = trace_polyline.corner_first();
 
-      if (this.curr_clip_shape != null && this.curr_clip_shape.is_outside(curr_end_corner))
+      if (curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner))
          {
          return null;
          }
@@ -651,7 +652,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             new_line_dir = other_trace_line.direction().turn_45_degree(6);
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
-         double translate_dist = (PlaLimits.sqrt2 - 1) * this.curr_half_width;
+         double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
          double prev_corner_dist = Math.abs(translate_line.signed_distance(curr_prev_end_corner.to_float()));
          double other_dist = Math.abs(translate_line.signed_distance(other_trace_corner_approx));
          translate_dist = Math.min(translate_dist, prev_corner_dist);
@@ -711,7 +712,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       Polyline trace_polyline = p_trace.polyline();
       PlaPoint curr_end_corner = trace_polyline.corner_last();
 
-      if (this.curr_clip_shape != null && this.curr_clip_shape.is_outside(curr_end_corner))
+      if (curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner))
          {
          return null;
          }
@@ -788,7 +789,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             new_line_dir = other_trace_line.direction().turn_45_degree(2);
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
-         double translate_dist = (PlaLimits.sqrt2 - 1) * this.curr_half_width;
+         double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
          double prev_corner_dist = Math.abs(translate_line.signed_distance(curr_prev_end_corner.to_float()));
          double other_dist = Math.abs(translate_line.signed_distance(other_trace_corner_approx));
          translate_dist = Math.min(translate_dist, prev_corner_dist);

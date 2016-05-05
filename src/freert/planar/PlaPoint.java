@@ -33,10 +33,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
    {
    private static final long serialVersionUID = 1L;
    private static final String classname="PlaPoint.";
-
-   // Standard implementation of the zero point .
-   public static final PlaPointInt ZERO = new PlaPointInt(0, 0);
-   
    
    public abstract PlaPointInt round();
    

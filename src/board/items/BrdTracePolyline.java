@@ -93,7 +93,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
    @Override
    public PlaPoint first_corner()
       {
-      return polyline.corner(0);
+      return polyline.corner_first();
       }
 
    /**
@@ -491,19 +491,19 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       boolean own_trace_split = false;
       ShapeSearchTree default_tree = r_board.search_tree_manager.get_default_tree();
-      for (int i = 0; i < polyline.plalinelen(-2); ++i)
+      for (int index = 0; index < polyline.plalinelen(-2); ++index)
          {
          if (p_clip_shape != null)
             {
-            PlaSegmentInt curr_segment = new PlaSegmentInt(polyline, i + 1);
+            PlaSegmentInt curr_segment = new PlaSegmentInt(polyline, index + 1);
             if (!p_clip_shape.intersects(curr_segment.bounding_box()))
                {
                continue;
                }
             }
-         ShapeTile curr_shape = get_tree_shape(default_tree, i);
+         ShapeTile curr_shape = get_tree_shape(default_tree, index);
          
-         PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, i + 1);
+         PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, index + 1);
          
          Collection<ShapeTreeEntry> overlapping_tree_entries = new LinkedList<ShapeTreeEntry>();
          // look for intersecting traces with the i-th line segment
@@ -516,41 +516,40 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                // this trace has been deleted in a cleanup operation
                return result;
                }
+            
             ShapeTreeEntry found_entry = it.next();
-            if (!(found_entry.object instanceof BrdItem))
-               {
-               continue;
-               }
+            
+            if (!(found_entry.object instanceof BrdItem)) continue;
+            
             BrdItem found_item = (BrdItem) found_entry.object;
+
             if (found_item == this)
                {
-
-               if (found_entry.shape_index_in_object >= i - 1 && found_entry.shape_index_in_object <= i + 1)
+               if (found_entry.shape_index_in_object >= index - 1 && found_entry.shape_index_in_object <= index + 1)
                   {
                   // don't split own trace at this line or at neighbour lines
                   continue;
                   }
-               // try to handle intermediate segments of length 0 by comparing
-               // end corners
-               if (i < found_entry.shape_index_in_object)
+
+               // try to handle intermediate segments of length 0 by comparing end corners
+               if (index < found_entry.shape_index_in_object)
                   {
-                  if (polyline.corner(i + 1).equals(polyline.corner(found_entry.shape_index_in_object)))
+                  if (polyline.corner(index + 1).equals(polyline.corner(found_entry.shape_index_in_object)))
                      {
                      continue;
                      }
                   }
-               else if (found_entry.shape_index_in_object < i)
+               else if (found_entry.shape_index_in_object < index)
                   {
-                  if (polyline.corner(found_entry.shape_index_in_object + 1).equals(polyline.corner(i)))
+                  if (polyline.corner(found_entry.shape_index_in_object + 1).equals(polyline.corner(index)))
                      {
                      continue;
                      }
                   }
                }
-            if (!found_item.shares_net(this))
-               {
-               continue;
-               }
+            
+            if (!found_item.shares_net(this)) continue;
+            
             if (found_item instanceof BrdTracePolyline)
                {
                BrdTracePolyline found_trace = (BrdTracePolyline) found_item;
@@ -563,10 +562,10 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
 
                if (found_trace != this)
                   {
-                  for (int j = 0; j < intersecting_lines.length; ++j)
+                  for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
                      {
                      int line_no = found_entry.shape_index_in_object + 1;
-                     BrdTracePolyline[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[j]);
+                     BrdTracePolyline[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[jndex]);
                      if (curr_split_pieces != null)
                         {
 
@@ -581,9 +580,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                            }
                         if (found_trace_split)
                            {
-                           // reread the overlapping tree entries and reset the
-                           // iterator,
-                           // because the board has changed
+                           // reread the overlapping tree entries and reset the iterator, because the board has changed
                            default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
                            it = overlapping_tree_entries.iterator();
                            break;
@@ -598,9 +595,10 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                // now try splitting the own trace
 
                intersecting_lines = curr_line_segment.intersection(found_line_segment);
-               for (int j = 0; j < intersecting_lines.length; ++j)
+               
+               for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
                   {
-                  BrdTracePolyline[] curr_split_pieces = split(i + 1, intersecting_lines[j]);
+                  BrdTracePolyline[] curr_split_pieces = split(index + 1, intersecting_lines[jndex]);
                   if (curr_split_pieces != null)
                      {
                      own_trace_split = true;
@@ -647,7 +645,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                   {
                   PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
                   PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
-                  split(i + 1, split_line);
+                  split(index + 1, split_line);
                   }
                }
             else if (!is_user_fixed() && (found_item instanceof BrdAreaConduction))

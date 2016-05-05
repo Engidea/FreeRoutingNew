@@ -277,6 +277,7 @@ public final class AlgoOptimizeVia
       
       Polyline trace_polyline = contact_trace.polyline();
       PlaPoint check_corner;
+
       if (at_first_corner)
          {
          check_corner = trace_polyline.corner(1);

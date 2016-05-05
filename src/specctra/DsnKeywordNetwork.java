@@ -24,7 +24,6 @@ import freert.library.LibLogicalPin;
 import freert.library.LibPackage;
 import freert.library.LibPackagePin;
 import freert.library.LibPadstack;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
@@ -1349,7 +1348,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          return; // component is not yet placed.
          }
       
-      PlaVectorInt component_translation = component_location.difference_by(PlaPoint.ZERO);
+      PlaVectorInt component_translation = component_location.difference_by(PlaPointInt.ZERO);
 
       ItemFixState fixed_state;
       if (p_location.position_fixed)

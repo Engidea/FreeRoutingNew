@@ -34,7 +34,6 @@ import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -344,7 +343,7 @@ public final class AlgoMoveDrillItem
          
          for (int index = 0; index < try_via_centers.length; ++index)
             {
-            PlaVectorInt curr_delta = shove_deltas[index].round().difference_by(PlaPoint.ZERO);
+            PlaVectorInt curr_delta = shove_deltas[index].round().difference_by(PlaPointInt.ZERO);
             try_via_centers[index] = curr_via_center.translate_by(curr_delta);
             }
          }

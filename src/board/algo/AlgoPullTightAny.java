@@ -909,7 +909,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaLineInt other_trace_line = null;
       PlaLineInt other_prev_trace_line = null;
       Polyline trace_polyline = p_trace.polyline();
-      PlaPoint curr_end_corner = trace_polyline.corner(0);
+      PlaPoint curr_end_corner = trace_polyline.corner_first();
 
       if (this.curr_clip_shape != null && this.curr_clip_shape.is_outside(curr_end_corner))
          {

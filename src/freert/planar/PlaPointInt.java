@@ -29,6 +29,9 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    private static final String classname="PlaPointInt.";
+   
+   // Standard implementation of the zero point
+   public static final PlaPointInt ZERO = new PlaPointInt(0, 0);
 
    public final int v_x;
    public final int v_y;

@@ -351,7 +351,7 @@ public class WindowVia extends GuiSubWindowSavable
             int circle_radius = (int) Math.round(coordinate_transform.user_to_board(radius));
             if (circle_radius > 0)
                {
-               padstack_shapes[i] = new freert.planar.PlaCircle(freert.planar.PlaPoint.ZERO, circle_radius);
+               padstack_shapes[i] = new freert.planar.PlaCircle(freert.planar.PlaPointInt.ZERO, circle_radius);
                shape_exists = true;
                }
             }
