@@ -311,7 +311,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
    @Override
    public PlaCircle translate_by(PlaVector p_vector)
       {
-      if (p_vector.equals(PlaVector.ZERO)) return this;
+      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
 
       PlaPointInt new_center = center.translate_by(p_vector).round();
       

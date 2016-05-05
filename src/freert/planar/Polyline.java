@@ -655,7 +655,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline translate_by(PlaVector p_vector)
       {
-      if (p_vector.equals(PlaVector.ZERO)) return this;
+      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
       
       PlaLineInt[] new_arr = new PlaLineInt[plalinelen()];
       for (int index = 0; index < new_arr.length; ++index)

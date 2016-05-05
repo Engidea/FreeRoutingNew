@@ -512,18 +512,21 @@ final class DsnKeywordWiring extends DsnKeywordScope
             clearance_class_no = net_class.default_item_clearance_classes.get(ItemClass.TRACE);
             }
          PlaLineInt[] line_arr = new PlaLineInt[path.coordinate_arr.length / 4];
+         
          double[] curr_point = new double[2];
-         for (int i = 0; i < line_arr.length; ++i)
+         
+         for (int index = 0; index < line_arr.length; ++index)
             {
-            curr_point[0] = path.coordinate_arr[4 * i];
-            curr_point[1] = path.coordinate_arr[4 * i + 1];
+            curr_point[0] = path.coordinate_arr[4 * index];
+            curr_point[1] = path.coordinate_arr[4 * index + 1];
             PlaPointFloat curr_a = p_par.coordinate_transform.dsn_to_board(curr_point);
-            curr_point[0] = path.coordinate_arr[4 * i + 2];
-            curr_point[1] = path.coordinate_arr[4 * i + 3];
+            curr_point[0] = path.coordinate_arr[4 * index + 2];
+            curr_point[1] = path.coordinate_arr[4 * index + 3];
             PlaPointFloat curr_b = p_par.coordinate_transform.dsn_to_board(curr_point);
-            line_arr[i] = new PlaLineInt(curr_a.round(), curr_b.round());
+            line_arr[index] = new PlaLineInt(curr_a.round(), curr_b.round());
             }
          Polyline trace_polyline = new Polyline(line_arr);
+         
          result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
          }
       else

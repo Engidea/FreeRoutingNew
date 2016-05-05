@@ -154,7 +154,7 @@ public final class PolylineArea implements PlaArea, Serializable
    @Override
    public PolylineArea translate_by(PlaVector p_vector)
       {
-      if (p_vector.equals(PlaVector.ZERO))
+      if (p_vector.equals(PlaVectorInt.ZERO))
          {
          return this;
          }

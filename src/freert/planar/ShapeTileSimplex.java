@@ -561,7 +561,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public ShapeTileSimplex translate_by(PlaVector p_vector)
       {
-      if (p_vector.equals(PlaVector.ZERO)) return this;
+      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
 
       PlaLineInt[] new_arr = new PlaLineInt[lines_arr.length];
       

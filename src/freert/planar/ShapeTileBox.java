@@ -493,7 +493,7 @@ public final class ShapeTileBox extends ShapeTileRegular
 
    public ShapeTileBox translate_by(PlaVectorInt p_rel_coor)
       {
-      if (p_rel_coor.equals(PlaVector.ZERO)) return this;
+      if (p_rel_coor.equals(PlaVectorInt.ZERO)) return this;
 
       PlaPointInt new_ll = box_ll.translate_by(p_rel_coor);
       PlaPointInt new_ur = box_ur.translate_by(p_rel_coor);

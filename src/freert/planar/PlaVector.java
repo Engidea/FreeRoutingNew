@@ -31,8 +31,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    {
    private static final long serialVersionUID = 1L;
 
-   // Standard implementation of the zero vector .
-   public static final PlaVectorInt ZERO = new PlaVectorInt(0, 0);
    
    /**
     * @return true, if this vector is equal to the zero vector.

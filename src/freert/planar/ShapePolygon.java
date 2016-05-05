@@ -295,7 +295,7 @@ public final class ShapePolygon extends ShapePolyline
    @Override
    public ShapePolygon translate_by(PlaVector p_vector)
       {
-      if (p_vector.equals(PlaVector.ZERO)) return this;
+      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
       
       PlaPoint[] new_corners = new PlaPoint[corners.length];
       

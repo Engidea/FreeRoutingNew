@@ -170,8 +170,8 @@ public final class RoutingBoard implements java.io.Serializable
 
    
    /**
-    * Inserts a trace into the board, whose geometry is described by a Polyline. p_clearance_class is the index in the
-    * clearance_matix, which describes the required clearance restrictions to other items. 
+    * Inserts a trace into the board, whose geometry is described by a Polyline. 
+    * p_clearance_class is the index in the clearance_matix, which describes the required clearance restrictions to other items. 
     * Because no internal cleaning of items is done, the new inserted item can be returned.
     */
    public BrdTracePolyline insert_trace_without_cleaning(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
@@ -276,7 +276,7 @@ public final class RoutingBoard implements java.io.Serializable
          System.out.println("BasicBoard.insert_obstacle: p_area is null");
          return;
          }
-      BrdArea obs = new BrdArea(p_area, p_layer, PlaVector.ZERO, 0, false, p_clearance_class, 0, 0, null, p_fixed_state, this);
+      BrdArea obs = new BrdArea(p_area, p_layer, PlaVectorInt.ZERO, 0, false, p_clearance_class, 0, 0, null, p_fixed_state, this);
       insert_item(obs);
       }
 
@@ -316,7 +316,7 @@ public final class RoutingBoard implements java.io.Serializable
          System.out.println("BasicBoard.insert_via_obstacle: p_area is null");
          return;
          }
-      BrdAreaObstacleVia obs = new BrdAreaObstacleVia(p_area, p_layer, PlaVector.ZERO, 0, false, p_clearance_class, 0, 0, null, p_fixed_state, this);
+      BrdAreaObstacleVia obs = new BrdAreaObstacleVia(p_area, p_layer, PlaVectorInt.ZERO, 0, false, p_clearance_class, 0, 0, null, p_fixed_state, this);
       insert_item(obs);
       }
 
@@ -354,7 +354,7 @@ public final class RoutingBoard implements java.io.Serializable
          System.out.println("BasicBoard.insert_component_obstacle: p_area is null");
          return;
          }
-      BrdAreaObstacleComp obs = new BrdAreaObstacleComp(p_area, p_layer, PlaVector.ZERO, 0, false, p_clearance_class, 0, 0, null, p_fixed_state, this);
+      BrdAreaObstacleComp obs = new BrdAreaObstacleComp(p_area, p_layer, PlaVectorInt.ZERO, 0, false, p_clearance_class, 0, 0, null, p_fixed_state, this);
       insert_item(obs);
       }
 
@@ -413,7 +413,7 @@ public final class RoutingBoard implements java.io.Serializable
          System.out.println("BasicBoard.insert_conduction_area: p_area is null");
          return null;
          }
-      BrdAreaConduction cc_area = new BrdAreaConduction(p_area, p_layer, PlaVector.ZERO, 0, false, p_net_no_arr, p_clearance_class, 0, 0, null, p_is_obstacle, p_fixed_state, this);
+      BrdAreaConduction cc_area = new BrdAreaConduction(p_area, p_layer, PlaVectorInt.ZERO, 0, false, p_net_no_arr, p_clearance_class, 0, 0, null, p_is_obstacle, p_fixed_state, this);
       insert_item(cc_area);
       return cc_area;
       }

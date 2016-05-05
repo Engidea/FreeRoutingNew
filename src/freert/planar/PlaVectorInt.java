@@ -31,6 +31,10 @@ package freert.planar;
 public final class PlaVectorInt extends PlaVector
    {
    private static final long serialVersionUID = 1L;
+   
+   // Standard implementation of the zero vector .
+   public static final PlaVectorInt ZERO = new PlaVectorInt(0, 0);
+   
 
    public final int point_x;
    public final int point_y;

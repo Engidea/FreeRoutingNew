@@ -413,7 +413,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    @Override   
    public ShapeTileOctagon translate_by(PlaVector p_rel_coor)
       {
-      if (p_rel_coor.equals(PlaVector.ZERO)) return this;
+      if (p_rel_coor.equals(PlaVectorInt.ZERO)) return this;
 
       PlaVectorInt rel_coor = (PlaVectorInt) p_rel_coor;
 
