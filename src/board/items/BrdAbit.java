@@ -405,10 +405,12 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public PlaPoint normal_contact_point(BrdAbit p_other)
       {
-      if (shares_layer(p_other) && center_get().equals(p_other.center_get()))
-         {
-         return center_get();
-         }
+      if ( ! shares_layer(p_other) ) return null;
+      
+      PlaPointInt my_center = center_get();
+      
+      if ( my_center.equals(p_other.center_get())) return my_center;
+      
       return null;
       }
 
@@ -417,7 +419,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       {
       if ( ! shares_layer(p_trace)) return null;
 
-      PlaPoint drill_center = center_get();
+      PlaPointInt drill_center = center_get();
 
       if (drill_center.equals(p_trace.first_corner()) || drill_center.equals(p_trace.corner_last()))
          {

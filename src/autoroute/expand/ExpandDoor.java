@@ -20,13 +20,13 @@
 package autoroute.expand;
 
 import java.util.ArrayList;
-import freert.planar.PlaDimension;
-import freert.planar.PlaPoint;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaSegmentFloat;
-import freert.planar.ShapeTile;
 import autoroute.ArtEngine;
 import autoroute.maze.MazeSearchElement;
+import freert.planar.PlaDimension;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.PlaSegmentFloat;
+import freert.planar.ShapeTile;
 
 /**
  * An ExpansionDoor is a common edge between two ExpansionRooms
@@ -213,13 +213,13 @@ public final class ExpandDoor implements ExpandObject
       {
       ShapeTile first_room_shape = first_room.get_shape();
       ShapeTile second_room_shape = second_room.get_shape();
-      PlaPoint first_corner = null;
-      PlaPoint second_corner = null;
+      PlaPointInt first_corner = null;
+      PlaPointInt second_corner = null;
       int corner_count = p_door_shape.border_line_count();
       
       for (int index = 0; index < corner_count; ++index)
          {
-         PlaPoint curr_corner = p_door_shape.corner(index);
+         PlaPointInt curr_corner = p_door_shape.corner(index);
          
          if ( ! ( ! first_room_shape.contains_inside(curr_corner) && !second_room_shape.contains_inside(curr_corner) ) ) continue;
          

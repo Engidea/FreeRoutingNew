@@ -67,11 +67,13 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
 
    /**
     * returns the first corner of the trace
+    * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
     */
    public abstract PlaPoint first_corner();
 
    /**
     * returns the last corner of the trace
+    * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
     */
    public abstract PlaPoint corner_last();
 

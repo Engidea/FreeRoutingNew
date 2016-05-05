@@ -366,11 +366,17 @@ public final class Polyline implements java.io.Serializable, PlaObject
          precalculated_corners = new PlaPoint[corners_count];
          }
 
-      if (precalculated_corners[p_no] == null)
-         {
-         // corner is not yet calculated
-         precalculated_corners[p_no] = plaline(p_no).intersection(plaline(p_no + 1));
-         }
+      if (precalculated_corners[p_no] != null) return precalculated_corners[p_no];
+
+      // calculate the new corner to this polyline, make sure that first and last are integers
+      precalculated_corners[p_no] = plaline(p_no).intersection(plaline(p_no + 1));
+      
+/* Ahhh, not yet, it is not possible, yet to round first and last point to int points, not yet....     
+      if ( p_no == 0 ) 
+         precalculated_corners[p_no] = precalculated_corners[p_no].round();
+      else if ( p_no == corners_count -1 )
+         precalculated_corners[p_no] = precalculated_corners[p_no].round();
+*/
       
       return precalculated_corners[p_no];
       }
