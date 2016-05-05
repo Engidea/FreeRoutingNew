@@ -45,7 +45,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
@@ -156,11 +156,12 @@ public final class AlgoShoveTrace
          double max_dist = 0.5 * curr_shove_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
          double max_dist_square = max_dist * max_dist;
          boolean shove_via_ok = false;
-         for (int i = 0; i < try_via_centers.length; ++i)
+         
+         for (int index = 0; index < try_via_centers.length; ++index)
             {
-            if (i == 0 || curr_shove_via_center.length_square(try_via_centers[i].to_float()) <= max_dist_square)
+            if ( index == 0 || curr_shove_via_center.length_square(try_via_centers[index].to_float()) <= max_dist_square)
                {
-               PlaVector delta = try_via_centers[i].difference_by(curr_shove_via.center_get());
+               PlaVectorInt delta = try_via_centers[index].difference_by(curr_shove_via.center_get());
                Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
                if (r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items,  p_time_limit))
                   {
@@ -329,7 +330,7 @@ public final class AlgoShoveTrace
                {
                return 0;
                }
-            PlaVector delta = new_via_center[0].difference_by(curr_shove_via.center_get());
+            PlaVectorInt delta = new_via_center[0].difference_by(curr_shove_via.center_get());
             Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
             shove_via_ok = r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, null);
             }

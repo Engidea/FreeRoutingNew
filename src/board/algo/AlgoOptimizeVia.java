@@ -257,7 +257,7 @@ public final class AlgoOptimizeVia
 
       if (contact_trace == null) return false;
 
-      PlaPoint via_center = p_via.center_get();
+      PlaPointInt via_center = p_via.center_get();
       
       boolean at_first_corner;
 
@@ -308,18 +308,20 @@ public final class AlgoOptimizeVia
          PlaPointFloat float_check_corner = check_corner.to_float();
          PlaPointFloat float_via_center = via_center.to_float();
          PlaPointFloat float_prev_corner = prev_corner.to_float();
+         
          if (float_check_corner.scalar_product(float_via_center, float_prev_corner) != 0)
             {
             PlaSegmentFloat curr_line = new PlaSegmentFloat(float_check_corner, float_prev_corner);
-            PlaPoint projection = curr_line.perpendicular_projection(float_via_center).round();
-            PlaVector diff_vector = projection.difference_by(via_center);
+            PlaPointInt projection = curr_line.perpendicular_projection(float_via_center).round();
+            PlaVectorInt diff_vector = projection.difference_by(via_center);
             boolean projection_ok = true;
             TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
-            if (projection.equals(via_center) || angle_restriction == TraceAngleRestriction.NINETY_DEGREE && !diff_vector.is_orthogonal()
-                  || angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE && !diff_vector.is_multiple_of_45_degree())
+            if (projection.equals(via_center) || angle_restriction.is_limit_90() && !diff_vector.is_orthogonal()
+                  || angle_restriction.is_limit_45() && !diff_vector.is_multiple_of_45_degree())
                {
                projection_ok = false;
                }
+            
             if (projection_ok)
                {
                if (r_board.move_drill_algo.check(p_via, diff_vector, 0, 0, null, null))
@@ -378,12 +380,12 @@ public final class AlgoOptimizeVia
       }
 
    /**
-    * Tries to move the via into the direction of p_to_location as far as possible Return the new location of the via, or null, if
-    * no move was possible.
+    * Tries to move the via into the direction of p_to_location as far as possible 
+    * Return the new location of the via, or null, if no move was possible.
     */
-   private PlaPoint reposition_via( BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width, int p_trace_layer, int p_trace_cl_class)
+   private PlaPointInt reposition_via( BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width, int p_trace_layer, int p_trace_cl_class)
       {
-      PlaPoint from_location = p_via.center_get();
+      PlaPointInt from_location = p_via.center_get();
 
       if (from_location.equals(p_to_location)) return null;
 
@@ -402,8 +404,8 @@ public final class AlgoOptimizeVia
          {
          new_float_to_location = float_from_location.change_length(float_to_location, ok_length);
          }
-      PlaPoint new_to_location = new_float_to_location.round();
-      PlaVector delta = new_to_location.difference_by(from_location);
+      PlaPointInt new_to_location = new_float_to_location.round();
+      PlaVectorInt delta = new_to_location.difference_by(from_location);
       boolean check_ok = r_board.move_drill_algo.check(p_via, delta, 0, 0, null, null);
 
       if (check_ok)
@@ -418,13 +420,14 @@ public final class AlgoOptimizeVia
       double curr_length = ok_length / 2;
 
       ok_length = 0;
-      PlaPoint result = null;
+      PlaPointInt result = null;
 
       while (curr_length >= c_min_length)
          {
-         PlaPoint check_point = float_from_location.change_length(float_to_location, ok_length + curr_length).round();
+         PlaPointInt check_point = float_from_location.change_length(float_to_location, ok_length + curr_length).round();
 
          delta = check_point.difference_by(from_location);
+         
          if (r_board.move_drill_algo.check(p_via, delta, 0, 0, null, null))
             {
             ok_length += curr_length;
@@ -432,14 +435,23 @@ public final class AlgoOptimizeVia
             }
          curr_length /= 2;
          }
+      
       return result;
       }
 
-   private boolean reposition_via( BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width_1, int p_trace_layer_1, int p_trace_cl_class_1,
-         PlaPointInt p_connect_location, int p_trace_half_width_2, int p_trace_layer_2, int p_trace_cl_class_2)
+   private boolean reposition_via( 
+         BrdAbitVia p_via, 
+         PlaPointInt p_to_location, 
+         int p_trace_half_width_1, 
+         int p_trace_layer_1, 
+         int p_trace_cl_class_1,
+         PlaPointInt p_connect_location, 
+         int p_trace_half_width_2, 
+         int p_trace_layer_2, 
+         int p_trace_cl_class_2)
 
       {
-      PlaPoint from_location = p_via.center_get();
+      PlaPointInt from_location = p_via.center_get();
 
       if (from_location.equals(p_to_location))
          {
@@ -449,7 +461,7 @@ public final class AlgoOptimizeVia
          return false;
          }
 
-      PlaVector delta = p_to_location.difference_by(from_location);
+      PlaVectorInt delta = p_to_location.difference_by(from_location);
 
       if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && delta.distance() <= 1.5)
          {
@@ -470,14 +482,10 @@ public final class AlgoOptimizeVia
 
       ok_length = r_board.check_trace_segment(p_to_location, p_connect_location, p_trace_layer_2, net_no_arr, p_trace_half_width_2, p_trace_cl_class_2, false);
 
-      if (ok_length < Integer.MAX_VALUE)
-         {
-         return false;
-         }
-      if (!r_board.move_drill_algo.check(p_via, delta, 0, 0, null,  null))
-         {
-         return false;
-         }
+      if (ok_length < Integer.MAX_VALUE) return false;
+      
+      if (!r_board.move_drill_algo.check(p_via, delta, 0, 0, null,  null)) return false;
+
       return true;
       }
 

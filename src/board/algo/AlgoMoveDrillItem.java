@@ -37,7 +37,6 @@ import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
@@ -73,7 +72,7 @@ public final class AlgoMoveDrillItem
     * checks, if p_drill_item can be translated by p_vector by shoving obstacle traces and vias aside, so that no clearance
     * violations occur.
     */
-   public boolean check(BrdAbit p_drill_item, PlaVector p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, Collection<BrdItem> p_ignore_items, TimeLimit p_time_limit)
+   public boolean check(BrdAbit p_drill_item, PlaVectorInt p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, Collection<BrdItem> p_ignore_items, TimeLimit p_time_limit)
       {
       if (is_stop_requested(p_time_limit)) return false;
 

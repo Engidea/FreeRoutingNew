@@ -21,6 +21,7 @@
 package board.algo;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import board.BrdFromSide;
 import board.BrdShapeAndFromSide;
 import board.RoutingBoard;
@@ -38,7 +39,7 @@ import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -118,8 +119,8 @@ public final class AlgoShovePad
             return ShoveDrillResult.NOT_DRILLABLE;
             }
       
-         PlaVector delta = new_via_center[0].difference_by(curr_shove_via.center_get());
-         Collection<BrdItem> ignore_items = new java.util.LinkedList<BrdItem>();
+         PlaVectorInt delta = new_via_center[0].difference_by(curr_shove_via.center_get());
+         Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
          
          if (!r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, p_time_limit))
             {

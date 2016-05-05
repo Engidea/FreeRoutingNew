@@ -80,7 +80,7 @@ public abstract class ArtConnectionLocate
     */
    public static ArtConnectionLocate get_instance(MazeSearchResult p_maze_search, ArtControl p_ctrl, ShapeSearchTree p_search_tree, TraceAngleRestriction p_angle_restriction, SortedSet<BrdItem> p_ripped_list )
       {
-      if (p_angle_restriction.is_no_restriction() )
+      if (p_angle_restriction.is_limit_none() )
          return new ArtConnectionLocate_xx_Degree(p_maze_search, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_list );
       else
          return new ArtConnectionLocate_45_Degree(p_maze_search, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_list );
