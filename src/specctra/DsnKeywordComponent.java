@@ -168,7 +168,7 @@ public final class DsnKeywordComponent extends DsnKeywordScope
          {
          return;
          }
-      freert.library.LibPackageKeepout[] curr_keepout_arr;
+      specctra.varie.DsnPackageKeepout[] curr_keepout_arr;
       String keepout_type;
       for (int j = 0; j < 3; ++j)
          {
@@ -189,7 +189,7 @@ public final class DsnKeywordComponent extends DsnKeywordScope
             }
          for (int i = 0; i < curr_keepout_arr.length; ++i)
             {
-            freert.library.LibPackageKeepout curr_keepout = curr_keepout_arr[i];
+            specctra.varie.DsnPackageKeepout curr_keepout = curr_keepout_arr[i];
             board.items.BrdArea curr_obstacle_area = get_keepout(p_par.board, p_component.id_no, curr_keepout.name);
             if (curr_obstacle_area == null || curr_obstacle_area.clearance_class_no() == 0)
                {

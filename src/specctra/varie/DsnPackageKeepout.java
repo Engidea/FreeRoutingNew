@@ -1,11 +1,11 @@
-package freert.library;
+package specctra.varie;
 
 import freert.planar.PlaArea;
 
 /** 
  * Deescribes a named keepout belonging to a package, 
  */
-public final class LibPackageKeepout implements java.io.Serializable
+public final class DsnPackageKeepout implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
@@ -13,7 +13,7 @@ public final class LibPackageKeepout implements java.io.Serializable
    public final PlaArea area;
    public final int layer;
 
-   public LibPackageKeepout(String p_name, PlaArea p_area, int p_layer)
+   public DsnPackageKeepout(String p_name, PlaArea p_area, int p_layer)
       {
       name = p_name;
       area = p_area;

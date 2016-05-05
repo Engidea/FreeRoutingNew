@@ -182,10 +182,10 @@ public class DsnKeywordPackage
          p_par.file.write(" ");
          p_par.identifier_type.write(curr_pin.name, p_par.file);
          double[] rel_coor = p_par.coordinate_transform.board_to_dsn(curr_pin.relative_location);
-         for (int j = 0; j < rel_coor.length; ++j)
+         for (int jndex = 0; jndex < rel_coor.length; ++jndex)
             {
             p_par.file.write(" ");
-            p_par.file.write((new Double(rel_coor[j])).toString());
+            p_par.file.write((new Double(rel_coor[jndex])).toString());
             }
          int rotation = (int) Math.round(curr_pin.rotation_in_degree);
          if (rotation != 0)
@@ -197,9 +197,9 @@ public class DsnKeywordPackage
          p_par.file.write(")");
          }
       // write the keepouts belonging to the package.
-      for (int i = 0; i < p_package.keepout_arr.length; ++i)
+      for (int index = 0; index < p_package.keepout_arr.length; ++index)
          {
-         write_package_keepout(p_package.keepout_arr[i], p_par, false);
+         write_package_keepout(p_package.keepout_arr[index], p_par, false);
          }
       for (int i = 0; i < p_package.via_keepout_arr.length; ++i)
          {
@@ -217,7 +217,7 @@ public class DsnKeywordPackage
       p_par.file.end_scope();
       }
 
-   private static void write_package_keepout(freert.library.LibPackageKeepout p_keepout, DsnWriteScopeParameter p_par, boolean p_is_via_keepout) throws java.io.IOException
+   private static void write_package_keepout(specctra.varie.DsnPackageKeepout p_keepout, DsnWriteScopeParameter p_par, boolean p_is_via_keepout) throws java.io.IOException
       {
       DsnLayer keepout_layer;
       if (p_keepout.layer >= 0)

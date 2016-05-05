@@ -18,14 +18,14 @@
 
 package board.items;
 
-import freert.planar.PlaArea;
-import freert.planar.PlaVector;
-import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
 import board.RoutingBoard;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaArea;
+import freert.planar.PlaVectorInt;
+import gui.varie.ObjectInfoPanel;
 
 /**
  * Describes Areas on the board, where vias are not allowed.
@@ -39,8 +39,19 @@ public final class BrdAreaObstacleVia extends BrdArea
    /**
     * Creates a new area item which may belong to several nets
     */
-   public BrdAreaObstacleVia(PlaArea p_area, int p_layer, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no,
-         String p_name, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdAreaObstacleVia(
+         PlaArea p_area, 
+         int p_layer, 
+         PlaVectorInt p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int[] p_net_no_arr, 
+         int p_clearance_type, 
+         int p_id_no, 
+         int p_group_no,
+         String p_name, 
+         ItemFixState p_fixed_state, 
+         RoutingBoard p_board)
       {
       super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }
@@ -48,8 +59,18 @@ public final class BrdAreaObstacleVia extends BrdArea
    /**
     * Creates a new area item without net
     */
-   public BrdAreaObstacleVia(PlaArea p_area, int p_layer, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int p_clearance_type, int p_id_no, int p_group_no, String p_name,
-         ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdAreaObstacleVia(
+         PlaArea p_area, 
+         int p_layer, 
+         PlaVectorInt p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int p_clearance_type, 
+         int p_id_no, 
+         int p_group_no, 
+         String p_name,
+         ItemFixState p_fixed_state, 
+         RoutingBoard p_board)
       {
       this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, new int[0], p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }

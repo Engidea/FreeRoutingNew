@@ -20,20 +20,6 @@
  */
 package interactive;
 
-import freert.graphics.GdiContext;
-import freert.host.HostCom;
-import freert.planar.PlaCoordTransform;
-import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
-import freert.planar.ShapePolyline;
-import freert.planar.ShapeTileBox;
-import freert.rules.BoardRules;
-import freert.rules.NetClass;
-import freert.rules.RuleNet;
-import freert.varie.ItemClass;
-import freert.varie.UnitMeasure;
-import gui.BoardPanel;
-import gui.varie.GuiResources;
 import interactive.state.StateCircleConstrut;
 import interactive.state.StateConstructHole;
 import interactive.state.StateConstructPolygon;
@@ -55,6 +41,7 @@ import interactive.varie.IteraPullTightThread;
 import interactive.varie.ReadActlogThread;
 import java.awt.Dimension;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
 import java.io.File;
@@ -83,6 +70,20 @@ import board.varie.IdGenerator;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.graphics.GdiContext;
+import freert.host.HostCom;
+import freert.planar.PlaCoordTransform;
+import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
+import freert.planar.ShapePolyline;
+import freert.planar.ShapeTileBox;
+import freert.rules.BoardRules;
+import freert.rules.NetClass;
+import freert.rules.RuleNet;
+import freert.varie.ItemClass;
+import freert.varie.UnitMeasure;
+import gui.BoardPanel;
+import gui.varie.GuiResources;
 
 /**
  * Central connection class between the graphical user interface and the board database.
@@ -908,7 +909,7 @@ public final class IteraBoard
    /**
     * Actions to be taken in the current interactive state when the mouse pointer has moved.
     */
-   public void mouse_moved(Point2D p_point)
+   public void mouse_moved(Point p_point)
       {
       // no interactive action when logfile is running
       if (board_is_read_only) return;
@@ -944,7 +945,7 @@ public final class IteraBoard
    /**
     * Actions to be taken in the current interactive state when the mouse is dragged.
     */
-   public void mouse_dragged(Point2D p_point)
+   public void mouse_dragged(Point p_point)
       {
       if (interactive_state != null && gdi_context != null)
          {

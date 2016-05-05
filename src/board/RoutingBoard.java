@@ -284,14 +284,24 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts an obstacle belonging to a component into the board p_name is to identify the corresponding ObstacstacleArea in the
     * component package.
     */
-   public void insert_obstacle(PlaArea p_area, int p_layer, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int p_clearance_class, int p_component_no, String p_name,
+   public void insert_obstacle(
+         PlaArea p_area, 
+         int p_layer, 
+         PlaVectorInt p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int p_clearance_class, 
+         int p_component_no, 
+         String p_name,
          ItemFixState p_fixed_state)
       {
+      
       if (p_area == null)
          {
          System.out.println("BasicBoard.insert_obstacle: p_area is null");
          return;
          }
+      
       BrdArea obs = new BrdArea(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, p_clearance_class, 0, p_component_no, p_name, p_fixed_state, this);
       insert_item(obs);
       }
@@ -314,8 +324,16 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts an via obstacle belonging to a component into the board p_name is to identify the corresponding ObstacstacleArea in
     * the component package.
     */
-   public void insert_via_obstacle(PlaArea p_area, int p_layer, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int p_clearance_class, int p_component_no,
-         String p_name, ItemFixState p_fixed_state)
+   public void insert_via_obstacle(
+         PlaArea p_area, 
+         int p_layer, 
+         PlaVectorInt p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int p_clearance_class, 
+         int p_component_no,
+         String p_name, 
+         ItemFixState p_fixed_state)
       {
       if (p_area == null)
          {
@@ -344,8 +362,16 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts a component obstacle belonging to a component into the board. p_name is to identify the corresponding ObstacstacleArea
     * in the component package.
     */
-   public void insert_component_obstacle(PlaArea p_area, int p_layer, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int p_clearance_class,
-         int p_component_no, String p_name, ItemFixState p_fixed_state)
+   public void insert_component_obstacle(
+         PlaArea p_area, 
+         int p_layer, 
+         PlaVectorInt p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int p_clearance_class,
+         int p_component_no, 
+         String p_name, 
+         ItemFixState p_fixed_state)
       {
       if (p_area == null)
          {
@@ -1353,12 +1379,24 @@ public final class RoutingBoard implements java.io.Serializable
       PlaArea curr_area = p_area.get_relative_area();
       int layer = p_area.get_layer();
       ItemFixState fixed_state = p_area.get_fixed_state();
-      PlaVector translation = p_area.get_translation();
+      PlaVectorInt translation = p_area.get_translation();
       double rotation = p_area.get_rotation_in_degree();
       boolean side_changed = p_area.get_side_changed();
       int[] net_no_arr = new int[1];
       net_no_arr[0] = p_net_no;
-      new_item = new BrdAreaConduction(curr_area, layer, translation, rotation, side_changed, net_no_arr, p_area.clearance_class_no(), 0, p_area.get_component_no(), p_area.area_name, true, fixed_state,
+      new_item = new BrdAreaConduction(
+            curr_area, 
+            layer, 
+            translation, 
+            rotation, 
+            side_changed, 
+            net_no_arr, 
+            p_area.clearance_class_no(), 
+            0, 
+            p_area.get_component_no(), 
+            p_area.area_name, 
+            true, 
+            fixed_state,
             this);
       remove_item(p_area);
       insert_item(new_item);

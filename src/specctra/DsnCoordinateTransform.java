@@ -22,7 +22,7 @@ package specctra;
 
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTileBox;
@@ -145,7 +145,7 @@ public final class DsnCoordinateTransform implements java.io.Serializable
    /**
     * Transforms a geometry.planar.Vector to a tuple of doubles in the dsn coordinate system.
     */
-   public double[] board_to_dsn(PlaVector p_vector)
+   public double[] board_to_dsn(PlaVectorInt p_vector)
       {
       double[] result = new double[2];
       PlaPointFloat v = p_vector.to_float();

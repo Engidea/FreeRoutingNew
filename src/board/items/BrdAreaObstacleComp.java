@@ -18,14 +18,14 @@
 
 package board.items;
 
-import freert.planar.PlaArea;
-import freert.planar.PlaVector;
-import gui.varie.ObjectInfoPanel;
 import java.awt.Color;
 import board.RoutingBoard;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.planar.PlaArea;
+import freert.planar.PlaVectorInt;
+import gui.varie.ObjectInfoPanel;
 
 /**
  * Describes areas of the board, where components are not allowed.
@@ -42,7 +42,7 @@ public final class BrdAreaObstacleComp extends BrdArea
    public BrdAreaObstacleComp(
          PlaArea p_area, 
          int p_layer, 
-         PlaVector p_translation, 
+         PlaVectorInt p_translation, 
          double p_rotation_in_degree, 
          boolean p_side_changed, 
          int p_clearance_type, 

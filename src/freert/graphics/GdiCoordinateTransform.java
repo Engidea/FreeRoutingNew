@@ -114,10 +114,11 @@ public final class GdiCoordinateTransform implements java.io.Serializable
     */
    public Point2D board_to_screen(PlaPointFloat p_point)
       {
-      PlaPointFloat rotated_point = p_point.rotate(this.rotation_radiants, this.rotation_pole);
+      PlaPointFloat rotated_point = p_point.rotate(rotation_radiants, rotation_pole);
 
       double x, y;
-      if (this.mirror_left_right)
+      
+      if (mirror_left_right)
          {
          x = (design_box_with_offset.width() - rotated_point.v_x - 1) * scale_factor + display_x_offset;
          }
@@ -125,7 +126,8 @@ public final class GdiCoordinateTransform implements java.io.Serializable
          {
          x = rotated_point.v_x * scale_factor - display_x_offset;
          }
-      if (this.mirror_top_bottom)
+      
+      if (mirror_top_bottom)
          {
          y = (design_box_with_offset.height() - rotated_point.v_y - 1) * scale_factor + display_y_offset;
          }
@@ -133,6 +135,7 @@ public final class GdiCoordinateTransform implements java.io.Serializable
          {
          y = rotated_point.v_y * scale_factor - display_y_offset;
          }
+      
       return new Point2D.Double(x, y);
       }
 
@@ -202,12 +205,16 @@ public final class GdiCoordinateTransform implements java.io.Serializable
    public Rectangle board_to_screen(ShapeTileBox p_box)
       {
       Point2D corner_1 = board_to_screen(p_box.box_ll.to_float());
+      
       Point2D corner_2 = board_to_screen(p_box.box_ur.to_float());
+      
       double ll_x = Math.min(corner_1.getX(), corner_2.getX());
       double ll_y = Math.min(corner_1.getY(), corner_2.getY());
-      double dx = Math.abs(corner_2.getX() - corner_1.getX());
-      double dy = Math.abs(corner_2.getY() - corner_1.getY());
-      java.awt.Rectangle result = new java.awt.Rectangle((int) Math.floor(ll_x), (int) Math.floor(ll_y), (int) Math.ceil(dx), (int) Math.ceil(dy));
+      double dx   = Math.abs(corner_2.getX() - corner_1.getX());
+      double dy   = Math.abs(corner_2.getY() - corner_1.getY());
+      
+      Rectangle result = new Rectangle((int) Math.floor(ll_x), (int) Math.floor(ll_y), (int) Math.ceil(dx), (int) Math.ceil(dy));
+      
       return result;
       }
 
@@ -215,14 +222,17 @@ public final class GdiCoordinateTransform implements java.io.Serializable
     * Transform a java.awt.Rectangle to a geometry.planar.IntBox If the internal rotation is not a multiple of Pi/2, a bounding box
     * of the rotated rectangular shape is returned.
     */
-   public ShapeTileBox screen_to_board(java.awt.Rectangle p_rect)
+   public ShapeTileBox screen_to_board(Rectangle p_rect)
       {
       PlaPointFloat corner_1 = screen_to_board(new Point2D.Double(p_rect.getX(), p_rect.getY()));
+      
       PlaPointFloat corner_2 = screen_to_board(new Point2D.Double(p_rect.getX() + p_rect.getWidth(), p_rect.getY() + p_rect.getHeight()));
+      
       int llx = (int) Math.floor(Math.min(corner_1.v_x, corner_2.v_x));
       int lly = (int) Math.floor(Math.min(corner_1.v_y, corner_2.v_y));
       int urx = (int) Math.ceil(Math.max(corner_1.v_x, corner_2.v_x));
       int ury = (int) Math.ceil(Math.max(corner_1.v_y, corner_2.v_y));
+      
       return new ShapeTileBox(llx, lly, urx, ury);
       }
 

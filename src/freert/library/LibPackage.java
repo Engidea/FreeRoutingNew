@@ -20,6 +20,7 @@
 
 package freert.library;
 
+import specctra.varie.DsnPackageKeepout;
 import board.infos.PrintableInfo;
 import freert.planar.PlaShape;
 
@@ -43,9 +44,9 @@ public final class LibPackage implements Comparable<LibPackage>, PrintableInfo, 
 
    // The outline of the component, which may be null
    public final PlaShape[] outline;
-   public final LibPackageKeepout[] keepout_arr;
-   public final LibPackageKeepout[] via_keepout_arr;
-   public final LibPackageKeepout[] place_keepout_arr;
+   public final DsnPackageKeepout[] keepout_arr;
+   public final DsnPackageKeepout[] via_keepout_arr;
+   public final DsnPackageKeepout[] place_keepout_arr;
    // If false, the package is placed on the back side of the board
    public final boolean is_front;
    
@@ -56,9 +57,9 @@ public final class LibPackage implements Comparable<LibPackage>, PrintableInfo, 
          int p_no, 
          LibPackagePin[] p_pin_arr, 
          PlaShape[] p_outline, 
-         LibPackageKeepout[] p_keepout_arr, 
-         LibPackageKeepout[] p_via_keepout_arr, 
-         LibPackageKeepout[] p_place_keepout_arr, 
+         DsnPackageKeepout[] p_keepout_arr, 
+         DsnPackageKeepout[] p_via_keepout_arr, 
+         DsnPackageKeepout[] p_place_keepout_arr, 
          boolean p_is_front,
          LibPackages p_package_list)
       {

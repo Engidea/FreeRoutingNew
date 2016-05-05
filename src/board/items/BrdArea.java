@@ -28,7 +28,6 @@ import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -52,7 +51,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
    // the layer of this relative_area
    private int layer_no;
    private PlaArea relative_area;
-   private PlaVector translation;
+   private PlaVectorInt translation;
    private double rotation_in_degree;
    private boolean side_changed;
 
@@ -65,7 +64,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
    public BrdArea(
          PlaArea p_area, 
          int p_layer_no, 
-         PlaVector p_translation, 
+         PlaVectorInt p_translation, 
          double p_rotation_in_degree, 
          boolean p_side_changed, 
          int[] p_net_no_arr, 
@@ -88,8 +87,18 @@ public class BrdArea extends BrdItem implements java.io.Serializable
    /**
     * Creates a new relative_area item without net. p_name is null, if the ObstacleArea does not belong to a component.
     */
-   public BrdArea(PlaArea p_area, int p_layer, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int p_clearance_type, int p_id_no, int p_group_no, String p_name,
-         ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdArea(
+         PlaArea p_area, 
+         int p_layer, 
+         PlaVectorInt p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int p_clearance_type, 
+         int p_id_no, 
+         int p_group_no, 
+         String p_name,
+         ItemFixState p_fixed_state, 
+         RoutingBoard p_board)
       {
       this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, new int[0], p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }
@@ -317,7 +326,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       return layer_no;
       }
 
-   public PlaVector get_translation()
+   public PlaVectorInt get_translation()
       {
       return translation;
       }

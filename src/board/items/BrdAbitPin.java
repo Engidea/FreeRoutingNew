@@ -39,7 +39,6 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
@@ -255,7 +254,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          rel_location = package_pin.relative_location.mirror_at_y_axis();
          }
 
-      PlaVector component_translation = component.get_location().difference_by(PlaPoint.ZERO);
+      PlaVectorInt component_translation = component.get_location().difference_by(PlaPoint.ZERO);
 
       for (int index = 0; index < precalculated_shapes.length; ++index)
          {

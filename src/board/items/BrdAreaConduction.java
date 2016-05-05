@@ -33,7 +33,7 @@ import board.varie.ItemSelectionFilter;
 import freert.planar.PlaArea;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import gui.varie.ObjectInfoPanel;
 
@@ -48,8 +48,20 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
 
    private boolean is_obstacle;
    
-   public BrdAreaConduction(PlaArea p_area, int p_layer, PlaVector p_translation, double p_rotation_in_degree, boolean p_side_changed, int[] p_net_no_arr, int p_clearance_class, int p_id_no, int p_group_no,
-         String p_name, boolean p_is_obstacle, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdAreaConduction(
+         PlaArea p_area, 
+         int p_layer, 
+         PlaVectorInt p_translation, 
+         double p_rotation_in_degree, 
+         boolean p_side_changed, 
+         int[] p_net_no_arr, 
+         int p_clearance_class, 
+         int p_id_no, 
+         int p_group_no,
+         String p_name, 
+         boolean p_is_obstacle, 
+         ItemFixState p_fixed_state, 
+         RoutingBoard p_board)
       {
       super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, p_net_no_arr, p_clearance_class, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       is_obstacle = p_is_obstacle;

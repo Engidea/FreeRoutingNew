@@ -33,7 +33,7 @@ import freert.library.LibPadstack;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import gui.varie.ObjectInfoPanel;
@@ -89,7 +89,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       for (int index = 0; index < precalculated_shapes.length; ++index)
          {
          int padstack_layer = index + first_layer();
-         PlaVector translate_vector = center_get().difference_by(PlaPoint.ZERO);
+         PlaVectorInt translate_vector = center_get().difference_by(PlaPoint.ZERO);
          PlaShape curr_shape = padstack.get_shape(padstack_layer);
 
          if (curr_shape == null)

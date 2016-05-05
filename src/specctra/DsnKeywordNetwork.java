@@ -19,10 +19,14 @@
  */
 package specctra;
 
+import freert.library.LibLogicalPart;
 import freert.library.LibLogicalPin;
+import freert.library.LibPackage;
+import freert.library.LibPackagePin;
+import freert.library.LibPadstack;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.rules.BoardRules;
 import freert.rules.NetClass;
 import freert.varie.ItemClass;
@@ -31,8 +35,11 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import specctra.varie.DsnPackageKeepout;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
+import board.infos.BrdComponent;
+import board.infos.BrdViaInfo;
 import board.varie.ItemFixState;
 
 /**
@@ -51,7 +58,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       {
       Collection<DsnNetClass> classes = new LinkedList<DsnNetClass>();
       Collection<DsnNetClassClass> class_class_list = new LinkedList<DsnNetClassClass>();
-      Collection<board.infos.BrdViaInfo> via_infos = new LinkedList<board.infos.BrdViaInfo>();
+      Collection<BrdViaInfo> via_infos = new LinkedList<BrdViaInfo>();
       Collection<Collection<String>> via_rules = new LinkedList<Collection<String>>();
       Object next_token = null;
       for (;;)
@@ -85,7 +92,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                }
             else if (next_token == DsnKeyword.VIA)
                {
-               board.infos.BrdViaInfo curr_via_info = read_via_info(p_par.scanner, p_par.i_board.get_routing_board());
+               BrdViaInfo curr_via_info = read_via_info(p_par.scanner, p_par.i_board.get_routing_board());
                if (curr_via_info == null)
                   {
                   return false;
@@ -153,7 +160,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       {
       for (int i = 0; i < p_rules.via_infos.count(); ++i)
          {
-         board.infos.BrdViaInfo curr_via = p_rules.via_infos.get(i);
+         BrdViaInfo curr_via = p_rules.via_infos.get(i);
          p_file.start_scope();
          p_file.write("via ");
          p_file.new_line();
@@ -545,7 +552,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       return true;
       }
 
-   public static board.infos.BrdViaInfo read_via_info(JflexScanner p_scanner, RoutingBoard p_board)
+   public static BrdViaInfo read_via_info(JflexScanner p_scanner, RoutingBoard p_board)
       {
       try
          {
@@ -565,7 +572,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             return null;
             }
          String padstack_name = (String) next_token;
-         freert.library.LibPadstack via_padstack = p_board.library.get_via_padstack(padstack_name);
+         LibPadstack via_padstack = p_board.library.get_via_padstack(padstack_name);
          if (via_padstack == null)
             {
             // The padstack may not yet be inserted into the list of via padstacks
@@ -607,7 +614,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                return null;
                }
             }
-         return new board.infos.BrdViaInfo(name, via_padstack, clearance_class, attach_allowed, p_board.brd_rules);
+         return new BrdViaInfo(name, via_padstack, clearance_class, attach_allowed, p_board.brd_rules);
          }
       catch (java.io.IOException e)
          {
@@ -645,11 +652,11 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       }
 
-   private static void insert_via_infos(Collection<board.infos.BrdViaInfo> p_via_infos, RoutingBoard p_board, boolean p_attach_allowed)
+   private static void insert_via_infos(Collection<BrdViaInfo> p_via_infos, RoutingBoard p_board, boolean p_attach_allowed)
       {
       if (p_via_infos.size() > 0)
          {
-         for (board.infos.BrdViaInfo curr_info : p_via_infos)
+         for (BrdViaInfo curr_info : p_via_infos)
             {
             p_board.brd_rules.via_infos.add(curr_info);
             }
@@ -667,7 +674,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       boolean is_default_class = (p_net_class == p_board.brd_rules.get_default_net_class());
       for (int i = 0; i < p_board.library.via_padstack_count(); ++i)
          {
-         freert.library.LibPadstack curr_padstack = p_board.library.get_via_padstack(i);
+         LibPadstack curr_padstack = p_board.library.get_via_padstack(i);
          boolean attach_allowed = p_attach_allowed && curr_padstack.attach_allowed;
          String via_name;
          if (is_default_class)
@@ -678,7 +685,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             {
             via_name = curr_padstack.pads_name + DsnReadUtils.CLASS_CLEARANCE_SEPARATOR + p_net_class.get_name();
             }
-         board.infos.BrdViaInfo found_via_info = new board.infos.BrdViaInfo(via_name, curr_padstack, cl_class, attach_allowed, p_board.brd_rules);
+         BrdViaInfo found_via_info = new BrdViaInfo(via_name, curr_padstack, cl_class, attach_allowed, p_board.brd_rules);
          p_board.brd_rules.via_infos.add(found_via_info);
          }
       }
@@ -719,7 +726,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       boolean rule_ok = true;
       while (it.hasNext())
          {
-         board.infos.BrdViaInfo curr_via = p_board.brd_rules.via_infos.get(it.next());
+         BrdViaInfo curr_via = p_board.brd_rules.via_infos.get(it.next());
          if (curr_via != null)
             {
             curr_rule.append_via(curr_via);
@@ -1037,7 +1044,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          {
          for (int i = 0; i < p_board.brd_rules.via_infos.count(); ++i)
             {
-            board.infos.BrdViaInfo curr_via_info = p_board.brd_rules.via_infos.get(i);
+            BrdViaInfo curr_via_info = p_board.brd_rules.via_infos.get(i);
             if (curr_via_info.get_clearance_class() == default_via_cl_class)
                {
                if (curr_via_info.get_padstack().pads_name.equals(curr_via_name))
@@ -1217,7 +1224,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       RoutingBoard routing_board = p_par.i_board.get_routing_board();
       for (DsnLogicalPart next_part : p_par.logical_parts)
          {
-         freert.library.LibPackage lib_package = search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
+         LibPackage lib_package = search_lib_package(next_part.name, p_par.logical_part_mappings, routing_board);
          if (lib_package == null)
             {
             return false;
@@ -1241,7 +1248,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
 
       for (DsnLogicalPartMapping next_mapping : p_par.logical_part_mappings)
          {
-         freert.library.LibLogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
+         LibLogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
             {
             if (curr_logical_part == null)
                {
@@ -1250,7 +1257,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             }
          for (String curr_cmp_name : next_mapping.components)
             {
-            board.infos.BrdComponent curr_component = routing_board.brd_components.get(curr_cmp_name);
+            BrdComponent curr_component = routing_board.brd_components.get(curr_cmp_name);
             if (curr_component != null)
                {
                curr_component.set_logical_part(curr_logical_part);
@@ -1268,7 +1275,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
     * Calculates the library package belonging to the logical part with name p_part_name. Returns null, if the package was not
     * found.
     */
-   private static freert.library.LibPackage search_lib_package(String p_part_name, java.util.Collection<DsnLogicalPartMapping> p_logical_part_mappings, RoutingBoard p_board)
+   private static LibPackage search_lib_package(String p_part_name, java.util.Collection<DsnLogicalPartMapping> p_logical_part_mappings, RoutingBoard p_board)
       {
       for (DsnLogicalPartMapping curr_mapping : p_logical_part_mappings)
          {
@@ -1285,7 +1292,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                System.out.println("Network.search_lib_package: component list empty");
                return null;
                }
-            board.infos.BrdComponent curr_component = p_board.brd_components.get(component_name);
+            BrdComponent curr_component = p_board.brd_components.get(component_name);
             if (curr_component == null)
                {
                System.out.println("Network.search_lib_package: component not found");
@@ -1305,9 +1312,10 @@ public class DsnKeywordNetwork extends DsnKeywordScope
     */
    private static void insert_component(DsnComponentLocation p_location, String p_lib_key, DsnReadScopeParameters p_par)
       {
-      board.RoutingBoard routing_board = p_par.i_board.get_routing_board();
-      freert.library.LibPackage curr_front_package = routing_board.library.packages.pkg_get(p_lib_key, true);
-      freert.library.LibPackage curr_back_package = routing_board.library.packages.pkg_get(p_lib_key, false);
+      RoutingBoard routing_board = p_par.i_board.get_routing_board();
+      LibPackage curr_front_package = routing_board.library.packages.pkg_get(p_lib_key, true);
+      LibPackage curr_back_package = routing_board.library.packages.pkg_get(p_lib_key, false);
+      
       if (curr_front_package == null || curr_back_package == null)
          {
          System.out.println("Network.insert_component: component package not found");
@@ -1315,6 +1323,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
 
       PlaPointInt component_location;
+      
       if (p_location.coor != null)
          {
          component_location = p_par.coordinate_transform.dsn_to_board(p_location.coor).round();
@@ -1325,14 +1334,21 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       double rotation_in_degree = p_location.rotation;
 
-      board.infos.BrdComponent new_component = routing_board.brd_components.add(p_location.name, component_location, rotation_in_degree, p_location.is_front, curr_front_package, curr_back_package,
+      BrdComponent new_component = routing_board.brd_components.add(
+            p_location.name, 
+            component_location, 
+            rotation_in_degree, 
+            p_location.is_front, 
+            curr_front_package, 
+            curr_back_package,
             p_location.position_fixed);
 
       if (component_location == null)
          {
          return; // component is not yet placed.
          }
-      PlaVector component_translation = component_location.difference_by(PlaPoint.ZERO);
+      
+      PlaVectorInt component_translation = component_location.difference_by(PlaPoint.ZERO);
 
       ItemFixState fixed_state;
       if (p_location.position_fixed)
@@ -1343,11 +1359,11 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          {
          fixed_state = ItemFixState.UNFIXED;
          }
-      freert.library.LibPackage curr_package = new_component.get_package();
+      LibPackage curr_package = new_component.get_package();
       for (int i = 0; i < curr_package.pin_count(); ++i)
          {
-         freert.library.LibPackagePin curr_pin = curr_package.get_pin(i);
-         freert.library.LibPadstack curr_padstack = routing_board.library.padstacks.get(curr_pin.padstack_no);
+         LibPackagePin curr_pin = curr_package.get_pin(i);
+         LibPadstack curr_padstack = routing_board.library.padstacks.get(curr_pin.padstack_no);
          if (curr_padstack == null)
             {
             System.out.println("Network.insert_component: pin padstack not found");
@@ -1361,7 +1377,6 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             if (curr_board_net == null)
                {
                System.out.println("Network.insert_component: board net not found");
-
                }
             else
                {
@@ -1416,7 +1431,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       // insert the keepouts belonging to the package (k = 1 for via keepouts)
       for (int k = 0; k <= 2; ++k)
          {
-         freert.library.LibPackageKeepout[] keepout_arr;
+         DsnPackageKeepout[] keepout_arr;
          java.util.Map<String, DsnClearanceInfo> curr_keepout_infos;
          if (k == 0)
             {
@@ -1435,7 +1450,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             }
          for (int i = 0; i < keepout_arr.length; ++i)
             {
-            freert.library.LibPackageKeepout curr_keepout = keepout_arr[i];
+            DsnPackageKeepout curr_keepout = keepout_arr[i];
             int layer = curr_keepout.layer;
             if (layer >= routing_board.get_layer_count())
                {
@@ -1456,22 +1471,47 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                   clearance_class = curr_clearance_class;
                   }
                }
+            
             if (layer >= 0)
                {
                if (k == 0)
                   {
-                  routing_board.insert_obstacle(curr_keepout.area, layer, component_translation, rotation_in_degree, !p_location.is_front, clearance_class, new_component.id_no, curr_keepout.name,
+                  routing_board.insert_obstacle(
+                        curr_keepout.area, 
+                        layer, 
+                        component_translation, 
+                        rotation_in_degree, 
+                        !p_location.is_front, 
+                        clearance_class, 
+                        new_component.id_no, 
+                        curr_keepout.name,
                         fixed_state);
                   }
                else if (k == 1)
                   {
-                  routing_board.insert_via_obstacle(curr_keepout.area, layer, component_translation, rotation_in_degree, !p_location.is_front, clearance_class, new_component.id_no, curr_keepout.name,
+                  routing_board.insert_via_obstacle(
+                        curr_keepout.area, 
+                        layer, 
+                        component_translation, 
+                        rotation_in_degree, 
+                        !p_location.is_front, 
+                        clearance_class, 
+                        new_component.id_no, 
+                        curr_keepout.name,
                         fixed_state);
                   }
                else
                   {
-                  routing_board.insert_component_obstacle(curr_keepout.area, layer, component_translation, rotation_in_degree, !p_location.is_front, clearance_class, new_component.id_no,
-                        curr_keepout.name, fixed_state);
+                  routing_board.insert_component_obstacle(
+                        curr_keepout.area, 
+                        layer, 
+                        component_translation, 
+                        rotation_in_degree, 
+                        !p_location.is_front, 
+                        clearance_class, 
+                        new_component.id_no,
+                        curr_keepout.name, 
+                        fixed_state);
                   }
                }
             else
@@ -1483,29 +1523,59 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                      {
                      if (k == 0)
                         {
-                        routing_board.insert_obstacle(curr_keepout.area, jndex, component_translation, rotation_in_degree, !p_location.is_front, clearance_class, new_component.id_no, curr_keepout.name,
+                        routing_board.insert_obstacle(
+                              curr_keepout.area, 
+                              jndex, 
+                              component_translation, 
+                              rotation_in_degree, 
+                              !p_location.is_front, 
+                              clearance_class, 
+                              new_component.id_no, 
+                              curr_keepout.name,
                               fixed_state);
                         }
                      else if (k == 1)
                         {
-                        routing_board.insert_via_obstacle(curr_keepout.area, jndex, component_translation, rotation_in_degree, !p_location.is_front, clearance_class, new_component.id_no, curr_keepout.name,
+                        routing_board.insert_via_obstacle(
+                              curr_keepout.area, 
+                              jndex, 
+                              component_translation, 
+                              rotation_in_degree, 
+                              !p_location.is_front, 
+                              clearance_class, 
+                              new_component.id_no, 
+                              curr_keepout.name,
                               fixed_state);
                         }
                      else
                         {
-                        routing_board.insert_component_obstacle(curr_keepout.area, jndex, component_translation, rotation_in_degree, !p_location.is_front, clearance_class, new_component.id_no,
-                              curr_keepout.name, fixed_state);
+                        routing_board.insert_component_obstacle(
+                              curr_keepout.area, 
+                              jndex, 
+                              component_translation, 
+                              rotation_in_degree, 
+                              !p_location.is_front, 
+                              clearance_class, 
+                              new_component.id_no,
+                              curr_keepout.name, 
+                              fixed_state);
                         }
                      }
                   }
                }
             }
          }
+      
       // insert the outline as component keepout
-      for (int i = 0; i < curr_package.outline.length; ++i)
+      for (int index = 0; index < curr_package.outline.length; ++index)
          {
-
-         routing_board.insert_component_outline(curr_package.outline[i], p_location.is_front, component_translation, rotation_in_degree, new_component.id_no, fixed_state);
+         routing_board.insert_component_outline(
+               curr_package.outline[index], 
+               p_location.is_front, 
+               component_translation, 
+               rotation_in_degree, 
+               new_component.id_no, 
+               fixed_state);
          }
       }
    }

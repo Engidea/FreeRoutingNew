@@ -596,7 +596,7 @@ public final class IteraRoute
             PlaPointFloat[] draw_points = new PlaPointFloat[2];
             draw_points[0] = curr_info.incomplete.point_a;
             draw_points[1] = curr_info.incomplete.point_b;
-            java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
+            Color draw_color = p_graphics_context.get_incomplete_color();
             p_graphics_context.draw(draw_points, 1, draw_color, p_graphics, highligt_color_intensity);
             }
          }
@@ -675,7 +675,7 @@ public final class IteraRoute
       PlaPointFloat[] draw_points = new PlaPointFloat[2];
       draw_points[0] = from_corner;
       draw_points[1] = nearest_target_point;
-      java.awt.Color draw_color = p_graphics_context.get_incomplete_color();
+      Color draw_color = p_graphics_context.get_incomplete_color();
       double draw_width = Math.min(r_board.host_com.get_resolution(UnitMeasure.MIL), 100); // problem with low resolution on
                                                                                             // Kicad
       if (!curr_length_matching_ok)

@@ -26,9 +26,15 @@ import java.util.LinkedList;
 import specctra.varie.DsnReadUtils;
 import board.BrdLayer;
 import freert.library.LibPackagePin;
+import freert.library.LibPackages;
 import freert.library.LibPadstack;
+import freert.library.LibPadstacks;
+import freert.planar.PlaArea;
+import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
+import freert.planar.ShapeConvex;
 import freert.planar.ShapePolygon;
+import freert.planar.ShapeTile;
 import freert.planar.ShapeTileSimplex;
 
 /**
@@ -46,7 +52,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
    public boolean read_scope(DsnReadScopeParameters p_par)
       {
       board.RoutingBoard board = p_par.i_board.get_routing_board();
-      board.library.padstacks = new freert.library.LibPadstacks(p_par.i_board.get_routing_board().layer_structure);
+      board.library.padstacks = new LibPadstacks(p_par.i_board.get_routing_board().layer_structure);
       Collection<DsnKeywordPackage> package_list = new LinkedList<DsnKeywordPackage>();
       Object next_token = null;
       for (;;)
@@ -100,13 +106,13 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       // Set the via padstacks.
       if (p_par.via_padstack_names != null)
          {
-         freert.library.LibPadstack[] via_padstacks = new freert.library.LibPadstack[p_par.via_padstack_names.size()];
+         LibPadstack[] via_padstacks = new LibPadstack[p_par.via_padstack_names.size()];
          Iterator<String> it = p_par.via_padstack_names.iterator();
          int found_padstack_count = 0;
          for (int i = 0; i < via_padstacks.length; ++i)
             {
             String curr_padstack_name = it.next();
-            freert.library.LibPadstack curr_padstack = board.library.padstacks.get(curr_padstack_name);
+            LibPadstack curr_padstack = board.library.padstacks.get(curr_padstack_name);
             if (curr_padstack != null)
                {
                via_padstacks[found_padstack_count] = curr_padstack;
@@ -130,7 +136,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
          }
 
       // Create the library packages on the board
-      board.library.packages = new freert.library.LibPackages(board.library.padstacks);
+      board.library.packages = new LibPackages(board.library.padstacks);
       Iterator<DsnKeywordPackage> it = package_list.iterator();
       while (it.hasNext())
          {
@@ -142,7 +148,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
             int rel_x = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[0]));
             int rel_y = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[1]));
             PlaVectorInt rel_coor = new PlaVectorInt(rel_x, rel_y);
-            freert.library.LibPadstack board_padstack = board.library.padstacks.get(pin_info.padstack_name);
+            LibPadstack board_padstack = board.library.padstacks.get(pin_info.padstack_name);
             if (board_padstack == null)
                {
                System.out.println("Library.read_scope: board padstack not found");
@@ -150,7 +156,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
                }
             pin_arr[i] = new LibPackagePin(pin_info.pin_name, board_padstack.pads_no, rel_coor, pin_info.rotation);
             }
-         freert.planar.PlaShape[] outline_arr = new freert.planar.PlaShape[curr_package.outline.size()];
+         PlaShape[] outline_arr = new PlaShape[curr_package.outline.size()];
 
          Iterator<DsnShape> it3 = curr_package.outline.iterator();
          for (int i = 0; i < outline_arr.length; ++i)
@@ -168,32 +174,32 @@ public class DsnKeywordLibrary extends DsnKeywordScope
          generate_missing_keepout_names("keepout_", curr_package.keepouts);
          generate_missing_keepout_names("via_keepout_", curr_package.via_keepouts);
          generate_missing_keepout_names("place_keepout_", curr_package.place_keepouts);
-         freert.library.LibPackageKeepout[] keepout_arr = new freert.library.LibPackageKeepout[curr_package.keepouts.size()];
+         specctra.varie.DsnPackageKeepout[] keepout_arr = new specctra.varie.DsnPackageKeepout[curr_package.keepouts.size()];
          Iterator<DsnScopeArea> it2 = curr_package.keepouts.iterator();
          for (int i = 0; i < keepout_arr.length; ++i)
             {
             DsnScopeArea curr_keepout = it2.next();
             DsnLayer curr_layer = curr_keepout.shape_list.iterator().next().layer;
-            freert.planar.PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
-            keepout_arr[i] = new freert.library.LibPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
+            PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
+            keepout_arr[i] = new specctra.varie.DsnPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
             }
-         freert.library.LibPackageKeepout[] via_keepout_arr = new freert.library.LibPackageKeepout[curr_package.via_keepouts.size()];
+         specctra.varie.DsnPackageKeepout[] via_keepout_arr = new specctra.varie.DsnPackageKeepout[curr_package.via_keepouts.size()];
          it2 = curr_package.via_keepouts.iterator();
          for (int i = 0; i < via_keepout_arr.length; ++i)
             {
             DsnScopeArea curr_keepout = it2.next();
             DsnLayer curr_layer = (curr_keepout.shape_list.iterator().next()).layer;
-            freert.planar.PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
-            via_keepout_arr[i] = new freert.library.LibPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
+            PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
+            via_keepout_arr[i] = new specctra.varie.DsnPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
             }
-         freert.library.LibPackageKeepout[] place_keepout_arr = new freert.library.LibPackageKeepout[curr_package.place_keepouts.size()];
+         specctra.varie.DsnPackageKeepout[] place_keepout_arr = new specctra.varie.DsnPackageKeepout[curr_package.place_keepouts.size()];
          it2 = curr_package.place_keepouts.iterator();
          for (int i = 0; i < place_keepout_arr.length; ++i)
             {
             DsnScopeArea curr_keepout = it2.next();
             DsnLayer curr_layer = (curr_keepout.shape_list.iterator().next()).layer;
-            freert.planar.PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
-            place_keepout_arr[i] = new freert.library.LibPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
+            PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
+            place_keepout_arr[i] = new specctra.varie.DsnPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
             }
          board.library.packages.add(curr_package.name, pin_arr, outline_arr, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
          }
@@ -215,7 +221,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   public static void write_padstack_scope(DsnWriteScopeParameter p_par, freert.library.LibPadstack p_padstack) throws java.io.IOException
+   public static void write_padstack_scope(DsnWriteScopeParameter p_par, LibPadstack p_padstack) throws java.io.IOException
       {
       // search the layer range of the padstack
       int first_layer_no = 0;
@@ -247,7 +253,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       p_par.identifier_type.write(p_padstack.pads_name, p_par.file);
       for (int index = first_layer_no; index <= last_layer_no; ++index)
          {
-         freert.planar.PlaShape curr_board_shape = p_padstack.get_shape(index);
+         PlaShape curr_board_shape = p_padstack.get_shape(index);
          if (curr_board_shape == null)
             {
             continue;
@@ -273,7 +279,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   public static boolean read_padstack_scope(JflexScanner p_scanner, DsnLayerStructure p_layer_structure, DsnCoordinateTransform p_coordinate_transform, freert.library.LibPadstacks p_board_padstacks)
+   public static boolean read_padstack_scope(JflexScanner p_scanner, DsnLayerStructure p_layer_structure, DsnCoordinateTransform p_coordinate_transform, LibPadstacks p_board_padstacks)
       {
       String padstack_name = null;
       boolean p_attach_allowed = true;
@@ -353,16 +359,16 @@ public class DsnKeywordLibrary extends DsnKeywordScope
          System.out.println(padstack_name);
          return true;
          }
-      freert.planar.ShapeConvex[] padstack_shapes = new freert.planar.ShapeConvex[p_layer_structure.arr.length];
+      ShapeConvex[] padstack_shapes = new ShapeConvex[p_layer_structure.arr.length];
       Iterator<DsnShape> it = shape_list.iterator();
       while (it.hasNext())
          {
          DsnShape pad_shape = it.next();
-         freert.planar.PlaShape curr_shape = pad_shape.transform_to_board_rel(p_coordinate_transform);
-         freert.planar.ShapeConvex convex_shape;
-         if (curr_shape instanceof freert.planar.ShapeConvex)
+         PlaShape curr_shape = pad_shape.transform_to_board_rel(p_coordinate_transform);
+         ShapeConvex convex_shape;
+         if (curr_shape instanceof ShapeConvex)
             {
-            convex_shape = (freert.planar.ShapeConvex) curr_shape;
+            convex_shape = (ShapeConvex) curr_shape;
             }
          else
             {
@@ -370,7 +376,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
                {
                curr_shape = ((ShapePolygon) curr_shape).convex_hull();
                }
-            freert.planar.ShapeTile[] convex_shapes = curr_shape.split_to_convex();
+            ShapeTile[] convex_shapes = curr_shape.split_to_convex();
             if (convex_shapes.length != 1)
                {
                System.out.println("Library.read_padstack_scope: convex shape expected");
@@ -381,7 +387,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
                convex_shape = ((ShapeTileSimplex) convex_shape).simplify();
                }
             }
-         freert.planar.ShapeConvex padstack_shape = convex_shape;
+         ShapeConvex padstack_shape = convex_shape;
          if (padstack_shape != null)
             {
             if ( ! padstack_shape.dimension().is_area() )
