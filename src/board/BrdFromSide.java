@@ -23,6 +23,7 @@ package board;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentInt;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
@@ -116,7 +117,7 @@ public final class BrdFromSide
     * Calculates the nearest border side of p_shape to p_from_point. 
     * Used in the shove_drill_item algorithm to determine the shove direction.
     */
-   public BrdFromSide(PlaPoint p_from_point, ShapeTile p_shape)
+   public BrdFromSide(PlaPointInt p_from_point, ShapeTile p_shape)
       {
       PlaPoint border_projection = p_shape.nearest_border_point(p_from_point);
       

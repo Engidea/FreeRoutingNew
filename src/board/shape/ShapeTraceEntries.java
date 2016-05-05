@@ -93,14 +93,14 @@ public class ShapeTraceEntries
             {
             continue;
             }
-         boolean contains_own_net = curr_item.shares_net_no(this.own_net_nos);
+         boolean contains_own_net = curr_item.shares_net_no(own_net_nos);
          if (curr_item instanceof BrdAreaConduction && (contains_own_net || !((BrdAreaConduction) curr_item).get_is_obstacle()))
             {
             continue;
             }
          if (curr_item.is_shove_fixed() && !contains_own_net)
             {
-            this.found_obstacle = curr_item;
+            found_obstacle = curr_item;
             return false;
             }
          if (curr_item instanceof BrdAbitVia)
@@ -125,18 +125,18 @@ public class ShapeTraceEntries
                {
                if (!p_copper_sharing_allowed)
                   {
-                  this.found_obstacle = curr_item;
+                  found_obstacle = curr_item;
                   return false;
                   }
                if (p_is_pad_check && !((curr_item instanceof BrdAbitPin) && ((BrdAbitPin) curr_item).drill_allowed()))
                   {
-                  this.found_obstacle = curr_item;
+                  found_obstacle = curr_item;
                   return false;
                   }
                }
             else
                {
-               this.found_obstacle = curr_item;
+               found_obstacle = curr_item;
                return false;
                }
             }
@@ -162,7 +162,7 @@ public class ShapeTraceEntries
 
       BrdTracePolyline curr_trace = entries[0].trace;
       ShapeTile offset_shape;
-      ShapeSearchTree search_tree = this.board.search_tree_manager.get_default_tree();
+      ShapeSearchTree search_tree = board.search_tree_manager.get_default_tree();
       if (search_tree.is_clearance_compensation_used())
          {
          double curr_offset = curr_trace.get_compensated_half_width(search_tree) + c_offset_add;
@@ -204,7 +204,7 @@ public class ShapeTraceEntries
       try
          {
          Polyline piece_polyline = new Polyline(piece_lines);
-         return new BrdTracePolyline(piece_polyline, this.layer, curr_trace.get_half_width(), curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED, this.board);
+         return new BrdTracePolyline(piece_polyline, layer, curr_trace.get_half_width(), curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED, board);
          }
       catch ( Exception exc )
          {
@@ -235,7 +235,7 @@ public class ShapeTraceEntries
     */
    public boolean trace_tails_in_shape()
       {
-      return this.shape_contains_trace_tails;
+      return shape_contains_trace_tails;
       }
 
    /**
@@ -247,9 +247,9 @@ public class ShapeTraceEntries
       while (it.hasNext())
          {
          BrdItem curr_item = it.next();
-         if (curr_item instanceof BrdTracePolyline && !curr_item.shares_net_no(this.own_net_nos))
+         if (curr_item instanceof BrdTracePolyline && !curr_item.shares_net_no(own_net_nos))
             {
-            cutout_trace((BrdTracePolyline) curr_item, this.shape, this.cl_class);
+            cutout_trace((BrdTracePolyline) curr_item, shape, cl_class);
             }
          }
       }
@@ -341,7 +341,7 @@ public class ShapeTraceEntries
     */
    private boolean store_trace(BrdTracePolyline p_trace)
       {
-      ShapeSearchTree search_tree = this.board.search_tree_manager.get_default_tree();
+      ShapeSearchTree search_tree = board.search_tree_manager.get_default_tree();
       ShapeTile offset_shape;
       if (search_tree.is_clearance_compensation_used())
          {
@@ -351,7 +351,7 @@ public class ShapeTraceEntries
       else
          {
          // enlarge the shape in 2 steps for symmetry reasons
-         double cl_offset = board.get_clearance(p_trace.clearance_class_no(), this.cl_class, p_trace.get_layer()) + c_offset_add;
+         double cl_offset = board.get_clearance(p_trace.clearance_class_no(), cl_class, p_trace.get_layer()) + c_offset_add;
          offset_shape = (ShapeTile) shape.offset(p_trace.get_half_width());
          offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
          }
@@ -371,128 +371,130 @@ public class ShapeTraceEntries
 
       // Look, if an end point of the trace lies in the interiour of the shape. This may be the case, if a via touches the shape
 
-      if (!p_trace.shares_net_no(own_net_nos))
+      if ( p_trace.shares_net_no(own_net_nos) )
          {
-         if (!(p_trace.is_nets_normal()))
+         found_obstacle = p_trace;
+         return true;
+         }
+
+      if ( ! p_trace.is_nets_normal() ) return false;
+
+      PlaPoint end_corner = p_trace.first_corner();
+      
+      Collection<BrdItem> contact_list;
+      for (int index = 0; index < 2; ++index)
+         {
+         if (offset_shape.contains(end_corner))
             {
-            return false;
-            }
-         PlaPoint end_corner = p_trace.first_corner();
-         Collection<BrdItem> contact_list;
-         for (int i = 0; i < 2; ++i)
-            {
-            if (offset_shape.contains(end_corner))
+            if (index == 0)
                {
-               if (i == 0)
+               contact_list = p_trace.get_start_contacts();
+               }
+            else
+               {
+               contact_list = p_trace.get_end_contacts();
+               }
+            int contact_count = 0;
+            boolean store_end_corner = true;
+
+            // check for contact object, which is not shovable
+            Iterator<BrdItem> it = contact_list.iterator();
+            while (it.hasNext())
+               {
+               BrdItem contact_item = it.next();
+               if (!contact_item.is_route())
                   {
-                  contact_list = p_trace.get_start_contacts();
+                  found_obstacle = contact_item;
+                  return false;
+                  }
+               
+               if (contact_item instanceof BrdTrace)
+                  {
+
+                  if (contact_item.is_shove_fixed() || ((BrdTrace) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_class_no() != p_trace.clearance_class_no())
+                     {
+                     if (offset_shape.contains_inside(end_corner))
+                        {
+                        found_obstacle = contact_item;
+                        return false;
+                        }
+                     }
+                  }
+               else if (contact_item instanceof BrdAbitVia)
+                  {
+                  ShapeTile via_shape = ((BrdAbitVia) contact_item).get_tile_shape_on_layer(layer);
+
+                  double via_trace_diff = via_shape.smallest_radius() - p_trace.get_compensated_half_width(search_tree);
+                  if (!search_tree.is_clearance_compensation_used())
+                     {
+                     int via_clearance = board.get_clearance(contact_item.clearance_class_no(), cl_class, layer);
+                     int trace_clearance = board.get_clearance(p_trace.clearance_class_no(), cl_class, layer);
+                     if (trace_clearance > via_clearance)
+                        {
+                        via_trace_diff += via_clearance - trace_clearance;
+                        }
+                     }
+                  if (via_trace_diff < 0)
+                     {
+                     // the via is smaller than the trace
+                     found_obstacle = contact_item;
+                     return false;
+                     }
+
+                  if (via_trace_diff == 0 && !offset_shape.contains_inside(end_corner))
+                     {
+                     // the via need not to be shoved
+                     store_end_corner = false;
+                     }
+                  }
+               ++contact_count;
+               }
+            
+            if (contact_count == 1 && store_end_corner)
+               {
+               PlaPoint projection = offset_shape.nearest_border_point(end_corner);
+               int projection_side = offset_shape.contains_on_border_line_no(projection);
+               int trace_line_segment_no;
+               // the following may not be correct because the trace may not conntain a suitable
+               // line for the construction oof the end line of the substitute trace.
+               if (index == 0)
+                  {
+                  trace_line_segment_no = 0;
                   }
                else
                   {
-                  contact_list = p_trace.get_end_contacts();
+                  trace_line_segment_no = p_trace.polyline().plalinelen(-1);
                   }
-               int contact_count = 0;
-               boolean store_end_corner = true;
 
-               // check for contact object, which is not shovable
-               Iterator<BrdItem> it = contact_list.iterator();
-               while (it.hasNext())
+               if (projection_side >= 0)
                   {
-                  BrdItem contact_item = it.next();
-                  if (!contact_item.is_route())
-                     {
-                     this.found_obstacle = contact_item;
-                     return false;
-                     }
-                  if (contact_item instanceof BrdTrace)
-                     {
-
-                     if (contact_item.is_shove_fixed() || ((BrdTrace) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_class_no() != p_trace.clearance_class_no())
-                        {
-                        if (offset_shape.contains_inside(end_corner))
-                           {
-                           this.found_obstacle = contact_item;
-                           return false;
-                           }
-                        }
-                     }
-                  else if (contact_item instanceof BrdAbitVia)
-                     {
-                     ShapeTile via_shape = ((BrdAbitVia) contact_item).get_tile_shape_on_layer(layer);
-
-                     double via_trace_diff = via_shape.smallest_radius() - p_trace.get_compensated_half_width(search_tree);
-                     if (!search_tree.is_clearance_compensation_used())
-                        {
-                        int via_clearance = board.get_clearance(contact_item.clearance_class_no(), this.cl_class, this.layer);
-                        int trace_clearance = board.get_clearance(p_trace.clearance_class_no(), this.cl_class, this.layer);
-                        if (trace_clearance > via_clearance)
-                           {
-                           via_trace_diff += via_clearance - trace_clearance;
-                           }
-                        }
-                     if (via_trace_diff < 0)
-                        {
-                        // the via is smaller than the trace
-                        this.found_obstacle = contact_item;
-                        return false;
-                        }
-
-                     if (via_trace_diff == 0 && !offset_shape.contains_inside(end_corner))
-                        {
-                        // the via need not to be shoved
-                        store_end_corner = false;
-                        }
-                     }
-                  ++contact_count;
-                  }
-               if (contact_count == 1 && store_end_corner)
-                  {
-                  PlaPoint projection = offset_shape.nearest_border_point(end_corner);
-                     {
-                     int projection_side = offset_shape.contains_on_border_line_no(projection);
-                     int trace_line_segment_no;
-                     // the following may not be correct because the trace may not conntain a suitable
-                     // line for the construction oof the end line of the substitute trace.
-                     if (i == 0)
-                        {
-                        trace_line_segment_no = 0;
-                        }
-                     else
-                        {
-                        trace_line_segment_no = p_trace.polyline().plalinelen(-1);
-                        }
-
-                     if (projection_side >= 0)
-                        {
-                        insert_entry_point(p_trace, trace_line_segment_no, projection_side, projection.to_float());
-                        }
-                     }
-                  }
-               else if (contact_count == 0 && offset_shape.contains_inside(end_corner))
-                  {
-                  shape_contains_trace_tails = true;
+                  insert_entry_point(p_trace, trace_line_segment_no, projection_side, projection.to_float());
                   }
                }
-            end_corner = p_trace.corner_last();
+            else if (contact_count == 0 && offset_shape.contains_inside(end_corner))
+               {
+               shape_contains_trace_tails = true;
+               }
             }
+         end_corner = p_trace.corner_last();
          }
-      
+
       found_obstacle = p_trace;
       return true;
       }
 
    private void search_from_side()
       {
-      if (this.from_side != null && this.from_side.side_no >= 0)
+      if (from_side != null && from_side.side_no >= 0)
          {
          return; // from side is already legal
          }
-      ShapeTraceEntryPoint curr_node = this.list_anchor;
+      ShapeTraceEntryPoint curr_node = list_anchor;
       int curr_fromside_no = 0;
       PlaPointFloat curr_entry_approx = null;
       while (curr_node != null)
          {
-         if (curr_node.trace.shares_net_no(this.own_net_nos))
+         if (curr_node.trace.shares_net_no(own_net_nos))
             {
             curr_fromside_no = curr_node.edge_no;
             curr_entry_approx = curr_node.entry_approx;
@@ -500,7 +502,7 @@ public class ShapeTraceEntries
             }
          curr_node = curr_node.next;
          }
-      this.from_side = new BrdFromSide(curr_fromside_no, curr_entry_approx);
+      from_side = new BrdFromSide(curr_fromside_no, curr_entry_approx);
       }
 
    /**
@@ -508,15 +510,15 @@ public class ShapeTraceEntries
     */
    private void resort()
       {
-      int edge_count = this.shape.border_line_count();
-      if (this.from_side.side_no < 0 || from_side.side_no >= edge_count)
+      int edge_count = shape.border_line_count();
+      if (from_side.side_no < 0 || from_side.side_no >= edge_count)
          {
          System.out.println("ShapeTraceEntries.resort: from side not calculated");
          return;
          }
       // resort the intersection points, so that they start in the
       // middle of from_side.
-      PlaPointFloat compare_corner_1 = shape.corner_approx(this.from_side.side_no);
+      PlaPointFloat compare_corner_1 = shape.corner_approx(from_side.side_no);
       PlaPointFloat compare_corner_2;
       if (from_side.side_no == edge_count - 1)
          {
@@ -544,7 +546,7 @@ public class ShapeTraceEntries
 
       while (curr != null)
          {
-         if (curr.edge_no > this.from_side.side_no)
+         if (curr.edge_no > from_side.side_no)
             {
             break;
             }
@@ -670,7 +672,7 @@ public class ShapeTraceEntries
       ShapeTraceEntryPoint curr_entry = list_anchor;
       int[] curr_net_nos = curr_entry.trace.net_no_arr;
       int curr_level;
-      if (net_nos_equal(curr_net_nos, this.own_net_nos))
+      if (net_nos_equal(curr_net_nos, own_net_nos))
          {
          // ignore own net when calculating the stack level
          curr_level = 0;
@@ -690,7 +692,7 @@ public class ShapeTraceEntries
                {
                if (max_stack_level > 1)
                   {
-                  this.found_obstacle = curr_entry.trace;
+                  found_obstacle = curr_entry.trace;
                   }
                max_stack_level = curr_level;
                }
@@ -789,7 +791,7 @@ public class ShapeTraceEntries
       {
       if (list_anchor == null)
          {
-         if (this.trace_piece_count != 0)
+         if (trace_piece_count != 0)
             {
             System.out.println("ShapeTraceEntries: trace_piece_count is inconsistent");
             }
@@ -800,7 +802,7 @@ public class ShapeTraceEntries
 
       while (first != null)
          {
-         if (first.stack_level == this.max_stack_level)
+         if (first.stack_level == max_stack_level)
             {
             break;
             }
@@ -851,7 +853,7 @@ public class ShapeTraceEntries
          curr = curr.next;
          }
       --trace_piece_count;
-      if (first.trace.nets_equal(this.own_net_nos))
+      if (first.trace.nets_equal(own_net_nos))
          {
          // own net is ignored and nay occur only at the lowest level
          result = pop_piece();
