@@ -2254,16 +2254,29 @@ public final class RoutingBoard implements java.io.Serializable
       {
       clear_shove_failing_obstacle();
       
-      PlaPoint from_corner = p_polyline.corner_first();
-      PlaPoint to_corner = p_polyline.corner_last();
+      PlaPoint from_corner_point = p_polyline.corner_first();
       
-      if (from_corner.equals(to_corner)) return to_corner;
-      
-      if (!(from_corner instanceof PlaPointInt && to_corner instanceof PlaPointInt))
+      if (! (from_corner_point instanceof PlaPointInt ))
          {
-         System.err.println(classname+"insert_trace_polyline: only implemented for IntPoints");
+         System.err.println(classname+"insert_trace_polyline: from_corner_point NOT int");
+         // really. what is the point of returning this ? I did not actually route up to this !
+         return from_corner_point;
+         }      
+      
+      PlaPointInt from_corner = (PlaPointInt)from_corner_point; 
+      
+      PlaPoint to_corner_point = p_polyline.corner_last();
+
+      if (!( to_corner_point instanceof PlaPointInt))
+         {
+         System.err.println(classname+"insert_trace_polyline: to_corner_point NOT int");
+         // really. what is the point of returning this ? I did not actually route up to this !
          return from_corner;
          }
+     
+      PlaPointInt to_corner = (PlaPointInt)to_corner_point; 
+
+      if (from_corner.equals(to_corner)) return to_corner;
       
       start_marking_changed_area();
       // Check, if there ends a item of the same net at p_from_corner.
@@ -2271,6 +2284,7 @@ public final class RoutingBoard implements java.io.Serializable
       BrdTrace picked_trace = null;
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.TRACES);
       Set<BrdItem> picked_items = pick_items(from_corner, p_layer, filter);
+      
       if (picked_items.size() == 1)
          {
          BrdTrace curr_picked_trace = (BrdTrace) picked_items.iterator().next();
