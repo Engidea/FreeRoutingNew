@@ -30,7 +30,6 @@ import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -46,14 +45,14 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    private static final long serialVersionUID = 1L;
 
    private PlaArea relative_area;
-   private PlaVector translation;
+   private PlaVectorInt translation;
    private double rotation_in_degree;
    private boolean is_front;
 
    private transient PlaArea precalculated_absolute_area = null;
    
 
-   public BrdComponentOutline(PlaArea p_area, boolean p_is_front, PlaVector p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdComponentOutline(PlaArea p_area, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(new int[0], 0, 0, p_component_no, p_fixed_state, p_board);
       relative_area = p_area;

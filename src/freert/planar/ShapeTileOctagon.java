@@ -407,25 +407,32 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       return new PlaLineInt(p_a, p_b);
       }
 
+   @Override   
+   public ShapeTileOctagon translate_by(PlaVector p_rel_coor)
+      {
+      if ( p_rel_coor instanceof PlaVectorInt ) 
+         return translate_by( (PlaVectorInt) p_rel_coor );
+      else
+         throw new IllegalArgumentException("Not supported");
+      }
+
    /**
     * This function is at the moment only implemented for Vectors with integer coordinates.
     */
    @Override   
-   public ShapeTileOctagon translate_by(PlaVector p_rel_coor)
+   public ShapeTileOctagon translate_by(PlaVectorInt p_rel_coor)
       {
       if (p_rel_coor.equals(PlaVectorInt.ZERO)) return this;
 
-      PlaVectorInt rel_coor = (PlaVectorInt) p_rel_coor;
-
       return new ShapeTileOctagon(
-            oct_lx + rel_coor.point_x, 
-            oct_ly + rel_coor.point_y, 
-            oct_rx + rel_coor.point_x, 
-            oct_uy + rel_coor.point_y, 
-            oct_ulx + rel_coor.point_x - rel_coor.point_y, 
-            oct_lrx + rel_coor.point_x - rel_coor.point_y, 
-            oct_llx + rel_coor.point_x + rel_coor.point_y, 
-            oct_urx + rel_coor.point_x + rel_coor.point_y);
+            oct_lx + p_rel_coor.point_x, 
+            oct_ly + p_rel_coor.point_y, 
+            oct_rx + p_rel_coor.point_x, 
+            oct_uy + p_rel_coor.point_y, 
+            oct_ulx + p_rel_coor.point_x - p_rel_coor.point_y, 
+            oct_lrx + p_rel_coor.point_x - p_rel_coor.point_y, 
+            oct_llx + p_rel_coor.point_x + p_rel_coor.point_y, 
+            oct_urx + p_rel_coor.point_x + p_rel_coor.point_y);
       }
 
    @Override   

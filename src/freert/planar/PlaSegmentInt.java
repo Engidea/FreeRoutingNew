@@ -115,11 +115,13 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPoint start_point()
       {
-      if (precalculated_start_point == null)
-         {
-         precalculated_start_point = middle.intersection(start);
-         }
+      if (precalculated_start_point != null) return precalculated_start_point;
+
+      precalculated_start_point = middle.intersection(start);
       
+//      if ( ! ( precalculated_start_point instanceof PlaPointInt ) ) it happens...
+      //         System.err.println("UFFA start");
+         
       return precalculated_start_point;
       }
 
@@ -128,10 +130,13 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPoint end_point()
       {
-      if (precalculated_end_point == null)
-         {
-         precalculated_end_point = middle.intersection(end);
-         }
+      if (precalculated_end_point != null) return precalculated_end_point;
+
+      precalculated_end_point = middle.intersection(end);
+
+      //      if ( ! ( precalculated_end_point instanceof PlaPointInt ) )
+      //   System.err.println("UFFA end");
+
       return precalculated_end_point;
       }
 

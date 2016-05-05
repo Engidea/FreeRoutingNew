@@ -319,6 +319,16 @@ public final class PlaCircle implements ShapeConvex , Serializable
       }
 
    @Override
+   public PlaCircle translate_by(PlaVectorInt p_vector)
+      {
+      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
+
+      PlaPointInt new_center = center.translate_by(p_vector);
+      
+      return new PlaCircle(new_center, radius);
+      }
+
+   @Override
    public PlaPointFloat nearest_point_approx(PlaPointFloat p_point)
       {
       System.out.println("Circle.nearest_point_approx not yet implemented");

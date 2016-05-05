@@ -73,7 +73,6 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentInt;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
@@ -386,7 +385,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts a component ouline into the board.
     */
-   public void insert_component_outline(PlaArea p_area, boolean p_is_front, PlaVector p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state)
+   public void insert_component_outline(PlaArea p_area, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state)
       {
       if (p_area == null)
          {
@@ -434,13 +433,13 @@ public final class RoutingBoard implements java.io.Serializable
    public BrdOutline get_outline()
       {
       Iterator<UndoableObjectNode> it = item_list.start_read_object();
+      
       for (;;)
          {
          UndoableObjectStorable curr_item = item_list.read_object(it);
-         if (curr_item == null)
-            {
-            break;
-            }
+      
+         if (curr_item == null)  break;
+
          if (curr_item instanceof BrdOutline)
             {
             return (BrdOutline) curr_item;

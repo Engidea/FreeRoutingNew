@@ -492,11 +492,20 @@ public final class AlgoOptimizeVia
    /**
     * Tries to reposition the via to a better location according to the trace costs. Returns null, if no better location was found.
     */
-   private PlaPoint reposition_via( BrdAbitVia p_via, int p_first_trace_half_width, int p_first_trace_cl_class, int p_first_trace_layer,
-         ExpandCostFactor p_first_trace_costs, PlaPoint p_first_trace_from_corner, int p_second_trace_half_width, int p_second_trace_cl_class, int p_second_trace_layer,
-         ExpandCostFactor p_second_trace_costs, PlaPoint p_second_trace_from_corner)
+   private PlaPoint reposition_via( 
+         BrdAbitVia p_via, 
+         int p_first_trace_half_width, 
+         int p_first_trace_cl_class, 
+         int p_first_trace_layer,
+         ExpandCostFactor p_first_trace_costs, 
+         PlaPoint p_first_trace_from_corner, 
+         int p_second_trace_half_width, 
+         int p_second_trace_cl_class, 
+         int p_second_trace_layer,
+         ExpandCostFactor p_second_trace_costs,
+         PlaPoint p_second_trace_from_corner)
       {
-      PlaPoint via_location = p_via.center_get();
+      PlaPointInt via_location = p_via.center_get();
 
       PlaVector first_delta = p_first_trace_from_corner.difference_by(via_location);
       PlaVector second_delta = p_second_trace_from_corner.difference_by(via_location);

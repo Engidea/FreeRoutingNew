@@ -651,13 +651,14 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Returns the by p_vector translated polyline
+    * Returns the by p_vector translated polyline pippo
     */
-   public Polyline translate_by(PlaVector p_vector)
+   public Polyline translate_by(PlaVectorInt p_vector)
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
       
       PlaLineInt[] new_arr = new PlaLineInt[plalinelen()];
+      
       for (int index = 0; index < new_arr.length; ++index)
          {
          new_arr[index] = plaline(index).translate_by(p_vector);

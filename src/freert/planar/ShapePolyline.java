@@ -86,6 +86,7 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
    @Override
    public abstract ShapePolyline translate_by(PlaVector p_vector);
 
+   public abstract ShapePolyline translate_by(PlaVectorInt p_vector);
 
    /**
     * Returns an approximation of the p_no-th corner of this shape for p_no between 0 and border_line_count() - 1. If the shape is
