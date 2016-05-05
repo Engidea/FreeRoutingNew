@@ -20,6 +20,7 @@
 
 package freert.library;
 
+import java.util.ArrayList;
 import specctra.varie.DsnPackageKeepout;
 import board.infos.PrintableInfo;
 import freert.planar.PlaShape;
@@ -43,7 +44,7 @@ public final class LibPackage implements Comparable<LibPackage>, PrintableInfo, 
    private final LibPackages parent_package_list;
 
    // The outline of the component, which may be null
-   public final PlaShape[] outline;
+   public final ArrayList<PlaShape> outline_shapes;
    public final DsnPackageKeepout[] keepout_arr;
    public final DsnPackageKeepout[] via_keepout_arr;
    public final DsnPackageKeepout[] place_keepout_arr;
@@ -66,12 +67,17 @@ public final class LibPackage implements Comparable<LibPackage>, PrintableInfo, 
       pkg_name = p_name;
       pkg_no = p_no;
       pin_arr = p_pin_arr;
-      outline = p_outline;
       keepout_arr = p_keepout_arr;
       via_keepout_arr = p_via_keepout_arr;
       place_keepout_arr = p_place_keepout_arr;
       is_front = p_is_front;
       parent_package_list = p_package_list;
+
+      outline_shapes = new ArrayList<PlaShape>(p_outline.length);
+      
+      for (int index=0; index<p_outline.length; index++)
+         outline_shapes.add(p_outline[index]);
+      
       }
 
    /**

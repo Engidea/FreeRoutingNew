@@ -27,7 +27,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
-import board.MoveComponent;
 import board.items.BrdItem;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPointFloat;
@@ -80,7 +79,7 @@ public class StateDragItem extends StateDrag
          return this;
          }
 
-      MoveComponent move_component = null;
+      IteraMoveComponent move_component = null;
       PlaVectorInt rel_coor = to_location.difference_by(from_location);
       
       double length = rel_coor.distance();
@@ -89,7 +88,7 @@ public class StateDragItem extends StateDrag
       
       for (int index = 0; index < 2; ++index)
          {
-         move_component = new MoveComponent(item_to_move, rel_coor, 99, 5);
+         move_component = new IteraMoveComponent(item_to_move, rel_coor, 99, 5);
          if (move_component.check_move())
             {
             shove_ok = true;

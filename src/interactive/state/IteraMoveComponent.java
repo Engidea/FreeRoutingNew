@@ -17,11 +17,12 @@
  *
  * Created on 25. Oktober 2003, 09:03
  */
-package board;
+package interactive.state;
 
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.TreeSet;
+import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.items.BrdAbit;
 import board.items.BrdArea;
@@ -36,10 +37,11 @@ import freert.varie.TimeLimit;
 
 /**
  * Class for moving a group of items on the board
+ * Used by StateDrag only
  * 
  * @author Alfons Wirtz
  */
-public final class MoveComponent
+public final class IteraMoveComponent
    {
    private static final int s_TIGHT_TIME_ms = 2;
 
@@ -51,7 +53,7 @@ public final class MoveComponent
    private final TreeSet<SortedItemDouble> item_group_arr = new TreeSet<SortedItemDouble>();
    private BrdComponent component = null;
 
-   public MoveComponent(BrdItem p_item, PlaVectorInt p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
+   public IteraMoveComponent(BrdItem p_item, PlaVectorInt p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
       {
       r_board = p_item.r_board;
       translate_vector = p_translate_vector;

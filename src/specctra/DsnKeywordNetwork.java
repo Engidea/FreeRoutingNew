@@ -26,6 +26,7 @@ import freert.library.LibPackagePin;
 import freert.library.LibPadstack;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.rules.BoardRules;
 import freert.rules.NetClass;
@@ -1567,10 +1568,10 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
       
       // insert the outline as component keepout
-      for (int index = 0; index < curr_package.outline.length; ++index)
+      for ( PlaShape a_shape : curr_package.outline_shapes )
          {
          routing_board.insert_component_outline(
-               curr_package.outline[index], 
+               a_shape, 
                p_location.is_front, 
                component_translation, 
                rotation_in_degree, 
