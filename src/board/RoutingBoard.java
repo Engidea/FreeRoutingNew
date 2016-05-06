@@ -2160,14 +2160,14 @@ public final class RoutingBoard implements java.io.Serializable
       return true;
       }
 
-
+   
    /**
     * Tries to insert a trace line with the input parameters from p_from_corner to p_to_corner while shoving aside obstacle traces and vias. 
     * Returns the last point between p_from_corner and p_to_corner, to which the shove succeeded. 
     * Returns null, if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
     * p_search_tree is the shape search tree used in the algorithm.
     */
-   public final PlaPoint insert_trace_segment(
+   public final PlaPointInt insert_trace_segment (
          PlaPointInt p_from_corner, 
          PlaPointInt p_to_corner, 
          int p_half_width, 
@@ -2182,49 +2182,12 @@ public final class RoutingBoard implements java.io.Serializable
          boolean p_with_check, 
          TimeLimit p_time_limit)
       {
-      return insert_trace_segment_generic(
-            p_from_corner, 
-            p_to_corner, 
-            p_half_width, 
-            p_layer,
-            p_net_no_arr,
-            p_clearance_class_no,
-            p_max_recursion_depth,
-            p_max_via_recursion_depth,
-            p_max_spring_over_recursion_depth,
-            p_tidy_width,
-            p_pull_tight_accuracy,
-            p_with_check,
-            p_time_limit
-            );
-      }
-   
-   /**
-    * Tries to insert a trace line with the input parameters from p_from_corner to p_to_corner while shoving aside obstacle traces and vias. 
-    * Returns the last point between p_from_corner and p_to_corner, to which the shove succeeded. 
-    * Returns null, if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
-    * p_search_tree is the shape search tree used in the algorithm.
-    */
-   public final PlaPoint insert_trace_segment_generic(
-         PlaPoint p_from_corner, 
-         PlaPoint p_to_corner, 
-         int p_half_width, 
-         int p_layer, 
-         int[] p_net_no_arr, 
-         int p_clearance_class_no, 
-         int p_max_recursion_depth,
-         int p_max_via_recursion_depth, 
-         int p_max_spring_over_recursion_depth, 
-         int p_tidy_width, 
-         int p_pull_tight_accuracy, 
-         boolean p_with_check, 
-         TimeLimit p_time_limit)
-      {
       if (p_from_corner.equals(p_to_corner)) return p_to_corner;
       
+      // Now, careful, polyline does NOT preserve corners, it creates new ones with the same value!!
       Polyline insert_polyline = new Polyline(p_from_corner, p_to_corner);
       
-      PlaPoint ok_point = insert_trace_polyline(
+      PlaPointInt ok_point = insert_trace_polyline(
             insert_polyline, 
             p_half_width, 
             p_layer, 
@@ -2237,8 +2200,10 @@ public final class RoutingBoard implements java.io.Serializable
             p_pull_tight_accuracy, 
             p_with_check, 
             p_time_limit);
+
+      PlaPointInt result;
       
-      PlaPoint result;
+      // the following needs to be done since polyline does not preserve points, it should, really...
       
       if (ok_point == insert_polyline.corner_first())
          {
@@ -2252,6 +2217,7 @@ public final class RoutingBoard implements java.io.Serializable
          {
          result = ok_point;
          }
+         
       return result;
       }
 

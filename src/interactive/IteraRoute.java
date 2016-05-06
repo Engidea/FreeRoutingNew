@@ -88,7 +88,7 @@ public final class IteraRoute
    public final int[] net_no_arr;    // The net numbers used for routing 
 
    private BrdItem shove_failing_obstacle = null;
-   private PlaPoint prev_corner;
+   private PlaPointInt prev_corner;
    private int layer_active_no;
 
    /**
@@ -204,7 +204,7 @@ public final class IteraRoute
 
       // tests.Validate.check("before insert", board);
       
-      PlaPoint ok_point = r_board.insert_trace_segment_generic(
+      PlaPointInt ok_point = r_board.insert_trace_segment (
             prev_corner, 
             curr_corner, 
             pen_half_width_arr[layer_active_no], 
@@ -471,14 +471,14 @@ public final class IteraRoute
       
       for (int index = 1; index < corners.size(); ++index)
          {
-         PlaPoint from_corner = corners.get(index - 1);
-         PlaPoint to_corner = corners.get(index);
+         PlaPointInt from_corner = corners.get(index - 1);
+         PlaPointInt to_corner = corners.get(index);
          
          TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
 
          while (!from_corner.equals(to_corner))
             {
-            PlaPoint curr_ok_point = r_board.insert_trace_segment_generic(
+            PlaPointInt curr_ok_point = r_board.insert_trace_segment (
                   from_corner, 
                   to_corner, 
                   pen_half_width_arr[layer_active_no], 
@@ -864,7 +864,7 @@ public final class IteraRoute
     * If the routed starts at a pin and the route failed with the normal trace width, another try with the smallest pin width is
     * done. Returns the ok_point of the try, which is this.prev_point, if the try failed.
     */
-   private PlaPoint try_neckdown_at_start(PlaPointInt p_to_corner)
+   private PlaPointInt try_neckdown_at_start(PlaPointInt p_to_corner)
       {
       if (!(start_item instanceof BrdAbitPin))
          {
@@ -902,7 +902,8 @@ public final class IteraRoute
             }
          }
       TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
-      PlaPoint ok_point = r_board.insert_trace_segment_generic(
+      
+      PlaPointInt ok_point = r_board.insert_trace_segment (
             prev_corner, 
             p_to_corner, 
             neck_down_halfwidth, 
@@ -916,6 +917,7 @@ public final class IteraRoute
             itera_settings.trace_pull_tight_accuracy, 
             ! is_stitch_mode, 
             time_limit);
+      
       return ok_point;
       }
 
@@ -923,7 +925,7 @@ public final class IteraRoute
     * If the routed ends at a pin and the route failed with the normal trace width, another try with the smalllest pin width is
     * done. Returns the ok_point of the try, which is p_from_corner, if the try failed.
     */
-   private PlaPoint try_neckdown_at_end(PlaPoint p_from_corner, PlaPoint p_to_corner)
+   private PlaPointInt try_neckdown_at_end(PlaPointInt p_from_corner, PlaPointInt p_to_corner)
       {
       if (!(nearest_target_item instanceof BrdAbitPin)) return p_from_corner;
 
@@ -949,7 +951,7 @@ public final class IteraRoute
       
       TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
       
-      PlaPoint ok_point = r_board.insert_trace_segment_generic(
+      PlaPointInt ok_point = r_board.insert_trace_segment (
             p_from_corner, 
             p_to_corner, 
             neck_down_halfwidth, 
