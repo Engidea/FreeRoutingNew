@@ -56,8 +56,8 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    // the direction to the southeast
    public static final PlaDirection DOWN45 = new PlaDirection(1, -1);
 
-   public final long dir_x;
-   public final long dir_y;
+   public final long dir_y;   // this is normally the top part of the m coefficient
+   public final long dir_x;   // this is the bottom part
    
    public final boolean is_vertical;
    public final boolean is_horizontal;
@@ -230,8 +230,34 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      return new PlaDirection(BigInteger.valueOf(new_x),BigInteger.valueOf(new_y));
      }
   
-  
+  /**
+   * Used while trying to calculate intersection of thwo lines
+   * @param p_other
+   * @return
+   */
+  public PlaDirection subtract ( PlaDirection p_other )
+     {
+     if ( dir_x == p_other.dir_x )
+        {
+        // if the denominator is the same, then it is just a difference
+        return new PlaDirection(dir_y - p_other.dir_y, dir_x);
+        }
+     
+     
+     long denom = dir_x * p_other.dir_x;
+     
+     long my_y    = dir_y * p_other.dir_x;
+     long other_y = p_other.dir_y * dir_x;
 
+     long numerator = my_y - other_y;
+     
+     return new PlaDirection(BigInteger.valueOf(denom),BigInteger.valueOf(numerator) );
+     }
+
+  
+  
+  
+  
   @Override
   public int compareTo(PlaDirection p_other)
      {

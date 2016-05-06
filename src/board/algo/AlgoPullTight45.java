@@ -348,7 +348,6 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaDirection prev_dir = p_line_arr[p_no].direction();
       PlaDirection next_dir = p_line_arr[p_no + 1].direction();
       
-//      PlaDirection new_line_dir = new PlaDirection(prev_dir.get_vector().add(next_dir.get_vector()));
       PlaDirection new_line_dir = prev_dir.add(next_dir);
       
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
@@ -473,7 +472,6 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaDirection prev_dir = p_line_arr[p_no].direction();
       PlaDirection next_dir = p_line_arr[p_no + 1].direction();
       
-//      PlaDirection new_line_dir = new PlaDirection(prev_dir.get_vector().add(next_dir.get_vector()));
       PlaDirection new_line_dir = prev_dir.add(next_dir);
       
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);

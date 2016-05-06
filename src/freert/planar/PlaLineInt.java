@@ -424,16 +424,13 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       return ret_rat;
       }
 
+   
+/*   
    private PlaPointInt intersect ( PlaLineInt line_a, PlaLineInt line_b )
       {
-      return new PlaPointInt();
-    /*
-      line_a.calc_m_q();
-      line_b.calc_m_q();
+      PlaDirection bottom = line_a.line_dir.subtract(line_b.line_dir);
+
       
-      double bottom = line_a.cf_m - line_b.cf_m;
-      
-      if ( bottom == 0 ) return new PlaPointInt();
       
       double top_x = line_b.cf_q - line_a.cf_q;
       
@@ -444,8 +441,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       double new_y = top_y / bottom;
       
       return new PlaPointInt ( new_x, new_y);
-     */ 
       }
+     */ 
    
    /**
     * Returns an approximation of the intersection of the 2 lines by a FloatPoint. 
