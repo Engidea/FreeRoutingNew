@@ -33,20 +33,21 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    public final PlaPointInt point_a;
    public final PlaPointInt point_b;
    
-   private transient PlaDirection dir=null; // should only be accessed from get_direction().
+   private final PlaDirection line_dir; 
    
    private transient int cf_q;
    
    boolean is_nan;
    
    /**
-    * creates am "empty" line
+    * creates a kind of null line
     */
    public PlaLineInt()
       {
-      is_nan  = true;
-      point_a = new PlaPointInt ();
-      point_b = new PlaPointInt ();
+      is_nan   = true;
+      point_a  = new PlaPointInt ();
+      point_b  = new PlaPointInt ();
+      line_dir = new PlaDirection();
       }
    
    /**
@@ -62,12 +63,16 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       point_a = (PlaPointInt)p_a;
       point_b = (PlaPointInt)p_b;
+      
+      line_dir = new PlaDirection (point_a,point_b);
       }
 
    public PlaLineInt(PlaPointInt p_a, PlaPointInt p_b)
       {
       point_a = p_a;
       point_b = p_b;
+      
+      line_dir = new PlaDirection (point_a,point_b);
       }
 
    public PlaLineInt(PlaPoint p_a, PlaDirection p_dir)
@@ -79,7 +84,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       point_b = point_a.translate_by(p_dir);
       
-      dir = p_dir;
+      line_dir = p_dir;
       }
 
    public PlaLineInt(PlaPointInt p_a, PlaDirection p_dir)
@@ -88,7 +93,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       point_b = point_a.translate_by(p_dir);
       
-      dir = p_dir;
+      line_dir = p_dir;
       }
 
    @Override
@@ -149,17 +154,12 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * get the direction of this directed line
+    * Note that the direction is actually the m coefficient of the line in a plane
+    * @return the direction of this directed line
     */
    public PlaDirection direction()
       {
-      if (dir != null) return dir;
-
-//      dir = new PlaDirection (point_b.difference_by(point_a));
-      
-      dir = new PlaDirection (point_a,point_b);
-      
-      return dir;
+      return line_dir;
       }
 
    /**

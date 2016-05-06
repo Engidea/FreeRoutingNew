@@ -59,6 +59,16 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    public final long dir_x;
    public final long dir_y;
    
+   private boolean is_NaN;
+   
+   public PlaDirection()
+      {
+      is_NaN = true;
+      dir_x = 0;
+      dir_y = 0;
+      }
+   
+   
    /**
     * Use this one only if you know that the values are already gcd
     */
@@ -153,7 +163,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    @Override
    public final boolean is_NaN ()
       {
-      return false;
+      return is_NaN;
       }
    
    /**
