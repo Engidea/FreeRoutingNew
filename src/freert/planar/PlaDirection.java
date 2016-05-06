@@ -59,6 +59,9 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    public final long dir_x;
    public final long dir_y;
    
+   public final boolean is_vertical;
+   public final boolean is_horizontal;
+   
    private boolean is_NaN;
    
    public PlaDirection()
@@ -66,6 +69,8 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       is_NaN = true;
       dir_x = 0;
       dir_y = 0;
+      is_vertical = true;
+      is_horizontal = true;
       }
    
    
@@ -76,6 +81,8 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       {
       dir_x = p_x;
       dir_y = p_y;
+      is_vertical   = dir_x == 0;
+      is_horizontal = dir_y == 0;
       }
 
    /**
@@ -105,6 +112,9 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    
       dir_x = dx.intValue();
       dir_y = dy.intValue();
+
+      is_vertical   = dir_x == 0;
+      is_horizontal = dir_y == 0;
       }
    
    /**
@@ -185,10 +195,28 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
 
   public boolean is_diagonal()
      {
-     return Math.abs(dir_x) == Math.abs(dir_y);
+     return is_diagonal_right() || is_diagonal_left();
      }
 
+  /**
+   * The line is 45 degrees diagonal on the right 
+   * @return
+   */
+  public boolean is_diagonal_right()
+     {
+     return dir_x == dir_y;
+     }
 
+  /**
+   * The line is 45 degrees diagonal on the right 
+   * @return
+   */
+  public boolean is_diagonal_left()
+     {
+     return dir_x == -dir_y;
+     }
+
+  
   /**
    * Return a new PlaDirection that is the sum of this direction plus the other one
    * @param p_oter
@@ -464,17 +492,6 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
          }
       return result;
       }
-
-   private boolean is_vertical ( )
-      {
-      return dir_x == 0;
-      }
-   
-   private boolean is_horizontal ( )
-      {
-      return dir_y == 0;
-      }
-
    
    /**
     * Returns an approximation of the signed angle corresponding to this dierection
@@ -484,14 +501,14 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     */
    public double angle_approx()
       {
-      if ( is_vertical() )
+      if ( is_vertical )
          {
          if ( dir_y >= 0 ) 
             return Math.PI / 2;
          else 
             return -Math.PI / 2;
          }
-      else if ( is_horizontal() )
+      else if ( is_horizontal )
          {
          if ( dir_x >= 0 ) 
             return 0;

@@ -309,75 +309,70 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaPoint intersection(PlaLineInt p_other)
       {
-      // this function is at the moment only implemented for lines consisting of IntPoints.
-      // The general implementation is still missing.
-      
-      PlaVectorInt delta_1 = point_b.difference_by(point_a);
-      PlaVectorInt delta_2 = p_other.point_b.difference_by(p_other.point_a);
       
       // Separate handling for orthogonal and 45 degree lines for better performance
-      if (delta_1.point_x == 0) // this line is vertical
+      if ( line_dir.is_vertical ) // this line is vertical
          {
-         if (delta_2.point_y == 0) // other line is horizontal
+         if (p_other.line_dir.is_horizontal ) // other line is horizontal
             {
             return new PlaPointInt(point_a.v_x, p_other.point_a.v_y);
             }
-         if (delta_2.point_x == delta_2.point_y) // other line is right diagonal
+         if (p_other.line_dir.is_diagonal_right()) // other line is right diagonal
             {
             int this_x = point_a.v_x;
             PlaPointInt other_a = p_other.point_a;
             return new PlaPointInt(this_x, other_a.v_y + this_x - other_a.v_x);
             }
-         if (delta_2.point_x == -delta_2.point_y) // other line is left diagonal
+         if (p_other.line_dir.is_diagonal_left()) // other line is left diagonal
             {
             int this_x = point_a.v_x;
             PlaPointInt other_a = p_other.point_a;
             return new PlaPointInt(this_x, other_a.v_y + other_a.v_x - this_x);
             }
          }
-      else if (delta_1.point_y == 0) // this line is horizontal
+      else if (line_dir.is_horizontal ) // this line is horizontal
          {
-         if (delta_2.point_x == 0) // other line is vertical
+         if (p_other.line_dir.is_vertical ) // other line is vertical
             {
             return new PlaPointInt(p_other.point_a.v_x, point_a.v_y);
             }
-         if (delta_2.point_x == delta_2.point_y) // other line is right diagonal
+         if (p_other.line_dir.is_diagonal_right()) // other line is right diagonal
             {
             int this_y = point_a.v_y;
             PlaPointInt other_a = p_other.point_a;
             return new PlaPointInt(other_a.v_x + this_y - other_a.v_y, this_y);
             }
-         if (delta_2.point_x == -delta_2.point_y) // other line is left diagonal
+         if (p_other.line_dir.is_diagonal_left()) // other line is left diagonal
             {
             int this_y = point_a.v_y;
             PlaPointInt other_a = p_other.point_a;
             return new PlaPointInt(other_a.v_x + other_a.v_y - this_y, this_y);
             }
          }
-      else if (delta_1.point_x == delta_1.point_y) // this line is right diagonal
+      else if (line_dir.is_diagonal_right()) // this line is right diagonal
          {
-         if (delta_2.point_x == 0) // other line is vertical
+         if (p_other.line_dir.is_vertical ) // other line is vertical
             {
             int other_x = p_other.point_a.v_x;
             PlaPointInt this_a = point_a;
             return new PlaPointInt(other_x, this_a.v_y + other_x - this_a.v_x);
             }
-         if (delta_2.point_y == 0) // other line is horizontal
+         if (p_other.line_dir.is_horizontal ) // other line is horizontal
             {
             int other_y = p_other.point_a.v_y;
             PlaPointInt this_a = point_a;
             return new PlaPointInt(this_a.v_x + other_y - this_a.v_y, other_y);
             }
          }
-      else if (delta_1.point_x == -delta_1.point_y) // this line is left diagonal
+      else if (line_dir.is_diagonal_left()) // this line is left diagonal
          {
-         if (delta_2.point_x == 0) // other line is vertical
+         if (p_other.line_dir.is_vertical ) // other line is vertical
             {
             int other_x = p_other.point_a.v_x;
             PlaPointInt this_a = point_a;
             return new PlaPointInt(other_x, this_a.v_y + this_a.v_x - other_x);
             }
-         if (delta_2.point_y == 0) // other line is horizontal
+         if (p_other.line_dir.is_horizontal ) // other line is horizontal
             {
             int other_y = p_other.point_a.v_y;
             PlaPointInt this_a = point_a;
@@ -387,6 +382,10 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
 
       BigInteger det_1 = BigInteger.valueOf(point_a.determinant(point_b));
       BigInteger det_2 = BigInteger.valueOf( p_other.point_a.determinant( p_other.point_b));
+      
+      PlaVectorInt delta_1 = point_b.difference_by(point_a);
+      PlaVectorInt delta_2 = p_other.point_b.difference_by(p_other.point_a);
+
       
       BigInteger det = BigInteger.valueOf(delta_2.determinant(delta_1));
       BigInteger tmp_1 = det_1.multiply(BigInteger.valueOf(delta_2.point_x));
