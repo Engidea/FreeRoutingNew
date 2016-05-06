@@ -35,6 +35,7 @@ import interactive.varie.IteraTargetPoint;
 import interactive.varie.PinSwappable;
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -61,6 +62,7 @@ public final class IteraRoute
    {
    private static final int s_CHECK_FORCED_TRACE_TIME_MAX = 3;
    private static final int s_PULL_TIGHT_TIME_MAX = 2;
+   private static final String classname="IteraRoute.";
 
    private final RoutingBoard r_board;
    private final IteraSettings itera_settings;
@@ -463,14 +465,14 @@ public final class IteraRoute
     */
    private boolean connect(PlaPoint p_from_point, PlaPointInt p_to_point)
       {
-      PlaPoint[] corners = angled_connection(p_from_point, p_to_point);
+      ArrayList<PlaPointInt> corners = angled_connection(p_from_point, p_to_point);
       
       boolean connection_succeeded = true;
       
-      for (int index = 1; index < corners.length; ++index)
+      for (int index = 1; index < corners.size(); ++index)
          {
-         PlaPoint from_corner = corners[index - 1];
-         PlaPoint to_corner = corners[index];
+         PlaPoint from_corner = corners.get(index - 1);
+         PlaPoint to_corner = corners.get(index);
          
          TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
 
@@ -710,39 +712,34 @@ public final class IteraRoute
    /**
     * Makes a connection polygon from p_from_point to p_to_point whose lines fulfill the angle restriction.
     */
-   private PlaPoint[] angled_connection(PlaPoint p_from_point, PlaPointInt p_to_point)
+   private ArrayList<PlaPointInt> angled_connection(PlaPoint p_from_point, PlaPointInt p_to_point)
       {
-      PlaPointInt add_corner = null;
+      TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
+      ArrayList<PlaPointInt> result = new ArrayList<PlaPointInt>(3);
       
-      if (p_from_point instanceof PlaPointInt )
+      PlaPointInt p_from = p_from_point.round();
+      
+      if ( p_from_point instanceof PlaPoint )
          {
-         // this means that if I enter with a rational I will not be able to make a 43 anglr...
-         
-         TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
-         if (angle_restriction.is_limit_90() )
-            {
-            add_corner = ((PlaPointInt) p_from_point).ninety_degree_corner(p_to_point, true);
-            }
-         else if (angle_restriction.is_limit_45() )
-            {
-            add_corner = ((PlaPointInt) p_from_point).fortyfive_degree_corner(p_to_point, true);
-            }
+         // It does happen, not a lot but it happens now, but the result is still ok... so letś go on
+         System.err.println(classname+"angled_connection fixed a PlaPoint");
          }
       
-      int new_corner_count = 2;
-      if (add_corner != null)
+      result.add(p_from);
+ 
+      if (angle_restriction.is_limit_90() )
          {
-         ++new_corner_count;
+         PlaPointInt extra = p_from.ninety_degree_corner(p_to_point, true);
+         if ( extra != null ) result.add(extra);
+         }
+      else if (angle_restriction.is_limit_45() )
+         {
+         PlaPointInt extra = p_from.fortyfive_degree_corner(p_to_point, true);
+         if ( extra != null ) result.add(extra);
          }
       
-      PlaPoint[] result = new PlaPoint[new_corner_count];
-      result[0] = p_from_point;
-      if (add_corner != null)
-         {
-         result[1] = add_corner;
-         }
+      result.add(p_to_point);
       
-      result[result.length - 1] = p_to_point;
       return result;
       }
 
