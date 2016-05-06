@@ -580,7 +580,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
          return null;
          }
 
-      PlaPoint curr_prev_end_corner = trace_polyline.corner(1);
+      PlaPoint curr_prev_end_corner = trace_polyline.corner_first_next();
       PlaSide prev_corner_side = null;
       PlaDirection line_direction = trace_polyline.plaline(1).direction();
       PlaDirection prev_line_direction = trace_polyline.plaline(2).direction();
@@ -717,7 +717,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
          return null;
          }
 
-      PlaPoint curr_prev_end_corner = trace_polyline.corner(trace_polyline.corner_count() - 2);
+      PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
       PlaSide prev_corner_side = null;
       PlaDirection line_direction = trace_polyline.plaline(trace_polyline.plalinelen(-2)).direction().opposite();
       PlaDirection prev_line_direction = trace_polyline.plaline(trace_polyline.plalinelen(-3)).direction().opposite();

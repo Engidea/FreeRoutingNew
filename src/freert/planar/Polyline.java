@@ -255,7 +255,17 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
 
    /**
-    * returns the intersection of the last line with the line before the last line
+    * Equivalente to cornet(1)
+    * @return the corner after the first one
+    */
+   public PlaPoint corner_first_next()
+      {
+      return corner(1);
+      }
+
+   
+   /**
+    * @return the intersection of the last line with the line before the last line
     */
    public PlaPoint corner_last()
       {
@@ -263,6 +273,17 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return corner(corner_count() - 1);
       }
 
+   /**
+    * Equivalent to corner(corner_count() - 2)
+    * @return the corner before the last one
+    */
+   public PlaPoint corner_last_prev()
+      {
+      // corner index go from 0 to n-1 to indicate n corners 
+      return corner(corner_count() - 2);
+      }
+
+   
    /**
     * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
     */

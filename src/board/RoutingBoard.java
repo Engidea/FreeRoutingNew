@@ -60,7 +60,6 @@ import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
-import board.varie.TraceAngleRestriction;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
 import freert.host.BrdObserverVoid;
@@ -2205,30 +2204,48 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Checks, if a trace polyline with the input parameters can be inserted while shoving aside obstacle traces and vias.
     */
-   public final boolean check_trace_polyline(Polyline p_polyline, int p_half_width, int p_layer, int[] p_net_no_arr, int p_clearance_class_no, int p_max_recursion_depth,
-         int p_max_via_recursion_depth, int p_max_spring_over_recursion_depth)
+   public final boolean check_trace_polyline(
+         Polyline p_polyline, 
+         int p_half_width, 
+         int p_layer, 
+         int[] p_net_no_arr, 
+         int p_clearance_class_no, 
+         int p_max_recursion_depth,
+         int p_max_via_recursion_depth, 
+         int p_max_spring_over_recursion_depth)
       {
       ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
       ShapeTile[] trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.corner_count());
-      boolean orthogonal_mode = (brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE);
+      boolean orthogonal_mode = brd_rules.is_trace_snap_90();
 
       for (int index = 0; index < trace_shapes.length; ++index)
          {
          ShapeTile curr_trace_shape = trace_shapes[index];
+         
          if (orthogonal_mode)
             {
+            // why is this needed ?
             curr_trace_shape = curr_trace_shape.bounding_box();
             }
+         
          BrdFromSide from_side = new BrdFromSide(p_polyline, index + 1, curr_trace_shape);
 
-         boolean check_shove_ok = shove_trace_algo.check(curr_trace_shape, from_side, null, p_layer, p_net_no_arr, p_clearance_class_no, p_max_recursion_depth, p_max_via_recursion_depth,
-               p_max_spring_over_recursion_depth, null);
-         if (!check_shove_ok)
-            {
-            return false;
-            }
+         boolean check_shove_ok = shove_trace_algo.check(
+               curr_trace_shape, 
+               from_side, 
+               null, 
+               p_layer, 
+               p_net_no_arr, 
+               p_clearance_class_no, 
+               p_max_recursion_depth, 
+               p_max_via_recursion_depth,
+               p_max_spring_over_recursion_depth, 
+               null);
+
+         if ( ! check_shove_ok) return false;
          }
+      
       return true;
       }
 

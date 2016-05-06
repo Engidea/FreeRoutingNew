@@ -3,8 +3,8 @@ package freert.varie;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
-import freert.planar.PlaSide;
 import board.varie.IdGenerator;
+import freert.planar.PlaSide;
 
 /**
  * Describes a triangle in the triagulation. 
@@ -178,9 +178,9 @@ public final class PlaDelTriTriangle
       PlaDelTriTriangle[] new_triangles = new PlaDelTriTriangle[3];
 
       PlaDelTriEdge[] new_edges = new PlaDelTriEdge[3];
-      for (int i = 0; i < 3; ++i)
+      for (int index = 0; index < 3; ++index)
          {
-         new_edges[i] = new PlaDelTriEdge(id_generator, get_corner(i), p_corner);
+         new_edges[index] = new PlaDelTriEdge(id_generator, get_corner(index), p_corner);
          }
 
       // construct the 3 new triangles.

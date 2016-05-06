@@ -73,15 +73,16 @@ public final class AlgoOptimizeVia
          }
       
       Collection<BrdItem> contacts = p_via.get_normal_contacts();
-      boolean is_plane_or_fanout_via = (contacts.size() == 1);
       BrdTracePolyline first_trace = null;
       BrdTracePolyline second_trace = null;
-      if (!is_plane_or_fanout_via)
+
+
+      boolean is_plane_or_fanout_via = contacts.size() == 1;
+      
+      if (! is_plane_or_fanout_via)
          {
-         if (contacts.size() != 2)
-            {
-            return false;
-            }
+         if (contacts.size() != 2) return false;
+
          Iterator<BrdItem> it = contacts.iterator();
          BrdItem curr_item = it.next();
          if (curr_item.is_shove_fixed() || !(curr_item instanceof BrdTracePolyline))
@@ -99,6 +100,7 @@ public final class AlgoOptimizeVia
             {
             first_trace = (BrdTracePolyline) curr_item;
             }
+         
          curr_item = it.next();
          if (curr_item.is_shove_fixed() || !(curr_item instanceof BrdTracePolyline))
             {
@@ -116,11 +118,14 @@ public final class AlgoOptimizeVia
             second_trace = (BrdTracePolyline) curr_item;
             }
          }
+      
+      
       if (is_plane_or_fanout_via)
          {
          return opt_plane_or_fanout_via( p_via, p_trace_pull_tight_accuracy, p_max_recursion_depth); // pippo
          }
-      PlaPoint via_center = p_via.center_get();
+      
+      PlaPointInt via_center = p_via.center_get();
       int first_layer = first_trace.get_layer();
       int second_layer = second_trace.get_layer();
       PlaPoint first_trace_from_corner;
@@ -130,11 +135,11 @@ public final class AlgoOptimizeVia
 
       if (first_trace.first_corner().equals(via_center))
          {
-         first_trace_from_corner = first_trace.polyline().corner(1);
+         first_trace_from_corner = first_trace.polyline().corner_first_next();
          }
       else if (first_trace.corner_last().equals(via_center))
          {
-         first_trace_from_corner = first_trace.polyline().corner(first_trace.polyline().corner_count() - 2);
+         first_trace_from_corner = first_trace.polyline().corner_last_prev();
          }
       else
          {
@@ -144,11 +149,11 @@ public final class AlgoOptimizeVia
 
       if (second_trace.first_corner().equals(via_center))
          {
-         second_trace_from_corner = second_trace.polyline().corner(1);
+         second_trace_from_corner = second_trace.polyline().corner_first_next();
          }
       else if (second_trace.corner_last().equals(via_center))
          {
-         second_trace_from_corner = second_trace.polyline().corner(second_trace.polyline().corner_count() - 2);
+         second_trace_from_corner = second_trace.polyline().corner_last_prev();
          }
       else
          {
@@ -169,7 +174,7 @@ public final class AlgoOptimizeVia
          second_layer_trace_costs = first_layer_trace_costs;
          }
 
-      PlaPoint new_location = reposition_via( 
+      PlaPointInt new_location = reposition_via( 
             p_via, 
             first_trace.get_half_width(), 
             first_trace.clearance_class_no(), 
@@ -182,7 +187,7 @@ public final class AlgoOptimizeVia
             second_layer_trace_costs, 
             second_trace_from_corner);
       
-      if (new_location == null || new_location.equals(via_center))
+      if ( new_location == null || new_location.equals(via_center))
          {
          return false;
          }
@@ -280,11 +285,11 @@ public final class AlgoOptimizeVia
 
       if (at_first_corner)
          {
-         check_corner = trace_polyline.corner(1);
+         check_corner = trace_polyline.corner_first_next();
          }
       else
          {
-         check_corner = trace_polyline.corner(trace_polyline.corner_count() - 2);
+         check_corner = trace_polyline.corner_last_prev();
          }
       
       PlaPointInt rounded_check_corner = check_corner.round();
@@ -491,9 +496,10 @@ public final class AlgoOptimizeVia
       }
 
    /**
-    * Tries to reposition the via to a better location according to the trace costs. Returns null, if no better location was found.
+    * Tries to reposition the via to a better location according to the trace costs. 
+    * @return null, if no better location was found.
     */
-   private PlaPoint reposition_via( 
+   private PlaPointInt reposition_via( 
          BrdAbitVia p_via, 
          int p_first_trace_half_width, 
          int p_first_trace_cl_class, 
@@ -508,76 +514,75 @@ public final class AlgoOptimizeVia
       {
       PlaPointInt via_location = p_via.center_get();
 
-      PlaVector first_delta = p_first_trace_from_corner.difference_by(via_location);
+      PlaVector first_delta  = p_first_trace_from_corner.difference_by(via_location);
       PlaVector second_delta = p_second_trace_from_corner.difference_by(via_location);
-      double scalar_product = first_delta.scalar_product(second_delta);
+      double scalar_product  = first_delta.scalar_product(second_delta);
 
-      PlaPointFloat float_via_location = via_location.to_float();
-      PlaPointFloat float_first_trace_from_corner = p_first_trace_from_corner.to_float();
-      PlaPointFloat float_second_trace_from_corner = p_second_trace_from_corner.to_float();
-      double first_trace_from_corner_distance = float_via_location.distance(float_first_trace_from_corner);
-      double second_trace_from_corner_distance = float_via_location.distance(float_second_trace_from_corner);
-      PlaPointInt rounded_first_trace_from_corner = float_first_trace_from_corner.round();
-      PlaPointInt rounded_second_trace_from_corner = float_second_trace_from_corner.round();
+      PlaPointFloat via_location_float = via_location.to_float();
+      PlaPointFloat first_trace_from_corner_float = p_first_trace_from_corner.to_float();
+      PlaPointFloat second_trace_from_corner_float = p_second_trace_from_corner.to_float();
+      double first_trace_from_corner_distance = via_location_float.distance(first_trace_from_corner_float);
+      double second_trace_from_corner_distance = via_location_float.distance(second_trace_from_corner_float);
+      PlaPointInt first_trace_from_corner_int  = first_trace_from_corner_float.round();
+      PlaPointInt second_trace_from_corner_int = second_trace_from_corner_float.round();
 
       // handle case of overlapping lines first
 
       if (via_location.side_of(p_first_trace_from_corner, p_second_trace_from_corner) == PlaSide.COLLINEAR && scalar_product > 0)
          {
          if (second_trace_from_corner_distance < first_trace_from_corner_distance)
-            {
-            return reposition_via( p_via, rounded_second_trace_from_corner, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
-            }
-         return reposition_via( p_via, rounded_first_trace_from_corner, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
+            return reposition_via(p_via, second_trace_from_corner_int, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
+         else
+            return reposition_via(p_via, first_trace_from_corner_int, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
          }
-      PlaPoint result = null;
+      
+      PlaPointInt result = null;
 
-      double curr_weighted_distance_1 = float_via_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-      double curr_weighted_distance_2 = float_via_location.weighted_distance(float_first_trace_from_corner, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+      double curr_weighted_distance_1 = via_location_float.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+      double curr_weighted_distance_2 = via_location_float.weighted_distance(first_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
       if (curr_weighted_distance_1 > curr_weighted_distance_2)
          {
          // try to move the via in direction of p_first_trace_from_corner
-         result = reposition_via( p_via, rounded_first_trace_from_corner, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
-         if (result != null)
-            {
-            return result;
-            }
+         result = reposition_via( p_via, first_trace_from_corner_int, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
+
+         if (result != null) return result;
          }
 
-      curr_weighted_distance_1 = float_via_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-      curr_weighted_distance_2 = float_via_location.weighted_distance(float_second_trace_from_corner, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+      curr_weighted_distance_1 = via_location_float.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+      curr_weighted_distance_2 = via_location_float.weighted_distance(second_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
 
       if (curr_weighted_distance_1 > curr_weighted_distance_2)
          {
          // try to move the via in direction of p_second_trace_from_corner
-         result = reposition_via( p_via, rounded_second_trace_from_corner, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
-         if (result != null)
-            {
-            return result;
-            }
+         result = reposition_via( p_via, second_trace_from_corner_int, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
+
+         if (result != null) return result;
          }
-      if (scalar_product > 0 && r_board.brd_rules.get_trace_snap_angle() != TraceAngleRestriction.NINETY_DEGREE)
+      
+      if (scalar_product > 0 && ! r_board.brd_rules.is_trace_snap_90())
          {
          // acute angle
          PlaPointInt to_point_1;
          PlaPointInt to_point_2;
          PlaPointFloat float_to_point_1;
          PlaPointFloat float_to_point_2;
+      
          if (first_trace_from_corner_distance < second_trace_from_corner_distance)
             {
-            to_point_1 = rounded_first_trace_from_corner;
-            float_to_point_1 = float_first_trace_from_corner;
-            float_to_point_2 = float_via_location.change_length(float_second_trace_from_corner, first_trace_from_corner_distance);
+            to_point_1 = first_trace_from_corner_int;
+            float_to_point_1 = first_trace_from_corner_float;
+            float_to_point_2 = via_location_float.change_length(second_trace_from_corner_float, first_trace_from_corner_distance);
             to_point_2 = float_to_point_2.round();
             }
          else
             {
-            float_to_point_1 = float_via_location.change_length(float_first_trace_from_corner, second_trace_from_corner_distance);
+            float_to_point_1 = via_location_float.change_length(first_trace_from_corner_float, second_trace_from_corner_distance);
             to_point_1 = float_to_point_1.round();
-            to_point_2 = rounded_second_trace_from_corner;
-            float_to_point_2 = float_second_trace_from_corner;
+            to_point_2 = second_trace_from_corner_int;
+            float_to_point_2 = second_trace_from_corner_float;
             }
+         
          curr_weighted_distance_1 = float_to_point_1.weighted_distance(float_to_point_2, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
          curr_weighted_distance_2 = float_to_point_1.weighted_distance(float_to_point_2, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
@@ -599,83 +604,89 @@ public final class AlgoOptimizeVia
                result = reposition_via( p_via, to_point_1, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
                }
             }
-         if (result != null)
-            {
-            return result;
-            }
+         
+         if (result != null) return result;
          }
 
       // try decomposition in axisparallel parts
 
       if (!first_delta.is_orthogonal())
          {
-         PlaPointFloat float_check_location = new PlaPointFloat(float_via_location.v_x, float_first_trace_from_corner.v_y);
+         PlaPointFloat float_check_location = new PlaPointFloat(via_location_float.v_x, first_trace_from_corner_float.v_y);
 
-         curr_weighted_distance_1 = float_via_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-         curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-         double curr_weighted_distance_3 = float_check_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_1 = via_location_float.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         double curr_weighted_distance_3 = float_check_location.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via( p_via, check_location, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class, rounded_first_trace_from_corner,
-                  p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
-            if (check_ok)
-               {
-               return check_location;
-               }
+            boolean check_ok = reposition_via( 
+                  p_via, 
+                  check_location, 
+                  p_second_trace_half_width, 
+                  p_second_trace_layer, 
+                  p_second_trace_cl_class, 
+                  first_trace_from_corner_int,
+                  p_first_trace_half_width, 
+                  p_first_trace_layer, 
+                  p_first_trace_cl_class);
+
+            if (check_ok) return check_location;
             }
 
-         float_check_location = new PlaPointFloat(float_first_trace_from_corner.v_x, float_via_location.v_y);
+         float_check_location = new PlaPointFloat(first_trace_from_corner_float.v_x, via_location_float.v_y);
 
-         curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-         curr_weighted_distance_3 = float_check_location.weighted_distance(float_first_trace_from_corner, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_3 = float_check_location.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via( p_via, check_location, p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class, rounded_first_trace_from_corner,
-                  p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class);
-            if (check_ok)
-               {
-               return check_location;
-               }
+            boolean check_ok = reposition_via( 
+                  p_via, 
+                  check_location, 
+                  p_second_trace_half_width, 
+                  p_second_trace_layer, 
+                  p_second_trace_cl_class, 
+                  first_trace_from_corner_int,
+                  p_first_trace_half_width, 
+                  p_first_trace_layer, 
+                  p_first_trace_cl_class);
+
+            if (check_ok) return check_location;
             }
          }
 
       if (!second_delta.is_orthogonal())
          {
-         PlaPointFloat float_check_location = new PlaPointFloat(float_via_location.v_x, float_second_trace_from_corner.v_y);
+         PlaPointFloat float_check_location = new PlaPointFloat(via_location_float.v_x, second_trace_from_corner_float.v_y);
 
-         curr_weighted_distance_1 = float_via_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-         curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-         double curr_weighted_distance_3 = float_check_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_1 = via_location_float.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         double curr_weighted_distance_3 = float_check_location.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via( p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, rounded_second_trace_from_corner,
+            boolean check_ok = reposition_via( p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, second_trace_from_corner_int,
                   p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
-            if (check_ok)
-               {
-               return check_location;
-               }
+
+            if (check_ok) return check_location;
             }
 
-         float_check_location = new PlaPointFloat(float_second_trace_from_corner.v_x, float_via_location.v_y);
+         float_check_location = new PlaPointFloat(second_trace_from_corner_float.v_x, via_location_float.v_y);
 
-         curr_weighted_distance_2 = float_via_location.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-         curr_weighted_distance_3 = float_check_location.weighted_distance(float_second_trace_from_corner, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_3 = float_check_location.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
             PlaPointInt check_location = float_check_location.round();
-            boolean check_ok = reposition_via( p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, rounded_second_trace_from_corner,
+            boolean check_ok = reposition_via( p_via, check_location, p_first_trace_half_width, p_first_trace_layer, p_first_trace_cl_class, second_trace_from_corner_int,
                   p_second_trace_half_width, p_second_trace_layer, p_second_trace_cl_class);
-            if (check_ok)
-               {
-               return check_location;
-               }
+
+            if (check_ok) return check_location;
             }
          }
       return null;
