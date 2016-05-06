@@ -123,11 +123,11 @@ public final class ArtConnectionInsert
     * Inserts the trace by shoving aside obstacle traces and vias.
     * @return true if all is fine, false if that was not possible for the whole trace.
     */
-   private boolean insert_trace_done(ArtLocateResult p_trace)
+   private boolean insert_trace_done(ArtLocateResult p_locate)
       {
-      if (p_trace.corners.length == 1)
+      if (p_locate.corners.length == 1)
          {
-         last_corner = p_trace.corners[0];
+         last_corner = p_locate.corners[0];
          return true;
          }
       
@@ -143,10 +143,10 @@ public final class ArtConnectionInsert
       if (ctrl.with_neckdown)
          {
          ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
-         PlaPoint curr_end_corner = p_trace.corners[0];
+         PlaPointInt curr_end_corner = p_locate.corners[0];
          for (int index = 0; index < 2; ++index)
             {
-            Set<BrdItem> picked_items = r_board.pick_items(curr_end_corner, p_trace.layer, item_filter);
+            Set<BrdItem> picked_items = r_board.pick_items(curr_end_corner, p_locate.layer, item_filter);
             for (BrdItem curr_item : picked_items)
                {
                BrdAbitPin curr_pin = (BrdAbitPin) curr_item;
@@ -162,7 +162,7 @@ public final class ArtConnectionInsert
                      }
                   }
                }
-            curr_end_corner = p_trace.corners[p_trace.corners.length - 1];
+            curr_end_corner = p_locate.corners[p_locate.corners.length - 1];
             }
          }
       
@@ -171,20 +171,21 @@ public final class ArtConnectionInsert
       net_no_arr[0] = ctrl.net_no;
 
       int from_corner_no = 0;
-      for (int index = 1; index < p_trace.corners.length; ++index)
+      for (int index = 1; index < p_locate.corners.length; ++index)
          {
-         PlaPoint[] curr_corner_arr = new PlaPoint[index - from_corner_no + 1];
+         PlaPointInt[] curr_corner_arr = new PlaPointInt[index - from_corner_no + 1];
+         
          for (int jndex = from_corner_no; jndex <= index; ++jndex)
             {
-            curr_corner_arr[jndex - from_corner_no] = p_trace.corners[jndex];
+            curr_corner_arr[jndex - from_corner_no] = p_locate.corners[jndex];
             }
          
          Polyline insert_polyline = new Polyline(curr_corner_arr);
          
          PlaPointInt ok_point = r_board.insert_trace_polyline(
                insert_polyline, 
-               ctrl.trace_half_width[p_trace.layer], 
-               p_trace.layer, 
+               ctrl.trace_half_width[p_locate.layer], 
+               p_locate.layer, 
                net_no_arr, 
                ctrl.trace_clearance_class_no,
                ctrl.max_shove_trace_recursion_depth, 
@@ -205,13 +206,13 @@ public final class ArtConnectionInsert
          
          if ( ok_point != insert_polyline.corner_last() && ctrl.with_neckdown && curr_corner_arr.length == 2)
             {
-            neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_trace.layer, start_pin, end_pin);
+            neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_locate.layer, start_pin, end_pin);
             }
          if (ok_point == insert_polyline.corner_last() || neckdown_inserted)
             {
             from_corner_no = index;
             }
-         else if (ok_point == insert_polyline.corner_first() && index != p_trace.corners.length - 1)
+         else if (ok_point == insert_polyline.corner_first() && index != p_locate.corners.length - 1)
             {
             // if ok_point == insert_polyline.first_corner() the spring over may have failed.
             // Spring over may correct the situation because an insertion, which is ok with clearance compensation
@@ -241,9 +242,9 @@ public final class ArtConnectionInsert
       if ( ! r_board.debug(Mdbg.AUTORT, Ldbg.SPC_C) )
          {
          // the idea is that this code is always executed, unless you are debugging autoroute special C
-         for (int index = 0; index < p_trace.corners.length - 1; ++index)
+         for (int index = 0; index < p_locate.corners.length - 1; ++index)
             {
-            BrdTrace trace_stub = r_board.get_trace_tail(p_trace.corners[index], p_trace.layer, net_no_arr);
+            BrdTrace trace_stub = r_board.get_trace_tail(p_locate.corners[index], p_locate.layer, net_no_arr);
 
             if (trace_stub == null) continue;
 
@@ -255,10 +256,10 @@ public final class ArtConnectionInsert
       
       if ( first_corner == null)
          {
-         first_corner = p_trace.corners[0];
+         first_corner = p_locate.corners[0];
          }
       
-      last_corner = p_trace.corners[p_trace.corners.length - 1];
+      last_corner = p_locate.corners[p_locate.corners.length - 1];
       
       return result;
       }
@@ -266,7 +267,7 @@ public final class ArtConnectionInsert
    /**
     * 
     */
-   boolean insert_neckdown(PlaPoint p_from_corner, PlaPoint p_to_corner, int p_layer, BrdAbitPin p_start_pin, BrdAbitPin p_end_pin)
+   private boolean insert_neckdown(PlaPointInt p_from_corner, PlaPointInt p_to_corner, int p_layer, BrdAbitPin p_start_pin, BrdAbitPin p_end_pin)
       {
       if (p_start_pin != null)
          {
@@ -284,7 +285,7 @@ public final class ArtConnectionInsert
       return false;
       }
 
-   private PlaPoint try_neck_down(PlaPoint p_from_corner, PlaPoint p_to_corner, int p_layer, BrdAbitPin p_pin, boolean p_at_start)
+   private PlaPoint try_neck_down(PlaPointInt p_from_corner, PlaPointInt p_to_corner, int p_layer, BrdAbitPin p_pin, boolean p_at_start)
       {
       if (!p_pin.is_on_layer(p_layer)) return null;
 
@@ -311,7 +312,7 @@ public final class ArtConnectionInsert
       if (ok_length >= Integer.MAX_VALUE) return p_from_corner;
       
       ok_length -= TOLERANCE;
-      PlaPoint neck_down_end_point;
+      PlaPointInt neck_down_end_point;
       if (ok_length <= TOLERANCE)
          {
          neck_down_end_point = p_from_corner;
@@ -323,7 +324,8 @@ public final class ArtConnectionInsert
          // add a corner in case neck_down_end_point is not exactly on the line from p_from_corner to p_to_corner
          boolean horizontal_first = Math.abs(float_from_corner.v_x - float_neck_down_end_point.v_x) >= Math.abs(float_from_corner.v_y - float_neck_down_end_point.v_y);
          PlaPointInt add_corner = ArtConnectionLocate.calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
-         PlaPoint curr_ok_point = r_board.insert_trace_segment_generic(
+
+         PlaPoint curr_ok_point = r_board.insert_trace_segment(
                p_from_corner, 
                add_corner, 
                ctrl.trace_half_width[p_layer], 
@@ -340,7 +342,7 @@ public final class ArtConnectionInsert
 
          if (curr_ok_point != add_corner) return p_from_corner;
 
-         curr_ok_point = r_board.insert_trace_segment_generic(
+         curr_ok_point = r_board.insert_trace_segment (
                add_corner, 
                neck_down_end_point, 
                ctrl.trace_half_width[p_layer], 
@@ -359,7 +361,7 @@ public final class ArtConnectionInsert
          add_corner = ArtConnectionLocate.calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
          if (!add_corner.equals(p_to_corner))
             {
-            curr_ok_point = r_board.insert_trace_segment_generic(
+            curr_ok_point = r_board.insert_trace_segment (
                   neck_down_end_point, 
                   add_corner, 
                   ctrl.trace_half_width[p_layer], 
@@ -379,7 +381,7 @@ public final class ArtConnectionInsert
             }
          }
 
-      PlaPoint ok_point = r_board.insert_trace_segment_generic(
+      PlaPoint ok_point = r_board.insert_trace_segment (
             neck_down_end_point, 
             p_to_corner, 
             neck_down_halfwidth, 
@@ -391,6 +393,7 @@ public final class ArtConnectionInsert
             Integer.MAX_VALUE, 
             ctrl.pull_tight_accuracy, 
             true, null);
+      
       return ok_point;
       }
 

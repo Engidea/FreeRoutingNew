@@ -464,6 +464,7 @@ public final class IteraRoute
    private boolean connect(PlaPoint p_from_point, PlaPointInt p_to_point)
       {
       PlaPoint[] corners = angled_connection(p_from_point, p_to_point);
+      
       boolean connection_succeeded = true;
       
       for (int index = 1; index < corners.length; ++index)
