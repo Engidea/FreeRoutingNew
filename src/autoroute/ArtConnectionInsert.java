@@ -323,21 +323,55 @@ public final class ArtConnectionInsert
          // add a corner in case neck_down_end_point is not exactly on the line from p_from_corner to p_to_corner
          boolean horizontal_first = Math.abs(float_from_corner.v_x - float_neck_down_end_point.v_x) >= Math.abs(float_from_corner.v_y - float_neck_down_end_point.v_y);
          PlaPointInt add_corner = ArtConnectionLocate.calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
-         PlaPoint curr_ok_point = r_board.insert_trace_segment(p_from_corner, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-               ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+         PlaPoint curr_ok_point = r_board.insert_trace_segment_generic(
+               p_from_corner, 
+               add_corner, 
+               ctrl.trace_half_width[p_layer], 
+               p_layer, 
+               net_no_arr, 
+               ctrl.trace_clearance_class_no,
+               ctrl.max_shove_trace_recursion_depth, 
+               ctrl.max_shove_via_recursion_depth, 
+               ctrl.max_spring_over_recursion_depth, 
+               Integer.MAX_VALUE, 
+               ctrl.pull_tight_accuracy, 
+               true, 
+               null);
 
          if (curr_ok_point != add_corner) return p_from_corner;
 
-         curr_ok_point = r_board.insert_trace_segment(add_corner, neck_down_end_point, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-               ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+         curr_ok_point = r_board.insert_trace_segment_generic(
+               add_corner, 
+               neck_down_end_point, 
+               ctrl.trace_half_width[p_layer], 
+               p_layer, 
+               net_no_arr, 
+               ctrl.trace_clearance_class_no,
+               ctrl.max_shove_trace_recursion_depth, 
+               ctrl.max_shove_via_recursion_depth, 
+               ctrl.max_spring_over_recursion_depth, 
+               Integer.MAX_VALUE, 
+               ctrl.pull_tight_accuracy, 
+               true, null);
 
          if (curr_ok_point != neck_down_end_point) return p_from_corner;
 
          add_corner = ArtConnectionLocate.calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
          if (!add_corner.equals(p_to_corner))
             {
-            curr_ok_point = r_board.insert_trace_segment(neck_down_end_point, add_corner, ctrl.trace_half_width[p_layer], p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-                  ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+            curr_ok_point = r_board.insert_trace_segment_generic(
+                  neck_down_end_point, 
+                  add_corner, 
+                  ctrl.trace_half_width[p_layer], 
+                  p_layer, 
+                  net_no_arr, 
+                  ctrl.trace_clearance_class_no,
+                  ctrl.max_shove_trace_recursion_depth, 
+                  ctrl.max_shove_via_recursion_depth, 
+                  ctrl.max_spring_over_recursion_depth, 
+                  Integer.MAX_VALUE, 
+                  ctrl.pull_tight_accuracy, 
+                  true, null);
 
             if (curr_ok_point != add_corner) return p_from_corner;
 
@@ -345,8 +379,18 @@ public final class ArtConnectionInsert
             }
          }
 
-      PlaPoint ok_point = r_board.insert_trace_segment(neck_down_end_point, p_to_corner, neck_down_halfwidth, p_layer, net_no_arr, ctrl.trace_clearance_class_no,
-            ctrl.max_shove_trace_recursion_depth, ctrl.max_shove_via_recursion_depth, ctrl.max_spring_over_recursion_depth, Integer.MAX_VALUE, ctrl.pull_tight_accuracy, true, null);
+      PlaPoint ok_point = r_board.insert_trace_segment_generic(
+            neck_down_end_point, 
+            p_to_corner, 
+            neck_down_halfwidth, 
+            p_layer, net_no_arr, 
+            ctrl.trace_clearance_class_no,
+            ctrl.max_shove_trace_recursion_depth, 
+            ctrl.max_shove_via_recursion_depth, 
+            ctrl.max_spring_over_recursion_depth, 
+            Integer.MAX_VALUE, 
+            ctrl.pull_tight_accuracy, 
+            true, null);
       return ok_point;
       }
 
@@ -355,7 +399,7 @@ public final class ArtConnectionInsert
     * this mask and inserts the via. 
     * @return false, if no suitable via mask was found or if the algorithm failed.
     */
-   private boolean insert_via_done(PlaPoint p_location, int p_from_layer, int p_to_layer)
+   private boolean insert_via_done(PlaPointInt p_location, int p_from_layer, int p_to_layer)
       {
       // no via necessary
       if (p_from_layer == p_to_layer) return true; 
@@ -378,6 +422,7 @@ public final class ArtConnectionInsert
       int[] net_no_arr = new int[1];
       net_no_arr[0] = ctrl.net_no;
       BrdViaInfo via_info = null;
+      
       for (int index = 0; index < ctrl.via_rule.via_count(); ++index)
          {
          BrdViaInfo curr_via_info = ctrl.via_rule.get_via(index);
@@ -400,11 +445,16 @@ public final class ArtConnectionInsert
          }
       
       // insert the via
-      if (! r_board.shove_via_algo.insert(via_info, p_location, net_no_arr, ctrl.trace_clearance_class_no, ctrl.trace_half_width, ctrl.max_shove_trace_recursion_depth,
+      if (! r_board.shove_via_algo.insert(
+            via_info, 
+            p_location, 
+            net_no_arr, 
+            ctrl.trace_clearance_class_no, 
+            ctrl.trace_half_width, 
+            ctrl.max_shove_trace_recursion_depth,
             ctrl.max_shove_via_recursion_depth ))
          {
-         System.out.print("InsertFoundConnectionAlgo: forced via failed for net ");
-         System.out.println(ctrl.net_no);
+         System.out.print("InsertFoundConnectionAlgo: forced via failed for net "+ctrl.net_no);
          return false;
          }
       

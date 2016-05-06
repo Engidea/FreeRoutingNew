@@ -34,6 +34,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -107,9 +108,9 @@ public final class AlgoShoveVia
    /**
     * Checks, if a Via is possible with the input parameter after evtl. shoving aside obstacle traces.
     */
-   public boolean check(BrdViaInfo p_via_info, PlaPoint p_location, int[] p_net_no_arr, int p_max_recursion_depth, int p_max_via_recursion_depth )
+   public boolean check(BrdViaInfo p_via_info, PlaPointInt p_location, int[] p_net_no_arr, int p_max_recursion_depth, int p_max_via_recursion_depth )
       {
-      PlaVector translate_vector = p_location.difference_by(PlaPointInt.ZERO);
+      PlaVectorInt translate_vector = p_location.difference_by(PlaPointInt.ZERO);
       
       int calc_from_side_offset = r_board.get_min_trace_half_width();
 
@@ -122,14 +123,18 @@ public final class AlgoShoveVia
 
          curr_pad_shape = (PlaShape) curr_pad_shape.translate_by(translate_vector);
          ShapeTile tile_shape;
-         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+         
+         if (r_board.brd_rules.is_trace_snap_90())
             {
+            // this is understandable
             tile_shape = curr_pad_shape.bounding_box();
             }
          else
             {
+            // this is understandable, 
             tile_shape = curr_pad_shape.bounding_octagon();
             }
+         
          BrdFromSide from_side = r_board.shove_pad_algo.calc_from_side(tile_shape, p_location, index, calc_from_side_offset, p_via_info.get_clearance_class());
          if ( r_board.shove_pad_algo.check_forced_pad(
                tile_shape, 
@@ -159,7 +164,7 @@ public final class AlgoShoveVia
     */
    public boolean insert(
          BrdViaInfo p_via_info, 
-         PlaPoint p_location, 
+         PlaPointInt p_location, 
          int[] p_net_no_arr, 
          int p_trace_clearance_class_no, 
          int[] p_trace_pen_halfwidth_arr, 
@@ -208,7 +213,14 @@ public final class AlgoShoveVia
                start_trace_shape = start_trace_circle.bounding_octagon();
                }
             }
-         BrdFromSide from_side = r_board.shove_pad_algo.calc_from_side(tile_shape, p_location, index, calc_from_side_offset, p_via_info.get_clearance_class());
+         
+         BrdFromSide from_side = r_board.shove_pad_algo.calc_from_side(
+               tile_shape, 
+               p_location, 
+               index, 
+               calc_from_side_offset, 
+               p_via_info.get_clearance_class());
+         
          if (!r_board.shove_pad_algo.forced_pad(tile_shape, from_side, index, p_net_no_arr, p_via_info.get_clearance_class(), p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
                p_max_via_recursion_depth))
             {

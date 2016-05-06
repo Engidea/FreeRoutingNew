@@ -52,6 +52,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    
    /**
     * creates a directed Line from two Points
+    * @deprecated
     */
    public PlaLineInt(PlaPoint p_a, PlaPoint p_b)
       {
@@ -385,7 +386,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       PlaVectorInt delta_1 = point_b.difference_by(point_a);
       PlaVectorInt delta_2 = p_other.point_b.difference_by(p_other.point_a);
-
       
       BigInteger det = BigInteger.valueOf(delta_2.determinant(delta_1));
       BigInteger tmp_1 = det_1.multiply(BigInteger.valueOf(delta_2.point_x));

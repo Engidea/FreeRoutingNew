@@ -339,7 +339,7 @@ public final class AlgoShovePad
     * Looks for a side of p_shape, so that a trace line from the shape center to the nearest point on this side does not conflict
     * with any obstacles.
     */
-   public BrdFromSide calc_from_side(ShapeTile p_shape, PlaPoint p_shape_center, int p_layer, int p_offset, int p_cl_class)
+   public BrdFromSide calc_from_side(ShapeTile p_shape, PlaPointInt p_shape_center, int p_layer, int p_offset, int p_cl_class)
       {
       int[] empty_arr = new int[0];
       ShapeTile offset_shape = (ShapeTile) p_shape.offset(p_offset);

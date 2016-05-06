@@ -94,7 +94,7 @@ public final class IteraRoute
     * p_pen_half_width_arr is provided because it may be different from the half width array in p_board.rules.
     */
    public IteraRoute(
-         PlaPoint p_start_corner, 
+         PlaPointInt p_start_corner, 
          int p_layer, 
          int[] p_pen_half_width_arr, 
          boolean[] p_layer_active_arr, 
@@ -201,7 +201,8 @@ public final class IteraRoute
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_CHECK_FORCED_TRACE_TIME_MAX);
 
       // tests.Validate.check("before insert", board);
-      PlaPoint ok_point = r_board.insert_trace_segment(
+      
+      PlaPoint ok_point = r_board.insert_trace_segment_generic(
             prev_corner, 
             curr_corner, 
             pen_half_width_arr[layer_active_no], 
@@ -304,7 +305,8 @@ public final class IteraRoute
       }
 
    /**
-    * Changing the layer in interactive route and inserting a via. Returns false, if changing the layer was not possible.
+    * Changing the layer in interactive route and inserting a via. 
+    * @returns false, if changing the layer was not possible.
     */
    public boolean change_layer(int p_to_layer)
       {
@@ -316,40 +318,45 @@ public final class IteraRoute
          return false;
          }
 
-      if (!layer_active_arr[p_to_layer])
-         {
-         return false;
-         }
-      if (via_rule == null)
-         {
-         return false;
-         }
+      if ( ! layer_active_arr[p_to_layer]) return false;
+
+      if (via_rule == null) return false;
+
       shove_failing_obstacle = null;
-      if (via_snap_to_smd_center)
+
+      if ( via_snap_to_smd_center )
          {
          boolean snapped_to_smd_center = snap_to_smd_center(p_to_layer);
+         
          if (!snapped_to_smd_center)
             {
             snap_to_smd_center(layer_active_no);
             }
          }
+      
+      PlaPointInt a_corner = prev_corner.round();  // pippo this is actually generically correct, but may not be always
+      
       boolean result = true;
       int min_layer = Math.min(layer_active_no, p_to_layer);
       int max_layer = Math.max(layer_active_no, p_to_layer);
       boolean via_found = false;
-      for (int i = 0; i < via_rule.via_count(); ++i)
+      
+      for (int index = 0; index < via_rule.via_count(); ++index)
          {
-         BrdViaInfo curr_via_info = via_rule.get_via(i);
+         BrdViaInfo curr_via_info = via_rule.get_via(index);
          LibPadstack curr_via_padstack = curr_via_info.get_padstack();
+         
          if (min_layer < curr_via_padstack.from_layer() || max_layer > curr_via_padstack.to_layer())
             {
             continue;
             }
+         
          // make the current situation restorable by undo
          r_board.generate_snapshot();
+         
          result = r_board.insert_via(
                curr_via_info, 
-               prev_corner, 
+               a_corner, 
                net_no_arr, 
                clearance_class, 
                pen_half_width_arr, 
@@ -358,18 +365,23 @@ public final class IteraRoute
                itera_settings.trace_pull_tight_region_width,
                itera_settings.trace_pull_tight_accuracy, 
                s_PULL_TIGHT_TIME_MAX);
+         
          if (result)
             {
             via_found = true;
             break;
             }
+         
          set_shove_failing_obstacle(r_board.get_shove_failing_obstacle());
+      
          r_board.undo(null);
          }
+      
       if (via_found)
          {
          layer_active_no = p_to_layer;
          }
+      
       return result;
       }
 
@@ -383,9 +395,9 @@ public final class IteraRoute
       board.items.BrdAbitPin found_smd_pin = null;
       for (BrdItem curr_item : picked_items)
          {
-         if (curr_item instanceof board.items.BrdAbitPin && curr_item.shares_net_no(net_no_arr))
+         if (curr_item instanceof BrdAbitPin && curr_item.shares_net_no(net_no_arr))
             {
-            board.items.BrdAbitPin curr_pin = (board.items.BrdAbitPin) curr_item;
+            BrdAbitPin curr_pin = (BrdAbitPin) curr_item;
             if (curr_pin.first_layer() == p_layer && curr_pin.last_layer() == p_layer)
                {
                found_smd_pin = curr_pin;
@@ -393,15 +405,14 @@ public final class IteraRoute
                }
             }
          }
-      if (found_smd_pin == null)
-         {
-         return false;
-         }
+      
+      if (found_smd_pin == null) return false;
       
       PlaPointInt pin_center = found_smd_pin.center_get();
 
       if (connect(prev_corner, pin_center))
          {
+         // Ahhh found it !!!! pippo
          prev_corner = pin_center;
          }
       
@@ -447,23 +458,24 @@ public final class IteraRoute
       }
 
    /**
-    * Tries to make a trace connection from p_from_point to p_to_point according to the angle restriction. Returns true, if the
-    * connection succeeded.
+    * Tries to make a trace connection from p_from_point to p_to_point according to the angle restriction. 
+    * @returns true, if the connection succeeded.
     */
    private boolean connect(PlaPoint p_from_point, PlaPointInt p_to_point)
       {
       PlaPoint[] corners = angled_connection(p_from_point, p_to_point);
       boolean connection_succeeded = true;
       
-      for (int i = 1; i < corners.length; ++i)
+      for (int index = 1; index < corners.length; ++index)
          {
-         PlaPoint from_corner = corners[i - 1];
-         PlaPoint to_corner = corners[i];
+         PlaPoint from_corner = corners[index - 1];
+         PlaPoint to_corner = corners[index];
          
          TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
+
          while (!from_corner.equals(to_corner))
             {
-            PlaPoint curr_ok_point = r_board.insert_trace_segment(
+            PlaPoint curr_ok_point = r_board.insert_trace_segment_generic(
                   from_corner, 
                   to_corner, 
                   pen_half_width_arr[layer_active_no], 
@@ -477,6 +489,7 @@ public final class IteraRoute
                   itera_settings.trace_pull_tight_accuracy, 
                   ! is_stitch_mode, 
                   time_limit);
+            
             if (curr_ok_point == null)
                {
                // database may be damaged, restore previous situation
@@ -499,6 +512,7 @@ public final class IteraRoute
             from_corner = curr_ok_point;
             }
          }
+      
       return connection_succeeded;
       }
 
@@ -701,18 +715,18 @@ public final class IteraRoute
       
       if (p_from_point instanceof PlaPointInt )
          {
+         // this means that if I enter with a rational I will not be able to make a 43 anglr...
+         
          TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
-         if (angle_restriction == TraceAngleRestriction.NINETY_DEGREE)
+         if (angle_restriction.is_limit_90() )
             {
             add_corner = ((PlaPointInt) p_from_point).ninety_degree_corner(p_to_point, true);
             }
-         else if (angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE)
+         else if (angle_restriction.is_limit_45() )
             {
             add_corner = ((PlaPointInt) p_from_point).fortyfive_degree_corner(p_to_point, true);
             }
          }
-      
-      
       
       int new_corner_count = 2;
       if (add_corner != null)
@@ -890,7 +904,7 @@ public final class IteraRoute
             }
          }
       TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
-      PlaPoint ok_point = r_board.insert_trace_segment(
+      PlaPoint ok_point = r_board.insert_trace_segment_generic(
             prev_corner, 
             p_to_corner, 
             neck_down_halfwidth, 
@@ -913,29 +927,31 @@ public final class IteraRoute
     */
    private PlaPoint try_neckdown_at_end(PlaPoint p_from_corner, PlaPoint p_to_corner)
       {
-      if (!(nearest_target_item instanceof board.items.BrdAbitPin))
-         {
-         return p_from_corner;
-         }
-      board.items.BrdAbitPin target_pin = (board.items.BrdAbitPin) nearest_target_item;
-      if (!target_pin.is_on_layer(layer_active_no))
-         {
-         return p_from_corner;
-         }
+      if (!(nearest_target_item instanceof BrdAbitPin)) return p_from_corner;
+
+      BrdAbitPin target_pin = (BrdAbitPin) nearest_target_item;
+
+      if (!target_pin.is_on_layer(layer_active_no)) return p_from_corner;
+
       PlaPointFloat pin_center = target_pin.center_get().to_float();
       double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, target_pin.clearance_class_no(), layer_active_no);
       double pin_neck_down_distance = 2 * (0.5 * target_pin.get_max_width(layer_active_no) + curr_clearance);
+
       if (pin_center.distance(p_from_corner.to_float()) >= pin_neck_down_distance)
          {
          return p_from_corner;
          }
+      
       int neck_down_halfwidth = target_pin.get_trace_neckdown_halfwidth(layer_active_no);
+      
       if (neck_down_halfwidth >= pen_half_width_arr[layer_active_no])
          {
          return p_from_corner;
          }
+      
       TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
-      PlaPoint ok_point = r_board.insert_trace_segment(
+      
+      PlaPoint ok_point = r_board.insert_trace_segment_generic(
             p_from_corner, 
             p_to_corner, 
             neck_down_halfwidth, 
@@ -948,6 +964,7 @@ public final class IteraRoute
             itera_settings.trace_pull_tight_region_width, 
             itera_settings.trace_pull_tight_accuracy, 
             !is_stitch_mode, time_limit);
+      
       return ok_point;
       }
 
