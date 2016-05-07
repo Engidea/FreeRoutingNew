@@ -35,7 +35,6 @@ import freert.library.LibPackagePin;
 import freert.library.LibPadstack;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
@@ -363,7 +362,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       
       ShapeTile pad_shape = (ShapeTile) curr_shape;
       double component_rotation = component.get_rotation_in_degree();
-      PlaPoint pin_center = center_get();
+      PlaPointInt pin_center = center_get();
       PlaPointFloat center_approx = pin_center.to_float();
 
       for (PlaDirection curr_padstack_exit_direction : padstack_exit_directions)
@@ -732,7 +731,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       if (trace_exit_restrictions.isEmpty()) return null;
 
       PlaShape pin_shape = get_shape(p_layer - first_layer());
-      PlaPoint pin_center = center_get();
+      PlaPointInt pin_center = center_get();
 
       if (!(pin_shape instanceof ShapeTile)) return null;
 
@@ -806,7 +805,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       if (trace_exit_restrictions.isEmpty()) return null;
   
       PlaShape pin_shape = get_shape(p_layer - first_layer());
-      PlaPoint pin_center = center_get();
+      PlaPointInt pin_center = center_get();
 
       if (!(pin_shape instanceof ShapeTile)) return null;
       

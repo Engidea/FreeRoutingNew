@@ -52,7 +52,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline(PlaPolygon p_polygon)
       {
-      PlaPoint[] point_arr = p_polygon.corner_array();
+      PlaPointInt[] point_arr = p_polygon.corner_array();
    
       if (point_arr.length < 2)
          throw new IllegalArgumentException(classname+"A must contain at least 2 different points");

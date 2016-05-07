@@ -3,7 +3,7 @@ package freert.planar;
 
 final class ShapePolygonDivisionPoint implements PlaObject
    {
-   public final PlaPoint[] corners;
+   public final PlaPointInt[] corners;
 
    final int corner_no_after_projection;
    final PlaPointFloat projection;
@@ -12,7 +12,7 @@ final class ShapePolygonDivisionPoint implements PlaObject
     * At a concave corner of the closed polygon, a minimal axis parallel division line is constructed, to divide the closed polygon
     * into two.
     */
-   ShapePolygonDivisionPoint(PlaPoint[] p_corners, int p_concave_corner_no)
+   ShapePolygonDivisionPoint(PlaPointInt[] p_corners, int p_concave_corner_no)
       {
       corners = p_corners;
 
@@ -45,7 +45,7 @@ final class ShapePolygonDivisionPoint implements PlaObject
 
       int corner_no_after_curr_projection = (p_concave_corner_no + 2) % corners.length;
 
-      PlaPoint corner_before_curr_projection;
+      PlaPointInt corner_before_curr_projection;
       if (corner_no_after_curr_projection != 0)
          corner_before_curr_projection = corners[corner_no_after_curr_projection - 1];
       else
@@ -57,7 +57,7 @@ final class ShapePolygonDivisionPoint implements PlaObject
 
       for (int i = 0; i < loop_end; ++i)
          {
-         PlaPoint corner_after_curr_projection = corners[corner_no_after_curr_projection];
+         PlaPointInt corner_after_curr_projection = corners[corner_no_after_curr_projection];
          PlaPointFloat corner_after_projection_approx = corner_after_curr_projection.to_float();
          if (corner_before_projection_approx.v_y != corner_after_projection_approx.v_y)
          // try a horizontal division
@@ -153,13 +153,4 @@ final class ShapePolygonDivisionPoint implements PlaObject
       {
       return false;
       }
-   
-   
-   
-   
-   
-   
-   
-   
-   
    }

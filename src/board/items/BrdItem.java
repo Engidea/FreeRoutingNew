@@ -414,44 +414,41 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       
       if ( ! is_obstacle ) return false;
       
-      if ( this instanceof BrdTrace && curr_item instanceof BrdTrace)
+      if ( ! ( this instanceof BrdTrace && curr_item instanceof BrdTrace ) ) return is_obstacle;   
+
+      // Look, if both traces are connected to the same tie pin.
+      // In this case they are allowed to overlap without sharing a net.
+      BrdTrace this_trace = (BrdTrace) this;
+      PlaPoint contact_point = this_trace.first_corner();
+      boolean contact_found = false;
+      Collection<BrdItem> curr_contacts = this_trace.get_normal_contacts(contact_point, true);
+
+      if (curr_contacts.contains(curr_item))
          {
-         // Look, if both traces are connected to the same tie pin.
-         // In this case they are allowed to overlap without sharing a net.
-         BrdTrace this_trace = (BrdTrace) this;
-         PlaPoint contact_point = this_trace.first_corner();
-         boolean contact_found = false;
-         Collection<BrdItem> curr_contacts = this_trace.get_normal_contacts(contact_point, true);
+         contact_found = true;
+         }
+         
+      if ( ! contact_found)
+         {
+         contact_point = this_trace.corner_last();
+         curr_contacts = this_trace.get_normal_contacts(contact_point, true);
+
+         if (curr_contacts.contains(curr_item))
             {
-            if (curr_contacts.contains(curr_item))
-               {
-               contact_found = true;
-               }
+            contact_found = true;
             }
+         }
+      
+      if (contact_found)
+         {
+         for (BrdItem curr_contact : curr_contacts)
+            {
+            if ( ! ( curr_contact instanceof BrdAbitPin) ) continue;
             
-         if (!contact_found)
-            {
-            contact_point = this_trace.corner_last();
-            curr_contacts = this_trace.get_normal_contacts(contact_point, true);
+            if (curr_contact.shares_net(this) && curr_contact.shares_net(curr_item))
                {
-               if (curr_contacts.contains(curr_item))
-                  {
-                  contact_found = true;
-                  }
-               }
-            }
-         if (contact_found)
-            {
-            for (BrdItem curr_contact : curr_contacts)
-               {
-               if (curr_contact instanceof BrdAbitPin)
-                  {
-                  if (curr_contact.shares_net(this) && curr_contact.shares_net(curr_item))
-                     {
-                     is_obstacle = false;
-                     break;
-                     }
-                  }
+               is_obstacle = false;
+               break;
                }
             }
          }
@@ -624,6 +621,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * auxiliary function
+    * Overridden in subclasses
     */
    public PlaPoint normal_contact_point(BrdTrace p_other)
       {
@@ -632,6 +630,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * auxiliary function
+    * Overridden in subclasses
     */
    public PlaPoint normal_contact_point(BrdAbit p_other)
       {

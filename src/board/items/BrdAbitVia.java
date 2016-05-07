@@ -30,7 +30,6 @@ import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
@@ -56,7 +55,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
    transient private PlaShape[] precalculated_shapes = null;
    transient private ExpandDrill autoroute_drill_info = null;
    
-   public BrdAbitVia(LibPadstack p_padstack, PlaPoint p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, boolean p_attach_allowed, RoutingBoard p_board)
+   public BrdAbitVia(LibPadstack p_padstack, PlaPointInt p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, boolean p_attach_allowed, RoutingBoard p_board)
       {
       super(p_center, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
       padstack = p_padstack;

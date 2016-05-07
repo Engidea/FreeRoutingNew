@@ -27,7 +27,6 @@ import board.varie.ItemFixState;
 import board.varie.ItemSelectionFilter;
 import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -180,7 +179,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    public void change_placement_side(PlaPointInt p_pole)
       {
       is_front = !is_front;
-      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
+      PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
       translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
@@ -219,7 +218,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
          rotation_in_degree += 360;
          }
       
-      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
+      PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
       
       translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPointInt.ZERO);
       

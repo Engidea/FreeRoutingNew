@@ -1067,10 +1067,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    public boolean check_connection_to_pin(boolean p_at_start)
       {
-      if (corner_count() < 2)
-         {
-         return true;
-         }
+      if (corner_count() < 2) return true;
+
       Collection<BrdItem> contact_list;
       if (p_at_start)
          {
@@ -1089,15 +1087,13 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             break;
             }
          }
-      if (contact_pin == null)
-         {
-         return true;
-         }
+      
+      if (contact_pin == null) return true;
+
       Collection<BrdTraceExitRestriction> trace_exit_restrictions = contact_pin.get_trace_exit_restrictions(get_layer());
-      if (trace_exit_restrictions.isEmpty())
-         {
-         return true;
-         }
+
+      if (trace_exit_restrictions.isEmpty()) return true;
+
       PlaPoint end_corner;
       PlaPoint prev_end_corner;
       if (p_at_start)
@@ -1108,7 +1104,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       else
          {
          end_corner = corner_last();
-         prev_end_corner = polyline.corner(polyline.corner_count() - 2);
+         prev_end_corner = polyline.corner_last_prev();
          }
       
       PlaDirection trace_end_direction = PlaDirection.get_instance(end_corner, prev_end_corner);

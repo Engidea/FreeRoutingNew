@@ -169,7 +169,20 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       return p_vector.to_direction();
       }
 
+   /**
+    * Calculates the direction from p_from to p_to. 
+    * If p_from and p_to are equal, null is returned.
+    */
+   public static final PlaDirection get_instance(PlaPointInt p_from, PlaPointInt p_to)
+      {
+      if (p_from.equals(p_to)) return null;
 
+      PlaVectorInt p_vector = p_to.difference_by(p_from);
+      
+      return p_vector.to_direction();
+      }
+
+   
    @Override
    public final boolean is_NaN ()
       {

@@ -45,6 +45,7 @@ public final class ShapeTileBox extends ShapeTileRegular
          }
       else if ( a_point instanceof PlaPointRational )
          {
+         
          PlaPointFloat fp = a_point.to_float();
          double p_ll_x = Math.floor(fp.v_x);
          double p_ll_y = Math.floor(fp.v_y);

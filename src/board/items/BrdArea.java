@@ -25,7 +25,6 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -239,7 +238,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
          {
          rotation_in_degree += 360;
          }
-      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
+      PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
       translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
@@ -273,7 +272,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       // why is it changing layer ? damiano
       layer_no = r_board.get_layer_count() - layer_no - 1;
 
-      PlaPoint rel_location = PlaPointInt.ZERO.translate_by(translation);
+      PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
       translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }

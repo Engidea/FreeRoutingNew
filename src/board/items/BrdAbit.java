@@ -32,7 +32,6 @@ import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdTraceInfo;
 import board.varie.ItemFixState;
-import board.varie.TraceAngleRestriction;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
 import freert.library.LibPadstack;
@@ -62,12 +61,11 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    // Pre calculated last layer, where this DrillItem contains a pad shape. If < 0, the value is not yet calculated
    private int precalculated_last_layer = -1;
 
-   public BrdAbit(PlaPoint p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdAbit(PlaPointInt p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
 
-      if ( p_center != null )
-         abit_center = p_center.round();
+      abit_center = p_center;
       }
 
    /**
@@ -121,7 +119,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public void move_by(PlaVectorInt p_vector)
       {
-      PlaPoint old_center = center_get();
+      PlaPointInt old_center = center_get();
       
       // remember the contact situation of this drillitem to traces on each layer
       Set<BrdTraceInfo> contact_trace_info = new TreeSet<BrdTraceInfo>();
@@ -140,26 +138,24 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       super.move_by(p_vector);
 
       // Insert a Trace from the old center to the new center, on all layers, where this DrillItem was connected to a Trace.
-      LinkedList<PlaPoint> connect_point_list = new LinkedList<PlaPoint>();
+      LinkedList<PlaPointInt> connect_point_list = new LinkedList<PlaPointInt>();
       
       connect_point_list.add(old_center);
       
-      PlaPoint new_center = center_get();
+      PlaPointInt new_center = center_get();
       
       PlaPointInt add_corner = null;
       
-      if (old_center instanceof PlaPointInt && new_center instanceof PlaPointInt)
+      if (r_board.brd_rules.is_trace_snap_90() )
          {
          // Make shure, that the traces will remain 90- or 45-degree.
-         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
-            {
-            add_corner = ((PlaPointInt) old_center).ninety_degree_corner((PlaPointInt) new_center, true);
-            }
-         else if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
-            {
-            add_corner = ((PlaPointInt) old_center).fortyfive_degree_corner((PlaPointInt) new_center, true);
-            }
+         add_corner = old_center.ninety_degree_corner(new_center, true);
          }
+      else if (r_board.brd_rules.is_trace_snap_45())
+         {
+         add_corner = old_center.fortyfive_degree_corner(new_center, true);
+         }
+
       if (add_corner != null)
          {
          connect_point_list.add(add_corner);
@@ -167,7 +163,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       
       connect_point_list.add(new_center);
       
-      PlaPoint[] connect_points = connect_point_list.toArray(new PlaPoint[connect_point_list.size()]);
+      PlaPointInt[] connect_points = connect_point_list.toArray(new PlaPointInt[connect_point_list.size()]);
       
       for ( BrdTraceInfo curr_trace_info : contact_trace_info )
          {
@@ -403,7 +399,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public PlaPoint normal_contact_point(BrdAbit p_other)
+   public PlaPointInt normal_contact_point(BrdAbit p_other)
       {
       if ( ! shares_layer(p_other) ) return null;
       

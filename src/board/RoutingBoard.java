@@ -238,7 +238,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts a via into the board. 
     * @param p_attach_allowed indicates, if the via may overlap with SMD pins of the same net.
     */
-   public void insert_via(LibPadstack p_padstack, PlaPoint p_center, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state, boolean p_attach_allowed)
+   public void insert_via(LibPadstack p_padstack, PlaPointInt p_center, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state, boolean p_attach_allowed)
       {
       BrdAbitVia new_via = new BrdAbitVia(p_padstack, p_center, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, p_attach_allowed, this);
       insert_item(new_via);
@@ -1797,7 +1797,7 @@ public final class RoutingBoard implements java.io.Serializable
     * If a conflict exists, The result length is the maximal line length from p_line.a to p_line.b, which can be inserted without conflict
     * (Integer.MAX_VALUE, if no conflict exists). If p_only_not_shovable_obstacles, unfixed traces and vias are ignored.
     */
-   public final double check_trace_segment(PlaPoint p_from_point, PlaPoint p_to_point, int p_layer, int[] p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
+   public final double check_trace_segment(PlaPointInt p_from_point, PlaPointInt p_to_point, int p_layer, int[] p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
       {
       if (p_from_point.equals(p_to_point)) return 0;
 
@@ -2530,7 +2530,13 @@ public final class RoutingBoard implements java.io.Serializable
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(10,null);
       
-      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, opt_net_no_arr, tidy_region, p_pull_tight_accuracy, t_limit, new BrdKeepPoint( new_corner, p_layer) );
+      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(
+            this, 
+            opt_net_no_arr, 
+            tidy_region, 
+            p_pull_tight_accuracy, 
+            t_limit, 
+            new BrdKeepPoint( new_corner, p_layer) );
 
       // Remove evtl. generated cycles because otherwise pull_tight may not work correctly.
       if (new_trace.normalize(changed_area.get_area(p_layer)))
