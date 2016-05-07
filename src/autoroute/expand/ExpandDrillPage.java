@@ -21,12 +21,6 @@
 
 package autoroute.expand;
 
-import freert.graphics.GdiContext;
-import freert.planar.PlaDimension;
-import freert.planar.PlaPoint;
-import freert.planar.PolylineArea;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
@@ -38,6 +32,12 @@ import board.items.BrdAbitPin;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeEntry;
+import freert.graphics.GdiContext;
+import freert.planar.PlaDimension;
+import freert.planar.PlaPointInt;
+import freert.planar.PolylineArea;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 
 /**
  *
@@ -135,7 +135,7 @@ public final class ExpandDrillPage implements ExpandObject
       for (int i = 0; i < drill_shapes.length; ++i)
          {
          ShapeTile curr_drill_shape = drill_shapes[i];
-         PlaPoint curr_drill_location = null;
+         PlaPointInt curr_drill_location = null;
          if (p_attach_smd)
             {
             curr_drill_location = calc_pin_center_in_drill(curr_drill_shape, drill_first_layer, p_autoroute_engine.r_board);
@@ -227,7 +227,7 @@ public final class ExpandDrillPage implements ExpandObject
     * Looks if p_drill_shape contains the center of a drillable Pin on p_layer.
     * @return null, if no such Pin was found.
     */
-   private static PlaPoint calc_pin_center_in_drill(ShapeTile p_drill_shape, int p_layer, RoutingBoard p_board)
+   private PlaPointInt calc_pin_center_in_drill(ShapeTile p_drill_shape, int p_layer, RoutingBoard p_board)
       {
       Collection<BrdItem> overlapping_items = p_board.overlapping_items(p_drill_shape, p_layer);
       

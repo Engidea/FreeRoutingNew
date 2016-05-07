@@ -19,7 +19,6 @@ import freert.graphics.GdiContext;
 import freert.library.LibPadstack;
 import freert.planar.PlaArea;
 import freert.planar.PlaEllipse;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVector;
@@ -437,7 +436,7 @@ public final class IteraRoute
          }
       
       boolean route_completed = false;
-      PlaPoint connection_point = null;
+      PlaPointInt connection_point = null;
       if (nearest_target_item instanceof BrdAbit)
          {
          BrdAbit target = (BrdAbit) nearest_target_item;
@@ -451,9 +450,10 @@ public final class IteraRoute
          {
          connection_point = p_from_point;
          }
-      if (connection_point != null && connection_point instanceof PlaPointInt)
+      
+      if (connection_point != null )
          {
-         route_completed = connect(p_from_point, (PlaPointInt) connection_point);
+         route_completed = connect(p_from_point, connection_point);
          }
       
       return route_completed;
@@ -463,7 +463,7 @@ public final class IteraRoute
     * Tries to make a trace connection from p_from_point to p_to_point according to the angle restriction. 
     * @returns true, if the connection succeeded.
     */
-   private boolean connect(PlaPoint p_from_point, PlaPointInt p_to_point)
+   private boolean connect(PlaPointInt p_from_point, PlaPointInt p_to_point)
       {
       ArrayList<PlaPointInt> corners = angled_connection(p_from_point, p_to_point);
       
@@ -712,29 +712,21 @@ public final class IteraRoute
    /**
     * Makes a connection polygon from p_from_point to p_to_point whose lines fulfill the angle restriction.
     */
-   private ArrayList<PlaPointInt> angled_connection(PlaPoint p_from_point, PlaPointInt p_to_point)
+   private ArrayList<PlaPointInt> angled_connection(PlaPointInt p_from_point, PlaPointInt p_to_point)
       {
       TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
       ArrayList<PlaPointInt> result = new ArrayList<PlaPointInt>(3);
       
-      PlaPointInt p_from = p_from_point.round();
-      
-      if ( p_from_point instanceof PlaPoint )
-         {
-         // It does happen, not a lot but it happens now, but the result is still ok... so letś go on
-         System.err.println(classname+"angled_connection fixed a PlaPoint");
-         }
-      
-      result.add(p_from);
+      result.add(p_from_point);
  
       if (angle_restriction.is_limit_90() )
          {
-         PlaPointInt extra = p_from.ninety_degree_corner(p_to_point, true);
+         PlaPointInt extra = p_from_point.ninety_degree_corner(p_to_point, true);
          if ( extra != null ) result.add(extra);
          }
       else if (angle_restriction.is_limit_45() )
          {
-         PlaPointInt extra = p_from.fortyfive_degree_corner(p_to_point, true);
+         PlaPointInt extra = p_from_point.fortyfive_degree_corner(p_to_point, true);
          if ( extra != null ) result.add(extra);
          }
       
@@ -760,7 +752,7 @@ public final class IteraRoute
          BrdItem curr_ob = it.next();
          if (curr_ob instanceof BrdAbit)
             {
-            PlaPoint curr_point = ((BrdAbit) curr_ob).center_get();
+            PlaPointInt curr_point = ((BrdAbit) curr_ob).center_get();
             target_points.add(new IteraTargetPoint(curr_point.to_float(), curr_ob));
             }
          else if (curr_ob instanceof BrdTrace || curr_ob instanceof BrdAreaConduction)
@@ -770,17 +762,15 @@ public final class IteraRoute
          }
       }
 
-   public PlaPoint get_last_corner()
+   public PlaPointInt get_last_corner()
       {
       return prev_corner;
       }
 
    public boolean is_layer_active(int p_layer)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         return false;
-         }
+      if (p_layer < 0 || p_layer >= layer_active_arr.length) return false;
+
       return layer_active_arr[p_layer];
       }
 
@@ -802,6 +792,7 @@ public final class IteraRoute
             nearest_item = curr_target_point.item;
             }
          }
+      
       Iterator<BrdItem> it = target_traces_and_areas.iterator();
       while (it.hasNext())
          {
@@ -839,10 +830,12 @@ public final class IteraRoute
                }
             }
          }
+      
       if (nearest_point == null)
          {
          return; // target set is empty
          }
+      
       nearest_target_point = nearest_point;
       nearest_target_item = nearest_item;
       // join the graphics update box by the nearest item, so that the incomplete

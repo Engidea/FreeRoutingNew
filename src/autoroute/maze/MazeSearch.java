@@ -58,7 +58,6 @@ import board.varie.ItemSelectionFilter;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentFloat;
@@ -341,7 +340,7 @@ public final class MazeSearch
          {
          double half_width_add = half_width + ArtEngine.TRACE_WIDTH_TOLERANCE;
          ExpandDoor curr_door = (ExpandDoor) p_element.door;
-         if (this.art_ctrl.with_neckdown)
+         if (art_ctrl.with_neckdown)
             {
             // try evtl. neckdown at a destination pin
             double neck_down_half_width = check_neck_down_at_dest_pin(p_element.next_room);
@@ -354,11 +353,11 @@ public final class MazeSearch
          curr_door_is_small = door_is_small(curr_door, 2 * half_width_add);
          }
 
-      this.art_engine.complete_neigbour_rooms(p_element.next_room);
+      art_engine.complete_neigbour_rooms(p_element.next_room);
 
       PlaPointFloat shape_entry_middle = p_element.shape_entry.point_a.middle_point(p_element.shape_entry.point_b);
 
-      if (this.art_ctrl.with_neckdown && p_element.door instanceof ExpandDoorItem)
+      if (art_ctrl.with_neckdown && p_element.door instanceof ExpandDoorItem)
          {
          // try evtl. neckdown at a start pin
          BrdItem start_item = ((ExpandDoorItem) p_element.door).item;
@@ -407,16 +406,15 @@ public final class MazeSearch
       if (!layer_active && p_element.door instanceof ExpandDrill)
          {
          // check for drill to a foreign conduction area on split plane.
-         PlaPoint drill_location = ((ExpandDrill) p_element.door).location;
+         PlaPointInt drill_location = ((ExpandDrill) p_element.door).location;
          ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.CONDUCTION);
          Set<BrdItem> picked_items = r_board.pick_items(drill_location, layer_no, filter);
+
          for (BrdItem curr_item : picked_items)
             {
-            if (!curr_item.contains_net(art_ctrl.net_no))
-               {
-               return true;
-               }
+            if (!curr_item.contains_net(art_ctrl.net_no)) return true;
             }
+         
          }
       boolean something_expanded = false;
       if (expand_to_target_doors(p_element, next_room_is_thick, curr_door_is_small, shape_entry_middle))
@@ -467,7 +465,7 @@ public final class MazeSearch
             if (ripup_costs != ALREADY_RIPPED_COSTS && next_room_is_thick)
                {
                BrdItem obstacle_item = obstacle_room.get_item();
-               if (!curr_door_is_small && this.art_ctrl.max_shove_trace_recursion_depth > 0 && obstacle_item instanceof board.items.BrdTracePolyline)
+               if (!curr_door_is_small && art_ctrl.max_shove_trace_recursion_depth > 0 && obstacle_item instanceof board.items.BrdTracePolyline)
                   {
                   if (!shove_trace_room(p_element, obstacle_room))
                      {
@@ -477,7 +475,7 @@ public final class MazeSearch
                         MazeListElement new_element = new MazeListElement(p_element.door, p_element.section_no_of_door, p_element.backtrack_door,
                               p_element.section_no_of_backtrack_door, p_element.expansion_value + ripup_costs, p_element.sorting_value + ripup_costs, p_element.next_room,
                               p_element.shape_entry, true, p_element.adjustment, true);
-                        this.maze_expansion_list.add(new_element);
+                        maze_expansion_list.add(new_element);
                         }
                      return something_expanded;
                      }
@@ -508,7 +506,7 @@ public final class MazeSearch
          if ((something_expanded || next_room_is_thick) && p_element.next_room instanceof ExpandRoomFreespaceComplete)
             {
             // avoid setting something_expanded to true when next_room is thin to allow occupying by different sections of the door
-            Collection<ExpandDrillPage> overlapping_drill_pages = this.art_engine.drill_page_array.overlapping_pages(p_element.next_room.get_shape());
+            Collection<ExpandDrillPage> overlapping_drill_pages = art_engine.drill_page_array.overlapping_pages(p_element.next_room.get_shape());
                {
                for (ExpandDrillPage to_drill_page : overlapping_drill_pages)
                   {
@@ -523,7 +521,7 @@ public final class MazeSearch
             if (curr_obstacle_item instanceof board.items.BrdAbitVia)
                {
                board.items.BrdAbitVia curr_via = (board.items.BrdAbitVia) curr_obstacle_item;
-               ExpandDrill via_drill_info = curr_via.get_autoroute_drill_info(this.art_engine.autoroute_search_tree);
+               ExpandDrill via_drill_info = curr_via.get_autoroute_drill_info(art_engine.autoroute_search_tree);
                expand_to_drill(via_drill_info, p_element, ripup_costs);
                }
             }
@@ -564,7 +562,7 @@ public final class MazeSearch
             {
             // check the line from p_shape_entry_middle to the nearest point.
             int[] curr_net_no_arr = new int[1];
-            curr_net_no_arr[0] = this.art_ctrl.net_no;
+            curr_net_no_arr[0] = art_ctrl.net_no;
             int curr_layer = p_list_element.next_room.get_layer();
             PlaPointInt[] check_points = new PlaPointInt[2];
             check_points[0] = p_shape_entry_middle.round();
@@ -714,19 +712,19 @@ public final class MazeSearch
       PlaPointFloat shape_entry_middle = p_shape_entry.point_a.middle_point(p_shape_entry.point_b);
       double expansion_value = p_from_element.expansion_value + p_add_costs
             + shape_entry_middle.weighted_distance(p_from_element.shape_entry.point_a.middle_point(p_from_element.shape_entry.point_b), art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical);
-      double sorting_value = expansion_value + this.destination_distance.calculate(shape_entry_middle, layer);
+      double sorting_value = expansion_value + destination_distance.calculate(shape_entry_middle, layer);
       boolean room_ripped = p_add_costs > 0 && p_adjustment == MazeAdjustment.NONE || p_from_element.already_checked && p_from_element.room_ripped;
 
       MazeListElement new_element = new MazeListElement(p_door, p_section_no, p_from_element.door, p_from_element.section_no_of_door, expansion_value, sorting_value, next_room, p_shape_entry,
             room_ripped, p_adjustment, false);
-      this.maze_expansion_list.add(new_element);
+      maze_expansion_list.add(new_element);
       return true;
       }
 
    private void expand_to_drill(ExpandDrill p_drill, MazeListElement p_from_element, int p_add_costs)
       {
       int layer = p_from_element.next_room.get_layer();
-      int trace_half_width = this.art_ctrl.compensated_trace_half_width[layer];
+      int trace_half_width = art_ctrl.compensated_trace_half_width[layer];
       boolean room_shape_is_thin = p_from_element.next_room.get_shape().min_width() < 2 * trace_half_width;
 
       if (room_shape_is_thin)
@@ -746,9 +744,9 @@ public final class MazeSearch
          // If expansion comes from a pin with trace exit directions the eapansion_value is calculated
          // from the nearest trace exit point instead from the center olf the pin.
          BrdItem from_item = ((ExpandDoorItem) p_from_element.backtrack_door).item;
-         if (from_item instanceof board.items.BrdAbitPin)
+         if (from_item instanceof BrdAbitPin)
             {
-            PlaPointFloat nearest_exit_corner = ((board.items.BrdAbitPin) from_item).nearest_trace_exit_corner(p_drill.location.to_float(), trace_half_width, layer);
+            PlaPointFloat nearest_exit_corner = ((BrdAbitPin) from_item).nearest_trace_exit_corner(p_drill.location.to_float(), trace_half_width, layer);
             if (nearest_exit_corner != null)
                {
                compare_corner = nearest_exit_corner;
@@ -774,10 +772,10 @@ public final class MazeSearch
          new_section_no_of_backtrack_door = p_from_element.section_no_of_door;
          expansion_value += art_ctrl.min_normal_via_cost;
          }
-      double sorting_value = expansion_value + this.destination_distance.calculate(nearest_point, layer);
+      double sorting_value = expansion_value + destination_distance.calculate(nearest_point, layer);
       MazeListElement new_element = new MazeListElement(p_drill, section_no, new_backtrack_door, new_section_no_of_backtrack_door, expansion_value, sorting_value, null, shape_entry,
             p_from_element.room_ripped, MazeAdjustment.NONE, false);
-      this.maze_expansion_list.add(new_element);
+      maze_expansion_list.add(new_element);
       }
 
    /**
@@ -792,10 +790,10 @@ public final class MazeSearch
       PlaPointFloat nearest_point = p_drill_page.page_shape.nearest_point(from_element_shape_entry_middle);
       double expansion_value = p_from_element.expansion_value + art_ctrl.min_normal_via_cost;
       double sorting_value = expansion_value + nearest_point.weighted_distance(from_element_shape_entry_middle, art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical)
-            + this.destination_distance.calculate(nearest_point, layer);
+            + destination_distance.calculate(nearest_point, layer);
       MazeListElement new_element = new MazeListElement(p_drill_page, layer, p_from_element.door, p_from_element.section_no_of_door, expansion_value, sorting_value, p_from_element.next_room,
             p_from_element.shape_entry, p_from_element.room_ripped, MazeAdjustment.NONE, false);
-      this.maze_expansion_list.add(new_element);
+      maze_expansion_list.add(new_element);
       }
 
    private void expand_to_drills_of_page(MazeListElement p_from_element)
@@ -842,7 +840,7 @@ public final class MazeSearch
             return;
             }
          freert.library.LibPadstack curr_obstacle_padstack = ((board.items.BrdAbitVia) curr_obstacle_item).get_padstack();
-         if (! art_ctrl.via_rule.contains_padstack(curr_obstacle_padstack) || curr_obstacle_item.clearance_class_no() != this.art_ctrl.via_clearance_class)
+         if (! art_ctrl.via_rule.contains_padstack(curr_obstacle_padstack) || curr_obstacle_item.clearance_class_no() != art_ctrl.via_clearance_class)
             {
             return;
             }
@@ -863,8 +861,18 @@ public final class MazeSearch
          for (;;)
             {
             ShapeTile curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer_no].get_shape();
-            ShoveDrillResult drill_result = r_board.shove_via_algo.check_layer(art_ctrl.via_radius_arr[curr_layer], art_ctrl.via_clearance_class, art_ctrl.attach_smd_allowed, curr_room_shape,
-                  curr_drill.location, curr_layer, net_no_arr, art_ctrl.max_shove_trace_recursion_depth, 0);
+            
+            ShoveDrillResult drill_result = r_board.shove_via_algo.check_layer(
+                  art_ctrl.via_radius_arr[curr_layer], 
+                  art_ctrl.via_clearance_class, 
+                  art_ctrl.attach_smd_allowed, 
+                  curr_room_shape,
+                  curr_drill.location, 
+                  curr_layer, 
+                  net_no_arr, 
+                  art_ctrl.max_shove_trace_recursion_depth, 
+                  0);
+
             if (drill_result == ShoveDrillResult.NOT_DRILLABLE)
                {
                via_lower_bound = curr_layer + 1;
@@ -901,8 +909,16 @@ public final class MazeSearch
                break;
                }
             ShapeTile curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer_no].get_shape();
-            ShoveDrillResult drill_result = r_board.shove_via_algo.check_layer(art_ctrl.via_radius_arr[curr_layer], art_ctrl.via_clearance_class, art_ctrl.attach_smd_allowed, curr_room_shape,
-                  curr_drill.location, curr_layer, net_no_arr, art_ctrl.max_shove_trace_recursion_depth, 0);
+            ShoveDrillResult drill_result = r_board.shove_via_algo.check_layer(
+                  art_ctrl.via_radius_arr[curr_layer], 
+                  art_ctrl.via_clearance_class, 
+                  art_ctrl.attach_smd_allowed, 
+                  curr_room_shape,
+                  curr_drill.location, 
+                  curr_layer, net_no_arr, 
+                  art_ctrl.max_shove_trace_recursion_depth, 
+                  0);
+
             if (drill_result == ShoveDrillResult.NOT_DRILLABLE)
                {
                via_upper_bound = curr_layer - 1;
@@ -925,10 +941,8 @@ public final class MazeSearch
 
       for (int to_layer = via_lower_bound; to_layer <= via_upper_bound; ++to_layer)
          {
-         if (to_layer == from_layer)
-            {
-            continue;
-            }
+         if (to_layer == from_layer) continue;
+
          // check, there there is a fitting via mask.
          int curr_first_layer;
          int curr_last_layer;
@@ -960,22 +974,30 @@ public final class MazeSearch
                   }
                }
             }
-         if (!mask_found)
-            {
-            continue;
-            }
+
+         if (!mask_found) continue;
+
          MazeSearchElement curr_drill_layer_info = curr_drill.get_maze_search_element(to_layer - curr_drill.first_layer_no);
-         if (curr_drill_layer_info.is_occupied)
-            {
-            continue;
-            }
+
+         if (curr_drill_layer_info.is_occupied) continue;
+
          double expansion_value = p_list_element.expansion_value + art_ctrl.add_via_costs[from_layer].to_layer[to_layer];
          PlaPointFloat shape_entry_middle = p_list_element.shape_entry.point_a.middle_point(p_list_element.shape_entry.point_b);
-         double sorting_value = expansion_value + this.destination_distance.calculate(shape_entry_middle, to_layer);
+         double sorting_value = expansion_value + destination_distance.calculate(shape_entry_middle, to_layer);
          int curr_room_index = to_layer - curr_drill.first_layer_no;
-         MazeListElement new_element = new MazeListElement(curr_drill, curr_room_index, curr_drill, p_list_element.section_no_of_door, expansion_value, sorting_value,
-               curr_drill.room_arr[curr_room_index], p_list_element.shape_entry, room_ripped, MazeAdjustment.NONE, false);
-         this.maze_expansion_list.add(new_element);
+         
+         MazeListElement new_element = new MazeListElement(
+               curr_drill, 
+               curr_room_index, 
+               curr_drill, 
+               p_list_element.section_no_of_door, 
+               expansion_value, sorting_value,
+               curr_drill.room_arr[curr_room_index], 
+               p_list_element.shape_entry, 
+               room_ripped, 
+               MazeAdjustment.NONE, false);
+
+         maze_expansion_list.add(new_element);
          }
       }
 
@@ -1017,7 +1039,7 @@ public final class MazeSearch
          }
       else if (obstacle_item instanceof BrdAbitVia)
          {
-         ShapeTile via_shape = ((board.items.BrdAbitVia) obstacle_item).get_tree_shape_on_layer(this.search_tree, layer);
+         ShapeTile via_shape = ((board.items.BrdAbitVia) obstacle_item).get_tree_shape_on_layer(search_tree, layer);
          obstacle_half_width = 0.5 * via_shape.max_width();
          }
       else
@@ -1130,7 +1152,7 @@ public final class MazeSearch
       if (randomize)
          {
          // shuffle the result to avoid repetitive loops
-         double random_number = this.random_generator.nextDouble();
+         double random_number = random_generator.nextDouble();
          double random_factor = 0.5 + random_number * random_number;
          detour *= random_factor;
          }

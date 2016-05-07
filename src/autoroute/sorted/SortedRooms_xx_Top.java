@@ -39,7 +39,7 @@ import board.shape.ShapeTreeEntry;
 import board.shape.ShapeTreeObject;
 import freert.planar.PlaDimension;
 import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileSimplex;
 
@@ -260,7 +260,7 @@ public final class SortedRooms_xx_Top
          else
             // dimensin = 0
             {
-            PlaPoint touching_point = intersection.corner(0);
+            PlaPointInt touching_point = intersection.corner(0);
             int room_corner_no = room_shape.equals_corner(touching_point);
             boolean room_touch_is_corner;
             int touching_side_no_of_room;

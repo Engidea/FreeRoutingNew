@@ -32,8 +32,8 @@ import board.items.BrdItem;
 import board.items.BrdTracePolyline;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentFloat;
 import freert.planar.PlaSegmentInt;
 import freert.planar.PlaSide;
@@ -365,7 +365,8 @@ public final class MazeShoveTraceAlgo
       
       if (p_from_item instanceof BrdAbit)
          {
-         PlaPoint from_center = ((BrdAbit) p_from_item).center_get();
+         PlaPointInt from_center = ((BrdAbit) p_from_item).center_get();
+         
          if ( from_center.equals(p_trace.first_corner()) ) return true;
          
          if ( from_center.equals(p_trace.corner_last()) ) return true;

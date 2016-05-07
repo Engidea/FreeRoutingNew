@@ -370,14 +370,13 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
 
    public PlaPointFloat nearest_point_approx(PlaPointFloat p_from_point)
       {
-      if (contains(p_from_point))
-         {
-         return p_from_point;
-         }
+      if (contains(p_from_point)) return p_from_point;
+
       return nearest_border_point_approx(p_from_point);
       }
 
    /**
+    * TODO this is one that needs to return int points !!! damiano
     * Returns a nearest point to p_from_point on the edge of the shape
     */
    public PlaPoint nearest_border_point(PlaPoint p_from_point)
@@ -398,14 +397,14 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       int min_dist_ind = 0;
 
       // calculate the distance to the nearest corner first
-      for (int i = 0; i < line_count; ++i)
+      for (int index = 0; index < line_count; ++index)
          {
-         PlaPointFloat curr_corner_f = corner_approx(i);
+         PlaPointFloat curr_corner_f = corner_approx(index);
          double curr_dist = curr_corner_f.length_square(from_point_f);
          if (curr_dist < min_dist)
             {
             min_dist = curr_dist;
-            min_dist_ind = i;
+            min_dist_ind = index;
             }
          }
 
@@ -431,6 +430,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          prev_ind = curr_ind;
          curr_ind = next_ind;
          }
+      
       return nearest_point;
       }
 

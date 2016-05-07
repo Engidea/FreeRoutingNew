@@ -27,7 +27,7 @@ import autoroute.ArtEngine;
 import autoroute.maze.MazeSearchElement;
 import board.shape.ShapeTreeObject;
 import freert.planar.PlaDimension;
-import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 
@@ -46,13 +46,13 @@ public final class ExpandDrill implements ExpandObject
    // The shape of the drill
    private final ShapeTile shape;
    // The location, where the drill is checked
-   public final PlaPoint location;
+   public final PlaPointInt location;
    // The first layer of the drill 
    public final int first_layer_no;
    // The last layer of the drill 
    public final int last_layer_no;
    
-   public ExpandDrill(ShapeTile p_shape, PlaPoint p_location, int p_first_layer_no, int p_last_layer_no)
+   public ExpandDrill(ShapeTile p_shape, PlaPointInt p_location, int p_first_layer_no, int p_last_layer_no)
       {
       shape = p_shape;
       location = p_location;
@@ -82,10 +82,11 @@ public final class ExpandDrill implements ExpandObject
       for (int index = first_layer_no; index <= last_layer_no; ++index)
          {
          ExpandRoomComplete found_room = null;
-         Iterator<board.shape.ShapeTreeObject> iter = overlaps.iterator();
+         Iterator<ShapeTreeObject> iter = overlaps.iterator();
          while (iter.hasNext())
             {
             board.shape.ShapeTreeObject curr_ob = iter.next();
+            
             if (!(curr_ob instanceof ExpandRoomComplete))
                {
                iter.remove();
@@ -93,6 +94,7 @@ public final class ExpandDrill implements ExpandObject
                }
             
             ExpandRoomComplete curr_room = (ExpandRoomComplete) curr_ob;
+            
             if (curr_room.get_layer() == index)
                {
                found_room = curr_room;

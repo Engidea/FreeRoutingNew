@@ -30,7 +30,6 @@ import board.items.BrdTracePolyline;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
@@ -271,21 +270,22 @@ public final class ArtConnectionInsert
       {
       if (p_start_pin != null)
          {
-         PlaPoint ok_point = try_neck_down(p_to_corner, p_from_corner, p_layer, p_start_pin, true);
+         PlaPointInt ok_point = try_neck_down(p_to_corner, p_from_corner, p_layer, p_start_pin, true);
 
          if (ok_point == p_from_corner)  return true;
          }
       
       if (p_end_pin != null)
          {
-         PlaPoint ok_point = try_neck_down(p_from_corner, p_to_corner, p_layer, p_end_pin, false);
+         PlaPointInt ok_point = try_neck_down(p_from_corner, p_to_corner, p_layer, p_end_pin, false);
 
          if (ok_point == p_to_corner) return true;
          }
+      
       return false;
       }
 
-   private PlaPoint try_neck_down(PlaPointInt p_from_corner, PlaPointInt p_to_corner, int p_layer, BrdAbitPin p_pin, boolean p_at_start)
+   private PlaPointInt try_neck_down(PlaPointInt p_from_corner, PlaPointInt p_to_corner, int p_layer, BrdAbitPin p_pin, boolean p_at_start)
       {
       if (!p_pin.is_on_layer(p_layer)) return null;
 
@@ -325,7 +325,7 @@ public final class ArtConnectionInsert
          boolean horizontal_first = Math.abs(float_from_corner.v_x - float_neck_down_end_point.v_x) >= Math.abs(float_from_corner.v_y - float_neck_down_end_point.v_y);
          PlaPointInt add_corner = ArtConnectionLocate.calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
 
-         PlaPoint curr_ok_point = r_board.insert_trace_segment(
+         PlaPointInt curr_ok_point = r_board.insert_trace_segment(
                p_from_corner, 
                add_corner, 
                ctrl.trace_half_width[p_layer], 
@@ -381,7 +381,7 @@ public final class ArtConnectionInsert
             }
          }
 
-      PlaPoint ok_point = r_board.insert_trace_segment (
+      PlaPointInt ok_point = r_board.insert_trace_segment (
             neck_down_end_point, 
             p_to_corner, 
             neck_down_halfwidth, 

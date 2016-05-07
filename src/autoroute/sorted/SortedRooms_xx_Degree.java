@@ -41,7 +41,6 @@ import board.shape.ShapeTreeEntry;
 import freert.planar.PlaDimension;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.ShapeTile;
@@ -170,6 +169,7 @@ public final class SortedRooms_xx_Degree
       SortedRoom_xx_Degree prev_neighbour = sorted_neighbours.last();
       Iterator<SortedRoom_xx_Degree> it = sorted_neighbours.iterator();
       ShapeTileSimplex room_simplex = from_room.get_shape().to_Simplex();
+
       while (it.hasNext())
          {
          SortedRoom_xx_Degree next_neighbour = it.next();
@@ -357,14 +357,14 @@ public final class SortedRooms_xx_Degree
       // Insert 1 dimensional doors of trace rooms only, if they are parallel to the trace line.
       // Otherwise there may be check ripup problems with entering at the wrong side at a fork.
       PlaLineInt door_line = null;
-      PlaPoint prev_corner = p_door_shape.corner(0);
+      PlaPointInt prev_corner = p_door_shape.corner(0);
       int corner_count = p_door_shape.border_line_count();
-      for (int i = 1; i < corner_count; ++i)
+      for (int index = 1; index < corner_count; ++index)
          {
-         PlaPoint curr_corner = p_door_shape.corner(i);
+         PlaPointInt curr_corner = p_door_shape.corner(index);
          if (!curr_corner.equals(prev_corner))
             {
-            door_line = p_door_shape.border_line(i - 1);
+            door_line = p_door_shape.border_line(index - 1);
             break;
             }
          prev_corner = curr_corner;

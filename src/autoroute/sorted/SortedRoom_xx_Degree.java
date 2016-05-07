@@ -2,8 +2,8 @@ package autoroute.sorted;
 
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.ShapeTile;
 import freert.varie.Signum;
@@ -30,8 +30,8 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
    // True, if the intersection of this room and the neighbour is equal to a corner of the neighbour room
    public final boolean neighbour_room_touch_is_corner;
 
-   private PlaPoint precalculated_first_corner = null;
-   private PlaPoint precalculated_last_corner = null;
+   private PlaPointInt precalculated_first_corner = null;
+   private PlaPointInt precalculated_last_corner = null;
 
    
    public SortedRoom_xx_Degree(
@@ -101,7 +101,7 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
    /**
     * Returns the first corner of the intersection shape with the neighbour.
     */
-   public PlaPoint first_corner()
+   public PlaPointInt first_corner()
       {
       if (precalculated_first_corner != null) return precalculated_first_corner;
 
@@ -115,7 +115,7 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
          }
       else
          {
-         PlaPoint curr_first_corner = neighbour_shape.corner(neighbour_shape.next_no(touching_side_no_of_neighbour_room));
+         PlaPointInt curr_first_corner = neighbour_shape.corner(neighbour_shape.next_no(touching_side_no_of_neighbour_room));
          PlaLineInt prev_line = room_shape.border_line(room_shape.prev_no(touching_side_no_of_room));
          if (prev_line.side_of(curr_first_corner) == PlaSide.ON_THE_RIGHT)
             precalculated_first_corner = curr_first_corner;
@@ -130,7 +130,7 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
    /**
     * Returns the last corner of the intersection shape with the neighbour.
     */
-   public PlaPoint last_corner()
+   public PlaPointInt last_corner()
       {
       if (precalculated_last_corner != null) return precalculated_last_corner;
 
@@ -144,7 +144,7 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
          }
       else
          {
-         PlaPoint curr_last_corner = neighbour_shape.corner(touching_side_no_of_neighbour_room);
+         PlaPointInt curr_last_corner = neighbour_shape.corner(touching_side_no_of_neighbour_room);
          PlaLineInt next_line = room_shape.border_line(room_shape.next_no(touching_side_no_of_room));
          if (next_line.side_of(curr_last_corner) == PlaSide.ON_THE_RIGHT)
             precalculated_last_corner = curr_last_corner;
