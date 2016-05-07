@@ -125,12 +125,16 @@ public class StateRoute extends StateInteractive
 
       int trace_clearance_class = p_board_handling.get_trace_clearance_class(route_net_no_arr[0]);
       boolean start_ok = true;
+      
       if (picked_item instanceof BrdTrace)
          {
          BrdTrace picked_trace = (BrdTrace) picked_item;
+         
          PlaPoint picked_corner = picked_trace.nearest_end_point(location);
+         
          if (picked_corner instanceof PlaPointInt && p_location.distance(picked_corner.to_float()) < 5 * picked_trace.get_half_width())
             {
+            // Why should it fail if it is a rational ? pippo
             location = (PlaPointInt) picked_corner;
             }
          else
@@ -145,6 +149,7 @@ public class StateRoute extends StateInteractive
                start_ok = false;
                }
             }
+         
          if (start_ok && !p_board_handling.itera_settings.manual_rule_selection)
             {
             // Pick up the half with and the clearance class of the found trace.
@@ -159,11 +164,8 @@ public class StateRoute extends StateInteractive
       else if (picked_item instanceof BrdAbit)
          {
          BrdAbit drill_item = (BrdAbit) picked_item;
-         PlaPoint center = drill_item.center_get();
-         if (center instanceof PlaPointInt)
-            {
-            location = (PlaPointInt) center;
-            }
+
+         location = drill_item.center_get();
          }
 
       if (!start_ok) return null;

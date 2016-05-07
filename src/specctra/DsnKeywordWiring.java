@@ -35,7 +35,6 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
 import freert.planar.PlaLineInt;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
@@ -213,12 +212,15 @@ final class DsnKeywordWiring extends DsnKeywordScope
 
       if (p_par.compat_mode)
          {
-         PlaPoint[] corner_arr = curr_wire.polyline().corner_arr();
-         PlaPointFloat[] float_corner_arr = new PlaPointFloat[corner_arr.length];
-         for (int i = 0; i < corner_arr.length; ++i)
+         Polyline a_poly = curr_wire.polyline();
+         
+         PlaPointFloat[] float_corner_arr = new PlaPointFloat[a_poly.corner_count()];
+         
+         for (int index = 0; index < float_corner_arr.length; ++index)
             {
-            float_corner_arr[i] = corner_arr[i].to_float();
+            float_corner_arr[index] = a_poly.corner(index).to_float();
             }
+         
          double[] coors = p_par.coordinate_transform.board_to_dsn(float_corner_arr);
          DsnPolygonPath curr_path = new DsnPolygonPath(curr_layer, wire_width, coors);
          curr_path.write_scope(p_par.file, p_par.identifier_type);

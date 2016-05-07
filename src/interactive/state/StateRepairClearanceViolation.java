@@ -16,7 +16,6 @@ package interactive.state;
  *
  */
 
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.rules.RuleNets;
@@ -99,7 +98,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
       
       router.next_corner(end_float);
 
-      PlaPoint route_end = router.get_last_corner();
+      PlaPointInt route_end = router.get_last_corner();
       
       i_brd.move_mouse(route_end.to_float());
       

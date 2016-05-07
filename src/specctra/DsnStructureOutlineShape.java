@@ -1,6 +1,6 @@
 package specctra;
 
-import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -8,7 +8,7 @@ import freert.planar.ShapeTileBox;
 /**
  * Used to separate the holes in the outline.
  */
-public class DsnStructureOutlineShape
+public final class DsnStructureOutlineShape
    {
    final ShapePolyline shape;
    final ShapeTileBox bounding_box;
@@ -35,22 +35,22 @@ public class DsnStructureOutlineShape
          }
       
       int corner_count = p_other_shape.shape.border_line_count();
-      for (int i = 0; i < corner_count; ++i)
+      
+      for (int index = 0; index < corner_count; ++index)
          {
-         PlaPoint curr_corner = p_other_shape.shape.corner(i);
+         PlaPointInt curr_corner = p_other_shape.shape.corner(index);
+
          boolean is_contained = false;
-         for (int j = 0; j < this.convex_shapes.length; ++j)
+         
+         for (int jndex = 0; jndex < convex_shapes.length; ++jndex)
             {
-            if (this.convex_shapes[j].contains(curr_corner))
-               {
-               is_contained = true;
-               break;
-               }
+            if ( ! convex_shapes[jndex].contains(curr_corner)) continue;
+
+            is_contained = true;
+            break;
             }
-         if (!is_contained)
-            {
-            return false;
-            }
+         
+         if ( ! is_contained) return false;
          }
       return true;
       }

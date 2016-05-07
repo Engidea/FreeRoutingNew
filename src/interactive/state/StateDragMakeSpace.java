@@ -20,8 +20,8 @@
 
 package interactive.state;
 
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import freert.rules.RuleNets;
 import freert.rules.RuleViaInfoList;
 import interactive.Actlog;
@@ -96,7 +96,7 @@ public final class StateDragMakeSpace extends StateDrag
       
       itera_route.next_corner(p_to_location);
 
-      PlaPoint route_end = itera_route.get_last_corner();
+      PlaPointInt route_end = itera_route.get_last_corner();
       
       if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && ! route_end.equals(p_to_location.round()))
          {

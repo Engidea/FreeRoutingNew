@@ -20,8 +20,8 @@
 
 package specctra;
 
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.Polyline;
 import gui.varie.IndentFileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -374,17 +374,24 @@ public final class SpectraWriteSesFile
       int wire_width = (int) Math.round(p_coordinate_transform.board_to_dsn(2 * p_wire.get_half_width()));
       output_file.start_scope();
       output_file.write("wire");
-      PlaPoint[] corner_arr = p_wire.polyline().corner_arr();
-      int[] coors = new int[2 * corner_arr.length];
+      
+      Polyline a_poly = p_wire.polyline();
+      
+      int corners_len = a_poly.corner_count();
+      
+      int[] coors = new int[2 * corners_len];
+      
       int corner_index = 0;
       int[] prev_coors = null;
-      for (int i = 0; i < corner_arr.length; ++i)
+      
+      for (int index = 0; index < corners_len; ++index)
          {
-         double[] curr_float_coors = p_coordinate_transform.board_to_dsn(corner_arr[i].to_float());
+         double[] curr_float_coors = p_coordinate_transform.board_to_dsn(a_poly.corner(index).to_float());
+         
          int[] curr_coors = new int[2];
          curr_coors[0] = (int) Math.round(curr_float_coors[0]);
          curr_coors[1] = (int) Math.round(curr_float_coors[1]);
-         if (i == 0 || (curr_coors[0] != prev_coors[0] || curr_coors[1] != prev_coors[1]))
+         if (index == 0 || (curr_coors[0] != prev_coors[0] || curr_coors[1] != prev_coors[1]))
             {
             coors[corner_index] = curr_coors[0];
             ++corner_index;

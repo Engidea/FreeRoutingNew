@@ -35,7 +35,6 @@ import board.infos.BrdItemViolation;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import freert.library.BrdLibrary;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -373,7 +372,7 @@ public class StateMoveItem extends StateInteractive
 
    private PlaVectorInt adjust_to_placement_grid(PlaVectorInt p_vector)
       {
-      PlaPoint new_component_location = grid_snap_component.get_location().translate_by(p_vector);
+      PlaPointInt new_component_location = grid_snap_component.get_location().translate_by(p_vector);
       PlaPointInt rounded_component_location = new_component_location.to_float().round_to_grid(i_brd.itera_settings.horizontal_component_grid, i_brd.itera_settings.vertical_component_grid);
       PlaVectorInt adjustment = rounded_component_location.difference_by(new_component_location).round();
       PlaVectorInt result = p_vector.add(adjustment);
