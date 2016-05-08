@@ -640,7 +640,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             else if (found_item instanceof BrdAbit)
                {
                BrdAbit curr_drill_item = (BrdAbit) found_item;
-               PlaPoint split_point = curr_drill_item.center_get();
+               PlaPointInt split_point = curr_drill_item.center_get();
                if (curr_line_segment.contains(split_point))
                   {
                   PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
@@ -729,12 +729,14 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       return pad_found;
       }
 
+   @Override
    public final BrdTrace[] split(PlaPointInt p_point)
       {
       for (int index = 0; index < polyline.plalinelen(-2); index++)
          {
          PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, index + 1);
          
+         // The split point (an integer) is within the currentline segment
          if ( ! curr_line_segment.contains(p_point)) continue;
          
          PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
@@ -747,15 +749,6 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
 
       return null;
-      }
-   
-   @Override
-   public BrdTrace[] split(PlaPoint p_point)
-      {
-      if ( !( p_point instanceof PlaPointInt ))
-         throw new IllegalArgumentException("split, only intpoints...");
-      
-      return split((PlaPointInt)p_point);
       }
 
    /**
@@ -771,17 +764,9 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       Polyline[] split_polylines = polyline.split(p_line_no, p_new_end_line);
 
       if (split_polylines == null) return null;
-
-      if (split_polylines.length != 2)
-         {
-         System.out.println("PolylineTrace.split: array of length 2 expected for split_polylines");
-         return null;
-         }
       
-      if (split_inside_drill_pad_prohibited(p_line_no, p_new_end_line))
-         {
-         return null;
-         }
+      if (split_inside_drill_pad_prohibited(p_line_no, p_new_end_line)) return null;
+      
       r_board.remove_item(this);
       BrdTracePolyline[] result = new BrdTracePolyline[2];
       result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_no_arr, clearance_class_no(), get_fixed_state());

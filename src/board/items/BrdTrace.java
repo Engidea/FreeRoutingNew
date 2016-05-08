@@ -554,7 +554,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
     * This method does NOT change the trace, it returns pieces
     * @return the 2 pieces of the split trace, or null if nothing was split 
     */
-   public abstract BrdTrace[] split(PlaPoint p_point);
+   public abstract BrdTrace[] split(PlaPointInt p_point);
 
    /**
     * Tries to make this trace shorter according to its rules. Returns true if

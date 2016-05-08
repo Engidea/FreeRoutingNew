@@ -240,6 +240,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       
       // create a perpendicular line at p_point and check, that the two
       // endpoints of this segment are on difcferent sides of that line.
+      
       PlaDirection perpendicular_direction = middle.direction().turn_45_degree(2);
       PlaLineInt perpendicular_line = new PlaLineInt(p_point, perpendicular_direction);
       PlaSide start_point_side = perpendicular_line.side_of(start_point());
@@ -251,20 +252,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          }
       
       return true;
-      }
-
-   /**
-    * Checks if p_point is contained in this line segment
-    */
-   public final boolean contains(PlaPoint p_point)
-      {
-      if (!(p_point instanceof PlaPointInt))
-         {
-         System.err.println("LineSegments.contains currently only implementet for IntPoints");
-         return false;
-         }
-      
-      return contains((PlaPointInt)p_point);
       }
 
    /**

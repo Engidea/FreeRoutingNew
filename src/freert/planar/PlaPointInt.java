@@ -87,6 +87,11 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return this;
       }
    
+   @Override 
+   public final boolean is_rational()
+      {
+      return false;
+      }
    
    public final boolean is_NaN ()
       {

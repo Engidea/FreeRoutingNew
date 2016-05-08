@@ -190,7 +190,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
       return p_pole.translate_by(v);
       }
 
-
+   public abstract boolean is_rational ();
+   
 
 
    }

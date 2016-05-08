@@ -1012,6 +1012,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaPoint new_end_corner = plaline(p_line_no).intersection(p_end_line);
       
       if ( new_end_corner.is_NaN() ) return null;
+      
+      if ( new_end_corner.is_rational() )
+         {
+         System.err.println(classname+"split: new_end_corner.is_rational !!");
+//         return null;
+         }
 
       // No split, if p_end_line does not intersect, but touches only tnis Polyline at an end point.
       if (p_line_no == 1 && new_end_corner.equals(corner_first()) ) return null;

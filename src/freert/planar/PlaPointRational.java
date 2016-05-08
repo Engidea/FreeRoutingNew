@@ -73,6 +73,12 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       rp_z = BigInteger.ONE;
       }
 
+   @Override 
+   public final boolean is_rational()
+      {
+      return true;
+      }
+
    
    /**
     * approximates the coordinates of this point by float coordinates
