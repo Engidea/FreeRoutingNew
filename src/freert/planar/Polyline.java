@@ -153,18 +153,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
          System.err.println(classname+"IntLine[] B < 3");
          return;
          }
-      
-      // corners are one less than the lines
-      precalculated_float_corners = new PlaPointFloat[plalinelen() - 1];
 
-      for (int index = 0; index < precalculated_float_corners.length; ++index)
-         {
-         PlaLineInt cur_l = plaline(index);
-         PlaLineInt nxt_l = plaline(index+1);
-         
-         precalculated_float_corners[index] = cur_l.intersection_approx(nxt_l);
-         }
+      // this will calculate the float corners
+      corner_approx_arr();
       
+      adjust_direction();
+      }
+
+   private void adjust_direction ()
+      {
       // turn  the direction of the lines that they point always from the previous corner to the next corner
       // Now, why is not the first and last line checked ? first should point to first and last should point away, no ?
       for (int index = 1; index < plalinelen(-1); index++)
@@ -173,20 +170,20 @@ public final class Polyline implements java.io.Serializable, PlaObject
          PlaLineInt cur_l = plaline(index);
          
          PlaSide side_of_line = pre_l.side_of(precalculated_float_corners[index]);
-
-         if (side_of_line != PlaSide.COLLINEAR)
-            {
-            PlaDirection d0 = pre_l.direction();
-            PlaDirection d1 = cur_l.direction();
-
-            PlaSide side1 = d0.side_of(d1);
-         
-            if (side1 == side_of_line) continue;
-
-            lines_arr.set(index, cur_l.opposite() );
-            }
+   
+         if (side_of_line == PlaSide.COLLINEAR) continue;
+   
+         PlaDirection d0 = pre_l.direction();
+         PlaDirection d1 = cur_l.direction();
+   
+         PlaSide side1 = d0.side_of(d1);
+      
+         if (side1 == side_of_line) continue;
+   
+         lines_arr.set(index, cur_l.opposite() );
          }
       }
+   
    
    @Override
    public final boolean is_NaN ()
@@ -342,7 +339,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
          {
          if (precalculated_float_corners[index] != null) continue;
          
-         precalculated_float_corners[index] = plaline(index).intersection_approx(plaline(index + 1));
+         PlaLineInt cur_l = plaline(index);
+         PlaLineInt nxt_l = plaline(index+1);
+         
+         precalculated_float_corners[index] = cur_l.intersection_approx(nxt_l);
          }
       
       return precalculated_float_corners;
@@ -992,8 +992,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Splits this polyline at the line with number p_line_no into two by inserting p_endline as concluding line of the first split
-    * piece and as the start line of the second split piece. 
+    * Splits this polyline at the line with number p_line_no into two 
+    * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece. 
     * p_endline and the line with number p_line_no must not be parallel. 
     * The order of the lines ins the two result pieces is preserved. 
     * p_line_no must be bigger than 0 and less then arr.length - 1.
@@ -1013,11 +1013,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       if ( new_end_corner.is_NaN() ) return null;
 
-      if (p_line_no <= 1 && new_end_corner.equals(corner_first()) || p_line_no >= plalinelen(-2) && new_end_corner.equals(corner_last()))
-         {
-         // No split, if p_end_line does not intersect, but touches only tnis Polyline at an end point.
-         return null;
-         }
+      // No split, if p_end_line does not intersect, but touches only tnis Polyline at an end point.
+      if (p_line_no == 1 && new_end_corner.equals(corner_first()) ) return null;
+      
+      if ( p_line_no == plalinelen(-2) && new_end_corner.equals(corner_last()) ) return null;
       
       PlaLineInt[] first_piece;
       if (corner(p_line_no - 1).equals(new_end_corner))
