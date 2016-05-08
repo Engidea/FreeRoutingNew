@@ -48,25 +48,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       end = p_end_line;
       }
 
-   /**
-    * creates the p_no-th line segment of p_polyline for p_no between 1 and p_polyline.line_count - 2.
-    */
-   public PlaSegmentInt(Polyline p_polyline, int p_no)
-      {
-      if (p_no <= 0 || p_no >= p_polyline.corner_count())
-         {
-         System.out.println("LineSegment from Polyline: p_no out of range");
-         start = null;
-         middle = null;
-         end = null;
-         return;
-         }
-      
-      start = p_polyline.plaline(p_no - 1);
-      middle = p_polyline.plaline(p_no);
-      end = p_polyline.plaline(p_no + 1);
-      }
-
    @Override
    public final boolean is_NaN ()
       {

@@ -1803,7 +1803,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       Polyline curr_polyline = new Polyline(p_from_point, p_to_point);
       
-      PlaSegmentInt curr_line_segment = new PlaSegmentInt(curr_polyline, 1);
+      PlaSegmentInt curr_line_segment = curr_polyline.segment_get(1);
       
       return check_trace_segment(curr_line_segment, p_layer, p_net_no_arr, p_trace_half_width, p_cl_class_no, p_only_not_shovable_obstacles);
       }

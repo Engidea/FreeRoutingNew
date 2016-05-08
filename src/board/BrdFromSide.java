@@ -63,7 +63,9 @@ public final class BrdFromSide
       // calculate the edge_no of p_shape, where p_polyline enters
       for (int curr_no = p_no; curr_no > 0; --curr_no)
          {
-         PlaSegmentInt curr_seg = new PlaSegmentInt(p_polyline, curr_no);
+         PlaSegmentInt curr_seg = p_polyline.segment_get(curr_no);
+         
+         if ( curr_seg == null ) continue;
          
          int[] intersections = curr_seg.border_intersections(p_shape);
          

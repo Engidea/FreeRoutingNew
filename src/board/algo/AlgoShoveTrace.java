@@ -371,9 +371,12 @@ public final class AlgoShoveTrace
             {
             break;
             }
-         for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+         for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
-            PlaSegmentInt curr_line_segment = new PlaSegmentInt(curr_substitute_trace.polyline(), i + 1);
+            Polyline a_poly = curr_substitute_trace.polyline();
+
+            PlaSegmentInt curr_line_segment = a_poly.segment_get(index + 1);
+            
             if (p_shove_to_the_left)
                {
                // swap the line segmment to get the corredct shove length

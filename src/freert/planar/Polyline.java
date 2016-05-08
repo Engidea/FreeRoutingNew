@@ -667,13 +667,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Calculates for the p_no-th line segment a box shape around this line where the border lines have the distance p_half_width
+    * Calculates for the p_no-th line segment a box shape around this line 
+    * where the border lines have the distance p_half_width
     * from the center line. 0 <= p_no <= arr.length - 3
     */
    public ShapeTileBox offset_box(int p_half_width, int p_no)
       {
-      PlaSegmentInt curr_line_segment = new PlaSegmentInt(this, p_no + 1);
+      PlaSegmentInt curr_line_segment = segment_get(p_no + 1);
+      
       ShapeTileBox result = curr_line_segment.bounding_box().offset(p_half_width);
+      
       return result;
       }
 
@@ -1066,7 +1069,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       for (int index = 1; index < plalinelen(-1); ++index)
          {
-         PlaSegmentInt curr_segment = new PlaSegmentInt(this, index);
+         PlaSegmentInt curr_segment = segment_get(index);
          
          if (curr_segment.contains(p_point)) return true;
          }
@@ -1231,5 +1234,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
          dest[dest_pos+index] = plaline(src_pos+index);
       }
    
+   
+   public PlaSegmentInt segment_get ( int index )
+      {
+      if ( index <= 0 || index >= plalinelen(-1) )
+         {
+         System.out.println(classname+"segment_get BAD index="+index);
+         return null;
+         }
+      
+      return new PlaSegmentInt(plaline(index - 1),plaline(index),plaline(index + 1) );
+      }
    
    }

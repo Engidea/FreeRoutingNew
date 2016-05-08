@@ -129,10 +129,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
    @Override
    public void draw(Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)
       {
-      if (p_graphics_context == null)
-         {
-         return;
-         }
+      if (p_graphics_context == null) return;
+
       int layer = get_layer();
       Color color = p_color_arr[layer];
       double display_width = get_half_width();
@@ -492,18 +490,19 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       boolean own_trace_split = false;
       ShapeSearchTree default_tree = r_board.search_tree_manager.get_default_tree();
+
       for (int index = 0; index < polyline.plalinelen(-2); ++index)
          {
          if (p_clip_shape != null)
             {
-            PlaSegmentInt curr_segment = new PlaSegmentInt(polyline, index + 1);
+            PlaSegmentInt curr_segment = polyline.segment_get(index + 1);
             
             if ( ! p_clip_shape.intersects(curr_segment.bounding_box())) continue;
             }
 
          ShapeTile curr_shape = get_tree_shape(default_tree, index);
          
-         PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, index + 1);
+         PlaSegmentInt curr_line_segment = polyline.segment_get(index + 1);
          
          Collection<ShapeTreeEntry> overlapping_tree_entries = new LinkedList<ShapeTreeEntry>();
 
@@ -555,7 +554,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                {
                BrdTracePolyline found_trace = (BrdTracePolyline) found_item;
                
-               PlaSegmentInt found_line_segment = new PlaSegmentInt(found_trace.polyline, found_entry.shape_index_in_object + 1);
+               PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(found_entry.shape_index_in_object + 1);
                
                PlaLineInt[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
                
@@ -684,22 +683,21 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       }
 
    /**
-    * Checks, if the intersection of the p_line_no-th line of this trace with
-    * p_line is inside the pad of a pin. In this case the trace will be split
-    * only, if the intersection is at the center of the pin. Extending the
-    * function to vias leaded to broken connection problems wenn the autorouter
-    * connected to a trace.
+    * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the pad of a pin. 
+    * In this case the trace will be split only, if the intersection is at the center of the pin. 
+    * Extending the function to vias leaded to broken connection problems wenn the autorouter connected to a trace.
     */
    private boolean split_inside_drill_pad_prohibited(int p_line_no, PlaLineInt p_line)
       {
       PlaPoint intersection = polyline.plaline(p_line_no).intersection(p_line);
       
-      java.util.Collection<BrdItem> overlap_items = r_board.pick_items(intersection, get_layer() );
+      Collection<BrdItem> overlap_items = r_board.pick_items(intersection, get_layer() );
+      
       boolean pad_found = false;
       
       for (BrdItem curr_item : overlap_items)
          {
-         if (!curr_item.shares_net(this)) continue;
+         if ( ! curr_item.shares_net(this)) continue;
 
          if (curr_item instanceof BrdAbitPin)
             {
@@ -719,15 +717,16 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                }
             }
          }
+      
       return pad_found;
       }
 
    @Override
    public final BrdTrace[] split(PlaPointInt p_point)
       {
-      for (int index = 0; index < polyline.plalinelen(-2); index++)
+      for (int index = 1; index < polyline.plalinelen(-1); index++)
          {
-         PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, index + 1);
+         PlaSegmentInt curr_line_segment = polyline.segment_get(index);
          
          // The split point (an integer) is within the currentline segment
          if ( ! curr_line_segment.contains(p_point)) continue;
@@ -736,7 +735,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
 
          PlaLineInt split_line = new PlaLineInt(p_point, split_line_direction);
          
-         BrdTrace[] result = split(index + 1, split_line);
+         BrdTrace[] result = split(index, split_line);
          
          if (result != null)  return result;
          }
@@ -745,20 +744,20 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       }
 
    /**
-    * Splits this trace at the line with number p_line_no into two by inserting
-    * p_endline as concluding line of the first split piece and as the start
-    * line of the second split piece. 
-    * Returns the 2 pieces of the splitted trace, or null, if nothing was splitted.
+    * Splits this trace at the line with number p_line_no into two 
+    * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece. 
+    * @return the 2 pieces of the splitted trace, or null, if nothing was splitted.
     */
    private BrdTracePolyline[] split(int p_line_no, PlaLineInt p_new_end_line)
       {
       if (!is_on_the_board()) return null;
 
+      // if split prohibited do nothing
+      if (split_inside_drill_pad_prohibited(p_line_no, p_new_end_line)) return null;
+
       Polyline[] split_polylines = polyline.split(p_line_no, p_new_end_line);
 
       if (split_polylines == null) return null;
-      
-      if (split_inside_drill_pad_prohibited(p_line_no, p_new_end_line)) return null;
       
       r_board.remove_item(this);
       BrdTracePolyline[] result = new BrdTracePolyline[2];
@@ -943,8 +942,11 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          System.out.println("PolylineTrace.get_trace_connection_shape p_index out of range");
          return null;
          }
-      PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, p_index + 1);
+      
+      PlaSegmentInt curr_line_segment = polyline.segment_get( p_index + 1);
+      
       ShapeTile result = curr_line_segment.to_simplex().simplify();
+      
       return result;
       }
 

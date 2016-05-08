@@ -109,6 +109,7 @@ public final class MazeShoveTraceAlgo
       // The side of the trace line seen from the doors to expand.
       // Used to determine, if a door is on the right side to put it into the p_door_list.
       PlaSegmentInt shove_line_segment;
+      
       if (from_door.dimension.is_area())
          {
          // shove from a link door into the direction of the other link door.
@@ -129,7 +130,9 @@ public final class MazeShoveTraceAlgo
             }
          
          boolean shove_into_direction_of_trace_start = door_center.length_square(corner_2) < door_center.length_square(corner_1);
-         shove_line_segment = new PlaSegmentInt(trace_polyline, trace_corner_no + 1);
+         
+         shove_line_segment = trace_polyline.segment_get(trace_corner_no + 1);
+
          if (shove_into_direction_of_trace_start)
             {
             // shove from the end point to the start point of the line segment

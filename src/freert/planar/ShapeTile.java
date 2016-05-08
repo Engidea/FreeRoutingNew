@@ -816,21 +816,23 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       return get_instance(new_lines);
       }
 
+   /**
+    * This is probably never tested...
+    */
    public ShapeTile rotate_approx(double p_angle, PlaPointFloat p_pole)
       {
-      if (p_angle == 0)
-         {
-         return this;
-         }
-      PlaPointInt[] new_corners = new PlaPointInt[border_line_count()];
-      for (int i = 0; i < new_corners.length; ++i)
-         {
+      if (p_angle == 0) return this;
 
-         new_corners[i] = corner_approx(i).rotate(p_angle, p_pole).round();
+      PlaPointInt[] new_corners = new PlaPointInt[border_line_count()];
+      for (int index = 0; index < new_corners.length; ++index)
+         {
+         new_corners[index] = corner_approx(index).rotate(p_angle, p_pole).round();
          }
+
       PlaPolygon corner_polygon = new PlaPolygon(new_corners);
       PlaPoint[] polygon_corners = corner_polygon.corner_array();
       ShapeTile result;
+
       if (polygon_corners.length >= 3)
          {
          result = get_instance(polygon_corners);
@@ -838,7 +840,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       else if (polygon_corners.length == 2)
          {
          Polyline curr_polyline = new Polyline(polygon_corners);
-         PlaSegmentInt curr_segment = new PlaSegmentInt(curr_polyline, 0);
+         PlaSegmentInt curr_segment = curr_polyline.segment_get(1);
          result = curr_segment.to_simplex();
          }
       else if (polygon_corners.length == 1)
@@ -926,11 +928,13 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       int prev_intersection_edge_no = -1;
       for (int line_no = 1; line_no < p_polyline.plalinelen(-1); ++line_no)
          {
-         PlaSegmentInt curr_line_seg = new PlaSegmentInt(p_polyline, line_no);
+         PlaSegmentInt curr_line_seg = p_polyline.segment_get(line_no);
+         
          int[] curr_intersections = curr_line_seg.border_intersections(this);
-         for (int i = 0; i < curr_intersections.length; ++i)
+         
+         for (int index = 0; index < curr_intersections.length; ++index)
             {
-            int edge_no = curr_intersections[i];
+            int edge_no = curr_intersections[index];
             if (line_no != prev_intersection_line_no || edge_no != prev_intersection_edge_no)
                {
                result[intersection_count][0] = line_no;
@@ -941,12 +945,13 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
                }
             }
          }
+      
       int[][] normalized_result = new int[intersection_count][2];
-      for (int j = 0; j < intersection_count; ++j)
+      for (int jndex = 0; jndex < intersection_count; ++jndex)
          {
-         for (int i = 0; i < 2; ++i)
+         for (int index = 0; index < 2; ++index)
             {
-            normalized_result[j][i] = result[j][i];
+            normalized_result[jndex][index] = result[jndex][index];
             }
          }
       return normalized_result;
