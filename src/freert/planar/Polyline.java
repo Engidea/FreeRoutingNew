@@ -45,6 +45,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private transient PlaPoint[]      precalculated_corners = null;
    private transient ShapeTileBox    precalculated_bounding_box = null;
    
+   private  PlaPointInt corner_first;
+   
    /**
     * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so that the i-th corner of p_polygon will be the
     * intersection of the i-th and the i+1-th lines of the new created p_polyline for 0 <= i < p_point_arr.length. 
@@ -58,6 +60,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
          throw new IllegalArgumentException(classname+"A must contain at least 2 different points");
       
       lines_arr = new ArrayList<PlaLineInt>(point_arr.length + 1);
+      
+      corner_first = point_arr[0];
       
       // construct perpendicular lines at the start and at the end to represent
       PlaDirection dir = PlaDirection.get_instance(point_arr[0], point_arr[1]);
@@ -88,6 +92,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       if (p_from_corner.equals(p_to_corner))
          throw new IllegalArgumentException(classname+"C must contain at least 2 different points");
+      
+      corner_first = p_from_corner;
       
       lines_arr = new ArrayList<PlaLineInt>(3);
       PlaDirection dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
@@ -140,6 +146,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       corner_approx_arr();
       
       adjust_direction();
+      
+      
+      
       }
 
    private void adjust_direction ()
@@ -192,12 +201,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Checks, if this polyline is empty or if all corner points are equal
-    * This seems weird..... how can a polyline have same points it if has more than three lines non colinear ?
+    * Checks is any corner of the polyline goes back to the first point
+    * It does happen if you are not careful while splitting, should not happen, really...
     */
-   private boolean is_point()
+   private boolean has_corner_loopt()
       {
-      PlaPoint first_corner = corner(0);
+      PlaPoint first_corner = corner_first();
 
       for (int index = 1; index < corner_count(); ++index)
          {
@@ -1038,13 +1047,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       Polyline[] result = new Polyline[2];
       result[0] = new Polyline(first_piece);
+
+      if (result[0].has_corner_loopt() ) return null;
+      
       result[1] = new Polyline(second_piece);
       
-      if (result[0].is_point() || result[1].is_point())
-         {
-         return null;
-         }
-      
+      if ( result[1].has_corner_loopt() )  return null;
+
       return result;
       }
 
