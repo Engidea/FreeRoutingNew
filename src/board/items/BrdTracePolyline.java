@@ -472,17 +472,18 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       }
 
    /**
-    * Looks up traces intersecting with this trace and splits them at the
-    * intersection points. In case of an overlaps, the traces are split at their
-    * first and their last common point. Returns the pieces resulting from
-    * splitting. Found cycles are removed. If nothing is split, the result will
-    * contain just this Trace. If p_clip_shape != null, the split may be
-    * resticted to p_clip_shape.
+    * Looks up traces intersecting with this trace and splits them at the intersection points. 
+    * In case of an overlaps, the traces are split at their first and their last common point. 
+    * Returns the pieces resulting from splitting. 
+    * Found cycles are removed. 
+    * If nothing is split, the result will contain just this Trace. 
+    * If p_clip_shape != null, the split may be resticted to p_clip_shape.
     */
    public Collection<BrdTracePolyline> split(ShapeTileOctagon p_clip_shape)
       {
       Collection<BrdTracePolyline> result = new LinkedList<BrdTracePolyline>();
-      if (!is_nets_normal())
+
+      if ( ! is_nets_normal())
          {
          // only normal nets are split
          result.add(this);
@@ -496,26 +497,26 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          if (p_clip_shape != null)
             {
             PlaSegmentInt curr_segment = new PlaSegmentInt(polyline, index + 1);
-            if (!p_clip_shape.intersects(curr_segment.bounding_box()))
-               {
-               continue;
-               }
+            
+            if ( ! p_clip_shape.intersects(curr_segment.bounding_box())) continue;
             }
+
          ShapeTile curr_shape = get_tree_shape(default_tree, index);
          
          PlaSegmentInt curr_line_segment = new PlaSegmentInt(polyline, index + 1);
          
          Collection<ShapeTreeEntry> overlapping_tree_entries = new LinkedList<ShapeTreeEntry>();
+
          // look for intersecting traces with the i-th line segment
+         
          default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
+         
          Iterator<ShapeTreeEntry> it = overlapping_tree_entries.iterator();
+         
          while (it.hasNext())
             {
-            if (!is_on_the_board())
-               {
-               // this trace has been deleted in a cleanup operation
-               return result;
-               }
+            // this trace has been deleted in a cleanup operation
+            if (!is_on_the_board()) return result;
             
             ShapeTreeEntry found_entry = it.next();
             
@@ -553,8 +554,11 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             if (found_item instanceof BrdTracePolyline)
                {
                BrdTracePolyline found_trace = (BrdTracePolyline) found_item;
+               
                PlaSegmentInt found_line_segment = new PlaSegmentInt(found_trace.polyline, found_entry.shape_index_in_object + 1);
+               
                PlaLineInt[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
+               
                Collection<BrdTracePolyline> split_pieces = new LinkedList<BrdTracePolyline>();
 
                // try splitting the found trace first
@@ -575,9 +579,9 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                               {
                               found_trace_split = true;
                               split_pieces.add(curr_split_pieces[k]);
-
                               }
                            }
+
                         if (found_trace_split)
                            {
                            // reread the overlapping tree entries and reset the iterator, because the board has changed
@@ -592,6 +596,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                      split_pieces.add(found_trace);
                      }
                   }
+               
                // now try splitting the own trace
 
                intersecting_lines = curr_line_segment.intersection(found_line_segment);
@@ -616,8 +621,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                   }
                if (found_trace_split || own_trace_split)
                   {
-                  // something was split,
-                  // remove cycles containing a split piece
+                  // something was split, remove cycles containing a split piece
                   Iterator<BrdTracePolyline> it2 = split_pieces.iterator();
                   for (int j = 0; j < 2; ++j)
                      {
@@ -627,15 +631,12 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                         r_board.remove_if_cycle(curr_piece);
                         }
 
-                     // remove cycles in the own split pieces last
-                     // to preserve them, if possible
+                     // remove cycles in the own split pieces last to preserve them, if possible
                      it2 = result.iterator();
                      }
                   }
-               if (own_trace_split)
-                  {
-                  break;
-                  }
+               
+               if (own_trace_split) break;
                }
             else if (found_item instanceof BrdAbit)
                {
@@ -661,30 +662,22 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                   }
                if (!ignore_areas && get_start_contacts().contains(found_item) && get_end_contacts().contains(found_item))
                   {
-                  // this trace can be removed because of cycle with conduction
-                  // area
+                  // this trace can be removed because of cycle with conduction area
                   r_board.remove_item(this);
                   return result;
                   }
                }
             }
-         if (own_trace_split)
-            {
-            break;
-            }
+         
+         if (own_trace_split)  break;
          }
-      if (!own_trace_split)
-         {
-         result.add(this);
-         }
+      
+      if (!own_trace_split) result.add(this);
       
       if (result.size() > 1)
          {
-         for (BrdItem curr_item : result)
-            {
-            // need to clean up possible autoroute information
-            curr_item.art_item_clear(); 
-            }
+         // need to clean up possible autoroute information
+         for (BrdItem curr_item : result)  curr_item.art_item_clear(); 
          }
       
       return result;

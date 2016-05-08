@@ -83,24 +83,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
 
    /**
     * creates a polyline consisting of 3 lines
-    * This cannot actually be called with rationals since it will throw exception !!
-    * @deprecated
-    */
-   public Polyline(PlaPoint p_from_corner, PlaPoint p_to_corner)
-      {
-      if (p_from_corner.equals(p_to_corner))
-         throw new IllegalArgumentException(classname+"B must contain at least 2 different points");
-      
-      lines_arr = new ArrayList<PlaLineInt>(3);
-      PlaDirection dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      lines_arr.add( new PlaLineInt(p_from_corner, dir.turn_45_degree(2)) );
-      lines_arr.add( new PlaLineInt(p_from_corner, p_to_corner) );
-      dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      lines_arr.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
-      }
-
-   /**
-    * creates a polyline consisting of 3 lines
     */
    public Polyline(PlaPointInt p_from_corner, PlaPointInt p_to_corner)
       {
