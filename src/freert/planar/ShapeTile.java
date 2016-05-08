@@ -41,14 +41,17 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
    /**
     * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
     */
-   public static ShapeTile get_instance(PlaPoint[] p_convex_polygon)
+   public static ShapeTile get_instance(PlaPointInt[] p_convex_polygon)
       {
       PlaLineInt[] line_arr = new PlaLineInt[p_convex_polygon.length];
-      for (int j = 0; j < line_arr.length - 1; ++j)
+      
+      for (int jndex = 0; jndex < line_arr.length - 1; ++jndex)
          {
-         line_arr[j] = new PlaLineInt(p_convex_polygon[j], p_convex_polygon[j + 1]);
+         line_arr[jndex] = new PlaLineInt(p_convex_polygon[jndex], p_convex_polygon[jndex + 1]);
          }
+      
       line_arr[line_arr.length - 1] = new PlaLineInt(p_convex_polygon[line_arr.length - 1], p_convex_polygon[0]);
+      
       return get_instance(line_arr);
       }
 
@@ -830,7 +833,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          }
 
       PlaPolygon corner_polygon = new PlaPolygon(new_corners);
-      PlaPoint[] polygon_corners = corner_polygon.corner_array();
+      PlaPointInt[] polygon_corners = corner_polygon.corner_array();
       ShapeTile result;
 
       if (polygon_corners.length >= 3)

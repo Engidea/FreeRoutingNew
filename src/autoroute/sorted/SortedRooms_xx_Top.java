@@ -195,8 +195,8 @@ public final class SortedRooms_xx_Top
             }
       
          ShapeTile curr_shape = curr_object.get_tree_shape(p_autoroute_search_tree, curr_entry.shape_index_in_object);
-         ShapeTile intersection = room_shape.intersection(curr_shape);
-         PlaDimension dimension = intersection.dimension();
+         ShapeTile shape_intersect = room_shape.intersection(curr_shape);
+         PlaDimension dimension = shape_intersect.dimension();
          if (dimension.is_area() )
             {
             if (completed_room instanceof ExpandRoomObstacle && curr_object instanceof BrdItem)
@@ -249,7 +249,7 @@ public final class SortedRooms_xx_Top
                }
             if (neighbour_room != null)
                {
-               if (SortedRooms_xx_Degree.insert_door_ok(completed_room, neighbour_room, intersection))
+               if (SortedRooms_xx_Degree.insert_door_ok(completed_room, neighbour_room, shape_intersect))
                   {
                   ExpandDoor new_door = new ExpandDoor(completed_room, neighbour_room, PlaDimension.LINE);
                   neighbour_room.add_door(new_door);
@@ -260,7 +260,7 @@ public final class SortedRooms_xx_Top
          else
             // dimensin = 0
             {
-            PlaPointInt touching_point = intersection.corner(0);
+            PlaPointInt touching_point = shape_intersect.corner(0);
             int room_corner_no = room_shape.equals_corner(touching_point);
             boolean room_touch_is_corner;
             int touching_side_no_of_room;

@@ -46,6 +46,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private transient ShapeTileBox    precalculated_bounding_box = null;
    
    private  PlaPointInt corner_first;
+   private  PlaPointInt corner_last;
    
    /**
     * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so that the i-th corner of p_polygon will be the
@@ -70,9 +71,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
       for (int index = 1; index < point_arr.length; ++index)
          lines_arr.add( new PlaLineInt(point_arr[index - 1], point_arr[index] ) );
       
+      corner_last = point_arr[point_arr.length - 1];
+      
       // the first and the last point of point_arr as intersection of lines.
-      dir = PlaDirection.get_instance(point_arr[point_arr.length - 1], point_arr[point_arr.length - 2]);
-      lines_arr.add( new PlaLineInt(point_arr[point_arr.length - 1], dir.turn_45_degree(2) ) );
+      dir = PlaDirection.get_instance(corner_last, point_arr[point_arr.length - 2]);
+      lines_arr.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
+      
+      precalculated_corners = new PlaPoint[corner_count()];
+      precalculated_corners[0] = corner_first;
+      precalculated_corners[corner_count()-1] = corner_last;
       }
 
    public Polyline(PlaPoint[] p_points)
@@ -101,6 +108,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
       lines_arr.add( new PlaLineInt(p_from_corner, p_to_corner) );
       dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
       lines_arr.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
+      
+      precalculated_corners = new PlaPoint[corner_count()];
+      precalculated_corners[0] = p_from_corner;
+      precalculated_corners[1] = p_to_corner;
       }
 
    /**
@@ -147,10 +158,46 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       adjust_direction();
       
+      precalculated_corners = new PlaPoint[corner_count()];
+      precalculated_corners[0] = plaline(0).intersection(plaline(1));
       
+/*
+      corner_first = plaline(1).point_a;
       
+      if ( ! corner_first.equals(precalculated_corners[0]))
+         {
+         print_dxy(corner_first,precalculated_corners[0]);
+         
+         }
+*/
       }
 
+   
+   private void print_dxy (PlaPointInt a, PlaPoint p_b)
+      {
+      if ( p_b.is_rational() )
+         {
+         System.err.println("ahhh rational");
+         return;
+         }
+   
+      PlaPointInt b = p_b.round();
+      
+      if ( a.v_x != b.v_x )
+         { 
+         int delta = a.v_x - b.v_x;
+         
+         System.err.println("ahhh dx="+ delta) ;
+         
+         if ( delta > 1000 )
+            System.err.println("ahhh really") ;
+         }
+      
+      if ( a.v_y != b.v_y )
+         System.err.println("ahhh dy="+ ( a.v_y - b.v_y)) ;
+      
+      }
+   
    private void adjust_direction ()
       {
       // turn  the direction of the lines that they point always from the previous corner to the next corner
@@ -170,7 +217,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          PlaSide side1 = d0.side_of(d1);
       
          if (side1 == side_of_line) continue;
-   
+         
          lines_arr.set(index, cur_l.opposite() );
          }
       }
@@ -257,7 +304,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaPoint corner_first()
       {
-      return corner(0);
+      PlaPoint a_point = corner(0);
+      
+      //if ( a_point.is_rational() )
+      //   System.err.println(classname+"corner_first: RATIONAL");
+      
+      return a_point;
       }
 
    /**

@@ -1045,11 +1045,14 @@ public class ShapeSearchTree extends ShapeTreeMinArea
                ShapePolyline curr_outline_shape = p_board_outline.get_shape(shape_no);
                int border_line_count = curr_outline_shape.border_line_count();
                curr_line_arr[0] = curr_outline_shape.border_line(border_line_count - 1);
-               for (int i = 0; i < border_line_count; ++i)
+               
+               for (int iindex = 0; iindex < border_line_count; ++iindex)
                   {
-                  curr_line_arr[1] = curr_outline_shape.border_line(i);
-                  curr_line_arr[2] = curr_outline_shape.border_line((i + 1) % border_line_count);
+                  curr_line_arr[1] = curr_outline_shape.border_line(iindex);
+                  curr_line_arr[2] = curr_outline_shape.border_line((iindex + 1) % border_line_count);
+               
                   Polyline tmp_polyline = new Polyline(curr_line_arr);
+                  
                   int cmp_value = get_clearance_compensation(p_board_outline.clearance_class_no(), 0);
                   result[curr_no] = tmp_polyline.offset_shape(half_width + cmp_value, 0);
                   ++curr_no;

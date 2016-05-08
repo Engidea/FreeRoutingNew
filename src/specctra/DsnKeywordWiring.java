@@ -527,6 +527,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
             PlaPointFloat curr_b = p_par.coordinate_transform.dsn_to_board(curr_point);
             line_arr[index] = new PlaLineInt(curr_a.round(), curr_b.round());
             }
+         
          Polyline trace_polyline = new Polyline(line_arr);
          
          result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
