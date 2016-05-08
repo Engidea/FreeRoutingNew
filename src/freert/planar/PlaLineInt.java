@@ -76,18 +76,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       line_dir = new PlaDirection (point_a,point_b);
       }
 
-   public PlaLineInt(PlaPoint p_a, PlaDirection p_dir)
-      {
-      if (! (p_a instanceof PlaPointInt ) )
-         throw new IllegalArgumentException("Line(p_a, p_dir) only implemented for IntPoints till now");
-
-      point_a = (PlaPointInt)p_a;
-      
-      point_b = point_a.translate_by(p_dir);
-      
-      line_dir = p_dir;
-      }
-
    public PlaLineInt(PlaPointInt p_a, PlaDirection p_dir)
       {
       point_a = p_a;

@@ -316,6 +316,7 @@ public abstract class AlgoPullTight
          }
       
       PlaLineInt translate_line = p_line_arr[p_no];
+      
       PlaPoint prev_corner = p_line_arr[p_no - 2].intersection(p_line_arr[p_no - 1]);
       PlaPoint next_corner = p_line_arr[p_no + 1].intersection(p_line_arr[p_no + 2]);
       
@@ -358,12 +359,13 @@ public abstract class AlgoPullTight
 
          if (first_time && nearest_point instanceof PlaPointInt)
             {
-            check_lines[1] = new PlaLineInt(nearest_point, translate_line.direction());
+            check_lines[1] = new PlaLineInt((PlaPointInt)nearest_point, translate_line.direction());
             }
          else
             {
             check_lines[1] = translate_line.translate(-translate_dist);
             }
+         
          if (check_lines[1].equals(translate_line))
             {
             // may happen at first time if nearest_point is not an IntPoint

@@ -1159,7 +1159,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       ShapeTile a_pin_tile = (ShapeTile)pin_shape;
       
-      PlaPoint pin_center = contact_pin.center_get();
+      PlaPointInt pin_center = contact_pin.center_get();
 
       final double edge_to_turn_dist = r_board.brd_rules.get_pin_edge_to_turn_dist();
 

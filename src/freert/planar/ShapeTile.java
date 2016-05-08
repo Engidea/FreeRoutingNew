@@ -876,7 +876,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
     * Calculates the border line of this shape intersecting the ray from p_from_point into the direction p_direction. p_from_point
     * is assumed to be inside this shape, otherwise -1 is returned.
     */
-   public int intersecting_border_line_no(PlaPoint p_from_point, PlaDirection p_direction)
+   public int intersecting_border_line_no(PlaPointInt p_from_point, PlaDirection p_direction)
       {
       if (! contains(p_from_point)) return -1;
       

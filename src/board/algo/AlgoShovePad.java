@@ -342,34 +342,37 @@ public final class AlgoShovePad
    public BrdFromSide calc_from_side(ShapeTile p_shape, PlaPointInt p_shape_center, int p_layer, int p_offset, int p_cl_class)
       {
       int[] empty_arr = new int[0];
+      
       ShapeTile offset_shape = (ShapeTile) p_shape.offset(p_offset);
-      for (int i = 0; i < offset_shape.border_line_count(); ++i)
+      
+      for (int index = 0; index < offset_shape.border_line_count(); ++index)
          {
-         ShapeTile check_shape = calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
+         ShapeTile check_shape = calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(index));
 
          if (r_board.check_trace_shape(check_shape, p_layer, empty_arr, p_cl_class, null))
             {
-            return new BrdFromSide(i, null);
+            return new BrdFromSide(index, null);
             }
          }
       
       // try second check without clearance
-      for (int i = 0; i < offset_shape.border_line_count(); ++i)
+      for (int index = 0; index < offset_shape.border_line_count(); ++index)
          {
-         ShapeTile check_shape = calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(i));
+         ShapeTile check_shape = calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(index));
          if (r_board.check_trace_shape(check_shape, p_layer, empty_arr, 0, null))
             {
-            return new BrdFromSide(i, null);
+            return new BrdFromSide(index, null);
             }
          }
       
       return BrdFromSide.NOT_CALCULATED;
       }
 
-   private static ShapeTile calc_check_chape_for_from_side(ShapeTile p_shape, PlaPoint p_shape_center, PlaLineInt p_border_line)
+   private ShapeTile calc_check_chape_for_from_side(ShapeTile p_shape, PlaPointInt p_shape_center, PlaLineInt p_border_line)
       {
       PlaPointFloat shape_center = p_shape_center.to_float();
       PlaPointFloat offset_projection = shape_center.projection_approx(p_border_line);
+      
       // Make shure, that direction restrictions are retained.
       PlaLineInt[] line_arr = new PlaLineInt[3];
       PlaDirection curr_dir = p_border_line.direction();
@@ -377,6 +380,7 @@ public final class AlgoShovePad
       line_arr[1] = new PlaLineInt(p_shape_center, curr_dir.turn_45_degree(2));
       line_arr[2] = new PlaLineInt(offset_projection.round(), curr_dir);
       Polyline check_line = new Polyline(line_arr);
+      
       return check_line.offset_shape(1, 0);
       }
 
@@ -392,14 +396,9 @@ public final class AlgoShovePad
          }
       
       ShapeTileOctagon pad_octagon = p_pad_shape.bounding_octagon();
-      if (!(p_line.point_a instanceof PlaPointInt && p_line.point_b instanceof PlaPointInt))
-         {
-         System.out.println(classname+"in_front_of_pad NOT PlaPointInt");
-         return true;
-         }
       
-      PlaPointInt line_a = (PlaPointInt) p_line.point_a;
-      PlaPointInt line_b = (PlaPointInt) p_line.point_b;
+      PlaPointInt point_a = p_line.point_a;
+      PlaPointInt point_b = p_line.point_b;
 
       double diag_width = p_width * Math.sqrt(2);
 
@@ -407,76 +406,76 @@ public final class AlgoShovePad
       switch (p_from_side)
          {
          case 0:
-            result = Math.min(line_a.v_y, line_b.v_y) >= pad_octagon.oct_uy + p_width || Math.max(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) <= pad_octagon.oct_ulx - diag_width
-                  || Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_x) >= pad_octagon.oct_urx + diag_width;
+            result = Math.min(point_a.v_y, point_b.v_y) >= pad_octagon.oct_uy + p_width || Math.max(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) <= pad_octagon.oct_ulx - diag_width
+                  || Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_x) >= pad_octagon.oct_urx + diag_width;
             if (p_with_sides && !result)
                {
-               result = Math.max(line_a.v_x, line_b.v_x) <= pad_octagon.oct_lx - p_width && Math.min(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) <= pad_octagon.oct_ulx - diag_width
-                     || Math.min(line_a.v_x, line_b.v_x) >= pad_octagon.oct_rx + p_width && Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) >= pad_octagon.oct_urx + diag_width;
+               result = Math.max(point_a.v_x, point_b.v_x) <= pad_octagon.oct_lx - p_width && Math.min(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) <= pad_octagon.oct_ulx - diag_width
+                     || Math.min(point_a.v_x, point_b.v_x) >= pad_octagon.oct_rx + p_width && Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) >= pad_octagon.oct_urx + diag_width;
                }
             break;
          case 1:
-            result = Math.min(line_a.v_y, line_b.v_y) >= pad_octagon.oct_uy + p_width || Math.max(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) <= pad_octagon.oct_ulx - diag_width
-                  || Math.max(line_a.v_x, line_b.v_x) <= pad_octagon.oct_lx - p_width;
+            result = Math.min(point_a.v_y, point_b.v_y) >= pad_octagon.oct_uy + p_width || Math.max(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) <= pad_octagon.oct_ulx - diag_width
+                  || Math.max(point_a.v_x, point_b.v_x) <= pad_octagon.oct_lx - p_width;
             if (p_with_sides && !result)
                {
-               result = Math.min(line_a.v_x, line_b.v_x) <= pad_octagon.oct_lx - p_width && Math.max(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) <= pad_octagon.oct_llx - diag_width
-                     || Math.max(line_a.v_y, line_b.v_y) >= pad_octagon.oct_uy + p_width && Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) >= pad_octagon.oct_urx + diag_width;
+               result = Math.min(point_a.v_x, point_b.v_x) <= pad_octagon.oct_lx - p_width && Math.max(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) <= pad_octagon.oct_llx - diag_width
+                     || Math.max(point_a.v_y, point_b.v_y) >= pad_octagon.oct_uy + p_width && Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) >= pad_octagon.oct_urx + diag_width;
                }
             break;
          case 2:
-            result = Math.max(line_a.v_x, line_b.v_x) <= pad_octagon.oct_lx - p_width || Math.max(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) <= pad_octagon.oct_ulx - diag_width
-                  || Math.max(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) <= pad_octagon.oct_llx - diag_width;
+            result = Math.max(point_a.v_x, point_b.v_x) <= pad_octagon.oct_lx - p_width || Math.max(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) <= pad_octagon.oct_ulx - diag_width
+                  || Math.max(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) <= pad_octagon.oct_llx - diag_width;
             if (p_with_sides && !result)
                {
-               result = Math.max(line_a.v_y, line_b.v_y) <= pad_octagon.oct_ly - p_width && Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) <= pad_octagon.oct_llx - diag_width
-                     || Math.min(line_a.v_y, line_b.v_y) >= pad_octagon.oct_uy + p_width && Math.min(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) <= pad_octagon.oct_ulx - diag_width;
+               result = Math.max(point_a.v_y, point_b.v_y) <= pad_octagon.oct_ly - p_width && Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) <= pad_octagon.oct_llx - diag_width
+                     || Math.min(point_a.v_y, point_b.v_y) >= pad_octagon.oct_uy + p_width && Math.min(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) <= pad_octagon.oct_ulx - diag_width;
 
                }
             break;
          case 3:
-            result = Math.max(line_a.v_x, line_b.v_x) <= pad_octagon.oct_lx - p_width || Math.max(line_a.v_y, line_b.v_y) <= pad_octagon.oct_ly - p_width
-                  || Math.max(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) <= pad_octagon.oct_llx - diag_width;
+            result = Math.max(point_a.v_x, point_b.v_x) <= pad_octagon.oct_lx - p_width || Math.max(point_a.v_y, point_b.v_y) <= pad_octagon.oct_ly - p_width
+                  || Math.max(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) <= pad_octagon.oct_llx - diag_width;
             if (p_with_sides && !result)
                {
-               result = Math.min(line_a.v_y, line_b.v_y) <= pad_octagon.oct_ly - p_width && Math.min(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) >= pad_octagon.oct_lrx + diag_width
-                     || Math.min(line_a.v_x, line_b.v_x) <= pad_octagon.oct_lx - p_width && Math.max(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) <= pad_octagon.oct_ulx - diag_width;
+               result = Math.min(point_a.v_y, point_b.v_y) <= pad_octagon.oct_ly - p_width && Math.min(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) >= pad_octagon.oct_lrx + diag_width
+                     || Math.min(point_a.v_x, point_b.v_x) <= pad_octagon.oct_lx - p_width && Math.max(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) <= pad_octagon.oct_ulx - diag_width;
                }
             break;
          case 4:
-            result = Math.max(line_a.v_y, line_b.v_y) <= pad_octagon.oct_ly - p_width || Math.max(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) <= pad_octagon.oct_llx - diag_width
-                  || Math.min(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) >= pad_octagon.oct_lrx + diag_width;
+            result = Math.max(point_a.v_y, point_b.v_y) <= pad_octagon.oct_ly - p_width || Math.max(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) <= pad_octagon.oct_llx - diag_width
+                  || Math.min(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) >= pad_octagon.oct_lrx + diag_width;
             if (p_with_sides && !result)
                {
-               result = Math.min(line_a.v_x, line_b.v_x) >= pad_octagon.oct_rx + p_width && Math.max(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) >= pad_octagon.oct_lrx + diag_width
-                     || Math.max(line_a.v_x, line_b.v_x) <= pad_octagon.oct_lx - p_width && Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) <= pad_octagon.oct_llx - diag_width;
+               result = Math.min(point_a.v_x, point_b.v_x) >= pad_octagon.oct_rx + p_width && Math.max(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) >= pad_octagon.oct_lrx + diag_width
+                     || Math.max(point_a.v_x, point_b.v_x) <= pad_octagon.oct_lx - p_width && Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) <= pad_octagon.oct_llx - diag_width;
                }
             break;
          case 5:
-            result = Math.max(line_a.v_y, line_b.v_y) <= pad_octagon.oct_ly - p_width || Math.min(line_a.v_x, line_b.v_x) >= pad_octagon.oct_rx + p_width
-                  || Math.min(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) >= pad_octagon.oct_lrx + diag_width;
+            result = Math.max(point_a.v_y, point_b.v_y) <= pad_octagon.oct_ly - p_width || Math.min(point_a.v_x, point_b.v_x) >= pad_octagon.oct_rx + p_width
+                  || Math.min(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) >= pad_octagon.oct_lrx + diag_width;
             if (p_with_sides && !result)
                {
-               result = Math.max(line_a.v_x, line_b.v_x) >= pad_octagon.oct_rx + p_width && Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) >= pad_octagon.oct_urx + diag_width
-                     || Math.min(line_a.v_y, line_b.v_y) <= pad_octagon.oct_ly - p_width && Math.max(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) <= pad_octagon.oct_llx - diag_width;
+               result = Math.max(point_a.v_x, point_b.v_x) >= pad_octagon.oct_rx + p_width && Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) >= pad_octagon.oct_urx + diag_width
+                     || Math.min(point_a.v_y, point_b.v_y) <= pad_octagon.oct_ly - p_width && Math.max(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) <= pad_octagon.oct_llx - diag_width;
                }
             break;
          case 6:
-            result = Math.min(line_a.v_x, line_b.v_x) >= pad_octagon.oct_rx + p_width || Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) >= pad_octagon.oct_urx + diag_width
-                  || Math.min(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) >= pad_octagon.oct_lrx + diag_width;
+            result = Math.min(point_a.v_x, point_b.v_x) >= pad_octagon.oct_rx + p_width || Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) >= pad_octagon.oct_urx + diag_width
+                  || Math.min(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) >= pad_octagon.oct_lrx + diag_width;
             if (p_with_sides && !result)
                {
-               result = Math.max(line_a.v_y, line_b.v_y) <= pad_octagon.oct_ly - p_width && Math.max(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) >= pad_octagon.oct_lrx + diag_width
-                     || Math.min(line_a.v_y, line_b.v_y) >= pad_octagon.oct_uy + p_width && Math.max(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) >= pad_octagon.oct_urx + diag_width;
+               result = Math.max(point_a.v_y, point_b.v_y) <= pad_octagon.oct_ly - p_width && Math.max(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) >= pad_octagon.oct_lrx + diag_width
+                     || Math.min(point_a.v_y, point_b.v_y) >= pad_octagon.oct_uy + p_width && Math.max(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) >= pad_octagon.oct_urx + diag_width;
                }
             break;
          case 7:
-            result = Math.min(line_a.v_y, line_b.v_y) >= pad_octagon.oct_uy + p_width || Math.min(line_a.v_x + line_a.v_y, line_b.v_x + line_b.v_y) >= pad_octagon.oct_urx + diag_width
-                  || Math.min(line_a.v_x, line_b.v_x) >= pad_octagon.oct_rx + p_width;
+            result = Math.min(point_a.v_y, point_b.v_y) >= pad_octagon.oct_uy + p_width || Math.min(point_a.v_x + point_a.v_y, point_b.v_x + point_b.v_y) >= pad_octagon.oct_urx + diag_width
+                  || Math.min(point_a.v_x, point_b.v_x) >= pad_octagon.oct_rx + p_width;
             if (p_with_sides && !result)
                {
-               result = Math.max(line_a.v_y, line_b.v_y) >= pad_octagon.oct_uy + p_width && Math.max(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) <= pad_octagon.oct_ulx - diag_width
-                     || Math.max(line_a.v_x, line_b.v_x) >= pad_octagon.oct_rx + p_width && Math.min(line_a.v_x - line_a.v_y, line_b.v_x - line_b.v_y) >= pad_octagon.oct_lrx + diag_width;
+               result = Math.max(point_a.v_y, point_b.v_y) >= pad_octagon.oct_uy + p_width && Math.max(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) <= pad_octagon.oct_ulx - diag_width
+                     || Math.max(point_a.v_x, point_b.v_x) >= pad_octagon.oct_rx + p_width && Math.min(point_a.v_x - point_a.v_y, point_b.v_x - point_b.v_y) >= pad_octagon.oct_lrx + diag_width;
                }
             break;
          default:

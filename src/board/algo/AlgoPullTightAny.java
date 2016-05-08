@@ -115,7 +115,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
             boolean ok = true;
             if (new_line_index == 1)
                {
-               if (!(p_polyline.corner_first() instanceof PlaPointInt))
+               PlaPoint corner_first = p_polyline.corner_first();
+               
+               if (corner_first.is_rational())
                   {
                   // first corner must not be changed
                   ok = false;
@@ -123,16 +125,19 @@ public final class AlgoPullTightAny extends AlgoPullTight
                else
                   {
                   PlaDirection dir = curr_lines[1].direction();
-                  curr_lines[0] = new PlaLineInt(p_polyline.corner_first(), dir.turn_45_degree(2));
+                  curr_lines[0] = new PlaLineInt((PlaPointInt)corner_first, dir.turn_45_degree(2));
                   }
                }
             else
                {
                curr_lines[0] = new_lines[new_line_index - 1];
                }
+            
             if (index == last_index)
                {
-               if (!(p_polyline.corner_last() instanceof PlaPointInt))
+               PlaPoint corner_last = p_polyline.corner_last();
+
+               if (corner_last.is_rational())
                   {
                   // last corner must not be changed
                   ok = false;
@@ -140,7 +145,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                else
                   {
                   PlaDirection dir = curr_lines[1].direction();
-                  curr_lines[2] = new PlaLineInt(p_polyline.corner_last(), dir.turn_45_degree(2));
+                  curr_lines[2] = new PlaLineInt((PlaPointInt)corner_last, dir.turn_45_degree(2));
                   }
                }
             else
@@ -148,11 +153,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
                curr_lines[2] = p_polyline.plaline(index + 3);
                }
 
-            // check, if the intersection of curr_lines[0] and curr_lines[1]
-            // is near new_a and the intersection of curr_lines[0] and
+            // check, if the intersection of curr_lines[0] and curr_lines[1] is near new_a and the intersection of curr_lines[0] and
             // curr_lines[1] and curr_lines[2] is near new_b.
-            // There may be numerical stability proplems with
-            // near parallel lines.
+            // There may be numerical stability proplems with near parallel lines.
 
             final double check_dist = 100;
             if (ok)
