@@ -489,6 +489,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          }
       
       boolean own_trace_split = false;
+      
       ShapeSearchTree default_tree = r_board.search_tree_manager.get_default_tree();
 
       for (int index = 0; index < polyline.plalinelen(-2); ++index)
@@ -568,10 +569,11 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                   for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
                      {
                      int line_no = found_entry.shape_index_in_object + 1;
+                     
                      BrdTracePolyline[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[jndex]);
+
                      if (curr_split_pieces != null)
                         {
-
                         for (int k = 0; k < 2; ++k)
                            {
                            if (curr_split_pieces[k] != null)

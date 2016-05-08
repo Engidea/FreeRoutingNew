@@ -982,7 +982,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * p_endline and the line with number p_line_no must not be parallel. 
     * The order of the lines ins the two result pieces is preserved. 
     * p_line_no must be bigger than 0 and less then arr.length - 1.
-    * Returns null, if nothing was split
+    * Damiano ok, let me try to split ending into an int point, since the "old" trace will be deleted...
+    * @return null, if nothing was split
     */
    public Polyline[] split(int p_line_no, PlaLineInt p_end_line)
       {
@@ -994,15 +995,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       if (plaline(p_line_no).is_parallel(p_end_line)) return null;
       
-      PlaPoint new_end_corner = plaline(p_line_no).intersection(p_end_line);
+      PlaPointFloat a_corner = plaline(p_line_no).intersection_approx(p_end_line);
       
-      if ( new_end_corner.is_NaN() ) return null;
+      if ( a_corner.is_NaN() ) return null;
       
-      if ( new_end_corner.is_rational() )
-         {
-         System.err.println(classname+"split: new_end_corner.is_rational !!");
-//         return null;
-         }
+      // Yes, it happens a lot that the end corner is rational, however, test shows that it is ok to round it
+      // to an int point since it actually must fall into a drawable board
+      PlaPointInt new_end_corner = a_corner.round();
 
       // No split, if p_end_line does not intersect, but touches only tnis Polyline at an end point.
       if (p_line_no == 1 && new_end_corner.equals(corner_first()) ) return null;
