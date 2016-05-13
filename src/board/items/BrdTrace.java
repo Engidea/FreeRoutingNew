@@ -268,34 +268,28 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       }
 
    @Override
-   public PlaPoint normal_contact_point(BrdAbit p_drill_item)
+   public PlaPointInt normal_contact_point(BrdAbit p_drill_item)
       {
       return p_drill_item.normal_contact_point(this);
       }
 
    @Override
-   public PlaPoint normal_contact_point(BrdTrace p_other)
+   public PlaPointInt normal_contact_point(BrdTrace p_other)
       {
       if ( layer_no != p_other.layer_no) return null;
 
       boolean contact_at_first_corner = corner_first().equals(p_other.corner_first()) || corner_first().equals(p_other.corner_last());
       boolean contact_at_last_corner = corner_last().equals(p_other.corner_first()) || corner_last().equals(p_other.corner_last());
-      PlaPoint result;
-      if (!(contact_at_first_corner || contact_at_last_corner) || contact_at_first_corner && contact_at_last_corner)
-         {
-         // no contact point or more than 1 contact point
-         result = null;
-         }
-      else if (contact_at_first_corner)
-         {
-         result = corner_first();
-         }
-      else
-         // contact at last corner
-         {
-         result = corner_last();
-         }
-      return result;
+      
+      // more than 1 contact point, it is an invalid situation
+      if ( contact_at_first_corner && contact_at_last_corner) return null;
+
+      // added rounding, it should be an IntPoint in any case...
+      if (contact_at_first_corner) return corner_first().round();
+
+      if (contact_at_last_corner)  return corner_last().round();
+
+      return null;
       }
 
    @Override

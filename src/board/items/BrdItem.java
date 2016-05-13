@@ -631,7 +631,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * auxiliary function
     * Overridden in subclasses
     */
-   public PlaPoint normal_contact_point(BrdTrace p_other)
+   public PlaPointInt normal_contact_point(BrdTrace p_other)
       {
       return null;
       }
@@ -640,7 +640,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * auxiliary function
     * Overridden in subclasses
     */
-   public PlaPoint normal_contact_point(BrdAbit p_other)
+   public PlaPointInt normal_contact_point(BrdAbit p_other)
       {
       return null;
       }
