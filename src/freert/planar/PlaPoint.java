@@ -128,6 +128,19 @@ public abstract class PlaPoint implements PlaObject, Serializable
       }
 
    /**
+    * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; 
+    * Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2; 
+    * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
+    */
+   public final PlaSide side_of(PlaPointInt p_1, PlaPointInt p_2)
+      {
+      PlaVector v1 = difference_by(p_1);
+      PlaVector v2 = p_2.difference_by(p_1);
+      return v1.side_of(v2);
+      }
+
+   
+   /**
     * Calculates the perpendicular direction froma this point to p_line. Returns Direction.NULL, if this point lies on p_line.
     */
    public PlaDirection perpendicular_direction(PlaLineInt p_line)

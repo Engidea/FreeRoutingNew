@@ -714,26 +714,6 @@ public final class ShapeTileSimplex extends ShapeTile
       return offset_simplex.intersection(offset_oct.to_Simplex());
       }
 
-   /**
-    * Returns the number of the rightmost corner seen from p_from_point No other point of this simplex may be to the right of the
-    * line from p_from_point to the result corner.
-    */
-   public int index_of_right_most_corner(PlaPoint p_from_point)
-      {
-      PlaPoint pole = p_from_point;
-      PlaPoint right_most_corner = corner(0);
-      int result = 0;
-      for (int i = 1; i < lines_arr.length; ++i)
-         {
-         PlaPoint curr_corner = corner(i);
-         if (curr_corner.side_of(pole, right_most_corner) == PlaSide.ON_THE_RIGHT)
-            {
-            right_most_corner = curr_corner;
-            result = i;
-            }
-         }
-      return result;
-      }
 
    /**
     * Returns the intersection of p_box with this simplex

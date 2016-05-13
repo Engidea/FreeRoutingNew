@@ -307,45 +307,5 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
 
       return false;
       }
-
-   /**
-    * Calculates the left most corner of this shape, when looked at from p_from_point.
-    */
-   public final PlaPoint left_most_corner(PlaPoint p_from_point)
-      {
-      if (is_empty()) return p_from_point;
-
-      PlaPoint result = corner(0);
-      int corner_count = border_line_count();
-      for (int index = 1; index < corner_count; ++index)
-         {
-         PlaPoint curr_corner = corner(index);
-         
-         if (curr_corner.side_of(p_from_point, result) == PlaSide.ON_THE_LEFT)
-            {
-            result = curr_corner;
-            }
-         }
-      return result;
-      }
-
-   /**
-    * Calculates the left most corner of this shape, when looked at from p_from_point.
-    */
-   public PlaPoint right_most_corner(PlaPoint p_from_point)
-      {
-      if ( is_empty()) return p_from_point;
-
-      PlaPoint result = corner(0);
-      int corner_count = border_line_count();
-      for (int i = 1; i < corner_count; ++i)
-         {
-         PlaPoint curr_corner = this.corner(i);
-         if (curr_corner.side_of(p_from_point, result) == PlaSide.ON_THE_RIGHT)
-            {
-            result = curr_corner;
-            }
-         }
-      return result;
-      }
+   
    }

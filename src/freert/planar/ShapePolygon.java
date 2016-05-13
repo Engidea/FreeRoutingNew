@@ -387,14 +387,13 @@ public final class ShapePolygon extends ShapePolyline
       {
       if (corners.length <= 2) return true;
       
-      PlaPoint prev_point = corners[corners.length - 1];
-      PlaPoint curr_point = corners[0];
-      PlaPoint next_point = corners[1];
+      PlaPointInt prev_point = corners[corners.length - 1];
+      PlaPointInt curr_point = corners[0];
+      PlaPointInt next_point = corners[1];
 
       for (int ind = 0; ind < corners.length; ++ind)
          {
-         if (next_point.side_of(prev_point, curr_point) == PlaSide.ON_THE_RIGHT)
-            return false;
+         if (next_point.side_of(prev_point, curr_point) == PlaSide.ON_THE_RIGHT) return false;
          prev_point = curr_point;
          curr_point = next_point;
          if (ind == corners.length - 2)
@@ -427,9 +426,9 @@ public final class ShapePolygon extends ShapePolyline
       {
       if (corners.length <= 2) return this;
       
-      PlaPoint prev_point = corners[corners.length - 1];
-      PlaPoint curr_point = corners[0];
-      PlaPoint next_point;
+      PlaPointInt prev_point = corners[corners.length - 1];
+      PlaPointInt curr_point = corners[0];
+      PlaPointInt next_point;
       for (int ind = 0; ind < corners.length; ++ind)
          {
          if (ind == corners.length - 1)
@@ -647,14 +646,14 @@ public final class ShapePolygon extends ShapePolyline
       {
       // start with a hashed corner and search the first concave corner
       int start_corner_no = random_generator.nextInt(corners.length);
-      PlaPoint curr_corner = corners[start_corner_no];
-      PlaPoint prev_corner;
+      PlaPointInt curr_corner = corners[start_corner_no];
+      PlaPointInt prev_corner;
       if (start_corner_no != 0)
          prev_corner = corners[start_corner_no - 1];
       else
          prev_corner = corners[corners.length - 1];
 
-      PlaPoint next_corner = null;
+      PlaPointInt next_corner = null;
 
       // search for the next concave corner from here
       int concave_corner_no = -1;
