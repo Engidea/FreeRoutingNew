@@ -1039,24 +1039,21 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       }
 
    /**
-    * checks, that the connection restrictions to the contact pins are
-    * satisfied. If p_at_start, the start of this trace is checked, else the
-    * end. Returns false, if a pin is at that end, where the connection is
-    * checked and the connection is not ok.
+    * checks, that the connection restrictions to the contact pins are satisfied. 
+    * If p_at_start, the start of this trace is checked, else the end. 
+    * @return false, if a pin is at that end, where the connection is checked and the connection is not ok.
     */
    public boolean check_connection_to_pin(boolean p_at_start)
       {
       if (corner_count() < 2) return true;
 
       Collection<BrdItem> contact_list;
+
       if (p_at_start)
-         {
          contact_list = get_start_contacts();
-         }
       else
-         {
          contact_list = get_end_contacts();
-         }
+      
       BrdAbitPin contact_pin = null;
       for (BrdItem curr_contact : contact_list)
          {
@@ -1073,17 +1070,20 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
 
       if (trace_exit_restrictions.isEmpty()) return true;
 
-      PlaPoint end_corner;
-      PlaPoint prev_end_corner;
+      PlaPointInt end_corner;
+      PlaPointInt prev_end_corner;
+      
       if (p_at_start)
          {
-         end_corner = first_corner();
-         prev_end_corner = polyline.corner_first_next();
+         // As far as the use is concerned, we are not looking for a perfect match
+         end_corner = first_corner().round();
+         prev_end_corner = polyline.corner_first_next().round();
          }
       else
          {
-         end_corner = corner_last();
-         prev_end_corner = polyline.corner_last_prev();
+         // As far as the use is concerned, we are not looking for a perfect match
+         end_corner = corner_last().round();
+         prev_end_corner = polyline.corner_last_prev().round();
          }
       
       PlaDirection trace_end_direction = PlaDirection.get_instance(end_corner, prev_end_corner);
@@ -1106,14 +1106,13 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       if (edge_to_turn_dist < 0) return false;
 
-      double end_line_length = end_corner.to_float().distance(prev_end_corner.to_float());
+      double end_line_length = end_corner.distance(prev_end_corner);
+      
       double curr_clearance = r_board.get_clearance(clearance_class_no(), contact_pin.clearance_class_no(), get_layer());
       double add_width = Math.max(edge_to_turn_dist, curr_clearance + 1);
       double preserve_length = matching_exit_restriction.min_length + get_half_width() + add_width;
 
-      if (preserve_length > end_line_length) return false;
-
-      return true;
+      return preserve_length <= end_line_length;
       }
 
    /**
