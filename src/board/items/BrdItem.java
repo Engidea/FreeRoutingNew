@@ -19,6 +19,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -419,7 +420,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       // Look, if both traces are connected to the same tie pin.
       // In this case they are allowed to overlap without sharing a net.
       BrdTrace this_trace = (BrdTrace) this;
-      PlaPoint contact_point = this_trace.first_corner();
+      PlaPoint contact_point = this_trace.corner_first();
       boolean contact_found = false;
       Collection<BrdItem> curr_contacts = this_trace.get_normal_contacts(contact_point, true);
 
@@ -904,9 +905,9 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns all corners of this item, which are used for displaying the ratsnest. 
     * To be overwritten in derived classes implementing the Connectable interface.
     */
-   public PlaPointInt[] get_ratsnest_corners()
+   public ArrayList<PlaPointInt> get_ratsnest_corners()
       {
-      return new PlaPointInt[0];
+      return new ArrayList<PlaPointInt>();
       }
 
    @Override

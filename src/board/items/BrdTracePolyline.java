@@ -91,7 +91,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     * returns the first corner of this trace, which is the intersection of the first and second lines of its polyline
     */
    @Override
-   public PlaPoint first_corner()
+   public PlaPoint corner_first()
       {
       return polyline.corner_first();
       }
@@ -233,7 +233,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    private boolean combine_at_start(boolean p_ignore_areas)
       {
-      PlaPoint start_corner = first_corner();
+      PlaPoint start_corner = corner_first();
       Collection<BrdItem> contacts = get_normal_contacts(start_corner, false);
       if (p_ignore_areas)
          {
@@ -267,7 +267,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                   trace_found = true;
                   break;
                   }
-               else if (start_corner.equals(other_trace.first_corner()))
+               else if (start_corner.equals(other_trace.corner_first()))
                   {
                   reverse_order = true;
                   trace_found = true;
@@ -378,7 +378,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             other_trace = (BrdTracePolyline) curr_ob;
             if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == get_fixed_state())
                {
-               if (end_corner.equals(other_trace.first_corner()))
+               if (end_corner.equals(other_trace.corner_first()))
                   {
                   trace_found = true;
                   break;
@@ -710,7 +710,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          else if (curr_item instanceof BrdTrace)
             {
             BrdTrace curr_trace = (BrdTrace) curr_item;
-            if (curr_trace != this && curr_trace.first_corner().equals(intersection) || curr_trace.corner_last().equals(intersection))
+            if (curr_trace != this && curr_trace.corner_first().equals(intersection) || curr_trace.corner_last().equals(intersection))
                {
                return false;
                }
@@ -790,7 +790,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          if ( ! curr_split_trace.is_on_the_board()) continue;
          
          boolean trace_combined = curr_split_trace.combine();
-         if (curr_split_trace.corner_count() == 2 && curr_split_trace.first_corner().equals(curr_split_trace.corner_last()))
+         if (curr_split_trace.corner_count() == 2 && curr_split_trace.corner_first().equals(curr_split_trace.corner_last()))
             {
             // remove trace with only 1 corner
             r_board.remove_item(curr_split_trace);
@@ -1076,7 +1076,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       if (p_at_start)
          {
          // As far as the use is concerned, we are not looking for a perfect match
-         end_corner = first_corner().round();
+         end_corner = corner_first().round();
          prev_end_corner = polyline.corner_first_next().round();
          }
       else

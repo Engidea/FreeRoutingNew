@@ -22,6 +22,7 @@ package board.items;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
@@ -366,7 +367,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
          if (curr_item instanceof BrdTrace)
             {
             BrdTrace curr_trace = (BrdTrace) curr_item;
-            if (drill_center.equals(curr_trace.first_corner()) || drill_center.equals(curr_trace.corner_last()))
+            if (drill_center.equals(curr_trace.corner_first()) || drill_center.equals(curr_trace.corner_last()))
                {
                result.add(curr_item);
                }
@@ -410,7 +411,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
       PlaPointInt drill_center = center_get();
 
-      if (drill_center.equals(p_trace.first_corner()) || drill_center.equals(p_trace.corner_last()))
+      if (drill_center.equals(p_trace.corner_first()) || drill_center.equals(p_trace.corner_last()))
          {
          return drill_center;
          }
@@ -419,10 +420,10 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public PlaPointInt[] get_ratsnest_corners()
+   public ArrayList<PlaPointInt> get_ratsnest_corners()
       {
-      PlaPointInt[] result = new PlaPointInt[1];
-      result[0] = center_get();
+      ArrayList<PlaPointInt> result = new ArrayList<PlaPointInt>(1);
+      result.add (center_get());
       return result;
       }
 

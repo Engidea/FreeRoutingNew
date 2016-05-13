@@ -20,6 +20,7 @@
 
 package board.items;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
@@ -102,7 +103,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
                if (curr_item instanceof BrdTrace)
                   {
                   BrdTrace curr_trace = (BrdTrace) curr_item;
-                  if (curr_shape.contains(curr_trace.first_corner()) || curr_shape.contains(curr_trace.corner_last()))
+                  if (curr_shape.contains(curr_trace.corner_first()) || curr_shape.contains(curr_trace.corner_last()))
                      {
                      result.add(curr_item);
                      }
@@ -134,15 +135,15 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
       }
 
    @Override
-   public PlaPointInt[] get_ratsnest_corners()
+   public ArrayList<PlaPointInt> get_ratsnest_corners()
       {
       PlaPointFloat[] corners = get_area().corner_approx_arr();
 
-      PlaPointInt[] result = new PlaPointInt[corners.length];
+      ArrayList<PlaPointInt> result = new ArrayList<PlaPointInt>(corners.length);
       
       for (int index = 0; index < corners.length; ++index)
          {
-         result[index] = corners[index].round();
+         result.add(corners[index].round());
          }
 
       return result;

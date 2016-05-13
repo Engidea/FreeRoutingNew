@@ -1,5 +1,6 @@
 package interactive.varie;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import board.items.BrdItem;
 import freert.planar.PlaPointInt;
@@ -18,7 +19,7 @@ public final class IteraNetItem implements PlaDelTriStorable
       }
 
    @Override
-   public PlaPointInt[] get_triangulation_corners()
+   public ArrayList<PlaPointInt> get_triangulation_corners()
       {
       return item.get_ratsnest_corners();
       }

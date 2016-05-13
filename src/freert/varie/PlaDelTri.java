@@ -18,6 +18,7 @@
 
 package freert.varie;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -60,7 +61,7 @@ public final class PlaDelTri
       List<PlaDelTriCorner> corner_list = new LinkedList<PlaDelTriCorner>();
       for (PlaDelTriStorable curr_object : p_object_list)
          {
-         PlaPointInt[] curr_corners = curr_object.get_triangulation_corners();
+         ArrayList<PlaPointInt> curr_corners = curr_object.get_triangulation_corners();
 
          for (PlaPointInt curr_corner : curr_corners)
             {

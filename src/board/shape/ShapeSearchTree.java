@@ -161,7 +161,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       {
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
       ShapeTile[] link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
-      boolean change_order = p_from_trace.first_corner().equals(p_to_trace.first_corner());
+      boolean change_order = p_from_trace.corner_first().equals(p_to_trace.corner_first());
       // remove the last or first tree entry from p_from_trace and the
       // first tree entry from p_to_trace, because they will be replaced by
       // the new link entries.
@@ -831,7 +831,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       ShapeTile pin_shape = p_tie_pin.get_tree_shape_on_layer(this, p_trace.get_layer());
       PlaPointFloat compare_corner;
       int trace_shape_no;
-      if (p_trace.first_corner().equals(p_tie_pin.center_get()))
+      if (p_trace.corner_first().equals(p_tie_pin.center_get()))
          {
          trace_shape_no = 0;
          compare_corner = p_trace.polyline().corner_approx(1);

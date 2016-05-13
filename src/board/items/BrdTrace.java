@@ -16,6 +16,7 @@
 
 package board.items;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -69,7 +70,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
     * returns the first corner of the trace
     * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
     */
-   public abstract PlaPoint first_corner();
+   public abstract PlaPoint corner_first();
 
    /**
     * returns the last corner of the trace
@@ -142,7 +143,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
     */
    public Set<BrdItem> get_start_contacts()
       {
-      return get_normal_contacts(first_corner(), false);
+      return get_normal_contacts(corner_first(), false);
       }
 
    /**
@@ -157,7 +158,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
    public Set<BrdItem> get_normal_contacts()
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
-      PlaPoint start_corner = first_corner();
+      PlaPoint start_corner = corner_first();
       if (start_corner != null)
          {
          result.addAll(get_normal_contacts(start_corner, false));
@@ -218,7 +219,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       if ( p_point == null ) return result;
 
       // point should land on either first or last corner
-      if ( !(p_point.equals(first_corner()) || p_point.equals(corner_last()))) return result;
+      if ( !(p_point.equals(corner_first()) || p_point.equals(corner_last()))) return result;
 
       ShapeTile search_shape = new ShapeTileBox(p_point);
 
@@ -242,7 +243,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          if (curr_item instanceof BrdTrace)
             {
             BrdTrace curr_trace = (BrdTrace) curr_item;
-            if (p_point.equals(curr_trace.first_corner()) || p_point.equals(curr_trace.corner_last()))
+            if (p_point.equals(curr_trace.corner_first()) || p_point.equals(curr_trace.corner_last()))
                {
                result.add(curr_item);
                }
@@ -278,8 +279,8 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       {
       if ( layer_no != p_other.layer_no) return null;
 
-      boolean contact_at_first_corner = first_corner().equals(p_other.first_corner()) || first_corner().equals(p_other.corner_last());
-      boolean contact_at_last_corner = corner_last().equals(p_other.first_corner()) || corner_last().equals(p_other.corner_last());
+      boolean contact_at_first_corner = corner_first().equals(p_other.corner_first()) || corner_first().equals(p_other.corner_last());
+      boolean contact_at_last_corner = corner_last().equals(p_other.corner_first()) || corner_last().equals(p_other.corner_last());
       PlaPoint result;
       if (!(contact_at_first_corner || contact_at_last_corner) || contact_at_first_corner && contact_at_last_corner)
          {
@@ -288,7 +289,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          }
       else if (contact_at_first_corner)
          {
-         result = first_corner();
+         result = corner_first();
          }
       else
          // contact at last corner
@@ -347,23 +348,19 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
    /**
     * returns the endpoint of this trace with the shortest distance to p_from_point
     */
-   public PlaPoint nearest_end_point(PlaPoint p_from_point)
+   public PlaPoint nearest_end_point(PlaPointInt p_from_point)
       {
-      PlaPoint p1 = first_corner();
+      PlaPoint p1 = corner_first();
       PlaPoint p2 = corner_last();
       PlaPointFloat from_point = p_from_point.to_float();
+
       double d1 = from_point.distance(p1.to_float());
       double d2 = from_point.distance(p2.to_float());
-      PlaPoint result;
+
       if (d1 < d2)
-         {
-         result = p1;
-         }
+         return p1;
       else
-         {
-         result = p2;
-         }
-      return result;
+         return p2;
       }
 
    /**
@@ -371,21 +368,18 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
     */
    public boolean is_cycle()
       {
-      if (is_overlap())
-         {
-         return true;
-         }
+      if (is_overlap()) return true;
+
       Set<BrdItem> visited_items = new TreeSet<BrdItem>();
       Collection<BrdItem> start_contacts = get_start_contacts();
-      // a cycle exists if through expanding the start contact we reach
-      // this trace again via an end contact
+      // a cycle exists if through expanding the start contact we reach this trace again via an end contact
       for (BrdItem curr_contact : start_contacts)
          {
-         // make shure, that all direct neighbours are
-         // expanded from here, to block coming back to
+         // make shure, that all direct neighbours are expanded from here, to block coming back to
          // this trace via a start contact.
          visited_items.add(curr_contact);
          }
+      
       boolean ignore_areas = false;
       if (net_no_arr.length > 0)
          {
@@ -412,47 +406,19 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       }
 
    @Override
-   public PlaPointInt[] get_ratsnest_corners()
+   public ArrayList<PlaPointInt> get_ratsnest_corners()
       {
       // Use only uncontacted enpoints of the trace.
-      // Otherwise the allocated memory in the calculation of the incompletes
-      // might become very big.
-      int stub_count = 0;
-      boolean stub_at_start = false;
-      boolean stub_at_end = false;
+      // Otherwise the allocated memory in the calculation of the incompletes might become very big.
+
+      ArrayList<PlaPointInt> result = new ArrayList<PlaPointInt>(2);
+
       if (get_start_contacts().isEmpty())
-         {
-         ++stub_count;
-         stub_at_start = true;
-         }
+         result.add( corner_first().round() );
       
       if (get_end_contacts().isEmpty())
-         {
-         ++stub_count;
-         stub_at_end = true;
-         }
+         result.add( corner_last().round() );
       
-      PlaPointInt[] result = new PlaPointInt[stub_count];
-      int stub_no = 0;
-      if (stub_at_start)
-         {
-         result[stub_no] = first_corner().round();
-         ++stub_no;
-         }
-      
-      if (stub_at_end)
-         {
-         result[stub_no] = corner_last().round();
-         }
-      
-      for (int index = 0; index < result.length; ++index)
-         {
-         if (result[index] == null)
-            {
-            System.err.println("Trace is inconsistent");
-            return new PlaPointInt[0];// Trace is inconsistent
-            }
-         }
       return result;
       }
 
@@ -480,7 +446,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       {
       Set<BrdAbitPin> result = new TreeSet<BrdAbitPin>();
 
-      PlaPoint curr_end_point = first_corner();
+      PlaPoint curr_end_point = corner_first();
       for (int i = 0; i < 2; ++i)
          {
          ShapeTileOctagon curr_oct = new ShapeTileOctagon(curr_end_point);
@@ -503,7 +469,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
       p_window.append_bold(resources.getString("trace"));
       p_window.append(" " + resources.getString("from"));
-      p_window.append(first_corner().to_float());
+      p_window.append(corner_first().to_float());
       p_window.append(resources.getString("to"));
       p_window.append(corner_last().to_float());
       p_window.append(resources.getString("on_layer") + " ");
@@ -521,7 +487,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       {
       boolean result = super.validate_ok();
 
-      if (first_corner().equals( corner_last()))
+      if (corner_first().equals( corner_last()))
          {
          System.out.println("Trace.validate: first and last corner are equal");
          result = false;

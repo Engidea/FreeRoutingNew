@@ -552,7 +552,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       if (!(p_item instanceof BrdTrace)) return;
 
       BrdTrace curr_trace = (BrdTrace) p_item;
-      Set<BrdItem> contacts = curr_trace.get_normal_contacts(curr_trace.first_corner(), true);
+      Set<BrdItem> contacts = curr_trace.get_normal_contacts(curr_trace.corner_first(), true);
       contacts.addAll(curr_trace.get_normal_contacts(curr_trace.corner_last(), true));
       int corrected_net_no = 0;
       for (BrdItem curr_contact : contacts)

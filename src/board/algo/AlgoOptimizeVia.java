@@ -132,7 +132,7 @@ public final class AlgoOptimizeVia
 
       // calculate first_trace_from_corner and second_trace_from_corner
 
-      if (first_trace.first_corner().equals(via_center))
+      if (first_trace.corner_first().equals(via_center))
          {
          first_trace_from_corner = first_trace.polyline().corner_first_next();
          }
@@ -146,7 +146,7 @@ public final class AlgoOptimizeVia
          return false;
          }
 
-      if (second_trace.first_corner().equals(via_center))
+      if (second_trace.corner_first().equals(via_center))
          {
          second_trace_from_corner = second_trace.polyline().corner_first_next();
          }
@@ -265,7 +265,7 @@ public final class AlgoOptimizeVia
       
       boolean at_first_corner;
 
-      if (contact_trace.first_corner().equals(via_center))
+      if (contact_trace.corner_first().equals(via_center))
          {
          at_first_corner = true;
          }

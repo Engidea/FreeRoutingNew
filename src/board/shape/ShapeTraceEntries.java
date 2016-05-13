@@ -379,7 +379,7 @@ public class ShapeTraceEntries
 
       if ( ! p_trace.is_nets_normal() ) return false;
 
-      PlaPoint end_corner = p_trace.first_corner();
+      PlaPoint end_corner = p_trace.corner_first();
       
       Collection<BrdItem> contact_list;
       for (int index = 0; index < 2; ++index)

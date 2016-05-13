@@ -1,5 +1,6 @@
 package freert.varie;
 
+import java.util.ArrayList;
 import freert.planar.PlaPointInt;
 
 /**
@@ -10,5 +11,5 @@ public interface PlaDelTriStorable
    /**
     * Returns an array of corners, which can be used in a planar triangulation.
     */
-   PlaPointInt[] get_triangulation_corners();
+   ArrayList<PlaPointInt> get_triangulation_corners();
    }

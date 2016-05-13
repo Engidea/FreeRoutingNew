@@ -490,7 +490,7 @@ public final class AlgoShoveTrace
       
          if (curr_substitute_trace == null)  break;
 
-         if (curr_substitute_trace.first_corner().equals(curr_substitute_trace.corner_last()))
+         if (curr_substitute_trace.corner_first().equals(curr_substitute_trace.corner_last()))
             {
             continue;
             }
@@ -529,7 +529,7 @@ public final class AlgoShoveTrace
          if (!tails_exist_before)
             {
             end_corners = new PlaPoint[2];
-            end_corners[0] = curr_substitute_trace.first_corner();
+            end_corners[0] = curr_substitute_trace.corner_first();
             end_corners[1] = curr_substitute_trace.corner_last();
             }
          

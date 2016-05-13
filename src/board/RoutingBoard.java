@@ -178,7 +178,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       BrdTracePolyline new_trace = new BrdTracePolyline(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, this);
       
-      if (new_trace.first_corner().equals(new_trace.corner_last()))
+      if (new_trace.corner_first().equals(new_trace.corner_last()))
          {
          if (p_fixed_state.ordinal() < ItemFixState.USER_FIXED.ordinal())
             {
@@ -1569,7 +1569,7 @@ public final class RoutingBoard implements java.io.Serializable
 
          if (!curr_trace.nets_equal(p_net_no_arr))  continue;
 
-         if (curr_trace.first_corner().equals(p_location))
+         if (curr_trace.corner_first().equals(p_location))
             {
             Collection<BrdItem> contacts = curr_trace.get_start_contacts();
          
@@ -1603,7 +1603,7 @@ public final class RoutingBoard implements java.io.Serializable
       int curr_layer = p_trace.get_layer();
       int[] curr_net_no_arr = p_trace.net_no_arr;
       end_corners = new PlaPoint[2];
-      end_corners[0] = p_trace.first_corner();
+      end_corners[0] = p_trace.corner_first();
       end_corners[1] = p_trace.corner_last();
       tail_at_endpoint_before = new boolean[2];
       for (int i = 0; i < 2; ++i)
@@ -2700,7 +2700,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public final boolean connect_to_trace(PlaPointInt p_from_point, BrdTrace p_to_trace, int p_pen_half_width, int p_cl_type)
       {
-      PlaPoint first_corner = p_to_trace.first_corner();
+      PlaPoint first_corner = p_to_trace.corner_first();
 
       PlaPoint last_corner = p_to_trace.corner_last();
 

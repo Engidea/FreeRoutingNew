@@ -122,7 +122,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             board.items.BrdTrace curr_trace = (board.items.BrdTrace) curr_item;
             if (curr_trace.get_start_contacts().isEmpty())
                {
-               stub_location = curr_trace.first_corner().to_float();
+               stub_location = curr_trace.corner_first().to_float();
                }
             else if (curr_trace.get_end_contacts().isEmpty())
                {
