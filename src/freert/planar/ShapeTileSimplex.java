@@ -1018,8 +1018,8 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    /**
-    * Removes lines, which are redundant in the definition of the shape of this simplex. Assumes that the lines of this simplex are
-    * sorted.
+    * Removes lines, which are redundant in the definition of the shape of this simplex. 
+    * Assumes that the lines of this simplex are sorted.
     */
    ShapeTileSimplex remove_redundant_lines()
       {
@@ -1029,19 +1029,19 @@ public final class ShapeTileSimplex extends ShapeTile
       int new_length = 1;
       line_arr[0] = lines_arr[0];
       PlaLineInt prev = line_arr[0];
-      for (int i = 1; i < lines_arr.length; ++i)
+
+      for (int index = 1; index < lines_arr.length; ++index)
          {
-         if (!lines_arr[i].fast_equals(prev))
+         if (!lines_arr[index].equals(prev))
             {
-            line_arr[new_length] = lines_arr[i];
+            line_arr[new_length] = lines_arr[index];
             prev = line_arr[new_length];
             ++new_length;
             }
          }
 
       PlaSide[] intersection_sides = new PlaSide[new_length];
-      // precalculated array , on which side of this line the previous and the
-      // next line do intersect
+      // precalculated array , on which side of this line the previous and the next line do intersect
 
       boolean try_again = new_length > 2;
       int index_of_last_removed_line = new_length;
@@ -1079,14 +1079,13 @@ public final class ShapeTileSimplex extends ShapeTile
                if (det > 0)
                // direction of next_line is bigger than direction of prev_line
                   {
-                  // if the intersection of prev_line and next_line
-                  // is on the left of curr_line, curr_line does not
+                  // if the intersection of prev_line and next_line is on the left of curr_line, curr_line does not
                   // contribute to the shape of the simplex
                   remove_line = (intersection_sides[ind] != PlaSide.ON_THE_LEFT);
                   }
                else
-                  // direction of next_line is smaller than direction of prev_line
                   {
+                  // direction of next_line is smaller than direction of prev_line
 
                   if (intersection_sides[ind] == PlaSide.ON_THE_LEFT)
                      {
@@ -1105,12 +1104,11 @@ public final class ShapeTileSimplex extends ShapeTile
                   }
                }
             else
-               // prev_line and next_line are parallel
                {
+               // prev_line and next_line are parallel
+
                if (prev_line.side_of(next_line.point_a) == PlaSide.ON_THE_LEFT)
-               // prev_line is to the left of next_line,
-               // the halfplanes defined by prev_line and next_line
-               // do not intersect
+               // prev_line is to the left of next_line, the halfplanes defined by prev_line and next_line do not intersect
                   {
                   new_length = 0;
                   try_again = false;
@@ -1121,10 +1119,10 @@ public final class ShapeTileSimplex extends ShapeTile
                {
                try_again = true;
                --new_length;
-               for (int i = ind; i < new_length; ++i)
+               for (int index = ind; index < new_length; ++index)
                   {
-                  line_arr[i] = line_arr[i + 1];
-                  intersection_sides[i] = intersection_sides[i + 1];
+                  line_arr[index] = line_arr[index + 1];
+                  intersection_sides[index] = intersection_sides[index + 1];
                   }
 
                if (new_length < 3)
@@ -1132,11 +1130,13 @@ public final class ShapeTileSimplex extends ShapeTile
                   try_again = false;
                   break;
                   }
+               
                // reset 3 precalculated intersection_sides
                if (ind == 0)
                   {
                   prev_ind = new_length - 1;
                   }
+               
                intersection_sides[prev_ind] = null;
                if (ind >= new_length)
                   {
@@ -1157,8 +1157,8 @@ public final class ShapeTileSimplex extends ShapeTile
                }
             curr_line = next_line;
             if (!try_again && ind >= index_of_last_removed_line)
-            // tried all lines without removing one
                {
+               // tried all lines without removing one
                break;
                }
             }
@@ -1169,8 +1169,8 @@ public final class ShapeTileSimplex extends ShapeTile
          if (line_arr[0].is_parallel(line_arr[1]))
             {
             if (line_arr[0].direction().equals(line_arr[1].direction()))
-            // one of the two remaining lines is redundant
                {
+               // one of the two remaining lines is redundant
                if (line_arr[1].side_of(line_arr[0].point_a) == PlaSide.ON_THE_LEFT)
                   {
                   line_arr[0] = line_arr[1];
@@ -1188,16 +1188,20 @@ public final class ShapeTileSimplex extends ShapeTile
                }
             }
          }
+
       if (new_length == lines_arr.length)
          {
          return this; // nothing removed
          }
+      
       if (new_length == 0)
          {
          return ShapeTileSimplex.EMPTY;
          }
+      
       PlaLineInt[] result = new PlaLineInt[new_length];
       System.arraycopy(line_arr, 0, result, 0, new_length);
+      
       return new ShapeTileSimplex(result);
       }
 

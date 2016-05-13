@@ -209,8 +209,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
 
    /**
     * Get a list of all items having a connection point at p_point on the layer of this trace. 
-    * If p_ignore_net is false, only contacts to items sharing a
-    * net with this trace are calculated. This is the normal case.
+    * If p_ignore_net is false, only contacts to items sharing a net with this trace are calculated. This is the normal case.
     */
    public Set<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net)
       {

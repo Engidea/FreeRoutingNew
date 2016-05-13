@@ -95,33 +95,11 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       PlaLineInt other = (PlaLineInt) p_ob;
       
+      // point_a should be on the same line
       if (side_of(other.point_a) != PlaSide.COLLINEAR) return false;
       
+      // and the line should have the same direction
       return direction().equals(other.direction());
-      }
-
-   /**
-    * Returns true, if this and p_other define the same line. 
-    * Is designed for good performance
-    */
-   public final boolean fast_equals(PlaLineInt p_other)
-      {
-      PlaPointInt this_a = point_a;
-      PlaPointInt this_b = point_b;
-      PlaPointInt other_a = p_other.point_a;
-      
-      double dx1 = other_a.v_x - this_a.v_x;
-      double dy1 = other_a.v_y - this_a.v_y;
-      double dx2 = this_b.v_x - this_a.v_x;
-      double dy2 = this_b.v_y - this_a.v_y;
-      double det = dx1 * dy2 - dx2 * dy1;
-      
-      if (det != 0)
-         {
-         return false;
-         }
-      
-      return direction().equals(p_other.direction());
       }
 
    /**
@@ -146,7 +124,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * I wish to know where we are dealing with proper int points
     * @param p_point
     * @return
     */
@@ -189,7 +166,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaSide side_of_intersection(PlaLineInt p_1, PlaLineInt p_2)
       {
-      // TODO try not to use rationals for this one ....
       PlaPointFloat intersection_approx = p_1.intersection_approx(p_2);
       
       if ( intersection_approx.is_NaN() )
@@ -231,9 +207,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public boolean is_on_the_right(ShapeTile p_tile)
       {
-      for (int i = 0; i < p_tile.border_line_count(); ++i)
+      for (int index = 0; index < p_tile.border_line_count(); ++index)
          {
-         if (side_of(p_tile.corner(i)) == PlaSide.ON_THE_LEFT)
+         if (side_of(p_tile.corner(index)) == PlaSide.ON_THE_LEFT)
             {
             return false;
             }
@@ -556,20 +532,21 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * A line l_1 is defined bigger than a line l_2, if the direction of l_1 is bigger than the direction of l_2. Implements the
-    * comparable interface. Throws a cast exception, if p_other is not a Line. Fast implementation only for lines consisting of
-    * IntPoints because of critical performance
+    * A line l_1 is defined bigger than a line l_2, if the direction of l_1 is bigger than the direction of l_2. 
+    * Implements the comparable interface. 
+    * Throws a cast exception, if p_other is not a Line. 
+    * Fast implementation only for lines consisting of IntPoints because of critical performance
     */
    public int compareTo(PlaLineInt p_other)
       {
-      PlaPointInt this_a = (PlaPointInt) point_a;
-      PlaPointInt this_b = (PlaPointInt) point_b;
-      PlaPointInt other_a = (PlaPointInt) p_other.point_a;
-      PlaPointInt other_b = (PlaPointInt) p_other.point_b;
-      int dx1 = this_b.v_x - this_a.v_x;
-      int dy1 = this_b.v_y - this_a.v_y;
+      PlaPointInt other_a = p_other.point_a;
+      PlaPointInt other_b = p_other.point_b;
+
+      int dx1 = point_b.v_x - point_a.v_x;
+      int dy1 = point_b.v_y - point_a.v_y;
       int dx2 = other_b.v_x - other_a.v_x;
       int dy2 = other_b.v_y - other_a.v_y;
+      
       if (dy1 > 0)
          {
          if (dy2 < 0)
@@ -615,8 +592,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
          return 0;
          }
 
-      // now this direction and p_other are located in the same
-      // open horizontal half plane
+      // now this direction and p_other are located in the same open horizontal half plane
 
       double determinant = (double) dx2 * dy1 - (double) dy2 * dx1;
       return Signum.as_int(determinant);
@@ -627,14 +603,17 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public double function_value_approx(double p_x)
       {
-      PlaPointFloat p1 = point_a.to_float();
-      PlaPointFloat p2 = point_b.to_float();
-      double dx = p2.v_x - p1.v_x;
-      if (dx == 0)
+      if ( line_dir.is_vertical )
          {
          System.out.println("function_value_approx: line is vertical");
          return 0;
          }
+      
+      PlaPointFloat p1 = point_a.to_float();
+      PlaPointFloat p2 = point_b.to_float();
+
+      double dx = p2.v_x - p1.v_x;
+
       double dy = p2.v_y - p1.v_y;
       double det = p1.v_x * p2.v_y - p2.v_x * p1.v_y;
       double result = (dy * p_x - det) / dx;
@@ -646,14 +625,16 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public double function_in_y_value_approx(double p_y)
       {
-      PlaPointFloat p1 = point_a.to_float();
-      PlaPointFloat p2 = point_b.to_float();
-      double dy = p2.v_y - p1.v_y;
-      if (dy == 0)
+      if ( line_dir.is_horizontal )
          {
          System.out.println("function_in_y_value_approx: line is horizontal");
          return 0;
          }
+
+      PlaPointFloat p1 = point_a.to_float();
+      PlaPointFloat p2 = point_b.to_float();
+      double dy = p2.v_y - p1.v_y;
+
       double dx = p2.v_x - p1.v_x;
       double det = p1.v_x * p2.v_y - p2.v_x * p1.v_y;
       double result = (dx * p_y + det) / dy;
@@ -682,16 +663,11 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       if (side_of(check_point_2) != line_side) return dir2;
 
       PlaPointFloat nearest_line_point = p_from_point.to_float().projection_approx(this);
-      PlaDirection result;
+      
       if (nearest_line_point.length_square(check_point_1.to_float()) <= nearest_line_point.length_square(check_point_2.to_float()))
-         {
-         result = dir1;
-         }
+         return dir1;
       else
-         {
-         result = dir2;
-         }
-      return result;
+         return dir2;
       }
 
    /**
