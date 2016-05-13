@@ -263,14 +263,14 @@ public final class PlaCircle implements ShapeConvex , Serializable
    @Override
    public PlaCircle mirror_vertical(PlaPointInt p_pole)
       {
-      PlaPointInt new_center = (PlaPointInt) center.mirror_vertical(p_pole);
+      PlaPointInt new_center = center.mirror_vertical(p_pole);
       return new PlaCircle(new_center, radius);
       }
 
    @Override
    public PlaCircle mirror_horizontal(PlaPointInt p_pole)
       {
-      PlaPointInt new_center = (PlaPointInt) center.mirror_horizontal(p_pole);
+      PlaPointInt new_center = center.mirror_horizontal(p_pole);
       return new PlaCircle(new_center, radius);
       }
 

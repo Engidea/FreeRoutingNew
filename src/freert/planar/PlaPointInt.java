@@ -156,7 +156,9 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return p_pole.translate_by(v);
       }
    
-   @Override
+   /**
+    * Mirrors this point at the vertical line through p_pole.
+    */
    public final PlaPointInt mirror_vertical(PlaPointInt p_pole)
       {
       PlaVectorInt v = difference_by(p_pole);
@@ -164,7 +166,9 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return p_pole.translate_by(v);
       }
    
-   @Override
+   /**
+    * Mirrors this point at the horizontal line through p_pole
+    */
    public final PlaPointInt mirror_horizontal(PlaPointInt p_pole)
       {
       PlaVectorInt v = difference_by(p_pole);

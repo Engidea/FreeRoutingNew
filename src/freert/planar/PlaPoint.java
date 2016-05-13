@@ -155,15 +155,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
    public abstract int compare_x_y(PlaPointInt p_other);
    public abstract int compare_x_y(PlaPointRational p_other);
 
-   /**
-    * Mirrors this point at the vertical line through p_pole.
-    */
-   public abstract PlaPointInt mirror_vertical(PlaPointInt p_pole);
 
-   /**
-    * Mirrors this point at the horizontal line through p_pole
-    */
-   public abstract PlaPointInt mirror_horizontal(PlaPointInt p_pole);
    
    public abstract boolean is_rational ();
    

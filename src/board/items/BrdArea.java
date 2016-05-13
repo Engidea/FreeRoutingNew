@@ -273,7 +273,9 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       layer_no = r_board.get_layer_count() - layer_no - 1;
 
       PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
+      
       translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPointInt.ZERO);
+      
       clear_derived_data();
       }
 

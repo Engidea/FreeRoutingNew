@@ -590,9 +590,9 @@ public final class ShapePolygon extends ShapePolyline
    public ShapePolygon mirror_vertical(PlaPointInt p_pole)
       {
       PlaPoint[] new_corners = new PlaPoint[corners.length];
-      for (int i = 0; i < corners.length; ++i)
+      for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[i] = corners[i].mirror_vertical(p_pole);
+         new_corners[index] = corners[index].mirror_vertical(p_pole);
          }
       return new ShapePolygon(new_corners);
       }
@@ -601,9 +601,10 @@ public final class ShapePolygon extends ShapePolyline
    public ShapePolygon mirror_horizontal(PlaPointInt p_pole)
       {
       PlaPoint[] new_corners = new PlaPoint[corners.length];
-      for (int i = 0; i < corners.length; ++i)
+      
+      for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[i] = corners[i].mirror_horizontal(p_pole);
+         new_corners[index] = corners[index].mirror_horizontal(p_pole);
          }
       return new ShapePolygon(new_corners);
       }
