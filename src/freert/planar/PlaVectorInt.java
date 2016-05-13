@@ -206,10 +206,6 @@ public final class PlaVectorInt extends PlaVector
       return new PlaPointInt(p_point.v_x + point_x, p_point.v_y + point_y);
       }
 
-   PlaPoint add_to(PlaPointRational p_point)
-      {
-      return p_point.translate_by(this);
-      }
 
    @Override
    public PlaSide side_of(PlaVectorInt p_other)

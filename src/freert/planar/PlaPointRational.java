@@ -190,8 +190,8 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return translate_by(vector);
       }
 
-   @Override
-   public PlaPointRational translate_by(PlaVectorRational p_vector)
+//   @Override
+   private PlaPointRational translate_by(PlaVectorRational p_vector)
       {
       BigInteger v1[] = new BigInteger[3];
       v1[0] = rp_x;

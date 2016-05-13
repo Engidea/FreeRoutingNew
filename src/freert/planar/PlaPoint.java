@@ -36,24 +36,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
    
    public abstract PlaPointInt round();
    
-   /**
-    * returns the translation of this point by p_vector
-    */
-   public final PlaPoint translate_by(PlaVector p_vector)
-      {
-      if ( p_vector == null ) return this;
-      
-      if ( p_vector instanceof PlaVectorInt )
-         return translate_by((PlaVectorInt)p_vector);
-      else if ( p_vector instanceof PlaVectorRational )
-         return translate_by((PlaVectorRational)p_vector);
-      else 
-         return null;
-      }
-   
    public abstract PlaPoint translate_by(PlaVectorInt p_vector);
-   public abstract PlaPoint translate_by(PlaVectorRational p_vector);
-   
 
    /**
     * returns the difference vector of this point and p_other
