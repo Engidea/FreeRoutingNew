@@ -249,7 +249,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
    @Override
    public PlaCircle turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaPointInt new_center = (PlaPointInt) center.turn_90_degree(p_factor, p_pole);
+      PlaPointInt new_center = center.turn_90_degree(p_factor, p_pole);
       return new PlaCircle(new_center, radius);
       }
 

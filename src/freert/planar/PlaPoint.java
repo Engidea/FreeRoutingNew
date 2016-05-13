@@ -140,20 +140,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
       }
 
    
-   /**
-    * Calculates the perpendicular direction froma this point to p_line. Returns Direction.NULL, if this point lies on p_line.
-    */
-   public PlaDirection perpendicular_direction(PlaLineInt p_line)
-      {
-      PlaSide side = side_of(p_line);
-      
-      if (side == PlaSide.COLLINEAR) return PlaDirection.NULL;
-      
-      if (side == PlaSide.ON_THE_RIGHT)
-         return p_line.direction().turn_45_degree(2);
-      else
-         return p_line.direction().turn_45_degree(6);
-      }
 
    /**
     * The function returns compare_x (p_other), if the result is not 0. Otherwise it returns compare_y (p_other).
@@ -168,18 +154,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
 
    public abstract int compare_x_y(PlaPointInt p_other);
    public abstract int compare_x_y(PlaPointRational p_other);
-
-   /**
-    * Turns this point by p_factor times 90 degree around p_pole.
-    */
-   public final PlaPoint turn_90_degree(int p_factor, PlaPoint p_pole)
-      {
-      PlaVector v = difference_by(p_pole);
-      v = v.turn_90_degree(p_factor);
-      return p_pole.translate_by(v);
-      }
-
-   public abstract PlaPointInt turn_90_degree(int p_factor, PlaPointInt p_pole);
 
    /**
     * Mirrors this point at the vertical line through p_pole.

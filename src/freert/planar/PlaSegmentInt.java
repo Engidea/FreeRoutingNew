@@ -598,7 +598,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaSegmentInt sort_endpoints_in_x_y()
       {
-      boolean swap_endlines = (start_point().compare_x_y(end_point()) > 0);
+      boolean swap_endlines = start_point().compare_x_y(end_point()) > 0;
       PlaSegmentInt result;
 
       if (swap_endlines)

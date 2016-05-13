@@ -566,9 +566,9 @@ public final class ShapePolygon extends ShapePolyline
    public ShapePolygon turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       PlaPoint[] new_corners = new PlaPoint[corners.length];
-      for (int i = 0; i < corners.length; ++i)
+      for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[i] = corners[i].turn_90_degree(p_factor, p_pole);
+         new_corners[index] = corners[index].turn_90_degree(p_factor, p_pole);
          }
       return new ShapePolygon(new_corners);
       }

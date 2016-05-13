@@ -498,8 +498,8 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    public ShapeTileBox turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaPointInt p1 = (PlaPointInt) box_ll.turn_90_degree(p_factor, p_pole);
-      PlaPointInt p2 = (PlaPointInt) box_ur.turn_90_degree(p_factor, p_pole);
+      PlaPointInt p1 = box_ll.turn_90_degree(p_factor, p_pole);
+      PlaPointInt p2 = box_ur.turn_90_degree(p_factor, p_pole);
 
       int llx = Math.min(p1.v_x, p2.v_x);
       int lly = Math.min(p1.v_y, p2.v_y);

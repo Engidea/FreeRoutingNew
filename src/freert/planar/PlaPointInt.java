@@ -146,7 +146,9 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return tmp.negate();
       }
 
-   @Override
+   /**
+    * Turns this point by p_factor times 90 degree around p_pole.
+    */
    public final PlaPointInt turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       PlaVectorInt v = difference_by(p_pole);
@@ -532,6 +534,21 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       risul.append(","+v_y);
       risul.append(')');
       return risul.toString();
+      }
+   
+   /**
+    * Calculates the perpendicular direction froma this point to p_line. Returns Direction.NULL, if this point lies on p_line.
+    */
+   public final PlaDirection perpendicular_direction(PlaLineInt p_line)
+      {
+      PlaSide side = side_of(p_line);
+      
+      if (side == PlaSide.COLLINEAR) return PlaDirection.NULL;
+      
+      if (side == PlaSide.ON_THE_RIGHT)
+         return p_line.direction().turn_45_degree(2);
+      else
+         return p_line.direction().turn_45_degree(6);
       }
    
    
