@@ -335,7 +335,7 @@ public final class IteraRoute
             }
          }
       
-      PlaPointInt a_corner = prev_corner.round();  // pippo this is actually generically correct, but may not be always
+      PlaPointInt a_corner = prev_corner; 
       
       boolean result = true;
       int min_layer = Math.min(layer_active_no, p_to_layer);

@@ -284,7 +284,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       // more than 1 contact point, it is an invalid situation
       if ( contact_at_first_corner && contact_at_last_corner) return null;
 
-      // added rounding, it should be an IntPoint in any case...
+      // added rounding, it should be an IntPoint in any case, NO, they may be rationals, really... WARNING
       if (contact_at_first_corner) return corner_first().round();
 
       if (contact_at_last_corner)  return corner_last().round();
@@ -407,10 +407,10 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       ArrayList<PlaPointInt> result = new ArrayList<PlaPointInt>(2);
 
       if (get_start_contacts().isEmpty())
-         result.add( corner_first().round() );
+         result.add( corner_first().round() );   
       
       if (get_end_contacts().isEmpty())
-         result.add( corner_last().round() );
+         result.add( corner_last().round() );   
       
       return result;
       }

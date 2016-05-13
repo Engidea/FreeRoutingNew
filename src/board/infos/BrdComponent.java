@@ -60,11 +60,19 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
     * Creates a new instance of Component with the input parameters. 
     * If p_on_front is false, the component will be placed on the back side.
     */
-   public BrdComponent(String p_name, PlaPointInt p_location, double p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, int p_no, boolean p_position_fixed)
+   public BrdComponent(
+         String p_name, 
+         PlaPointInt p_location, 
+         double p_rotation_in_degree, 
+         boolean p_on_front, 
+         LibPackage p_package_front, 
+         LibPackage p_package_back, 
+         int p_no, 
+         boolean p_position_fixed)
       {
       id_no = p_no;
       name = p_name;
-      location = p_location.round();
+      location = p_location;
       on_front = p_on_front;
       lib_package_front = p_package_front;
       lib_package_back = p_package_back;

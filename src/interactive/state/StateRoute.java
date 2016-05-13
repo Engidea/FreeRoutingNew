@@ -126,9 +126,9 @@ public class StateRoute extends StateInteractive
       int trace_clearance_class = p_board_handling.get_trace_clearance_class(route_net_no_arr[0]);
       boolean start_ok = true;
       
-      if (picked_item instanceof BrdTrace)
+      if (picked_item instanceof BrdTracePolyline)
          {
-         BrdTrace picked_trace = (BrdTrace) picked_item;
+         BrdTracePolyline picked_trace = (BrdTracePolyline) picked_item;
          
          PlaPoint picked_corner = picked_trace.nearest_end_point(location);
          
@@ -139,12 +139,11 @@ public class StateRoute extends StateInteractive
             }
          else
             {
-            if (picked_trace instanceof BrdTracePolyline)
-               {
-               PlaPointFloat nearest_point = ((BrdTracePolyline) picked_trace).polyline().nearest_point_approx(p_location);
-               location = nearest_point.round();
-               }
-            if (!routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_class_no()))
+            PlaPointFloat nearest_point = picked_trace.polyline().nearest_point_approx(p_location);
+
+            location = nearest_point.round();
+            
+            if ( ! routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_class_no()))
                {
                start_ok = false;
                }
@@ -158,7 +157,6 @@ public class StateRoute extends StateInteractive
             new_trace_half_widths[picked_trace.get_layer()] = picked_trace.get_half_width();
             trace_half_widths = new_trace_half_widths;
             trace_clearance_class = picked_trace.clearance_class_no();
-
             }
          }
       else if (picked_item instanceof BrdAbit)
@@ -177,7 +175,9 @@ public class StateRoute extends StateInteractive
       // Switch to stitch mode for nets, which are shove fixed.
       boolean is_stitch_route = p_board_handling.itera_settings.is_stitch_route || curr_net.get_class().is_shove_fixed() || !curr_net.get_class().can_pull_tight();
       routing_board.generate_snapshot();
+      
       StateRoute new_instance;
+
       if (is_stitch_route)
          {
          new_instance = new StateRouteStitch(p_parent_state, p_board_handling, p_actlog);

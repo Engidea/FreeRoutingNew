@@ -613,9 +613,9 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Returns the contact point, if this item and p_other are Connectable and have a unique normal contact. 
-    * Returns null otherwise
+    * @return null otherwise
     */
-   public final PlaPoint normal_contact_point(BrdItem p_other)
+   public final PlaPointInt normal_contact_point(BrdItem p_other)
       {
       if ( p_other == null ) return null;
       
@@ -800,73 +800,67 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       while (it.hasNext())
          {
          BrdItem curr_item = it.next();
-         PlaPoint prev_contact_point = normal_contact_point(curr_item);
-         if (prev_contact_point == null)
-            {
-            // no unique contact point
-            continue;
-            }
+         
+         PlaPointInt prev_contact_point = normal_contact_point(curr_item);
+
+         // no unique contact point
+         if (prev_contact_point == null) continue;
+
          int prev_contact_layer = first_common_layer(curr_item);
+
          if (this instanceof BrdTrace)
             {
             // Check, that there is only 1 contact at this location.
-            // Only for pins and vias items of more than 1 connection
-            // are collected
+            // Only for pins and vias items of more than 1 connection are collected
             BrdTrace start_trace = (BrdTrace) this;
+            
             Collection<BrdItem> check_contacts = start_trace.get_normal_contacts(prev_contact_point, false);
-            if (check_contacts.size() != 1)
-               {
-               continue;
-               }
+            
+            if (check_contacts.size() != 1) continue;
             }
 
          // Search from curr_item along the contacts until the next fork or nonroute item.
          for (;;)
             {
-            if ( ! curr_item.is_route())
-               {
-               // connection ends
-               break;
-               }
+            
+            // connection ends
+            if ( ! curr_item.is_route()) break;
             
             if (curr_item instanceof BrdAbitVia)
                {
-               if (p_stop_option == BrdStopConnection.VIA)
-                  {
-                  break;
-                  }
+               if (p_stop_option == BrdStopConnection.VIA) break;
+
                if (p_stop_option == BrdStopConnection.FANOUT_VIA)
                   {
-                  if (curr_item.is_fanout_via(result))
-                     {
-                     break;
-                     }
+                  if (curr_item.is_fanout_via(result)) break;
                   }
                }
             result.add(curr_item);
+            
             Collection<BrdItem> curr_ob_contacts = curr_item.get_normal_contacts();
-            // filter the contacts at the previous contact point,
-            // because we were already there.
-            // If then there is not exactly 1 new contact left, there is
-            // a stub or a fork.
-            PlaPoint next_contact_point = null;
+            // filter the contacts at the previous contact point, because we were already there.
+            // If then there is not exactly 1 new contact left, there is a stub or a fork.
+            PlaPointInt next_contact_point = null;
             int next_contact_layer = -1;
             BrdItem next_contact = null;
             boolean fork_found = false;
+            
             Iterator<BrdItem> curr_it = curr_ob_contacts.iterator();
+            
             while (curr_it.hasNext())
                {
                BrdItem tmp_contact = curr_it.next();
                int tmp_contact_layer = curr_item.first_common_layer(tmp_contact);
                if (tmp_contact_layer >= 0)
                   {
-                  PlaPoint tmp_contact_point = curr_item.normal_contact_point(tmp_contact);
+                  PlaPointInt tmp_contact_point = curr_item.normal_contact_point(tmp_contact);
                   if (tmp_contact_point == null)
                      {
                      // no unique contact point
                      fork_found = true;
                      break;
                      }
+                  
                   if (prev_contact_layer != tmp_contact_layer || !prev_contact_point.equals(tmp_contact_point))
                      {
                      if (next_contact != null)
@@ -881,10 +875,9 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
                      }
                   }
                }
-            if (next_contact == null || fork_found)
-               {
-               break;
-               }
+            
+            if (next_contact == null || fork_found) break;
+
             curr_item = next_contact;
             prev_contact_point = next_contact_point;
             prev_contact_layer = next_contact_layer;

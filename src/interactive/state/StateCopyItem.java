@@ -199,7 +199,7 @@ public class StateCopyItem extends StateInteractive
                   continue;
                   }
                
-               PlaPointInt new_location = old_component.get_location().translate_by(translate_vector).round();
+               PlaPointInt new_location = old_component.get_location().translate_by(translate_vector);
                
                LibPackage new_package;
                if (layer_changed)

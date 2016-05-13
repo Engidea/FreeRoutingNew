@@ -161,43 +161,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       precalculated_corners = new PlaPoint[corner_count()];
       
       precalculated_corners[0] = plaline(0).intersection(plaline(1), "should never happen");
-      
-/*
-      corner_first = plaline(1).point_a;
-      
-      if ( ! corner_first.equals(precalculated_corners[0]))
-         {
-         print_dxy(corner_first,precalculated_corners[0]);
-         
-         }
-*/
       }
 
    
-   private void print_dxy (PlaPointInt a, PlaPoint p_b)
-      {
-      if ( p_b.is_rational() )
-         {
-         System.err.println("ahhh rational");
-         return;
-         }
-   
-      PlaPointInt b = p_b.round();
-      
-      if ( a.v_x != b.v_x )
-         { 
-         int delta = a.v_x - b.v_x;
-         
-         System.err.println("ahhh dx="+ delta) ;
-         
-         if ( delta > 1000 )
-            System.err.println("ahhh really") ;
-         }
-      
-      if ( a.v_y != b.v_y )
-         System.err.println("ahhh dy="+ ( a.v_y - b.v_y)) ;
-      
-      }
    
    private void adjust_direction ()
       {

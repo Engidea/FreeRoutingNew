@@ -292,10 +292,12 @@ public final class AlgoOptimizeVia
          }
       
       PlaPointInt rounded_check_corner = check_corner.round();
+      
       int trace_half_width = contact_trace.get_half_width();
       int trace_layer = contact_trace.get_layer();
       int trace_cl_class_no = contact_trace.clearance_class_no();
-      PlaPoint new_via_location = reposition_via( p_via, rounded_check_corner, trace_half_width, trace_layer, trace_cl_class_no);
+      
+      PlaPointInt new_via_location = reposition_via( p_via, rounded_check_corner, trace_half_width, trace_layer, trace_cl_class_no);
       
       if (new_via_location == null && trace_polyline.corner_count() >= 3)
          {
@@ -361,7 +363,7 @@ public final class AlgoOptimizeVia
          if (!contact_ok) return false;
          }
 
-      PlaVectorInt diff_vector = new_via_location.difference_by(via_center).round();  // does this rounding makes any difference ?
+      PlaVectorInt diff_vector = new_via_location.difference_by(via_center); 
       
       if ( ! r_board.move_drill_algo.insert(p_via, diff_vector, 9, 9, null))
          {

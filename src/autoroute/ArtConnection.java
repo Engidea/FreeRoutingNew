@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import board.items.BrdItem;
 import board.items.BrdTrace;
-import freert.planar.PlaPoint;
+import freert.planar.PlaPointInt;
 
 /**
  * Describes a routing connection ending at the next fork or terminal item.
@@ -39,16 +39,16 @@ public final class ArtConnection
    private static final double DETOUR_ITEM_COST = 0.1;
 
    // If the connection end in empty space, start_point or end_point may be null.
-   public final PlaPoint start_point;
+   public final PlaPointInt start_point;
    public final int start_layer;
 
-   public final PlaPoint end_point;
+   public final PlaPointInt end_point;
    public final int end_layer;
    
    public final Set<BrdItem> item_list;
 
    
-   private ArtConnection(PlaPoint p_start_point, int p_start_layer, PlaPoint p_end_point, int p_end_layer, Set<BrdItem> p_item_list)
+   private ArtConnection(PlaPointInt p_start_point, int p_start_layer, PlaPointInt p_end_point, int p_end_layer, Set<BrdItem> p_item_list)
       {
       start_point = p_start_point;
       start_layer = p_start_layer;
@@ -74,14 +74,14 @@ public final class ArtConnection
       Set<BrdItem> connection_items = new TreeSet<BrdItem>();
       connection_items.add(p_item);
 
-      PlaPoint start_point = null;
+      PlaPointInt start_point = null;
       int start_layer = 0;
-      PlaPoint end_point = null;
+      PlaPointInt end_point = null;
       int end_layer = 0;
 
       for (BrdItem curr_item : contacts)
          {
-         PlaPoint prev_contact_point = p_item.normal_contact_point(curr_item);
+         PlaPointInt prev_contact_point = p_item.normal_contact_point(curr_item);
 
          if (prev_contact_point == null)
             {
@@ -127,7 +127,7 @@ public final class ArtConnection
             Collection<BrdItem> curr_item_contacts = curr_item.get_normal_contacts();
             // filter the contacts at the previous contact point, because we were already there.
             // If then there is not exactly 1 new contact left, there is a stub or a fork.
-            PlaPoint next_contact_point = null;
+            PlaPointInt next_contact_point = null;
             int next_contact_layer = -1;
             BrdItem next_contact = null;
             for (BrdItem tmp_contact : curr_item_contacts)
@@ -135,7 +135,7 @@ public final class ArtConnection
                int tmp_contact_layer = curr_item.first_common_layer(tmp_contact);
                if (tmp_contact_layer >= 0)
                   {
-                  PlaPoint tmp_contact_point = curr_item.normal_contact_point(tmp_contact);
+                  PlaPointInt tmp_contact_point = curr_item.normal_contact_point(tmp_contact);
                   if (tmp_contact_point == null)
                      {
                      // no unique contact point
@@ -202,6 +202,7 @@ public final class ArtConnection
          {
          return Integer.MAX_VALUE;
          }
+      
       double min_trace_length = start_point.to_float().distance(end_point.to_float());
       
       double detour = (trace_length() + DETOUR_ADD) / (min_trace_length + DETOUR_ADD) + DETOUR_ITEM_COST * (item_list.size() - 1);

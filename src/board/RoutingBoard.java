@@ -2698,20 +2698,15 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts a trace from p_from_point to the nearest point on p_to_trace. 
     * @return false, if that is not possible without clearance violation.
     */
-   public final boolean connect_to_trace(PlaPointInt p_from_point, BrdTrace p_to_trace, int p_pen_half_width, int p_cl_type)
+   public final boolean connect_to_trace(PlaPointInt p_from_point, BrdTracePolyline p_to_trace, int p_pen_half_width, int p_cl_type)
       {
       PlaPoint first_corner = p_to_trace.corner_first();
 
       PlaPoint last_corner = p_to_trace.corner_last();
 
       int[] net_no_arr = p_to_trace.net_no_arr;
-
-      // not yet implemented      
-      if (!(p_to_trace instanceof BrdTracePolyline)) return false; 
       
-      BrdTracePolyline to_trace = (BrdTracePolyline) p_to_trace;
-      
-      Polyline apoly = to_trace.polyline();
+      Polyline apoly = p_to_trace.polyline();
       
       // no connection line necessary
       if (apoly.contains(p_from_point)) return true;
