@@ -152,23 +152,6 @@ public final class PolylineArea implements PlaArea, Serializable
       }
 
    @Override
-   public PolylineArea translate_by(PlaVector p_vector)
-      {
-      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
-
-      ShapePolyline translated_border = border_shape.translate_by(p_vector);
-
-      ShapePolyline[] translated_holes = new ShapePolyline[hole_arr.length];
-      
-      for (int index = 0; index < hole_arr.length; ++index)
-         {
-         translated_holes[index] = hole_arr[index].translate_by(p_vector);
-         }
-      
-      return new PolylineArea(translated_border, translated_holes);
-      }
-
-   @Override
    public PolylineArea translate_by(PlaVectorInt p_vector)
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;

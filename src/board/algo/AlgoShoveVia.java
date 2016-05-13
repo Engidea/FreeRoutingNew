@@ -33,7 +33,6 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
@@ -171,7 +170,7 @@ public final class AlgoShoveVia
          int p_max_recursion_depth,
          int p_max_via_recursion_depth )
       {
-      PlaVector translate_vector = p_location.difference_by(PlaPointInt.ZERO);
+      PlaVectorInt translate_vector = p_location.difference_by(PlaPointInt.ZERO);
       
       int calc_from_side_offset = r_board.get_min_trace_half_width();
 

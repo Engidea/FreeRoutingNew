@@ -485,13 +485,6 @@ public final class ShapeTileBox extends ShapeTileRegular
       }
 
    @Override
-   public ShapeTileBox translate_by(PlaVector p_rel_coor)
-      {
-      // This function is at the moment only implemented for Vectors with integer coordinates.
-      // The general implementation is still missing.
-      return translate_by((PlaVectorInt)p_rel_coor);
-      }
-
    public ShapeTileBox translate_by(PlaVectorInt p_rel_coor)
       {
       if (p_rel_coor.equals(PlaVectorInt.ZERO)) return this;

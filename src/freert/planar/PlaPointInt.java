@@ -162,6 +162,15 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return p_pole.translate_by(v);
       }
    
+   @Override
+   public final PlaPointInt mirror_horizontal(PlaPointInt p_pole)
+      {
+      PlaVectorInt v = difference_by(p_pole);
+      v = v.mirror_at_x_axis();
+      return p_pole.translate_by(v);
+      }
+   
+   
    
    @Override
    public PlaVectorInt difference_by(PlaPointInt p_other)

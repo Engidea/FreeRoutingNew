@@ -293,21 +293,6 @@ public final class ShapePolygon extends ShapePolyline
       }
 
    @Override
-   public ShapePolygon translate_by(PlaVector p_vector)
-      {
-      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
-      
-      PlaPoint[] new_corners = new PlaPoint[corners.length];
-      
-      for (int index = 0; index < corners.length; ++index)
-         {
-         new_corners[index] = corners[index].translate_by(p_vector);
-         }
-      
-      return new ShapePolygon(new_corners);
-      }
-
-   @Override
    public ShapePolygon translate_by(PlaVectorInt p_vector)
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
@@ -546,7 +531,7 @@ public final class ShapePolygon extends ShapePolyline
          return null;
          }
 
-      PlaPoint next_corner;
+      PlaPointInt next_corner;
       if (p_no == corners.length - 1)
          {
          next_corner = corners[0];

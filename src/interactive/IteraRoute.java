@@ -21,7 +21,7 @@ import freert.planar.PlaArea;
 import freert.planar.PlaEllipse;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
+import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
@@ -653,7 +653,7 @@ public final class IteraRoute
 
          if (incomplete_length < curr_max_trace_length && min_trace_length <= max_trace_length)
             {
-            PlaVector delta = nearest_target_point.round().difference_by(prev_corner);
+            PlaVectorInt delta = nearest_target_point.round().difference_by(prev_corner);
             double rotation = delta.angle_approx();
             PlaPointFloat center = from_corner.middle_point(nearest_target_point);
             double bigger_radius = 0.5 * curr_max_trace_length;

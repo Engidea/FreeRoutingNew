@@ -2468,6 +2468,7 @@ public final class RoutingBoard implements java.io.Serializable
                last_trace_shape = last_trace_shape.bounding_box();
                }
             }
+         
          BrdFromSide from_side = new BrdFromSide(combined_polyline, shape_index, last_trace_shape);
          boolean check_shove_ok = shove_trace_algo.check(
                last_trace_shape, 

@@ -1198,15 +1198,17 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaPointFloat last_corner = corner_approx(p_new_line_count - 2);
       PlaPointFloat prev_last_corner = corner_approx(p_new_line_count - 3);
       PlaPointInt new_last_corner = prev_last_corner.change_length(last_corner, p_last_segment_length).round();
+      
       if (new_last_corner.equals(corner(corner_count() - 2)))
          {
          // skip the last line
          return skip_lines(p_new_line_count - 1, p_new_line_count - 1);
          }
+      
       PlaLineInt[] new_lines = new PlaLineInt[p_new_line_count];
       plaline_copy(0, new_lines, 0, p_new_line_count - 2);
       // create the last 2 lines of the new polyline
-      PlaPoint first_line_point = plaline(p_new_line_count - 2).point_a;
+      PlaPointInt first_line_point = plaline(p_new_line_count - 2).point_a;
       if (first_line_point.equals(new_last_corner))
          {
          first_line_point = plaline(p_new_line_count - 2).point_b;

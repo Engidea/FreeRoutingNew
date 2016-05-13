@@ -407,15 +407,6 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       return new PlaLineInt(p_a, p_b);
       }
 
-   @Override   
-   public ShapeTileOctagon translate_by(PlaVector p_rel_coor)
-      {
-      if ( p_rel_coor instanceof PlaVectorInt ) 
-         return translate_by( (PlaVectorInt) p_rel_coor );
-      else
-         throw new IllegalArgumentException("Not supported");
-      }
-
    /**
     * This function is at the moment only implemented for Vectors with integer coordinates.
     */

@@ -49,24 +49,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       point_b  = new PlaPointInt ();
       line_dir = new PlaDirection();
       }
-   
-   /**
-    * creates a directed Line from two Points
-    * @deprecated
-    */
-   public PlaLineInt(PlaPoint p_a, PlaPoint p_b)
-      {
-      if (!(p_a instanceof PlaPointInt) )
-         throw new IllegalArgumentException("Line(p_a) only implemented for IntPoints till now");
-
-      if (!(p_b instanceof PlaPointInt) )
-         throw new IllegalArgumentException("Line(p_b) only implemented for IntPoints till now");
-      
-      point_a = (PlaPointInt)p_a;
-      point_b = (PlaPointInt)p_b;
-      
-      line_dir = new PlaDirection (point_a,point_b);
-      }
 
    public PlaLineInt(PlaPointInt p_a, PlaPointInt p_b)
       {
@@ -504,12 +486,12 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    /**
     * translates the line by p_vector
     */
-   public PlaLineInt translate_by(PlaVector p_vector)
+   public PlaLineInt translate_by(PlaVectorInt p_vector)
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
 
-      PlaPoint new_a = point_a.translate_by(p_vector);
-      PlaPoint new_b = point_b.translate_by(p_vector);
+      PlaPointInt new_a = point_a.translate_by(p_vector);
+      PlaPointInt new_b = point_b.translate_by(p_vector);
       
       return new PlaLineInt(new_a, new_b);
       }
@@ -717,24 +699,24 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaLineInt turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaPoint new_a = point_a.turn_90_degree(p_factor, p_pole);
-      PlaPoint new_b = point_b.turn_90_degree(p_factor, p_pole);
+      PlaPointInt new_a = point_a.turn_90_degree(p_factor, p_pole);
+      PlaPointInt new_b = point_b.turn_90_degree(p_factor, p_pole);
       return new PlaLineInt(new_a, new_b);
       }
 
    /** Mirrors this line at the vertical line through p_pole */
    public PlaLineInt mirror_vertical(PlaPointInt p_pole)
       {
-      PlaPoint new_a = point_b.mirror_vertical(p_pole);
-      PlaPoint new_b = point_a.mirror_vertical(p_pole);
+      PlaPointInt new_a = point_b.mirror_vertical(p_pole);
+      PlaPointInt new_b = point_a.mirror_vertical(p_pole);
       return new PlaLineInt(new_a, new_b);
       }
 
    /** Mirrors this line at the horizontal line through p_pole */
    public PlaLineInt mirror_horizontal(PlaPointInt p_pole)
       {
-      PlaPoint new_a = point_b.mirror_horizontal(p_pole);
-      PlaPoint new_b = point_a.mirror_horizontal(p_pole);
+      PlaPointInt new_a = point_b.mirror_horizontal(p_pole);
+      PlaPointInt new_b = point_a.mirror_horizontal(p_pole);
       return new PlaLineInt(new_a, new_b);
       }
 

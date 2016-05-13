@@ -108,12 +108,6 @@ public interface PlaArea extends PlaObject
 
    /**
     * Returns the affine translation of the area by p_vector
-    * @deprecated  use the one with the PlaVectorInt
-    */
-   PlaArea translate_by(PlaVector p_vector);
-
-   /**
-    * Returns the affine translation of the area by p_vector
     */
    PlaArea translate_by(PlaVectorInt p_vector);
 

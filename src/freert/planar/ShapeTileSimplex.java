@@ -559,22 +559,6 @@ public final class ShapeTileSimplex extends ShapeTile
     * Returns the simplex, which results from translating the lines of this simplex by p_vector
     */
    @Override   
-   public ShapeTileSimplex translate_by(PlaVector p_vector)
-      {
-      if (p_vector.equals(PlaVectorInt.ZERO)) return this;
-
-      PlaLineInt[] new_arr = new PlaLineInt[lines_arr.length];
-      
-      for (int index = 0; index < lines_arr.length; ++index)
-         new_arr[index] = lines_arr[index].translate_by(p_vector);
-      
-      return new ShapeTileSimplex(new_arr);
-      }
-
-   /**
-    * Returns the simplex, which results from translating the lines of this simplex by p_vector
-    */
-   @Override   
    public ShapeTileSimplex translate_by(PlaVectorInt p_vector)
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;

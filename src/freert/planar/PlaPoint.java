@@ -171,25 +171,13 @@ public abstract class PlaPoint implements PlaObject, Serializable
    /**
     * Mirrors this point at the vertical line through p_pole.
     */
-   public final PlaPoint mirror_vertical(PlaPoint p_pole)
-      {
-      PlaVector v = difference_by(p_pole);
-      v = v.mirror_at_y_axis();
-      return p_pole.translate_by(v);
-      }
-
    public abstract PlaPointInt mirror_vertical(PlaPointInt p_pole);
 
    /**
-    * Mirrors this point at the horizontal line through p_pole.
+    * Mirrors this point at the horizontal line through p_pole
     */
-   public final PlaPoint mirror_horizontal(PlaPoint p_pole)
-      {
-      PlaVector v = difference_by(p_pole);
-      v = v.mirror_at_x_axis();
-      return p_pole.translate_by(v);
-      }
-
+   public abstract PlaPointInt mirror_horizontal(PlaPointInt p_pole);
+   
    public abstract boolean is_rational ();
    
 

@@ -31,7 +31,6 @@ import board.items.BrdItem;
 import board.varie.SortedItemDouble;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.varie.TimeLimit;
 
@@ -117,7 +116,7 @@ public final class IteraMoveComponent
             item_center = curr_item.bounding_box().centre_of_gravity().round();
             }
       
-         PlaVector compare_vector = gravity_point.difference_by(item_center);
+         PlaVectorInt compare_vector = gravity_point.difference_by(item_center);
          
          double curr_projection = compare_vector.scalar_product(translate_vector);
 

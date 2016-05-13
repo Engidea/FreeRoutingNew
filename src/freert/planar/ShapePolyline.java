@@ -84,8 +84,6 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
     * Returns the affine translation of the area by p_vector
     */
    @Override
-   public abstract ShapePolyline translate_by(PlaVector p_vector);
-
    public abstract ShapePolyline translate_by(PlaVectorInt p_vector);
 
    /**
