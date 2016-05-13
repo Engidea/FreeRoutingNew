@@ -56,10 +56,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       rp_y = p_y;
       rp_z = p_z;
       
-      if (p_z.signum() < 0)
-         {
-         throw new IllegalArgumentException("RationalPoint: p_z is expected to be >= 0");
-         }
+      is_nan = p_z.signum() <= 0;
       }
 
    /**
@@ -90,10 +87,11 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       double yd = rp_y.doubleValue();
       double zd = rp_z.doubleValue();
       
-      if (zd == 0)
+      if ( is_nan )
          {
          xd = Float.MAX_VALUE;
          yd = Float.MAX_VALUE;
+         new IllegalArgumentException("RationalPoint: to_float NAN").printStackTrace();
          }
       else
          {
@@ -109,8 +107,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       {
       return to_float().round();
       }
-
-   
 
    @Override
    public final boolean is_NaN ()

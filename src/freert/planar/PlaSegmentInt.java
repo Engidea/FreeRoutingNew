@@ -97,7 +97,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       {
       if (precalculated_start_point != null) return precalculated_start_point;
 
-      precalculated_start_point = middle.intersection(start);
+      precalculated_start_point = middle.intersection(start, "should never happen");
       
 //      if ( ! ( precalculated_start_point instanceof PlaPointInt ) ) it happens...
       //         System.err.println("UFFA start");
@@ -112,7 +112,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       {
       if (precalculated_end_point != null) return precalculated_end_point;
 
-      precalculated_end_point = middle.intersection(end);
+      precalculated_end_point = middle.intersection(end, "should never happen");
 
       //      if ( ! ( precalculated_end_point instanceof PlaPointInt ) )
       //   System.err.println("UFFA end");
@@ -456,7 +456,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          if (start_point_side != PlaSide.ON_THE_RIGHT || end_point_side != PlaSide.ON_THE_RIGHT)
             {
             // not both points are inside the halplane defined by curr_line
-            PlaPoint is = middle.intersection(curr_line);
+            PlaPoint is = middle.intersection(curr_line, "what does this do ?");
             PlaSide prev_line_side_of_is = prev_line.side_of(is);
             PlaSide next_line_side_of_is = next_line.side_of(is);
             if (prev_line_side_of_is != PlaSide.ON_THE_LEFT && next_line_side_of_is != PlaSide.ON_THE_LEFT)

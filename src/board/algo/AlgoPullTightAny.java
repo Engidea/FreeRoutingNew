@@ -183,7 +183,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                // make shure that the second corner of the new polyline
                // is on the same side of the trace as the third corner. (There
                // may be splitting problems)
-               PlaPoint new_corner = curr_lines[0].intersection(curr_lines[1]);
+               PlaPoint new_corner = curr_lines[0].intersection(curr_lines[1], "does this heppne");
                if (new_corner.side_of(new_lines[0]) != p_polyline.corner_first_next().side_of(new_lines[0]))
                   {
                   ok = false;
@@ -193,7 +193,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                {
                // There may be a connection to a trace. Make shure that the second last corner of the new polyline
                // is on the same side of the trace as the third last corner (There may be splitting problems)
-               PlaPoint new_corner = curr_lines[1].intersection(curr_lines[2]);
+               PlaPoint new_corner = curr_lines[1].intersection(curr_lines[2], "does this heppne");
                
                if (new_corner.side_of(new_lines[0]) != p_polyline.corner_last_prev().side_of(new_lines[0]))
                   {

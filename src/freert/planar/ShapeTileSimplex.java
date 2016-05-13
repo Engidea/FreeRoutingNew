@@ -194,7 +194,8 @@ public final class ShapeTileSimplex extends ShapeTile
          {
          prev = lines_arr[p_no - 1];
          }
-      precalc_corners_int[p_no] = lines_arr[p_no].intersection(prev).round();
+      
+      precalc_corners_int[p_no] = lines_arr[p_no].intersection(prev,"should not heppen").round();
 
       return precalc_corners_int[p_no];
       }
@@ -330,7 +331,8 @@ public final class ShapeTileSimplex extends ShapeTile
             // simplex is 1 dimensional and unbounded at one side
             return PlaDimension.LINE;
             }
-         PlaPoint intersection = lines_arr[1].intersection(lines_arr[2]);
+         PlaPoint intersection = lines_arr[1].intersection(lines_arr[2], "what does this do ?");
+         
          PlaSide side_of_line0 = lines_arr[0].side_of(intersection);
          if (side_of_line0 == PlaSide.ON_THE_RIGHT)
             {

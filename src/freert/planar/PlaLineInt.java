@@ -180,7 +180,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
          {
          // Previous calculation was with FloatPoints and a tolerance for performance reasons. 
          // Make an exact check for collinearity now with class Point instead of FloatPoint.
-         PlaPoint intersection = p_1.intersection(p_2);
+         PlaPoint intersection = p_1.intersection(p_2, "this should never happen");
+         
          return side_of(intersection);
          }
       
@@ -254,7 +255,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     * Returns the intersection point of the 2 lines. 
     * If the lines are parallel result.is_infinite() will be true.
     */
-   public PlaPoint intersection(PlaLineInt p_other)
+   public PlaPoint intersection(PlaLineInt p_other, String error_msg )
       {
       
       // Separate handling for orthogonal and 45 degree lines for better performance
@@ -359,15 +360,16 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
                }
             det = BigInteger.ONE;
             }
+         
+         // this is a standard rational
+         return new PlaPointRational(is_x, is_y, det);
          }
       
-      // this is the real issue, returning a rational is a big issue....
-//      System.out.println("rational");
-      PlaPointRational ret_rat = new PlaPointRational(is_x, is_y, det);
-//      PlaPointInt ret_int = intersect(this,p_other);
-//      System.out.print("rat="+ret_rat);
-//      System.out.println(" int="+ret_int);
-      return ret_rat;
+      if ( error_msg != null )
+         new IllegalArgumentException("PlaLineInt: intersection NAN "+error_msg).printStackTrace();
+      
+      // this is instead a null rational !!
+      return new PlaPointRational(is_x, is_y, det);
       }
 
    

@@ -159,7 +159,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
       adjust_direction();
       
       precalculated_corners = new PlaPoint[corner_count()];
-      precalculated_corners[0] = plaline(0).intersection(plaline(1));
+      
+      precalculated_corners[0] = plaline(0).intersection(plaline(1), "should never happen");
       
 /*
       corner_first = plaline(1).point_a;
@@ -341,30 +342,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return corner(corner_count() - 2);
       }
 
-   
-   /**
-    * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
-    */
-   public PlaPoint[] corner_arr()
-      {
-      int corner_max = corner_count();
-
-      if (precalculated_corners == null)
-         {
-         // corner array is not yet allocated
-         precalculated_corners = new PlaPoint[corner_max];
-         }
-
-      for (int index = 0; index < corner_max; ++index)
-         {
-         if (precalculated_corners[index] != null) continue;
-
-         precalculated_corners[index] = plaline(index).intersection(plaline(index + 1));
-         }
-      
-      return precalculated_corners;
-      }
-
    /**
     * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
     */
@@ -451,7 +428,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (precalculated_corners[p_no] != null) return precalculated_corners[p_no];
 
       // calculate the new corner to this polyline, make sure that first and last are integers
-      precalculated_corners[p_no] = plaline(p_no).intersection(plaline(p_no + 1));
+      precalculated_corners[p_no] = plaline(p_no).intersection(plaline(p_no + 1), "should never happen");
       
 /* Ahhh, not yet, it is not possible, yet to round first and last point to int points, not yet....     
       if ( p_no == 0 ) 

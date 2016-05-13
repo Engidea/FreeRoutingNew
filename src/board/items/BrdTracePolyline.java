@@ -688,7 +688,10 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    private boolean split_inside_drill_pad_prohibited(int p_line_no, PlaLineInt p_line)
       {
-      PlaPoint intersection = polyline.plaline(p_line_no).intersection(p_line);
+      PlaPoint intersection = polyline.plaline(p_line_no).intersection(p_line, null);
+
+      // it is kind of OK if intersecion is a NaN since it will NOT match a point
+      if ( intersection.is_NaN() ) return true;
       
       Collection<BrdItem> overlap_items = r_board.pick_items(intersection, get_layer() );
       
@@ -701,15 +704,19 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          if (curr_item instanceof BrdAbitPin)
             {
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
+            
             if (curr_drill_item.center_get().equals(intersection))
                {
-               return false; // split always at the center of a drill item.
+               // split always at the center of a drill item.
+               return false; 
                }
+            
             pad_found = true;
             }
          else if (curr_item instanceof BrdTrace)
             {
             BrdTrace curr_trace = (BrdTrace) curr_item;
+            
             if (curr_trace != this && curr_trace.corner_first().equals(intersection) || curr_trace.corner_last().equals(intersection))
                {
                return false;

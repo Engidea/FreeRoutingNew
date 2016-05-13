@@ -307,7 +307,8 @@ public abstract class AlgoPullTight
          // check, that the corners of the line to translate are inside the clip shape
          for (int index = -1; index < 1; ++index)
             {
-            PlaPoint curr_corner = p_line_arr[p_no + index].intersection(p_line_arr[p_no + index + 1]);
+            PlaPoint curr_corner = p_line_arr[p_no + index].intersection(p_line_arr[p_no + index + 1] , "should not matter");
+
             if (curr_clip_shape.is_outside(curr_corner))
                {
                return null;
@@ -317,8 +318,8 @@ public abstract class AlgoPullTight
       
       PlaLineInt translate_line = p_line_arr[p_no];
       
-      PlaPoint prev_corner = p_line_arr[p_no - 2].intersection(p_line_arr[p_no - 1]);
-      PlaPoint next_corner = p_line_arr[p_no + 1].intersection(p_line_arr[p_no + 2]);
+      PlaPoint prev_corner = p_line_arr[p_no - 2].intersection(p_line_arr[p_no - 1], "probably messy");
+      PlaPoint next_corner = p_line_arr[p_no + 1].intersection(p_line_arr[p_no + 2], "probably messy");
       
       double prev_dist = translate_line.signed_distance(prev_corner.to_float());
       double next_dist = translate_line.signed_distance(next_corner.to_float());
