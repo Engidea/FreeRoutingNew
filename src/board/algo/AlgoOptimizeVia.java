@@ -39,7 +39,6 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentFloat;
 import freert.planar.PlaSide;
-import freert.planar.PlaVector;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 
@@ -514,17 +513,20 @@ public final class AlgoOptimizeVia
       {
       PlaPointInt via_location = p_via.center_get();
 
-      PlaVector first_delta  = p_first_trace_from_corner.difference_by(via_location);
-      PlaVector second_delta = p_second_trace_from_corner.difference_by(via_location);
+      PlaPointInt first_trace_from_corner_int = p_first_trace_from_corner.round();
+      PlaPointInt second_trace_from_corner_int = p_second_trace_from_corner.round();
+      
+      PlaVectorInt first_delta  = first_trace_from_corner_int.difference_by(via_location);
+      PlaVectorInt second_delta = second_trace_from_corner_int.difference_by(via_location);
+      
       double scalar_product  = first_delta.scalar_product(second_delta);
 
       PlaPointFloat via_location_float = via_location.to_float();
       PlaPointFloat first_trace_from_corner_float = p_first_trace_from_corner.to_float();
       PlaPointFloat second_trace_from_corner_float = p_second_trace_from_corner.to_float();
+      
       double first_trace_from_corner_distance = via_location_float.distance(first_trace_from_corner_float);
       double second_trace_from_corner_distance = via_location_float.distance(second_trace_from_corner_float);
-      PlaPointInt first_trace_from_corner_int  = first_trace_from_corner_float.round();
-      PlaPointInt second_trace_from_corner_int = second_trace_from_corner_float.round();
 
       // handle case of overlapping lines first
 
