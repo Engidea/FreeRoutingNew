@@ -35,7 +35,6 @@ import board.varie.ItemFixState;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
 import freert.library.LibPadstack;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
@@ -393,12 +392,6 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public PlaPoint normal_contact_point(BrdItem p_other)
-      {
-      return p_other.normal_contact_point(this);
-      }
-
-   @Override
    public PlaPointInt normal_contact_point(BrdAbit p_other)
       {
       if ( ! shares_layer(p_other) ) return null;
@@ -411,7 +404,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public PlaPoint normal_contact_point(BrdTrace p_trace)
+   public PlaPointInt normal_contact_point(BrdTrace p_trace)
       {
       if ( ! shares_layer(p_trace)) return null;
 

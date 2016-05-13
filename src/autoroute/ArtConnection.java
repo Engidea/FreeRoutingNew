@@ -68,10 +68,7 @@ public final class ArtConnection
       
       ArtConnection precalculated_connection = p_item.art_item_get().get_precalculated_connection();
 
-      if (precalculated_connection != null)
-         {
-         return precalculated_connection;
-         }
+      if (precalculated_connection != null) return precalculated_connection;
       
       Set<BrdItem> contacts = p_item.get_normal_contacts();
       Set<BrdItem> connection_items = new TreeSet<BrdItem>();

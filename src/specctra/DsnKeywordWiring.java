@@ -23,6 +23,7 @@ package specctra;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Set;
 import specctra.varie.DsnReadUtils;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
@@ -548,12 +549,10 @@ final class DsnKeywordWiring extends DsnKeywordScope
     */
    private void try_correct_net(BrdItem p_item)
       {
-      if (!(p_item instanceof BrdTrace))
-         {
-         return;
-         }
+      if (!(p_item instanceof BrdTrace)) return;
+
       BrdTrace curr_trace = (BrdTrace) p_item;
-      java.util.Set<BrdItem> contacts = curr_trace.get_normal_contacts(curr_trace.first_corner(), true);
+      Set<BrdItem> contacts = curr_trace.get_normal_contacts(curr_trace.first_corner(), true);
       contacts.addAll(curr_trace.get_normal_contacts(curr_trace.corner_last(), true));
       int corrected_net_no = 0;
       for (BrdItem curr_contact : contacts)

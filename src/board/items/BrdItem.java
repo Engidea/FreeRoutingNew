@@ -350,8 +350,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean shares_layer(BrdItem p_other)
       {
-      int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
-      int min_last_layer = Math.min(this.last_layer(), p_other.last_layer());
+      int max_first_layer = Math.max(first_layer(), p_other.first_layer());
+      int min_last_layer = Math.min(last_layer(), p_other.last_layer());
       return max_first_layer <= min_last_layer;
       }
 
@@ -361,8 +361,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final int first_common_layer(BrdItem p_other)
       {
-      int max_first_layer = Math.max(this.first_layer(), p_other.first_layer());
-      int min_last_layer = Math.min(this.last_layer(), p_other.last_layer());
+      int max_first_layer = Math.max(first_layer(), p_other.first_layer());
+      int min_last_layer = Math.min(last_layer(), p_other.last_layer());
       
       if (max_first_layer > min_last_layer)
          {
@@ -501,7 +501,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
             
             if (!r_board.search_tree_manager.is_clearance_compensation_used())
                {
-               double cl_offset = 0.5 * r_board.brd_rules.clearance_matrix.value_at(curr_item.clearance_class, this.clearance_class, shape_layer(index));
+               double cl_offset = 0.5 * r_board.brd_rules.clearance_matrix.value_at(curr_item.clearance_class, clearance_class, shape_layer(index));
                shape_1 = (ShapeTile) shape_1.enlarge(cl_offset);
                shape_2 = (ShapeTile) shape_2.enlarge(cl_offset);
                }
@@ -598,7 +598,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean is_connected_on_layer(int p_layer)
       {
-      Collection<BrdItem> contacts_on_layer = this.get_all_contacts(p_layer);
+      Collection<BrdItem> contacts_on_layer = get_all_contacts(p_layer);
       return (contacts_on_layer.size() > 0);
       }
 
@@ -614,9 +614,16 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns the contact point, if this item and p_other are Connectable and have a unique normal contact. 
     * Returns null otherwise
     */
-   public PlaPoint normal_contact_point(BrdItem p_other)
+   public final PlaPoint normal_contact_point(BrdItem p_other)
       {
-      return null;
+      if ( p_other == null ) return null;
+      
+      if ( p_other instanceof BrdTrace )
+         return normal_contact_point((BrdTrace)p_other);
+      else if ( p_other instanceof BrdAbit )
+         return normal_contact_point((BrdAbit)p_other);
+      else
+         return null;
       }
 
    /**
@@ -757,7 +764,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          }
       else
          {
-         for (int curr_net_no : this.net_no_arr)
+         for (int curr_net_no : net_no_arr)
             {
             result.addAll(r_board.get_connectable_items(curr_net_no));
             }
@@ -792,13 +799,13 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       while (it.hasNext())
          {
          BrdItem curr_item = it.next();
-         PlaPoint prev_contact_point = this.normal_contact_point(curr_item);
+         PlaPoint prev_contact_point = normal_contact_point(curr_item);
          if (prev_contact_point == null)
             {
             // no unique contact point
             continue;
             }
-         int prev_contact_layer = this.first_common_layer(curr_item);
+         int prev_contact_layer = first_common_layer(curr_item);
          if (this instanceof BrdTrace)
             {
             // Check, that there is only 1 contact at this location.
@@ -811,15 +818,16 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
                continue;
                }
             }
-         // Search from curr_item along the contacts
-         // until the next fork or nonroute item.
+
+         // Search from curr_item along the contacts until the next fork or nonroute item.
          for (;;)
             {
-            if (!curr_item.is_route())
+            if ( ! curr_item.is_route())
                {
                // connection ends
                break;
                }
+            
             if (curr_item instanceof BrdAbitVia)
                {
                if (p_stop_option == BrdStopConnection.VIA)
@@ -1060,7 +1068,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * gets the p_no-the net number of this item for 0 <= p_no < this.net_count().
+    * gets the p_no-the net number of this item for 0 <= p_no < net_count().
     */
    public final int get_net_no(int p_no)
       {
@@ -1103,7 +1111,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          new_net_no_arr[i] = net_no_arr[i + 1];
          }
       
-      this.net_no_arr = new_net_no_arr;
+      net_no_arr = new_net_no_arr;
       
       return true;
       }
@@ -1284,10 +1292,10 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    protected final void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
-      for (int i = 0; i < this.net_count(); ++i)
+      for (int i = 0; i < net_count(); ++i)
          {
          p_window.append(", " + resources.getString("net") + " ");
-         freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(this.get_net_no(i));
+         freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(get_net_no(i));
          p_window.append(curr_net.name, resources.getString("net_info"), curr_net);
          }
       }
@@ -1297,7 +1305,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    protected final void print_clearance_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      if (this.clearance_class > 0)
+      if (clearance_class > 0)
          {
          java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
          p_window.append(", " + resources.getString("clearance_class") + " ");
@@ -1315,7 +1323,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          {
          java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.FixedState", p_locale);
          p_window.append(", ");
-         p_window.append(resources.getString(this.fixed_state.toString()));
+         p_window.append(resources.getString(fixed_state.toString()));
          }
       }
 
@@ -1324,7 +1332,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    protected final void print_contact_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      Collection<BrdItem> contacts = this.get_normal_contacts();
+      Collection<BrdItem> contacts = get_normal_contacts();
       if (!contacts.isEmpty())
          {
          java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
@@ -1339,7 +1347,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    protected final void print_clearance_violation_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      Collection<BrdItemViolation> clearance_violations = this.clearance_violations();
+      Collection<BrdItemViolation> clearance_violations = clearance_violations();
       
       if ( clearance_violations.isEmpty() ) return;
       
@@ -1364,11 +1372,11 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    protected final void print_connectable_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      this.print_clearance_info(p_window, p_locale);
-      this.print_fixed_info(p_window, p_locale);
-      this.print_net_info(p_window, p_locale);
-      this.print_contact_info(p_window, p_locale);
-      this.print_clearance_violation_info(p_window, p_locale);
+      print_clearance_info(p_window, p_locale);
+      print_fixed_info(p_window, p_locale);
+      print_net_info(p_window, p_locale);
+      print_contact_info(p_window, p_locale);
+      print_clearance_violation_info(p_window, p_locale);
       }
 
    /**
@@ -1376,9 +1384,9 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    protected final void print_item_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      this.print_clearance_info(p_window, p_locale);
-      this.print_fixed_info(p_window, p_locale);
-      this.print_clearance_violation_info(p_window, p_locale);
+      print_clearance_info(p_window, p_locale);
+      print_fixed_info(p_window, p_locale);
+      print_clearance_violation_info(p_window, p_locale);
       }
 
    /**
@@ -1425,7 +1433,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean is_fanout_via(Set<BrdItem> p_ignore_items)
       {
-      Collection<BrdItem> contact_list = this.get_normal_contacts();
+      Collection<BrdItem> contact_list = get_normal_contacts();
       for (BrdItem curr_contact : contact_list)
          {
          if (curr_contact instanceof BrdAbitPin && curr_contact.first_layer() == curr_contact.last_layer() && curr_contact.get_normal_contacts().size() <= 1)

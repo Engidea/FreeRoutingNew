@@ -247,10 +247,9 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                }
             }
          }
-      if (contacts.size() != 1)
-         {
-         return false;
-         }
+      
+      if (contacts.size() != 1) return false;
+      
       BrdTracePolyline other_trace = null;
       boolean trace_found = false;
       boolean reverse_order = false;
@@ -351,6 +350,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       {
       PlaPoint end_corner = corner_last();
       Collection<BrdItem> contacts = get_normal_contacts(end_corner, false);
+      
       if (p_ignore_areas)
          {
          // remove conduction areas from the list
@@ -363,10 +363,9 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                }
             }
          }
-      if (contacts.size() != 1)
-         {
-         return false;
-         }
+      
+      if (contacts.size() != 1) return false;
+      
       BrdTracePolyline other_trace = null;
       boolean trace_found = false;
       boolean reverse_order = false;
@@ -393,10 +392,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
                }
             }
          }
-      if (!trace_found)
-         {
-         return false;
-         }
+      
+      if ( ! trace_found ) return false;
 
       r_board.item_list.save_for_undo(this);
       

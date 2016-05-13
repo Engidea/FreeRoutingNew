@@ -153,12 +153,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       {
       return get_normal_contacts(corner_last(), false);
       }
-
-   public PlaPoint normal_contact_point(BrdItem p_other)
-      {
-      return p_other.normal_contact_point(this);
-      }
-
+   
    public Set<BrdItem> get_normal_contacts()
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
@@ -272,11 +267,13 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       return result;
       }
 
+   @Override
    public PlaPoint normal_contact_point(BrdAbit p_drill_item)
       {
       return p_drill_item.normal_contact_point(this);
       }
 
+   @Override
    public PlaPoint normal_contact_point(BrdTrace p_other)
       {
       if ( layer_no != p_other.layer_no) return null;
