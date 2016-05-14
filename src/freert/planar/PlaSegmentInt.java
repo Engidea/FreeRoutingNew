@@ -16,6 +16,7 @@
 package freert.planar;
 
 
+
 /**
  * Implements functionality for line segments. 
  * The difference between a LineSegment and a Line is, that a Line is possibly infinite but a
@@ -27,6 +28,7 @@ package freert.planar;
 public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    {
    private static final long serialVersionUID = 1L;
+   private static final String classname="PlaSegmentInt.";
 
    private final PlaLineInt start;
    private final PlaLineInt middle;
@@ -47,6 +49,19 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       end = p_end_line;
       }
 
+   public PlaSegmentInt(PlaPointInt p_from_corner, PlaPointInt p_to_corner)
+      {
+      if (p_from_corner.equals(p_to_corner))
+         throw new IllegalArgumentException(classname+"C must contain at least 2 different points");
+
+      PlaDirection dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
+      start = new PlaLineInt(p_from_corner, dir.turn_45_degree(2));
+      middle = new PlaLineInt(p_from_corner, p_to_corner);
+      dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
+      end = new PlaLineInt(p_to_corner, dir.turn_45_degree(2));
+      }
+   
+   
    @Override
    public final boolean is_NaN ()
       {
@@ -233,7 +248,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       
       return true;
       }
-
+   
+   
    /**
     * calculates the smallest surrounding box of this line segmant
     */

@@ -388,7 +388,7 @@ public final class AlgoOptimizeVia
 
    /**
     * Tries to move the via into the direction of p_to_location as far as possible 
-    * Return the new location of the via, or null, if no move was possible.
+    * @return the new location of the via, or null, if no move was possible.
     */
    private PlaPointInt reposition_via( BrdAbitVia p_via, PlaPointInt p_to_location, int p_trace_half_width, int p_trace_layer, int p_trace_cl_class)
       {
@@ -411,14 +411,13 @@ public final class AlgoOptimizeVia
          {
          new_float_to_location = float_from_location.change_length(float_to_location, ok_length);
          }
+      
       PlaPointInt new_to_location = new_float_to_location.round();
       PlaVectorInt delta = new_to_location.difference_by(from_location);
+
       boolean check_ok = r_board.move_drill_algo.check(p_via, delta, 0, 0, null, null);
 
-      if (check_ok)
-         {
-         return new_to_location;
-         }
+      if (check_ok) return new_to_location;
 
       final double c_min_length = 0.3 * p_trace_half_width + 1;
 

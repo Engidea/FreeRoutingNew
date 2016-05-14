@@ -84,8 +84,7 @@ public final class BrdFromSide
       if ( ! border_intersection_found)
          {
          // The first corner of p_polyline is inside p_shape.
-         // Calculate the nearest intersection point of p_polyline.arr[1]
-         // with the border of p_shape to the first corner of p_polyline
+         // Calculate the nearest intersection point of p_polyline.arr[1] with the border of p_shape to the first corner of p_polyline
          PlaPointFloat from_point = p_polyline.corner_approx(0);
          PlaLineInt check_line = p_polyline.plaline(1);
          double min_dist = Double.MAX_VALUE;

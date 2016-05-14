@@ -20,6 +20,7 @@ import interactive.IteraSettings;
 import java.awt.Graphics;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
@@ -1800,10 +1801,8 @@ public final class RoutingBoard implements java.io.Serializable
    public final double check_trace_segment(PlaPointInt p_from_point, PlaPointInt p_to_point, int p_layer, int[] p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
       {
       if (p_from_point.equals(p_to_point)) return 0;
-
-      Polyline curr_polyline = new Polyline(p_from_point, p_to_point);
       
-      PlaSegmentInt curr_line_segment = curr_polyline.segment_get(1);
+      PlaSegmentInt curr_line_segment = new PlaSegmentInt(p_from_point, p_to_point);
       
       return check_trace_segment(curr_line_segment, p_layer, p_net_no_arr, p_trace_half_width, p_cl_class_no, p_only_not_shovable_obstacles);
       }
@@ -1831,19 +1830,17 @@ public final class RoutingBoard implements java.io.Serializable
 
       for (ShapeTreeEntry curr_obstacle_entry : obstacle_entries)
          {
-         if (!(curr_obstacle_entry.object instanceof BrdItem))
-            {
-            continue;
-            }
+         if ( ! (curr_obstacle_entry.object instanceof BrdItem)) continue;
+
          BrdItem curr_obstacle = (BrdItem) curr_obstacle_entry.object;
-         if (p_only_not_shovable_obstacles && curr_obstacle.is_route() && !curr_obstacle.is_shove_fixed())
-            {
-            continue;
-            }
+
+         if ( p_only_not_shovable_obstacles && curr_obstacle.is_route() && ! curr_obstacle.is_shove_fixed()) continue;
+
          ShapeTile curr_obstacle_shape = curr_obstacle_entry.object.get_tree_shape(default_tree, curr_obstacle_entry.shape_index_in_object);
          ShapeTile curr_offset_shape;
          PlaPointFloat nearest_obstacle_point;
          double shorten_value;
+
          if (default_tree.is_clearance_compensation_used())
             {
             curr_offset_shape = shape_to_check;
@@ -1855,11 +1852,11 @@ public final class RoutingBoard implements java.io.Serializable
             curr_offset_shape = (ShapeTile) shape_to_check.offset(clearance_value);
             shorten_value = p_trace_half_width + clearance_value;
             }
+         
          ShapeTile intersection = curr_obstacle_shape.intersection(curr_offset_shape);
-         if (intersection.is_empty())
-            {
-            continue;
-            }
+         
+         if (intersection.is_empty()) continue;
+
          nearest_obstacle_point = intersection.nearest_point_approx(from_point);
 
          double projection = from_point.scalar_product(to_point, nearest_obstacle_point) / line_length;
@@ -1869,6 +1866,7 @@ public final class RoutingBoard implements java.io.Serializable
          if (projection < ok_length)
             {
             ok_length = projection;
+
             if (ok_length <= 0)
                {
                return 0;
@@ -2236,12 +2234,12 @@ public final class RoutingBoard implements java.io.Serializable
       {
       ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
-      ShapeTile[] trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.corner_count());
+      ArrayList<ShapeTile> trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.corner_count());
       boolean orthogonal_mode = brd_rules.is_trace_snap_90();
 
-      for (int index = 0; index < trace_shapes.length; ++index)
+      for (int index = 0; index < trace_shapes.size(); ++index)
          {
-         ShapeTile curr_trace_shape = trace_shapes[index];
+         ShapeTile curr_trace_shape = trace_shapes.get(index);
          
          if (orthogonal_mode)
             {
@@ -2357,12 +2355,16 @@ public final class RoutingBoard implements java.io.Serializable
       
       int start_shape_no = combined_polyline.plalinelen() - new_polyline.plalinelen();
       // calculate the last shapes of combined_polyline for checking
-      ShapeTile[] trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.plalinelen(-1));
-      int last_shape_no = trace_shapes.length;
+      ArrayList<ShapeTile> trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.plalinelen(-1));
+      
+      final int trace_shapes_count = trace_shapes.size();
+      int last_shape_no = trace_shapes_count;
+      
       boolean orthogonal_mode = brd_rules.is_trace_snap_90();
-      for (int index = 0; index < trace_shapes.length; ++index)
+      
+      for (int index = 0; index < trace_shapes_count; ++index)
          {
-         ShapeTile curr_trace_shape = trace_shapes[index];
+         ShapeTile curr_trace_shape = trace_shapes.get(index);
          
          if (orthogonal_mode)
             {
@@ -2370,7 +2372,7 @@ public final class RoutingBoard implements java.io.Serializable
             curr_trace_shape = curr_trace_shape.bounding_box();
             }
          
-         BrdFromSide from_side = new BrdFromSide(combined_polyline, combined_polyline.corner_count() - trace_shapes.length - 1 + index, curr_trace_shape);
+         BrdFromSide from_side = new BrdFromSide(combined_polyline, combined_polyline.corner_count() - trace_shapes_count - 1 + index, curr_trace_shape);
 
          if (p_with_check)
             {
@@ -2409,11 +2411,11 @@ public final class RoutingBoard implements java.io.Serializable
 
       PlaPointInt new_corner = to_corner;
       
-      if (last_shape_no < trace_shapes.length)
+      if (last_shape_no < trace_shapes_count)
          {
          // the shove with index last_shape_no failed.
          // Sample the shove line to a shorter shove distance and try again.
-         ShapeTile last_trace_shape = trace_shapes[last_shape_no];
+         ShapeTile last_trace_shape = trace_shapes.get(last_shape_no);
          
          if (orthogonal_mode)
             {
@@ -2431,11 +2433,11 @@ public final class RoutingBoard implements java.io.Serializable
             return from_corner;
             }
          
-         int shape_index = combined_polyline.corner_count() - trace_shapes.length - 1 + last_shape_no;
+         int shape_index = combined_polyline.corner_count() - trace_shapes_count - 1 + last_shape_no;
          
          if (last_segment_length > sample_width)
             {
-            new_polyline = new_polyline.shorten(new_polyline.plalinelen( - (trace_shapes.length - last_shape_no - 1)), sample_width);
+            new_polyline = new_polyline.shorten(new_polyline.plalinelen( - (trace_shapes_count - last_shape_no - 1)), sample_width);
             
             PlaPoint new_last_corner_point = new_polyline.corner_last();
             

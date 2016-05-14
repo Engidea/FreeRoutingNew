@@ -17,6 +17,7 @@
  */
 package board.shape;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -114,9 +115,9 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       // calculate the shapes of p_new_polyline from keep_at_start_count to
       // new_shape_count - keep_at_end_count - 1;
       int compensated_half_width = p_obj.get_half_width() + get_clearance_compensation(p_obj.clearance_class_no(), p_obj.get_layer());
-      ShapeTile[] changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plalinelen(-1) - p_keep_at_end_count);
+      ArrayList<ShapeTile> changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plalinelen(-1) - p_keep_at_end_count);
       int old_shape_count = p_obj.tree_shape_count(this);
-      int new_shape_count = changed_shapes.length + p_keep_at_start_count + p_keep_at_end_count;
+      int new_shape_count = changed_shapes.size() + p_keep_at_start_count + p_keep_at_end_count;
       ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
       ShapeTreeLeaf[] old_entries = p_obj.get_search_tree_entries(this);
@@ -140,15 +141,16 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          }
 
       // correct the precalculated tree shapes first, because it is used in this.insert
-      for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; ++i)
+      for (int index = p_keep_at_start_count; index < new_shape_count - p_keep_at_end_count; ++index)
          {
-         new_precalculated_tree_shapes[i] = changed_shapes[i - p_keep_at_start_count];
+         new_precalculated_tree_shapes[index] = changed_shapes.get(index - p_keep_at_start_count);
          }
+      
       p_obj.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
-      for (int i = p_keep_at_start_count; i < new_shape_count - p_keep_at_end_count; ++i)
+      for (int index = p_keep_at_start_count; index < new_shape_count - p_keep_at_end_count; ++index)
          {
-         new_leaf_arr[i] = insert(p_obj, i);
+         new_leaf_arr[index] = insert(p_obj, index);
          }
       p_obj.set_search_tree_entries(new_leaf_arr, this);
       }
@@ -160,11 +162,9 @@ public class ShapeSearchTree extends ShapeTreeMinArea
    public final void merge_entries_in_front(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
-      ShapeTile[] link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
+      ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
       boolean change_order = p_from_trace.corner_first().equals(p_to_trace.corner_first());
-      // remove the last or first tree entry from p_from_trace and the
-      // first tree entry from p_to_trace, because they will be replaced by
-      // the new link entries.
+      // remove the last or first tree entry from p_from_trace and the first tree entry from p_to_trace, because they will be replaced by the new link entries.
       int from_shape_count_minus_1 = p_from_trace.tile_shape_count() - 1;
       int remove_no;
       if (change_order)
@@ -179,7 +179,10 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       ShapeTreeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
       remove_leaf(from_trace_entries[remove_no]);
       remove_leaf(to_trace_entries[0]);
-      int new_shape_count = from_trace_entries.length + link_shapes.length + to_trace_entries.length - 2;
+      
+      final int link_shapes_count = link_shapes.size();
+      
+      int new_shape_count = from_trace_entries.length + link_shapes_count + to_trace_entries.length - 2;
       ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
       int old_to_shape_count = to_trace_entries.length;
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
@@ -200,24 +203,25 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          new_leaf_arr[i].object = p_to_trace;
          new_leaf_arr[i].shape_index_in_object = i;
          }
-      for (int i = 1; i < old_to_shape_count; ++i)
+      
+      for (int index = 1; index < old_to_shape_count; ++index)
          {
-         int curr_ind = from_shape_count_minus_1 + link_shapes.length + i - 1;
-         new_precalculated_tree_shapes[curr_ind] = p_to_trace.get_tree_shape(this, i);
-         new_leaf_arr[curr_ind] = to_trace_entries[i];
+         int curr_ind = from_shape_count_minus_1 + link_shapes_count + index - 1;
+         new_precalculated_tree_shapes[curr_ind] = p_to_trace.get_tree_shape(this, index);
+         new_leaf_arr[curr_ind] = to_trace_entries[index];
          new_leaf_arr[curr_ind].shape_index_in_object = curr_ind;
          }
 
       // correct the precalculated tree shapes first, because it is used in this.insert
-      for (int i = 0; i < link_shapes.length; ++i)
+      for (int index = 0; index < link_shapes_count; ++index)
          {
-         int curr_ind = from_shape_count_minus_1 + i;
-         new_precalculated_tree_shapes[curr_ind] = link_shapes[i];
+         int curr_ind = from_shape_count_minus_1 + index;
+         new_precalculated_tree_shapes[curr_ind] = link_shapes.get(index);
          }
       p_to_trace.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
       // create the new link entries
-      for (int i = 0; i < link_shapes.length; ++i)
+      for (int i = 0; i < link_shapes_count; ++i)
          {
          int curr_ind = from_shape_count_minus_1 + i;
          new_leaf_arr[curr_ind] = insert(p_to_trace, curr_ind);
@@ -233,7 +237,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
    public final void merge_entries_at_end(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
-      ShapeTile[] link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
+      ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
       boolean change_order = p_from_trace.corner_last().equals(p_to_trace.corner_last());
       ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
       ShapeTreeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
@@ -252,7 +256,10 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          remove_no = 0;
          }
       remove_leaf(from_trace_entries[remove_no]);
-      int new_shape_count = from_trace_entries.length + link_shapes.length + to_trace_entries.length - 2;
+      
+      final int link_shapes_count = link_shapes.size();
+      
+      int new_shape_count = from_trace_entries.length + link_shapes_count + to_trace_entries.length - 2;
       ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
       // transfer the tree entries except the last from the old shapes
@@ -263,17 +270,17 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          new_leaf_arr[i] = to_trace_entries[i];
          }
 
-      for (int i = 1; i < from_trace_entries.length; ++i)
+      for (int index = 1; index < from_trace_entries.length; ++index)
          {
-         int curr_ind = to_shape_count_minus_1 + link_shapes.length + i - 1;
+         int curr_ind = to_shape_count_minus_1 + link_shapes_count + index - 1;
          int from_no;
          if (change_order)
             {
-            from_no = from_trace_entries.length - i - 1;
+            from_no = from_trace_entries.length - index - 1;
             }
          else
             {
-            from_no = i;
+            from_no = index;
             }
          new_precalculated_tree_shapes[curr_ind] = p_from_trace.get_tree_shape(this, from_no);
          new_leaf_arr[curr_ind] = from_trace_entries[from_no];
@@ -282,17 +289,18 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          }
 
       // correct the precalculated tree shapes first, because it is used in this.insert
-      for (int i = 0; i < link_shapes.length; ++i)
+      for (int index = 0; index < link_shapes_count; ++index)
          {
-         int curr_ind = to_shape_count_minus_1 + i;
-         new_precalculated_tree_shapes[curr_ind] = link_shapes[i];
+         int curr_ind = to_shape_count_minus_1 + index;
+         new_precalculated_tree_shapes[curr_ind] = link_shapes.get(index);
          }
+      
       p_to_trace.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
 
       // create the new link entries
-      for (int i = 0; i < link_shapes.length; ++i)
+      for (int index = 0; index < link_shapes_count; ++index)
          {
-         int curr_ind = to_shape_count_minus_1 + i;
+         int curr_ind = to_shape_count_minus_1 + index;
          new_leaf_arr[curr_ind] = insert(p_to_trace, curr_ind);
          }
       p_to_trace.set_search_tree_entries(new_leaf_arr, this);
@@ -1075,7 +1083,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
    /**
     * Used for creating the shapes of a polyline_trace for this tree. Overwritten in derived classes.
     */
-   protected ShapeTile[] offset_shapes(Polyline p_polyline, int p_half_width, int p_from_no, int p_to_no)
+   protected ArrayList<ShapeTile> offset_shapes(Polyline p_polyline, int p_half_width, int p_from_no, int p_to_no)
       {
       return p_polyline.offset_shapes(p_half_width, p_from_no, p_to_no);
       }

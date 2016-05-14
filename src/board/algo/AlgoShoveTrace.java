@@ -15,6 +15,7 @@
  */
 package board.algo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
@@ -269,15 +270,15 @@ public final class AlgoShoveTrace
          p_trace_half_width += search_tree.get_clearance_compensation(p_cl_type, p_layer);
          }
       
-      ShapeTile[] trace_shapes = p_line_segment.to_polyline().offset_shapes(p_trace_half_width);
+      ArrayList<ShapeTile> trace_shapes = p_line_segment.to_polyline().offset_shapes(p_trace_half_width);
       
-      if (trace_shapes.length != 1)
+      if (trace_shapes.size() != 1)
          {
          System.out.println("ShoveTraceAlgo.check: trace_shape count 1 expected");
          return 0;
          }
 
-      ShapeTile trace_shape = trace_shapes[0];
+      ShapeTile trace_shape = trace_shapes.get(0);
       if (trace_shape.is_empty())
          {
          System.out.println("ShoveTraceAlgo.check: trace_shape is empty");

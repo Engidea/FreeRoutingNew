@@ -212,14 +212,14 @@ public final class MazeShoveTraceAlgo
 
       double shove_width = r_board.check_trace_segment(shove_line_segment, trace_layer, net_no_arr, trace_half_width, art_ctrl.trace_clearance_class_no, true);
       boolean segment_shortened = false;
+      
       if (shove_width < Integer.MAX_VALUE)
          {
          // shorten shove_line_segment
          shove_width = shove_width - 1;
-         if (shove_width <= 0)
-            {
-            return true;
-            }
+      
+         if (shove_width <= 0) return true;
+         
          shove_line_segment = shove_line_segment.change_length_approx(shove_width);
          segment_shortened = true;
          }
@@ -228,10 +228,17 @@ public final class MazeShoveTraceAlgo
       PlaPointFloat to_corner = shove_line_segment.end_point_approx();
       boolean segment_ist_point = from_corner.length_square(to_corner) < 0.1;
 
-      if (!segment_ist_point)
+      if ( ! segment_ist_point)
          {
-         shove_width = r_board.shove_trace_algo.check(shove_line_segment, p_shove_to_the_left, trace_layer, net_no_arr, trace_half_width, art_ctrl.trace_clearance_class_no,
-               art_ctrl.max_shove_trace_recursion_depth, art_ctrl.max_shove_via_recursion_depth);
+         shove_width = r_board.shove_trace_algo.check(
+               shove_line_segment, 
+               p_shove_to_the_left, 
+               trace_layer, 
+               net_no_arr, 
+               trace_half_width, 
+               art_ctrl.trace_clearance_class_no,
+               art_ctrl.max_shove_trace_recursion_depth, 
+               art_ctrl.max_shove_via_recursion_depth);
 
          if (shove_width <= 0) return true;
          }

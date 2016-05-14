@@ -452,7 +452,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * calculates for each line a shape around this line where the right and left edge lines have the distance p_half_width from the
     * center line Returns an array of convex shapes of length line_count - 2
     */
-   public ShapeTile[] offset_shapes(int p_half_width)
+   public ArrayList<ShapeTile> offset_shapes(int p_half_width)
       {
       return offset_shapes(p_half_width, 0, plalinelen(-1));
       }
@@ -461,14 +461,14 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * calculates for each line between p_from_no and p_to_no a shape around this line, where the right and left edge lines have the
     * distance p_half_width from the center line
     */
-   public ShapeTile[] offset_shapes(int p_half_width, int p_from_no, int p_to_no)
+   public ArrayList<ShapeTile> offset_shapes(int p_half_width, int p_from_no, int p_to_no)
       {
       int from_no = Math.max(p_from_no, 0);
       int to_no = Math.min(p_to_no, plalinelen(-1));
       
       int shape_count = Math.max(to_no - from_no - 1, 0);
       
-      ShapeTile[] shape_arr = new ShapeTile[shape_count];
+      ArrayList<ShapeTile> shape_arr = new ArrayList<ShapeTile>(shape_count);
       
       if (shape_count == 0) return shape_arr;
       
@@ -626,8 +626,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
                }
             s1 = s1.intersection(ShapeTile.get_instance(cut_lines));
             }
-         int curr_shape_no = index - from_no - 1;
+
          ShapeTile bounding_shape;
+
          if (USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES)
             {
             // intersect with the bounding octagon
@@ -641,16 +642,18 @@ public final class Polyline implements java.io.Serializable, PlaObject
             ShapeTileBox offset_box = surr_box.offset(p_half_width);
             bounding_shape = offset_box.to_Simplex();
             }
-         shape_arr[curr_shape_no] = bounding_shape.intersection_with_simplify(s1);
-         if (shape_arr[curr_shape_no].is_empty())
-            {
-            System.out.println("offset_shapes: shape is empty");
-            }
-
+      
+         ShapeTile a_risul = bounding_shape.intersection_with_simplify(s1);
+         
+         if ( a_risul.is_empty() )
+            System.err.println(classname+"offset_shapes: shape is empty");
+         else
+            shape_arr.add(a_risul);
+         
          prev_dir = curr_dir;
          curr_dir = next_dir;
-
          }
+
       return shape_arr;
       }
 
@@ -666,8 +669,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return null;
          }
       
-      ShapeTile[] result = offset_shapes(p_half_width, p_no, p_no + 2);
-      return result[0];
+      ArrayList<ShapeTile> result = offset_shapes(p_half_width, p_no, p_no + 2);
+
+      return result.get(0);
       }
 
    /**
