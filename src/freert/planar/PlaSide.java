@@ -56,16 +56,21 @@ public final class PlaSide
       }
 
    /**
-    * @return ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value == 0
+    * Experimental testing show that this tolerance produces the same result than "perfect" calculation usin rationals
+    * Well, teoretically, it may be that a rational is able to differentiate finer details, however, on a reasonably 
+    * complex board, no such case happens, this value was 0.004
+    * Some further testing shows some "glitch", let me see is a smaller value is "better"
+    */
+   public static final double OPTIMAL_side_tolerance = 0.001;
+   
+   
+   /**
+    * Note that this uses OPTIMAL_side_tolerance as discriminant
+    * @return ON_THE_LEFT, if p_value < 0, ON_THE_RIGHT, if p_value > 0 and COLLINEAR, if p_value almost 0
     */
    static PlaSide get_side_of(double p_value)
       {
-      if (p_value > 0)
-          return ON_THE_RIGHT;
-      else if (p_value < 0)
-          return ON_THE_LEFT;
-      else
-         return COLLINEAR;
+      return get_side_of(p_value,OPTIMAL_side_tolerance);
       }
    
    /**

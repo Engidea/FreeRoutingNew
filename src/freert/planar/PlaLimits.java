@@ -47,6 +47,7 @@ public final class PlaLimits
    public static final double sqrt2 = Math.sqrt(2);
    
    
+   
    public static boolean is_critical ( int value )
       {
       return value > CRIT_INT || value < -CRIT_INT;

@@ -37,7 +37,8 @@ import freert.varie.BigIntAux;
 public final class PlaPointRational extends PlaPoint implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
-
+   private static final String classname="PlaPointRational.";
+   
    final BigInteger rp_x;
    final BigInteger rp_y;
    final BigInteger rp_z;
@@ -247,9 +248,31 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
     */
    public final PlaSide side_of(PlaPoint p_1, PlaPoint p_2)
       {
-      PlaVector v1 = difference_by(p_1);
-      PlaVector v2 = p_2.difference_by(p_1);
-      return v1.side_of(v2);
+//      PlaVector v1 = difference_by(p_1);
+//      PlaVector v2 = p_2.difference_by(p_1);
+//      PlaSide a_risul = v1.side_of(v2);
+      
+      // now, another way to calculate this, consider the line p_1 -> p_2 as reference and set origins on p_1
+      PlaPointFloat pf_1 = p_1.to_float();
+      PlaPointFloat pf_2 = p_2.to_float();
+
+      // use myself as float to do calculation
+      PlaPointFloat my_float = to_float();
+      
+      // center the point to pf_1, and this becomes a "direction"
+      PlaPointFloat point_dir = new PlaPointFloat(my_float.v_x - pf_1.v_x, my_float.v_y - pf_1.v_y);
+      
+      // center the second point to pf_1, and this becomes a "direction" of the line
+      PlaPointFloat line_dir = new PlaPointFloat(pf_2.v_x - pf_1.v_x, pf_2.v_y - pf_1.v_y);
+      
+      double determinant = PlaDirection.determinant(point_dir, line_dir);
+      
+      PlaSide b_risul = PlaSide.get_side_of(determinant);
+      
+ //     if ( a_risul != b_risul )
+ //        System.err.println(classname+"a_risul="+a_risul+" b_risul="+b_risul);
+      
+      return b_risul;
       }
    
    

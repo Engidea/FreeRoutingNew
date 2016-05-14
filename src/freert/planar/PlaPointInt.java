@@ -117,19 +117,26 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return false;
       }
 
+   
+   public final PlaSide side_of(PlaPointInt p_1, PlaPointInt p_2)
+      {
+      PlaVectorInt v1 = difference_by(p_1);
+      PlaVectorInt v2 = p_2.difference_by(p_1);
+      return v1.side_of(v2);
+      }   
+   
 
    /**
     * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; 
     * Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2; 
     * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
     */
-   
    @Override   
    public final PlaSide side_of(PlaPoint p_1, PlaPoint p_2)
       {
-      PlaVector v1 = difference_by(p_1);
-      PlaVector v2 = p_2.difference_by(p_1);
-      PlaSide a_risul = v1.side_of(v2);
+//      PlaVector v1 = difference_by(p_1);
+//      PlaVector v2 = p_2.difference_by(p_1);
+//      PlaSide a_risul = v1.side_of(v2);
       
       // now, another way to calculate this, consider the line p_1 -> p_2 as reference and set origins on p_1
       PlaPointFloat pf_1 = p_1.to_float();
@@ -143,20 +150,14 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       
       double determinant = PlaDirection.determinant(point_dir, line_dir);
       
-      PlaSide b_risul = PlaSide.get_side_of(determinant, 0.1);
+      PlaSide b_risul = PlaSide.get_side_of(determinant);
       
-      if ( a_risul != b_risul )
-         System.err.println("a_risul="+a_risul+" b_risul="+b_risul);
+//      if ( a_risul != b_risul )
+//         System.err.println(classname+"a_risul="+a_risul+" b_risul="+b_risul);
       
-      return a_risul;
+      return b_risul;
       }
    
-   public final PlaSide side_of(PlaPointInt p_1, PlaPointInt p_2)
-      {
-      PlaVectorInt v1 = difference_by(p_1);
-      PlaVectorInt v2 = p_2.difference_by(p_1);
-      return v1.side_of(v2);
-      }   
    
    
    
