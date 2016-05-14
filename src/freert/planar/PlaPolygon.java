@@ -28,10 +28,17 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
    {
    private static final long serialVersionUID = 1L;
 
-   private final ArrayList<PlaPointInt> corners = new ArrayList<PlaPointInt>();
+   private final ArrayList<PlaPointInt> corners; 
    
+   /**
+    * 
+    * @param p_point_arr
+    * @deprecated
+    */
    public PlaPolygon(PlaPointInt[] p_point_arr)
       {
+      corners = new ArrayList<PlaPointInt>(p_point_arr.length);
+      
       for (PlaPointInt a_point : p_point_arr )
          {
          // if this point is already in the list
@@ -44,6 +51,23 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
          }
       }
 
+   public PlaPolygon(ArrayList<PlaPointInt> p_point_list)
+      {
+      corners = new ArrayList<PlaPointInt>(p_point_list.size());
+
+      for (PlaPointInt a_point : p_point_list )
+         {
+         // if this point is already in the list
+         if ( has_point(a_point) ) continue;
+         
+         // if this point is "colinear" with some points in the list
+         if ( has_colinear(a_point)) continue;
+         
+         corners.add(a_point);
+         }
+      }
+
+   
    @Override
    public final boolean is_NaN ()
       {
@@ -156,10 +180,10 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
       int corner_count = corners.size();
       int from_idx = corner_count-1;
       
-      PlaPointInt[] reverse_corner_arr = new PlaPointInt[corner_count];
+      ArrayList<PlaPointInt> reverse_corner_arr = new ArrayList<PlaPointInt>(corner_count);
 
       for (int index = 0; index < corner_count; ++index)
-         reverse_corner_arr[index] = corners.get(from_idx--);
+         reverse_corner_arr.add( corners.get(from_idx--) );
       
       return new PlaPolygon(reverse_corner_arr);
       }

@@ -15,6 +15,7 @@
  */
 package freert.planar;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -824,10 +825,13 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       {
       if (p_angle == 0) return this;
 
-      PlaPointInt[] new_corners = new PlaPointInt[border_line_count()];
-      for (int index = 0; index < new_corners.length; ++index)
+      int points_count = border_line_count();
+      
+      ArrayList<PlaPointInt> new_corners = new ArrayList<PlaPointInt>(points_count);
+      
+      for (int index = 0; index < points_count; ++index)
          {
-         new_corners[index] = corner_approx(index).rotate(p_angle, p_pole).round();
+         new_corners.add( corner_approx(index).rotate(p_angle, p_pole).round() );
          }
 
       PlaPolygon corner_polygon = new PlaPolygon(new_corners);

@@ -44,7 +44,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private transient PlaPointFloat[] precalculated_float_corners = null;
    private transient PlaPoint[]      precalculated_corners = null;
    private transient ShapeTileBox    precalculated_bounding_box = null;
-   
+
    private  PlaPointInt corner_first;
    private  PlaPointInt corner_last;
    
@@ -53,28 +53,47 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * intersection of the i-th and the i+1-th lines of the new created p_polyline for 0 <= i < p_point_arr.length. 
     * p_polygon must have at least 2 corners
     */
-   public Polyline(PlaPolygon p_polygon)
+   private Polyline(PlaPointIntAlist point_arr)
       {
-      PlaPointInt[] point_arr = p_polygon.corner_array();
-   
-      if (point_arr.length < 2)
+      int initial_len = point_arr.size(); 
+      
+      if ( initial_len < 2)
          throw new IllegalArgumentException(classname+"A must contain at least 2 different points");
+
+      ArrayList<PlaPointInt> corners_list = new ArrayList<PlaPointInt>(initial_len);
       
-      lines_arr = new ArrayList<PlaLineInt>(point_arr.length + 1);
+      for ( int index=0; index< initial_len; index++ )
+         {
+         PlaPointInt a_point = point_arr.get(index);
+         
+         if ( a_point == null ) continue;
+         
+         // if this point is already in the list
+         if ( has_point(corners_list, a_point) ) continue;
+         
+         // if this point is "colinear" with some points in the list
+         if ( has_colinear(corners_list, a_point)) continue;
+         
+         corners_list.add(a_point);
+         }
       
-      corner_first = point_arr[0];
+      int input_len = corners_list.size(); 
+      
+      lines_arr = new ArrayList<PlaLineInt>(input_len + 1);
+
+      corner_first = corners_list.get(0);
       
       // construct perpendicular lines at the start and at the end to represent
-      PlaDirection dir = PlaDirection.get_instance(point_arr[0], point_arr[1]);
-      lines_arr.add(new PlaLineInt(point_arr[0], dir.turn_45_degree(2)) );
+      PlaDirection dir = PlaDirection.get_instance(corner_first, corners_list.get(1));
+      lines_arr.add(new PlaLineInt(corner_first, dir.turn_45_degree(2)) );
 
-      for (int index = 1; index < point_arr.length; ++index)
-         lines_arr.add( new PlaLineInt(point_arr[index - 1], point_arr[index] ) );
+      for (int index = 1; index < input_len; ++index)
+         lines_arr.add( new PlaLineInt(corners_list.get(index - 1), corners_list.get(index) ) );
       
-      corner_last = point_arr[point_arr.length - 1];
+      corner_last = corners_list.get(input_len - 1);
       
       // the first and the last point of point_arr as intersection of lines.
-      dir = PlaDirection.get_instance(corner_last, point_arr[point_arr.length - 2]);
+      dir = PlaDirection.get_instance(corner_last, corners_list.get(input_len - 2));
       lines_arr.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
       
       precalculated_corners = new PlaPoint[corner_count()];
@@ -84,8 +103,72 @@ public final class Polyline implements java.io.Serializable, PlaObject
 
    public Polyline(PlaPointInt[] p_points)
       {
-      this(new PlaPolygon(p_points));
+      this(new PlaPointIntAlist(p_points));
       }
+
+   private static boolean has_point (ArrayList<PlaPointInt> corners_list, PlaPointInt a_point)
+      {
+      for (PlaPointInt b_point : corners_list )
+         {
+         if ( b_point.equals(a_point)) return true;
+         }
+      
+      return false;
+      }
+   
+   private static boolean has_colinear (ArrayList<PlaPointInt> corners_list, PlaPointInt a_point)
+      {
+      int count = corners_list.size();
+      
+      // I need at least two points in the corners for algorithm to work
+      if ( count < 2 ) return false;
+      
+      for (int index=0; index<count-1; index++)
+         {
+         PlaPointInt start = corners_list.get(index);
+         PlaPointInt end   = corners_list.get(index+1);
+         
+         // the given point is not on the same line as start end
+         if (a_point.side_of(start, end) != PlaSide.COLLINEAR) continue;
+
+         double d_start_p   = start.distance(a_point);
+         double d_p_end     = a_point.distance(end);
+         double d_start_end = start.distance(end);
+
+         if ( d_start_end >= d_start_p )
+            {
+            if ( d_start_end >= d_p_end )
+               {
+               // simplest case, the new point is in the middle of start end
+               return true; 
+               }
+            else
+               {
+               // new point is on the left of start point, close to it
+               corners_list.set(index, a_point);
+               return true;
+               }
+            }
+         else
+            {
+            if ( d_start_end >= d_p_end )
+               {
+               // new point is on the right of end, close to it
+               corners_list.set(index+1, a_point);
+               return true;
+               }
+            else
+               {
+               // new point is on the left, far away
+               corners_list.set(index, a_point);
+               return true;
+               }
+            }
+         }
+      
+      return false;
+      }
+   
    
    /**
     * creates a polyline consisting of 3 lines

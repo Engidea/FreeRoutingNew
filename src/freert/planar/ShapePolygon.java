@@ -20,6 +20,7 @@
 
 package freert.planar;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -128,7 +129,13 @@ public final class ShapePolygon extends ShapePolyline
       corners = result;
       }
 
-   public ShapePolygon(PlaPointInt[] p_corner_arr)
+   public ShapePolygon(ArrayList<PlaPointInt> p_corner_arr)
+      {
+      this(new PlaPolygon(p_corner_arr));
+      }
+
+   
+   public ShapePolygon(PlaPointInt [] p_corner_arr)
       {
       this(new PlaPolygon(p_corner_arr));
       }

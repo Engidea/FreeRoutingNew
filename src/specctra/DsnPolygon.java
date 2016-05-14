@@ -21,6 +21,8 @@
 package specctra;
 
 import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
+import freert.planar.ShapePolygon;
 import gui.varie.IndentFileWriter;
 
 /**
@@ -40,7 +42,7 @@ public class DsnPolygon extends DsnShape
       coor = p_coor;
       }
 
-   public freert.planar.PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
+   public PlaShape transform_to_board(DsnCoordinateTransform p_coordinate_transform)
       {
       PlaPointInt[] corner_arr = new PlaPointInt[coor.length / 2];
       double[] curr_point = new double[2];
@@ -50,7 +52,7 @@ public class DsnPolygon extends DsnShape
          curr_point[1] = coor[2 * index + 1];
          corner_arr[index] = p_coordinate_transform.dsn_to_board(curr_point).round();
          }
-      return new freert.planar.ShapePolygon(corner_arr);
+      return new ShapePolygon(corner_arr);
       }
 
    public freert.planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
@@ -59,6 +61,7 @@ public class DsnPolygon extends DsnShape
          {
          return freert.planar.ShapeTileSimplex.EMPTY;
          }
+      
       PlaPointInt[] corner_arr = new PlaPointInt[coor.length / 2];
       for (int i = 0; i < corner_arr.length; ++i)
          {
@@ -66,7 +69,7 @@ public class DsnPolygon extends DsnShape
          long curr_y = Math.round(p_coordinate_transform.dsn_to_board(coor[2 * i + 1]));
          corner_arr[i] = new PlaPointInt(curr_x, curr_y);
          }
-      return new freert.planar.ShapePolygon(corner_arr);
+      return new ShapePolygon(corner_arr);
       }
 
    public DsnRectangle bounding_box()
