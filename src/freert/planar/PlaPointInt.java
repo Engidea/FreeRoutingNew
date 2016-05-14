@@ -117,7 +117,12 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return false;
       }
 
-   
+   /**
+    * This is a good candidate for optimization
+    * @param p_1
+    * @param p_2
+    * @return
+    */
    public final PlaSide side_of(PlaPointInt p_1, PlaPointInt p_2)
       {
       PlaVectorInt v1 = difference_by(p_1);

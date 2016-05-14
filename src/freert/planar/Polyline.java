@@ -39,7 +39,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private static final String classname="Polyline.";
 
    // the array of lines of this Polyline.
-   private final ArrayList<PlaLineInt> lines_arr;
+   private final ArrayList<PlaLineInt> lines_list;
 
    private transient PlaPointFloat[] precalculated_float_corners = null;
    private transient PlaPoint[]      precalculated_corners = null;
@@ -49,9 +49,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private  PlaPointInt corner_last;
    
    /**
-    * creates a polyline of length p_polygon.corner_count + 1 from p_polygon, so that the i-th corner of p_polygon will be the
-    * intersection of the i-th and the i+1-th lines of the new created p_polyline for 0 <= i < p_point_arr.length. 
-    * p_polygon must have at least 2 corners
+    * creates a polyline of length point_arr.size + 1 so that the i-th corner of p_polygon will be the
+    * intersection of the i-th and the i+1-th lines of the new created p_polyline for 0 <= i < p_point_arr.length.
+    * There is quite some checks done to ensure the result is meaningfult 
     */
    private Polyline(PlaPointIntAlist point_arr)
       {
@@ -77,25 +77,28 @@ public final class Polyline implements java.io.Serializable, PlaObject
          corners_list.add(a_point);
          }
       
+      // Now that the list of points is cleaned up we go again
       int input_len = corners_list.size(); 
-      
-      lines_arr = new ArrayList<PlaLineInt>(input_len + 1);
+
+      // this is the actual result
+      lines_list = new ArrayList<PlaLineInt>(input_len + 1);
 
       corner_first = corners_list.get(0);
       
       // construct perpendicular lines at the start and at the end to represent
       PlaDirection dir = PlaDirection.get_instance(corner_first, corners_list.get(1));
-      lines_arr.add(new PlaLineInt(corner_first, dir.turn_45_degree(2)) );
+      lines_list.add(new PlaLineInt(corner_first, dir.turn_45_degree(2)) );
 
       for (int index = 1; index < input_len; ++index)
-         lines_arr.add( new PlaLineInt(corners_list.get(index - 1), corners_list.get(index) ) );
+         lines_list.add( new PlaLineInt(corners_list.get(index - 1), corners_list.get(index) ) );
       
       corner_last = corners_list.get(input_len - 1);
       
       // the first and the last point of point_arr as intersection of lines.
       dir = PlaDirection.get_instance(corner_last, corners_list.get(input_len - 2));
-      lines_arr.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
+      lines_list.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
       
+      // When I am done I can replace this with the given points list TODO
       precalculated_corners = new PlaPoint[corner_count()];
       precalculated_corners[0] = corner_first;
       precalculated_corners[corner_count()-1] = corner_last;
@@ -106,7 +109,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       this(new PlaPointIntAlist(p_points));
       }
 
-   private static boolean has_point (ArrayList<PlaPointInt> corners_list, PlaPointInt a_point)
+   private boolean has_point (ArrayList<PlaPointInt> corners_list, PlaPointInt a_point)
       {
       for (PlaPointInt b_point : corners_list )
          {
@@ -116,7 +119,14 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return false;
       }
    
-   private static boolean has_colinear (ArrayList<PlaPointInt> corners_list, PlaPointInt a_point)
+   /**
+    * Thest if the given point is somewhat colinear and should not be inserted
+    * NOTE it is quite possible that the given point replaces a point already in the list
+    * @param corners_list
+    * @param a_point
+    * @return true if the point should not be inserted in the "list"
+    */
+   private boolean has_colinear (ArrayList<PlaPointInt> corners_list, PlaPointInt a_point)
       {
       int count = corners_list.size();
       
@@ -146,6 +156,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                // new point is on the left of start point, close to it
                corners_list.set(index, a_point);
+               // there should be no add operation
                return true;
                }
             }
@@ -155,12 +166,14 @@ public final class Polyline implements java.io.Serializable, PlaObject
                {
                // new point is on the right of end, close to it
                corners_list.set(index+1, a_point);
+               // there should be no add operation
                return true;
                }
             else
                {
                // new point is on the left, far away
                corners_list.set(index, a_point);
+               // there should be no add operation
                return true;
                }
             }
@@ -180,16 +193,21 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       corner_first = p_from_corner;
       
-      lines_arr = new ArrayList<PlaLineInt>(3);
+      lines_list = new ArrayList<PlaLineInt>(3);
       PlaDirection dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      lines_arr.add( new PlaLineInt(p_from_corner, dir.turn_45_degree(2)) );
-      lines_arr.add( new PlaLineInt(p_from_corner, p_to_corner) );
+      lines_list.add( new PlaLineInt(p_from_corner, dir.turn_45_degree(2)) );
+      lines_list.add( new PlaLineInt(p_from_corner, p_to_corner) );
       dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      lines_arr.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
+      lines_list.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
       
       precalculated_corners = new PlaPoint[corner_count()];
       precalculated_corners[0] = p_from_corner;
       precalculated_corners[1] = p_to_corner;
+      }
+
+   public Polyline(PlaLineInt[] p_line_arr)
+      {
+      this (new PlaLineIntAlist(p_line_arr));
       }
 
    /**
@@ -199,46 +217,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * Now, it happens that there is a request to create a polyline with wrong corners... however, the code then checks the validity
     * and it is not quite easy to wrap all of it in try catch
     */
-   public Polyline(PlaLineInt[] p_line_arr)
+   public Polyline(PlaLineIntAlist p_lines_list)
       {
-      int have_len = p_line_arr.length;
+      int have_len = p_lines_list.size();
       
-      lines_arr = new ArrayList<PlaLineInt>(have_len);
-      
-      if ( have_len < 3)
-         {
-         System.err.println(classname+"IntLine[] A < 3");
-         return;
-         }
-      
-      // this part will remove all lines that are colinear with the previous one
-      PlaLineInt ref_line = p_line_arr[0];
-      lines_arr.add(ref_line);
-      
-      for (int index = 1; index < have_len; ++index)
-         {
-         // skip a line that is parallel with the reference line
-         if ( ref_line.is_parallel(p_line_arr[index])) continue;
-         
-         ref_line = p_line_arr[index];
-         
-         lines_arr.add(ref_line);
-         }
-
-      if (plalinelen() < 3)
-         {
-         System.err.println(classname+"IntLine[] B < 3");
-         return;
-         }
-
-      complete_constructor();
-      }
-
-   public Polyline(ArrayList<PlaLineInt> p_line_arr)
-      {
-      int have_len = p_line_arr.size();
-      
-      lines_arr = new ArrayList<PlaLineInt>(have_len);
+      lines_list = new ArrayList<PlaLineInt>(have_len);
       
       if ( have_len < 3)
          {
@@ -247,19 +230,22 @@ public final class Polyline implements java.io.Serializable, PlaObject
          }
       
       // this part will remove all lines that are colinear with the previous one
-      PlaLineInt ref_line = p_line_arr.get(0);
-      lines_arr.add(ref_line);
+      PlaLineInt ref_line = p_lines_list.get(0);
+      
+      lines_list.add(ref_line);
       
       for (int index = 1; index < have_len; ++index)
          {
-         PlaLineInt a_line = p_line_arr.get(index);
+         PlaLineInt a_line = p_lines_list.get(index);
          
          // skip a line that is parallel with the reference line
          if ( ref_line.is_parallel(a_line) ) continue;
          
+         // line is not parallel, add it
+         lines_list.add(a_line);
+
+         // and now this becomes the reference
          ref_line = a_line;
-         
-         lines_arr.add(ref_line);
          }
 
       if (plalinelen() < 3)
@@ -268,11 +254,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return;
          }
 
-      complete_constructor();
-      }
-
-   private void complete_constructor()
-      {
       // this will calculate the float corners
       corner_approx_arr();
       
@@ -305,7 +286,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
          if (side1 == side_of_line) continue;
          
-         lines_arr.set(index, cur_l.opposite() );
+         lines_list.set(index, cur_l.opposite() );
          }
       }
    
@@ -1049,7 +1030,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return this; // no common end point
          }
       
-      ArrayList<PlaLineInt> lines_list = new ArrayList<PlaLineInt>(plalinelen() + p_other.plalinelen());
+      PlaLineIntAlist lines_list = new PlaLineIntAlist(plalinelen() + p_other.plalinelen());
       
       if (combine_at_start)
          {
@@ -1295,7 +1276,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public PlaLineInt plaline ( int index )
       {
-      return lines_arr.get(index);
+      return lines_list.get(index);
       }
    
    /**
@@ -1304,7 +1285,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public int plalinelen ( )
       {
-      return lines_arr.size();
+      return lines_list.size();
       }
    
    /**
@@ -1314,7 +1295,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public int plalinelen ( int offset )
       {
-      return lines_arr.size() + offset;
+      return lines_list.size() + offset;
       }
    
    /**
