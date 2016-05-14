@@ -196,8 +196,8 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       v1[2] = rp_z;
 
       BigInteger v2[] = new BigInteger[3];
-      v2[0] = BigInteger.valueOf(p_vector.point_x);
-      v2[1] = BigInteger.valueOf(p_vector.point_y);
+      v2[0] = BigInteger.valueOf(p_vector.v_x);
+      v2[1] = BigInteger.valueOf(p_vector.v_y);
       v2[2] = BigInteger.ONE;
       BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
       
@@ -251,23 +251,23 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       {
       // this function is at the moment only implemented for lines consisting of IntPoints.
       PlaVectorInt v = (PlaVectorInt) p_line.point_b.difference_by(p_line.point_a);
-      BigInteger vxvx = BigInteger.valueOf((long) v.point_x * v.point_x);
-      BigInteger vyvy = BigInteger.valueOf((long) v.point_y * v.point_y);
-      BigInteger vxvy = BigInteger.valueOf((long) v.point_x * v.point_y);
+      BigInteger vxvx = BigInteger.valueOf((long) v.v_x * v.v_x);
+      BigInteger vyvy = BigInteger.valueOf((long) v.v_y * v.v_y);
+      BigInteger vxvy = BigInteger.valueOf((long) v.v_x * v.v_y);
       BigInteger denominator = vxvx.add(vyvy);
       BigInteger det = BigInteger.valueOf(p_line.point_a.determinant(p_line.point_b));
 
       BigInteger tmp1 = vxvx.multiply(rp_x);
       BigInteger tmp2 = vxvy.multiply(rp_y);
       tmp1 = tmp1.add(tmp2);
-      tmp2 = det.multiply(BigInteger.valueOf(v.point_y));
+      tmp2 = det.multiply(BigInteger.valueOf(v.v_y));
       tmp2 = tmp2.multiply(rp_z);
       BigInteger proj_x = tmp1.add(tmp2);
 
       tmp1 = vxvy.multiply(rp_x);
       tmp2 = vyvy.multiply(rp_y);
       tmp1 = tmp1.add(tmp2);
-      tmp2 = det.multiply(BigInteger.valueOf(v.point_x));
+      tmp2 = det.multiply(BigInteger.valueOf(v.v_x));
       tmp2 = tmp2.multiply(rp_z);
       BigInteger proj_y = tmp1.add(tmp2);
 

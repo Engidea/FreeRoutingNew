@@ -135,7 +135,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     */
    public PlaDirection(PlaVectorInt p_vector)
       {
-      this ( BigInteger.valueOf(p_vector.point_x),BigInteger.valueOf(p_vector.point_y));
+      this ( BigInteger.valueOf(p_vector.v_x),BigInteger.valueOf(p_vector.v_y));
       }
    
    /**
@@ -160,13 +160,15 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     * Calculates the direction from p_from to p_to. 
     * If p_from and p_to are equal, null is returned.
     */
-   public static final PlaDirection get_instance(PlaPointInt p_from, PlaPointInt p_to)
+   public static final PlaDirection get_instance(PlaPointInt p_a, PlaPointInt p_b)
       {
-      if (p_from.equals(p_to)) return null;
+      if (p_a.equals(p_b)) return null;
 
-      PlaVectorInt p_vector = p_to.difference_by(p_from);
+      // basically change the origin of p_b to be p_a, so p_b becomes a "direction"
+      int vd_x = p_b.v_x - p_a.v_x;
+      int vd_y = p_b.v_y - p_a.v_y;
       
-      return p_vector.to_direction();
+      return new PlaDirection(BigInteger.valueOf(vd_x), BigInteger.valueOf(vd_y));
       }
 
    

@@ -416,14 +416,14 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       if (p_rel_coor.equals(PlaVectorInt.ZERO)) return this;
 
       return new ShapeTileOctagon(
-            oct_lx + p_rel_coor.point_x, 
-            oct_ly + p_rel_coor.point_y, 
-            oct_rx + p_rel_coor.point_x, 
-            oct_uy + p_rel_coor.point_y, 
-            oct_ulx + p_rel_coor.point_x - p_rel_coor.point_y, 
-            oct_lrx + p_rel_coor.point_x - p_rel_coor.point_y, 
-            oct_llx + p_rel_coor.point_x + p_rel_coor.point_y, 
-            oct_urx + p_rel_coor.point_x + p_rel_coor.point_y);
+            oct_lx + p_rel_coor.v_x, 
+            oct_ly + p_rel_coor.v_y, 
+            oct_rx + p_rel_coor.v_x, 
+            oct_uy + p_rel_coor.v_y, 
+            oct_ulx + p_rel_coor.v_x - p_rel_coor.v_y, 
+            oct_lrx + p_rel_coor.v_x - p_rel_coor.v_y, 
+            oct_llx + p_rel_coor.v_x + p_rel_coor.v_y, 
+            oct_urx + p_rel_coor.v_x + p_rel_coor.v_y);
       }
 
    @Override   

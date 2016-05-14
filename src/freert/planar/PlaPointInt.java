@@ -175,7 +175,7 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
    @Override
    public PlaPointInt translate_by(PlaVectorInt p_vector)
       {
-      return new PlaPointInt(v_x + p_vector.point_x, v_y + p_vector.point_y);
+      return new PlaPointInt(v_x + p_vector.v_x, v_y + p_vector.v_y);
       }
 
    public final PlaPointInt translate_by(PlaDirection p_dir)
@@ -250,9 +250,9 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       // The general implementation is still missing.
       
       PlaVectorInt v = p_line.point_b.difference_by(p_line.point_a);
-      BigInteger vxvx = BigInteger.valueOf((long) v.point_x * v.point_x);
-      BigInteger vyvy = BigInteger.valueOf((long) v.point_y * v.point_y);
-      BigInteger vxvy = BigInteger.valueOf((long) v.point_x * v.point_y);
+      BigInteger vxvx = BigInteger.valueOf((long) v.v_x * v.v_x);
+      BigInteger vyvy = BigInteger.valueOf((long) v.v_y * v.v_y);
+      BigInteger vxvy = BigInteger.valueOf((long) v.v_x * v.v_y);
       BigInteger denominator = vxvx.add(vyvy);
       BigInteger det = BigInteger.valueOf(p_line.point_a.determinant(p_line.point_b));
       BigInteger point_x = BigInteger.valueOf(v_x);
@@ -261,13 +261,13 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       BigInteger tmp1 = vxvx.multiply(point_x);
       BigInteger tmp2 = vxvy.multiply(point_y);
       tmp1 = tmp1.add(tmp2);
-      tmp2 = det.multiply(BigInteger.valueOf(v.point_y));
+      tmp2 = det.multiply(BigInteger.valueOf(v.v_y));
       BigInteger proj_x = tmp1.add(tmp2);
 
       tmp1 = vxvy.multiply(point_x);
       tmp2 = vyvy.multiply(point_y);
       tmp1 = tmp1.add(tmp2);
-      tmp2 = det.multiply(BigInteger.valueOf(v.point_x));
+      tmp2 = det.multiply(BigInteger.valueOf(v.v_x));
       BigInteger proj_y = tmp1.subtract(tmp2);
 
       int signum = denominator.signum();

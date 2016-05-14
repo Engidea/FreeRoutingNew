@@ -337,11 +337,11 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       PlaVectorInt delta_2 = p_other.point_b.difference_by(p_other.point_a);
       
       BigInteger det = BigInteger.valueOf(delta_2.determinant(delta_1));
-      BigInteger tmp_1 = det_1.multiply(BigInteger.valueOf(delta_2.point_x));
-      BigInteger tmp_2 = det_2.multiply(BigInteger.valueOf(delta_1.point_x));
+      BigInteger tmp_1 = det_1.multiply(BigInteger.valueOf(delta_2.v_x));
+      BigInteger tmp_2 = det_2.multiply(BigInteger.valueOf(delta_1.v_x));
       BigInteger is_x = tmp_1.subtract(tmp_2);
-      tmp_1 = det_1.multiply(BigInteger.valueOf(delta_2.point_y));
-      tmp_2 = det_2.multiply(BigInteger.valueOf(delta_1.point_y));
+      tmp_1 = det_1.multiply(BigInteger.valueOf(delta_2.v_y));
+      tmp_2 = det_2.multiply(BigInteger.valueOf(delta_1.v_y));
       BigInteger is_y = tmp_1.subtract(tmp_2);
       int signum = det.signum();
       

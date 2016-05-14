@@ -191,7 +191,7 @@ public final class AlgoOptimizeVia
          return false;
          }
       
-      PlaVectorInt delta = new_location.difference_by(via_center).round();   // does rounding here has some issues ?
+      PlaVectorInt delta = new_location.difference_by(via_center); 
       
       if ( ! r_board.move_drill_algo.insert(p_via, delta, 9, 9, null))
          {

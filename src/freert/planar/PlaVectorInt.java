@@ -13,8 +13,6 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * IntVector.java
- *
  * Created on 1. Februar 2003, 14:47
  */
 
@@ -22,10 +20,9 @@ package freert.planar;
 
 
 /**
- *
  * Implementation of the interface Vector via a tuple of integers
- *
  * @author Alfons Wirtz
+ * @author Damiano Bolla, unwrapped from rationals...
  */
 
 public final class PlaVectorInt  implements java.io.Serializable, PlaObject
@@ -34,10 +31,9 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
    
    // Standard implementation of the zero vector .
    public static final PlaVectorInt ZERO = new PlaVectorInt(0, 0);
-   
 
-   public final int point_x;
-   public final int point_y;
+   public final int v_x;
+   public final int v_y;
    
    /**
     * creates an IntVector from two integer coordinates
@@ -45,8 +41,8 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
    public PlaVectorInt(int p_x, int p_y)
       {
       // range check omitted for performance reasons
-      point_x = p_x;
-      point_y = p_y;
+      v_x = p_x;
+      v_y = p_y;
       }
 
    public PlaVectorInt(double p_x, double p_y)
@@ -57,7 +53,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       
       if ( along <= Integer.MIN_VALUE ) throw new IllegalArgumentException("IntVector p_x too - big");
       
-      point_x = (int)along;
+      v_x = (int)along;
       
       along = Math.round(p_y);
       
@@ -65,13 +61,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       
       if ( along <= Integer.MIN_VALUE ) throw new IllegalArgumentException("IntVector p_y too - big");
       
-      point_y = (int) along;
-      }
-   
-   
-   public final PlaVectorInt round()
-      {
-      return this;
+      v_y = (int) along;
       }
    
    @Override
@@ -94,7 +84,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
 
       PlaVectorInt other = (PlaVectorInt) p_ob;
 
-      return (point_x == other.point_x && point_y == other.point_y);
+      return v_x == other.v_x && v_y == other.v_y;
       }
 
    /**
@@ -102,17 +92,17 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
     */
    public final PlaVectorInt negate()
       {
-      return new PlaVectorInt(-point_x, -point_y);
+      return new PlaVectorInt(-v_x, -v_y);
       }
 
    public boolean is_orthogonal()
       {
-      return (point_x == 0 || point_y == 0);
+      return v_x == 0 || v_y == 0;
       }
 
    public final boolean is_diagonal()
       {
-      return (Math.abs(point_x) == Math.abs(point_y));
+      return  Math.abs(v_x) == Math.abs(v_y);
       }
 
    /**
@@ -130,7 +120,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
     */
    public final long determinant(PlaVectorInt p_other)
       {
-      return (long) point_x * p_other.point_y - (long) point_y * p_other.point_x;
+      return (long) v_x * p_other.v_y - (long) v_y * p_other.v_x;
       }
 
    public final PlaVectorInt turn_90_degree(int p_factor)
@@ -146,20 +136,20 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       switch (p_factor)
          {
          case 0: // 0 degree
-            new_x = point_x;
-            new_y = point_y;
+            new_x = v_x;
+            new_y = v_y;
             break;
          case 1: // 90 degree
-            new_x = -point_y;
-            new_y = point_x;
+            new_x = -v_y;
+            new_y = v_x;
             break;
          case 2: // 180 degree
-            new_x = -point_x;
-            new_y = -point_y;
+            new_x = -v_x;
+            new_y = -v_y;
             break;
          case 3: // 270 degree
-            new_x = point_y;
-            new_y = -point_x;
+            new_x = v_y;
+            new_y = -v_x;
             break;
          default:
             new_x = 0;
@@ -170,18 +160,18 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
 
    public PlaVectorInt mirror_at_y_axis()
       {
-      return new PlaVectorInt(-point_x, point_y);
+      return new PlaVectorInt(-v_x, v_y);
       }
 
    public final PlaVectorInt mirror_at_x_axis()
       {
-      return new PlaVectorInt(point_x, -point_y);
+      return new PlaVectorInt(v_x, -v_y);
       }
 
 
    public final PlaVectorInt add(PlaVectorInt p_other)
       {
-      return new PlaVectorInt(point_x + p_other.point_x, point_y + p_other.point_y);
+      return new PlaVectorInt(v_x + p_other.v_x, v_y + p_other.v_y);
       }
 
    /**
@@ -197,7 +187,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
     */
    public final PlaPointInt add_to(PlaPointInt p_point)
       {
-      return new PlaPointInt(p_point.v_x + point_x, p_point.v_y + point_y);
+      return new PlaPointInt(p_point.v_x + v_x, p_point.v_y + v_y);
       }
 
    /**
@@ -213,12 +203,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
 
    public PlaPointFloat to_float()
       {
-      return new PlaPointFloat(point_x, point_y);
-      }
-
-   final PlaDirection to_direction()
-      {
-      return new PlaDirection(this);
+      return new PlaPointFloat(v_x, v_y);
       }
 
    /**
@@ -248,7 +233,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
 
    public double scalar_product(PlaVectorInt p_other)
       {
-      return (double) point_x * p_other.point_x + (double) point_y * p_other.point_y;
+      return (double) v_x * p_other.v_x + (double) v_y * p_other.v_y;
       }
    
    /**

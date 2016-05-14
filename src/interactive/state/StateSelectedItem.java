@@ -311,7 +311,7 @@ public final class StateSelectedItem extends StateInteractive
          {
          BrdAbitVia curr_via = (BrdAbitVia) it.next();
          
-         PlaVectorInt rel_coor = curr_via.center_get().difference_by(gravity_point).round();
+         PlaVectorInt rel_coor = curr_via.center_get().difference_by(gravity_point);
          
          String pin_name = Integer.toString(index + 1);
          

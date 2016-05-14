@@ -374,7 +374,7 @@ public class StateMoveItem extends StateInteractive
       {
       PlaPointInt new_component_location = grid_snap_component.get_location().translate_by(p_vector);
       PlaPointInt rounded_component_location = new_component_location.to_float().round_to_grid(i_brd.itera_settings.horizontal_component_grid, i_brd.itera_settings.vertical_component_grid);
-      PlaVectorInt adjustment = rounded_component_location.difference_by(new_component_location).round();
+      PlaVectorInt adjustment = rounded_component_location.difference_by(new_component_location);
       PlaVectorInt result = p_vector.add(adjustment);
       current_position = previous_position.translate_by(result);
       return p_vector.add(adjustment);
