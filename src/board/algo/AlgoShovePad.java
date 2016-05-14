@@ -44,6 +44,7 @@ import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.NetNosList;
 import freert.varie.TimeLimit;
 
 /**
@@ -88,7 +89,7 @@ public final class AlgoShovePad
       
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
-      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, new int[0], p_cl_type);
+      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
 
       if (p_ignore_items != null)
          {
@@ -237,7 +238,7 @@ public final class AlgoShovePad
       
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
-      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, new int[0], p_cl_type);
+      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       
       if (p_ignore_items != null) obstacles.removeAll(p_ignore_items);
       

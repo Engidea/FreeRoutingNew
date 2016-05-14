@@ -36,6 +36,7 @@ import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.rules.RuleNets;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -444,7 +445,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          {
          ShapeTileOctagon curr_oct = new ShapeTileOctagon(curr_end_point);
          curr_oct = curr_oct.enlarge(trace_half_width);
-         Set<BrdItem> curr_overlaps = r_board.overlapping_items_with_clearance(curr_oct, layer_no, new int[0], clearance_class_no());
+         Set<BrdItem> curr_overlaps = r_board.overlapping_items_with_clearance(curr_oct, layer_no, NetNosList.EMPTY, clearance_class_no());
          for (BrdItem curr_item : curr_overlaps)
             {
             if ((curr_item instanceof BrdAbitPin) && curr_item.shares_net(this))

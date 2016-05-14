@@ -529,17 +529,17 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * If p_layer < 0 the layer is ignored.
     * @param p_result a non null Set
     */
-   public final void find_overlap_objects_with_clearance(ShapeConvex p_shape, int p_layer, int[] p_ignore_net_nos, int p_cl_type, Set<ShapeTreeObject> p_result)
+   public final void find_overlap_objects_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Set<ShapeTreeObject> p_result)
       {
       Collection<ShapeTreeEntry> res_tree_entries = new LinkedList<ShapeTreeEntry>();
       
       if (is_clearance_compensation_used())
          {
-         calc_overlapping_tree_entries(p_shape, p_layer,new NetNosList(p_ignore_net_nos), res_tree_entries);
+         calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, res_tree_entries);
          }
       else
          {
-         find_overlap_tree_entries_with_clearance(p_shape, p_layer, new NetNosList(p_ignore_net_nos), p_cl_type, res_tree_entries);
+         find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_cl_type, res_tree_entries);
          }
       
       for (ShapeTreeEntry curr_entry : res_tree_entries )
@@ -554,7 +554,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * The function may also return items which are nearly overlapping, but do not overlap with exact calculation. 
     * If p_layer < 0, the layer is ignored.
     */
-   public final Set<BrdItem> find_overlap_items_with_clearance(ShapeConvex p_shape, int p_layer, int[] p_ignore_net_nos, int p_clearance_class)
+   public final Set<BrdItem> find_overlap_items_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       Set<ShapeTreeObject> overlaps = new TreeSet<ShapeTreeObject>();
 

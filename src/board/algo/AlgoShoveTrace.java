@@ -51,6 +51,7 @@ import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.NetNosList;
 import freert.varie.TimeLimit;
 
 /**
@@ -108,7 +109,7 @@ public final class AlgoShoveTrace
       
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, new int[0], p_cl_type);
+      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
       
@@ -290,7 +291,7 @@ public final class AlgoShoveTrace
       
       BrdFromSide from_side = new BrdFromSide(p_line_segment, trace_shape, p_shove_to_the_left);
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(trace_shape, p_layer, p_net_no_arr, p_cl_type, from_side, r_board);
-      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(trace_shape, p_layer, new int[0], p_cl_type);
+      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
       if (!obstacles_shovable || shape_entries.trace_tails_in_shape())
@@ -455,7 +456,7 @@ public final class AlgoShoveTrace
       
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, new int[0], p_cl_type);
+      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
@@ -603,7 +604,7 @@ public final class AlgoShoveTrace
          {
          ShapeTile curr_shape = p_polyline.offset_shape(p_half_width, index);
          
-         Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(curr_shape, p_layer, check_net_no_arr, p_cl_type);
+         Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(curr_shape, p_layer, new NetNosList(check_net_no_arr), p_cl_type);
          
          for ( BrdItem curr_item : obstacles )
             {

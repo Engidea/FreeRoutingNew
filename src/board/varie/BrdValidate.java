@@ -33,6 +33,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.NetNosList;
 
 /**
  * Some consistency checking on a routing board.
@@ -145,7 +146,8 @@ public class BrdValidate
       
       for (ShapeTile a_shape : offset_shapes )
          {
-         Collection<BrdItem> obstacles = p_board.search_tree_manager.get_default_tree().find_overlap_items_with_clearance(a_shape, p_layer, p_net_no_arr, p_cl_type);
+         Collection<BrdItem> obstacles = p_board.search_tree_manager.get_default_tree().find_overlap_items_with_clearance(
+               a_shape, p_layer, new NetNosList(p_net_no_arr), p_cl_type);
          
          Iterator<BrdItem> it = obstacles.iterator();
          

@@ -41,6 +41,7 @@ import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.NetNosList;
 import freert.varie.TimeLimit;
 
 /**
@@ -204,7 +205,7 @@ public final class AlgoMoveDrillItem
       {
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
-      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_obstacle_shape, p_layer, new int[0], p_cl_type);
+      Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_obstacle_shape, p_layer, NetNosList.EMPTY, p_cl_type);
 
       if (!shape_entries.store_items(obstacles, false, p_copper_sharing_allowed))
          {

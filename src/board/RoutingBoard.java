@@ -990,7 +990,7 @@ public final class RoutingBoard implements java.io.Serializable
     * clearance matrix, which describes the required clearance restrictions to other items. The function may also return items,
     * which are nearly overlapping, but do not overlap with exact calculation. If p_layer < 0, the layer is ignored.
     */
-   public Set<BrdItem> overlapping_items_with_clearance(ShapeConvex p_shape, int p_layer, int[] p_ignore_net_nos, int p_clearance_class)
+   public Set<BrdItem> overlapping_items_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
       return default_tree.find_overlap_items_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
@@ -1036,7 +1036,7 @@ public final class RoutingBoard implements java.io.Serializable
          
          Set<ShapeTreeObject> found_obstacles = new TreeSet<ShapeTreeObject>();
          
-         default_tree.find_overlap_objects_with_clearance(curr_shape, p_layer, p_net_no_arr, p_cl_class, found_obstacles);
+         default_tree.find_overlap_objects_with_clearance(curr_shape, p_layer, new NetNosList(p_net_no_arr), p_cl_class, found_obstacles);
          
          for (ShapeTreeObject curr_ob : found_obstacles)
             {
@@ -1910,7 +1910,8 @@ public final class RoutingBoard implements java.io.Serializable
 
          if (!moved_shape.is_contained_in(bounding_box)) return false;
          
-         Set<BrdItem> obstacles = overlapping_items_with_clearance(moved_shape, p_item.shape_layer(index), p_item.net_no_arr, p_item.clearance_class_no());
+         Set<BrdItem> obstacles = overlapping_items_with_clearance(
+               moved_shape, p_item.shape_layer(index), new NetNosList(p_item.net_no_arr), p_item.clearance_class_no());
 
          for (BrdItem curr_item : obstacles)
             {
@@ -1936,8 +1937,8 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean check_change_net(BrdItem p_item, int p_new_net_no)
       {
-      int[] net_no_arr = new int[1];
-      net_no_arr[0] = p_new_net_no;
+      NetNosList net_no_arr = new NetNosList(1,p_new_net_no);
+      
       for (int i = 0; i < p_item.tile_shape_count(); ++i)
          {
          ShapeTile curr_shape = p_item.get_tile_shape(i);
