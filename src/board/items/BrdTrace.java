@@ -441,7 +441,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       Set<BrdAbitPin> result = new TreeSet<BrdAbitPin>();
 
       PlaPoint curr_end_point = corner_first();
-      for (int i = 0; i < 2; ++i)
+      for (int index = 0; index < 2; ++index)
          {
          ShapeTileOctagon curr_oct = new ShapeTileOctagon(curr_end_point);
          curr_oct = curr_oct.enlarge(trace_half_width);

@@ -189,7 +189,7 @@ public final class AlgoShovePad
                   curr.from_side, 
                   curr_dir, 
                   p_layer, 
-                  curr_substitute_trace.net_no_arr, 
+                  new NetNosList(curr_substitute_trace.net_no_arr), 
                   curr_substitute_trace.clearance_class_no(), 
                   p_max_recursion_depth - 1,
                   p_max_via_recursion_depth, 

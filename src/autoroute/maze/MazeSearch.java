@@ -67,6 +67,7 @@ import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.NetNosList;
 
 /**
  * Class for autorouting an incomplete connection via a maze search algorithm.
@@ -562,8 +563,8 @@ public final class MazeSearch
          if (!p_next_room_is_thick)
             {
             // check the line from p_shape_entry_middle to the nearest point.
-            int[] curr_net_no_arr = new int[1];
-            curr_net_no_arr[0] = art_ctrl.net_no;
+            NetNosList curr_net_no_arr =new NetNosList(1, art_ctrl.net_no);
+            
             int curr_layer = p_list_element.next_room.get_layer();
             PlaPointInt[] check_points = new PlaPointInt[2];
             check_points[0] = p_shape_entry_middle.round();

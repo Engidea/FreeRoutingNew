@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 import main.Ldbg;
 import main.Mdbg;
 import board.BrdFromSide;
@@ -80,7 +81,7 @@ public final class AlgoShoveTrace
          BrdFromSide p_from_side, 
          PlaDirection p_dir, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_cl_type, 
          int p_max_recursion_depth,
          int p_max_via_recursion_depth, 
@@ -107,7 +108,7 @@ public final class AlgoShoveTrace
          return false;
          }
       
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
@@ -142,7 +143,7 @@ public final class AlgoShoveTrace
 
       for (BrdAbitVia curr_shove_via : shape_entries.shove_via_list)
          {
-         if (curr_shove_via.shares_net_no(p_net_no_arr))  continue;
+         if (curr_shove_via.shares_net_no(p_net_no_arr.net_nos_arr))  continue;
 
          if (p_max_via_recursion_depth <= 0)
             {
@@ -226,7 +227,7 @@ public final class AlgoShoveTrace
                      curr.from_side, 
                      curr_dir, 
                      p_layer, 
-                     curr_substitute_trace.net_no_arr, 
+                     new NetNosList(curr_substitute_trace.net_no_arr), 
                      curr_substitute_trace.clearance_class_no(), 
                      p_max_recursion_depth - 1,
                      p_max_via_recursion_depth, 
@@ -457,7 +458,7 @@ public final class AlgoShoveTrace
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
-      obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
+      obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, new NetNosList(p_net_no_arr)));
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
       if (!shape_entries.shove_via_list.isEmpty())
@@ -557,19 +558,21 @@ public final class AlgoShoveTrace
       return true;
       }
 
-   Collection<BrdItem> get_ignore_items_at_tie_pins(ShapeTile p_trace_shape, int p_layer, int[] p_net_no_arr)
+   Collection<BrdItem> get_ignore_items_at_tie_pins(ShapeTile p_trace_shape, int p_layer, NetNosList p_net_no_arr)
       {
       Collection<ShapeTreeObject> overlaps = r_board.overlapping_objects(p_trace_shape, p_layer);
-      Set<BrdItem> result = new java.util.TreeSet<BrdItem>();
+
+      Set<BrdItem> result = new TreeSet<BrdItem>();
+
       for (ShapeTreeObject curr_object : overlaps)
          {
-         if (curr_object instanceof BrdAbitPin)
+         if ( ! (curr_object instanceof BrdAbitPin) ) continue;
+         
+         BrdAbitPin curr_pin = (BrdAbitPin) curr_object;
+         
+         if (curr_pin.shares_net_no(p_net_no_arr.net_nos_arr))
             {
-            BrdAbitPin curr_pin = (BrdAbitPin) curr_object;
-            if (curr_pin.shares_net_no(p_net_no_arr))
-               {
-               result.addAll(curr_pin.get_all_contacts(p_layer));
-               }
+            result.addAll(curr_pin.get_all_contacts(p_layer));
             }
          }
       return result;
