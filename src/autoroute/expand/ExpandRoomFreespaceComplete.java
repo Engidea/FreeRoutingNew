@@ -23,7 +23,6 @@ package autoroute.expand;
 import java.awt.Color;
 import java.util.Collection;
 import java.util.LinkedList;
-import freert.planar.ShapeTile;
 import autoroute.ArtEngine;
 import board.BrdConnectable;
 import board.items.BrdItem;
@@ -32,6 +31,8 @@ import board.shape.ShapeTree;
 import board.shape.ShapeTreeEntry;
 import board.shape.ShapeTreeLeaf;
 import board.shape.ShapeTreeObject;
+import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 
 /**
  * An expansion room, whose shape is completely calculated, so that it can be stored in a shape tree.
@@ -213,8 +214,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       boolean result = true;
       Collection<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
 
-      int[] net_no_arr = new int[1];
-      net_no_arr[0] = p_autoroute_engine.get_net_no();
+      NetNosList net_no_arr = new NetNosList(1,p_autoroute_engine.get_net_no() );
       
       p_autoroute_engine.autoroute_search_tree.calc_overlapping_tree_entries(get_shape(), get_layer(), net_no_arr, overlapping_objects);
 

@@ -51,6 +51,7 @@ import freert.planar.ShapeTileOctagon;
 import freert.planar.ShapeTileRegular;
 import freert.planar.ShapeTileSimplex;
 import freert.rules.ClearanceMatrix;
+import freert.varie.NetNosList;
 import freert.varie.UnitMeasure;
 
 /**
@@ -354,7 +355,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
 
       Collection<ShapeTreeEntry> tree_entries = new LinkedList<ShapeTreeEntry>();
 
-      calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
+      calc_overlapping_tree_entries(p_shape, p_layer, new NetNosList(p_ignore_net_nos), tree_entries);
 
       Iterator<ShapeTreeEntry> it = tree_entries.iterator();
       
@@ -382,7 +383,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, Collection<ShapeTreeEntry> p_risul_tree)
       {
-      calc_overlapping_tree_entries(p_shape, p_layer, new int[0], p_risul_tree);
+      calc_overlapping_tree_entries(p_shape, p_layer, NetNosList.EMPTY, p_risul_tree);
       }
 
    /**
@@ -390,7 +391,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * If p_layer < 0, the layer is ignored. 
     * tree_entries with object containing a net number of p_ignore_net_nos are ignored.
     */
-   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, int[] p_ignore_net_nos, Collection<ShapeTreeEntry> p_risul_tree)
+   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, Collection<ShapeTreeEntry> p_risul_tree)
       {
       if (p_shape == null) return;
       
@@ -417,37 +418,34 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          ShapeTreeLeaf curr_leaf = it.next();
          ShapeTreeObject curr_object = (ShapeTreeObject) curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
-         boolean ignore_object = p_layer >= 0 && curr_object.shape_layer(shape_index) != p_layer;
-         if (!ignore_object)
-            {
-            for (int i = 0; i < p_ignore_net_nos.length; ++i)
-               {
-               if (!curr_object.is_obstacle(p_ignore_net_nos[i]))
-                  {
-                  ignore_object = true;
-                  }
-               }
-            }
          
-         if (!ignore_object)
+         // ignore object if it is on a different layer
+         boolean ignore_object = p_layer >= 0 && curr_object.shape_layer(shape_index) != p_layer;
+         
+         if ( ignore_object ) continue;
+
+         // ingore if the given object is somewhat connectable to the net nos
+         ignore_object = p_ignore_net_nos.is_connectable(curr_object); 
+         
+         if ( ignore_object ) continue;
+         
+         ShapeTile curr_shape = curr_object.get_tree_shape(this, curr_leaf.shape_index_in_object);
+         boolean add_item;
+         if (is_45_degree && curr_shape instanceof ShapeTileOctagon)
+         // in this case the check for intersection is redundant and
+         // therefore skipped for performance reasons
             {
-            ShapeTile curr_shape = curr_object.get_tree_shape(this, curr_leaf.shape_index_in_object);
-            boolean add_item;
-            if (is_45_degree && curr_shape instanceof ShapeTileOctagon)
-            // in this case the check for intersection is redundant and
-            // therefore skipped for performance reasons
-               {
-               add_item = true;
-               }
-            else
-               {
-               add_item = curr_shape.intersects(p_shape);
-               }
-            if (add_item)
-               {
-               ShapeTreeEntry new_entry = new ShapeTreeEntry(curr_object, shape_index);
-               p_risul_tree.add(new_entry);
-               }
+            add_item = true;
+            }
+         else
+            {
+            add_item = curr_shape.intersects(p_shape);
+            }
+
+         if (add_item)
+            {
+            ShapeTreeEntry new_entry = new ShapeTreeEntry(curr_object, shape_index);
+            p_risul_tree.add(new_entry);
             }
          }
       }
@@ -542,7 +540,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       
       if (is_clearance_compensation_used())
          {
-         calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, res_tree_entries);
+         calc_overlapping_tree_entries(p_shape, p_layer,new NetNosList(p_ignore_net_nos), res_tree_entries);
          }
       else
          {
@@ -591,7 +589,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       
       if ( is_clearance_compensation_used())
          {
-         calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, result);
+         calc_overlapping_tree_entries(p_shape, p_layer, new NetNosList(p_ignore_net_nos), result);
          }
       else
          {

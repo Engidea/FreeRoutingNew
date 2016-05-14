@@ -82,6 +82,7 @@ import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.rules.BoardRules;
 import freert.rules.RuleNet;
+import freert.varie.NetNosList;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimit;
 import freert.varie.TimeLimitStoppable;
@@ -1069,7 +1070,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       Collection<ShapeTreeEntry> tree_entries = new LinkedList<ShapeTreeEntry>();
       
-      int[] ignore_net_nos = new int[0];
+      NetNosList ignore_net_nos = NetNosList.EMPTY;
       
       if (default_tree.is_clearance_compensation_used())
          {
@@ -1077,7 +1078,7 @@ public final class RoutingBoard implements java.io.Serializable
          }
       else
          {
-         default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos, p_cl_class, tree_entries);
+         default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos.net_nos_arr, p_cl_class, tree_entries);
          }
       
       for (ShapeTreeEntry curr_tree_entry : tree_entries)
