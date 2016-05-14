@@ -37,6 +37,7 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaLineInt;
+import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -434,38 +435,36 @@ public abstract class AlgoPullTight
     */
    protected Polyline skip_segments_of_length_0(Polyline p_polyline)
       {
-      boolean polyline_changed = false;
-      
-      Polyline curr_polyline = p_polyline;
-      
-      for (int index = 1; index < curr_polyline.corner_count(); index++)
+      for (int index = 1; index < p_polyline.corner_count(); index++)
          {
          boolean try_skip;
-         if (index == 1 || index == curr_polyline.plalinelen(-2))
+         
+         if (index == 1 || index == p_polyline.plalinelen(-2))
             {
             // the position of the first corner and the last corner must be retained exactly
-            PlaPoint prev_corner = curr_polyline.corner(index - 1);
-            PlaPoint curr_corner = curr_polyline.corner(index);
+            PlaPoint prev_corner = p_polyline.corner(index - 1);
+            PlaPoint curr_corner = p_polyline.corner(index);
             try_skip = curr_corner.equals(prev_corner);
             }
          else
             {
-            PlaPointFloat prev_corner = curr_polyline.corner_approx(index - 1);
-            PlaPointFloat curr_corner = curr_polyline.corner_approx(index);
+            PlaPointFloat prev_corner = p_polyline.corner_approx(index - 1);
+            PlaPointFloat curr_corner = p_polyline.corner_approx(index);
             try_skip = curr_corner.length_square(prev_corner) < c_min_corner_dist_square;
             }
 
          if (try_skip)
             {
             // check, if skipping the line of length 0 does not result in a clearance violation
+            // Now, what happens is that the resulting polyline is invalid since it ends up with parallel lines
             
-            PlaLineInt[] curr_lines = curr_polyline.plaline_copy(index);
+            PlaLineIntAlist curr_lines = p_polyline.plaline_copy(index);
             
             Polyline tmp = new Polyline(curr_lines);
             
-            boolean check_ok = (tmp.plalinelen() == curr_lines.length);
+            boolean check_ok = tmp.plalinelen() == curr_lines.size();
             
-            if (check_ok && !curr_polyline.plaline(index).is_multiple_of_45_degree())
+            if (check_ok && ! p_polyline.plaline(index).is_multiple_of_45_degree())
                {
                // no check necessary for skipping 45 degree lines, because the check is performance critical and the line shapes
                // are intersected with the bounding octagon anyway.
@@ -474,26 +473,18 @@ public abstract class AlgoPullTight
                   ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 2);
                   check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                   }
-               if (check_ok && (index < curr_polyline.plalinelen(-2)))
+               if (check_ok && (index < p_polyline.plalinelen(-2)))
                   {
                   ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 1);
                   check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                   }
                }
-            if (check_ok)
-               {
-               polyline_changed = true;
-               curr_polyline = tmp;
-               --index;
-               }
+            
+            if (check_ok) p_polyline = tmp;
             }
          }
-      
-      if (!polyline_changed)
-         {
-         return p_polyline;
-         }
-      return curr_polyline;
+
+      return p_polyline;
       }
 
    /**

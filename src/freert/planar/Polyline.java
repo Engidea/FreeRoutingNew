@@ -255,14 +255,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
          ref_line = a_line;
          }
 
-      if (plalinelen() < 3)
-         {
-         System.err.println(classname+"IntLine<> B < 3");
-         return;
-         }
-
       // allocation does not means calculation
       corners_allocate(corner_count());
+
+      if (plalinelen() < 3)
+         {
+         // it is not as terrible as it seems...
+         System.err.println(classname+"IntLine<> B < 3");
+//         new IllegalArgumentException(classname+"lines < 3").printStackTrace();
+         return;
+         }
 
       // this will calculate the float corners
       corner_approx_arr();
@@ -1314,21 +1316,20 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * Content is copied
     * @return
     */
-   public PlaLineInt [] plaline_copy(int skip_index)
+   public PlaLineIntAlist plaline_copy(int skip_index)
       {
       int src_len   = plalinelen();
-      int risul_len = src_len-1;
       int index;
       
-      PlaLineInt [] risul = new PlaLineInt[risul_len];
+      PlaLineIntAlist risul = new PlaLineIntAlist(src_len);
       
       for (index=0; index<skip_index; index++)
-         risul[index] = plaline(index);
+         risul.add( plaline(index) );
       
       index++; // skip the skip_index
       
       for (; index<src_len; index++)
-         risul[index-1] = plaline(index);
+         risul.add ( plaline(index) );
       
       return risul;
       }
