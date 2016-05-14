@@ -230,7 +230,9 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
             {
             next_side_vector = corner_arr[index + 1].difference_by(corner_arr[index]);
             }
+         
          angle_sum += prev_side_vector.angle_approx(next_side_vector);
+         
          prev_side_vector = next_side_vector;
          }
       angle_sum /= 2.0 * Math.PI;

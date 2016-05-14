@@ -234,14 +234,31 @@ public final class PlaVectorInt extends PlaVector
       return new PlaDirection(this);
       }
 
-   /*
-   @Override
-   public Signum projection(PlaVectorInt p_other)
+   /**
+    * Returns an approximation of the signed angle between this vector and p_other.
+    */
+   public double angle_approx(PlaVectorInt p_other)
       {
-      double tmp = (double) point_x * p_other.point_x + (double) point_y * p_other.point_y;
-      return Signum.of(tmp);
+      double result = Math.acos(cos_angle(p_other));
+
+      if (side_of(p_other) == PlaSide.ON_THE_LEFT)
+         {
+         result = -result;
+         }
+      
+      return result;
       }
-*/
+
+   /**
+    * Returns an approximation of the signed angle between this vector and the x axis.
+    */
+   public final double angle_approx()
+      {
+      PlaDirection a_dir = new PlaDirection(this);
+      
+      return a_dir.angle_approx();
+      }
+
    @Override
    public double scalar_product(PlaVectorInt p_other)
       {
@@ -257,7 +274,7 @@ public final class PlaVectorInt extends PlaVector
    /**
     * Returns an approximation of the cosinus of the angle between this vector and p_other by a double.
     */
-   public double cos_angle(PlaVectorInt p_other)
+   public final double cos_angle(PlaVectorInt p_other)
       {
       double result = scalar_product(p_other);
       result /= to_float().distance() * p_other.to_float().distance();

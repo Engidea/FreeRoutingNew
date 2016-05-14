@@ -48,8 +48,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    public abstract PlaVector add(PlaVectorInt p_other);
 
    public abstract PlaVector add(PlaVectorRational p_other);
-
-   
    
    /**
     * Let L be the line from the Zero Vector to p_other. 
@@ -57,17 +55,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
     * Side.ON_THE_RIGHT, if this Vector is on the right of L 
     * Side.COLLINEAR, if this Vector is collinear with L.
     */
-   public final PlaSide side_of(PlaVector p_other)
-      {
-      if ( p_other == null ) return null;
-      
-      if ( p_other instanceof PlaVectorInt )
-         return side_of((PlaVectorInt)p_other);
-      else if ( p_other instanceof PlaVectorRational )
-         return side_of((PlaVectorRational)p_other);
-      else 
-         return null;
-      }
    
    public abstract PlaSide side_of(PlaVectorInt p_other);
    public abstract PlaSide side_of(PlaVectorRational p_other);
@@ -91,21 +78,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
       return is_orthogonal() || is_diagonal();
       }
 
-   
-   /**
-    * Returns an approximation of the scalar product of this vector with p_other by a double.
-    */
-   public final double scalar_product(PlaVector p_other)
-      {
-      if ( p_other == null ) throw new IllegalArgumentException("p_other is null");
-      
-      if ( p_other instanceof PlaVectorInt )
-         return scalar_product((PlaVectorInt)p_other);
-      else if ( p_other instanceof PlaVectorRational )
-         return scalar_product((PlaVectorRational)p_other);
-      else 
-         throw new IllegalArgumentException("p_other is unsupported");
-      }
 
    public abstract double scalar_product(PlaVectorInt p_other);
    public abstract double scalar_product(PlaVectorRational p_other);
@@ -138,41 +110,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    public final double distance()
       {
       return to_float().distance();
-      }
-
-   /**
-    * Returns an approximation of the cosinus of the angle between this vector and p_other by a double.
-    */
-   private double cos_angle(PlaVector p_other)
-      {
-      double result = scalar_product(p_other);
-      result /= to_float().distance() * p_other.to_float().distance();
-      return result;
-      }
-
-   /**
-    * Returns an approximation of the signed angle between this vector and p_other.
-    */
-   public double angle_approx(PlaVector p_other)
-      {
-      double result = Math.acos(cos_angle(p_other));
-
-      if (side_of(p_other) == PlaSide.ON_THE_LEFT)
-         {
-         result = -result;
-         }
-      
-      return result;
-      }
-
-   /**
-    * Returns an approximation of the signed angle between this vector and the x axis.
-    */
-   public double angle_approx()
-      {
-      PlaVector other = new PlaVectorInt(1, 0);
-      
-      return other.angle_approx(this);
       }
 
    /**
