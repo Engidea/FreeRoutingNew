@@ -30,6 +30,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapeConvex;
 import freert.rules.BoardRules;
+import freert.varie.NetNosList;
 
 /**
  * Interactive creation of a circle obstacle
@@ -100,7 +101,7 @@ public class StateCircleConstrut extends StateInteractive
             {
             obstacle_shape = obstacle_shape.bounding_octagon();
             }
-         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, new int[0], cl_class);
+         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
          }
       if (construction_succeeded)
          {

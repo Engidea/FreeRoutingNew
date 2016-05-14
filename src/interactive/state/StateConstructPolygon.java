@@ -28,6 +28,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapePolygon;
 import freert.rules.BoardRules;
+import freert.varie.NetNosList;
 
 /**
  * Interactive state for constructing an obstacle with a polygon shape.
@@ -79,7 +80,7 @@ public class StateConstructPolygon extends StateConstructCorner
             }
          else
             {
-            construction_succeeded = r_brd.check_shape(obstacle_shape, i_brd.itera_settings.layer_no, new int[0], cl_class);
+            construction_succeeded = r_brd.check_shape(obstacle_shape, i_brd.itera_settings.layer_no, NetNosList.EMPTY, cl_class);
             }
          if (construction_succeeded)
             {

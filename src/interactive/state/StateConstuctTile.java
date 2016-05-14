@@ -32,6 +32,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.ShapeTile;
 import freert.rules.BoardRules;
+import freert.varie.NetNosList;
 
 /**
  * Class for interactive construction of a tile shaped obstacle
@@ -94,7 +95,7 @@ public class StateConstuctTile extends StateConstructCorner
          int layer = i_brd.itera_settings.layer_no;
          int cl_class = BoardRules.clearance_class_none;
 
-         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, new int[0], cl_class);
+         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
          if (construction_succeeded)
             {
             // insert the new shape as keepout

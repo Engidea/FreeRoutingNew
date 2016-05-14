@@ -1020,9 +1020,10 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Checks, if the an object with shape p_shape and net nos p_net_no_arr and clearance class p_cl_class 
     * can be inserted on layer p_layer without clearance violation
+    * WARNING apparently p_net_no_Arr is always empty, does not seems correct no ?
     * @return true if it can be inserted
     */
-   public boolean check_shape(PlaArea p_shape, int p_layer, int[] p_net_no_arr, int p_cl_class)
+   public boolean check_shape(PlaArea p_shape, int p_layer, NetNosList p_net_no_arr, int p_cl_class)
       {
       ShapeTile[] tiles = p_shape.split_to_convex();
       
@@ -1036,20 +1037,12 @@ public final class RoutingBoard implements java.io.Serializable
          
          Set<ShapeTreeObject> found_obstacles = new TreeSet<ShapeTreeObject>();
          
-         default_tree.find_overlap_objects_with_clearance(curr_shape, p_layer, new NetNosList(p_net_no_arr), p_cl_class, found_obstacles);
+         default_tree.find_overlap_objects_with_clearance(curr_shape, p_layer, p_net_no_arr, p_cl_class, found_obstacles);
          
          for (ShapeTreeObject curr_ob : found_obstacles)
             {
-            boolean is_obstacle = true;
-         
-            for (int jndex = 0; jndex < p_net_no_arr.length; ++jndex)
-               {
-               if ( curr_ob.is_obstacle(p_net_no_arr[jndex])) continue;
-
-               // there is at least one way to actually insert this, possibly more than one
-               is_obstacle = false;
-               }
-      
+            boolean is_obstacle = p_net_no_arr.is_obstacle(curr_ob);
+             
             if (is_obstacle) return false;
             }
          }
