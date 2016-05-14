@@ -209,15 +209,13 @@ public final class PlaVectorRational extends PlaVector
       return v1.v_x * v2.v_x + v1.v_y * v2.v_y;
       }
    
-   @Override
    public final PlaVectorRational add(PlaVectorInt p_other)
       {
       PlaVectorRational other = new PlaVectorRational(p_other);
       return add(other);
       }
 
-   @Override
-   public  final PlaVectorRational add(PlaVectorRational p_other)
+   private  final PlaVectorRational add(PlaVectorRational p_other)
       {
       BigInteger v1[] = new BigInteger[3];
       v1[0] = rp_x;

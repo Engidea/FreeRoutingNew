@@ -58,6 +58,7 @@ import board.varie.ItemSelectionFilter;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaLineInt;
+import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentFloat;
@@ -1381,11 +1382,14 @@ public final class MazeSearch
       PlaPointInt door_center = door_shape.centre_of_gravity().round();
       int curr_layer = p_list_element.next_room.get_layer();
       int check_radius = art_ctrl.compensated_trace_half_width[curr_layer] + ArtEngine.TRACE_WIDTH_TOLERANCE;
+      
       // create a perpendicular line segment of length 2 * check_radius through the door center
-      PlaLineInt[] line_arr = new PlaLineInt[3];
-      line_arr[0] = door_line.translate(check_radius);
-      line_arr[1] = new PlaLineInt(door_center, door_line.direction().turn_45_degree(2));
-      line_arr[2] = door_line.translate(-check_radius);
+      
+      PlaLineIntAlist line_arr = new PlaLineIntAlist(3);
+      
+      line_arr.add( door_line.translate(check_radius));
+      line_arr.add( new PlaLineInt(door_center, door_line.direction().turn_45_degree(2)) );
+      line_arr.add( door_line.translate(-check_radius) );
 
       Polyline check_polyline = new Polyline(line_arr);
       

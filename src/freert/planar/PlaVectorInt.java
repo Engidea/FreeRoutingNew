@@ -185,17 +185,11 @@ public final class PlaVectorInt extends PlaVector
       }
 
 
-   @Override
-   public PlaVectorInt add(PlaVectorInt p_other)
+   public final PlaVectorInt add(PlaVectorInt p_other)
       {
       return new PlaVectorInt(point_x + p_other.point_x, point_y + p_other.point_y);
       }
 
-   @Override
-   public PlaVectorRational add(PlaVectorRational p_other)
-      {
-      return p_other.add(this);
-      }
 
    /**
     * returns the Point, which results from adding this vector to p_point

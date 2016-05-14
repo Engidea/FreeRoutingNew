@@ -971,6 +971,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       int[][] intersection_no = entrance_points(p_polyline);
       PlaPoint first_corner = p_polyline.corner_first();
       boolean first_corner_is_inside = contains_inside(first_corner);
+      
       if (intersection_no.length == 0)
       // no intersections
          {
@@ -984,6 +985,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          result[0] = p_polyline;
          return result;
          }
+      
       Collection<Polyline> pieces = new LinkedList<Polyline>();
       int curr_intersection_no = 0;
       int[] curr_intersection_tuple = intersection_no[curr_intersection_no];
@@ -1002,6 +1004,7 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             int curr_polyline_intersection_no = curr_intersection_tuple[0];
             
             PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline_intersection_no + 2];
+            
             p_polyline.plaline_copy(0, curr_lines, 0, curr_polyline_intersection_no + 1);
             
             // close the polyline piece with the intersected edge line.

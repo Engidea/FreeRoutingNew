@@ -220,10 +220,8 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return p_pole.translate_by(v);
       }
    
-   
-   
-   @Override
-   public PlaVectorInt difference_by(PlaPointInt p_other)
+
+   public final PlaVectorInt difference_by(PlaPointInt p_other)
       {
       return new PlaVectorInt(v_x - p_other.v_x, v_y - p_other.v_y);
       }

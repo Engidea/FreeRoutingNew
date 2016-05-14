@@ -45,9 +45,6 @@ public abstract class PlaVector implements java.io.Serializable, PlaObject
    
    public abstract PlaVectorInt round ();
 
-   public abstract PlaVector add(PlaVectorInt p_other);
-
-   public abstract PlaVector add(PlaVectorRational p_other);
    
    /**
     * Let L be the line from the Zero Vector to p_other. 
