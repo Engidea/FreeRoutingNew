@@ -128,11 +128,10 @@ public final class ShapePolygon extends ShapePolyline
       corners = result;
       }
 
-   public ShapePolygon(PlaPoint[] p_corner_arr)
+   public ShapePolygon(PlaPointInt[] p_corner_arr)
       {
       this(new PlaPolygon(p_corner_arr));
       }
-
 
    
    @Override
@@ -442,10 +441,10 @@ public final class ShapePolygon extends ShapePolyline
          if (next_point.side_of(prev_point, curr_point) != PlaSide.ON_THE_LEFT)
             {
             // skip curr_point;
-            PlaPoint[] new_corners = new PlaPoint[corners.length - 1];
-            for (int i = 0; i < ind; ++i)
+            PlaPointInt[] new_corners = new PlaPointInt[corners.length - 1];
+            for (int index = 0; index < ind; ++index)
                {
-               new_corners[i] = corners[i];
+               new_corners[index] = corners[index];
                }
             for (int i = ind; i < new_corners.length; ++i)
                {
@@ -565,7 +564,7 @@ public final class ShapePolygon extends ShapePolyline
    @Override
    public ShapePolygon turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaPoint[] new_corners = new PlaPoint[corners.length];
+      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
       for (int index = 0; index < corners.length; ++index)
          {
          new_corners[index] = corners[index].turn_90_degree(p_factor, p_pole);
@@ -578,10 +577,10 @@ public final class ShapePolygon extends ShapePolyline
       {
       if (p_angle == 0) return this;
 
-      PlaPoint[] new_corners = new PlaPoint[corners.length];
-      for (int i = 0; i < corners.length; ++i)
+      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
+      for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[i] = corners[i].to_float().rotate(p_angle, p_pole).round();
+         new_corners[index] = corners[index].to_float().rotate(p_angle, p_pole).round();
          }
       return new ShapePolygon(new_corners);
       }
@@ -589,7 +588,7 @@ public final class ShapePolygon extends ShapePolyline
    @Override
    public ShapePolygon mirror_vertical(PlaPointInt p_pole)
       {
-      PlaPoint[] new_corners = new PlaPoint[corners.length];
+      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
       for (int index = 0; index < corners.length; ++index)
          {
          new_corners[index] = corners[index].mirror_vertical(p_pole);
@@ -600,7 +599,7 @@ public final class ShapePolygon extends ShapePolyline
    @Override
    public ShapePolygon mirror_horizontal(PlaPointInt p_pole)
       {
-      PlaPoint[] new_corners = new PlaPoint[corners.length];
+      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
       
       for (int index = 0; index < corners.length; ++index)
          {
@@ -694,12 +693,12 @@ public final class ShapePolygon extends ShapePolyline
       if (corner_count < 0)
          corner_count += corners.length;
       ++corner_count;
-      PlaPoint[] first_arr = new PlaPoint[corner_count];
+      PlaPointInt[] first_arr = new PlaPointInt[corner_count];
       int corner_ind = concave_corner_no;
 
-      for (int i = 0; i < corner_count - 1; ++i)
+      for (int index = 0; index < corner_count - 1; ++index)
          {
-         first_arr[i] = corners[corner_ind];
+         first_arr[index] = corners[corner_ind];
          corner_ind = (corner_ind + 1) % corners.length;
          }
       first_arr[corner_count - 1] = d.projection.round();
@@ -709,12 +708,12 @@ public final class ShapePolygon extends ShapePolyline
       if (corner_count < 0)
          corner_count += corners.length;
       corner_count += 2;
-      PlaPoint[] last_arr = new PlaPoint[corner_count];
+      PlaPointInt[] last_arr = new PlaPointInt[corner_count];
       last_arr[0] = d.projection.round();
       corner_ind = d.corner_no_after_projection;
-      for (int i = 1; i < corner_count; ++i)
+      for (int index = 1; index < corner_count; ++index)
          {
-         last_arr[i] = corners[corner_ind];
+         last_arr[index] = corners[corner_ind];
          corner_ind = (corner_ind + 1) % corners.length;
          }
       ShapePolygon last_piece = new ShapePolygon(last_arr);

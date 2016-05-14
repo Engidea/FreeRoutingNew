@@ -82,16 +82,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
       precalculated_corners[corner_count()-1] = corner_last;
       }
 
-   public Polyline(PlaPoint[] p_points)
-      {
-      this(new PlaPolygon(p_points));
-      }
-
    public Polyline(PlaPointInt[] p_points)
       {
       this(new PlaPolygon(p_points));
       }
-
+   
    /**
     * creates a polyline consisting of 3 lines
     */
@@ -153,6 +148,48 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return;
          }
 
+      complete_constructor();
+      }
+
+   public Polyline(ArrayList<PlaLineInt> p_line_arr)
+      {
+      int have_len = p_line_arr.size();
+      
+      lines_arr = new ArrayList<PlaLineInt>(have_len);
+      
+      if ( have_len < 3)
+         {
+         System.err.println(classname+"IntLine<> A < 3");
+         return;
+         }
+      
+      // this part will remove all lines that are colinear with the previous one
+      PlaLineInt ref_line = p_line_arr.get(0);
+      lines_arr.add(ref_line);
+      
+      for (int index = 1; index < have_len; ++index)
+         {
+         PlaLineInt a_line = p_line_arr.get(index);
+         
+         // skip a line that is parallel with the reference line
+         if ( ref_line.is_parallel(a_line) ) continue;
+         
+         ref_line = a_line;
+         
+         lines_arr.add(ref_line);
+         }
+
+      if (plalinelen() < 3)
+         {
+         System.err.println(classname+"IntLine<> B < 3");
+         return;
+         }
+
+      complete_constructor();
+      }
+
+   private void complete_constructor()
+      {
       // this will calculate the float corners
       corner_approx_arr();
       
@@ -162,7 +199,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       precalculated_corners[0] = plaline(0).intersection(plaline(1), "should never happen");
       }
-
+   
    
    
    private void adjust_direction ()
@@ -885,10 +922,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Combines the two polylines, if they have a common end corner. The order of lines in this polyline will be preserved. Returns
-    * the combined polyline or this polyline, if this polyline and p_other have no common end corner. If there is something to
-    * combine at the start of this polyline, p_other is inserted in front of this polyline. If there is something to combine at the
-    * end of this polyline, this polyline is inserted in front of p_other.
+    * Combines the two polylines, if they have a common end corner. 
+    * The order of lines in this polyline will be preserved. 
+    * @returns the combined polyline or this polyline, if this polyline and p_other have no common end corner. 
+    * If there is something to combine at the start of this polyline, p_other is inserted in front of this polyline. 
+    * If there is something to combine at the end of this polyline, this polyline is inserted in front of p_other.
     */
    public Polyline combine(Polyline p_other)
       {
@@ -928,16 +966,17 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return this; // no common end point
          }
       
-      PlaLineInt[] line_arr = new PlaLineInt[plalinelen() + p_other.plalinelen() - 2];
+      ArrayList<PlaLineInt> lines_list = new ArrayList<PlaLineInt>(plalinelen() + p_other.plalinelen());
+      
       if (combine_at_start)
          {
          // insert the lines of p_other in front
          if (combine_other_at_start)
             {
             // insert in reverse order, skip the first line of p_other
-            for (int i = 0; i < p_other.plalinelen(-1); ++i)
+            for (int index = 0; index < p_other.plalinelen(-1); ++index)
                {
-               line_arr[i] = p_other.plaline(p_other.plalinelen() - i - 1).opposite();
+               lines_list.add( p_other.plaline(p_other.plalinelen() - index - 1).opposite());
                }
             }
          else
@@ -945,29 +984,30 @@ public final class Polyline implements java.io.Serializable, PlaObject
             // skip the last line of p_other
             for (int index = 0; index < p_other.plalinelen(-1); ++index)
                {
-               line_arr[index] = p_other.plaline(index);
+               lines_list.add(p_other.plaline(index));
                }
             }
          
          // append the lines of this polyline, skip the first line
          for (int iindex = 1; iindex < plalinelen(); ++iindex)
             {
-            line_arr[p_other.plalinelen() + iindex - 2] = plaline(iindex);
+            lines_list.add( plaline(iindex));
             }
          }
       else
          {
          // insert the lines of this polyline in front, skip the last line
-         for (int index = 0; index < plalinelen() - 1; ++index)
+         for (int index = 0; index < plalinelen(-1); ++index)
             {
-            line_arr[index] = plaline(index);
+            lines_list.add( plaline(index));
             }
+         
          if (combine_other_at_start)
             {
             // skip the first line of p_other
             for (int index = 1; index < p_other.plalinelen(); ++index)
                {
-               line_arr[plalinelen() + index - 2] = p_other.plaline(index);
+               lines_list.add( p_other.plaline(index));
                }
             }
          else
@@ -975,13 +1015,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
             // insert in reverse order, skip the last line of p_other
             for (int index = 1; index < p_other.plalinelen(); ++index)
                {
-               line_arr[plalinelen() + index - 2] = p_other.plaline(p_other.plalinelen() - index - 1).opposite();
+               lines_list.add( p_other.plaline(p_other.plalinelen() - index - 1).opposite());
                }
             }
          }
       
-      
-      return new Polyline(line_arr);
+      return new Polyline(lines_list);
       }
 
    /**

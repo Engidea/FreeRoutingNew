@@ -221,11 +221,11 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts a trace into the board, whose geometry is described by an array of points, and cleans up the net.
     */
-   public void insert_trace(PlaPoint[] p_points, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
+   public void insert_trace(PlaPointInt[] p_points, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
-      for (int i = 0; i < p_points.length; ++i)
+      for (int index = 0; index < p_points.length; ++index)
          {
-         if (! bounding_box.contains(p_points[i]))
+         if (! bounding_box.contains(p_points[index]))
             {
             System.err.println("LayeredBoard.insert_trace: input point out of range");
             }

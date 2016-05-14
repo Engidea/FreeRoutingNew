@@ -30,36 +30,10 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
 
    private final ArrayList<PlaPointInt> corners = new ArrayList<PlaPointInt>();
    
-   /**
-    * Creates a polygon from p_point_arr. 
-    * Multiple points and points, which are collinear with its previous and next point will be removed.
-    */
-   public PlaPolygon(PlaPoint[] p_point_arr)
-      {
-      if (p_point_arr.length == 0)  return;
-      
-      for (int index = 0; index < p_point_arr.length; ++index)
-         {
-         PlaPointInt a_point = (PlaPointInt)p_point_arr[index];
-         
-         // if this point is already in the list
-         if ( has_point(a_point) ) continue;
-         
-         // if this point is "colinear" with some points in the list
-         if ( has_colinear(a_point) ) continue;
-         
-         corners.add(a_point);
-         }
-      }
-
    public PlaPolygon(PlaPointInt[] p_point_arr)
       {
-      if (p_point_arr.length == 0)  return;
-      
-      for (int index = 0; index < p_point_arr.length; ++index)
+      for (PlaPointInt a_point : p_point_arr )
          {
-         PlaPointInt a_point = p_point_arr[index];
-         
          // if this point is already in the list
          if ( has_point(a_point) ) continue;
          

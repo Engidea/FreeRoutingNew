@@ -105,9 +105,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
          }
 
       boolean polyline_changed = false;
-      PlaPoint[] new_corners = new PlaPoint[p_polyline.plalinelen(-3)];
+      PlaPointInt[] new_corners = new PlaPointInt[p_polyline.plalinelen(-3)];
       new_corners[0] = curr_corner[0];
-      PlaPoint[] curr_check_points = new PlaPoint[2];
+      PlaPointInt[] curr_check_points = new PlaPointInt[2];
       PlaPointInt new_corner = null;
       int corner_no = 3;
       
@@ -261,7 +261,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
          {
          return p_polyline;
          }
-      PlaPoint adjusted_corners[] = new PlaPoint[new_corner_count + 2];
+      PlaPointInt adjusted_corners[] = new PlaPointInt[new_corner_count + 2];
       for (int i = 0; i < new_corner_count; ++i)
          {
          adjusted_corners[i] = new_corners[i];
