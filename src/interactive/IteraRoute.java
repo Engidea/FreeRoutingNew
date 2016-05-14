@@ -27,6 +27,7 @@ import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.rules.RuleNet;
 import freert.rules.RuleViaInfoList;
+import freert.varie.NetNosList;
 import freert.varie.TimeLimit;
 import freert.varie.TimeLimitStoppable;
 import freert.varie.UnitMeasure;
@@ -207,7 +208,8 @@ public final class IteraRoute
             prev_corner, 
             curr_corner, 
             pen_half_width_arr[layer_active_no], 
-            layer_active_no, net_no_arr, 
+            layer_active_no, 
+            new NetNosList(net_no_arr), 
             clearance_class, 
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 
@@ -483,7 +485,7 @@ public final class IteraRoute
                   to_corner, 
                   pen_half_width_arr[layer_active_no], 
                   layer_active_no, 
-                  net_no_arr, 
+                  new NetNosList(net_no_arr), 
                   clearance_class, 
                   max_shove_trace_recursion_depth,
                   max_shove_via_recursion_depth, 
@@ -901,7 +903,7 @@ public final class IteraRoute
             p_to_corner, 
             neck_down_halfwidth, 
             layer_active_no, 
-            net_no_arr, 
+            new NetNosList(net_no_arr), 
             clearance_class, 
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 
@@ -949,7 +951,7 @@ public final class IteraRoute
             p_to_corner, 
             neck_down_halfwidth, 
             layer_active_no, 
-            net_no_arr, 
+            new NetNosList(net_no_arr), 
             clearance_class, 
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 

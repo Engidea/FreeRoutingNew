@@ -349,13 +349,13 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * Puts all items in the tree overlapping with p_shape on layer p_layer into p_obstacles. 
     * If p_layer < 0, the layer is ignored.
     */
-   public final TreeSet<ShapeTreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer, int[] p_ignore_net_nos)
+   public final TreeSet<ShapeTreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos)
       {
       TreeSet<ShapeTreeObject> risul_obstacles = new TreeSet<ShapeTreeObject>();
 
       Collection<ShapeTreeEntry> tree_entries = new LinkedList<ShapeTreeEntry>();
 
-      calc_overlapping_tree_entries(p_shape, p_layer, new NetNosList(p_ignore_net_nos), tree_entries);
+      calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
 
       Iterator<ShapeTreeEntry> it = tree_entries.iterator();
       
@@ -374,7 +374,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    public final Set<ShapeTreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer)
       {
-      return find_overlap_objects(p_shape, p_layer, new int[0] );
+      return find_overlap_objects(p_shape, p_layer, NetNosList.EMPTY );
       }
 
    /**
@@ -578,17 +578,17 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     *  If p_layer < 0, the layer is ignored.
     *  This seems one of the main point for the logic, finding out if something overlaps, damiano
     */
-   public final Collection<ShapeTreeEntry> find_overlap_tree_entries_with_clearance(ShapeConvex p_shape, int p_layer, int[] p_ignore_net_nos, int p_clearance_class)
+   public final Collection<ShapeTreeEntry> find_overlap_tree_entries_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       Collection<ShapeTreeEntry> result = new LinkedList<ShapeTreeEntry>();
       
       if ( is_clearance_compensation_used())
          {
-         calc_overlapping_tree_entries(p_shape, p_layer, new NetNosList(p_ignore_net_nos), result);
+         calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, result);
          }
       else
          {
-         find_overlap_tree_entries_with_clearance(p_shape, p_layer,new NetNosList( p_ignore_net_nos), p_clearance_class, result);
+         find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class, result);
          }
       
       return result;

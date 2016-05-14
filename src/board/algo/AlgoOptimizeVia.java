@@ -41,6 +41,7 @@ import freert.planar.PlaSegmentFloat;
 import freert.planar.PlaSide;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
+import freert.varie.NetNosList;
 
 /**
  * Contains functions for optimizing and improving via locations.
@@ -333,7 +334,8 @@ public final class AlgoOptimizeVia
                {
                if (r_board.move_drill_algo.check(p_via, diff_vector, 0, 0, null, null))
                   {
-                  double ok_length = r_board.check_trace_segment(via_center, projection, trace_layer, p_via.net_no_arr, trace_half_width, trace_cl_class_no, false);
+                  double ok_length = r_board.check_trace_segment(
+                        via_center, projection, trace_layer, new NetNosList(p_via.net_no_arr), trace_half_width, trace_cl_class_no, false);
                   if (ok_length >= Integer.MAX_VALUE)
                      {
                      new_via_location = projection;
@@ -396,7 +398,8 @@ public final class AlgoOptimizeVia
 
       if (from_location.equals(p_to_location)) return null;
 
-      double ok_length = r_board.check_trace_segment(from_location, p_to_location, p_trace_layer, p_via.net_no_arr, p_trace_half_width, p_trace_cl_class, false);
+      double ok_length = r_board.check_trace_segment(
+            from_location, p_to_location, p_trace_layer, new NetNosList(p_via.net_no_arr), p_trace_half_width, p_trace_cl_class, false);
 
       if (ok_length <= 0) return null;
 
@@ -477,7 +480,7 @@ public final class AlgoOptimizeVia
          return false;
          }
 
-      int[] net_no_arr = p_via.net_no_arr;
+      NetNosList net_no_arr = new NetNosList(p_via.net_no_arr);
 
       double ok_length = r_board.check_trace_segment(from_location, p_to_location, p_trace_layer_1, net_no_arr, p_trace_half_width_1, p_trace_cl_class_1, false);
 

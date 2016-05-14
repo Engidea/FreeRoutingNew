@@ -33,6 +33,7 @@ import freert.library.LibPadstack;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
+import freert.varie.NetNosList;
 
 /**
  * Inserts the traces and vias of the connection found by the autoroute algorithm.
@@ -304,8 +305,7 @@ public final class ArtConnectionInsert
 
       final int TOLERANCE = 2;
 
-      int[] net_no_arr = new int[1];
-      net_no_arr[0] = ctrl.net_no;
+      NetNosList net_no_arr = new NetNosList(1,ctrl.net_no);
 
       double ok_length = r_board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_class_no, true);
 

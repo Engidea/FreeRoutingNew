@@ -39,6 +39,7 @@ import freert.planar.PlaSegmentInt;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 
 /**
  * Auxiliary functions used in MazeSearchAlgo.
@@ -207,8 +208,8 @@ public final class MazeShoveTraceAlgo
          }
       
       int trace_half_width = art_ctrl.trace_half_width[trace_layer];
-      int[] net_no_arr = new int[1];
-      net_no_arr[0] = art_ctrl.net_no;
+
+      NetNosList net_no_arr = new NetNosList(1, art_ctrl.net_no);
 
       double shove_width = r_board.check_trace_segment(shove_line_segment, trace_layer, net_no_arr, trace_half_width, art_ctrl.trace_clearance_class_no, true);
       boolean segment_shortened = false;
@@ -234,7 +235,7 @@ public final class MazeShoveTraceAlgo
                shove_line_segment, 
                p_shove_to_the_left, 
                trace_layer, 
-               net_no_arr, 
+               net_no_arr.net_nos_arr, 
                trace_half_width, 
                art_ctrl.trace_clearance_class_no,
                art_ctrl.max_shove_trace_recursion_depth, 

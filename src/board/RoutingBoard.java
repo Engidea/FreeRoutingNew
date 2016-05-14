@@ -1792,7 +1792,7 @@ public final class RoutingBoard implements java.io.Serializable
     * If a conflict exists, The result length is the maximal line length from p_line.a to p_line.b, which can be inserted without conflict
     * (Integer.MAX_VALUE, if no conflict exists). If p_only_not_shovable_obstacles, unfixed traces and vias are ignored.
     */
-   public final double check_trace_segment(PlaPointInt p_from_point, PlaPointInt p_to_point, int p_layer, int[] p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
+   public final double check_trace_segment(PlaPointInt p_from_point, PlaPointInt p_to_point, int p_layer, NetNosList p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
       {
       if (p_from_point.equals(p_to_point)) return 0;
       
@@ -1807,7 +1807,7 @@ public final class RoutingBoard implements java.io.Serializable
     * (Integer.MAX_VALUE, if no conflict exists) 
     * If p_only_not_shovable_obstacles, unfixed traces and vias are ignored.
     */
-   public final double check_trace_segment(PlaSegmentInt p_line_segment, int p_layer, int[] p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
+   public final double check_trace_segment(PlaSegmentInt p_line_segment, int p_layer, NetNosList p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
       {
       Polyline check_polyline = p_line_segment.to_polyline();
       
@@ -1820,7 +1820,8 @@ public final class RoutingBoard implements java.io.Serializable
 
       ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
 
-      Collection<ShapeTreeEntry> obstacle_entries = default_tree.find_overlap_tree_entries_with_clearance(shape_to_check, p_layer, p_net_no_arr, p_cl_class_no);
+      Collection<ShapeTreeEntry> obstacle_entries = default_tree.find_overlap_tree_entries_with_clearance(
+            shape_to_check, p_layer, p_net_no_arr, p_cl_class_no);
 
       for (ShapeTreeEntry curr_obstacle_entry : obstacle_entries)
          {
@@ -2165,7 +2166,7 @@ public final class RoutingBoard implements java.io.Serializable
          PlaPointInt p_to_corner, 
          int p_half_width, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_clearance_class_no, 
          int p_max_recursion_depth,
          int p_max_via_recursion_depth, 
@@ -2184,7 +2185,7 @@ public final class RoutingBoard implements java.io.Serializable
             insert_polyline, 
             p_half_width, 
             p_layer, 
-            p_net_no_arr, 
+            p_net_no_arr.net_nos_arr, 
             p_clearance_class_no,
             p_max_recursion_depth, 
             p_max_via_recursion_depth,

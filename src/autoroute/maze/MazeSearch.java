@@ -1396,8 +1396,7 @@ public final class MazeSearch
       
       ShapeTile check_shape = check_polyline.offset_shape(check_radius, 0);
 
-      int[] ignore_net_nos = new int[1];
-      ignore_net_nos[0] = art_ctrl.net_no;
+      NetNosList ignore_net_nos = new NetNosList(1, art_ctrl.net_no);
 
       Set<ShapeTreeObject> overlapping_objects = art_engine.autoroute_search_tree.find_overlap_objects(check_shape, curr_layer, ignore_net_nos );
 

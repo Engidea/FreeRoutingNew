@@ -50,6 +50,7 @@ import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.rules.RuleNets;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 import gui.varie.UndoableObjectStorable;
 
@@ -472,7 +473,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          {
          ShapeTile curr_tile_shape = get_tile_shape(index);
          
-         Collection<ShapeTreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(curr_tile_shape, shape_layer(index), new int[0], clearance_class);
+         Collection<ShapeTreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(
+               curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_class);
       
          Iterator<ShapeTreeEntry> iter = curr_overlapping_items.iterator();
          
