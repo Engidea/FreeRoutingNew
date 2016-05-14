@@ -145,6 +145,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaSide side_of(PlaPointFloat p_point, double p_tolerance)
       {
+      // Let's center everything with point_a of this line, once origin changed the point direction is just its coordinates
       PlaPointFloat point_dir = new PlaPointFloat(p_point.v_x - point_a.v_x, p_point.v_y - point_a.v_y);
       
       return direction().side_of(point_dir, p_tolerance) ;

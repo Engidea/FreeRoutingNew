@@ -388,12 +388,22 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      }
 
 
-  final double determinant(PlaPointFloat p_other)
+  private final double determinant(PlaPointFloat p_other)
      {
      return dir_x * p_other.v_y - dir_y * p_other.v_x;
      }
 
-   
+  /**
+   * You can use this one to decide if two "directions" are colinear or on the right or left
+   * @param p_a
+   * @param p_b
+   * @return
+   */
+   public static final double determinant (PlaPointFloat p_a, PlaPointFloat p_b )
+      {
+      return p_a.v_x * p_b.v_y - p_a.v_y * p_b.v_x;
+      }
+
    /**
     * @return true, if p_ob is a Direction and this Direction and p_ob point into the same direction
     */

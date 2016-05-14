@@ -108,12 +108,57 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return (v_x == p_ob.v_x && v_y == p_ob.v_y);
       }
 
+   /**
+    * This is actually correct, the points are surely not the same point
+    */
    @Override
    public final boolean equals(PlaPointRational p_ob)
       {
       return false;
       }
 
+
+   /**
+    * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; 
+    * Side.ON_THE_RIGHT, if this Point is on the right of the line from p_1 to p_2; 
+    * Side.COLLINEAR, if this Point is collinear with p_1 and p_2.
+    */
+   
+   @Override   
+   public final PlaSide side_of(PlaPoint p_1, PlaPoint p_2)
+      {
+      PlaVector v1 = difference_by(p_1);
+      PlaVector v2 = p_2.difference_by(p_1);
+      PlaSide a_risul = v1.side_of(v2);
+      
+      // now, another way to calculate this, consider the line p_1 -> p_2 as reference and set origins on p_1
+      PlaPointFloat pf_1 = p_1.to_float();
+      PlaPointFloat pf_2 = p_2.to_float();
+      
+      // center the point to pf_1, and this becomes a "direction"
+      PlaPointFloat point_dir = new PlaPointFloat(v_x - pf_1.v_x, v_y - pf_1.v_y);
+      
+      // center the second point to pf_1, and this becomes a "direction" of the line
+      PlaPointFloat line_dir = new PlaPointFloat(pf_2.v_x - pf_1.v_x, pf_2.v_y - pf_1.v_y);
+      
+      double determinant = PlaDirection.determinant(point_dir, line_dir);
+      
+      PlaSide b_risul = PlaSide.get_side_of(determinant, 0.1);
+      
+      if ( a_risul != b_risul )
+         System.err.println("a_risul="+a_risul+" b_risul="+b_risul);
+      
+      return a_risul;
+      }
+   
+   public final PlaSide side_of(PlaPointInt p_1, PlaPointInt p_2)
+      {
+      PlaVectorInt v1 = difference_by(p_1);
+      PlaVectorInt v2 = p_2.difference_by(p_1);
+      return v1.side_of(v2);
+      }   
+   
+   
    
    @Override
    public boolean is_contained_in(ShapeTileBox p_box)
