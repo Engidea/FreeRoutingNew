@@ -28,7 +28,7 @@ package freert.planar;
  * @author Alfons Wirtz
  */
 
-public final class PlaVectorInt extends PlaVector
+public final class PlaVectorInt  implements java.io.Serializable, PlaObject
    {
    private static final long serialVersionUID = 1L;
    
@@ -249,11 +249,6 @@ public final class PlaVectorInt extends PlaVector
    public double scalar_product(PlaVectorInt p_other)
       {
       return (double) point_x * p_other.point_x + (double) point_y * p_other.point_y;
-      }
-
-   public double scalar_product(PlaVectorRational p_other)
-      {
-      return p_other.scalar_product(this);
       }
    
    /**

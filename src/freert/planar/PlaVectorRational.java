@@ -30,7 +30,7 @@ import freert.varie.BigIntAux;
  * @author Alfons Wirtz
  */
 
-public final class PlaVectorRational extends PlaVector
+public final class PlaVectorRational  implements java.io.Serializable, PlaObject
    {
    private static final long serialVersionUID = 1L;
 
@@ -138,7 +138,7 @@ public final class PlaVectorRational extends PlaVector
       }
    
    
-   public PlaVector turn_90_degree(int p_factor)
+   public PlaVectorRational turn_90_degree(int p_factor)
       {
       while (p_factor < 0) p_factor += 4;
 
@@ -170,12 +170,12 @@ public final class PlaVectorRational extends PlaVector
       return new PlaVectorRational(new_x, new_y, rp_z);
       }
 
-   public PlaVector mirror_at_y_axis()
+   public PlaVectorRational mirror_at_y_axis()
       {
       return new PlaVectorRational(rp_x.negate(), rp_y, rp_z);
       }
 
-   public PlaVector mirror_at_x_axis()
+   public PlaVectorRational mirror_at_x_axis()
       {
       return new PlaVectorRational(rp_x, rp_y.negate(), rp_z);
       }
