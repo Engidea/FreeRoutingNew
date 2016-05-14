@@ -1078,7 +1078,7 @@ public final class RoutingBoard implements java.io.Serializable
          }
       else
          {
-         default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos.net_nos_arr, p_cl_class, tree_entries);
+         default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos, p_cl_class, tree_entries);
          }
       
       for (ShapeTreeEntry curr_tree_entry : tree_entries)

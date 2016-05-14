@@ -456,7 +456,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * The elements in p_obstacle_entries are of type TreeEntry. 
     * if p_layer < 0, the layer is ignored. Used only internally, because the clearance compensation is not taken iinnto account.
     */
-   public final void find_overlap_tree_entries_with_clearance(ShapeConvex p_shape, int p_layer, int[] p_ignore_net_nos, int p_cl_type, Collection<ShapeTreeEntry> p_result)
+   public final void find_overlap_tree_entries_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<ShapeTreeEntry> p_result)
       {
       if (p_shape == null) return;
 
@@ -489,16 +489,11 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          BrdItem curr_item = (BrdItem) curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
          boolean ignore_item = p_layer >= 0 && curr_item.shape_layer(shape_index) != p_layer;
-         if (!ignore_item)
-            {
-            for (int i = 0; i < p_ignore_net_nos.length; ++i)
-               {
-               if (!curr_item.is_obstacle(p_ignore_net_nos[i]))
-                  {
-                  ignore_item = true;
-                  }
-               }
-            }
+         
+         if ( ignore_item ) continue;
+
+         ignore_item = p_ignore_net_nos.is_connectable(curr_item);
+         
          if (!ignore_item)
             {
             int curr_clearance = cl_matrix.value_at(p_cl_type, curr_item.clearance_class_no(), p_layer);
@@ -544,7 +539,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          }
       else
          {
-         find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_cl_type, res_tree_entries);
+         find_overlap_tree_entries_with_clearance(p_shape, p_layer, new NetNosList(p_ignore_net_nos), p_cl_type, res_tree_entries);
          }
       
       for (ShapeTreeEntry curr_entry : res_tree_entries )
@@ -593,7 +588,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          }
       else
          {
-         find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class, result);
+         find_overlap_tree_entries_with_clearance(p_shape, p_layer,new NetNosList( p_ignore_net_nos), p_clearance_class, result);
          }
       
       return result;
