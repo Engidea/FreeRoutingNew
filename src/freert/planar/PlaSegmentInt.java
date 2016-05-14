@@ -34,8 +34,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    private final PlaLineInt middle;
    private final PlaLineInt end;
    
-   private final PlaPoint precalculated_start_point;
-   private final PlaPoint precalculated_end_point;
+   private final PlaPoint start_point;
+   private final PlaPoint end_point;
    
    /**
     * Creates a line segment from the 3 input lines.
@@ -48,8 +48,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       middle = p_middle_line;
       end = p_end_line;
       
-      precalculated_start_point = middle.intersection(start, "should never happen");
-      precalculated_end_point = middle.intersection(end, "should never happen");
+      start_point = middle.intersection(start, "should never happen");
+      end_point = middle.intersection(end, "should never happen");
       }
 
    public PlaSegmentInt(PlaPointInt p_from_corner, PlaPointInt p_to_corner)
@@ -63,17 +63,11 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
       end = new PlaLineInt(p_to_corner, dir.turn_45_degree(2));
       
-      precalculated_start_point = p_from_corner;
-      precalculated_end_point = p_to_corner;
+      start_point = p_from_corner;
+      end_point = p_to_corner;
       
       }
    
-   
-   @Override
-   public final boolean is_NaN ()
-      {
-      return false;
-      }
    
    /**
     * Creates the p_no-th line segment of p_shape for p_no between 0 and p_shape.line_count - 1.
@@ -102,16 +96,24 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          end = p_shape.border_line(p_no + 1);
          }
       
-      precalculated_start_point = middle.intersection(start, "should never happen");
-      precalculated_end_point = middle.intersection(end, "should never happen");
+      start_point = middle.intersection(start, "should never happen");
+      end_point = middle.intersection(end, "should never happen");
       }
 
+   
+   @Override
+   public final boolean is_NaN ()
+      {
+      return false;
+      }
+ 
+   
    /**
     * Returns the intersection of the first 2 lines of this segment
     */
    public PlaPoint start_point()
       {
-      return precalculated_start_point;
+      return start_point;
       }
 
    /**
@@ -119,7 +121,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPoint end_point()
       {
-      return precalculated_end_point;
+      return end_point;
       }
 
    /**
@@ -127,16 +129,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPointFloat start_point_approx()
       {
-      PlaPointFloat result;
-      if (precalculated_start_point != null)
-         {
-         result = precalculated_start_point.to_float();
-         }
-      else
-         {
-         result = start.intersection_approx(middle);
-         }
-      return result;
+      return start_point.to_float();
       }
 
    /**
@@ -144,16 +137,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPointFloat end_point_approx()
       {
-      PlaPointFloat result;
-      if (precalculated_end_point != null)
-         {
-         result = precalculated_end_point.to_float();
-         }
-      else
-         {
-         result = end.intersection_approx(middle);
-         }
-      return result;
+      return end_point.to_float();
       }
 
    /**

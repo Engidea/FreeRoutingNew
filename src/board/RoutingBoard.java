@@ -1819,7 +1819,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       ShapeTile shape_to_check = check_polyline.offset_shape(p_trace_half_width, 0);
       PlaPointFloat from_point = p_line_segment.start_point_approx();
-      PlaPointFloat to_point = p_line_segment.end_point_approx();
+      PlaPointFloat to_point   = p_line_segment.end_point_approx();
       
       double line_length = to_point.distance(from_point);
       double ok_length = Integer.MAX_VALUE;

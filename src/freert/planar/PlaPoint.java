@@ -45,8 +45,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
 
    public abstract PlaVector difference_by(PlaPointRational p_other);
    
-   @Override
-   public boolean equals (Object p_other )
+   
+   public final boolean equals ( PlaPoint p_other )
       {
       if ( p_other == null ) return false;
       
@@ -61,7 +61,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
          return false;
          }
       }
-   
+
    public abstract boolean equals(PlaPointInt p_other);
    
    public abstract boolean equals(PlaPointRational p_other);

@@ -731,14 +731,14 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          }
       PlaLineInt cut_line = null;
       double cut_line_distance = -1;
-      for (int i = 0; i < obstacle_simplex.border_line_count(); ++i)
+      for (int index = 0; index < obstacle_simplex.border_line_count(); ++index)
          {
-         PlaSegmentInt curr_line_segment = new PlaSegmentInt(obstacle_simplex, i);
+         PlaSegmentInt curr_line_segment = new PlaSegmentInt(obstacle_simplex, index);
          if (room_shape.is_intersected_interiour_by(curr_line_segment))
             {
             // otherwise curr_object may not touch the intersection of p_shape with the half_plane defined by the cut_line.
             // That may lead to problems when creating the ExpansionRooms.
-            PlaLineInt curr_line = obstacle_simplex.border_line(i);
+            PlaLineInt curr_line = obstacle_simplex.border_line(index);
 
             double curr_min_distance = shape_to_be_contained.distance_to_the_left(curr_line);
 
