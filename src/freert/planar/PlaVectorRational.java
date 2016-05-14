@@ -109,14 +109,6 @@ public final class PlaVectorRational extends PlaVector
       return (det.signum() == 0);
       }
 
-   /**
-    * returns the Vector such that this plus minus() is zero
-    */
-   @Override
-   public PlaVectorRational negate()
-      {
-      return new PlaVectorRational(rp_x.negate(), rp_y.negate(), rp_z);
-      }
 
    public boolean is_orthogonal()
       {
@@ -188,20 +180,13 @@ public final class PlaVectorRational extends PlaVector
       return new PlaVectorRational(rp_x, rp_y.negate(), rp_z);
       }
 
-   @Override
-   PlaDirection to_direction()
-      {
-      return new PlaDirection(rp_x, rp_y);
-      }
 
-   @Override
    public double scalar_product(PlaVectorInt p_other)
       {
-      PlaVector other = new PlaVectorRational(p_other);
+      PlaVectorRational other = new PlaVectorRational(p_other);
       return other.scalar_product(this);
       }
 
-   @Override
    public double scalar_product(PlaVectorRational p_other)
       {
       PlaPointFloat v1 = to_float();
@@ -230,7 +215,6 @@ public final class PlaVectorRational extends PlaVector
       return new PlaVectorRational(result[0], result[1], result[2]);
       }
 
-   @Override
    PlaPointRational add_to(PlaPointInt p_point)
       {
       BigInteger new_x = rp_z.multiply(BigInteger.valueOf(p_point.v_x));
@@ -241,7 +225,6 @@ public final class PlaVectorRational extends PlaVector
       return new PlaPointRational(new_x, new_y, rp_z);
       }
    
-   @Override
    public PlaSide side_of(PlaVectorInt p_other)
       {
       PlaVectorRational other = new PlaVectorRational(p_other);
@@ -249,8 +232,7 @@ public final class PlaVectorRational extends PlaVector
       return side_of(other);
       }
 
-   @Override
-   public PlaSide side_of(PlaVectorRational p_other)
+   private PlaSide side_of(PlaVectorRational p_other)
       {
       BigInteger tmp_1 = rp_x.multiply(p_other.rp_y);
 

@@ -98,35 +98,32 @@ public final class PlaVectorInt extends PlaVector
       }
 
    /**
-    * returns true, if both coordinates of this vector are 0
-    */
-   @Override
-   public final boolean is_zero()
-      {
-      return point_x == 0 && point_y == 0;
-      }
-
-   /**
     * returns the Vector such that this plus this.minus() is zero
     */
-   @Override
-   public PlaVectorInt negate()
+   public final PlaVectorInt negate()
       {
       return new PlaVectorInt(-point_x, -point_y);
       }
 
-   @Override
    public boolean is_orthogonal()
       {
       return (point_x == 0 || point_y == 0);
       }
 
-   @Override
-   public boolean is_diagonal()
+   public final boolean is_diagonal()
       {
       return (Math.abs(point_x) == Math.abs(point_y));
       }
 
+   /**
+    * Basically the distnce from 0,0 to v_x,v_y
+    * @return an approximation of the euclidian length of this vector
+    */
+   public final double distance()
+      {
+      return to_float().distance();
+      }
+   
    /**
     * Calculates the determinant of the matrix consisting of this Vector and p_other
     * it is also the area between the two vectors
@@ -136,8 +133,7 @@ public final class PlaVectorInt extends PlaVector
       return (long) point_x * p_other.point_y - (long) point_y * p_other.point_x;
       }
 
-   @Override
-   public PlaVectorInt turn_90_degree(int p_factor)
+   public final PlaVectorInt turn_90_degree(int p_factor)
       {
       while (p_factor < 0)
          p_factor += 4;
@@ -172,14 +168,12 @@ public final class PlaVectorInt extends PlaVector
       return new PlaVectorInt(new_x, new_y);
       }
 
-   @Override
    public PlaVectorInt mirror_at_y_axis()
       {
       return new PlaVectorInt(-point_x, point_y);
       }
 
-   @Override
-   public PlaVectorInt mirror_at_x_axis()
+   public final PlaVectorInt mirror_at_x_axis()
       {
       return new PlaVectorInt(point_x, -point_y);
       }
@@ -190,40 +184,39 @@ public final class PlaVectorInt extends PlaVector
       return new PlaVectorInt(point_x + p_other.point_x, point_y + p_other.point_y);
       }
 
+   /**
+    * Returns true, if the vector is orthogonal or diagonal
+    */
+   public boolean is_multiple_of_45_degree()
+      {
+      return is_orthogonal() || is_diagonal();
+      }
 
    /**
     * returns the Point, which results from adding this vector to p_point
     */
-   @Override
-   public PlaPointInt add_to(PlaPointInt p_point)
+   public final PlaPointInt add_to(PlaPointInt p_point)
       {
       return new PlaPointInt(p_point.v_x + point_x, p_point.v_y + point_y);
       }
 
-
-   @Override
+   /**
+    * Let L be the line from the Zero Vector to p_other. 
+    * The function returns Side.ON_THE_LEFT, if this Vector is on the left of L
+    * Side.ON_THE_RIGHT, if this Vector is on the right of L 
+    * Side.COLLINEAR, if this Vector is collinear with L.
+    */
    public PlaSide side_of(PlaVectorInt p_other)
       {
       return PlaSide.get_side_of(determinant(p_other));
       }
 
-   @Override
-   public PlaSide side_of(PlaVectorRational p_other)
-      {
-      PlaSide tmp = p_other.side_of(this);
-      
-      return tmp.negate();
-      }
-
-
-   @Override
    public PlaPointFloat to_float()
       {
       return new PlaPointFloat(point_x, point_y);
       }
 
-   @Override
-   PlaDirection to_direction()
+   final PlaDirection to_direction()
       {
       return new PlaDirection(this);
       }
@@ -253,13 +246,11 @@ public final class PlaVectorInt extends PlaVector
       return a_dir.angle_approx();
       }
 
-   @Override
    public double scalar_product(PlaVectorInt p_other)
       {
       return (double) point_x * p_other.point_x + (double) point_y * p_other.point_y;
       }
 
-   @Override
    public double scalar_product(PlaVectorRational p_other)
       {
       return p_other.scalar_product(this);
@@ -273,6 +264,16 @@ public final class PlaVectorInt extends PlaVector
       double result = scalar_product(p_other);
       result /= to_float().distance() * p_other.to_float().distance();
       return result;
+      }
+
+   /**
+    * Returns an approximation vector of this vector with the same direction and length p_length.
+    */
+   public final PlaVectorInt change_length_approx(double p_length)
+      {
+      PlaPointFloat new_point = to_float().change_size(p_length);
+      
+      return new_point.round().difference_by(PlaPointInt.ZERO);
       }
    
 
