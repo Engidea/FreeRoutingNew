@@ -42,8 +42,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
     * returns the difference vector of this point and p_other
     */
    public abstract PlaVector difference_by(PlaPointInt p_other);
-
-   public abstract PlaVector difference_by(PlaPointRational p_other);
    
    
    public final boolean equals ( PlaPoint p_other )

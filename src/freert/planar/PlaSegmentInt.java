@@ -49,7 +49,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       end = p_end_line;
       
       start_point = middle.intersection(start, "should never happen");
-      end_point = middle.intersection(end, "should never happen");
+      end_point   = middle.intersection(end, "should never happen");
       }
 
    public PlaSegmentInt(PlaPointInt p_from_corner, PlaPointInt p_to_corner)
@@ -65,7 +65,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       
       start_point = p_from_corner;
       end_point = p_to_corner;
-      
       }
    
    

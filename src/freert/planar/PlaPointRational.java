@@ -217,29 +217,19 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       {
       PlaPointRational other = new PlaPointRational(p_other);
       
-      return difference_by(other);
-      }
-
-   @Override
-   public PlaVectorRational difference_by(PlaPointRational p_other)
-      {
-//      System.out.println("difference_by(PlaPointRational p_other) CALL");
-      
       BigInteger v1[] = new BigInteger[3];
       v1[0] = rp_x;
       v1[1] = rp_y;
       v1[2] = rp_z;
 
       BigInteger v2[] = new BigInteger[3];
-      v2[0] = p_other.rp_x.negate();
-      v2[1] = p_other.rp_y.negate();
-      v2[2] = p_other.rp_z;
+      v2[0] = other.rp_x.negate();
+      v2[1] = other.rp_y.negate();
+      v2[2] = other.rp_z;
       BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
       
       return new PlaVectorRational(result[0], result[1], result[2]);
       }
-
-   
    
    /**
     * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; 

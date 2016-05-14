@@ -29,6 +29,7 @@ import freert.varie.Signum;
 public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Serializable, PlaObject
    {
    private static final long serialVersionUID = 1L;
+   private static final String classname="PlaLineInt.";
 
    public final PlaPointInt point_a;
    public final PlaPointInt point_b;
@@ -343,33 +344,36 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       tmp_2 = det_2.multiply(BigInteger.valueOf(delta_1.point_y));
       BigInteger is_y = tmp_1.subtract(tmp_2);
       int signum = det.signum();
-      if (signum != 0)
+      
+      if ( signum == 0 )
          {
-         if (signum < 0)
-            {
-            det = det.negate();
-            is_x = is_x.negate();
-            is_y = is_y.negate();
-            }
-         if ((is_x.mod(det)).signum() == 0 && (is_y.mod(det)).signum() == 0)
-            {
-            is_x = is_x.divide(det);
-            is_y = is_y.divide(det);
-            if (Math.abs(is_x.doubleValue()) <= PlaLimits.CRIT_INT && Math.abs(is_y.doubleValue()) <= PlaLimits.CRIT_INT)
-               {
-               return new PlaPointInt(is_x.intValue(), is_y.intValue());
-               }
-            det = BigInteger.ONE;
-            }
+         // this is the case when the denominator is zero
          
-         // this is a standard rational
+         if ( error_msg != null )
+            new IllegalArgumentException(classname+"intersection NAN "+error_msg).printStackTrace();
+         
+         // this is instead a null rational !!
          return new PlaPointRational(is_x, is_y, det);
          }
       
-      if ( error_msg != null )
-         new IllegalArgumentException("PlaLineInt: intersection NAN "+error_msg).printStackTrace();
+      if (signum < 0)
+         {
+         // we wish the denominator to be alsays positive
+         det  = det.negate();
+         is_x = is_x.negate();
+         is_y = is_y.negate();
+         }
       
-      // this is instead a null rational !!
+      if ((is_x.mod(det)).signum() == 0 && (is_y.mod(det)).signum() == 0)
+         {
+         // this means that the result is actually an int point
+         is_x = is_x.divide(det);
+         is_y = is_y.divide(det);
+         // now, if the values are out of range they should be handled as NaN number
+         return new PlaPointInt(is_x.longValue(), is_y.longValue());
+         }
+      
+      // this is a standard rational
       return new PlaPointRational(is_x, is_y, det);
       }
 

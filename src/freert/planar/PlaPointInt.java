@@ -184,13 +184,6 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return p_vector.add_to(this);
       }
 
-   @Override
-   public PlaVectorRational difference_by(PlaPointRational p_other)
-      {
-      PlaVectorRational tmp = p_other.difference_by(this);
-
-      return tmp.negate();
-      }
 
    /**
     * Turns this point by p_factor times 90 degree around p_pole.
