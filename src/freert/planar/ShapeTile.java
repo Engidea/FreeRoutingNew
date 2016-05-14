@@ -781,9 +781,11 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       {
       boolean on_the_left = false;
       boolean on_the_right = false;
-      for (int i = 0; i < border_line_count(); ++i)
+      
+      for (int index = 0; index < border_line_count(); ++index)
          {
-         PlaSide curr_side = p_line.side_of(corner(i));
+         PlaSide curr_side = p_line.side_of(corner(index));
+
          if (curr_side == PlaSide.ON_THE_LEFT)
             {
             on_the_right = true;
@@ -792,21 +794,17 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             {
             on_the_left = true;
             }
+      
          if (on_the_left && on_the_right)
             {
             return PlaSide.COLLINEAR;
             }
          }
-      PlaSide result;
+      
       if (on_the_left)
-         {
-         result = PlaSide.ON_THE_LEFT;
-         }
+         return PlaSide.ON_THE_LEFT;
       else
-         {
-         result = PlaSide.ON_THE_RIGHT;
-         }
-      return result;
+         return PlaSide.ON_THE_RIGHT;
       }
 
    public ShapeTile turn_90_degree(int p_factor, PlaPointInt p_pole)

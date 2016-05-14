@@ -34,8 +34,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    private final PlaLineInt middle;
    private final PlaLineInt end;
    
-   transient private PlaPoint precalculated_start_point = null;
-   transient private PlaPoint precalculated_end_point = null;
+   private final PlaPoint precalculated_start_point;
+   private final PlaPoint precalculated_end_point;
    
    /**
     * Creates a line segment from the 3 input lines.
@@ -47,6 +47,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       start = p_start_line;
       middle = p_middle_line;
       end = p_end_line;
+      
+      precalculated_start_point = middle.intersection(start, "should never happen");
+      precalculated_end_point = middle.intersection(end, "should never happen");
       }
 
    public PlaSegmentInt(PlaPointInt p_from_corner, PlaPointInt p_to_corner)
@@ -59,6 +62,10 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       middle = new PlaLineInt(p_from_corner, p_to_corner);
       dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
       end = new PlaLineInt(p_to_corner, dir.turn_45_degree(2));
+      
+      precalculated_start_point = p_from_corner;
+      precalculated_end_point = p_to_corner;
+      
       }
    
    
@@ -74,15 +81,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    public PlaSegmentInt(ShapePolyline p_shape, int p_no)
       {
       int line_count = p_shape.border_line_count();
-      
-      if (p_no < 0 || p_no >= line_count)
-         {
-         System.out.println("LineSegment from TileShape: p_no out of range");
-         start = null;
-         middle = null;
-         end = null;
-         return;
-         }
       
       if (p_no == 0)
          {
@@ -103,6 +101,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          {
          end = p_shape.border_line(p_no + 1);
          }
+      
+      precalculated_start_point = middle.intersection(start, "should never happen");
+      precalculated_end_point = middle.intersection(end, "should never happen");
       }
 
    /**
@@ -110,13 +111,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPoint start_point()
       {
-      if (precalculated_start_point != null) return precalculated_start_point;
-
-      precalculated_start_point = middle.intersection(start, "should never happen");
-      
-//      if ( ! ( precalculated_start_point instanceof PlaPointInt ) ) it happens...
-      //         System.err.println("UFFA start");
-         
       return precalculated_start_point;
       }
 
@@ -125,13 +119,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaPoint end_point()
       {
-      if (precalculated_end_point != null) return precalculated_end_point;
-
-      precalculated_end_point = middle.intersection(end, "should never happen");
-
-      //      if ( ! ( precalculated_end_point instanceof PlaPointInt ) )
-      //   System.err.println("UFFA end");
-
       return precalculated_end_point;
       }
 
@@ -615,19 +602,10 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    public PlaSegmentInt sort_endpoints_in_x_y()
       {
       boolean swap_endlines = start_point().compare_x_y(end_point()) > 0;
-      PlaSegmentInt result;
 
       if (swap_endlines)
-         {
-         result = new PlaSegmentInt(end, middle, start);
-         result.precalculated_start_point = precalculated_end_point;
-         result.precalculated_end_point = precalculated_start_point;
-         }
+         return new PlaSegmentInt(end, middle, start);
       else
-         {
-         result = this;
-         }
-
-      return result;
+         return this;
       }
    }
