@@ -98,12 +98,18 @@ public final class Polyline implements java.io.Serializable, PlaObject
       dir = PlaDirection.get_instance(corner_last, corners_list.get(input_len - 2));
       lines_list.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
       
-      // When I am done I can replace this with the given points list TODO
-      precalculated_corners = new PlaPoint[corner_count()];
-      precalculated_corners[0] = corner_first;
-      precalculated_corners[corner_count()-1] = corner_last;
+      corners_allocate(corner_count());
+      
+      for ( int index=0; index < input_len; index ++ ) 
+         precalculated_corners[index] = corners_list.get(index);
       }
 
+   private void corners_allocate ( int count )
+      {
+      precalculated_float_corners = new PlaPointFloat[count];
+      precalculated_corners = new PlaPoint[count];
+      }
+   
    public Polyline(PlaPointInt[] p_points)
       {
       this(new PlaPointIntAlist(p_points));
@@ -200,7 +206,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
       dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
       lines_list.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
       
-      precalculated_corners = new PlaPoint[corner_count()];
+      corners_allocate(corner_count());
+
       precalculated_corners[0] = p_from_corner;
       precalculated_corners[1] = p_to_corner;
       }
@@ -254,14 +261,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return;
          }
 
+      // allocation does not means calculation
+      corners_allocate(corner_count());
+
       // this will calculate the float corners
       corner_approx_arr();
       
       adjust_direction();
-      
-      precalculated_corners = new PlaPoint[corner_count()];
-      
-      precalculated_corners[0] = plaline(0).intersection(plaline(1), "should never happen");
       }
    
    
@@ -415,12 +421,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
    public PlaPointFloat[] corner_approx_arr()
       {
       int corner_max = corner_count();
-      
-      if (precalculated_float_corners == null)
-         {
-         // corner array is not yet allocated
-         precalculated_float_corners = new PlaPointFloat[corner_max];
-         }
 
       for (int index = 0; index < corner_max; ++index)
          {
@@ -452,18 +452,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
          System.err.println(classname+"corner_approx: p_no must be less than arr.length - 1");
          p_no = corners_count - 1;
          }
-      
-      if (precalculated_float_corners == null)
-         {
-         // corner array is not yet allocated
-         precalculated_float_corners = new PlaPointFloat[corners_count];
-         }
 
-      if (precalculated_float_corners[p_no] == null)
-         {
-         // corner is not yet calculated
-         precalculated_float_corners[p_no] = plaline(p_no).intersection_approx(plaline(p_no + 1));
-         }
+      if (precalculated_float_corners[p_no] != null) return precalculated_float_corners[p_no];
+
+      // corner is not yet calculated
+      precalculated_float_corners[p_no] = plaline(p_no).intersection_approx(plaline(p_no + 1));
 
       return precalculated_float_corners[p_no];
       }
