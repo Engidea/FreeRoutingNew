@@ -1,6 +1,7 @@
 package freert.varie;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import board.items.BrdItem;
@@ -32,7 +33,7 @@ import board.shape.ShapeTreeObject;
  */
 public final class NetNosList implements Iterable<Integer>
    {
-   public final int[] net_nos_arr;
+   private final int[] net_nos_arr;
 
    public static final NetNosList EMPTY = new NetNosList();
 
@@ -65,7 +66,7 @@ public final class NetNosList implements Iterable<Integer>
       net_nos_arr = p_nets_no;
       }
 
-   public NetNosList(ArrayList<Integer> net_nos)
+   public NetNosList(Collection<Integer> net_nos)
       {
       net_nos_arr = new int[net_nos.size()];
 

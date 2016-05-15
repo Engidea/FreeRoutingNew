@@ -1385,24 +1385,21 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                net_numbers.add(curr_board_net.net_number);
                }
             }
-         int[] net_no_arr = new int[net_numbers.size()];
-         int net_index = 0;
-         for (Integer curr_net_no : net_numbers)
-            {
-            net_no_arr[net_index] = curr_net_no;
-            ++net_index;
-            }
+         
+         NetNosList net_no_arr = new NetNosList(net_numbers);
          
          NetClass net_class;
          RuleNet board_net;
-         if (net_no_arr.length > 0)
+
+         if (net_no_arr.size() > 0)
             {
-            board_net = routing_board.brd_rules.nets.get(net_no_arr[0]);
+            board_net = routing_board.brd_rules.nets.get(net_no_arr.first());
             }
          else
             {
             board_net = null;
             }
+         
          if (board_net != null)
             {
             net_class = board_net.get_class();
@@ -1411,6 +1408,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             {
             net_class = routing_board.brd_rules.get_default_net_class();
             }
+         
          int clearance_class = -1;
          DsnClearanceInfo pin_info = p_location.pin_infos.get(curr_pin.name);
          if (pin_info != null)
@@ -1428,7 +1426,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                clearance_class = net_class.default_item_clearance_classes.get(ItemClass.PIN);
                }
             }
-         routing_board.insert_pin(new_component.id_no, i, new NetNosList(net_no_arr), clearance_class, fixed_state);
+         routing_board.insert_pin(new_component.id_no, i, net_no_arr, clearance_class, fixed_state);
          }
 
       // insert the keepouts belonging to the package (k = 1 for via keepouts)

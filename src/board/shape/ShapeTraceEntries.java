@@ -934,30 +934,6 @@ public final class ShapeTraceEntries
          list_anchor = new_entry;
          }
       }
-
-   /**
-    * @return true if the net array has the given net within
-    */
-   private boolean net_nos_has(int[] p_net_nos, int has_no)
-      {
-      for (int cur_net : p_net_nos)
-         {
-         if (has_no == cur_net) return true;
-         }
-      
-      return false;
-      }
    
-   private boolean net_nos_equal(int[] p_net_nos_a, int[] p_net_nos_b)
-      {
-      if (p_net_nos_a.length != p_net_nos_b.length)
-         return false;
-      
-      for (int cur_net_a : p_net_nos_a)
-         {
-         if ( ! net_nos_has(p_net_nos_b, cur_net_a) ) return false;
-         }
-      
-      return true;
-      }
+
    }

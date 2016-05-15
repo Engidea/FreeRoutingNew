@@ -83,28 +83,19 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    // points to the entries of this item in the ShapeSearchTrees 
    private transient SearchTreesInfo search_trees_info = new SearchTreesInfo();
 
-   
-   public BrdItem(NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   /**
+    * Called by subclasses, obviously
+    */
+   protected BrdItem(NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       r_board = p_board;
-   
-      if (p_net_no_arr == null)
-         {
-         net_nos = NetNosList.EMPTY;
-         }
-      else
-         {
-         net_nos = p_net_no_arr.copy();
-         }
-
-      if (p_id_no <= 0)
-         id_no = r_board.host_com.id_no_generator.new_no();
-      else
-         id_no = p_id_no;
-      
       clearance_class = p_clearance_type;
       component_no = p_component_no;
       fixed_state = p_fixed_state;
+   
+      net_nos = p_net_no_arr == null  ?  NetNosList.EMPTY : p_net_no_arr.copy();
+      
+      id_no   = p_id_no > 0  ?  p_id_no : r_board.host_com.id_no_generator.new_no();
       }
    
    /**
@@ -1362,22 +1353,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean nets_equal(BrdItem p_other)
       {
-      return nets_equal(p_other.net_nos.net_nos_arr );
-      }
-
-   /**
-    * Checks, if this item contains exactly the nets in p_net_no_arr
-    */
-   public final boolean nets_equal(int[] p_net_no_arr)
-      {
-      if (net_nos.size() != p_net_no_arr.length) return false;
-
-      for (int curr_net_no : p_net_no_arr)
-         {
-         if ( ! contains_net(curr_net_no)) return false;
-         }
-      
-      return true;
+      return nets_equal(p_other.net_nos );
       }
 
    /**

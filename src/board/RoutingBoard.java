@@ -2778,7 +2778,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Checks, if the list p_items contains traces, which have no contact at their start or end point. 
     * Trace with net number p_except_net_no are ignored.
     */
-   public final boolean contains_trace_tails(Collection<BrdItem> p_items, int[] p_except_net_no_arr)
+   public final boolean contains_trace_tails(Collection<BrdItem> p_items, NetNosList p_except_net_no_arr)
       {
       for ( BrdItem curr_ob : p_items )
          {

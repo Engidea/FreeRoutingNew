@@ -507,7 +507,7 @@ public final class AlgoShoveTrace
          return false;
          }
 
-      boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr.net_nos_arr);
+      boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr);
       shape_entries.cutout_traces(obstacles);
       boolean is_orthogonal_mode = p_trace_shape instanceof ShapeTileBox;
       for (;;)

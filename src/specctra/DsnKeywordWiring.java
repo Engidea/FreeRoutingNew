@@ -20,6 +20,7 @@
 
 package specctra;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -417,17 +418,15 @@ final class DsnKeywordWiring extends DsnKeywordScope
       
       Collection<RuleNet> found_nets = get_subnets(net_id, board.brd_rules);
       
-      int[] net_no_arr = new int[found_nets.size()];
+      ArrayList<Integer> net_no_arr = new ArrayList<Integer>(found_nets.size());
       
       if ( found_nets.size() > 1 )
          board.userPrintln(classname+"weird net_size="+found_nets.size());
       
-      int curr_index = 0;
       for (RuleNet curr_net : found_nets)
          {
-         net_no_arr[curr_index] = curr_net.net_number;
+         net_no_arr.add( curr_net.net_number);
          net_class = curr_net.get_class();
-         ++curr_index;
          }
       
       int clearance_class_no = -1;
@@ -678,11 +677,11 @@ final class DsnKeywordWiring extends DsnKeywordScope
             System.out.println(" not found");
             }
          
-         int[] net_no_arr = new int[found_nets.size()];
-         int curr_index = 0;
-         for (freert.rules.RuleNet curr_net : found_nets)
+         ArrayList<Integer> net_no_arr = new ArrayList<Integer>(found_nets.size());
+
+         for ( RuleNet curr_net : found_nets)
             {
-            net_no_arr[curr_index] = curr_net.net_number;
+            net_no_arr.add( curr_net.net_number );
             net_class = curr_net.get_class();
             }
          
@@ -697,7 +696,10 @@ final class DsnKeywordWiring extends DsnKeywordScope
             clearance_class_no = net_class.default_item_clearance_classes.get(ItemClass.VIA);
             }
          PlaPointInt board_location = p_par.coordinate_transform.dsn_to_board(location).round();
-         if (via_exists(board_location, curr_padstack, net_no_arr, board))
+         
+         NetNosList net_nos = new NetNosList(net_no_arr);
+         
+         if (via_exists(board_location, curr_padstack, net_nos, board))
             {
             System.out.print("Multiple via skipped at (");
             System.out.println(board_location.v_x + ", " + board_location.v_y + ")");
@@ -706,8 +708,9 @@ final class DsnKeywordWiring extends DsnKeywordScope
             {
             boolean attach_allowed = p_par.via_at_smd_allowed && curr_padstack.attach_allowed;
             
-            board.insert_via(curr_padstack, board_location, new NetNosList(net_no_arr), clearance_class_no, fixed, attach_allowed);
+            board.insert_via(curr_padstack, board_location, net_nos, clearance_class_no, fixed, attach_allowed);
             }
+         
          return true;
          }
       catch (java.io.IOException e)
@@ -717,7 +720,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          }
       }
 
-   private boolean via_exists(PlaPointInt p_location, LibPadstack p_padstack, int[] p_net_no_arr, RoutingBoard p_board)
+   private boolean via_exists(PlaPointInt p_location, LibPadstack p_padstack, NetNosList p_net_no_arr, RoutingBoard p_board)
       {
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
       int from_layer = p_padstack.from_layer();
