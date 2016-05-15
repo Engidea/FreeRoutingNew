@@ -562,6 +562,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       return result;
       }
 
+   @Override
    protected Polyline smoothen_start_corner_at_trace(BrdTracePolyline p_trace)
       {
       boolean acute_angle = false;
@@ -700,6 +701,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       return null;
       }
 
+   @Override
    protected Polyline smoothen_end_corner_at_trace(BrdTracePolyline p_trace)
       {
       boolean acute_angle = false;

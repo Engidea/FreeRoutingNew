@@ -279,7 +279,7 @@ public final class AlgoShovePad
             {
             BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, false);
             
-            if (!r_board.shove_trace_algo.insert(
+            if (!r_board.shove_trace_algo.shove_trace_insert(
                   curr.shape, 
                   curr.from_side, 
                   p_layer, 

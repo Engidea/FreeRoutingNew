@@ -2117,7 +2117,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       start_marking_changed_area();
 
-      boolean r_ok = shove_via_algo.insert(
+      boolean r_ok = shove_via_algo.shove_via_insert(
             p_via_info, 
             p_location, 
             p_net_no_arr, 
@@ -2185,7 +2185,7 @@ public final class RoutingBoard implements java.io.Serializable
             insert_polyline, 
             p_half_width, 
             p_layer, 
-            p_net_no_arr, 
+            p_net_no_arr.net_nos_arr, 
             p_clearance_class_no,
             p_max_recursion_depth, 
             p_max_via_recursion_depth,
@@ -2272,7 +2272,7 @@ public final class RoutingBoard implements java.io.Serializable
          Polyline p_polyline, 
          int p_half_width, 
          int p_layer, 
-         NetNosList p_net_no_arr, 
+         int[] p_net_no_arr, 
          int p_clearance_class_no, 
          int p_max_recursion_depth,
          int p_max_via_recursion_depth, 
@@ -2329,8 +2329,7 @@ public final class RoutingBoard implements java.io.Serializable
       ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
 
-      Polyline new_polyline = shove_trace_algo.spring_over_obstacles(
-            p_polyline, compensated_half_width, p_layer, p_net_no_arr.net_nos_arr, p_clearance_class_no, null);
+      Polyline new_polyline = shove_trace_algo.spring_over_obstacles(p_polyline, compensated_half_width, p_layer, p_net_no_arr, p_clearance_class_no, null);
 
       if (new_polyline == null) return from_corner;
 
@@ -2378,7 +2377,7 @@ public final class RoutingBoard implements java.io.Serializable
                   from_side, 
                   null, 
                   p_layer, 
-                  p_net_no_arr, 
+                  new NetNosList(p_net_no_arr), 
                   p_clearance_class_no, 
                   p_max_recursion_depth, 
                   p_max_via_recursion_depth,
@@ -2392,11 +2391,11 @@ public final class RoutingBoard implements java.io.Serializable
                }
             }
          
-         boolean insert_ok = shove_trace_algo.insert(
+         boolean insert_ok = shove_trace_algo.shove_trace_insert(
                curr_trace_shape, 
                from_side, 
                p_layer, 
-               p_net_no_arr.net_nos_arr, 
+               p_net_no_arr, 
                p_clearance_class_no, 
                null, 
                p_max_recursion_depth, 
@@ -2474,7 +2473,7 @@ public final class RoutingBoard implements java.io.Serializable
                from_side, 
                null, 
                p_layer, 
-               p_net_no_arr, 
+               new NetNosList(p_net_no_arr), 
                p_clearance_class_no, 
                p_max_recursion_depth, 
                p_max_via_recursion_depth, 
@@ -2483,11 +2482,11 @@ public final class RoutingBoard implements java.io.Serializable
 
          if (!check_shove_ok) return from_corner;
 
-         boolean insert_ok = shove_trace_algo.insert(
+         boolean insert_ok = shove_trace_algo.shove_trace_insert(
                last_trace_shape, 
                from_side, 
                p_layer, 
-               p_net_no_arr.net_nos_arr, 
+               p_net_no_arr, 
                p_clearance_class_no, 
                null, 
                p_max_recursion_depth, 
@@ -2509,8 +2508,7 @@ public final class RoutingBoard implements java.io.Serializable
          join_changed_area(new_polyline.corner_approx(index), p_layer);
          }
       
-      BrdTracePolyline new_trace = insert_trace_without_cleaning(
-            new_polyline, p_layer, p_half_width, p_net_no_arr.net_nos_arr, p_clearance_class_no, ItemFixState.UNFIXED);
+      BrdTracePolyline new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class_no, ItemFixState.UNFIXED);
       new_trace.combine();
 
       ShapeTileOctagon tidy_region = null;
@@ -2519,21 +2517,21 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_region = new ShapeTileOctagon(new_corner).enlarge(p_tidy_width);
          }
       
-      NetNosList opt_net_no_arr;
+      int[] opt_net_no_arr;
       if (p_max_recursion_depth <= 0)
          {
          opt_net_no_arr = p_net_no_arr;
          }
       else
          {
-         opt_net_no_arr = NetNosList.EMPTY;
+         opt_net_no_arr = new int[0];
          }
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(10,null);
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(
             this, 
-            opt_net_no_arr.net_nos_arr, 
+            opt_net_no_arr, 
             tidy_region, 
             p_pull_tight_accuracy, 
             t_limit, 

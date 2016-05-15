@@ -1410,7 +1410,6 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * Checks, if this item contains exactly the nets in p_net_no_arr
-    * @deprecated use the one with NetNosList   
     */
    public final boolean nets_equal(int[] p_net_no_arr)
       {
@@ -1424,22 +1423,6 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       return true;
       }
 
-   /**
-    * Checks, if this item contains exactly the nets in p_net_no_arr
-    */
-   public final boolean nets_equal(NetNosList p_net_no_arr)
-      {
-      if (net_no_arr.length != p_net_no_arr.size()) return false;
-
-      for (int curr_net_no : p_net_no_arr)
-         {
-         if ( ! contains_net(curr_net_no)) return false;
-         }
-      
-      return true;
-      }
-
-   
    /**
     * Returns true, if the via is directly ob by a trace connected to a nearby SMD-pin. 
     * If p_ignore_items != null, contact traces in P-ignore_items are ignored.

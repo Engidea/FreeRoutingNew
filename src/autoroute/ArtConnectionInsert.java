@@ -186,7 +186,7 @@ public final class ArtConnectionInsert
                insert_polyline, 
                ctrl.trace_half_width[p_locate.layer], 
                p_locate.layer, 
-               new NetNosList(net_no_arr), 
+               net_no_arr, 
                ctrl.trace_clearance_class_no,
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
@@ -448,7 +448,7 @@ public final class ArtConnectionInsert
          }
       
       // insert the via
-      if (! r_board.shove_via_algo.insert(
+      if (! r_board.shove_via_algo.shove_via_insert(
             via_info, 
             p_location, 
             net_no_arr, 

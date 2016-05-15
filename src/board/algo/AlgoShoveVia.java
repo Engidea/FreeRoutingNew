@@ -161,7 +161,7 @@ public final class AlgoShoveVia
     * p_trace_pen_halfwidth_arr is provided to make space for starting a trace in case the trace width is bigger than the via shape.
     * Returns false, if the forced via failed.
     */
-   public boolean insert(
+   public boolean shove_via_insert(
          BrdViaInfo p_via_info, 
          PlaPointInt p_location, 
          int[] p_net_no_arr, 

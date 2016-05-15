@@ -190,11 +190,13 @@ public final class AlgoPullTight90 extends AlgoPullTight
       return result;
       }
 
+   @Override
    protected Polyline smoothen_start_corner_at_trace(BrdTracePolyline p_trace)
       {
       return null;
       }
 
+   @Override
    protected Polyline smoothen_end_corner_at_trace(BrdTracePolyline p_trace)
       {
       return null;

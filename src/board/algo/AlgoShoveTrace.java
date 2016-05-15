@@ -426,7 +426,7 @@ public final class AlgoShoveTrace
     * Puts in a trace segment with the input parameters and shoves obstacles out of the way. 
     * If the shove does not work, the database may be damaged. To prevent this, call check first.
     */
-   public boolean insert(
+   public boolean shove_trace_insert(
          ShapeTile p_trace_shape, 
          BrdFromSide p_from_side, 
          int p_layer, 
@@ -518,7 +518,7 @@ public final class AlgoShoveTrace
          for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
             {
             BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, false);
-            if (!this.insert(curr.shape, curr.from_side, p_layer, curr_net_no_arr, curr_substitute_trace.clearance_class_no(), p_ignore_items, p_max_recursion_depth - 1, p_max_via_recursion_depth,
+            if (!this.shove_trace_insert(curr.shape, curr.from_side, p_layer, curr_net_no_arr, curr_substitute_trace.clearance_class_no(), p_ignore_items, p_max_recursion_depth - 1, p_max_via_recursion_depth,
                   p_max_spring_over_recursion_depth))
                {
                return false;
