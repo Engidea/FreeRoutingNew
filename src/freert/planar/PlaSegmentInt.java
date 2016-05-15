@@ -273,11 +273,24 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public PlaSegmentInt change_length_approx(double p_new_length)
       {
+/*      
       PlaPointFloat new_end_point = start_point_approx().change_length(end_point_approx(), p_new_length);
       PlaDirection perpendicular_direction = middle.direction().turn_45_degree(2);
       PlaLineInt new_end_line = new PlaLineInt(new_end_point.round(), perpendicular_direction);
       PlaSegmentInt result = new PlaSegmentInt(start, middle, new_end_line);
-      return result;
+*/      
+      
+      System.err.println("testing, the original is the commented out");
+      
+      PlaPointFloat start_approx = start_point_approx();
+      
+      PlaPointInt start = start_point.round();
+
+      PlaPointFloat new_end_point = start_approx.change_length(end_point_approx(), p_new_length);
+      
+      PlaPointInt end = new_end_point.round();
+
+      return new PlaSegmentInt(start,end);
       }
 
    /**
@@ -298,6 +311,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       
       PlaSide start_point_side = start_point().side_of(p_other.middle);
       PlaSide end_point_side = end_point().side_of(p_other.middle);
+      
       if (start_point_side == PlaSide.COLLINEAR && end_point_side == PlaSide.COLLINEAR)
          {
          // there may be an overlap
@@ -341,6 +355,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
             }
          return result;
          }
+      
       if (start_point_side == end_point_side || p_other.start_point().side_of(middle) == p_other.end_point().side_of(middle))
          {
          return new PlaLineInt[0]; // no intersection possible

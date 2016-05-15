@@ -174,7 +174,7 @@ public abstract class AlgoPullTight
                
                if ( split_traces_at_keep_point()) break;
                }
-            else if (smoothen_end_corners_at_trace_1(curr_trace))
+            else if (smoothen_end_corners_at_trace_one(curr_trace))
                {
                something_changed = true;
 
@@ -503,14 +503,14 @@ public abstract class AlgoPullTight
       curr_net_no_arr = p_trace.net_nos;
       curr_cl_type = p_trace.clearance_class_no();
       
-      return smoothen_end_corners_at_trace_1(p_trace);
+      return smoothen_end_corners_at_trace_one(p_trace);
       }
 
    /**
     * Smoothen acute angles with contact traces. 
     * @return true, if something was changed.
     */
-   private boolean smoothen_end_corners_at_trace_1(BrdTracePolyline p_trace)
+   private boolean smoothen_end_corners_at_trace_one(BrdTracePolyline p_trace)
       {
       // try to improve the connection to other traces
       if (p_trace.is_shove_fixed()) return false;
@@ -526,7 +526,7 @@ public abstract class AlgoPullTight
       while (connection_to_trace_improved)
          {
          connection_to_trace_improved = false;
-         Polyline adjusted_polyline = smoothen_end_corners_at_trace_2(curr_trace);
+         Polyline adjusted_polyline = smoothen_end_corners_at_trace_two(curr_trace);
          if (adjusted_polyline != null)
             {
             result = true;
@@ -590,7 +590,7 @@ public abstract class AlgoPullTight
     * Smoothen acute angles with contact traces. 
     * @return null if nothing was changed.
     */
-   private Polyline smoothen_end_corners_at_trace_2(BrdTracePolyline p_trace)
+   private Polyline smoothen_end_corners_at_trace_two(BrdTracePolyline p_trace)
       {
       if (p_trace == null || !p_trace.is_on_the_board()) return null;
       
