@@ -113,16 +113,19 @@ public class StatePinSwap extends StateInteractive
          {
          to_net_no = -1;
          }
+      
       if (!r_brd.check_change_net(from_pin, to_net_no))
          {
          i_brd.screen_messages.set_status_message(resources.getString("pin_not_swapped_because_it_is_already_connected"));
          return cancel();
          }
+      
       if (!r_brd.check_change_net(to_pin, from_net_no))
          {
          i_brd.screen_messages.set_status_message(resources.getString("pin_not_swapped_because_second_pin_is_already_connected"));
          return cancel();
          }
+      
       r_brd.generate_snapshot();
       from_pin.swap(to_pin);
       for (int i = 0; i < from_pin.net_count(); ++i)

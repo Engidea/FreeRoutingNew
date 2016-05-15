@@ -197,6 +197,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    /**
     * @return true if the net number array of this and p_net_no_arr have a common number
+    * @deprecated try to use the one with NetNosList
     */
    public final boolean shares_net_no(int[] p_net_no_arr)
       {
@@ -215,6 +216,22 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       return false;
       }
 
+   /**
+    * @return true if the net number array of this and p_net_no_arr have a common number
+    */
+   public final boolean shares_net_no(NetNosList p_net_no_arr)
+      {
+      for (int index = 0; index < net_no_arr.length; ++index)
+         {
+         int want_net_no = net_no_arr[index];
+         
+         if ( p_net_no_arr.has_net_no(want_net_no) ) return true;
+         }
+      
+      return false;
+      }
+
+   
    /**
     * Returns the number of shapes of this item after decomposition into convex polygonal shapes
     */

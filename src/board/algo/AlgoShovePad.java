@@ -184,7 +184,7 @@ public final class AlgoShovePad
 
             BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, true);
       
-            if (!r_board.shove_trace_algo.check(
+            if (!r_board.shove_trace_algo.shove_trace_check(
                   curr.shape, 
                   curr.from_side, 
                   curr_dir, 

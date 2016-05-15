@@ -76,7 +76,7 @@ public final class AlgoShoveTrace
     * p_dir is used internally to prevent the check from bouncing back. 
     * @return false, if the shove failed.
     */
-   public boolean check(
+   public boolean shove_trace_check(
          ShapeTile p_trace_shape, 
          BrdFromSide p_from_side, 
          PlaDirection p_dir, 
@@ -223,7 +223,7 @@ public final class AlgoShoveTrace
             if (is_in_front)
                {
                BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, true);
-               if (!check(curr.shape, 
+               if (!shove_trace_check(curr.shape, 
                      curr.from_side, 
                      curr_dir, 
                      p_layer, 

@@ -120,11 +120,18 @@ public final class NetNosList implements Iterable<Integer>
       return false;
       }
 
+   /**
+    * Look int the array if it has the given net no
+    * @param p_net_no
+    * @return
+    */
    public boolean has_net_no(int p_net_no)
       {
       if ( p_net_no < 0 ) return false;
       
-      for (int index = 0; index < net_nos_arr.length; ++index)
+      int array_len = net_nos_arr.length;
+      
+      for (int index = 0; index < array_len; ++index)
          {
          if (net_nos_arr[index] == p_net_no) return true;
          }

@@ -1927,24 +1927,34 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Checks, if the net number of p_item can be changed without producing clearance violations.
+    * Checks, if the net number of p_item can be changed without producing clearance violations
+    * @return true if all is fine
     */
    public boolean check_change_net(BrdItem p_item, int p_new_net_no)
       {
       NetNosList net_no_arr = new NetNosList(p_new_net_no);
       
-      for (int i = 0; i < p_item.tile_shape_count(); ++i)
+      for (int index = 0; index < p_item.tile_shape_count(); ++index)
          {
-         ShapeTile curr_shape = p_item.get_tile_shape(i);
-         Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(i), net_no_arr, p_item.clearance_class_no());
+         ShapeTile curr_shape = p_item.get_tile_shape(index);
+         
+         Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(index), net_no_arr, p_item.clearance_class_no());
+
          for (ShapeTreeObject curr_ob : obstacles)
             {
-            if (curr_ob != p_item && curr_ob instanceof BrdConnectable && !((BrdConnectable) curr_ob).contains_net(p_new_net_no))
-               {
-               return false;
-               }
+            if ( curr_ob != p_item ) continue;
+            
+            if ( !( curr_ob instanceof BrdConnectable ) ) continue;
+            
+            BrdConnectable a_conn = (BrdConnectable)curr_ob;
+            
+            // if the connectable contains the given net we are fine
+            if ( a_conn.contains_net(p_new_net_no) ) continue;
+
+            return false;
             }
          }
+
       return true;
       }
 
@@ -2245,7 +2255,7 @@ public final class RoutingBoard implements java.io.Serializable
          
          BrdFromSide from_side = new BrdFromSide(p_polyline, index + 1, curr_trace_shape);
 
-         boolean check_shove_ok = shove_trace_algo.check(
+         boolean check_shove_ok = shove_trace_algo.shove_trace_check(
                curr_trace_shape, 
                from_side, 
                null, 
@@ -2372,7 +2382,7 @@ public final class RoutingBoard implements java.io.Serializable
 
          if (p_with_check)
             {
-            boolean check_shove_ok = shove_trace_algo.check(
+            boolean check_shove_ok = shove_trace_algo.shove_trace_check(
                   curr_trace_shape, 
                   from_side, 
                   null, 
@@ -2468,7 +2478,7 @@ public final class RoutingBoard implements java.io.Serializable
             }
          
          BrdFromSide from_side = new BrdFromSide(combined_polyline, shape_index, last_trace_shape);
-         boolean check_shove_ok = shove_trace_algo.check(
+         boolean check_shove_ok = shove_trace_algo.shove_trace_check(
                last_trace_shape, 
                from_side, 
                null, 

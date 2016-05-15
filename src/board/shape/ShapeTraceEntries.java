@@ -43,7 +43,7 @@ import freert.planar.ShapeTile;
  * @author Alfons Wirtz
  */
 
-public class ShapeTraceEntries
+public final class ShapeTraceEntries
    {
    public final Collection<BrdAbitVia> shove_via_list;
    private final ShapeTile shape;
@@ -853,11 +853,13 @@ public class ShapeTraceEntries
          curr = curr.next;
          }
       --trace_piece_count;
+      
       if (first.trace.nets_equal(own_net_nos))
          {
          // own net is ignored and nay occur only at the lowest level
          result = pop_piece();
          }
+      
       return result;
       }
 
