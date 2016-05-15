@@ -72,7 +72,7 @@ public class StateConstructPolygon extends StateConstructCorner
             corner_arr[i] = it.next();
             }
          ShapePolygon obstacle_shape = new ShapePolygon(corner_arr);
-         int cl_class = BoardRules.clearance_class_none;
+         int cl_class = BoardRules.clearance_null_idx;
          if (obstacle_shape.split_to_convex() == null)
             {
             // shape is invalid, maybe it has selfintersections

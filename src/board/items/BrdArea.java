@@ -108,7 +108,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       {
       NetNosList copied_net_nos = net_nos.copy();
 
-      return new BrdArea(relative_area, layer_no, translation, rotation_in_degree, side_changed, copied_net_nos, clearance_class_no(), p_id_no, get_component_no(), area_name, get_fixed_state(), r_board);
+      return new BrdArea(relative_area, layer_no, translation, rotation_in_degree, side_changed, copied_net_nos, clearance_idx(), p_id_no, get_component_no(), area_name, get_fixed_state(), r_board);
       }
 
    public PlaArea get_area()

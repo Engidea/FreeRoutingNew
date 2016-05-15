@@ -584,7 +584,7 @@ public final class MazeSearch
                   art_ctrl.trace_half_width[curr_layer], 
                   curr_layer, 
                   curr_net_no_arr, 
-                  art_ctrl.trace_clearance_class_no,
+                  art_ctrl.trace_clearance_idx,
                   art_ctrl.max_shove_trace_recursion_depth, 
                   art_ctrl.max_shove_via_recursion_depth, 
                   art_ctrl.max_spring_over_recursion_depth);
@@ -845,7 +845,7 @@ public final class MazeSearch
             return;
             }
          freert.library.LibPadstack curr_obstacle_padstack = ((board.items.BrdAbitVia) curr_obstacle_item).get_padstack();
-         if (! art_ctrl.via_rule.contains_padstack(curr_obstacle_padstack) || curr_obstacle_item.clearance_class_no() != art_ctrl.via_clearance_class)
+         if (! art_ctrl.via_rule.contains_padstack(curr_obstacle_padstack) || curr_obstacle_item.clearance_idx() != art_ctrl.via_clearance_idx)
             {
             return;
             }
@@ -868,7 +868,7 @@ public final class MazeSearch
             
             ShoveDrillResult drill_result = r_board.shove_via_algo.check_layer(
                   art_ctrl.via_radius_arr[curr_layer], 
-                  art_ctrl.via_clearance_class, 
+                  art_ctrl.via_clearance_idx, 
                   art_ctrl.attach_smd_allowed, 
                   curr_room_shape,
                   curr_drill.location, 
@@ -915,7 +915,7 @@ public final class MazeSearch
             ShapeTile curr_room_shape = curr_drill.room_arr[curr_layer - curr_drill.first_layer_no].get_shape();
             ShoveDrillResult drill_result = r_board.shove_via_algo.check_layer(
                   art_ctrl.via_radius_arr[curr_layer], 
-                  art_ctrl.via_clearance_class, 
+                  art_ctrl.via_clearance_idx, 
                   art_ctrl.attach_smd_allowed, 
                   curr_room_shape,
                   curr_drill.location, 
@@ -1039,7 +1039,7 @@ public final class MazeSearch
       double obstacle_half_width;
       if (obstacle_item instanceof BrdTrace)
          {
-         obstacle_half_width = ((BrdTrace) obstacle_item).get_half_width() + search_tree.get_clearance_compensation(obstacle_item.clearance_class_no(), layer);
+         obstacle_half_width = ((BrdTrace) obstacle_item).get_half_width() + search_tree.get_clearance_compensation(obstacle_item.clearance_idx(), layer);
          }
       else if (obstacle_item instanceof BrdAbitVia)
          {

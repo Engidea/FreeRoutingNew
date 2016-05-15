@@ -105,13 +105,13 @@ public final class ArtConnectionInsert
       if (p_connection.target_item instanceof BrdTracePolyline)
          {
          BrdTracePolyline to_trace = (BrdTracePolyline) p_connection.target_item;
-         r_board.connect_to_trace(first_corner, to_trace, ctrl.trace_half_width[p_connection.start_layer], ctrl.trace_clearance_class_no);
+         r_board.connect_to_trace(first_corner, to_trace, ctrl.trace_half_width[p_connection.start_layer], ctrl.trace_clearance_idx);
          }
       
       if (p_connection.start_item instanceof BrdTracePolyline)
          {
          BrdTracePolyline to_trace = (BrdTracePolyline) p_connection.start_item;
-         r_board.connect_to_trace(last_corner, to_trace, ctrl.trace_half_width[p_connection.target_layer], ctrl.trace_clearance_class_no);
+         r_board.connect_to_trace(last_corner, to_trace, ctrl.trace_half_width[p_connection.target_layer], ctrl.trace_clearance_idx);
          }
       
       r_board.normalize_traces(ctrl.net_no);
@@ -187,7 +187,7 @@ public final class ArtConnectionInsert
                ctrl.trace_half_width[p_locate.layer], 
                p_locate.layer, 
                net_no_arr, 
-               ctrl.trace_clearance_class_no,
+               ctrl.trace_clearance_idx,
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
@@ -287,7 +287,7 @@ public final class ArtConnectionInsert
       if (!p_pin.is_on_layer(p_layer)) return null;
 
       PlaPointFloat pin_center = p_pin.center_get().to_float();
-      double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(ctrl.trace_clearance_class_no, p_pin.clearance_class_no(), p_layer);
+      double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(ctrl.trace_clearance_idx, p_pin.clearance_idx(), p_layer);
       double pin_neck_down_distance = 2 * (0.5 * p_pin.get_max_width(p_layer) + curr_clearance);
 
       if (pin_center.distance(p_to_corner.to_float()) >= pin_neck_down_distance) return null;
@@ -303,7 +303,7 @@ public final class ArtConnectionInsert
 
       NetNosList net_no_arr = new NetNosList(ctrl.net_no);
 
-      double ok_length = r_board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_class_no, true);
+      double ok_length = r_board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_idx, true);
 
       if (ok_length >= Integer.MAX_VALUE) return p_from_corner;
       
@@ -327,7 +327,7 @@ public final class ArtConnectionInsert
                ctrl.trace_half_width[p_layer], 
                p_layer, 
                net_no_arr, 
-               ctrl.trace_clearance_class_no,
+               ctrl.trace_clearance_idx,
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
@@ -344,7 +344,7 @@ public final class ArtConnectionInsert
                ctrl.trace_half_width[p_layer], 
                p_layer, 
                net_no_arr, 
-               ctrl.trace_clearance_class_no,
+               ctrl.trace_clearance_idx,
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
@@ -363,7 +363,7 @@ public final class ArtConnectionInsert
                   ctrl.trace_half_width[p_layer], 
                   p_layer, 
                   net_no_arr, 
-                  ctrl.trace_clearance_class_no,
+                  ctrl.trace_clearance_idx,
                   ctrl.max_shove_trace_recursion_depth, 
                   ctrl.max_shove_via_recursion_depth, 
                   ctrl.max_spring_over_recursion_depth, 
@@ -382,7 +382,7 @@ public final class ArtConnectionInsert
             p_to_corner, 
             neck_down_halfwidth, 
             p_layer, net_no_arr, 
-            ctrl.trace_clearance_class_no,
+            ctrl.trace_clearance_idx,
             ctrl.max_shove_trace_recursion_depth, 
             ctrl.max_shove_via_recursion_depth, 
             ctrl.max_spring_over_recursion_depth, 
@@ -447,7 +447,7 @@ public final class ArtConnectionInsert
             via_info, 
             p_location, 
             net_no_arr, 
-            ctrl.trace_clearance_class_no, 
+            ctrl.trace_clearance_idx, 
             ctrl.trace_half_width, 
             ctrl.max_shove_trace_recursion_depth,
             ctrl.max_shove_via_recursion_depth ))

@@ -88,7 +88,7 @@ public final class BrdAreaObstacleVia extends BrdArea
             get_rotation_in_degree(), 
             get_side_changed(), 
             copied_net_nos, 
-            clearance_class_no(), 
+            clearance_idx(), 
             p_id_no,
             get_component_no(), 
             area_name, get_fixed_state(), r_board);

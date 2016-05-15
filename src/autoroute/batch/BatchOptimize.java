@@ -286,7 +286,7 @@ public class BatchOptimize
 
          if ( ! (fixed_state == ItemFixState.UNFIXED || fixed_state == ItemFixState.SHOVE_FIXED) ) continue;
 
-         int clearance_value = p_board.get_clearance(curr_trace.clearance_class_no(), BoardRules.default_clearance_class, curr_trace.get_layer());
+         int clearance_value = p_board.get_clearance(curr_trace.clearance_idx(), BoardRules.clearance_default_idx, curr_trace.get_layer());
          
          int half_width = curr_trace.get_half_width();
 

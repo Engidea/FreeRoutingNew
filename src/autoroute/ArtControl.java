@@ -52,9 +52,9 @@ public final class ArtControl
    double via_radius_max;
      
    // The currently used clearance class for traces in the autoroute algorithm 
-   public int trace_clearance_class_no;
+   public int trace_clearance_idx;
    // The currently used clearance class for vias in the autoroute algorithm 
-   public int via_clearance_class;
+   public int via_clearance_idx;
    // The possible (partial) vias, which can be used by the autoroute 
    public RuleViaInfoList via_rule;
    // The array of possible via ranges used by the autorouter 
@@ -170,12 +170,12 @@ public final class ArtControl
       if (curr_net != null)
          {
          curr_net_class = curr_net.get_class();
-         trace_clearance_class_no = curr_net_class.get_trace_clearance_class();
+         trace_clearance_idx = curr_net_class.get_trace_clearance_class();
          via_rule = curr_net_class.get_via_rule();
          }
       else
          {
-         trace_clearance_class_no = 1;
+         trace_clearance_idx = 1;
          via_rule = p_board.brd_rules.via_rules.firstElement();
          curr_net_class = null;
          }
@@ -191,7 +191,7 @@ public final class ArtControl
             trace_half_width[index] = p_board.brd_rules.get_trace_half_width(1, index);
             }
          
-         compensated_trace_half_width[index] = trace_half_width[index] + p_board.brd_rules.clearance_matrix.clearance_compensation_value(trace_clearance_class_no, index);
+         compensated_trace_half_width[index] = trace_half_width[index] + p_board.brd_rules.clearance_matrix.clearance_compensation_value(trace_clearance_idx, index);
          if (curr_net_class != null && !curr_net_class.is_active_routing_layer(index))
             {
             layer_active[index] = false;
@@ -200,11 +200,11 @@ public final class ArtControl
       
       if (via_rule.via_count() > 0)
          {
-         via_clearance_class = via_rule.get_via(0).get_clearance_class();
+         via_clearance_idx = via_rule.get_via(0).get_clearance_class();
          }
       else
          {
-         via_clearance_class = 1;
+         via_clearance_idx = 1;
          }
       
       via_info_arr = new ArtViaMask[via_rule.via_count()];

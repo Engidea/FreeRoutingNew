@@ -115,7 +115,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
       {
       // calculate the shapes of p_new_polyline from keep_at_start_count to
       // new_shape_count - keep_at_end_count - 1;
-      int compensated_half_width = p_obj.get_half_width() + get_clearance_compensation(p_obj.clearance_class_no(), p_obj.get_layer());
+      int compensated_half_width = p_obj.get_half_width() + get_clearance_compensation(p_obj.clearance_idx(), p_obj.get_layer());
       ArrayList<ShapeTile> changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plalinelen(-1) - p_keep_at_end_count);
       int old_shape_count = p_obj.tree_shape_count(this);
       int new_shape_count = changed_shapes.size() + p_keep_at_start_count + p_keep_at_end_count;
@@ -162,7 +162,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    public final void merge_entries_in_front(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
-      int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
+      int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_idx(), p_to_trace.get_layer());
       ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
       boolean change_order = p_from_trace.corner_first().equals(p_to_trace.corner_first());
       // remove the last or first tree entry from p_from_trace and the first tree entry from p_to_trace, because they will be replaced by the new link entries.
@@ -237,7 +237,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    public final void merge_entries_at_end(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
-      int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_class_no(), p_to_trace.get_layer());
+      int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_idx(), p_to_trace.get_layer());
       ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
       boolean change_order = p_from_trace.corner_last().equals(p_to_trace.corner_last());
       ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
@@ -496,7 +496,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          
          if (!ignore_item)
             {
-            int curr_clearance = cl_matrix.value_at(p_cl_type, curr_item.clearance_class_no(), p_layer);
+            int curr_clearance = cl_matrix.value_at(p_cl_type, curr_item.clearance_idx(), p_layer);
             ShapeSearchTreeEntry sorted_ob = new ShapeSearchTreeEntry(curr_leaf, curr_clearance);
             sorted_items.add(sorted_ob);
             }
@@ -904,7 +904,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     */
    public final ShapeTile[] calculate_tree_shapes(BrdTracePolyline p_trace)
       {
-      int offset_width = p_trace.get_half_width() + get_clearance_compensation(p_trace.clearance_class_no(), p_trace.get_layer());
+      int offset_width = p_trace.get_half_width() + get_clearance_compensation(p_trace.clearance_idx(), p_trace.get_layer());
       
       ShapeTile[] result = new ShapeTile[p_trace.tile_shape_count()];
 
@@ -946,7 +946,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
                {
                curr_tile_shape = curr_shape.bounding_tile();
                }
-            int offset_width = get_clearance_compensation(p_drill_item.clearance_class_no(), p_drill_item.shape_layer(index));
+            int offset_width = get_clearance_compensation(p_drill_item.clearance_idx(), p_drill_item.shape_layer(index));
             if (curr_tile_shape == null)
                {
                System.out.println("ShapeSearchTree.calculate_tree_shapes: shape is null");
@@ -984,7 +984,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
          {
          ShapeTile curr_convex_shape = convex_shapes[index];
 
-         int offset_width = get_clearance_compensation(p_obstacle_area.clearance_class_no(), p_obstacle_area.get_layer());
+         int offset_width = get_clearance_compensation(p_obstacle_area.clearance_idx(), p_obstacle_area.get_layer());
          curr_convex_shape = (ShapeTile) curr_convex_shape.enlarge(offset_width);
          ShapeTile[] curr_tree_shapes = curr_convex_shape.divide_into_sections(max_tree_shape_width);
          for (int jndex = 0; jndex < curr_tree_shapes.length; ++jndex)
@@ -1020,7 +1020,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
             for (int index = 0; index < convex_shapes.length; ++index)
                {
                ShapeTile curr_convex_shape = convex_shapes[index];
-               int offset_width = get_clearance_compensation(p_board_outline.clearance_class_no(), 0);
+               int offset_width = get_clearance_compensation(p_board_outline.clearance_idx(), 0);
                curr_convex_shape = (ShapeTile) curr_convex_shape.enlarge(offset_width);
                tree_shape_list.add(curr_convex_shape);
                }
@@ -1054,7 +1054,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
                
                   Polyline tmp_polyline = new Polyline(curr_line_arr);
                   
-                  int cmp_value = get_clearance_compensation(p_board_outline.clearance_class_no(), 0);
+                  int cmp_value = get_clearance_compensation(p_board_outline.clearance_idx(), 0);
                   result[curr_no] = tmp_polyline.offset_shape(half_width + cmp_value, 0);
                   ++curr_no;
                   curr_line_arr[0] = curr_line_arr[1];

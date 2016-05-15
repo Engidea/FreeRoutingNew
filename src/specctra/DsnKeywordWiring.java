@@ -184,7 +184,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          {
          write_net(via_net, p_par.file, p_par.identifier_type);
          }
-      DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_via.clearance_class_no()), p_par.file, p_par.identifier_type);
+      DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_via.clearance_idx()), p_par.file, p_par.identifier_type);
       write_fixed_state(p_par.file, p_via.get_fixed_state());
       p_par.file.end_scope();
       }
@@ -236,7 +236,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          curr_path.write_scope(p_par.file, p_par.identifier_type);
          }
       write_net(wire_net, p_par.file, p_par.identifier_type);
-      DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_wire.clearance_class_no()), p_par.file, p_par.identifier_type);
+      DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_wire.clearance_idx()), p_par.file, p_par.identifier_type);
       write_fixed_state(p_par.file, curr_wire.get_fixed_state());
       p_par.file.end_scope();
       }
@@ -279,7 +279,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          dsn_hole.write_hole_scope(p_par.file, p_par.identifier_type);
          }
       write_net(curr_net, p_par.file, p_par.identifier_type);
-      DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_conduction_area.clearance_class_no()), p_par.file, p_par.identifier_type);
+      DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_conduction_area.clearance_idx()), p_par.file, p_par.identifier_type);
       p_par.file.end_scope();
       }
 

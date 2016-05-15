@@ -70,7 +70,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
             padstack, 
             center_get(), 
             net_nos, 
-            clearance_class_no(), 
+            clearance_idx(), 
             p_id_no, 
             get_component_no(), 
             get_fixed_state(), 

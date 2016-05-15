@@ -131,7 +131,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
          BrdTrace curr_trace = (BrdTrace) curr_contact;
 
-         BrdTraceInfo curr_trace_info = new BrdTraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(), curr_trace.clearance_class_no());
+         BrdTraceInfo curr_trace_info = new BrdTraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(), curr_trace.clearance_idx());
          
          contact_trace_info.add(curr_trace_info);
          }

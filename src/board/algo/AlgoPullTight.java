@@ -501,7 +501,7 @@ public abstract class AlgoPullTight
       curr_layer = p_trace.get_layer();
       curr_half_width = p_trace.get_half_width();
       curr_net_no_arr = p_trace.net_nos;
-      curr_cl_type = p_trace.clearance_class_no();
+      curr_cl_type = p_trace.clearance_idx();
       
       return smoothen_end_corners_at_trace_one(p_trace);
       }
@@ -532,7 +532,7 @@ public abstract class AlgoPullTight
             result = true;
             connection_to_trace_improved = true;
             int trace_layer = curr_trace.get_layer();
-            int curr_cl_class = curr_trace.clearance_class_no();
+            int curr_cl_class = curr_trace.clearance_idx();
             ItemFixState curr_fixed_state = curr_trace.get_fixed_state();
             r_board.remove_item(curr_trace);
             

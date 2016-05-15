@@ -93,7 +93,7 @@ public class StateConstuctTile extends StateConstructCorner
          ShapeTile obstacle_shape = ShapeTile.get_instance(edge_lines);
 
          int layer = i_brd.itera_settings.layer_no;
-         int cl_class = BoardRules.clearance_class_none;
+         int cl_class = BoardRules.clearance_null_idx;
 
          construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
          if (construction_succeeded)

@@ -148,7 +148,7 @@ public final class DsnKeywordComponent extends DsnKeywordScope
          System.out.println("Component.write_pin_info: component pin not found");
          return;
          }
-      String cl_class_name = p_par.board.brd_rules.clearance_matrix.get_name(component_pin.clearance_class_no());
+      String cl_class_name = p_par.board.brd_rules.clearance_matrix.get_name(component_pin.clearance_idx());
       if (cl_class_name == null)
          {
          System.out.println("Component.write_pin_info: clearance class  name not found");
@@ -191,11 +191,11 @@ public final class DsnKeywordComponent extends DsnKeywordScope
             {
             specctra.varie.DsnPackageKeepout curr_keepout = curr_keepout_arr[i];
             board.items.BrdArea curr_obstacle_area = get_keepout(p_par.board, p_component.id_no, curr_keepout.name);
-            if (curr_obstacle_area == null || curr_obstacle_area.clearance_class_no() == 0)
+            if (curr_obstacle_area == null || curr_obstacle_area.clearance_idx() == 0)
                {
                continue;
                }
-            String cl_class_name = p_par.board.brd_rules.clearance_matrix.get_name(curr_obstacle_area.clearance_class_no());
+            String cl_class_name = p_par.board.brd_rules.clearance_matrix.get_name(curr_obstacle_area.clearance_idx());
             if (cl_class_name == null)
                {
                System.out.println("Component.write_keepout_infos: clearance class name not found");

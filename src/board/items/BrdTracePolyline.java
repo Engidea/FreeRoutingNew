@@ -72,7 +72,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       {
       NetNosList curr_net_no_arr = net_nos.copy();
       
-      return new BrdTracePolyline(polyline, get_layer(), get_half_width(), curr_net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), r_board);
+      return new BrdTracePolyline(polyline, get_layer(), get_half_width(), curr_net_no_arr, clearance_idx(), p_id_no, get_component_no(), get_fixed_state(), r_board);
       }
 
    /**
@@ -766,8 +766,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       r_board.remove_item(this);
       BrdTracePolyline[] result = new BrdTracePolyline[2];
-      result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos, clearance_class_no(), get_fixed_state());
-      result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos, clearance_class_no(), get_fixed_state());
+      result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       return result;
       }
 
@@ -844,7 +844,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             }
          }
       
-      Polyline new_lines = p_pull_tight_algo.pull_tight(polyline, get_layer(), get_half_width(), net_nos, clearance_class_no(), touching_pins_at_end_corners());
+      Polyline new_lines = p_pull_tight_algo.pull_tight(polyline, get_layer(), get_half_width(), net_nos, clearance_idx(), touching_pins_at_end_corners());
       if (new_lines != polyline)
          {
          change(new_lines);
@@ -1114,7 +1114,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
 
       double end_line_length = end_corner.distance(prev_end_corner);
       
-      double curr_clearance = r_board.get_clearance(clearance_class_no(), contact_pin.clearance_class_no(), get_layer());
+      double curr_clearance = r_board.get_clearance(clearance_idx(), contact_pin.clearance_idx(), get_layer());
       double add_width = Math.max(edge_to_turn_dist, curr_clearance + 1);
       double preserve_length = matching_exit_restriction.min_length + get_half_width() + add_width;
 
@@ -1172,7 +1172,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       // TODO should this be <= 0 and not just < ? as it is now it is mostly never done
       if (edge_to_turn_dist < 0) return false;
 
-      double curr_clearance = r_board.get_clearance(clearance_class_no(), contact_pin.clearance_class_no(), get_layer());
+      double curr_clearance = r_board.get_clearance(clearance_idx(), contact_pin.clearance_idx(), get_layer());
       
       double add_width = Math.max(edge_to_turn_dist, curr_clearance + 1);
       
@@ -1217,11 +1217,10 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             }
          else if (curr_exit_corner_distance < min_exit_corner_distance + TOLERANCE)
             {
-            // the distances are near equal, compare to the previous corners of
-            // p_trace_polyline
-            for (int i = 1; i < trace_polyline.corner_count(); ++i)
+            // the distances are near equal, compare to the previous corners of p_trace_polyline
+            for (int index = 1; index < trace_polyline.corner_count(); ++index)
                {
-               PlaPointFloat curr_trace_corner = trace_polyline.corner_approx(i);
+               PlaPointFloat curr_trace_corner = trace_polyline.corner_approx(index);
                double curr_trace_corner_distance = curr_trace_corner.length_square(curr_exit_corner);
                double old_trace_corner_distance = curr_trace_corner.length_square(nearest_exit_corner);
                if (curr_trace_corner_distance + TOLERANCE < old_trace_corner_distance)
@@ -1253,21 +1252,22 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       int clock_wise_side_diff = (nearest_border_line_no - latest_entry_tuple[1] + corner_count) % corner_count;
       int counter_clock_wise_side_diff = (latest_entry_tuple[1] - nearest_border_line_no + corner_count) % corner_count;
       int curr_border_line_no = nearest_border_line_no;
+      
       if (counter_clock_wise_side_diff <= clock_wise_side_diff)
          {
          curr_lines = new PlaLineInt[counter_clock_wise_side_diff + 3];
-         for (int i = 0; i <= counter_clock_wise_side_diff; ++i)
+         for (int index = 0; index <= counter_clock_wise_side_diff; ++index)
             {
-            curr_lines[i + 1] = offset_pin_shape.border_line(curr_border_line_no);
+            curr_lines[index + 1] = offset_pin_shape.border_line(curr_border_line_no);
             curr_border_line_no = (curr_border_line_no + 1) % corner_count;
             }
          }
       else
          {
          curr_lines = new PlaLineInt[clock_wise_side_diff + 3];
-         for (int i = 0; i <= clock_wise_side_diff; ++i)
+         for (int index = 0; index <= clock_wise_side_diff; ++index)
             {
-            curr_lines[i + 1] = offset_pin_shape.border_line(curr_border_line_no);
+            curr_lines[index + 1] = offset_pin_shape.border_line(curr_border_line_no);
             curr_border_line_no = (curr_border_line_no - 1 + corner_count) % corner_count;
             }
          }
@@ -1275,7 +1275,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       curr_lines[curr_lines.length - 1] = trace_polyline.plaline(latest_entry_tuple[0]);
 
       Polyline border_polyline = new Polyline(curr_lines);
-      if (!r_board.check_polyline_trace(border_polyline, get_layer(), get_half_width(), net_nos, clearance_class_no()))
+      
+      if (!r_board.check_polyline_trace(border_polyline, get_layer(), get_half_width(), net_nos, clearance_idx()))
          {
          return false;
          }
@@ -1305,13 +1306,15 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       change(changed_polyline);
 
-      // create an shove_fixed exit line.
+      // create an shove_fixed exit line. Interesting...
       curr_lines = new PlaLineInt[3];
       curr_lines[0] = new PlaLineInt(pin_center, pin_exit_direction.turn_45_degree(2));
       curr_lines[1] = nearest_pin_exit_ray;
       curr_lines[2] = offset_pin_shape.border_line(nearest_border_line_no);
       Polyline exit_line_segment = new Polyline(curr_lines);
-      r_board.insert_trace(exit_line_segment, get_layer(), get_half_width(), net_nos, clearance_class_no(), ItemFixState.SHOVE_FIXED);
+      
+      r_board.insert_trace(exit_line_segment, get_layer(), get_half_width(), net_nos, clearance_idx(), ItemFixState.SHOVE_FIXED);
+      
       return true;
       }
 

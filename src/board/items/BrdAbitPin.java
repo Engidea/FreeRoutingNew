@@ -179,7 +179,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       {
       NetNosList curr_net_no_arr = net_nos.copy();
       
-      return new BrdAbitPin(get_component_no(), pin_no, curr_net_no_arr, clearance_class_no(), p_id_no, get_fixed_state(), r_board);
+      return new BrdAbitPin(get_component_no(), pin_no, curr_net_no_arr, clearance_idx(), p_id_no, get_fixed_state(), r_board);
       }
 
    /**

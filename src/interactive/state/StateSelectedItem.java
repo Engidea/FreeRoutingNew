@@ -339,7 +339,7 @@ public final class StateSelectedItem extends StateInteractive
             net_no_arr[jndex] = curr_via.get_net_no(jndex);
             }
 */         
-         r_brd.insert_pin(new_component.id_no, index, net_no_arr, curr_via.clearance_class_no(), curr_via.get_fixed_state());
+         r_brd.insert_pin(new_component.id_no, index, net_no_arr, curr_via.clearance_idx(), curr_via.get_fixed_state());
          }
 
       actlog_start_scope(LogfileScope.ASSIGN_SELECTED_TO_NEW_GROUP);
@@ -703,11 +703,11 @@ public final class StateSelectedItem extends StateInteractive
       r_brd.generate_snapshot();
       for (BrdItem curr_item : items_list)
          {
-         if (curr_item.clearance_class_no() == p_cl_class_index)
+         if (curr_item.clearance_idx() == p_cl_class_index)
             {
             continue;
             }
-         curr_item.change_clearance_class(p_cl_class_index);
+         curr_item.change_clearance_idx(p_cl_class_index);
          }
       return return_state;
       }

@@ -1385,7 +1385,7 @@ public final class RoutingBoard implements java.io.Serializable
             rotation, 
             side_changed, 
             net_no_arr, 
-            p_area.clearance_class_no(), 
+            p_area.clearance_idx(), 
             0, 
             p_area.get_component_no(), 
             p_area.area_name, 
@@ -1404,10 +1404,10 @@ public final class RoutingBoard implements java.io.Serializable
       {
       if (p_item == null) return;
 
-      if (brd_rules == null || brd_rules.clearance_matrix == null || p_item.clearance_class_no() < 0 || p_item.clearance_class_no() >= brd_rules.clearance_matrix.get_class_count())
+      if (brd_rules == null || brd_rules.clearance_matrix == null || p_item.clearance_idx() < 0 || p_item.clearance_idx() >= brd_rules.clearance_matrix.get_class_count())
          {
          System.err.println(classname+"insert_item: clearance_class no out of range");
-         p_item.set_clearance_class_no(0);
+         p_item.set_clearance_idx(0);
          }
       
       p_item.r_board = this;
@@ -1842,11 +1842,11 @@ public final class RoutingBoard implements java.io.Serializable
          if (default_tree.is_clearance_compensation_used())
             {
             curr_offset_shape = shape_to_check;
-            shorten_value = p_trace_half_width + brd_rules.clearance_matrix.clearance_compensation_value(curr_obstacle.clearance_class_no(), p_layer);
+            shorten_value = p_trace_half_width + brd_rules.clearance_matrix.clearance_compensation_value(curr_obstacle.clearance_idx(), p_layer);
             }
          else
             {
-            int clearance_value = get_clearance(curr_obstacle.clearance_class_no(), p_cl_class_no, p_layer);
+            int clearance_value = get_clearance(curr_obstacle.clearance_idx(), p_cl_class_no, p_layer);
             curr_offset_shape = (ShapeTile) shape_to_check.offset(clearance_value);
             shorten_value = p_trace_half_width + clearance_value;
             }
@@ -1908,7 +1908,7 @@ public final class RoutingBoard implements java.io.Serializable
          if (!moved_shape.is_contained_in(bounding_box)) return false;
          
          Set<BrdItem> obstacles = overlapping_items_with_clearance(
-               moved_shape, p_item.shape_layer(index), p_item.net_nos, p_item.clearance_class_no());
+               moved_shape, p_item.shape_layer(index), p_item.net_nos, p_item.clearance_idx());
 
          for (BrdItem curr_item : obstacles)
             {
@@ -1941,7 +1941,7 @@ public final class RoutingBoard implements java.io.Serializable
          {
          ShapeTile curr_shape = p_item.get_tile_shape(index);
          
-         Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(index), net_no_arr, p_item.clearance_class_no());
+         Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(index), net_no_arr, p_item.clearance_idx());
 
          for (ShapeTreeObject curr_ob : obstacles)
             {
@@ -2335,7 +2335,7 @@ public final class RoutingBoard implements java.io.Serializable
       if (picked_items.size() == 1)
          {
          BrdTrace curr_picked_trace = (BrdTrace) picked_items.iterator().next();
-         if (curr_picked_trace.nets_equal(p_net_no_arr) && curr_picked_trace.get_half_width() == p_half_width && curr_picked_trace.clearance_class_no() == p_clearance_class_no
+         if (curr_picked_trace.nets_equal(p_net_no_arr) && curr_picked_trace.get_half_width() == p_half_width && curr_picked_trace.clearance_idx() == p_clearance_class_no
                && (curr_picked_trace instanceof BrdTracePolyline))
             {
             // can combine with the picked trace
@@ -2639,7 +2639,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       TimeLimitStoppable t_limit = new TimeLimitStoppable(10, p_stoppable_thread);
       
-      ArtEngine a_engine = new ArtEngine (this, p_item.get_net_no(0), ctrl_settings.trace_clearance_class_no, t_limit);
+      ArtEngine a_engine = new ArtEngine (this, p_item.get_net_no(0), ctrl_settings.trace_clearance_idx, t_limit);
 
       SortedSet<BrdItem> ripped_item_list = new TreeSet<BrdItem>();
 
@@ -2700,7 +2700,7 @@ public final class RoutingBoard implements java.io.Serializable
          }
       SortedSet<BrdItem> ripped_item_list = new TreeSet<BrdItem>();
       
-      ArtEngine a_engine = new ArtEngine(this, pin_net_no, ctrl_settings.trace_clearance_class_no, p_stoppable );
+      ArtEngine a_engine = new ArtEngine(this, pin_net_no, ctrl_settings.trace_clearance_idx, p_stoppable );
       
       ArtResult result = a_engine.autoroute_connection(pin_connected_set, unconnected_set, ctrl_settings, ripped_item_list);
       

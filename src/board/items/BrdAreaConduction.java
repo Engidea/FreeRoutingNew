@@ -85,7 +85,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
             get_rotation_in_degree(), 
             get_side_changed(), 
             net_nos, 
-            clearance_class_no(), 
+            clearance_idx(), 
             p_id_no, 
             get_component_no(),
             area_name, 

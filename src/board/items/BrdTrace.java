@@ -117,7 +117,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
     */
    public final int get_compensated_half_width(ShapeSearchTree p_search_tree)
       {
-      int result = trace_half_width + p_search_tree.get_clearance_compensation(clearance_class_no(), layer_no);
+      int result = trace_half_width + p_search_tree.get_clearance_compensation(clearance_idx(), layer_no);
       return result;
       }
 
@@ -449,7 +449,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          {
          ShapeTileOctagon curr_oct = new ShapeTileOctagon(curr_end_point);
          curr_oct = curr_oct.enlarge(trace_half_width);
-         Set<BrdItem> curr_overlaps = r_board.overlapping_items_with_clearance(curr_oct, layer_no, NetNosList.EMPTY, clearance_class_no());
+         Set<BrdItem> curr_overlaps = r_board.overlapping_items_with_clearance(curr_oct, layer_no, NetNosList.EMPTY, clearance_idx());
          for (BrdItem curr_item : curr_overlaps)
             {
             if ((curr_item instanceof BrdAbitPin) && curr_item.shares_net(this))

@@ -103,7 +103,7 @@ public class WinClearanceTableModel extends AbstractTableModel implements java.i
             {
             break;
             }
-         int curr_item_class_no = curr_item.clearance_class_no();
+         int curr_item_class_no = curr_item.clearance_idx();
          if (curr_item_class_no == curr_row)
             {
             items_already_assigned_row = true;

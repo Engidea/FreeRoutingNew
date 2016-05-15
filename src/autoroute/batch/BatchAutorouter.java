@@ -360,7 +360,7 @@ public class BatchAutorouter
 
       TimeLimitStoppable time_limit = new TimeLimitStoppable(10 + ar_pass_no, s_thread);
 
-      ArtEngine autoroute_engine = new ArtEngine(routing_board, p_route_net_no, autoroute_control.trace_clearance_class_no, time_limit);
+      ArtEngine autoroute_engine = new ArtEngine(routing_board, p_route_net_no, autoroute_control.trace_clearance_idx, time_limit);
       
       ArtResult aresult = autoroute_engine.autoroute_connection(route_start_set, route_dest_set, autoroute_control, p_ripped_item_list);
       

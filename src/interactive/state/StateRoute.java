@@ -147,7 +147,7 @@ public class StateRoute extends StateInteractive
 
             location = nearest_point.round();
             
-            if ( ! routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_class_no()))
+            if ( ! routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_idx()))
                {
                start_ok = false;
                }
@@ -160,7 +160,7 @@ public class StateRoute extends StateInteractive
             System.arraycopy(trace_half_widths, 0, new_trace_half_widths, 0, trace_half_widths.length);
             new_trace_half_widths[picked_trace.get_layer()] = picked_trace.get_half_width();
             trace_half_widths = new_trace_half_widths;
-            trace_clearance_class = picked_trace.clearance_class_no();
+            trace_clearance_class = picked_trace.clearance_idx();
             }
          }
       else if (picked_item instanceof BrdAbit)

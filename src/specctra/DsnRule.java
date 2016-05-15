@@ -229,7 +229,7 @@ public abstract class DsnRule
       p_par.file.write((new Double(trace_width)).toString());
       p_par.file.write(")");
       // write the default clearance rule
-      int default_cl_no = BoardRules.default_clearance_class;
+      int default_cl_no = BoardRules.clearance_default_idx;
       int default_board_clearance = p_par.board.brd_rules.clearance_matrix.value_at(default_cl_no, default_cl_no, p_layer);
       double default_clearance = p_par.coordinate_transform.board_to_dsn(default_board_clearance);
       p_par.file.new_line();

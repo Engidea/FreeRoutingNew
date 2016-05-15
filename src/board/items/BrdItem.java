@@ -65,7 +65,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
    private final int id_no;
    // the index in the clearance matrix describing the required spacing to other items
-   private int clearance_class;
+   private int clearance_idx;
    
    public NetNosList net_nos;     // The nets, to which this item belongs 
    
@@ -89,7 +89,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    protected BrdItem(NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       r_board = p_board;
-      clearance_class = p_clearance_type;
+      clearance_idx = p_clearance_type;
       component_no = p_component_no;
       fixed_state = p_fixed_state;
    
@@ -451,7 +451,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          ShapeTile curr_tile_shape = get_tile_shape(index);
          
          Collection<ShapeTreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(
-               curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_class);
+               curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
       
          Iterator<ShapeTreeEntry> iter = curr_overlapping_items.iterator();
          
@@ -481,7 +481,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
             
             if (!r_board.search_tree_manager.is_clearance_compensation_used())
                {
-               double cl_offset = 0.5 * r_board.brd_rules.clearance_matrix.value_at(curr_item.clearance_class, clearance_class, shape_layer(index));
+               double cl_offset = 0.5 * r_board.brd_rules.clearance_matrix.value_at(curr_item.clearance_idx, clearance_idx, shape_layer(index));
                shape_1 = (ShapeTile) shape_1.enlarge(cl_offset);
                shape_2 = (ShapeTile) shape_2.enlarge(cl_offset);
                }
@@ -1074,37 +1074,34 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Returns the index in the clearance matrix describing the required spacing of this item to other items
     */
-   public final int clearance_class_no()
+   public final int clearance_idx()
       {
-      return clearance_class;
+      return clearance_idx;
       }
 
    /**
     * Sets the index in the clearance matrix describing the required spacing of this item to other items.
+    * @return true if it has done or false otherwise
     */
-   public final void set_clearance_class_no(int p_index)
+   public final boolean set_clearance_idx(int p_index)
       {
       if (p_index < 0 || p_index >= r_board.brd_rules.clearance_matrix.get_class_count())
          {
-         System.err.println("Item.set_clearance_class_no: p_index out of range");
-         return;
+         System.err.println("set_clearance_class_no: p_index out of range");
+         return false;
          }
       
-      clearance_class = p_index;
+      clearance_idx = p_index;
+      
+      return true;
       }
 
    /**
     * Changes the clearance class of this item and updates the search tree.
     */
-   public final void change_clearance_class(int p_index)
+   public final void change_clearance_idx(int p_index)
       {
-      if (p_index < 0 || p_index >= r_board.brd_rules.clearance_matrix.get_class_count())
-         {
-         System.err.println("Item.set_clearance_class_no: p_index out of range");
-         return;
-         }
-      
-      clearance_class = p_index;
+      if ( ! set_clearance_idx ( p_index ) ) return;
       
       clear_derived_data();
       
@@ -1250,12 +1247,12 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    protected final void print_clearance_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      if (clearance_class > 0)
+      if (clearance_idx > 0)
          {
          java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
          p_window.append(", " + resources.getString("clearance_class") + " ");
-         String name = r_board.brd_rules.clearance_matrix.get_name(clearance_class);
-         p_window.append(name, resources.getString("clearance_info"), r_board.brd_rules.clearance_matrix.get_row(clearance_class));
+         String name = r_board.brd_rules.clearance_matrix.get_name(clearance_idx);
+         p_window.append(name, resources.getString("clearance_info"), r_board.brd_rules.clearance_matrix.get_row(clearance_idx));
          }
       }
 

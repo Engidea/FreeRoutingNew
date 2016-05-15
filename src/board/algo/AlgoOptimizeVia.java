@@ -177,12 +177,12 @@ public final class AlgoOptimizeVia
       PlaPointInt new_location = reposition_via( 
             p_via, 
             first_trace.get_half_width(), 
-            first_trace.clearance_class_no(), 
+            first_trace.clearance_idx(), 
             first_trace.get_layer(), 
             first_layer_trace_costs, 
             first_trace_from_corner,
             second_trace.get_half_width(), 
-            second_trace.clearance_class_no(), 
+            second_trace.clearance_idx(), 
             second_trace.get_layer(), 
             second_layer_trace_costs, 
             second_trace_from_corner);
@@ -296,7 +296,7 @@ public final class AlgoOptimizeVia
       
       int trace_half_width = contact_trace.get_half_width();
       int trace_layer = contact_trace.get_layer();
-      int trace_cl_class_no = contact_trace.clearance_class_no();
+      int trace_cl_class_no = contact_trace.clearance_idx();
       
       PlaPointInt new_via_location = reposition_via( p_via, rounded_check_corner, trace_half_width, trace_layer, trace_cl_class_no);
       

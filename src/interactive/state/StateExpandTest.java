@@ -86,7 +86,7 @@ public final class StateExpandTest extends StateInteractive
       control_settings.ripup_costs = control_settings.ripup_pass_no * i_brd.itera_settings.autoroute_settings.get_start_ripup_costs();
       control_settings.vias_allowed = false;
 
-      autoroute_engine = new ArtEngine(r_brd, route_net_no, control_settings.trace_clearance_class_no, null );
+      autoroute_engine = new ArtEngine(r_brd, route_net_no, control_settings.trace_clearance_idx, null );
       
       if (route_item == null)
          {

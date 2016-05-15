@@ -178,7 +178,7 @@ public class StateConstructHole extends StateConstructCorner
                }
             r_brd.generate_snapshot();
             r_brd.remove_item(item_to_modify);
-            r_brd.insert_obstacle(new_obs_area, item_to_modify.get_layer(), item_to_modify.clearance_class_no(), board.varie.ItemFixState.UNFIXED);
+            r_brd.insert_obstacle(new_obs_area, item_to_modify.get_layer(), item_to_modify.clearance_idx(), board.varie.ItemFixState.UNFIXED);
             if (observers_activated)
                {
                r_brd.end_notify_observers();

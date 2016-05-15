@@ -65,7 +65,7 @@ public final class BrdAreaObstacleComp extends BrdArea
             get_translation(), 
             get_rotation_in_degree(), 
             get_side_changed(), 
-            clearance_class_no(), 
+            clearance_idx(), 
             p_id_no, 
             get_component_no(),
             area_name,

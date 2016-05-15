@@ -292,7 +292,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    @Override
    public BrdOutline copy(int p_id_no)
       {
-      return new BrdOutline(shapes, clearance_class_no(), p_id_no, r_board);
+      return new BrdOutline(shapes, clearance_idx(), p_id_no, r_board);
       }
 
    @Override

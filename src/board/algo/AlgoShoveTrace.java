@@ -207,7 +207,7 @@ public final class AlgoShoveTrace
                   curr_substitute_trace.get_compensated_half_width(search_tree), 
                   p_layer, 
                   curr_substitute_trace.net_nos,
-                  curr_substitute_trace.clearance_class_no(), 
+                  curr_substitute_trace.clearance_idx(), 
                   false, p_max_spring_over_recursion_depth, null);
 
             // spring_over did not work
@@ -233,7 +233,7 @@ public final class AlgoShoveTrace
                      curr_dir, 
                      p_layer, 
                      curr_substitute_trace.net_nos, 
-                     curr_substitute_trace.clearance_class_no(), 
+                     curr_substitute_trace.clearance_idx(), 
                      p_max_recursion_depth - 1,
                      p_max_via_recursion_depth, 
                      p_max_spring_over_recursion_depth, 
@@ -354,7 +354,7 @@ public final class AlgoShoveTrace
             double curr_ok_lenght = projection - via_radius - p_trace_half_width;
             if (!search_tree.is_clearance_compensation_used())
                {
-               curr_ok_lenght -= cl_matrix.value_at(p_cl_type, curr_shove_via.clearance_class_no(), p_layer);
+               curr_ok_lenght -= cl_matrix.value_at(p_cl_type, curr_shove_via.clearance_idx(), p_layer);
                }
             if (curr_ok_lenght <= 0)
                {
@@ -402,7 +402,7 @@ public final class AlgoShoveTrace
                      p_layer, 
                      curr_substitute_trace.net_nos, 
                      curr_substitute_trace.get_half_width(),
-                     curr_substitute_trace.clearance_class_no(), 
+                     curr_substitute_trace.clearance_idx(), 
                      p_max_recursion_depth - 1,
                      p_max_via_recursion_depth);
                if (shove_ok_length < Integer.MAX_VALUE)
@@ -417,11 +417,11 @@ public final class AlgoShoveTrace
                   double curr_ok_length = shove_ok_length + projection - p_trace_half_width - curr_substitute_trace.get_half_width();
                   if (search_tree.is_clearance_compensation_used())
                      {
-                     curr_ok_length -= search_tree.get_clearance_compensation(curr_substitute_trace.clearance_class_no(), p_layer);
+                     curr_ok_length -= search_tree.get_clearance_compensation(curr_substitute_trace.clearance_idx(), p_layer);
                      }
                   else
                      {
-                     curr_ok_length -= cl_matrix.value_at(p_cl_type, curr_substitute_trace.clearance_class_no(), p_layer);
+                     curr_ok_length -= cl_matrix.value_at(p_cl_type, curr_substitute_trace.clearance_idx(), p_layer);
                      }
                   if (curr_ok_length <= 0)
                      {
@@ -526,7 +526,7 @@ public final class AlgoShoveTrace
                   curr_substitute_trace.polyline(), 
                   curr_substitute_trace.get_compensated_half_width(search_tree), 
                   p_layer, curr_substitute_trace.net_nos,
-                  curr_substitute_trace.clearance_class_no(), 
+                  curr_substitute_trace.clearance_idx(), 
                   false, p_max_spring_over_recursion_depth, null);
 
             if (new_polyline == null)
@@ -550,7 +550,7 @@ public final class AlgoShoveTrace
                   curr.from_side, 
                   p_layer, 
                   curr_net_no_arr, 
-                  curr_substitute_trace.clearance_class_no(), 
+                  curr_substitute_trace.clearance_idx(), 
                   p_ignore_items, p_max_recursion_depth - 1, 
                   p_max_via_recursion_depth,
                   p_max_spring_over_recursion_depth))
@@ -787,7 +787,7 @@ public final class AlgoShoveTrace
          {
          // enlarge the shape in 2 steps for symmetry reasons
          int offset = p_half_width + 1;
-         double half_cl_offset = 0.5 * r_board.get_clearance(found_obstacle.clearance_class_no(), p_cl_type, p_layer);
+         double half_cl_offset = 0.5 * r_board.get_clearance(found_obstacle.clearance_idx(), p_cl_type, p_layer);
          offset_shape = (ShapeTile) obstacle_shape.enlarge(offset + half_cl_offset);
          offset_shape = (ShapeTile) offset_shape.enlarge(half_cl_offset);
          }

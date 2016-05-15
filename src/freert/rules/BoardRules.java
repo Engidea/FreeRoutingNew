@@ -41,8 +41,8 @@ import board.varie.TraceAngleRestriction;
 public final class BoardRules implements Serializable
    {
    private static final long serialVersionUID = 1L;
-   public static final int default_clearance_class=1;
-   public static final int clearance_class_none=0;
+   public static final int clearance_null_idx=0;
+   public static final int clearance_default_idx=1;
 
    private final BrdLayerStructure layer_structure;
    
@@ -310,9 +310,9 @@ public final class BoardRules implements Serializable
       {
       for (board.items.BrdItem curr_item : p_board_items)
          {
-         if (curr_item.clearance_class_no() == p_from_no)
+         if (curr_item.clearance_idx() == p_from_no)
             {
-            curr_item.set_clearance_class_no(p_to_no);
+            curr_item.set_clearance_idx(p_to_no);
             }
          }
 
@@ -350,7 +350,7 @@ public final class BoardRules implements Serializable
       {
       for (board.items.BrdItem curr_item : p_board_items)
          {
-         if (curr_item.clearance_class_no() == p_index)
+         if (curr_item.clearance_idx() == p_index)
             {
             return false;
             }
@@ -382,9 +382,9 @@ public final class BoardRules implements Serializable
 
       for (board.items.BrdItem curr_item : p_board_items)
          {
-         if (curr_item.clearance_class_no() > p_index)
+         if (curr_item.clearance_idx() > p_index)
             {
-            curr_item.set_clearance_class_no(curr_item.clearance_class_no() - 1);
+            curr_item.set_clearance_idx(curr_item.clearance_idx() - 1);
             }
          }
 

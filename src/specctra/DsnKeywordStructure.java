@@ -263,7 +263,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                if (clearance_class_no < 0)
                   {
                   System.out.println("Structure.read_scope: clearance class not found");
-                  clearance_class_no = BoardRules.clearance_class_none;
+                  clearance_class_no = BoardRules.clearance_null_idx;
                   }
                }
             else
@@ -492,9 +492,9 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          DsnShape dsn_hole = p_par.coordinate_transform.board_to_dsn(holes[i], keepout_layer);
          dsn_hole.write_hole_scope(p_par.file, p_par.identifier_type);
          }
-      if (p_keepout.clearance_class_no() > 0)
+      if (p_keepout.clearance_idx() > 0)
          {
-         DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_keepout.clearance_class_no()), p_par.file, p_par.identifier_type);
+         DsnRule.write_item_clearance_class(p_par.board.brd_rules.clearance_matrix.get_name(p_keepout.clearance_idx()), p_par.file, p_par.identifier_type);
          }
       p_par.file.end_scope();
       }
@@ -1003,7 +1003,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                }
             NetNosList net_numbers = new NetNosList(curr_net.net_number);
             
-            p_board.insert_conduction_area(p_board.bounding_box, curr_layer.layer_no, net_numbers, BoardRules.clearance_class_none, false, ItemFixState.SYSTEM_FIXED);
+            p_board.insert_conduction_area(p_board.bounding_box, curr_layer.layer_no, net_numbers, BoardRules.clearance_null_idx, false, ItemFixState.SYSTEM_FIXED);
             }
          }
       }
@@ -1346,7 +1346,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          if (clearance_class_no < 0)
             {
             System.out.println("Keepout.insert_leepout: clearance class not found");
-            clearance_class_no = BoardRules.clearance_class_none;
+            clearance_class_no = BoardRules.clearance_null_idx;
             }
          }
       if (p_keepout_type == KeepoutType.via_keepout)

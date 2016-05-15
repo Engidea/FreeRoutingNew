@@ -876,7 +876,7 @@ public final class IteraRoute
          return prev_corner;
          }
       PlaPointFloat pin_center = start_pin.center_get().to_float();
-      double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, start_pin.clearance_class_no(), layer_active_no);
+      double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, start_pin.clearance_idx(), layer_active_no);
       double pin_neck_down_distance = 2 * (0.5 * start_pin.get_max_width(layer_active_no) + curr_clearance);
       if (pin_center.distance(prev_corner.to_float()) >= pin_neck_down_distance)
          {
@@ -934,7 +934,7 @@ public final class IteraRoute
       if (!target_pin.is_on_layer(layer_active_no)) return p_from_corner;
 
       PlaPointFloat pin_center = target_pin.center_get().to_float();
-      double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, target_pin.clearance_class_no(), layer_active_no);
+      double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, target_pin.clearance_idx(), layer_active_no);
       double pin_neck_down_distance = 2 * (0.5 * target_pin.get_max_width(layer_active_no) + curr_clearance);
 
       if (pin_center.distance(p_from_corner.to_float()) >= pin_neck_down_distance)

@@ -53,10 +53,8 @@ public class StateCircleConstrut extends StateInteractive
       {
       super(p_parent_state, p_board_handling, p_logfile);
       circle_center = p_location;
-      if (this.actlog != null)
-         {
-         actlog.start_scope(LogfileScope.CREATING_CIRCLE, p_location);
-         }
+
+      actlog_start_scope(LogfileScope.CREATING_CIRCLE, p_location);
       }
 
    public StateInteractive left_button_clicked(PlaPointFloat p_location)
@@ -65,7 +63,7 @@ public class StateCircleConstrut extends StateInteractive
          {
          actlog.add_corner(p_location);
          }
-      return this.complete();
+      return complete();
       }
 
    public StateInteractive mouse_moved()
@@ -86,12 +84,12 @@ public class StateCircleConstrut extends StateInteractive
       int layer = i_brd.itera_settings.layer_no;
       int cl_class;
 
-      cl_class = BoardRules.clearance_class_none;
+      cl_class = BoardRules.clearance_null_idx;
       boolean construction_succeeded = (circle_radius > 0);
       ShapeConvex obstacle_shape = null;
+      
       if (construction_succeeded)
          {
-
          obstacle_shape = new PlaCircle(center, radius);
          if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
             {
@@ -103,22 +101,23 @@ public class StateCircleConstrut extends StateInteractive
             }
          construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
          }
+
       if (construction_succeeded)
          {
          i_brd.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
 
          // insert the new shape as keepout
-         this.observers_activated = r_brd.observers_active();
-         if (this.observers_activated)
+         observers_activated = r_brd.observers_active();
+         if (observers_activated)
             {
             r_brd.start_notify_observers();
             }
          r_brd.generate_snapshot();
          r_brd.insert_obstacle(obstacle_shape, layer, cl_class, ItemFixState.UNFIXED);
-         if (this.observers_activated)
+         if (observers_activated)
             {
             r_brd.end_notify_observers();
-            this.observers_activated = false;
+            observers_activated = false;
             }
          }
       else
@@ -130,7 +129,7 @@ public class StateCircleConstrut extends StateInteractive
          actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
          }
       i_brd.repaint();
-      return this.return_state;
+      return return_state;
       }
 
    /**
@@ -138,7 +137,7 @@ public class StateCircleConstrut extends StateInteractive
     */
    public StateInteractive process_logfile_point(PlaPointFloat p_point)
       {
-      this.circle_radius = circle_center.distance(p_point);
+      circle_radius = circle_center.distance(p_point);
       return this;
       }
 
@@ -152,7 +151,7 @@ public class StateCircleConstrut extends StateInteractive
          {
          return;
          }
-      this.circle_radius = circle_center.distance(current_mouse_position);
+      circle_radius = circle_center.distance(current_mouse_position);
       i_brd.gdi_context.draw_circle(circle_center, circle_radius, 300, java.awt.Color.white, p_graphics, 1);
       }
 

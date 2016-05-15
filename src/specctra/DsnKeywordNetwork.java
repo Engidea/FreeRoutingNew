@@ -597,7 +597,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          if (clearance_class < 0)
             {
             // Clearance class not stored, because it is identical to the default clearance class.
-            clearance_class = BoardRules.default_clearance_class;
+            clearance_class = BoardRules.clearance_default_idx;
             }
          boolean attach_allowed = false;
          next_token = p_scanner.next_token();

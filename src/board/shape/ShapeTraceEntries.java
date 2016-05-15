@@ -173,7 +173,7 @@ public final class ShapeTraceEntries
          {
          // enlarge the shape in 2 steps for symmetry reasons
          offset_shape = (ShapeTile) shape.offset(curr_trace.get_half_width());
-         double cl_offset = board.get_clearance(curr_trace.clearance_class_no(), cl_class, layer) + c_offset_add;
+         double cl_offset = board.get_clearance(curr_trace.clearance_idx(), cl_class, layer) + c_offset_add;
          offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
          }
       int edge_count = shape.border_line_count();
@@ -186,12 +186,12 @@ public final class ShapeTraceEntries
       piece_lines[0] = entries[0].trace.polyline().plaline(entries[0].trace_line_no);
       // end with the intersecting line of the trace at the end entry
       piece_lines[piece_lines.length - 1] = entries[1].trace.polyline().plaline(entries[1].trace_line_no);
-      // fill the interiour lines of piece_lines with the appropriate edge
-      // lines of the offset shape
+      // fill the interiour lines of piece_lines with the appropriate edge lines of the offset shape
       int curr_edge_no = entries[0].edge_no % edge_count;
-      for (int i = 1; i < piece_lines.length - 1; ++i)
+      
+      for (int index = 1; index < piece_lines.length - 1; ++index)
          {
-         piece_lines[i] = offset_shape.border_line(curr_edge_no);
+         piece_lines[index] = offset_shape.border_line(curr_edge_no);
          if (curr_edge_no == edge_count - 1)
             {
             curr_edge_no = 0;
@@ -205,16 +205,18 @@ public final class ShapeTraceEntries
       try
          {
          Polyline piece_polyline = new Polyline(piece_lines);
+         
          return new BrdTracePolyline(
                piece_polyline, 
                layer, 
                curr_trace.get_half_width(), 
                curr_trace.net_nos,
-               curr_trace.clearance_class_no(), 
+               curr_trace.clearance_idx(), 
                0, 0, ItemFixState.UNFIXED, board);
          }
       catch ( Exception exc )
          {
+         System.err.println("Check this out");
          // no valid trace piece, return the next one
          return next_substitute_trace_piece();
          }
@@ -288,7 +290,7 @@ public final class ShapeTraceEntries
       else
          {
          // enlarge the shape in 2 steps for symmetry reasons
-         double cl_offset = board.get_clearance(p_trace.clearance_class_no(), p_cl_class, p_trace.get_layer()) + c_offset_add;
+         double cl_offset = board.get_clearance(p_trace.clearance_idx(), p_cl_class, p_trace.get_layer()) + c_offset_add;
          offset_shape = p_shape.offset(p_trace.get_half_width());
          offset_shape = offset_shape.offset(cl_offset);
          }
@@ -313,7 +315,7 @@ public final class ShapeTraceEntries
                   p_trace.get_layer(), 
                   p_trace.get_half_width(), 
                   p_trace.net_nos, 
-                  p_trace.clearance_class_no(), 
+                  p_trace.clearance_idx(), 
                   ItemFixState.UNFIXED);
             }
          }
@@ -335,7 +337,7 @@ public final class ShapeTraceEntries
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
             p_trace.net_nos, 
-            p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED,
+            p_trace.clearance_idx(), 0, 0, ItemFixState.UNFIXED,
             board);
 
       board.item_list.insert(start_piece);
@@ -346,7 +348,7 @@ public final class ShapeTraceEntries
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
             p_trace.net_nos, 
-            p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED, board);
+            p_trace.clearance_idx(), 0, 0, ItemFixState.UNFIXED, board);
 
       board.item_list.insert(end_piece);
       end_piece.set_on_the_board(true);
@@ -374,7 +376,7 @@ public final class ShapeTraceEntries
       else
          {
          // enlarge the shape in 2 steps for symmetry reasons
-         double cl_offset = board.get_clearance(p_trace.clearance_class_no(), cl_class, p_trace.get_layer()) + c_offset_add;
+         double cl_offset = board.get_clearance(p_trace.clearance_idx(), cl_class, p_trace.get_layer()) + c_offset_add;
          offset_shape = (ShapeTile) shape.offset(p_trace.get_half_width());
          offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
          }
@@ -434,7 +436,7 @@ public final class ShapeTraceEntries
                if (contact_item instanceof BrdTrace)
                   {
 
-                  if (contact_item.is_shove_fixed() || ((BrdTrace) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_class_no() != p_trace.clearance_class_no())
+                  if (contact_item.is_shove_fixed() || ((BrdTrace) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_idx() != p_trace.clearance_idx())
                      {
                      if (offset_shape.contains_inside(end_corner))
                         {
@@ -450,8 +452,8 @@ public final class ShapeTraceEntries
                   double via_trace_diff = via_shape.smallest_radius() - p_trace.get_compensated_half_width(search_tree);
                   if (!search_tree.is_clearance_compensation_used())
                      {
-                     int via_clearance = board.get_clearance(contact_item.clearance_class_no(), cl_class, layer);
-                     int trace_clearance = board.get_clearance(p_trace.clearance_class_no(), cl_class, layer);
+                     int via_clearance = board.get_clearance(contact_item.clearance_idx(), cl_class, layer);
+                     int trace_clearance = board.get_clearance(p_trace.clearance_idx(), cl_class, layer);
                      if (trace_clearance > via_clearance)
                         {
                         via_trace_diff += via_clearance - trace_clearance;

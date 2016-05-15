@@ -127,7 +127,7 @@ public final class AlgoMoveDrillItem
                from_side, 
                curr_layer, 
                p_drill_item.net_nos, 
-               p_drill_item.clearance_class_no(), 
+               p_drill_item.clearance_idx(), 
                attach_allowed, 
                ignore_items, 
                p_max_recursion_depth,
@@ -187,7 +187,7 @@ public final class AlgoMoveDrillItem
                from_side, 
                curr_layer, 
                p_drill_item.net_nos, 
-               p_drill_item.clearance_class_no(), 
+               p_drill_item.clearance_idx(), 
                attach_allowed, 
                ignore_items, 
                p_max_recursion_depth,
@@ -298,7 +298,7 @@ public final class AlgoMoveDrillItem
          return new PlaPointInt[0];
          }
       boolean is_int_octagon = p_obstacle_shape.is_IntOctagon();
-      double clearance_value = r_board.get_clearance(p_cl_class_no, p_via.clearance_class_no(), p_layer);
+      double clearance_value = r_board.get_clearance(p_cl_class_no, p_via.clearance_idx(), p_layer);
       double shove_distance;
       if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE || is_int_octagon)
          {
