@@ -36,8 +36,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    
    private final PlaDirection line_dir; 
    
-   private transient int cf_q;
-   
    boolean is_nan;
    
    /**
@@ -72,15 +70,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    public final boolean is_NaN ()
       {
       return false;
-      }
-
-   /**
-    * Experimental
-    */
-   private void calc_m_q ()
-      {
-      
-//      cf_q = point_a.v_y - cf_m * point_a.v_x;
       }
 
    /**

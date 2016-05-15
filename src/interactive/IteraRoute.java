@@ -62,7 +62,7 @@ public final class IteraRoute
    {
    private static final int s_CHECK_FORCED_TRACE_TIME_MAX = 3;
    private static final int s_PULL_TIGHT_TIME_MAX = 2;
-   private static final String classname="IteraRoute.";
+//   private static final String classname="IteraRoute.";
 
    private final RoutingBoard r_board;
    private final IteraSettings itera_settings;
@@ -86,6 +86,7 @@ public final class IteraRoute
    private final boolean via_snap_to_smd_center;
 
    public final int[] net_no_arr;    // The net numbers used for routing 
+   public final NetNosList net_nos;  // This is the replacement for the above
 
    private BrdItem shove_failing_obstacle = null;
    private PlaPointInt prev_corner;
@@ -129,7 +130,10 @@ public final class IteraRoute
          }
 
       prev_corner = p_start_corner;
+      
       net_no_arr = p_net_no_arr;
+      net_nos = new NetNosList(p_net_no_arr);
+      
       pen_half_width_arr = p_pen_half_width_arr;
       layer_active_arr = p_layer_active_arr;
       clearance_class = p_clearance_class;
@@ -360,7 +364,7 @@ public final class IteraRoute
          result = r_board.insert_via(
                curr_via_info, 
                a_corner, 
-               net_no_arr, 
+               net_nos, 
                clearance_class, 
                pen_half_width_arr, 
                max_shove_trace_recursion_depth, 

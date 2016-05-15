@@ -37,7 +37,6 @@ import freert.varie.BigIntAux;
 public final class PlaPointRational extends PlaPoint implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
-   private static final String classname="PlaPointRational.";
    
    final BigInteger rp_x;
    final BigInteger rp_y;
@@ -60,16 +59,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       is_nan = p_z.signum() <= 0;
       }
 
-   /**
-    * creates a RetionalPoint from an IntPoint
-    * needed to be able to do a difference from a rational to a plapoint int
-    */
-   private PlaPointRational(PlaPointInt p_point)
-      {
-      rp_x = BigInteger.valueOf(p_point.v_x);
-      rp_y = BigInteger.valueOf(p_point.v_y);
-      rp_z = BigInteger.ONE;
-      }
 
    @Override 
    public final boolean is_rational()

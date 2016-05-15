@@ -2114,7 +2114,7 @@ public final class RoutingBoard implements java.io.Serializable
    public final boolean insert_via(
          BrdViaInfo p_via_info, 
          PlaPointInt p_location, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_trace_clearance_class_no, 
          int[] p_trace_pen_halfwidth_arr, 
          int p_max_recursion_depth,
@@ -2130,7 +2130,7 @@ public final class RoutingBoard implements java.io.Serializable
       boolean r_ok = shove_via_algo.shove_via_insert(
             p_via_info, 
             p_location, 
-            p_net_no_arr, 
+            p_net_no_arr.net_nos_arr, 
             p_trace_clearance_class_no, 
             p_trace_pen_halfwidth_arr, 
             p_max_recursion_depth, 
@@ -2147,10 +2147,11 @@ public final class RoutingBoard implements java.io.Serializable
          {
          tidy_clip_shape = null;
          }
+      
       int[] opt_net_no_arr;
       if (p_max_recursion_depth <= 0)
          {
-         opt_net_no_arr = p_net_no_arr;
+         opt_net_no_arr = p_net_no_arr.net_nos_arr;
          }
       else
          {
