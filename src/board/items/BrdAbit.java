@@ -24,7 +24,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import board.BrdConnectable;
@@ -38,6 +37,7 @@ import freert.graphics.GdiDrawable;
 import freert.library.LibPadstack;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
@@ -139,9 +139,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       super.move_by(p_vector);
 
       // Insert a Trace from the old center to the new center, on all layers, where this DrillItem was connected to a Trace.
-      LinkedList<PlaPointInt> connect_point_list = new LinkedList<PlaPointInt>();
+      PlaPointIntAlist connect_points = new PlaPointIntAlist(100);
       
-      connect_point_list.add(old_center);
+      connect_points.add(old_center);
       
       PlaPointInt new_center = center_get();
       
@@ -159,12 +159,10 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
       if (add_corner != null)
          {
-         connect_point_list.add(add_corner);
+         connect_points.add(add_corner);
          }
       
-      connect_point_list.add(new_center);
-      
-      PlaPointInt[] connect_points = connect_point_list.toArray(new PlaPointInt[connect_point_list.size()]);
+      connect_points.add(new_center);
       
       for ( BrdTraceInfo curr_trace_info : contact_trace_info )
          {

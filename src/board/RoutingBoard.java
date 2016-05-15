@@ -72,6 +72,7 @@ import freert.planar.PlaArea;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.PlaSegmentInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
@@ -228,17 +229,17 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts a trace into the board, whose geometry is described by an array of points, and cleans up the net.
     */
-   public void insert_trace(PlaPointInt[] p_points, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
+   public void insert_trace(PlaPointIntAlist p_points, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
-      for (int index = 0; index < p_points.length; ++index)
+      for (PlaPointInt a_point : p_points )
          {
-         if (! bounding_box.contains(p_points[index]))
-            {
-            System.err.println("LayeredBoard.insert_trace: input point out of range");
-            }
+         if ( bounding_box.contains(a_point) ) continue;
+
+         System.err.println("LayeredBoard.insert_trace: input point out of range");
          }
       
       Polyline poly = new Polyline(p_points);
+      
       insert_trace(poly, p_layer, p_half_width, p_net_no_arr, p_clearance_class, p_fixed_state);
       }
 

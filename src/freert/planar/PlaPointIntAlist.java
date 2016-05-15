@@ -1,18 +1,28 @@
 package freert.planar;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Needed simply because erasure makes impossible to differentiate a constructor with ArrayList <xxx> and ArrayList <yyy>
  * @author damiano
  */
-public final class PlaPointIntAlist
+public final class PlaPointIntAlist implements Iterable<PlaPointInt>
    {
    private final ArrayList<PlaPointInt>a_list;
    
    public PlaPointIntAlist(int size)
       {
       a_list = new ArrayList<PlaPointInt>(size);
+      }
+   
+   
+   public PlaPointIntAlist(Collection<PlaPointInt> p_list )
+      {
+      a_list = new ArrayList<PlaPointInt>(p_list.size());
+      
+      a_list.addAll(p_list);
       }
    
    
@@ -41,4 +51,12 @@ public final class PlaPointIntAlist
       {
       return a_list.size();
       }
+   
+   
+   @Override
+   public Iterator<PlaPointInt> iterator()
+      {
+      return a_list.iterator();
+      }
+   
    }
