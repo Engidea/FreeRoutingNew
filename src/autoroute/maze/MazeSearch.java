@@ -61,6 +61,7 @@ import freert.planar.PlaLineInt;
 import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.PlaSegmentFloat;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
@@ -554,47 +555,49 @@ public final class MazeSearch
          }
     
       boolean result = false;
+      
       for (ExpandDoorItem to_door : p_list_element.next_room.get_target_doors())
          {
          if (to_door == p_list_element.door) continue;
 
          ShapeTile target_shape = ((BrdConnectable) to_door.item).get_trace_connection_shape(art_engine.autoroute_search_tree, to_door.tree_entry_no);
+
          PlaPointFloat connection_point = target_shape.nearest_point_approx(p_shape_entry_middle);
+         
          if (!p_next_room_is_thick)
             {
             // check the line from p_shape_entry_middle to the nearest point.
             NetNosList curr_net_no_arr =new NetNosList(art_ctrl.net_no);
             
             int curr_layer = p_list_element.next_room.get_layer();
-            PlaPointInt[] check_points = new PlaPointInt[2];
-            check_points[0] = p_shape_entry_middle.round();
-            check_points[1] = connection_point.round();
-            if (!check_points[0].equals(check_points[1]))
-               {
-               Polyline check_polyline = new Polyline(check_points);
-               boolean check_ok = r_board.check_trace_polyline(
-                     check_polyline, 
-                     art_ctrl.trace_half_width[curr_layer], 
-                     curr_layer, 
-                     curr_net_no_arr, 
-                     art_ctrl.trace_clearance_class_no,
-                     art_ctrl.max_shove_trace_recursion_depth, 
-                     art_ctrl.max_shove_via_recursion_depth, 
-                     art_ctrl.max_spring_over_recursion_depth);
-               if (!check_ok)
-                  {
-                  continue;
-                  }
-               }
+            
+            PlaPointIntAlist check_points = new PlaPointIntAlist(2);
+            check_points.add( p_shape_entry_middle.round() );
+            check_points.add( connection_point.round() );
+
+            if ( check_points.get(0).equals(check_points.get(1)) ) continue;
+            
+            Polyline check_polyline = new Polyline(check_points);
+
+            boolean check_ok = r_board.check_trace_polyline(
+                  check_polyline, 
+                  art_ctrl.trace_half_width[curr_layer], 
+                  curr_layer, 
+                  curr_net_no_arr, 
+                  art_ctrl.trace_clearance_class_no,
+                  art_ctrl.max_shove_trace_recursion_depth, 
+                  art_ctrl.max_shove_via_recursion_depth, 
+                  art_ctrl.max_spring_over_recursion_depth);
+               
+            if ( ! check_ok)  continue;
             }
 
+         // Wondering if this should be done in any case even if previous fails ..... TODO
          PlaSegmentFloat new_shape_entry = new PlaSegmentFloat(connection_point, connection_point);
 
-         if (expand_to_door_section(to_door, 0, new_shape_entry, p_list_element, 0, MazeAdjustment.NONE))
-            {
-            result = true;
-            }
+         if (expand_to_door_section(to_door, 0, new_shape_entry, p_list_element, 0, MazeAdjustment.NONE)) result = true;
          }
+      
       return result;
       }
 
