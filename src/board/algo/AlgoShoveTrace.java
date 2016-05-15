@@ -614,7 +614,8 @@ public final class AlgoShoveTrace
 
    /**
     * Checks, if there are obstacle in the way of p_polyline and tries to wrap the polyline trace around these obstacles in counter clock sense. 
-    * Returns null, if that is not possible. Returns p_polyline, if there were no obstacles 
+    * Returns null, if that is not possible. 
+    * Returns p_polyline, if there were no obstacles 
     * If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as obstacles, even if they are of the own net.
     */
    private final Polyline spring_over(
@@ -846,9 +847,9 @@ public final class AlgoShoveTrace
       substitute_lines[0] = p_polyline.plaline(first_intersection_line_no);
       int curr_edge_line_no = first_intersection_side_no;
 
-      for (int i = 1; i <= side_diff + 1; ++i)
+      for (int index = 1; index <= side_diff + 1; ++index)
          {
-         substitute_lines[i] = offset_shape.border_line(curr_edge_line_no);
+         substitute_lines[index] = offset_shape.border_line(curr_edge_line_no);
          if (curr_edge_line_no == offset_shape.border_line_count() - 1)
             {
             curr_edge_line_no = 0;

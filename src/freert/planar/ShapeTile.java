@@ -971,13 +971,15 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
       boolean first_corner_is_inside = contains_inside(first_corner);
       
       if (intersection_no.length == 0)
-      // no intersections
          {
+         // no intersections
+
          if (first_corner_is_inside)
          // p_polyline is contained completely in this shape
             {
             return new Polyline[0];
             }
+         
          // p_polyline is completely outside
          Polyline[] result = new Polyline[1];
          result[0] = p_polyline;
@@ -1008,18 +1010,16 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             // close the polyline piece with the intersected edge line.
             curr_lines[curr_polyline_intersection_no + 1] = border_line(curr_intersection_tuple[1]);
 
-            try
-               {
-               Polyline curr_piece = new Polyline(curr_lines);
-               pieces.add(curr_piece);
-               }
-            catch ( Exception exc )
-               {
-               
-               }
+            // remove try catch and added a validation test before add
+            Polyline curr_piece = new Polyline(curr_lines);
+            
+            if ( curr_piece.is_valid() ) pieces.add(curr_piece);
             }
          ++curr_intersection_no;
          }
+      
+      
+      
       while (curr_intersection_no < intersection_no.length - 1)
          {
          // calculate the next outside polyline piece
@@ -1049,18 +1049,15 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             
             curr_lines[curr_lines.length - 1] = border_line(next_intersection_tuple[1]);
 
-            try
-               {
-               Polyline curr_piece = new Polyline(curr_lines);
-               pieces.add(curr_piece);
-               }
-            catch ( Exception exc )
-               {
-               System.err.println("poly empty1");
-               }
+            // remove try catch and added a validation test before add
+            Polyline curr_piece = new Polyline(curr_lines);
+
+            if ( curr_piece.is_valid() ) pieces.add(curr_piece);
             }
+         
          curr_intersection_no += 2;
          }
+      
       if (curr_intersection_no <= intersection_no.length - 1)
       // calculate outside piece at end
          {
@@ -1072,22 +1069,18 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          
          p_polyline.plaline_copy(curr_polyline_intersection_no, curr_lines, 1, curr_lines.length - 1);
 
-         try
-            {
-            Polyline curr_piece = new Polyline(curr_lines);
-            pieces.add(curr_piece);
-            }
-         catch ( Exception exc )
-            {
-            System.err.println("poly empty1");
-            }
+         // remove try catch and added a validation test before add
+         Polyline curr_piece = new Polyline(curr_lines);
+ 
+         if ( curr_piece.is_valid() )  pieces.add(curr_piece);
          }
+
       Polyline[] result = new Polyline[pieces.size()];
+      
       Iterator<Polyline> it = pieces.iterator();
-      for (int i = 0; i < result.length; ++i)
-         {
-         result[i] = it.next();
-         }
+      
+      for (int index = 0; index < result.length; ++index) result[index] = it.next();
+      
       return result;
       }
 
