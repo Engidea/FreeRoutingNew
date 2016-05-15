@@ -36,6 +36,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 
 /**
  * Auxiliary class used by the shove functions
@@ -48,7 +49,7 @@ public final class ShapeTraceEntries
    public final Collection<BrdAbitVia> shove_via_list;
    private final ShapeTile shape;
    private final int layer;
-   private final int[] own_net_nos;
+   private final NetNosList own_net_nos;
    private final int cl_class;
    private BrdFromSide from_side;
    private final RoutingBoard board;
@@ -63,7 +64,7 @@ public final class ShapeTraceEntries
     * Used for shoving traces and vias out of the input shape. p_from_side.no is the side of p_shape, from where the shove comes. if
     * p_from_side.no < 0, it will be calculated internally.
     */
-   public ShapeTraceEntries(ShapeTile p_shape, int p_layer, int[] p_own_net_nos, int p_cl_type, BrdFromSide p_from_side, RoutingBoard p_board)
+   public ShapeTraceEntries(ShapeTile p_shape, int p_layer, NetNosList p_own_net_nos, int p_cl_type, BrdFromSide p_from_side, RoutingBoard p_board)
       {
       shape = p_shape;
       layer = p_layer;
@@ -204,7 +205,13 @@ public final class ShapeTraceEntries
       try
          {
          Polyline piece_polyline = new Polyline(piece_lines);
-         return new BrdTracePolyline(piece_polyline, layer, curr_trace.get_half_width(), curr_trace.net_no_arr, curr_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED, board);
+         return new BrdTracePolyline(
+               piece_polyline, 
+               layer, 
+               curr_trace.get_half_width(), 
+               curr_trace.net_nos.net_nos_arr,
+               curr_trace.clearance_class_no(), 
+               0, 0, ItemFixState.UNFIXED, board);
          }
       catch ( Exception exc )
          {
@@ -299,9 +306,15 @@ public final class ShapeTraceEntries
       else
          {
          board.remove_item(p_trace);
-         for (int i = 0; i < pieces.length; ++i)
+         for (int index = 0; index < pieces.length; ++index)
             {
-            board.insert_trace_without_cleaning(pieces[i], p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), ItemFixState.UNFIXED);
+            board.insert_trace_without_cleaning(
+                  pieces[index], 
+                  p_trace.get_layer(), 
+                  p_trace.get_half_width(), 
+                  p_trace.net_nos.net_nos_arr, 
+                  p_trace.clearance_class_no(), 
+                  ItemFixState.UNFIXED);
             }
          }
       }
@@ -317,13 +330,23 @@ public final class ShapeTraceEntries
       p_trace.art_item_clear();
       
       board.item_list.save_for_undo(p_trace);
-      BrdTracePolyline start_piece = new BrdTracePolyline(p_start_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED,
+      BrdTracePolyline start_piece = new BrdTracePolyline(
+            p_start_piece, 
+            p_trace.get_layer(), 
+            p_trace.get_half_width(), 
+            p_trace.net_nos.net_nos_arr, 
+            p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED,
             board);
 
       board.item_list.insert(start_piece);
       start_piece.set_on_the_board(true);
 
-      BrdTracePolyline end_piece = new BrdTracePolyline(p_end_piece, p_trace.get_layer(), p_trace.get_half_width(), p_trace.net_no_arr, p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED, board);
+      BrdTracePolyline end_piece = new BrdTracePolyline(
+            p_end_piece, 
+            p_trace.get_layer(), 
+            p_trace.get_half_width(), 
+            p_trace.net_nos.net_nos_arr, 
+            p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED, board);
 
       board.item_list.insert(end_piece);
       end_piece.set_on_the_board(true);
@@ -600,27 +623,27 @@ public final class ShapeTraceEntries
          return;
          }
       prev = list_anchor;
-      int[] prev_net_nos = prev.trace.net_no_arr;
+      NetNosList prev_net_nos = prev.trace.net_nos;
 
       curr = list_anchor.next;
-      int[] curr_net_nos;
+      NetNosList curr_net_nos;
       ShapeTraceEntryPoint next;
 
       if (curr != null)
          {
-         curr_net_nos = curr.trace.net_no_arr;
+         curr_net_nos = curr.trace.net_nos;
          next = curr.next;
          }
       else
          {
          next = null;
-         curr_net_nos = new int[0];
+         curr_net_nos = NetNosList.EMPTY;
          }
       ShapeTraceEntryPoint before_prev = null;
       while (next != null)
          {
-         int[] next_net_nos = next.trace.net_no_arr;
-         if (net_nos_equal(prev_net_nos, curr_net_nos) && net_nos_equal(curr_net_nos, next_net_nos))
+         NetNosList next_net_nos = next.trace.net_nos;
+         if ( prev_net_nos.net_nos_equal(curr_net_nos) && curr_net_nos.net_nos_equal(next_net_nos))
             {
             prev.next = next;
             }
@@ -636,10 +659,10 @@ public final class ShapeTraceEntries
          }
 
       // remove nodes of own net at start and end of the list
-      if (curr != null && net_nos_equal(curr_net_nos, own_net_nos))
+      if (curr != null && curr_net_nos.net_nos_equal(own_net_nos))
          {
          prev.next = null;
-         if (net_nos_equal(prev_net_nos, own_net_nos))
+         if ( prev_net_nos.net_nos_equal(own_net_nos))
             {
             if (before_prev != null)
                {
@@ -670,9 +693,9 @@ public final class ShapeTraceEntries
          return true;
          }
       ShapeTraceEntryPoint curr_entry = list_anchor;
-      int[] curr_net_nos = curr_entry.trace.net_no_arr;
+      NetNosList curr_net_nos = curr_entry.trace.net_nos;
       int curr_level;
-      if (net_nos_equal(curr_net_nos, own_net_nos))
+      if ( curr_net_nos.net_nos_equal(own_net_nos))
          {
          // ignore own net when calculating the stack level
          curr_level = 0;
@@ -709,8 +732,8 @@ public final class ShapeTraceEntries
          while (check_entry != null)
             {
             ++next_index;
-            int[] check_net_nos = check_entry.trace.net_no_arr;
-            if (net_nos_equal(check_net_nos, curr_net_nos))
+            NetNosList check_net_nos = check_entry.trace.net_nos;
+            if ( check_net_nos.net_nos_equal(curr_net_nos))
                {
                index_of_last_occurance_of_set = next_index;
                last_own_entry = check_entry;
@@ -759,7 +782,7 @@ public final class ShapeTraceEntries
                      }
                   }
                }
-            curr_net_nos = next_entry.trace.net_no_arr;
+            curr_net_nos = next_entry.trace.net_nos;
             // remove all entries between curr_entry and next_entry, because
             // they are irrelevant;
             check_entry = curr_entry.next;

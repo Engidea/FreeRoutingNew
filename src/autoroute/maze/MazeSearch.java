@@ -852,8 +852,7 @@ public final class MazeSearch
          }
       else
          {
-         int[] net_no_arr = new int[1];
-         net_no_arr[0] = art_ctrl.net_no;
+         NetNosList net_no_arr = new NetNosList(art_ctrl.net_no);
 
          room_ripped = false;
          int via_lower_limit = Math.max(curr_drill.first_layer_no, art_ctrl.via_lower_bound);

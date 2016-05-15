@@ -17,9 +17,10 @@
 package board;
 
 import java.util.Set;
-import freert.planar.ShapeTile;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
+import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 
 /**
  * Functionality required for items, which can be electrical connected to other items.
@@ -36,7 +37,7 @@ public interface BrdConnectable
    /**
     * Returns true if the net number array of this and p_net_no_arr have a common number.
     */
-   public boolean shares_net_no(int[] p_net_no_arr);
+   public boolean shares_net_no(NetNosList p_net_no_arr);
 
    /**
     * Returns a list of all connectable items overlapping and sharing a net with this item.

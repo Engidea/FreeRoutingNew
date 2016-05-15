@@ -68,7 +68,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       return new BrdAbitVia(
             padstack, 
             center_get(), 
-            net_no_arr, 
+            net_nos.net_nos_arr, 
             clearance_class_no(), 
             p_id_no, 
             get_component_no(), 

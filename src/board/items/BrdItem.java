@@ -66,8 +66,9 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    private final int id_no;
    // the index in the clearance matrix describing the required spacing to other items
    private int clearance_class;
-   // The nets, to which this item belongs 
-   public  int[] net_no_arr;
+   
+   public NetNosList net_nos;     // The nets, to which this item belongs 
+   
    // if an item is fixed or not
    private ItemFixState fixed_state;
    // not 0, if this item belongs to a component 
@@ -89,12 +90,11 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    
       if (p_net_no_arr == null)
          {
-         net_no_arr = new int[0];
+         net_nos = NetNosList.EMPTY;
          }
       else
          {
-         net_no_arr = new int[p_net_no_arr.length];
-         System.arraycopy(p_net_no_arr, 0, net_no_arr, 0, p_net_no_arr.length);
+         net_nos = new NetNosList(p_net_no_arr.clone());
          }
 
       if (p_id_no <= 0)
@@ -160,14 +160,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean contains_net(int p_net_no)
       {
-      if (p_net_no <= 0) return false;
-      
-      for (int index = 0; index < net_no_arr.length; ++index)
-         {
-         if (net_no_arr[index] == p_net_no) return true;
-         }
-
-      return false;
+      return net_nos.has_net_no(p_net_no);
       }
 
    @Override
@@ -192,28 +185,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean shares_net(BrdItem p_other)
       {
-      return shares_net_no(p_other.net_no_arr);
-      }
-
-   /**
-    * @return true if the net number array of this and p_net_no_arr have a common number
-    * @deprecated try to use the one with NetNosList
-    */
-   public final boolean shares_net_no(int[] p_net_no_arr)
-      {
-      for (int i = 0; i < net_no_arr.length; ++i)
-         {
-         int want_net_no = net_no_arr[i];
-         
-         for (int j = 0; j < p_net_no_arr.length; ++j)
-            {
-            if (want_net_no == p_net_no_arr[j])
-               {
-               return true;
-               }
-            }
-         }
-      return false;
+      return shares_net_no(p_other.net_nos);
       }
 
    /**
@@ -221,16 +193,13 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean shares_net_no(NetNosList p_net_no_arr)
       {
-      for (int index = 0; index < net_no_arr.length; ++index)
+      for (int want_net_no : net_nos )
          {
-         int want_net_no = net_no_arr[index];
-         
          if ( p_net_no_arr.has_net_no(want_net_no) ) return true;
          }
       
       return false;
       }
-
    
    /**
     * Returns the number of shapes of this item after decomposition into convex polygonal shapes
@@ -784,7 +753,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          }
       else
          {
-         for (int curr_net_no : net_no_arr)
+         for (int curr_net_no : net_nos)
             {
             result.addAll(r_board.get_connectable_items(curr_net_no));
             }
@@ -1077,15 +1046,15 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final int net_count()
       {
-      return net_no_arr.length;
+      return net_nos.size();
       }
 
    /**
     * gets the p_no-the net number of this item for 0 <= p_no < net_count().
     */
-   public final int get_net_no(int p_no)
+   public final int get_net_no(int p_no_index)
       {
-      return net_no_arr[p_no];
+      return net_nos.get(p_no_index);
       }
 
    /**
@@ -1097,34 +1066,16 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Removes p_net_no from the net number array. Returns false, if p_net_no was not contained in this array.
+    * Removes p_net_no from the net number array. 
+    * @eturn false, if p_net_no was not contained in this array.
     */
    public final boolean remove_from_net(int p_net_no)
       {
-      int found_index = -1;
-      for (int i = 0; i < net_no_arr.length; ++i)
-         {
-         if ( net_no_arr[i] == p_net_no)
-            {
-            found_index = i;
-            }
-         }
+      NetNosList new_nets = net_nos.remove_from_net(p_net_no);
       
-      if (found_index < 0) return false;
+      if ( new_nets == null ) return false;
       
-      int[] new_net_no_arr = new int[net_no_arr.length - 1];
-      
-      for (int i = 0; i < found_index; ++i)
-         {
-         new_net_no_arr[i] = net_no_arr[i];
-         }
-      
-      for (int i = found_index; i < new_net_no_arr.length; ++i)
-         {
-         new_net_no_arr[i] = net_no_arr[i + 1];
-         }
-      
-      net_no_arr = new_net_no_arr;
+      net_nos = new_nets;
       
       return true;
       }
@@ -1200,21 +1151,11 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
       if (p_net_no <= 0)
          {
-         net_no_arr = new int[0];
+         net_nos = NetNosList.EMPTY;
+         return;
          }
-      else
-         {
-         if (net_no_arr.length == 0)
-            {
-            net_no_arr = new int[1];
-            }
-         else if (net_no_arr.length > 1)
-            {
-            System.out.println("Item.assign_net_no: unexpected net_count > 1");
-            }
-         
-         net_no_arr[0] = p_net_no;
-         }
+
+      net_nos = new NetNosList(p_net_no);
       }
 
    /**
@@ -1407,13 +1348,12 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean is_nets_normal()
       {
-      for (int index = 0; index < net_no_arr.length; ++index)
+      
+      for (int a_net_no : net_nos )
          {
-         if (!RuleNets.is_normal_net_no(net_no_arr[index]))
-            {
-            return false;
-            }
+         if ( ! RuleNets.is_normal_net_no(a_net_no)) return false;
          }
+
       return true;
       }
 
@@ -1422,7 +1362,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean nets_equal(BrdItem p_other)
       {
-      return nets_equal(p_other.net_no_arr);
+      return nets_equal(p_other.net_nos.net_nos_arr );
       }
 
    /**
@@ -1430,7 +1370,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public final boolean nets_equal(int[] p_net_no_arr)
       {
-      if (net_no_arr.length != p_net_no_arr.length) return false;
+      if (net_nos.size() != p_net_no_arr.length) return false;
 
       for (int curr_net_no : p_net_no_arr)
          {
@@ -1438,6 +1378,14 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          }
       
       return true;
+      }
+
+   /**
+    * Checks, if this item contains exactly the nets in p_net_no_arr
+    */
+   public final boolean nets_equal(NetNosList p_net_nos)
+      {
+      return net_nos.net_nos_equal(p_net_nos);
       }
 
    /**

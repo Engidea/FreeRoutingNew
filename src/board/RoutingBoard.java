@@ -1602,7 +1602,7 @@ public final class RoutingBoard implements java.io.Serializable
       boolean[] tail_at_endpoint_before = null;
       PlaPoint[] end_corners = null;
       int curr_layer = p_trace.get_layer();
-      int[] curr_net_no_arr = p_trace.net_no_arr;
+      int[] curr_net_no_arr = p_trace.net_nos.net_nos_arr;
       end_corners = new PlaPoint[2];
       end_corners[0] = p_trace.corner_first();
       end_corners[1] = p_trace.corner_last();
@@ -1883,7 +1883,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public final boolean check_item_move(BrdItem p_item, PlaVectorInt p_vector, Collection<BrdItem> p_ignore_items)
       {
-      int net_count = p_item.net_no_arr.length;
+      int net_count = p_item.net_nos.size();
       
       if (net_count > 1)
          {
@@ -1911,7 +1911,7 @@ public final class RoutingBoard implements java.io.Serializable
          if (!moved_shape.is_contained_in(bounding_box)) return false;
          
          Set<BrdItem> obstacles = overlapping_items_with_clearance(
-               moved_shape, p_item.shape_layer(index), new NetNosList(p_item.net_no_arr), p_item.clearance_class_no());
+               moved_shape, p_item.shape_layer(index), p_item.net_nos, p_item.clearance_class_no());
 
          for (BrdItem curr_item : obstacles)
             {
@@ -1998,7 +1998,7 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_region = null;
          calculate_tidy_region = false;
          }
-      int[] net_no_arr = p_drill_item.net_no_arr;
+      int[] net_no_arr = p_drill_item.net_nos.net_nos_arr;
       start_marking_changed_area();
       if (!move_drill_algo.insert(p_drill_item, p_vector, p_max_recursion_depth, p_max_via_recursion_depth, tidy_region))
          {
@@ -2202,7 +2202,7 @@ public final class RoutingBoard implements java.io.Serializable
             insert_polyline, 
             p_half_width, 
             p_layer, 
-            p_net_no_arr.net_nos_arr, 
+            p_net_no_arr, 
             p_clearance_class_no,
             p_max_recursion_depth, 
             p_max_via_recursion_depth,
@@ -2289,7 +2289,7 @@ public final class RoutingBoard implements java.io.Serializable
          Polyline p_polyline, 
          int p_half_width, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_clearance_class_no, 
          int p_max_recursion_depth,
          int p_max_via_recursion_depth, 
@@ -2394,7 +2394,7 @@ public final class RoutingBoard implements java.io.Serializable
                   from_side, 
                   null, 
                   p_layer, 
-                  new NetNosList(p_net_no_arr), 
+                  p_net_no_arr, 
                   p_clearance_class_no, 
                   p_max_recursion_depth, 
                   p_max_via_recursion_depth,
@@ -2490,7 +2490,7 @@ public final class RoutingBoard implements java.io.Serializable
                from_side, 
                null, 
                p_layer, 
-               new NetNosList(p_net_no_arr), 
+               p_net_no_arr, 
                p_clearance_class_no, 
                p_max_recursion_depth, 
                p_max_via_recursion_depth, 
@@ -2525,7 +2525,9 @@ public final class RoutingBoard implements java.io.Serializable
          join_changed_area(new_polyline.corner_approx(index), p_layer);
          }
       
-      BrdTracePolyline new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class_no, ItemFixState.UNFIXED);
+      BrdTracePolyline new_trace = insert_trace_without_cleaning(
+            new_polyline, p_layer, p_half_width, p_net_no_arr.net_nos_arr,
+            p_clearance_class_no, ItemFixState.UNFIXED);
       new_trace.combine();
 
       ShapeTileOctagon tidy_region = null;
@@ -2534,21 +2536,21 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_region = new ShapeTileOctagon(new_corner).enlarge(p_tidy_width);
          }
       
-      int[] opt_net_no_arr;
+      NetNosList opt_net_no_arr;
       if (p_max_recursion_depth <= 0)
          {
          opt_net_no_arr = p_net_no_arr;
          }
       else
          {
-         opt_net_no_arr = new int[0];
+         opt_net_no_arr = NetNosList.EMPTY;
          }
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(10,null);
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(
             this, 
-            opt_net_no_arr, 
+            opt_net_no_arr.net_nos_arr, 
             tidy_region, 
             p_pull_tight_accuracy, 
             t_limit, 
@@ -2719,7 +2721,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       PlaPoint last_corner = p_to_trace.corner_last();
 
-      int[] net_no_arr = p_to_trace.net_no_arr;
+      int[] net_no_arr = p_to_trace.net_nos.net_nos_arr;
       
       Polyline apoly = p_to_trace.polyline();
       
@@ -2912,12 +2914,12 @@ public final class RoutingBoard implements java.io.Serializable
 
          BrdItem curr_item = (BrdItem) curr_ob;
 
-         if (curr_item.net_no_arr.length <= 1 || curr_item.get_fixed_state() == ItemFixState.SYSTEM_FIXED) continue;
+         if (curr_item.net_nos.size() <= 1 || curr_item.get_fixed_state() == ItemFixState.SYSTEM_FIXED) continue;
 
          if (curr_ob instanceof BrdAbitVia)
             {
             Collection<BrdItem> contacts = curr_item.get_normal_contacts();
-            for (int curr_net_no : curr_item.net_no_arr)
+            for (int curr_net_no : curr_item.net_nos)
                {
                for (BrdItem curr_contact : contacts)
                   {
@@ -2938,7 +2940,7 @@ public final class RoutingBoard implements java.io.Serializable
             Collection<BrdItem> contacts = curr_trace.get_start_contacts();
             for (int i = 0; i < 2; ++i)
                {
-               for (int curr_net_no : curr_item.net_no_arr)
+               for (int curr_net_no : curr_item.net_nos)
                   {
                   boolean pin_found = false;
                   for (BrdItem curr_contact : contacts)

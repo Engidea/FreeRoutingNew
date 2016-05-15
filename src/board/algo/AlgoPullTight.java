@@ -45,6 +45,7 @@ import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileOctagon;
+import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimitStoppable;
@@ -495,7 +496,7 @@ public abstract class AlgoPullTight
       {
       curr_layer = p_trace.get_layer();
       curr_half_width = p_trace.get_half_width();
-      curr_net_no_arr = p_trace.net_no_arr;
+      curr_net_no_arr = p_trace.net_nos.net_nos_arr;
       curr_cl_type = p_trace.clearance_class_no();
       
       return smoothen_end_corners_at_trace_1(p_trace);
@@ -530,8 +531,15 @@ public abstract class AlgoPullTight
             int curr_cl_class = curr_trace.clearance_class_no();
             ItemFixState curr_fixed_state = curr_trace.get_fixed_state();
             r_board.remove_item(curr_trace);
-            curr_trace = r_board.insert_trace_without_cleaning(adjusted_polyline, trace_layer, curr_half_width, curr_trace.net_no_arr, curr_cl_class, curr_fixed_state);
-            for (int curr_net_no : curr_trace.net_no_arr)
+            
+            curr_trace = r_board.insert_trace_without_cleaning(
+                  adjusted_polyline, 
+                  trace_layer, 
+                  curr_half_width, 
+                  curr_trace.net_nos.net_nos_arr, 
+                  curr_cl_class, curr_fixed_state);
+
+            for (int curr_net_no : curr_trace.net_nos )
                {
                r_board.split_traces(adjusted_polyline.corner_first(), trace_layer, curr_net_no);
                r_board.split_traces(adjusted_polyline.corner_last(), trace_layer, curr_net_no);
@@ -619,7 +627,12 @@ public abstract class AlgoPullTight
       
       Polyline result = p_polyline;
 
-      Polyline new_polyline = r_board.shove_trace_algo.spring_over_obstacles(p_polyline, curr_half_width, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+      Polyline new_polyline = r_board.shove_trace_algo.spring_over_obstacles(
+            p_polyline, 
+            curr_half_width, 
+            curr_layer, 
+            new NetNosList( curr_net_no_arr), 
+            curr_cl_type, contact_pins);
       
       if (new_polyline != null && new_polyline != p_polyline)
          {

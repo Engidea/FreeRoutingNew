@@ -77,8 +77,19 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
          return null;
          }
       
-      return new BrdAreaConduction(get_relative_area(), get_layer(), get_translation(), get_rotation_in_degree(), get_side_changed(), net_no_arr, clearance_class_no(), p_id_no, get_component_no(),
-            area_name, is_obstacle, get_fixed_state(), r_board);
+      return new BrdAreaConduction(
+            get_relative_area(), 
+            get_layer(), 
+            get_translation(), 
+            get_rotation_in_degree(), 
+            get_side_changed(), 
+            net_nos.net_nos_arr, 
+            clearance_class_no(), 
+            p_id_no, 
+            get_component_no(),
+            area_name, 
+            is_obstacle, 
+            get_fixed_state(), r_board);
       }
 
    @Override

@@ -58,8 +58,16 @@ public final class AlgoShoveVia
     * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces. p_room_shape is used for
     * calculating the from_side.
     */
-   public ShoveDrillResult check_layer(double p_via_radius, int p_cl_class, boolean p_attach_smd_allowed, ShapeTile p_room_shape, PlaPoint p_location, int p_layer,
-         int[] p_net_no_arr, int p_max_recursion_depth, int p_max_via_recursion_depth)
+   public ShoveDrillResult check_layer(
+         double p_via_radius, 
+         int p_cl_class, 
+         boolean p_attach_smd_allowed, 
+         ShapeTile p_room_shape, 
+         PlaPoint p_location, 
+         int p_layer,
+         NetNosList p_net_no_arr, 
+         int p_max_recursion_depth, 
+         int p_max_via_recursion_depth)
       {
       if (p_via_radius <= 0)
          {
@@ -108,7 +116,12 @@ public final class AlgoShoveVia
    /**
     * Checks, if a Via is possible with the input parameter after evtl. shoving aside obstacle traces.
     */
-   public boolean check(BrdViaInfo p_via_info, PlaPointInt p_location, int[] p_net_no_arr, int p_max_recursion_depth, int p_max_via_recursion_depth )
+   public boolean check(
+         BrdViaInfo p_via_info, 
+         PlaPointInt p_location, 
+         NetNosList p_net_no_arr, 
+         int p_max_recursion_depth, 
+         int p_max_via_recursion_depth )
       {
       PlaVectorInt translate_vector = p_location.difference_by(PlaPointInt.ZERO);
       

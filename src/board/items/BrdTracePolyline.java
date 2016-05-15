@@ -41,6 +41,7 @@ import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.rules.RuleNet;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimitStoppable;
@@ -650,9 +651,11 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             else if (!is_user_fixed() && (found_item instanceof BrdAreaConduction))
                {
                boolean ignore_areas = false;
-               if (net_no_arr.length > 0)
+               
+               if (! net_nos.is_empty())
                   {
-                  freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(net_no_arr[0]);
+                  RuleNet curr_net = r_board.brd_rules.nets.get(net_nos.first());
+                  
                   if (curr_net != null && curr_net.get_class() != null)
                      {
                      ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
@@ -767,8 +770,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       r_board.remove_item(this);
       BrdTracePolyline[] result = new BrdTracePolyline[2];
-      result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_no_arr, clearance_class_no(), get_fixed_state());
-      result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_no_arr, clearance_class_no(), get_fixed_state());
+      result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), get_fixed_state());
+      result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), get_fixed_state());
       return result;
       }
 
@@ -836,16 +839,16 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
          return false;
          }
 
-      if ( net_no_arr.length > 0)
+      if ( ! net_nos.is_empty() )
          {
          // why only of index 0 ?
-         if (! r_board.brd_rules.nets.get( net_no_arr[0]).get_class().can_pull_tight())
+         if (! r_board.brd_rules.nets.get( net_nos.first()).get_class().can_pull_tight())
             {
             return false;
             }
          }
       
-      Polyline new_lines = p_pull_tight_algo.pull_tight(polyline, get_layer(), get_half_width(), net_no_arr, clearance_class_no(), touching_pins_at_end_corners());
+      Polyline new_lines = p_pull_tight_algo.pull_tight(polyline, get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), touching_pins_at_end_corners());
       if (new_lines != polyline)
          {
          change(new_lines);
@@ -908,7 +911,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       if (p_own_net_only)
          {
-         opt_net_no_arr = net_no_arr;
+         opt_net_no_arr = net_nos.net_nos_arr;
          }
       else
          {
@@ -929,7 +932,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       if (p_own_net_only)
          {
-         opt_net_no_arr = net_no_arr;
+         opt_net_no_arr = net_nos.net_nos_arr;
          }
       else
          {
@@ -1276,7 +1279,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       curr_lines[curr_lines.length - 1] = trace_polyline.plaline(latest_entry_tuple[0]);
 
       Polyline border_polyline = new Polyline(curr_lines);
-      if (!r_board.check_polyline_trace(border_polyline, get_layer(), get_half_width(), net_no_arr, clearance_class_no()))
+      if (!r_board.check_polyline_trace(border_polyline, get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no()))
          {
          return false;
          }
@@ -1312,7 +1315,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       curr_lines[1] = nearest_pin_exit_ray;
       curr_lines[2] = offset_pin_shape.border_line(nearest_border_line_no);
       Polyline exit_line_segment = new Polyline(curr_lines);
-      r_board.insert_trace(exit_line_segment, get_layer(), get_half_width(), net_no_arr, clearance_class_no(), ItemFixState.SHOVE_FIXED);
+      r_board.insert_trace(exit_line_segment, get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), ItemFixState.SHOVE_FIXED);
       return true;
       }
 

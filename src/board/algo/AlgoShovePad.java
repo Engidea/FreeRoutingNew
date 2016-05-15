@@ -72,7 +72,7 @@ public final class AlgoShovePad
          ShapeTile p_pad_shape, 
          BrdFromSide p_from_side, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_cl_type, 
          boolean p_copper_sharing_allowed,
          Collection<BrdItem> p_ignore_items, 
@@ -189,7 +189,7 @@ public final class AlgoShovePad
                   curr.from_side, 
                   curr_dir, 
                   p_layer, 
-                  new NetNosList(curr_substitute_trace.net_no_arr), 
+                  curr_substitute_trace.net_nos, 
                   curr_substitute_trace.clearance_class_no(), 
                   p_max_recursion_depth - 1,
                   p_max_via_recursion_depth, 
@@ -245,7 +245,7 @@ public final class AlgoShovePad
          }
       
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, p_from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       
       if (p_ignore_items != null) obstacles.removeAll(p_ignore_items);
@@ -282,7 +282,7 @@ public final class AlgoShovePad
             continue;
             }
 
-         int[] curr_net_no_arr = curr_substitute_trace.net_no_arr;
+         NetNosList curr_net_no_arr = curr_substitute_trace.net_nos;
          for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
             BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, false);
@@ -326,7 +326,7 @@ public final class AlgoShovePad
          
          for (int index = 0; index < 2; ++index)
             {
-            BrdTrace tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
+            BrdTrace tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr.net_nos_arr);
             
             if (tail == null) continue;
 

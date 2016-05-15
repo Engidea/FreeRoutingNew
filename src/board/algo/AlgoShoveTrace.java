@@ -108,7 +108,7 @@ public final class AlgoShoveTrace
          return false;
          }
       
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, p_from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
@@ -202,8 +202,13 @@ public final class AlgoShoveTrace
 
          if (p_max_spring_over_recursion_depth > 0)
             {
-            Polyline new_polyline = spring_over(curr_substitute_trace.polyline(), curr_substitute_trace.get_compensated_half_width(search_tree), p_layer, curr_substitute_trace.net_no_arr,
-                  curr_substitute_trace.clearance_class_no(), false, p_max_spring_over_recursion_depth, null);
+            Polyline new_polyline = spring_over(
+                  curr_substitute_trace.polyline(), 
+                  curr_substitute_trace.get_compensated_half_width(search_tree), 
+                  p_layer, 
+                  curr_substitute_trace.net_nos,
+                  curr_substitute_trace.clearance_class_no(), 
+                  false, p_max_spring_over_recursion_depth, null);
 
             // spring_over did not work
             if (new_polyline == null) return false;
@@ -227,7 +232,7 @@ public final class AlgoShoveTrace
                      curr.from_side, 
                      curr_dir, 
                      p_layer, 
-                     new NetNosList(curr_substitute_trace.net_no_arr), 
+                     curr_substitute_trace.net_nos, 
                      curr_substitute_trace.clearance_class_no(), 
                      p_max_recursion_depth - 1,
                      p_max_via_recursion_depth, 
@@ -292,7 +297,7 @@ public final class AlgoShoveTrace
       if (!trace_shape.is_contained_in(r_board.get_bounding_box())) return 0;
       
       BrdFromSide from_side = new BrdFromSide(p_line_segment, trace_shape, p_shove_to_the_left);
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(trace_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(trace_shape, p_layer, p_net_no_arr, p_cl_type, from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
@@ -395,7 +400,7 @@ public final class AlgoShoveTrace
                      curr_line_segment, 
                      p_shove_to_the_left, 
                      p_layer, 
-                     new NetNosList(curr_substitute_trace.net_no_arr), 
+                     curr_substitute_trace.net_nos, 
                      curr_substitute_trace.get_half_width(),
                      curr_substitute_trace.clearance_class_no(), 
                      p_max_recursion_depth - 1,
@@ -439,7 +444,7 @@ public final class AlgoShoveTrace
          ShapeTile p_trace_shape, 
          BrdFromSide p_from_side, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_cl_type,
          Collection<BrdItem> p_ignore_items, 
          int p_max_recursion_depth,
@@ -463,7 +468,7 @@ public final class AlgoShoveTrace
             p_trace_shape, 
             p_from_side, 
             p_layer, 
-            new NetNosList(p_net_no_arr), 
+            p_net_no_arr, 
             p_cl_type, 
             p_ignore_items, 
             p_max_recursion_depth, 
@@ -476,7 +481,7 @@ public final class AlgoShoveTrace
       ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
-      obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, new NetNosList(p_net_no_arr)));
+      obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
       if (!shape_entries.shove_via_list.isEmpty())
@@ -502,7 +507,7 @@ public final class AlgoShoveTrace
          return false;
          }
 
-      boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr);
+      boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr.net_nos_arr);
       shape_entries.cutout_traces(obstacles);
       boolean is_orthogonal_mode = p_trace_shape instanceof ShapeTileBox;
       for (;;)
@@ -517,8 +522,12 @@ public final class AlgoShoveTrace
             }
          if (p_max_spring_over_recursion_depth > 0)
             {
-            Polyline new_polyline = spring_over(curr_substitute_trace.polyline(), curr_substitute_trace.get_compensated_half_width(search_tree), p_layer, curr_substitute_trace.net_no_arr,
-                  curr_substitute_trace.clearance_class_no(), false, p_max_spring_over_recursion_depth, null);
+            Polyline new_polyline = spring_over(
+                  curr_substitute_trace.polyline(), 
+                  curr_substitute_trace.get_compensated_half_width(search_tree), 
+                  p_layer, curr_substitute_trace.net_nos,
+                  curr_substitute_trace.clearance_class_no(), 
+                  false, p_max_spring_over_recursion_depth, null);
 
             if (new_polyline == null)
                {
@@ -532,11 +541,18 @@ public final class AlgoShoveTrace
                curr_substitute_trace.change(new_polyline);
                }
             }
-         int[] curr_net_no_arr = curr_substitute_trace.net_no_arr;
+         NetNosList curr_net_no_arr = curr_substitute_trace.net_nos;
          for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
             {
             BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, false);
-            if (!this.shove_trace_insert(curr.shape, curr.from_side, p_layer, curr_net_no_arr, curr_substitute_trace.clearance_class_no(), p_ignore_items, p_max_recursion_depth - 1, p_max_via_recursion_depth,
+            if ( !  shove_trace_insert(
+                  curr.shape, 
+                  curr.from_side, 
+                  p_layer, 
+                  curr_net_no_arr, 
+                  curr_substitute_trace.clearance_class_no(), 
+                  p_ignore_items, p_max_recursion_depth - 1, 
+                  p_max_via_recursion_depth,
                   p_max_spring_over_recursion_depth))
                {
                return false;
@@ -561,7 +577,7 @@ public final class AlgoShoveTrace
             {
             for (int i = 0; i < 2; ++i)
                {
-               BrdTrace tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
+               BrdTrace tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr.net_nos_arr);
                if (tail != null)
                   {
                   r_board.remove_items_unfixed(tail.get_connection_items(BrdStopConnection.VIA));
@@ -605,7 +621,7 @@ public final class AlgoShoveTrace
          Polyline p_polyline, 
          int p_half_width, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_cl_type, 
          boolean p_over_connected_pins, 
          int p_recursion_depth,
@@ -614,18 +630,18 @@ public final class AlgoShoveTrace
       BrdItem found_obstacle = null;
       ShapeTileBox found_obstacle_bounding_box = null;
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      int[] check_net_no_arr;
+      NetNosList check_net_no_arr;
       
       if (p_contact_pins == null)
          check_net_no_arr = p_net_no_arr;
       else
-         check_net_no_arr = new int[0];
+         check_net_no_arr = NetNosList.EMPTY;
       
       for (int index = 0; index < p_polyline.plalinelen(-2); ++index)
          {
          ShapeTile curr_shape = p_polyline.offset_shape(p_half_width, index);
          
-         Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(curr_shape, p_layer, new NetNosList(check_net_no_arr), p_cl_type);
+         Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(curr_shape, p_layer, check_net_no_arr, p_cl_type);
          
          for ( BrdItem curr_item : obstacles )
             {
@@ -867,7 +883,7 @@ public final class AlgoShoveTrace
     * This function looks contrary to the previous function for the shortest way around the obstacles. 
     * If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as obstacles, even if they are of the own net.
     */
-   public Polyline spring_over_obstacles(Polyline p_polyline, int p_half_width, int p_layer, int[] p_net_no_arr, int p_cl_type, Set<BrdAbitPin> p_contact_pins)
+   public Polyline spring_over_obstacles(Polyline p_polyline, int p_half_width, int p_layer, NetNosList p_net_no_arr, int p_cl_type, Set<BrdAbitPin> p_contact_pins)
       {
       final int c_max_spring_over_recursion_depth = 20;
       

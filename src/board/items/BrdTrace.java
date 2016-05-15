@@ -35,6 +35,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
+import freert.rules.RuleNet;
 import freert.rules.RuleNets;
 import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
@@ -327,7 +328,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
       // check, if the trace belongs to a net, which is not shovable.
       RuleNets nets = r_board.brd_rules.nets;
       
-      for (int curr_net_no : net_no_arr)
+      for (int curr_net_no : net_nos)
          {
          // do not check special nets
          if ( ! freert.rules.RuleNets.is_normal_net_no(curr_net_no)) continue;
@@ -375,14 +376,17 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
          }
       
       boolean ignore_areas = false;
-      if (net_no_arr.length > 0)
+      
+      if ( ! net_nos.is_empty() )
          {
-         freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(net_no_arr[0]);
+         RuleNet curr_net = r_board.brd_rules.nets.get(net_nos.first());
+
          if (curr_net != null && curr_net.get_class() != null)
             {
             ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
             }
          }
+      
       for (BrdItem curr_contact : start_contacts)
          {
          if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas))

@@ -126,7 +126,7 @@ public final class AlgoMoveDrillItem
                curr_tile_shape, 
                from_side, 
                curr_layer, 
-               p_drill_item.net_no_arr, 
+               p_drill_item.net_nos, 
                p_drill_item.clearance_class_no(), 
                attach_allowed, 
                ignore_items, 
@@ -186,7 +186,7 @@ public final class AlgoMoveDrillItem
                curr_tile_shape, 
                from_side, 
                curr_layer, 
-               new NetNosList( p_drill_item.net_no_arr ), 
+               p_drill_item.net_nos, 
                p_drill_item.clearance_class_no(), 
                attach_allowed, 
                ignore_items, 
@@ -220,7 +220,8 @@ public final class AlgoMoveDrillItem
          boolean p_copper_sharing_allowed)
       {
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_obstacle_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, p_from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(
+            p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_obstacle_shape, p_layer, NetNosList.EMPTY, p_cl_type);
 
       if (!shape_entries.store_items(obstacles, false, p_copper_sharing_allowed))
