@@ -32,6 +32,7 @@ import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.Polyline;
 import freert.varie.NetNosList;
 
@@ -80,7 +81,7 @@ public final class ArtConnectionInsert
       for ( ArtLocateResult curr_new_item : p_connection.connection_items )
          {
          
-         if (! insert_via_done(curr_new_item.corners[0], curr_layer, curr_new_item.layer))
+         if (! insert_via_done(curr_new_item.first(), curr_layer, curr_new_item.layer))
             {
             r_board.userPrintln(classname+"insert_via FAIL");
             return false;
@@ -125,9 +126,9 @@ public final class ArtConnectionInsert
     */
    private boolean insert_trace_done(ArtLocateResult p_locate)
       {
-      if (p_locate.corners.length == 1)
+      if (p_locate.size() == 1)
          {
-         last_corner = p_locate.corners[0];
+         last_corner = p_locate.corner(0);
          return true;
          }
       
@@ -143,10 +144,11 @@ public final class ArtConnectionInsert
       if (ctrl.with_neckdown)
          {
          ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
-         PlaPointInt curr_end_corner = p_locate.corners[0];
+         PlaPointInt curr_end_corner = p_locate.first();
          for (int index = 0; index < 2; ++index)
             {
             Set<BrdItem> picked_items = r_board.pick_items(curr_end_corner, p_locate.layer, item_filter);
+            
             for (BrdItem curr_item : picked_items)
                {
                BrdAbitPin curr_pin = (BrdAbitPin) curr_item;
@@ -162,22 +164,21 @@ public final class ArtConnectionInsert
                      }
                   }
                }
-            curr_end_corner = p_locate.corners[p_locate.corners.length - 1];
+            curr_end_corner = p_locate.corner(p_locate.size(-1) );
             }
          }
-      
       
       NetNosList net_no_arr = new NetNosList( ctrl.net_no );
 
       int from_corner_no = 0;
-      for (int index = 1; index < p_locate.corners.length; ++index)
+      
+      for (int index = 1; index < p_locate.size(); ++index)
          {
-         PlaPointInt[] curr_corner_arr = new PlaPointInt[index - from_corner_no + 1];
+         // no need to be stingy with the ArrayList allocation
+         PlaPointIntAlist curr_corner_arr = new PlaPointIntAlist(p_locate.size());
          
          for (int jndex = from_corner_no; jndex <= index; ++jndex)
-            {
-            curr_corner_arr[jndex - from_corner_no] = p_locate.corners[jndex];
-            }
+            curr_corner_arr.add( p_locate.corner(jndex));
          
          Polyline insert_polyline = new Polyline(curr_corner_arr);
          
@@ -203,15 +204,15 @@ public final class ArtConnectionInsert
             break;
             }
          
-         if ( ok_point != insert_polyline.corner_last() && ctrl.with_neckdown && curr_corner_arr.length == 2)
+         if ( ok_point != insert_polyline.corner_last() && ctrl.with_neckdown && curr_corner_arr.size() == 2)
             {
-            neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr[1], p_locate.layer, start_pin, end_pin);
+            neckdown_inserted = insert_neckdown(ok_point, curr_corner_arr.get(1), p_locate.layer, start_pin, end_pin);
             }
          if (ok_point == insert_polyline.corner_last() || neckdown_inserted)
             {
             from_corner_no = index;
             }
-         else if (ok_point == insert_polyline.corner_first() && index != p_locate.corners.length - 1)
+         else if (ok_point == insert_polyline.corner_first() && index != p_locate.size(-1))
             {
             // if ok_point == insert_polyline.first_corner() the spring over may have failed.
             // Spring over may correct the situation because an insertion, which is ok with clearance compensation
@@ -219,9 +220,8 @@ public final class ArtConnectionInsert
             // In this case repeating the insertion with more distant corners may allow the spring_over to correct the situation.
             if (from_corner_no > 0)
                {
-               // p_trace.corners[i] may be inside the offset for the substitute trace around
-               // a spring_over obstacle (if clearance compensation is off).
-               if (curr_corner_arr.length < 3)
+               // p_trace.corners[i] may be inside the offset for the substitute trace around a spring_over obstacle (if clearance compensation is off).
+               if (curr_corner_arr.size() < 3)
                   {
                   // first correction
                   --from_corner_no;
@@ -241,9 +241,9 @@ public final class ArtConnectionInsert
       if ( ! r_board.debug(Mdbg.AUTORT, Ldbg.SPC_C) )
          {
          // the idea is that this code is always executed, unless you are debugging autoroute special C
-         for (int index = 0; index < p_locate.corners.length - 1; ++index)
+         for (int index = 0; index < p_locate.size(-1); ++index)
             {
-            BrdTrace trace_stub = r_board.get_trace_tail(p_locate.corners[index], p_locate.layer, net_no_arr);
+            BrdTrace trace_stub = r_board.get_trace_tail(p_locate.corner(index), p_locate.layer, net_no_arr);
 
             if (trace_stub == null) continue;
 
@@ -253,12 +253,9 @@ public final class ArtConnectionInsert
       
       r_board.brd_rules.set_pin_edge_to_turn_dist(saved_edge_to_turn_dist);
       
-      if ( first_corner == null)
-         {
-         first_corner = p_locate.corners[0];
-         }
+      if ( first_corner == null) first_corner = p_locate.first();
       
-      last_corner = p_locate.corners[p_locate.corners.length - 1];
+      last_corner = p_locate.last();
       
       return result;
       }

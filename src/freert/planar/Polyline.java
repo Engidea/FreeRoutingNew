@@ -42,7 +42,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private final ArrayList<PlaLineInt> lines_list;
 
    private transient PlaPointFloat[] precalculated_float_corners = null;
-   private transient PlaPoint[]      precalculated_corners = null;
+   private transient PlaPoint[]      precalculated_corners = null;        // need to ba an array since not all are calculated 
    private transient ShapeTileBox    precalculated_bounding_box = null;
 
    private  PlaPointInt corner_first;
@@ -53,7 +53,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * intersection of the i-th and the i+1-th lines of the new created p_polyline for 0 <= i < p_point_arr.length.
     * There is quite some checks done to ensure the result is meaningfult 
     */
-   private Polyline(PlaPointIntAlist point_arr)
+   public Polyline(PlaPointIntAlist point_arr)
       {
       int initial_len = point_arr.size(); 
       
