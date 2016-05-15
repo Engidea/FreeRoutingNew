@@ -20,6 +20,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.rules.RuleNets;
 import freert.rules.RuleViaInfoList;
+import freert.varie.NetNosList;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraClearanceViolations;
@@ -61,8 +62,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
          layer_active_arr[index] = true;
          }
       
-      int[] route_net_no_arr = new int[1];
-      route_net_no_arr[0] = RuleNets.HIDDEN_NET_NO;
+      NetNosList route_net_no_arr = new NetNosList( RuleNets.HIDDEN_NET_NO );
 
       return new IteraRoute(start_point, 
             layer_no, 

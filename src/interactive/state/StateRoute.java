@@ -23,6 +23,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.rules.RuleNet;
+import freert.varie.NetNosList;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraRoute;
@@ -86,44 +87,47 @@ public class StateRoute extends StateInteractive
 
       if (net_count <= 0) return null;
 
-      int[] route_net_no_arr;
+      NetNosList route_net_no_arr;
+      
       if (picked_item instanceof BrdAbitPin && net_count > 1)
          {
          // tie pin, remove nets, which are already conneccted to this pin on the current layer.
-         route_net_no_arr = get_route_net_numbers_at_tie_pin((BrdAbitPin) picked_item, p_board_handling.itera_settings.layer_no);
+         route_net_no_arr = new NetNosList ( get_route_net_numbers_at_tie_pin((BrdAbitPin) picked_item, p_board_handling.itera_settings.layer_no) );
          }
       else
          {
-         route_net_no_arr = new int[net_count];
-         for (int i = 0; i < net_count; ++i)
-            {
-            route_net_no_arr[i] = picked_item.get_net_no(i);
-            }
+         int [] a_net_no_arr = new int[net_count];
+      
+         for (int index = 0; index < net_count; ++index) a_net_no_arr[index] = picked_item.get_net_no(index);
+         
+         route_net_no_arr = new NetNosList(a_net_no_arr);
          }
-      if (route_net_no_arr.length <= 0)
-         {
-         return null;
-         }
+      
+      if (route_net_no_arr.is_empty() ) return null;
       
       // uff, this static stuff is really annoying....
       RoutingBoard routing_board = p_board_handling.get_routing_board();
       
       int[] trace_half_widths = new int[routing_board.get_layer_count()];
       boolean[] layer_active_arr = new boolean[trace_half_widths.length];
-      for (int i = 0; i < trace_half_widths.length; ++i)
+      
+      for (int index = 0; index < trace_half_widths.length; ++index)
          {
-         trace_half_widths[i] = p_board_handling.get_trace_halfwidth(route_net_no_arr[0], i);
-         layer_active_arr[i] = false;
-         for (int j = 0; j < route_net_no_arr.length; ++j)
+         trace_half_widths[index] = p_board_handling.get_trace_halfwidth(route_net_no_arr.first(), index);
+         
+         layer_active_arr[index] = false;
+         
+         for (int route_net_no : route_net_no_arr )
             {
-            if (p_board_handling.is_active_routing_layer(route_net_no_arr[j], i))
+            if ( p_board_handling.is_active_routing_layer(route_net_no, index))
                {
-               layer_active_arr[i] = true;
+               layer_active_arr[index] = true;
                }
             }
          }
 
-      int trace_clearance_class = p_board_handling.get_trace_clearance_class(route_net_no_arr[0]);
+      int trace_clearance_class = p_board_handling.get_trace_clearance_class(route_net_no_arr.first() );
+      
       boolean start_ok = true;
       
       if (picked_item instanceof BrdTracePolyline)
@@ -168,7 +172,7 @@ public class StateRoute extends StateInteractive
 
       if (!start_ok) return null;
 
-      RuleNet curr_net = routing_board.brd_rules.nets.get(route_net_no_arr[0]);
+      RuleNet curr_net = routing_board.brd_rules.nets.get(route_net_no_arr.first());
 
       if (curr_net == null)  return null;
 
@@ -195,7 +199,7 @@ public class StateRoute extends StateInteractive
             layer_active_arr, 
             route_net_no_arr, 
             trace_clearance_class,
-            p_board_handling.get_via_rule(route_net_no_arr[0]), 
+            p_board_handling.get_via_rule(route_net_no_arr.first()), 
             p_board_handling.itera_settings.push_enabled, 
             picked_item, 
             new_instance.

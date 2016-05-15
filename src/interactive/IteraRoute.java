@@ -101,7 +101,7 @@ public final class IteraRoute
          int p_layer, 
          int[] p_pen_half_width_arr, 
          boolean[] p_layer_active_arr, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_clearance_class, 
          RuleViaInfoList p_via_rule, 
          boolean p_push_enabled,
@@ -130,9 +130,7 @@ public final class IteraRoute
          }
 
       prev_corner = p_start_corner;
-
-      net_nos = new NetNosList(p_net_no_arr);
-      
+      net_nos = p_net_no_arr;
       pen_half_width_arr = p_pen_half_width_arr;
       layer_active_arr = p_layer_active_arr;
       clearance_class = p_clearance_class;

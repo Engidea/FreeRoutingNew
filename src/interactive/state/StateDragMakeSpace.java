@@ -24,6 +24,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.rules.RuleNets;
 import freert.rules.RuleViaInfoList;
+import freert.varie.NetNosList;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraRoute;
@@ -56,8 +57,7 @@ public final class StateDragMakeSpace extends StateDrag
          layer_active_arr[index] = true;
          }
       
-      int[] route_net_no_arr = new int[1];
-      route_net_no_arr[0] = RuleNets.HIDDEN_NET_NO;
+      NetNosList route_net_no_arr = new NetNosList(RuleNets.HIDDEN_NET_NO);
 
       itera_route = new IteraRoute(p_location.round(), 
             i_brd.itera_settings.layer_no, 
