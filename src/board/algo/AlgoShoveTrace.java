@@ -577,7 +577,7 @@ public final class AlgoShoveTrace
             {
             for (int i = 0; i < 2; ++i)
                {
-               BrdTrace tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr.net_nos_arr);
+               BrdTrace tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
                if (tail != null)
                   {
                   r_board.remove_items_unfixed(tail.get_connection_items(BrdStopConnection.VIA));

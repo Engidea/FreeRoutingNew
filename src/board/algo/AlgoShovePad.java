@@ -326,7 +326,7 @@ public final class AlgoShovePad
          
          for (int index = 0; index < 2; ++index)
             {
-            BrdTrace tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr.net_nos_arr);
+            BrdTrace tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
             
             if (tail == null) continue;
 
@@ -350,7 +350,7 @@ public final class AlgoShovePad
     */
    public BrdFromSide calc_from_side(ShapeTile p_shape, PlaPointInt p_shape_center, int p_layer, int p_offset, int p_cl_class)
       {
-      int[] empty_arr = new int[0];
+      NetNosList empty_arr = NetNosList.EMPTY;
       
       ShapeTile offset_shape = (ShapeTile) p_shape.offset(p_offset);
       

@@ -37,6 +37,7 @@ import freert.planar.ShapeTileBox;
 import freert.rules.BoardRules;
 import freert.rules.ClearanceMatrix;
 import freert.varie.ItemClass;
+import freert.varie.NetNosList;
 import freert.varie.UndoableObjectNode;
 import gui.varie.IndentFileWriter;
 import gui.varie.UndoableObjectStorable;
@@ -269,8 +270,8 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                {
                clearance_class_no = curr_net.get_class().default_item_clearance_classes.get(ItemClass.AREA);
                }
-            int[] net_numbers = new int[1];
-            net_numbers[0] = curr_net.net_number;
+            NetNosList net_numbers = new NetNosList( curr_net.net_number);
+            
             board.insert_conduction_area(plane_area, curr_layer.layer_no, net_numbers, clearance_class_no, false, ItemFixState.SYSTEM_FIXED);
             }
          else
@@ -1000,8 +1001,8 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                   continue;
                   }
                }
-            int[] net_numbers = new int[1];
-            net_numbers[0] = curr_net.net_number;
+            NetNosList net_numbers = new NetNosList(curr_net.net_number);
+            
             p_board.insert_conduction_area(p_board.bounding_box, curr_layer.layer_no, net_numbers, BoardRules.clearance_class_none, false, ItemFixState.SYSTEM_FIXED);
             }
          }

@@ -30,6 +30,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -66,7 +67,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
          PlaVectorInt p_translation, 
          double p_rotation_in_degree, 
          boolean p_side_changed, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_clearance_type, 
          int p_id_no, 
          int p_cmp_no, 
@@ -99,13 +100,13 @@ public class BrdArea extends BrdItem implements java.io.Serializable
          ItemFixState p_fixed_state, 
          RoutingBoard p_board)
       {
-      this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, new int[0], p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
+      this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, NetNosList.EMPTY, p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }
 
    @Override
    public BrdArea copy(int p_id_no)
       {
-      int[] copied_net_nos = net_nos.net_nos_arr.clone();
+      NetNosList copied_net_nos = net_nos.copy();
 
       return new BrdArea(relative_area, layer_no, translation, rotation_in_degree, side_changed, copied_net_nos, clearance_class_no(), p_id_no, get_component_no(), area_name, get_fixed_state(), r_board);
       }

@@ -178,7 +178,7 @@ public final class AlgoShoveVia
    public boolean shove_via_insert(
          BrdViaInfo p_via_info, 
          PlaPointInt p_location, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_trace_clearance_class_no, 
          int[] p_trace_pen_halfwidth_arr, 
          int p_max_recursion_depth,
@@ -238,7 +238,7 @@ public final class AlgoShoveVia
                tile_shape, 
                from_side, 
                index, 
-               new NetNosList(p_net_no_arr), 
+               p_net_no_arr, 
                p_via_info.get_clearance_class(), 
                p_via_info.attach_smd_allowed(), 
                null, 
@@ -255,7 +255,7 @@ public final class AlgoShoveVia
                   start_trace_shape, 
                   from_side, 
                   index, 
-                  new NetNosList(p_net_no_arr), 
+                  p_net_no_arr, 
                   p_trace_clearance_class_no, 
                   true, 
                   null, 
@@ -267,7 +267,12 @@ public final class AlgoShoveVia
                }
             }
          }
-      r_board.insert_via(via_padstack, p_location, p_net_no_arr, p_via_info.get_clearance_class(), ItemFixState.UNFIXED, p_via_info.attach_smd_allowed());
+      r_board.insert_via(
+            via_padstack, 
+            p_location, 
+            p_net_no_arr, 
+            p_via_info.get_clearance_class(), 
+            ItemFixState.UNFIXED, p_via_info.attach_smd_allowed());
       return true;
       }
 

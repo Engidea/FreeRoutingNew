@@ -29,7 +29,9 @@ import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.rules.BoardRules;
 import freert.rules.NetClass;
+import freert.rules.RuleNet;
 import freert.varie.ItemClass;
+import freert.varie.NetNosList;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
@@ -1390,8 +1392,9 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             net_no_arr[net_index] = curr_net_no;
             ++net_index;
             }
-         freert.rules.NetClass net_class;
-         freert.rules.RuleNet board_net;
+         
+         NetClass net_class;
+         RuleNet board_net;
          if (net_no_arr.length > 0)
             {
             board_net = routing_board.brd_rules.nets.get(net_no_arr[0]);
@@ -1425,7 +1428,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                clearance_class = net_class.default_item_clearance_classes.get(ItemClass.PIN);
                }
             }
-         routing_board.insert_pin(new_component.id_no, i, net_no_arr, clearance_class, fixed_state);
+         routing_board.insert_pin(new_component.id_no, i, new NetNosList(net_no_arr), clearance_class, fixed_state);
          }
 
       // insert the keepouts belonging to the package (k = 1 for via keepouts)

@@ -32,6 +32,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.NetNosList;
 import freert.varie.UnitMeasure;
 import gui.varie.ObjectInfoPanel;
 
@@ -53,7 +54,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
 
    public BrdComponentOutline(PlaArea p_area, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
-      super(new int[0], 0, 0, p_component_no, p_fixed_state, p_board);
+      super(NetNosList.EMPTY, 0, 0, p_component_no, p_fixed_state, p_board);
       relative_area = p_area;
       is_front = p_is_front;
       translation = p_translation;

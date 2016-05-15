@@ -243,7 +243,7 @@ public final class ArtConnectionInsert
          // the idea is that this code is always executed, unless you are debugging autoroute special C
          for (int index = 0; index < p_locate.corners.length - 1; ++index)
             {
-            BrdTrace trace_stub = r_board.get_trace_tail(p_locate.corners[index], p_locate.layer, net_no_arr.net_nos_arr);
+            BrdTrace trace_stub = r_board.get_trace_tail(p_locate.corners[index], p_locate.layer, net_no_arr);
 
             if (trace_stub == null) continue;
 
@@ -449,7 +449,7 @@ public final class ArtConnectionInsert
       if (! r_board.shove_via_algo.shove_via_insert(
             via_info, 
             p_location, 
-            net_no_arr.net_nos_arr, 
+            net_no_arr, 
             ctrl.trace_clearance_class_no, 
             ctrl.trace_half_width, 
             ctrl.max_shove_trace_recursion_depth,

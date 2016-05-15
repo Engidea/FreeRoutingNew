@@ -42,6 +42,7 @@ import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -63,7 +64,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
     * Creates a new instance of Pin with the input parameters. (p_to_layer - p_from_layer + 1) shapes must be provided. 
     * p_pin_no is the number of the pin in its component (starting with 0).
     */
-   public BrdAbitPin(int p_component_no, int p_pin_no, int[] p_net_no_arr, int p_clearance_type, int p_id_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdAbitPin(int p_component_no, int p_pin_no, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(null, p_net_no_arr, p_clearance_type, p_id_no, p_component_no, p_fixed_state, p_board);
 
@@ -176,12 +177,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    @Override
    public BrdAbitPin copy(int p_id_no)
       {
-      int[] curr_net_no_arr = new int[net_count()];
-      
-      for (int index = 0; index < curr_net_no_arr.length; ++index)
-         {
-         curr_net_no_arr[index] = get_net_no(index);
-         }
+      NetNosList curr_net_no_arr = net_nos.copy();
       
       return new BrdAbitPin(get_component_no(), pin_no, curr_net_no_arr, clearance_class_no(), p_id_no, get_fixed_state(), r_board);
       }

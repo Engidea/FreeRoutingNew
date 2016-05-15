@@ -36,6 +36,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -55,7 +56,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
          PlaVectorInt p_translation, 
          double p_rotation_in_degree, 
          boolean p_side_changed, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_clearance_class, 
          int p_id_no, 
          int p_group_no,
@@ -83,7 +84,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
             get_translation(), 
             get_rotation_in_degree(), 
             get_side_changed(), 
-            net_nos.net_nos_arr, 
+            net_nos, 
             clearance_class_no(), 
             p_id_no, 
             get_component_no(),

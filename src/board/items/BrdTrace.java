@@ -54,7 +54,7 @@ public abstract class BrdTrace extends BrdItem implements BrdConnectable, java.i
    private final int trace_half_width; // half width of the trace pen
    private int layer_no; // board layer of the trace
    
-   public BrdTrace(int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdTrace(int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
       

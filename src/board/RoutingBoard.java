@@ -180,7 +180,7 @@ public final class RoutingBoard implements java.io.Serializable
     * p_clearance_class is the index in the clearance_matix, which describes the required clearance restrictions to other items. 
     * Because no internal cleaning of items is done, the new inserted item can be returned.
     */
-   public BrdTracePolyline insert_trace_without_cleaning(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
+   public BrdTracePolyline insert_trace_without_cleaning(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
       if ( ! p_polyline.is_valid() ) return null;
 
@@ -209,7 +209,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts a trace into the board, whose geometry is described by a Polyline. p_clearance_class is the index in the
     * clearance_matix, which describes the required clearance restrictions to other items.
     */
-   public void insert_trace(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
+   public void insert_trace(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
       BrdTracePolyline new_trace = insert_trace_without_cleaning(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, p_fixed_state);
 
@@ -228,7 +228,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts a trace into the board, whose geometry is described by an array of points, and cleans up the net.
     */
-   public void insert_trace(PlaPointInt[] p_points, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
+   public void insert_trace(PlaPointInt[] p_points, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
       for (int index = 0; index < p_points.length; ++index)
          {
@@ -246,7 +246,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts a via into the board. 
     * @param p_attach_allowed indicates, if the via may overlap with SMD pins of the same net.
     */
-   public void insert_via(LibPadstack p_padstack, PlaPointInt p_center, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state, boolean p_attach_allowed)
+   public void insert_via(LibPadstack p_padstack, PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state, boolean p_attach_allowed)
       {
       BrdAbitVia new_via = new BrdAbitVia(p_padstack, p_center, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, p_attach_allowed, this);
       insert_item(new_via);
@@ -265,7 +265,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts a pin into the board. p_pin_no is the number of this pin in the library package of its component (starting with 0).
     */
-   public void insert_pin(int p_component_no, int p_pin_no, int[] p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
+   public void insert_pin(int p_component_no, int p_pin_no, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
       BrdAbitPin new_pin = new BrdAbitPin(p_component_no, p_pin_no, p_net_no_arr, p_clearance_class, 0, p_fixed_state, this);
       insert_item(new_pin);
@@ -412,7 +412,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Inserts a conduction area into the board , whose geometry is described by a polygonyal shape, which may have holes. If
     * p_is_obstacle is false, it is possible to route through the conduction area with traces and vias of foreign nets.
     */
-   public BrdAreaConduction insert_conduction_area(PlaArea p_area, int p_layer, int[] p_net_no_arr, int p_clearance_class, boolean p_is_obstacle, ItemFixState p_fixed_state)
+   public BrdAreaConduction insert_conduction_area(PlaArea p_area, int p_layer, NetNosList p_net_no_arr, int p_clearance_class, boolean p_is_obstacle, ItemFixState p_fixed_state)
       {
       if (p_area == null)
          {
@@ -1061,7 +1061,7 @@ public final class RoutingBoard implements java.io.Serializable
     * layer p_layer without clearance violation. If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as
     * obstacles, even if they are of the own net.
     */
-   public boolean check_trace_shape(ShapeTile p_shape, int p_layer, int[] p_net_no_arr, int p_cl_class, Set<BrdAbitPin> p_contact_pins)
+   public boolean check_trace_shape(ShapeTile p_shape, int p_layer, NetNosList p_net_no_arr, int p_cl_class, Set<BrdAbitPin> p_contact_pins)
       {
       if (!p_shape.is_contained_in(bounding_box)) return false;
       
@@ -1100,15 +1100,8 @@ public final class RoutingBoard implements java.io.Serializable
                }
             }
          
-         boolean is_obstacle = true;
-         for (int i = 0; i < p_net_no_arr.length; ++i)
-            {
-            if (!curr_item.is_trace_obstacle(p_net_no_arr[i]))
-               {
-               is_obstacle = false;
-               }
-            }
-         
+         boolean is_obstacle = p_net_no_arr.is_trace_obstacle(curr_item);
+    
          if (is_obstacle && (curr_item instanceof BrdTracePolyline) && p_contact_pins != null)
             {
             // check for traces of foreign nets at tie pins, which will be ignored inside the pin shape
@@ -1142,7 +1135,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Checks, if a polyline trace with the input parameters can be inserted without clearance violations
     */
-   public boolean check_polyline_trace(Polyline p_polyline, int p_layer, int p_pen_half_width, int[] p_net_no_arr, int p_clearance_class)
+   public boolean check_polyline_trace(Polyline p_polyline, int p_layer, int p_pen_half_width, NetNosList p_net_no_arr, int p_clearance_class)
       {
       BrdTrace tmp_trace = new BrdTracePolyline(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, 0, ItemFixState.UNFIXED, this);
       
@@ -1381,8 +1374,9 @@ public final class RoutingBoard implements java.io.Serializable
       PlaVectorInt translation = p_area.get_translation();
       double rotation = p_area.get_rotation_in_degree();
       boolean side_changed = p_area.get_side_changed();
-      int[] net_no_arr = new int[1];
-      net_no_arr[0] = p_net_no;
+
+      NetNosList net_no_arr = new NetNosList(p_net_no);
+      
       new_item = new BrdAreaConduction(
             curr_area, 
             layer, 
@@ -1556,7 +1550,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Looks if at the input position ends a trace with the input net number, which has no normal contact at that position. 
     * @return null, if no tail is found.
     */
-   public BrdTrace get_trace_tail(PlaPoint p_location, int p_layer, int[] p_net_no_arr)
+   public BrdTrace get_trace_tail(PlaPoint p_location, int p_layer, NetNosList p_net_no_arr)
       {
       ShapeTile point_shape = new ShapeTileBox(p_location);
       
@@ -1602,16 +1596,18 @@ public final class RoutingBoard implements java.io.Serializable
       boolean[] tail_at_endpoint_before = null;
       PlaPoint[] end_corners = null;
       int curr_layer = p_trace.get_layer();
-      int[] curr_net_no_arr = p_trace.net_nos.net_nos_arr;
+      NetNosList curr_net_no_arr = p_trace.net_nos;
       end_corners = new PlaPoint[2];
       end_corners[0] = p_trace.corner_first();
       end_corners[1] = p_trace.corner_last();
       tail_at_endpoint_before = new boolean[2];
-      for (int i = 0; i < 2; ++i)
+      
+      for (int index = 0; index < 2; ++index)
          {
-         BrdTrace tail = get_trace_tail(end_corners[i], curr_layer, curr_net_no_arr);
-         tail_at_endpoint_before[i] = (tail != null);
+         BrdTrace tail = get_trace_tail(end_corners[index], curr_layer, curr_net_no_arr);
+         tail_at_endpoint_before[index] = (tail != null);
          }
+      
       Set<BrdItem> connection_items = p_trace.get_connection_items();
       
       remove_items_unfixed(connection_items);
@@ -2136,7 +2132,7 @@ public final class RoutingBoard implements java.io.Serializable
       boolean r_ok = shove_via_algo.shove_via_insert(
             p_via_info, 
             p_location, 
-            p_net_no_arr.net_nos_arr, 
+            p_net_no_arr, 
             p_trace_clearance_class_no, 
             p_trace_pen_halfwidth_arr, 
             p_max_recursion_depth, 
@@ -2526,8 +2522,9 @@ public final class RoutingBoard implements java.io.Serializable
          }
       
       BrdTracePolyline new_trace = insert_trace_without_cleaning(
-            new_polyline, p_layer, p_half_width, p_net_no_arr.net_nos_arr,
+            new_polyline, p_layer, p_half_width, p_net_no_arr,
             p_clearance_class_no, ItemFixState.UNFIXED);
+      
       new_trace.combine();
 
       ShapeTileOctagon tidy_region = null;
@@ -2721,7 +2718,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       PlaPoint last_corner = p_to_trace.corner_last();
 
-      int[] net_no_arr = p_to_trace.net_nos.net_nos_arr;
+      NetNosList net_no_arr = p_to_trace.net_nos;
       
       Polyline apoly = p_to_trace.polyline();
       

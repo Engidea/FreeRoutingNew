@@ -75,7 +75,7 @@ public abstract class AlgoPullTight
 
    protected int curr_layer;
    protected int curr_half_width;
-   protected int[] curr_net_no_arr;
+   protected NetNosList curr_net_no_arr;
    protected int curr_cl_type;
    protected ShapeTileOctagon curr_clip_shape;
    protected Set<BrdAbitPin> contact_pins;
@@ -246,7 +246,7 @@ public abstract class AlgoPullTight
     * Function for optimizing a single trace polygon p_contact_pins are the pins at the end corners of p_polyline. 
     * Other pins are regarded as obstacles, even if they are of the own net.
     */
-   public Polyline pull_tight(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_cl_type, Set<BrdAbitPin> p_contact_pins)
+   public Polyline pull_tight(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_cl_type, Set<BrdAbitPin> p_contact_pins)
       {
       curr_layer = p_layer;
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
@@ -496,7 +496,7 @@ public abstract class AlgoPullTight
       {
       curr_layer = p_trace.get_layer();
       curr_half_width = p_trace.get_half_width();
-      curr_net_no_arr = p_trace.net_nos.net_nos_arr;
+      curr_net_no_arr = p_trace.net_nos;
       curr_cl_type = p_trace.clearance_class_no();
       
       return smoothen_end_corners_at_trace_1(p_trace);
@@ -536,7 +536,7 @@ public abstract class AlgoPullTight
                   adjusted_polyline, 
                   trace_layer, 
                   curr_half_width, 
-                  curr_trace.net_nos.net_nos_arr, 
+                  curr_trace.net_nos, 
                   curr_cl_class, curr_fixed_state);
 
             for (int curr_net_no : curr_trace.net_nos )
@@ -631,7 +631,7 @@ public abstract class AlgoPullTight
             p_polyline, 
             curr_half_width, 
             curr_layer, 
-            new NetNosList( curr_net_no_arr), 
+            curr_net_no_arr, 
             curr_cl_type, contact_pins);
       
       if (new_polyline != null && new_polyline != p_polyline)

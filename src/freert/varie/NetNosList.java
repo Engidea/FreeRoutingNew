@@ -3,6 +3,7 @@ package freert.varie;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
+import board.items.BrdItem;
 import board.shape.ShapeTreeObject;
 
 /*
@@ -47,6 +48,12 @@ public final class NetNosList implements Iterable<Integer>
       {
       net_nos_arr = new int[1];
       net_nos_arr[0] = first_value;
+      }
+
+   public NetNosList copy ( )
+      {
+      int [] a_copy = net_nos_arr.clone();
+      return new NetNosList(a_copy);
       }
 
    /**
@@ -110,6 +117,28 @@ public final class NetNosList implements Iterable<Integer>
       return false;
       }
 
+
+   /**
+    * The given item is not an obstacle for the list of nets if there is at least one net usable
+    * So, to be an obstacle ALL nets should be an obstacle
+    * @param p_item
+    * @return
+    */
+   public boolean is_trace_obstacle(BrdItem p_item)
+      {
+      for (int index = 0; index < net_nos_arr.length; ++index)
+         {
+         // if at least one net is NOT an obstacle we can return
+         if ( ! p_item.is_trace_obstacle(net_nos_arr[index])) return false;
+         }
+      
+      // all nets are obstacle
+      return true;
+      }
+
+   
+   
+   
    /**
     * If there is at least one net that is not an obstacle then return true
     * @param p_obj

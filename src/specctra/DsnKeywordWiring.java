@@ -35,6 +35,7 @@ import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
+import freert.planar.PlaArea;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -43,6 +44,7 @@ import freert.planar.ShapeTileBox;
 import freert.rules.NetClass;
 import freert.rules.RuleNet;
 import freert.varie.ItemClass;
+import freert.varie.NetNosList;
 import freert.varie.UndoableObjectNode;
 import gui.varie.IndentFileWriter;
 
@@ -472,8 +474,10 @@ final class DsnKeywordWiring extends DsnKeywordScope
          Collection<DsnShape> area = new LinkedList<DsnShape>();
          area.add(border_shape);
          area.addAll(hole_list);
-         freert.planar.PlaArea conduction_area = DsnShape.transform_area_to_board(area, p_par.coordinate_transform);
-         result = board.insert_conduction_area(conduction_area, layer_no, net_no_arr, clearance_class_no, false, fixed);
+         
+         PlaArea conduction_area = DsnShape.transform_area_to_board(area, p_par.coordinate_transform);
+         
+         result = board.insert_conduction_area(conduction_area, layer_no,  new NetNosList(net_no_arr), clearance_class_no, false, fixed);
          }
       else if (path instanceof DsnPolygonPath)
          {
@@ -501,7 +505,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
             {
             Polyline trace_polyline = new Polyline(corner_arr);
             // Traces are not yet normalized here because cycles may be removed premature.
-            result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
+            result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, new NetNosList(net_no_arr), clearance_class_no, fixed);
             }
          catch ( Exception exc )
             {
@@ -531,7 +535,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
          
          Polyline trace_polyline = new Polyline(line_arr);
          
-         result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, net_no_arr, clearance_class_no, fixed);
+         result = board.insert_trace_without_cleaning(trace_polyline, layer_no, half_width, new NetNosList(net_no_arr), clearance_class_no, fixed);
          }
       else
          {
@@ -673,6 +677,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
             System.out.print(net_id.name);
             System.out.println(" not found");
             }
+         
          int[] net_no_arr = new int[found_nets.size()];
          int curr_index = 0;
          for (freert.rules.RuleNet curr_net : found_nets)
@@ -680,6 +685,8 @@ final class DsnKeywordWiring extends DsnKeywordScope
             net_no_arr[curr_index] = curr_net.net_number;
             net_class = curr_net.get_class();
             }
+         
+         
          int clearance_class_no = -1;
          if (clearance_class_name != null)
             {
@@ -698,7 +705,8 @@ final class DsnKeywordWiring extends DsnKeywordScope
          else
             {
             boolean attach_allowed = p_par.via_at_smd_allowed && curr_padstack.attach_allowed;
-            board.insert_via(curr_padstack, board_location, net_no_arr, clearance_class_no, fixed, attach_allowed);
+            
+            board.insert_via(curr_padstack, board_location, new NetNosList(net_no_arr), clearance_class_no, fixed, attach_allowed);
             }
          return true;
          }

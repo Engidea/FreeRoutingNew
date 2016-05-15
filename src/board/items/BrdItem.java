@@ -84,7 +84,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    private transient SearchTreesInfo search_trees_info = new SearchTreesInfo();
 
    
-   public BrdItem(int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdItem(NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       r_board = p_board;
    
@@ -94,7 +94,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          }
       else
          {
-         net_nos = new NetNosList(p_net_no_arr.clone());
+         net_nos = p_net_no_arr.copy();
          }
 
       if (p_id_no <= 0)

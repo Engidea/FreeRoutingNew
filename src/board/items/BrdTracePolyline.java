@@ -42,6 +42,7 @@ import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.rules.RuleNet;
+import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimitStoppable;
@@ -56,7 +57,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
    
    private Polyline polyline;   // the actual line of the trace
 
-   public BrdTracePolyline(Polyline p_polyline, int p_layer, int p_half_width, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdTracePolyline(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(p_layer, p_half_width, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
 
@@ -69,12 +70,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
    @Override
    public BrdItem copy(int p_id_no)
       {
-      int[] curr_net_no_arr = new int[net_count()];
-
-      for (int index = 0; index < curr_net_no_arr.length; ++index)
-         {
-         curr_net_no_arr[index] = get_net_no(index);
-         }
+      NetNosList curr_net_no_arr = net_nos.copy();
       
       return new BrdTracePolyline(polyline, get_layer(), get_half_width(), curr_net_no_arr, clearance_class_no(), p_id_no, get_component_no(), get_fixed_state(), r_board);
       }
@@ -770,8 +766,8 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       
       r_board.remove_item(this);
       BrdTracePolyline[] result = new BrdTracePolyline[2];
-      result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), get_fixed_state());
-      result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), get_fixed_state());
+      result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos, clearance_class_no(), get_fixed_state());
+      result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos, clearance_class_no(), get_fixed_state());
       return result;
       }
 
@@ -848,7 +844,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
             }
          }
       
-      Polyline new_lines = p_pull_tight_algo.pull_tight(polyline, get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), touching_pins_at_end_corners());
+      Polyline new_lines = p_pull_tight_algo.pull_tight(polyline, get_layer(), get_half_width(), net_nos, clearance_class_no(), touching_pins_at_end_corners());
       if (new_lines != polyline)
          {
          change(new_lines);
@@ -1279,7 +1275,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       curr_lines[curr_lines.length - 1] = trace_polyline.plaline(latest_entry_tuple[0]);
 
       Polyline border_polyline = new Polyline(curr_lines);
-      if (!r_board.check_polyline_trace(border_polyline, get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no()))
+      if (!r_board.check_polyline_trace(border_polyline, get_layer(), get_half_width(), net_nos, clearance_class_no()))
          {
          return false;
          }
@@ -1315,7 +1311,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
       curr_lines[1] = nearest_pin_exit_ray;
       curr_lines[2] = offset_pin_shape.border_line(nearest_border_line_no);
       Polyline exit_line_segment = new Polyline(curr_lines);
-      r_board.insert_trace(exit_line_segment, get_layer(), get_half_width(), net_nos.net_nos_arr, clearance_class_no(), ItemFixState.SHOVE_FIXED);
+      r_board.insert_trace(exit_line_segment, get_layer(), get_half_width(), net_nos, clearance_class_no(), ItemFixState.SHOVE_FIXED);
       return true;
       }
 

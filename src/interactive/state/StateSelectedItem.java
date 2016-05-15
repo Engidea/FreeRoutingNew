@@ -25,6 +25,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.rules.RuleNet;
+import freert.varie.NetNosList;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimitStoppable;
 import gui.win.WindowObjectInfo;
@@ -326,12 +327,18 @@ public final class StateSelectedItem extends StateInteractive
       for (int index = 0; index < pin_arr.length; ++index)
          {
          BrdAbitVia curr_via = (BrdAbitVia) it.next();
+         
          r_brd.remove_item(curr_via);
+         
+         NetNosList net_no_arr = curr_via.net_nos.copy();
+         
+/*         
          int[] net_no_arr = new int[curr_via.net_count()];
          for (int jndex = 0; jndex < net_no_arr.length; ++jndex)
             {
             net_no_arr[jndex] = curr_via.get_net_no(jndex);
             }
+*/         
          r_brd.insert_pin(new_component.id_no, index, net_no_arr, curr_via.clearance_class_no(), curr_via.get_fixed_state());
          }
 

@@ -25,6 +25,7 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.planar.PlaArea;
 import freert.planar.PlaVectorInt;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -45,7 +46,7 @@ public final class BrdAreaObstacleVia extends BrdArea
          PlaVectorInt p_translation, 
          double p_rotation_in_degree, 
          boolean p_side_changed, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_clearance_type, 
          int p_id_no, 
          int p_group_no,
@@ -72,13 +73,13 @@ public final class BrdAreaObstacleVia extends BrdArea
          ItemFixState p_fixed_state, 
          RoutingBoard p_board)
       {
-      this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, new int[0], p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
+      this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, NetNosList.EMPTY, p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }
 
    @Override
    public BrdAreaObstacleVia copy(int p_id_no)
       {
-      int[] copied_net_nos =  net_nos.net_nos_arr.clone();
+      NetNosList copied_net_nos =  net_nos.copy();
 
       return new BrdAreaObstacleVia(
             get_relative_area(), 

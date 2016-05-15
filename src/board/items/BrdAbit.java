@@ -42,6 +42,7 @@ import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.NetNosList;
 
 /**
  * Common superclass for Pins and Vias
@@ -61,7 +62,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    // Pre calculated last layer, where this DrillItem contains a pad shape. If < 0, the value is not yet calculated
    private int precalculated_last_layer = -1;
 
-   public BrdAbit(PlaPointInt p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdAbit(PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
 
@@ -171,7 +172,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
                connect_points, 
                curr_trace_info.layer, 
                curr_trace_info.half_width, 
-               net_nos.net_nos_arr, 
+               net_nos, 
                curr_trace_info.clearance_type, 
                ItemFixState.UNFIXED);
          }

@@ -25,6 +25,7 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.planar.PlaArea;
 import freert.planar.PlaVectorInt;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -52,7 +53,7 @@ public final class BrdAreaObstacleComp extends BrdArea
          ItemFixState p_fixed_state, 
          RoutingBoard p_board)
       {
-      super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, new int[0], p_clearance_type, p_id_no, p_component_no, p_name, p_fixed_state, p_board);
+      super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, NetNosList.EMPTY, p_clearance_type, p_id_no, p_component_no, p_name, p_fixed_state, p_board);
       }
 
    @Override

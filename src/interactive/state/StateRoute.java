@@ -411,7 +411,7 @@ public class StateRoute extends StateInteractive
 
    public StateInteractive cancel()
       {
-      BrdTrace tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_nos.net_nos_arr);
+      BrdTrace tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_nos);
       
       if (tail != null)
          {

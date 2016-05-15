@@ -34,6 +34,7 @@ import freert.planar.PolylineArea;
 import freert.planar.ShapePolyline;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -56,7 +57,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    
    public BrdOutline(ShapePolyline[] p_shapes, int p_clearance_class_no, int p_id_no, RoutingBoard p_board)
       {
-      super(new int[0], p_clearance_class_no, p_id_no, 0, ItemFixState.SYSTEM_FIXED, p_board);
+      super(NetNosList.EMPTY, p_clearance_class_no, p_id_no, 0, ItemFixState.SYSTEM_FIXED, p_board);
       shapes = p_shapes;
       }
 

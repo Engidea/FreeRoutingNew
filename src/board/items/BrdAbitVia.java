@@ -35,6 +35,7 @@ import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -55,7 +56,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
    transient private PlaShape[] precalculated_shapes = null;
    transient private ExpandDrill autoroute_drill_info = null;
    
-   public BrdAbitVia(LibPadstack p_padstack, PlaPointInt p_center, int[] p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, boolean p_attach_allowed, RoutingBoard p_board)
+   public BrdAbitVia(LibPadstack p_padstack, PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, boolean p_attach_allowed, RoutingBoard p_board)
       {
       super(p_center, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
       padstack = p_padstack;
@@ -68,7 +69,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       return new BrdAbitVia(
             padstack, 
             center_get(), 
-            net_nos.net_nos_arr, 
+            net_nos, 
             clearance_class_no(), 
             p_id_no, 
             get_component_no(), 

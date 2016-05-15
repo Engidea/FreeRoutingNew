@@ -209,7 +209,7 @@ public final class ShapeTraceEntries
                piece_polyline, 
                layer, 
                curr_trace.get_half_width(), 
-               curr_trace.net_nos.net_nos_arr,
+               curr_trace.net_nos,
                curr_trace.clearance_class_no(), 
                0, 0, ItemFixState.UNFIXED, board);
          }
@@ -312,7 +312,7 @@ public final class ShapeTraceEntries
                   pieces[index], 
                   p_trace.get_layer(), 
                   p_trace.get_half_width(), 
-                  p_trace.net_nos.net_nos_arr, 
+                  p_trace.net_nos, 
                   p_trace.clearance_class_no(), 
                   ItemFixState.UNFIXED);
             }
@@ -334,7 +334,7 @@ public final class ShapeTraceEntries
             p_start_piece, 
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
-            p_trace.net_nos.net_nos_arr, 
+            p_trace.net_nos, 
             p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED,
             board);
 
@@ -345,7 +345,7 @@ public final class ShapeTraceEntries
             p_end_piece, 
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
-            p_trace.net_nos.net_nos_arr, 
+            p_trace.net_nos, 
             p_trace.clearance_class_no(), 0, 0, ItemFixState.UNFIXED, board);
 
       board.item_list.insert(end_piece);
