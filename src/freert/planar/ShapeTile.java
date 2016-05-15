@@ -836,27 +836,25 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
 
       PlaPolygon corner_polygon = new PlaPolygon(new_corners);
       PlaPointInt[] polygon_corners = corner_polygon.corner_array();
-      ShapeTile result;
 
       if (polygon_corners.length >= 3)
          {
-         result = get_instance(polygon_corners);
+         return get_instance(polygon_corners);
          }
       else if (polygon_corners.length == 2)
          {
          Polyline curr_polyline = new Polyline(polygon_corners);
          PlaSegmentInt curr_segment = curr_polyline.segment_get(1);
-         result = curr_segment.to_simplex();
+         return curr_segment.to_simplex();
          }
       else if (polygon_corners.length == 1)
          {
-         result = new ShapeTileBox(polygon_corners[0]);
+         return new ShapeTileBox(polygon_corners[0]);
          }
       else
          {
-         result = ShapeTileSimplex.EMPTY;
+         return ShapeTileSimplex.EMPTY;
          }
-      return result;
       }
 
    public ShapeTile mirror_vertical(PlaPointInt p_pole)

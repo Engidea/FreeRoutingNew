@@ -210,17 +210,15 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * Returns the signed distance of this line from p_point. The result will be positive, if the line is on the left of p_point,
-    * else negative.
+    * Returns the signed distance of this line from p_point. 
+    * The result will be positive, if the line is on the left of p_point else negative.
     */
    public double signed_distance(PlaPointFloat p_point)
       {
       // only implemented for IntPoint lines for performance reasons
-      PlaPointInt this_a = (PlaPointInt) point_a;
-      PlaPointInt this_b = (PlaPointInt) point_b;
-      double dx = this_b.v_x - this_a.v_x;
-      double dy = this_b.v_y - this_a.v_y;
-      double det = dy * (p_point.v_x - this_a.v_x) - dx * (p_point.v_y - this_a.v_y);
+      double dx = point_b.v_x - point_a.v_x;
+      double dy = point_b.v_y - point_a.v_y;
+      double det = dy * (p_point.v_x - point_a.v_x) - dx * (p_point.v_y - point_a.v_y);
       // area of the parallelogramm spanned by the 3 points
       double length = Math.sqrt(dx * dx + dy * dy);
       return det / length;

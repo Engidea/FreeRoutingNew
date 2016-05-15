@@ -365,11 +365,10 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          double prev_dist = translate_line.signed_distance(prev_corner);
          double next_dist = translate_line.signed_distance(next_corner);
-         if (Signum.of(prev_dist) != Signum.of(next_dist))
+         
          // the 2 corners are on different sides of the translate_line
-            {
-            continue;
-            }
+         if (Signum.of(prev_dist) != Signum.of(next_dist))  continue;
+
          double translate_dist;
          if (Math.abs(prev_dist) < Math.abs(next_dist))
             {
@@ -379,11 +378,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
             {
             translate_dist = next_dist;
             }
-         if (translate_dist == 0)
-            {
-            // line segment may have length 0
-            continue;
-            }
+         
+         // line segment may have length 0
+         if (translate_dist == 0)  continue;
 
          PlaSide line_side = translate_line.side_of(prev_corner);
          PlaLineInt new_line = translate_line.translate(-translate_dist);
@@ -443,13 +440,13 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          p_polyline.plaline_copy(index + 1 + crossed_corners_after_count, curr_lines, keep_before_ind + 1, curr_lines.length - (keep_before_ind + 1));
          
-         Polyline tmp = new Polyline(curr_lines);
+         Polyline try_poly = new Polyline(curr_lines);
 
          boolean check_ok = false;
          
-         if (tmp.plalinelen() == curr_lines.length)
+         if (try_poly.plalinelen() == curr_lines.length)
             {
-            ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, keep_before_ind - 1);
+            ShapeTile shape_to_check = try_poly.offset_shape(curr_half_width, keep_before_ind - 1);
             check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
             }
          
@@ -461,8 +458,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
                r_board.changed_area.join(next_corner, curr_layer);
                }
 
-            p_polyline = tmp;
-            --index;
+            p_polyline = try_poly;
+
+            // basically, the idea is to try to look again from the beginnig... , let's try to make it simple and not do it, no more  --index;
             }
          }
       

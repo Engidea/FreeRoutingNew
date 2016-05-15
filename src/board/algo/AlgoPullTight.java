@@ -311,26 +311,28 @@ public abstract class AlgoPullTight
             {
             PlaPoint curr_corner = p_line_arr[p_no + index].intersection(p_line_arr[p_no + index + 1] , "should not matter");
 
-            if (curr_clip_shape.is_outside(curr_corner))
-               {
-               return null;
-               }
+            // it is fair to consider this a failure
+            if ( curr_corner.is_NaN() ) return null;
+
+            if (curr_clip_shape.is_outside(curr_corner)) return null;
             }
          }
       
       PlaLineInt translate_line = p_line_arr[p_no];
       
       PlaPoint prev_corner = p_line_arr[p_no - 2].intersection(p_line_arr[p_no - 1], "probably messy");
-      PlaPoint next_corner = p_line_arr[p_no + 1].intersection(p_line_arr[p_no + 2], "probably messy");
       
+      if ( prev_corner.is_NaN() ) return null;
+      
+      PlaPoint next_corner = p_line_arr[p_no + 1].intersection(p_line_arr[p_no + 2], "probably messy");
+
+      if ( next_corner.is_NaN() ) return null;
+
       double prev_dist = translate_line.signed_distance(prev_corner.to_float());
       double next_dist = translate_line.signed_distance(next_corner.to_float());
       
-      if (Signum.of(prev_dist) != Signum.of(next_dist))
-         {
-         // the 2 corners are at different sides of translate_line
-         return null;
-         }
+      // the 2 corners are at different sides of translate_line
+      if (Signum.of(prev_dist) != Signum.of(next_dist)) return null;
       
       PlaPoint nearest_point;
       double max_translate_dist;
@@ -376,10 +378,10 @@ public abstract class AlgoPullTight
             }
          
          PlaSide new_line_side_of_nearest_point = check_lines[1].side_of(nearest_point);
+         
          if (new_line_side_of_nearest_point != side_of_nearest_point && new_line_side_of_nearest_point != PlaSide.COLLINEAR)
             {
-            // moved a little bit to far at the first time because of numerical inaccuracy;
-            // may happen if nearest_point is not an IntPoint
+            // moved a little bit to far at the first time because of numerical inaccuracy may happen if nearest_point is not an IntPoint
             double shorten_value = sign * 0.5;
             max_translate_dist -= shorten_value;
             translate_dist -= shorten_value;
@@ -392,9 +394,11 @@ public abstract class AlgoPullTight
          if (tmp.plalinelen() == 3)
             {
             ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
-            check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+            check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
             }
+         
          delta_dist /= 2;
+         
          if (check_ok)
             {
             new_line = check_lines[1];

@@ -68,7 +68,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
 
    /**
     * Tries to reduce the amount of corners of p_polyline. 
-    * Return p_polyline, if nothing was changed.
+    * @return p_polyline, if nothing was changed.
     * Ack this one will kind of fails if the result is not an int....
     */
    private Polyline reduce_corners(Polyline p_polyline)

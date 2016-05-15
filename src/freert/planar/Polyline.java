@@ -819,10 +819,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       if (p_angle == 0) return this;
 
-      PlaPointInt[] new_corners = new PlaPointInt[corner_count()];
-      for (int i = 0; i < new_corners.length; ++i)
+      int co_count = corner_count();
+      
+      PlaPointIntAlist new_corners = new PlaPointIntAlist(co_count);
+
+      for (int index = 0; index < co_count; ++index)
          {
-         new_corners[i] = corner_approx(i).rotate(p_angle, p_pole).round();
+         new_corners.add( corner_approx(index).rotate(p_angle, p_pole).round() );
          }
 
       return new Polyline(new_corners);
