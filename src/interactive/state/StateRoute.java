@@ -393,7 +393,7 @@ public class StateRoute extends StateInteractive
 
          i_brd.screen_messages.clear();
 
-         for (int curr_net_no : route.net_no_arr)
+         for (int curr_net_no : route.net_nos )
             {
             i_brd.update_ratsnest(curr_net_no);
             }
@@ -407,7 +407,8 @@ public class StateRoute extends StateInteractive
 
    public StateInteractive cancel()
       {
-      BrdTrace tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_no_arr);
+      BrdTrace tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_nos.net_nos_arr);
+      
       if (tail != null)
          {
          Collection<BrdItem> remove_items = tail.get_connection_items(BrdStopConnection.VIA);
@@ -425,15 +426,16 @@ public class StateRoute extends StateInteractive
          r_brd.end_notify_observers();
          observers_activated = false;
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.CANCEL_SCOPE);
-         }
+
+      actlog_start_scope(LogfileScope.CANCEL_SCOPE);
+
       i_brd.screen_messages.clear();
-      for (int curr_net_no : route.net_no_arr)
+      
+      for (int curr_net_no : route.net_nos )
          {
          i_brd.update_ratsnest(curr_net_no);
          }
+      
       return return_state;
       }
 
@@ -459,7 +461,7 @@ public class StateRoute extends StateInteractive
             BrdAbitVia new_via = null;
             for (BrdItem curr_via : picked_items)
                {
-               if (curr_via.shares_net_no(route.net_no_arr))
+               if (curr_via.shares_net_no(route.net_nos))
                   {
                   new_via = (BrdAbitVia) curr_via;
                   break;
@@ -497,10 +499,8 @@ public class StateRoute extends StateInteractive
             if (connected_to_plane)
                {
                i_brd.set_interactive_state(return_state);
-               for (int curr_net_no : route.net_no_arr)
-                  {
-                  i_brd.update_ratsnest(curr_net_no);
-                  }
+               
+               for (int curr_net_no : route.net_nos ) i_brd.update_ratsnest(curr_net_no);
                }
             else
                {
@@ -578,7 +578,8 @@ public class StateRoute extends StateInteractive
       {
       if (route == null) return;
       
-      RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_no_arr[0]);
+      RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_nos.first());
+      
       i_brd.screen_messages.set_status_message(resources.getString("routing_net") + " " + curr_net.name);
       }
    }

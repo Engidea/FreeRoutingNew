@@ -79,7 +79,7 @@ public class StateRouteStitch extends StateRoute
       draw_points[0] = route.get_last_corner().to_float();
       draw_points[1] = i_brd.get_current_mouse_position();
       java.awt.Color draw_color = i_brd.gdi_context.get_hilight_color();
-      double display_width = i_brd.get_trace_halfwidth(route.net_no_arr[0], i_brd.itera_settings.layer_no);
+      double display_width = i_brd.get_trace_halfwidth(route.net_nos.first(), i_brd.itera_settings.layer_no);
       int clearance_draw_width = 50;
       double radius_with_clearance = display_width;
       freert.rules.NetClass default_net_class = r_brd.brd_rules.get_default_net_class();

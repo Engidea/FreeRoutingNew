@@ -70,10 +70,6 @@ public final class IteraRoute
    private final Set<BrdItem> target_set;
    // Pins, which can be reached by a pin swap by a target pin
    private final Set<PinSwappable> swap_pin_infos;
-   private Collection<IteraTargetPoint> target_points;  // from drill_items
-   private Collection<BrdItem> target_traces_and_areas; // from traces and conduction areas
-   private PlaPointFloat nearest_target_point;
-   private BrdItem nearest_target_item;
    
    private final int[] pen_half_width_arr;
    private final boolean[] layer_active_arr;
@@ -85,13 +81,17 @@ public final class IteraRoute
    private final boolean is_stitch_mode;
    private final boolean via_snap_to_smd_center;
 
-   public final int[] net_no_arr;    // The net numbers used for routing 
-   public final NetNosList net_nos;  // This is the replacement for the above pippolone
-
+   private Collection<IteraTargetPoint> target_points;  // from drill_items
+   private Collection<BrdItem> target_traces_and_areas; // from traces and conduction areas
+   private PlaPointFloat nearest_target_point;
+   private BrdItem nearest_target_item;
    private BrdItem shove_failing_obstacle = null;
    private PlaPointInt prev_corner;
    private int layer_active_no;
 
+   public  final NetNosList net_nos;  // Net numbers to use for routing
+
+   
    /**
     * Starts routing a connection. 
     * p_pen_half_width_arr is provided because it may be different from the half width array in p_board.rules.
@@ -130,8 +130,7 @@ public final class IteraRoute
          }
 
       prev_corner = p_start_corner;
-      
-      net_no_arr = p_net_no_arr;
+
       net_nos = new NetNosList(p_net_no_arr);
       
       pen_half_width_arr = p_pen_half_width_arr;

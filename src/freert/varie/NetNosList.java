@@ -220,7 +220,7 @@ public final class NetNosList implements Iterable<Integer>
    
    
    
-private class RangeIterator implements Iterator<Integer>
+private final class RangeIterator implements Iterator<Integer>
    {
    private int cursor;
 
@@ -238,7 +238,7 @@ private class RangeIterator implements Iterator<Integer>
       {
       if ( ! hasNext()) throw new NoSuchElementException();
 
-      return cursor++;
+      return Integer.valueOf(net_nos_arr[cursor++]);
       }
 
    public void remove()
