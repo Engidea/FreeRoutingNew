@@ -38,6 +38,7 @@ import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileSimplex;
+import freert.varie.NetNosList;
 
 /**
  * Class with static functions for checking and inserting forced vias.
@@ -220,7 +221,15 @@ public final class AlgoShoveVia
                calc_from_side_offset, 
                p_via_info.get_clearance_class());
          
-         if (!r_board.shove_pad_algo.forced_pad(tile_shape, from_side, index, p_net_no_arr, p_via_info.get_clearance_class(), p_via_info.attach_smd_allowed(), null, p_max_recursion_depth,
+         if (!r_board.shove_pad_algo.forced_pad(
+               tile_shape, 
+               from_side, 
+               index, 
+               new NetNosList(p_net_no_arr), 
+               p_via_info.get_clearance_class(), 
+               p_via_info.attach_smd_allowed(), 
+               null, 
+               p_max_recursion_depth,
                p_max_via_recursion_depth))
             {
             r_board.set_shove_failing_layer(index);
@@ -229,7 +238,16 @@ public final class AlgoShoveVia
          if (start_trace_shape != null)
             {
             // necessesary in case strart_trace_shape is bigger than tile_shape
-            if ( ! r_board.shove_pad_algo.forced_pad(start_trace_shape, from_side, index, p_net_no_arr, p_trace_clearance_class_no, true, null, p_max_recursion_depth, p_max_via_recursion_depth))
+            if ( ! r_board.shove_pad_algo.forced_pad(
+                  start_trace_shape, 
+                  from_side, 
+                  index, 
+                  new NetNosList(p_net_no_arr), 
+                  p_trace_clearance_class_no, 
+                  true, 
+                  null, 
+                  p_max_recursion_depth, 
+                  p_max_via_recursion_depth))
                {
                r_board.set_shove_failing_layer(index);
                return false;

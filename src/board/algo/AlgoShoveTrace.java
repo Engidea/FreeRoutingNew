@@ -450,7 +450,16 @@ public final class AlgoShoveTrace
          return false;
          }
   
-      if (!r_board.move_drill_algo.shove_vias(p_trace_shape, p_from_side, p_layer, p_net_no_arr, p_cl_type, p_ignore_items, p_max_recursion_depth, p_max_via_recursion_depth, true))
+      if ( ! r_board.move_drill_algo.shove_vias(
+            p_trace_shape, 
+            p_from_side, 
+            p_layer, 
+            new NetNosList(p_net_no_arr), 
+            p_cl_type, 
+            p_ignore_items, 
+            p_max_recursion_depth, 
+            p_max_via_recursion_depth, 
+            true))
          {
          return false;
          }

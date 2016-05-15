@@ -212,7 +212,7 @@ public final class AlgoShovePad
          ShapeTile p_pad_shape, 
          BrdFromSide p_from_side, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_cl_type, 
          boolean p_copper_sharing_allowed, 
          Collection<BrdItem> p_ignore_items,
@@ -231,13 +231,21 @@ public final class AlgoShovePad
          return false;
          }
       
-      if (!r_board.move_drill_algo.shove_vias(p_pad_shape, p_from_side, p_layer, p_net_no_arr, p_cl_type, p_ignore_items, p_max_recursion_depth, p_max_via_recursion_depth, false))
+      if (!r_board.move_drill_algo.shove_vias(
+            p_pad_shape, 
+            p_from_side, 
+            p_layer, 
+            p_net_no_arr, 
+            p_cl_type, 
+            p_ignore_items, 
+            p_max_recursion_depth, 
+            p_max_via_recursion_depth, false))
          {
          return false;
          }
       
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       
       if (p_ignore_items != null) obstacles.removeAll(p_ignore_items);
@@ -259,7 +267,7 @@ public final class AlgoShovePad
          return false;
 
          }
-      boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr);
+      boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr.net_nos_arr);
       shape_entries.cutout_traces(obstacles);
       boolean is_orthogonal_mode = p_pad_shape instanceof ShapeTileBox;
 

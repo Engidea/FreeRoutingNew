@@ -182,7 +182,15 @@ public final class AlgoMoveDrillItem
             p_tidy_region = p_tidy_region.union(curr_tile_shape.bounding_octagon());
             }
          BrdFromSide from_side = new BrdFromSide(p_drill_item.center_get(), curr_tile_shape);
-         if (!r_board.shove_pad_algo.forced_pad(curr_tile_shape, from_side, curr_layer, p_drill_item.net_no_arr, p_drill_item.clearance_class_no(), attach_allowed, ignore_items, p_max_recursion_depth,
+         if ( ! r_board.shove_pad_algo.forced_pad(
+               curr_tile_shape, 
+               from_side, 
+               curr_layer, 
+               new NetNosList( p_drill_item.net_no_arr ), 
+               p_drill_item.clearance_class_no(), 
+               attach_allowed, 
+               ignore_items, 
+               p_max_recursion_depth,
                p_max_via_recursion_depth))
             {
             return false;
@@ -200,11 +208,19 @@ public final class AlgoMoveDrillItem
    /**
     * Shoves vias out of p_obstacle_shape. Returns false, if the database is damaged, so that an undo is necessary afterwards.
     */
-   public boolean shove_vias(ShapeTile p_obstacle_shape, BrdFromSide p_from_side, int p_layer, int[] p_net_no_arr, int p_cl_type, Collection<BrdItem> p_ignore_items, int p_max_recursion_depth,
-         int p_max_via_recursion_depth, boolean p_copper_sharing_allowed)
+   public boolean shove_vias(
+         ShapeTile p_obstacle_shape, 
+         BrdFromSide p_from_side, 
+         int p_layer, 
+         NetNosList p_net_no_arr, 
+         int p_cl_type, 
+         Collection<BrdItem> p_ignore_items, 
+         int p_max_recursion_depth,
+         int p_max_via_recursion_depth, 
+         boolean p_copper_sharing_allowed)
       {
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_obstacle_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_obstacle_shape, p_layer, NetNosList.EMPTY, p_cl_type);
 
       if (!shape_entries.store_items(obstacles, false, p_copper_sharing_allowed))
