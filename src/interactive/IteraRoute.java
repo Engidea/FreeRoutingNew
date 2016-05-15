@@ -298,7 +298,7 @@ public final class IteraRoute
       t_limit = new TimeLimitStoppable(s_PULL_TIGHT_TIME_MAX);
       
       r_board.optimize_changed_area(
-            opt_net_no_arr.net_nos_arr, 
+            opt_net_no_arr, 
             tidy_clip_shape, 
             itera_settings.trace_pull_tight_accuracy, 
             null, 

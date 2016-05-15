@@ -830,7 +830,7 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
 
       if ( ! is_nets_normal()) return false;
       
-      if (p_pull_tight_algo.only_net_no_arr.length > 0 && ! nets_equal(p_pull_tight_algo.only_net_no_arr))
+      if (p_pull_tight_algo.only_net_no_arr.size() > 0 && ! nets_equal(p_pull_tight_algo.only_net_no_arr))
          {
          return false;
          }
@@ -903,15 +903,15 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    public final boolean pull_tight(boolean p_own_net_only, int p_pull_tight_accuracy, ThreadStoppable p_stoppable_thread)
       {
-      int[] opt_net_no_arr;
+      NetNosList opt_net_no_arr;
       
       if (p_own_net_only)
          {
-         opt_net_no_arr = net_nos.net_nos_arr;
+         opt_net_no_arr = net_nos;
          }
       else
          {
-         opt_net_no_arr = new int[0];
+         opt_net_no_arr = NetNosList.EMPTY;
          }
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(r_board, opt_net_no_arr, null, p_pull_tight_accuracy, p_stoppable_thread, null );
@@ -924,15 +924,15 @@ public final class BrdTracePolyline extends BrdTrace implements java.io.Serializ
     */
    public boolean smoothen_end_corners_fork(boolean p_own_net_only, int p_pull_tight_accuracy, ThreadStoppable p_stoppable_thread)
       {
-      int[] opt_net_no_arr;
+      NetNosList opt_net_no_arr;
       
       if (p_own_net_only)
          {
-         opt_net_no_arr = net_nos.net_nos_arr;
+         opt_net_no_arr = net_nos;
          }
       else
          {
-         opt_net_no_arr = new int[0];
+         opt_net_no_arr = NetNosList.EMPTY;
          }
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(r_board, opt_net_no_arr, null, p_pull_tight_accuracy, p_stoppable_thread, null );

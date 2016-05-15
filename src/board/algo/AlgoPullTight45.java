@@ -33,6 +33,7 @@ import freert.planar.PlaSide;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
 
@@ -42,7 +43,7 @@ import freert.varie.ThreadStoppable;
  */
 public final class AlgoPullTight45 extends AlgoPullTight
    {
-   public AlgoPullTight45(RoutingBoard p_board, int[] p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
+   public AlgoPullTight45(RoutingBoard p_board, NetNosList p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
       {
       super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point );
       }

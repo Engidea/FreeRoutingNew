@@ -18,12 +18,13 @@ package autoroute.batch;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
 import freert.rules.RuleNet;
+import freert.varie.NetNosList;
 import freert.varie.TimeLimitStoppable;
 import freert.varie.UndoableObjectNode;
 import gui.varie.GuiResources;
 import gui.varie.UndoableObjectStorable;
-import interactive.IteraBoard;
 import interactive.BrdActionThread;
+import interactive.IteraBoard;
 import interactive.IteraSettings;
 import java.util.Collection;
 import java.util.Iterator;
@@ -104,7 +105,7 @@ public class BatchAutorouter
       
       TimeLimitStoppable time_limit = new TimeLimitStoppable(10, s_thread);
       
-      routing_board.optimize_changed_area(new int[0], null, itera_settings.trace_pull_tight_accuracy, trace_cost_arr, time_limit, null);
+      routing_board.optimize_changed_area(NetNosList.EMPTY, null, itera_settings.trace_pull_tight_accuracy, trace_cost_arr, time_limit, null);
       }
    
    

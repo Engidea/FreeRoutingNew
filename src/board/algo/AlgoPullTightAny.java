@@ -29,6 +29,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
+import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
 
@@ -40,7 +41,7 @@ import freert.varie.ThreadStoppable;
 
 public final class AlgoPullTightAny extends AlgoPullTight
    {
-   public AlgoPullTightAny(RoutingBoard p_board, int[] p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
+   public AlgoPullTightAny(RoutingBoard p_board, NetNosList p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
       {
       super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point);
       }

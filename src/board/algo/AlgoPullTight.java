@@ -67,7 +67,7 @@ public abstract class AlgoPullTight
 
    protected final RoutingBoard r_board;
    // If only_net_no > 0, only nets with this net numbers are optimized
-   public final int[] only_net_no_arr;
+   public final NetNosList only_net_no_arr;
    // If keep_point != null, traces containing the keep_point must also contain the keep_point after optimizing.
    private final BrdKeepPoint keep_point;
    // If stoppable_thread != null, the algorithm can be requested to be stopped.
@@ -91,7 +91,7 @@ public abstract class AlgoPullTight
    /**
     * If p_only_net_no > 0, only traces with net number p_not_no are optimized. 
     */
-   public static AlgoPullTight get_instance(RoutingBoard p_board, int[] p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_min_translate_dist, ThreadStoppable p_stoppable, BrdKeepPoint p_keep_point)
+   public static AlgoPullTight get_instance(RoutingBoard p_board, NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_min_translate_dist, ThreadStoppable p_stoppable, BrdKeepPoint p_keep_point)
       {
       TraceAngleRestriction angle_restriction = p_board.brd_rules.get_trace_snap_angle();
 
@@ -125,7 +125,7 @@ public abstract class AlgoPullTight
    /**
     * Can only be created by subclasses
     */
-   protected AlgoPullTight(RoutingBoard p_board, int[] p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
+   protected AlgoPullTight(RoutingBoard p_board, NetNosList p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
       {
       r_board = p_board;
       only_net_no_arr = p_only_net_no_arr;

@@ -1718,7 +1718,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
       
-      optimize_changed_area(new int[0], tidy_region, p_pull_tight_accuracy, null, t_limit, null);
+      optimize_changed_area(NetNosList.EMPTY, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
       
       return all_deleted;
       }
@@ -1773,7 +1773,7 @@ public final class RoutingBoard implements java.io.Serializable
     * If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds. 
     * If p_keep_point != null, traces on layer p_keep_point_layer containing p_keep_point will also contain this point after optimizing.
     */
-   public final void optimize_changed_area(int[] p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_accuracy, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
+   public final void optimize_changed_area(NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_accuracy, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
       {
       if (changed_area == null) return;
       
@@ -1994,8 +1994,10 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_region = null;
          calculate_tidy_region = false;
          }
-      int[] net_no_arr = p_drill_item.net_nos.net_nos_arr;
+      NetNosList net_no_arr = p_drill_item.net_nos;
+      
       start_marking_changed_area();
+      
       if (!move_drill_algo.insert(p_drill_item, p_vector, p_max_recursion_depth, p_max_via_recursion_depth, tidy_region))
          {
          return false;
@@ -2006,7 +2008,7 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_region = tidy_region.enlarge(p_tidy_width);
          }
       
-      int[] opt_net_no_arr;
+      NetNosList opt_net_no_arr;
       
       if (p_max_recursion_depth <= 0)
          {
@@ -2014,7 +2016,7 @@ public final class RoutingBoard implements java.io.Serializable
          }
       else
          {
-         opt_net_no_arr = new int[0];
+         opt_net_no_arr = NetNosList.EMPTY;
          }
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(p_pull_tight_time_limit);
@@ -2150,14 +2152,15 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_clip_shape = null;
          }
       
-      int[] opt_net_no_arr;
+      NetNosList opt_net_no_arr;
+      
       if (p_max_recursion_depth <= 0)
          {
-         opt_net_no_arr = p_net_no_arr.net_nos_arr;
+         opt_net_no_arr = p_net_no_arr;
          }
       else
          {
-         opt_net_no_arr = new int[0];
+         opt_net_no_arr = NetNosList.EMPTY;
          }
 
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
@@ -2547,7 +2550,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(
             this, 
-            opt_net_no_arr.net_nos_arr, 
+            opt_net_no_arr, 
             tidy_region, 
             p_pull_tight_accuracy, 
             t_limit, 
@@ -2653,7 +2656,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       if (result == ArtResult.ROUTED)
          {
-         optimize_changed_area(new int[0], null, p_settings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, t_limit, null);
+         optimize_changed_area(NetNosList.EMPTY, null, p_settings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, t_limit, null);
          }
       
       return result;
@@ -2703,7 +2706,7 @@ public final class RoutingBoard implements java.io.Serializable
       if (result == ArtResult.ROUTED)
          {
          TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP, p_stoppable);
-         optimize_changed_area(new int[0], null, p_settings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, t_limit, null);
+         optimize_changed_area(NetNosList.EMPTY, null, p_settings.trace_pull_tight_accuracy, ctrl_settings.trace_costs, t_limit, null);
          }
       return result;
       }
