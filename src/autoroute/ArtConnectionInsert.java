@@ -186,7 +186,7 @@ public final class ArtConnectionInsert
                insert_polyline, 
                ctrl.trace_half_width[p_locate.layer], 
                p_locate.layer, 
-               net_no_arr, 
+               new NetNosList(net_no_arr), 
                ctrl.trace_clearance_class_no,
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
@@ -305,7 +305,7 @@ public final class ArtConnectionInsert
 
       final int TOLERANCE = 2;
 
-      NetNosList net_no_arr = new NetNosList(1,ctrl.net_no);
+      NetNosList net_no_arr = new NetNosList(ctrl.net_no);
 
       double ok_length = r_board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_class_no, true);
 

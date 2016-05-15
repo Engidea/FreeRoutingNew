@@ -563,7 +563,7 @@ public final class MazeSearch
          if (!p_next_room_is_thick)
             {
             // check the line from p_shape_entry_middle to the nearest point.
-            NetNosList curr_net_no_arr =new NetNosList(1, art_ctrl.net_no);
+            NetNosList curr_net_no_arr =new NetNosList(art_ctrl.net_no);
             
             int curr_layer = p_list_element.next_room.get_layer();
             PlaPointInt[] check_points = new PlaPointInt[2];
@@ -1396,7 +1396,7 @@ public final class MazeSearch
       
       ShapeTile check_shape = check_polyline.offset_shape(check_radius, 0);
 
-      NetNosList ignore_net_nos = new NetNosList(1, art_ctrl.net_no);
+      NetNosList ignore_net_nos = new NetNosList(art_ctrl.net_no);
 
       Set<ShapeTreeObject> overlapping_objects = art_engine.autoroute_search_tree.find_overlap_objects(check_shape, curr_layer, ignore_net_nos );
 

@@ -214,7 +214,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       boolean result = true;
       Collection<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
 
-      NetNosList net_no_arr = new NetNosList(1,p_autoroute_engine.get_net_no() );
+      NetNosList net_no_arr = new NetNosList(p_autoroute_engine.get_net_no() );
       
       p_autoroute_engine.autoroute_search_tree.calc_overlapping_tree_entries(get_shape(), get_layer(), net_no_arr, overlapping_objects);
 

@@ -43,14 +43,9 @@ public final class NetNosList implements Iterable<Integer>
       net_nos_arr = new int[0];
       }
 
-   public NetNosList(int count)
+   public NetNosList( int first_value)
       {
-      net_nos_arr = new int[count];
-      }
-
-   public NetNosList(int count, int first_value)
-      {
-      net_nos_arr = new int[count];
+      net_nos_arr = new int[1];
       net_nos_arr[0] = first_value;
       }
 

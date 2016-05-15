@@ -209,7 +209,7 @@ public final class MazeShoveTraceAlgo
       
       int trace_half_width = art_ctrl.trace_half_width[trace_layer];
 
-      NetNosList net_no_arr = new NetNosList(1, art_ctrl.net_no);
+      NetNosList net_no_arr = new NetNosList(art_ctrl.net_no);
 
       double shove_width = r_board.check_trace_segment(shove_line_segment, trace_layer, net_no_arr, trace_half_width, art_ctrl.trace_clearance_class_no, true);
       boolean segment_shortened = false;
