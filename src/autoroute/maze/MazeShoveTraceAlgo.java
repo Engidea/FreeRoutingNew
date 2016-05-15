@@ -231,11 +231,11 @@ public final class MazeShoveTraceAlgo
 
       if ( ! segment_ist_point)
          {
-         shove_width = r_board.shove_trace_algo.check(
+         shove_width = r_board.shove_trace_algo.shove_trace_check(
                shove_line_segment, 
                p_shove_to_the_left, 
                trace_layer, 
-               net_no_arr.net_nos_arr, 
+               net_no_arr, 
                trace_half_width, 
                art_ctrl.trace_clearance_class_no,
                art_ctrl.max_shove_trace_recursion_depth, 

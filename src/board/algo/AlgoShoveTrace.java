@@ -143,7 +143,7 @@ public final class AlgoShoveTrace
 
       for (BrdAbitVia curr_shove_via : shape_entries.shove_via_list)
          {
-         if (curr_shove_via.shares_net_no(p_net_no_arr.net_nos_arr))  continue;
+         if (curr_shove_via.shares_net_no(p_net_no_arr))  continue;
 
          if (p_max_via_recursion_depth <= 0)
             {
@@ -256,10 +256,11 @@ public final class AlgoShoveTrace
     * The result is the maximum lenght of a trace from the start of the line segment to the end of the line segment, for wich the algoritm succeedes. 
     * If the algorithm succeedes completely, the result will be equal to Integer.MAX_VALUE.
     */
-   public double check( PlaSegmentInt p_line_segment, 
+   public final double shove_trace_check( 
+         PlaSegmentInt p_line_segment, 
          boolean p_shove_to_the_left, 
          int p_layer, 
-         int[] p_net_no_arr, 
+         NetNosList p_net_no_arr, 
          int p_trace_half_width, 
          int p_cl_type,
          int p_max_recursion_depth, 
@@ -291,7 +292,7 @@ public final class AlgoShoveTrace
       if (!trace_shape.is_contained_in(r_board.get_bounding_box())) return 0;
       
       BrdFromSide from_side = new BrdFromSide(p_line_segment, trace_shape, p_shove_to_the_left);
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(trace_shape, p_layer, p_net_no_arr, p_cl_type, from_side, r_board);
+      ShapeTraceEntries shape_entries = new ShapeTraceEntries(trace_shape, p_layer, p_net_no_arr.net_nos_arr, p_cl_type, from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
@@ -387,10 +388,18 @@ public final class AlgoShoveTrace
                curr_line_segment = curr_line_segment.opposite();
                }
             boolean is_in_front = curr_line_segment.get_line().direction().equals(line_direction);
+            
             if (is_in_front)
                {
-               double shove_ok_length = check(curr_line_segment, p_shove_to_the_left, p_layer, curr_substitute_trace.net_no_arr, curr_substitute_trace.get_half_width(),
-                     curr_substitute_trace.clearance_class_no(), p_max_recursion_depth - 1, p_max_via_recursion_depth);
+               double shove_ok_length = shove_trace_check(
+                     curr_line_segment, 
+                     p_shove_to_the_left, 
+                     p_layer, 
+                     new NetNosList(curr_substitute_trace.net_no_arr), 
+                     curr_substitute_trace.get_half_width(),
+                     curr_substitute_trace.clearance_class_no(), 
+                     p_max_recursion_depth - 1,
+                     p_max_via_recursion_depth);
                if (shove_ok_length < Integer.MAX_VALUE)
                   {
                   if (shove_ok_length <= 0)
@@ -579,7 +588,7 @@ public final class AlgoShoveTrace
          
          BrdAbitPin curr_pin = (BrdAbitPin) curr_object;
          
-         if (curr_pin.shares_net_no(p_net_no_arr.net_nos_arr))
+         if (curr_pin.shares_net_no(p_net_no_arr))
             {
             result.addAll(curr_pin.get_all_contacts(p_layer));
             }
@@ -592,7 +601,7 @@ public final class AlgoShoveTrace
     * Returns null, if that is not possible. Returns p_polyline, if there were no obstacles 
     * If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as obstacles, even if they are of the own net.
     */
-   private Polyline spring_over(
+   private final Polyline spring_over(
          Polyline p_polyline, 
          int p_half_width, 
          int p_layer, 

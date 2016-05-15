@@ -117,9 +117,9 @@ public final class IteraSettings implements java.io.Serializable
       
       manual_trace_half_width_arr = new int[p_board.get_layer_count()];
       
-      for (int i = 0; i < manual_trace_half_width_arr.length; ++i)
+      for (int index = 0; index < manual_trace_half_width_arr.length; ++index)
          {
-         manual_trace_half_width_arr[i] = 1000;
+         manual_trace_half_width_arr[index] = 1000;
          }
       
       autoroute_settings = new ArtSettings(p_board);

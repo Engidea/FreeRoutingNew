@@ -368,12 +368,12 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          automatic_button.setSelected(true);
          }
 
-      shove_check.setSelected(this.board_handling.itera_settings.is_push_enabled());
-      drag_component_check.setSelected(this.board_handling.itera_settings.get_drag_components_enabled());
-      via_snap_to_smd_center_check.setSelected(this.board_handling.itera_settings.is_via_snap_to_smd_center());
-      ignore_conduction_check.setSelected(this.board_handling.get_routing_board().brd_rules.get_ignore_conduction());
-      hilight_routing_obstacle_check.setSelected(this.board_handling.itera_settings.is_hilight_routing_obstacle());
-      neckdown_check.setSelected(this.board_handling.itera_settings.is_automatic_neckdown());
+      shove_check.setSelected(board_handling.itera_settings.is_push_enabled());
+      drag_component_check.setSelected(board_handling.itera_settings.get_drag_components_enabled());
+      via_snap_to_smd_center_check.setSelected(board_handling.itera_settings.is_via_snap_to_smd_center());
+      ignore_conduction_check.setSelected(board_handling.get_routing_board().brd_rules.get_ignore_conduction());
+      hilight_routing_obstacle_check.setSelected(board_handling.itera_settings.is_hilight_routing_obstacle());
+      neckdown_check.setSelected(board_handling.itera_settings.is_automatic_neckdown());
       clearance_compensation_check.setSelected(board_handling.get_routing_board().search_tree_manager.is_clearance_compensation_used());
       
       BrdOutline outline = board_handling.get_routing_board().get_outline();
