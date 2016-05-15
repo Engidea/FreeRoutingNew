@@ -86,7 +86,7 @@ public final class IteraRoute
    private final boolean via_snap_to_smd_center;
 
    public final int[] net_no_arr;    // The net numbers used for routing 
-   public final NetNosList net_nos;  // This is the replacement for the above
+   public final NetNosList net_nos;  // This is the replacement for the above pippolone
 
    private BrdItem shove_failing_obstacle = null;
    private PlaPointInt prev_corner;
@@ -213,7 +213,7 @@ public final class IteraRoute
             curr_corner, 
             pen_half_width_arr[layer_active_no], 
             layer_active_no, 
-            new NetNosList(net_no_arr), 
+            net_nos, 
             clearance_class, 
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 
@@ -274,21 +274,21 @@ public final class IteraRoute
          tidy_clip_shape = new ShapeTileOctagon(ok_point).enlarge(itera_settings.trace_pull_tight_region_width);
          }
       
-      int[] opt_net_no_arr;
+      NetNosList opt_net_no_arr;
       
       if (max_shove_trace_recursion_depth <= 0)
          {
-         opt_net_no_arr = net_no_arr;
+         opt_net_no_arr = net_nos;
          }
       else
          {
-         opt_net_no_arr = new int[0];
+         opt_net_no_arr = NetNosList.EMPTY;
          }
       
       if (route_completed)
          {
          r_board.reduce_nets_of_route_items();
-         for (int curr_net_no : net_no_arr)
+         for ( int curr_net_no : net_nos )
             {
             r_board.combine_traces(curr_net_no);
             }
@@ -301,7 +301,7 @@ public final class IteraRoute
       t_limit = new TimeLimitStoppable(s_PULL_TIGHT_TIME_MAX);
       
       r_board.optimize_changed_area(
-            opt_net_no_arr, 
+            opt_net_no_arr.net_nos_arr, 
             tidy_clip_shape, 
             itera_settings.trace_pull_tight_accuracy, 
             null, 
@@ -440,7 +440,7 @@ public final class IteraRoute
          nearest_target_item = null;
          }
       
-      if (nearest_target_item == null || !nearest_target_item.shares_net_no(net_no_arr))
+      if (nearest_target_item == null || !nearest_target_item.shares_net_no(net_nos))
          {
          return false;
          }
@@ -493,7 +493,7 @@ public final class IteraRoute
                   to_corner, 
                   pen_half_width_arr[layer_active_no], 
                   layer_active_no, 
-                  new NetNosList(net_no_arr), 
+                  net_nos, 
                   clearance_class, 
                   max_shove_trace_recursion_depth,
                   max_shove_via_recursion_depth, 
@@ -604,9 +604,9 @@ public final class IteraRoute
          shove_failing_obstacle.draw(p_graphics, p_graphics_context, p_graphics_context.get_violations_color(), 1);
          }
       
-      if (target_set == null || net_no_arr.length < 1) return;
+      if (target_set == null || net_nos.is_empty() ) return;
 
-      RuleNet curr_net = r_board.brd_rules.nets.get(net_no_arr[0]);
+      RuleNet curr_net = r_board.brd_rules.nets.get(net_nos.first());
 
       if (curr_net == null) return;
 

@@ -68,6 +68,11 @@ public final class NetNosList implements Iterable<Integer>
          net_nos_arr[index++] = an_int.intValue();
       }
    
+   public boolean is_empty()
+      {
+      return size() < 1;
+      }
+
    public int size()
       {
       return net_nos_arr.length;
