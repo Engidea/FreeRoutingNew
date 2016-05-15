@@ -333,11 +333,11 @@ public final class IteraRoute
 
       if ( via_snap_to_smd_center )
          {
-         boolean snapped_to_smd_center = snap_to_smd_center(p_to_layer);
+         boolean snapped_to_smd_center = via_try_snap_smd_center(p_to_layer);
          
          if (!snapped_to_smd_center)
             {
-            snap_to_smd_center(layer_active_no);
+            via_try_snap_smd_center(layer_active_no);
             }
          }
       
@@ -395,21 +395,25 @@ public final class IteraRoute
    /**
     * Snaps to the center of an smd pin, if the location location on p_layer is inside an smd pin of the own net,
     */
-   private boolean snap_to_smd_center(int p_layer)
+   private boolean via_try_snap_smd_center(int p_layer)
       {
       ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
       Collection<BrdItem> picked_items = r_board.pick_items(prev_corner, p_layer, selection_filter);
-      board.items.BrdAbitPin found_smd_pin = null;
+      
+      BrdAbitPin found_smd_pin = null;
+      
       for (BrdItem curr_item : picked_items)
          {
-         if (curr_item instanceof BrdAbitPin && curr_item.shares_net_no(net_no_arr))
+         if ( ! ( curr_item instanceof BrdAbitPin ) ) continue; 
+         
+         BrdAbitPin a_pin = (BrdAbitPin)curr_item;
+         
+         if ( ! a_pin.shares_net_no(net_nos) ) continue;
+         
+         if ( a_pin.first_layer() == p_layer && a_pin.last_layer() == p_layer)
             {
-            BrdAbitPin curr_pin = (BrdAbitPin) curr_item;
-            if (curr_pin.first_layer() == p_layer && curr_pin.last_layer() == p_layer)
-               {
-               found_smd_pin = curr_pin;
-               break;
-               }
+            found_smd_pin = a_pin;
+            break;
             }
          }
       
@@ -417,9 +421,9 @@ public final class IteraRoute
       
       PlaPointInt pin_center = found_smd_pin.center_get();
 
-      if (connect(prev_corner, pin_center))
+      if (itera_connect(prev_corner, pin_center))
          {
-         // Ahhh found it !!!! pippo
+         // if connections successfult update the prev_corner
          prev_corner = pin_center;
          }
       
@@ -459,7 +463,7 @@ public final class IteraRoute
       
       if (connection_point != null )
          {
-         route_completed = connect(p_from_point, connection_point);
+         route_completed = itera_connect(p_from_point, connection_point);
          }
       
       return route_completed;
@@ -469,7 +473,7 @@ public final class IteraRoute
     * Tries to make a trace connection from p_from_point to p_to_point according to the angle restriction. 
     * @returns true, if the connection succeeded.
     */
-   private boolean connect(PlaPointInt p_from_point, PlaPointInt p_to_point)
+   private boolean itera_connect(PlaPointInt p_from_point, PlaPointInt p_to_point)
       {
       ArrayList<PlaPointInt> corners = angled_connection(p_from_point, p_to_point);
       
@@ -907,7 +911,7 @@ public final class IteraRoute
             p_to_corner, 
             neck_down_halfwidth, 
             layer_active_no, 
-            new NetNosList(net_no_arr), 
+            net_nos, 
             clearance_class, 
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 
@@ -955,7 +959,7 @@ public final class IteraRoute
             p_to_corner, 
             neck_down_halfwidth, 
             layer_active_no, 
-            new NetNosList(net_no_arr), 
+            net_nos, 
             clearance_class, 
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 

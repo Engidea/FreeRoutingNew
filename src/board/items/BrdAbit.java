@@ -202,6 +202,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
             precalculated_first_layer = padstack.board_layer_count() - padstack.to_layer() - 1;
             }
          }
+      
       return precalculated_first_layer;
       }
 

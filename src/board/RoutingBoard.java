@@ -144,7 +144,13 @@ public final class RoutingBoard implements java.io.Serializable
     * Creates a new instance of a routing Board with surrounding box p_bounding_box Rules contains the restrictions to obey when
     * inserting items. Among other things it may contain a clearance matrix.
     */
-   public RoutingBoard(ShapeTileBox p_bounding_box, BrdLayerStructure p_layer_structure, ShapePolyline[] p_outline_shapes, int p_outline_cl_class_no, BoardRules p_rules, HostCom p_board_communication,
+   public RoutingBoard(
+         ShapeTileBox p_bounding_box, 
+         BrdLayerStructure p_layer_structure, 
+         ShapePolyline[] p_outline_shapes, 
+         int p_outline_cl_class_no, 
+         BoardRules p_rules, 
+         HostCom p_host_com,
          Stat p_stat)
       {
       stat = p_stat;
@@ -153,7 +159,7 @@ public final class RoutingBoard implements java.io.Serializable
       library = new BrdLibrary();
       item_list = new UndoableObjects();
       brd_components = new BrdComponents();
-      host_com = p_board_communication;
+      host_com = p_host_com;
       bounding_box = p_bounding_box;
       search_tree_manager = new SearchTreeManager(this);
       
