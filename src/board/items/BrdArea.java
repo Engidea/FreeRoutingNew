@@ -182,11 +182,9 @@ public class BrdArea extends BrdItem implements java.io.Serializable
    @Override
    public boolean is_obstacle(BrdItem p_other)
       {
-      if (p_other.shares_net(this))
-         {
-         return false;
-         }
-      return p_other instanceof BrdTrace || p_other instanceof BrdAbitVia;
+      if (p_other.shares_net(this)) return false;
+
+      return p_other instanceof BrdTracePolyline || p_other instanceof BrdAbitVia;
       }
 
    @Override

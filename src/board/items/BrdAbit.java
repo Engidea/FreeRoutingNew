@@ -127,9 +127,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
       for ( BrdItem curr_contact : get_normal_contacts() )
          {
-         if ( ! ( curr_contact instanceof BrdTrace) ) continue;
+         if ( ! ( curr_contact instanceof BrdTracePolyline) ) continue;
 
-         BrdTrace curr_trace = (BrdTrace) curr_contact;
+         BrdTracePolyline curr_trace = (BrdTracePolyline) curr_contact;
 
          BrdTraceInfo curr_trace_info = new BrdTraceInfo(curr_trace.get_layer(), curr_trace.get_half_width(), curr_trace.clearance_idx());
          
@@ -370,9 +370,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
          // skip if current item does not share my layer
          if (  ! curr_item.shares_layer(this)) continue;
          
-         if (curr_item instanceof BrdTrace)
+         if (curr_item instanceof BrdTracePolyline)
             {
-            BrdTrace curr_trace = (BrdTrace) curr_item;
+            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
             if (drill_center.equals(curr_trace.corner_first()) || drill_center.equals(curr_trace.corner_last()))
                {
                result.add(curr_item);
@@ -411,7 +411,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public PlaPointInt normal_contact_point(BrdTrace p_trace)
+   public PlaPointInt normal_contact_point(BrdTracePolyline p_trace)
       {
       if ( ! shares_layer(p_trace)) return null;
 

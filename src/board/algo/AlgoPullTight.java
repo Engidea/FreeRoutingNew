@@ -26,7 +26,6 @@ import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeObject;
@@ -578,7 +577,7 @@ public abstract class AlgoPullTight
       
       for (BrdItem curr_item : picked_items)
          {
-         BrdTrace[] split_pieces = ((BrdTrace) curr_item).split( keep_point.keep_point);
+         BrdTracePolyline[] split_pieces = ((BrdTracePolyline) curr_item).split( keep_point.keep_point);
 
          if (split_pieces != null) return true;
          }

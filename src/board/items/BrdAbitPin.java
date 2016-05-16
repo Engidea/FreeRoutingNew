@@ -446,7 +446,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          return true;
          }
       
-      if (p_other instanceof BrdTrace)
+      if (p_other instanceof BrdTracePolyline)
          {
          // they share a net and this is a Trace, not an obstacle
          return false;

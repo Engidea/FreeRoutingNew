@@ -270,7 +270,131 @@ public final class Polyline implements java.io.Serializable, PlaObject
       corner_approx_arr();
       
       adjust_direction();
+      
+//      adjust_corners();
       }
+   
+   /**
+    * I should make the corners all ints and lines join at corners
+    * It kind of work at the beginning... but then it falls apart
+    */
+   private void adjust_corners ()
+      {
+      int check_len = plalinelen(-2);
+      
+      adjust_corner_first (0, plaline(0), plaline(1));
+
+      for (int index = 1; index < check_len; index++)
+         {
+         adjust_corner (index, plaline(index), plaline(index+1));
+         }
+      }
+
+   private void adjust_corner_first (int c_index, PlaLineInt l_cur, PlaLineInt l_next )
+      {
+      PlaPointInt i_point = l_cur.point_a;
+      
+      if ( ! i_point.is_rational() && i_point.equals(l_next.point_a) ) 
+         {
+         // point is not rational and it matches with the next point, we are agood
+         precalculated_corners[c_index] = i_point;
+         return;
+         }
+
+      PlaPoint x_point = corner(c_index);
+      
+      if ( x_point.is_rational() )
+         {
+         System.err.println("adjust_corner_first index="+c_index);
+         x_point = x_point.round();
+         }
+      
+      i_point = (PlaPointInt)x_point;
+      
+      lines_list.set(c_index,adjust_line_first_cur(l_cur,i_point) );
+      lines_list.set(c_index+1,adjust_line_first_next(l_next,i_point) );
+      
+      precalculated_corners[c_index] = i_point;
+      }
+   
+   /**
+    * First line has point_a as nearest to the intersection
+    */
+   private PlaLineInt adjust_line_first_cur ( PlaLineInt x_line, PlaPointInt i_point )
+      {
+      double dist_ia = i_point.distance_square(x_line.point_a);
+      double dist_ib = i_point.distance_square(x_line.point_b);
+      
+      if ( dist_ia < dist_ib )
+         {
+//         System.err.println("Norm");
+         return new PlaLineInt (i_point, x_line.point_b );
+         }
+      else
+         {
+//         System.err.println("INV");
+         return new PlaLineInt (i_point, x_line.point_a );
+         }
+      }
+
+   /**
+    * First line next has point_a as nearest to the intersection
+    * I trust that points are "ordered"
+    */
+   private PlaLineInt adjust_line_first_next ( PlaLineInt x_line, PlaPointInt i_point )
+      {
+      if ( i_point.equals(x_line.point_a)) return x_line;
+
+      System.err.println("Fix");
+
+      return new PlaLineInt (i_point, x_line.point_b );
+      }
+
+   
+   private void adjust_corner (int c_index, PlaLineInt l_cur, PlaLineInt l_next )
+      {
+      PlaPointInt i_point = l_cur.point_b;
+      
+      if ( ! i_point.is_rational() &&  i_point.equals(l_next.point_a) ) 
+         {
+         // point is not rational and it matches with the next point, we are agood
+         precalculated_corners[c_index] = i_point;
+         return;
+         }
+
+      PlaPoint x_point = corner(c_index);
+      
+      if ( x_point.is_rational() )
+         {
+         System.err.println("adjust_corner index="+c_index);
+         x_point = x_point.round();
+         }
+      
+      i_point = (PlaPointInt)x_point;
+      
+      // this should adjust the B point of the current line
+      lines_list.set(c_index,new PlaLineInt(l_cur.point_a,i_point) );
+      
+      // and this instead should fix the a point
+      lines_list.set(c_index+1,new PlaLineInt(i_point,l_next.point_b) );
+      
+      precalculated_corners[c_index] = i_point;
+      }
+
+
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    
    
    

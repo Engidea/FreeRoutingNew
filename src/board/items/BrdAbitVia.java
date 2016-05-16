@@ -141,7 +141,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
          return true;
          }
       
-      if (p_other instanceof BrdTrace)
+      if (p_other instanceof BrdTracePolyline)
          {
          // This is a via and the other is a net, not an obstacle
          return false;

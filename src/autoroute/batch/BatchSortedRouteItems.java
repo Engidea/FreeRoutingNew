@@ -1,14 +1,14 @@
 package autoroute.batch;
 
-import freert.planar.PlaPointFloat;
-import freert.varie.UndoableObjectNode;
-import gui.varie.UndoableObjectStorable;
 import java.util.Iterator;
 import java.util.Set;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTrace;
+import board.items.BrdTracePolyline;
+import freert.planar.PlaPointFloat;
+import freert.varie.UndoableObjectNode;
+import gui.varie.UndoableObjectStorable;
 
 /**
  * Reads the vias and traces on the board in ascending x order. 
@@ -83,9 +83,9 @@ public class BatchSortedRouteItems
             {
             break;
             }
-         if (curr_item instanceof BrdTrace)
+         if (curr_item instanceof BrdTracePolyline)
             {
-            BrdTrace curr_trace = (BrdTrace) curr_item;
+            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
             if (!curr_trace.is_shove_fixed())
                {
                PlaPointFloat first_corner = curr_trace.corner_first().to_float();

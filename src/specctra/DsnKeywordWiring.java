@@ -30,7 +30,6 @@ import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
@@ -122,8 +121,8 @@ final class DsnKeywordWiring extends DsnKeywordScope
       p_par.file.start_scope();
       p_par.file.write("wiring");
       // write the wires
-      Collection<BrdTrace> board_wires = p_par.board.get_traces();
-      Iterator<BrdTrace> it = board_wires.iterator();
+      Collection<BrdTracePolyline> board_wires = p_par.board.get_traces();
+      Iterator<BrdTracePolyline> it = board_wires.iterator();
       while (it.hasNext())
          {
          write_wire_scope(p_par, it.next());
@@ -189,7 +188,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   private static void write_wire_scope(DsnWriteScopeParameter p_par, BrdTrace p_wire) throws java.io.IOException
+   private static void write_wire_scope(DsnWriteScopeParameter p_par, BrdTracePolyline p_wire) throws java.io.IOException
       {
       if (!(p_wire instanceof BrdTracePolyline))
          {
@@ -552,9 +551,9 @@ final class DsnKeywordWiring extends DsnKeywordScope
     */
    private void try_correct_net(BrdItem p_item)
       {
-      if (!(p_item instanceof BrdTrace)) return;
+      if (!(p_item instanceof BrdTracePolyline)) return;
 
-      BrdTrace curr_trace = (BrdTrace) p_item;
+      BrdTracePolyline curr_trace = (BrdTracePolyline) p_item;
       Set<BrdItem> contacts = curr_trace.get_normal_contacts(curr_trace.corner_first(), true);
       contacts.addAll(curr_trace.get_normal_contacts(curr_trace.corner_last(), true));
       int corrected_net_no = 0;

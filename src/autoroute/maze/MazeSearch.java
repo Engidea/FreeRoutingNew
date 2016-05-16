@@ -48,7 +48,6 @@ import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeObject;
@@ -1037,9 +1036,9 @@ public final class MazeSearch
       BrdItem obstacle_item = p_obstacle_room.get_item();
       int layer = p_obstacle_room.get_layer();
       double obstacle_half_width;
-      if (obstacle_item instanceof BrdTrace)
+      if (obstacle_item instanceof BrdTracePolyline)
          {
-         obstacle_half_width = ((BrdTrace) obstacle_item).get_half_width() + search_tree.get_clearance_compensation(obstacle_item.clearance_idx(), layer);
+         obstacle_half_width = ((BrdTracePolyline) obstacle_item).get_half_width() + search_tree.get_clearance_compensation(obstacle_item.clearance_idx(), layer);
          }
       else if (obstacle_item instanceof BrdAbitVia)
          {
@@ -1099,9 +1098,9 @@ public final class MazeSearch
 
       double fanout_via_cost_factor = 1.0;
       double cost_factor = 1;
-      if (p_obstacle_item instanceof board.items.BrdTrace)
+      if (p_obstacle_item instanceof BrdTracePolyline)
          {
-         board.items.BrdTrace obstacle_trace = (board.items.BrdTrace) p_obstacle_item;
+         BrdTracePolyline obstacle_trace = (BrdTracePolyline) p_obstacle_item;
          cost_factor = obstacle_trace.get_half_width();
          if (!art_ctrl.stop_remove_fanout_vias)
             {
@@ -1116,12 +1115,12 @@ public final class MazeSearch
          int contact_count = 0;
          for (BrdItem curr_contact : contact_list)
             {
-            if (!(curr_contact instanceof board.items.BrdTrace) || curr_contact.is_user_fixed())
+            if (!(curr_contact instanceof BrdTracePolyline) || curr_contact.is_user_fixed())
                {
                return -1;
                }
             ++contact_count;
-            board.items.BrdTrace obstacle_trace = (board.items.BrdTrace) curr_contact;
+            BrdTracePolyline obstacle_trace = (BrdTracePolyline) curr_contact;
             cost_factor = Math.max(cost_factor, obstacle_trace.get_half_width());
             if (look_if_fanout_via)
                {
@@ -1171,7 +1170,7 @@ public final class MazeSearch
    /**
     * Return the additional cost factor for ripping the trace, if it is connected to a fanout via or 1, if no fanout via was found.
     */
-   private static double calc_fanout_via_ripup_cost_factor(board.items.BrdTrace p_trace)
+   private static double calc_fanout_via_ripup_cost_factor(BrdTracePolyline p_trace)
       {
       final double FANOUT_COST_CONST = 20000;
       Collection<BrdItem> curr_end_contacts;

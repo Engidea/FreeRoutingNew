@@ -31,7 +31,9 @@ import java.util.SortedSet;
 import main.Stat;
 import board.RoutingBoard;
 import board.infos.BrdRouteStub;
+import board.items.BrdAbitVia;
 import board.items.BrdItem;
+import board.items.BrdTracePolyline;
 
 /**
  *
@@ -68,7 +70,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
       Collection<BrdItem> board_items = routing_board.get_items();
       for (BrdItem curr_item : board_items)
          {
-         if (!(curr_item instanceof board.items.BrdTrace || curr_item instanceof board.items.BrdAbitVia))
+         if (!(curr_item instanceof BrdTracePolyline || curr_item instanceof BrdAbitVia))
             {
             continue;
             }
@@ -79,7 +81,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
 
          PlaPointFloat stub_location;
          int stub_layer;
-         if (curr_item instanceof board.items.BrdAbitVia)
+         if (curr_item instanceof BrdAbitVia)
             {
             Collection<BrdItem> contact_list = curr_item.get_all_contacts();
             if (contact_list.isEmpty())
@@ -119,7 +121,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             }
          else
             {
-            board.items.BrdTrace curr_trace = (board.items.BrdTrace) curr_item;
+            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
             if (curr_trace.get_start_contacts().isEmpty())
                {
                stub_location = curr_trace.corner_first().to_float();

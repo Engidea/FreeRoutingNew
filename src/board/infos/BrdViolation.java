@@ -1,8 +1,5 @@
 package board.infos;
 
-import freert.planar.PlaPointFloat;
-import gui.BoardFrame;
-import gui.varie.GuiResources;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdArea;
@@ -11,7 +8,10 @@ import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdOutline;
-import board.items.BrdTrace;
+import board.items.BrdTracePolyline;
+import freert.planar.PlaPointFloat;
+import gui.BoardFrame;
+import gui.varie.GuiResources;
 
 public final class BrdViolation implements Comparable<BrdViolation>, PrintableInfo
    {
@@ -43,7 +43,7 @@ public final class BrdViolation implements Comparable<BrdViolation>, PrintableIn
          {
          result = resources.getString("via");
          }
-      else if (p_item instanceof BrdTrace)
+      else if (p_item instanceof BrdTracePolyline)
          {
          result = resources.getString("trace");
          }

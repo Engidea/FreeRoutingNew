@@ -438,9 +438,9 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    
    private boolean has_free_angle_traces ()
       {
-      Collection<board.items.BrdTrace> trace_list = board_handling.get_routing_board().get_traces();
+      Collection<BrdTracePolyline> trace_list = board_handling.get_routing_board().get_traces();
      
-      for (board.items.BrdTrace curr_trace : trace_list)
+      for (BrdTracePolyline curr_trace : trace_list)
          {
          if ( ! (curr_trace instanceof BrdTracePolyline) ) continue;
          

@@ -272,11 +272,9 @@ public class BrdValidate
       while (it.hasNext())
          {
          BrdItem curr_item = it.next();
-         if (!(curr_item instanceof board.items.BrdTrace))
-            {
-            continue;
-            }
-         if (((board.items.BrdTrace) curr_item).is_cycle())
+         if (!(curr_item instanceof BrdTracePolyline)) continue;
+
+         if (((BrdTracePolyline) curr_item).is_cycle())
             {
             System.out.print(p_s);
             System.out.println(": cycle found");
@@ -297,9 +295,9 @@ public class BrdValidate
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
-         if (curr_ob instanceof board.items.BrdTrace)
+         if (curr_ob instanceof board.items.BrdTracePolyline)
             {
-            if (((board.items.BrdTrace) curr_ob).contains_net(p_net_no))
+            if (((board.items.BrdTracePolyline) curr_ob).contains_net(p_net_no))
                {
                ++found_traces;
                }

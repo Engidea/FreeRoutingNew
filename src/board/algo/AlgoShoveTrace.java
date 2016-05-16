@@ -34,7 +34,6 @@ import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdOutline;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
@@ -558,6 +557,7 @@ public final class AlgoShoveTrace
                return false;
                }
             }
+         
          for (int i = 0; i < curr_substitute_trace.corner_count(); ++i)
             {
             r_board.join_changed_area(curr_substitute_trace.polyline().corner_approx(i), p_layer);
@@ -573,11 +573,13 @@ public final class AlgoShoveTrace
          r_board.insert_item(curr_substitute_trace);
          
          curr_substitute_trace.normalize(r_board.changed_area.get_area(p_layer));
-         if (!tails_exist_before)
+
+         if ( ! tails_exist_before)  // TODO
             {
             for (int i = 0; i < 2; ++i)
                {
-               BrdTrace tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
+               BrdTracePolyline tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
+
                if (tail != null)
                   {
                   r_board.remove_items_unfixed(tail.get_connection_items(BrdStopConnection.VIA));
@@ -729,7 +731,7 @@ public final class AlgoShoveTrace
          return p_polyline;
          }
 
-      if (p_recursion_depth <= 0 || found_obstacle instanceof BrdOutline || (found_obstacle instanceof BrdTrace && !found_obstacle.is_shove_fixed()))
+      if (p_recursion_depth <= 0 || found_obstacle instanceof BrdOutline || (found_obstacle instanceof BrdTracePolyline && !found_obstacle.is_shove_fixed()))
          {
          r_board.set_shove_failing_obstacle(found_obstacle);
          return null;
@@ -742,7 +744,7 @@ public final class AlgoShoveTrace
          Collection<BrdItem> contacts_on_layer = found_obstacle.get_all_contacts(p_layer);
          for (BrdItem curr_contact : contacts_on_layer)
             {
-            if (curr_contact instanceof BrdTrace)
+            if (curr_contact instanceof BrdTracePolyline)
                {
                try_spring_over = false;
                break;
@@ -752,7 +754,7 @@ public final class AlgoShoveTrace
       ShapeConvex obstacle_shape = null;
       if (try_spring_over)
          {
-         if (found_obstacle instanceof BrdArea || found_obstacle instanceof BrdTrace)
+         if (found_obstacle instanceof BrdArea || found_obstacle instanceof BrdTracePolyline)
             {
             if (found_obstacle.tree_shape_count(search_tree) == 1)
                {

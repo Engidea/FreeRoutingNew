@@ -49,7 +49,6 @@ import board.items.BrdAreaObstacleVia;
 import board.items.BrdComponentOutline;
 import board.items.BrdItem;
 import board.items.BrdOutline;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeEntry;
@@ -772,17 +771,17 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Returns the list of all traces on the board
     */
-   public Collection<BrdTrace> get_traces()
+   public Collection<BrdTracePolyline> get_traces()
       {
-      Collection<BrdTrace> result = new LinkedList<BrdTrace>();
+      Collection<BrdTracePolyline> result = new LinkedList<BrdTracePolyline>();
       Iterator<UndoableObjectNode> it = item_list.start_read_object();
       for (;;)
          {
          UndoableObjectStorable curr_item = item_list.read_object(it);
          if (curr_item == null)  break;
 
-         if (curr_item instanceof BrdTrace)
-            result.add((BrdTrace) curr_item);
+         if (curr_item instanceof BrdTracePolyline)
+            result.add((BrdTracePolyline) curr_item);
 
          }
       return result;
@@ -803,9 +802,9 @@ public final class RoutingBoard implements java.io.Serializable
       
          if (curr_item == null) break;
 
-         if (curr_item instanceof BrdTrace)
+         if (curr_item instanceof BrdTracePolyline)
             {
-            result += ((BrdTrace) curr_item).get_length();
+            result += ((BrdTracePolyline) curr_item).get_length();
             }
          }
       
@@ -825,9 +824,9 @@ public final class RoutingBoard implements java.io.Serializable
       
       if ( ! p_item.is_on_the_board() ) return false;
       
-      if ( ! (p_item  instanceof BrdTrace) ) return false;
+      if ( ! (p_item  instanceof BrdTracePolyline) ) return false;
 
-      BrdTrace a_trace = (BrdTrace)p_item;
+      BrdTracePolyline a_trace = (BrdTracePolyline)p_item;
       
       return a_trace.combine();
       }
@@ -933,7 +932,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       for (BrdItem curr_item : picked_items)
          {
-         BrdTrace curr_trace = (BrdTrace) curr_item;
+         BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
       
          if ( ! curr_trace.contains_net(p_net_no)) continue;
 
@@ -1138,7 +1137,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean check_polyline_trace(Polyline p_polyline, int p_layer, int p_pen_half_width, NetNosList p_net_no_arr, int p_clearance_class)
       {
-      BrdTrace tmp_trace = new BrdTracePolyline(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, 0, ItemFixState.UNFIXED, this);
+      BrdTracePolyline tmp_trace = new BrdTracePolyline(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, 0, ItemFixState.UNFIXED, this);
       
       Set<BrdAbitPin> contact_pins = tmp_trace.touching_pins_at_end_corners();
       
@@ -1551,7 +1550,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Looks if at the input position ends a trace with the input net number, which has no normal contact at that position. 
     * @return null, if no tail is found.
     */
-   public BrdTrace get_trace_tail(PlaPoint p_location, int p_layer, NetNosList p_net_no_arr)
+   public BrdTracePolyline get_trace_tail(PlaPoint p_location, int p_layer, NetNosList p_net_no_arr)
       {
       ShapeTile point_shape = new ShapeTileBox(p_location);
       
@@ -1559,9 +1558,9 @@ public final class RoutingBoard implements java.io.Serializable
 
       for (ShapeTreeObject curr_ob : found_items )
          {
-         if ( ! (curr_ob instanceof BrdTrace) ) continue;
+         if ( ! (curr_ob instanceof BrdTracePolyline) ) continue;
          
-         BrdTrace curr_trace = (BrdTrace) curr_ob;
+         BrdTracePolyline curr_trace = (BrdTracePolyline) curr_ob;
 
          if (!curr_trace.nets_equal(p_net_no_arr))  continue;
 
@@ -1586,7 +1585,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Checks, if p_item item is part of a cycle and remove it together with its connection in this case.
     */
-   public boolean remove_if_cycle(BrdTrace p_trace)
+   public boolean remove_if_cycle(BrdTracePolyline p_trace)
       {
       if (!p_trace.is_on_the_board()) return false;
 
@@ -1605,7 +1604,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       for (int index = 0; index < 2; ++index)
          {
-         BrdTrace tail = get_trace_tail(end_corners[index], curr_layer, curr_net_no_arr);
+         BrdTracePolyline tail = get_trace_tail(end_corners[index], curr_layer, curr_net_no_arr);
          tail_at_endpoint_before[index] = (tail != null);
          }
       
@@ -1617,7 +1616,7 @@ public final class RoutingBoard implements java.io.Serializable
          {
          if (!tail_at_endpoint_before[i])
             {
-            BrdTrace tail = get_trace_tail(end_corners[i], curr_layer, curr_net_no_arr);
+            BrdTracePolyline tail = get_trace_tail(end_corners[i], curr_layer, curr_net_no_arr);
             if (tail != null)
                {
                remove_items_unfixed(tail.get_connection_items());
@@ -1897,7 +1896,7 @@ public final class RoutingBoard implements java.io.Serializable
          contact_count = p_item.get_all_contacts().size();
          }
       
-      if (p_item instanceof BrdTrace && contact_count > 0) return false;
+      if (p_item instanceof BrdTracePolyline && contact_count > 0) return false;
    
       if (p_ignore_items != null) p_ignore_items.add(p_item);
       
@@ -2072,7 +2071,7 @@ public final class RoutingBoard implements java.io.Serializable
                {
                PlaPointFloat drill_item_center = curr_drill_item.center_get().to_float();
                curr_dist = drill_item_center.distance(pick_location);
-               if (curr_dist < min_dist || nearest_item instanceof BrdTrace)
+               if (curr_dist < min_dist || nearest_item instanceof BrdTracePolyline)
                   {
                   candidate_found = true;
                   }
@@ -2328,13 +2327,13 @@ public final class RoutingBoard implements java.io.Serializable
       start_marking_changed_area();
       // Check, if there ends a item of the same net at p_from_corner.
       // If so, its geometry will be used to cut off dog ears of the check shape.
-      BrdTrace picked_trace = null;
+      BrdTracePolyline picked_trace = null;
       ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.TRACES);
       Set<BrdItem> picked_items = pick_items(from_corner, p_layer, filter);
       
       if (picked_items.size() == 1)
          {
-         BrdTrace curr_picked_trace = (BrdTrace) picked_items.iterator().next();
+         BrdTracePolyline curr_picked_trace = (BrdTracePolyline) picked_items.iterator().next();
          if (curr_picked_trace.nets_equal(p_net_no_arr) && curr_picked_trace.get_half_width() == p_half_width && curr_picked_trace.clearance_idx() == p_clearance_class_no
                && (curr_picked_trace instanceof BrdTracePolyline))
             {
@@ -2754,7 +2753,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       if (!p_from_point.equals(first_corner))
          {
-         BrdTrace tail = get_trace_tail(first_corner, trace_layer, net_no_arr);
+         BrdTracePolyline tail = get_trace_tail(first_corner, trace_layer, net_no_arr);
       
          if (tail != null && !tail.is_user_fixed())
             {
@@ -2764,7 +2763,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       if ( ! p_from_point.equals(last_corner))
          {
-         BrdTrace tail = get_trace_tail(last_corner, trace_layer, net_no_arr);
+         BrdTracePolyline tail = get_trace_tail(last_corner, trace_layer, net_no_arr);
 
          if (tail != null && !tail.is_user_fixed())
             {
@@ -2783,9 +2782,9 @@ public final class RoutingBoard implements java.io.Serializable
       {
       for ( BrdItem curr_ob : p_items )
          {
-         if ( ! (curr_ob instanceof BrdTrace) ) continue;
+         if ( ! (curr_ob instanceof BrdTracePolyline) ) continue;
          
-         BrdTrace curr_trace = (BrdTrace) curr_ob;
+         BrdTracePolyline curr_trace = (BrdTracePolyline) curr_ob;
       
          if ( curr_trace.nets_equal(p_except_net_no_arr)) continue;
          
@@ -2935,9 +2934,9 @@ public final class RoutingBoard implements java.io.Serializable
                if (something_changed) break;
                }
             }
-         else if (curr_ob instanceof BrdTrace)
+         else if (curr_ob instanceof BrdTracePolyline)
             {
-            BrdTrace curr_trace = (BrdTrace) curr_ob;
+            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_ob;
             Collection<BrdItem> contacts = curr_trace.get_start_contacts();
             for (int i = 0; i < 2; ++i)
                {

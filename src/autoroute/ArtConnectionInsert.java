@@ -25,7 +25,6 @@ import board.RoutingBoard;
 import board.infos.BrdViaInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -243,7 +242,7 @@ public final class ArtConnectionInsert
          // the idea is that this code is always executed, unless you are debugging autoroute special C
          for (int index = 0; index < p_locate.size(-1); ++index)
             {
-            BrdTrace trace_stub = r_board.get_trace_tail(p_locate.corner(index), p_locate.layer, net_no_arr);
+            BrdTracePolyline trace_stub = r_board.get_trace_tail(p_locate.corner(index), p_locate.layer, net_no_arr);
 
             if (trace_stub == null) continue;
 

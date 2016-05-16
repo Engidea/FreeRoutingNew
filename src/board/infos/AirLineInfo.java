@@ -2,6 +2,7 @@ package board.infos;
 
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
+import board.items.BrdTracePolyline;
 import freert.planar.PlaPointFloat;
 import freert.rules.RuleNet;
 import gui.varie.GuiResources;
@@ -51,7 +52,7 @@ public final class AirLineInfo implements Comparable<AirLineInfo>, PrintableInfo
          {
          return resources.getString("via");
          }
-      else if (p_item instanceof board.items.BrdTrace)
+      else if (p_item instanceof BrdTracePolyline)
          {
          return resources.getString("trace");
          }

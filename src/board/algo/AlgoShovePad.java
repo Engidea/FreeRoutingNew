@@ -28,7 +28,6 @@ import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
@@ -326,7 +325,7 @@ public final class AlgoShovePad
          
          for (int index = 0; index < 2; ++index)
             {
-            BrdTrace tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
+            BrdTracePolyline tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
             
             if (tail == null) continue;
 

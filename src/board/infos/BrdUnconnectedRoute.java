@@ -4,7 +4,9 @@ import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 import java.util.Collection;
 import java.util.Locale;
+import board.items.BrdAbitVia;
 import board.items.BrdItem;
+import board.items.BrdTracePolyline;
 
 /**
  * Describes information of a connected set of unconnected traces and vias.
@@ -19,44 +21,45 @@ public final class BrdUnconnectedRoute implements Comparable<BrdUnconnectedRoute
 
    public final Collection<BrdItem> item_list;
 
-   public BrdUnconnectedRoute(GuiResources resources, freert.rules.RuleNet p_net, Collection<BrdItem> p_item_list, int id_no)
+   public BrdUnconnectedRoute(GuiResources p_resources, freert.rules.RuleNet p_net, Collection<BrdItem> p_item_list, int p_id_no)
       {
-      this.resources = resources;
-      this.net = p_net;
-      this.item_list = p_item_list;
-      this.id_no = id_no;
+      resources = p_resources;
+      net = p_net;
+      item_list = p_item_list;
+      id_no = p_id_no;
+      
       int curr_trace_count = 0;
       int curr_via_count = 0;
       for (BrdItem curr_item : p_item_list)
          {
-         if (curr_item instanceof board.items.BrdTrace)
+         if (curr_item instanceof BrdTracePolyline)
             {
             ++curr_trace_count;
             }
-         else if (curr_item instanceof board.items.BrdAbitVia)
+         else if (curr_item instanceof BrdAbitVia)
             {
             ++curr_via_count;
             }
          }
-      this.trace_count = curr_trace_count;
-      this.via_count = curr_via_count;
+      trace_count = curr_trace_count;
+      via_count = curr_via_count;
       }
 
    public String toString()
       {
 
-      String result = resources.getString("net") + " " + this.net.name + ": " + resources.getString("trace_count") + " " + this.trace_count.toString() + ", " + resources.getString("via_count")
-            + " " + this.via_count.toString();
+      String result = resources.getString("net") + " " + net.name + ": " + resources.getString("trace_count") + " " + trace_count.toString() + ", " + resources.getString("via_count")
+            + " " + via_count.toString();
 
       return result;
       }
 
    public int compareTo(BrdUnconnectedRoute p_other)
       {
-      int result = this.net.name.compareTo(p_other.net.name);
+      int result = net.name.compareTo(p_other.net.name);
       if (result == 0)
          {
-         result = this.id_no - p_other.id_no;
+         result = id_no - p_other.id_no;
          }
       return result;
       }

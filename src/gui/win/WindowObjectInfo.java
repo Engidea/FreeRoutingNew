@@ -43,6 +43,7 @@ import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTrace;
+import board.items.BrdTracePolyline;
 import board.printable.PrintableShape;
 
 /**
@@ -96,7 +97,7 @@ public final class WindowObjectInfo extends GuiSubWindowTemp implements ObjectIn
          else if (curr_object instanceof BrdTrace)
             {
             ++trace_count;
-            cumulative_trace_length += ((BrdTrace) curr_object).get_length();
+            cumulative_trace_length += ((BrdTracePolyline) curr_object).get_length();
             }
          }
       new_instance.append_bold(new_instance.resources.getString("summary") + " ");

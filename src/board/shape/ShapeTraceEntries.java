@@ -26,7 +26,6 @@ import board.items.BrdAreaConduction;
 import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
-import board.items.BrdTrace;
 import board.items.BrdTracePolyline;
 import board.varie.ItemFixState;
 import board.varie.ShapeTraceEntryPoint;
@@ -433,10 +432,10 @@ public final class ShapeTraceEntries
                   return false;
                   }
                
-               if (contact_item instanceof BrdTrace)
+               if (contact_item instanceof BrdTracePolyline)
                   {
 
-                  if (contact_item.is_shove_fixed() || ((BrdTrace) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_idx() != p_trace.clearance_idx())
+                  if (contact_item.is_shove_fixed() || ((BrdTracePolyline) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_idx() != p_trace.clearance_idx())
                      {
                      if (offset_shape.contains_inside(end_corner))
                         {

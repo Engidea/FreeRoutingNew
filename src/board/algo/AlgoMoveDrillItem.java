@@ -29,7 +29,7 @@ import board.items.BrdAbit;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
-import board.items.BrdTrace;
+import board.items.BrdTracePolyline;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
 import board.varie.ShoveDrillResult;
@@ -83,7 +83,7 @@ public final class AlgoMoveDrillItem
       
       for (BrdItem curr_contact : contact_list)
          {
-         if (!(curr_contact instanceof BrdTrace || curr_contact instanceof BrdAreaConduction))
+         if (!(curr_contact instanceof BrdTracePolyline || curr_contact instanceof BrdAreaConduction))
             {
             return false;
             }

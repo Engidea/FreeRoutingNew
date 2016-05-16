@@ -26,7 +26,7 @@ import board.BrdConnectable;
 import board.infos.PrintableInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
-import board.items.BrdTrace;
+import board.items.BrdTracePolyline;
 import freert.varie.UndoableObjectNode;
 import freert.varie.UndoableObjects;
 
@@ -192,9 +192,9 @@ public final class RuleNet implements Comparable<RuleNet>, PrintableInfo, java.i
 
       for (BrdItem curr_item : net_items)
          {
-         if ( ! ( curr_item instanceof BrdTrace) ) continue;
+         if ( ! ( curr_item instanceof BrdTracePolyline) ) continue;
 
-         cumulative_trace_length += ((BrdTrace) curr_item).get_length();
+         cumulative_trace_length += ((BrdTracePolyline) curr_item).get_length();
          }
       
       return cumulative_trace_length;
