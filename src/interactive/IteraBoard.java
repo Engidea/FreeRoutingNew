@@ -65,7 +65,7 @@ import board.BrdLayerStructure;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.IdGenerator;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
@@ -236,9 +236,9 @@ public final class IteraBoard
          
          for (BrdItem curr_contact : curr_pin.get_normal_contacts())
             {
-            if ( ! (curr_contact instanceof BrdTracePolyline) ) continue;
+            if ( ! (curr_contact instanceof BrdTracep) ) continue;
 
-            BrdTracePolyline a_trace = (BrdTracePolyline) curr_contact;
+            BrdTracep a_trace = (BrdTracep) curr_contact;
             
             if ( a_trace.get_fixed_state() != ItemFixState.SHOVE_FIXED) continue;
 

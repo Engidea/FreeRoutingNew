@@ -33,7 +33,7 @@ import board.items.BrdAbitPin;
 import board.items.BrdArea;
 import board.items.BrdItem;
 import board.items.BrdOutline;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaDimension;
 import freert.planar.PlaLineInt;
@@ -111,7 +111,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * Changes the tree entries from p_keep_at_start_count + 1 to new_shape_count - 1 - keep_at_end_count to p_changed_entries.
     * Special implementation for change_trace for performance reasons
     */
-   public final void change_entries(BrdTracePolyline p_obj, Polyline p_new_polyline, int p_keep_at_start_count, int p_keep_at_end_count)
+   public final void change_entries(BrdTracep p_obj, Polyline p_new_polyline, int p_keep_at_start_count, int p_keep_at_end_count)
       {
       // calculate the shapes of p_new_polyline from keep_at_start_count to
       // new_shape_count - keep_at_end_count - 1;
@@ -160,7 +160,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * Merges the tree entries from p_from_trace in front of p_to_trace. 
     * Special implementation for combine trace for performance reasons.
     */
-   public final void merge_entries_in_front(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
+   public final void merge_entries_in_front(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_idx(), p_to_trace.get_layer());
       ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
@@ -235,7 +235,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * Merges the tree entries from p_from_trace to the end of p_to_trace. 
     * Special implementation for combine trace for performance reasons.
     */
-   public final void merge_entries_at_end(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
+   public final void merge_entries_at_end(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_idx(), p_to_trace.get_layer());
       ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
@@ -311,7 +311,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * Trannsfers tree entries from p_from_trace to p_start and p_end_piece after a moddle piece was cut out. 
     * Special implementation for ShapeTraceEntries.fast_cutout_trace for performance reasoms.
     */
-   public final void reuse_entries_after_cutout(BrdTracePolyline p_from_trace, BrdTracePolyline p_start_piece, BrdTracePolyline p_end_piece)
+   public final void reuse_entries_after_cutout(BrdTracep p_from_trace, BrdTracep p_start_piece, BrdTracep p_end_piece)
       {
       ShapeTreeLeaf[] start_piece_leaf_arr = new ShapeTreeLeaf[p_start_piece.polyline().plalinelen(-2)];
       ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
@@ -827,7 +827,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
     * Reduces the first or last shape of p_trace at a tie pin, so that the autoroute algorithm can find a connection for a
     * different net.
     */
-   public final void reduce_trace_shape_at_tie_pin(BrdAbitPin p_tie_pin, BrdTracePolyline p_trace)
+   public final void reduce_trace_shape_at_tie_pin(BrdAbitPin p_tie_pin, BrdTracep p_trace)
       {
       ShapeTile pin_shape = p_tie_pin.get_tree_shape_on_layer(this, p_trace.get_layer());
       PlaPointFloat compare_corner;
@@ -902,7 +902,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
    /**
     * This is for a polyline
     */
-   public final ShapeTile[] calculate_tree_shapes(BrdTracePolyline p_trace)
+   public final ShapeTile[] calculate_tree_shapes(BrdTracep p_trace)
       {
       int offset_width = p_trace.get_half_width() + get_clearance_compensation(p_trace.clearance_idx(), p_trace.get_layer());
       

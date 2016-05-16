@@ -393,11 +393,11 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       
       if ( ! is_obstacle ) return false;
       
-      if ( ! ( this instanceof BrdTracePolyline && curr_item instanceof BrdTracePolyline ) ) return is_obstacle;   
+      if ( ! ( this instanceof BrdTracep && curr_item instanceof BrdTracep ) ) return is_obstacle;   
 
       // Look, if both traces are connected to the same tie pin.
       // In this case they are allowed to overlap without sharing a net.
-      BrdTracePolyline this_trace = (BrdTracePolyline) this;
+      BrdTracep this_trace = (BrdTracep) this;
       PlaPoint contact_point = this_trace.corner_first();
       boolean contact_found = false;
       Collection<BrdItem> curr_contacts = this_trace.get_normal_contacts(contact_point, true);
@@ -598,8 +598,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       {
       if ( p_other == null ) return null;
       
-      if ( p_other instanceof BrdTracePolyline )
-         return normal_contact_point((BrdTracePolyline)p_other);
+      if ( p_other instanceof BrdTracep )
+         return normal_contact_point((BrdTracep)p_other);
       else if ( p_other instanceof BrdAbit )
          return normal_contact_point((BrdAbit)p_other);
       else
@@ -610,7 +610,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * auxiliary function
     * Overridden in subclasses
     */
-   public PlaPointInt normal_contact_point(BrdTracePolyline p_other)
+   public PlaPointInt normal_contact_point(BrdTracep p_other)
       {
       return null;
       }
@@ -787,11 +787,11 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
          int prev_contact_layer = first_common_layer(curr_item);
 
-         if (this instanceof BrdTracePolyline)
+         if (this instanceof BrdTracep)
             {
             // Check, that there is only 1 contact at this location.
             // Only for pins and vias items of more than 1 connection are collected
-            BrdTracePolyline start_trace = (BrdTracePolyline) this;
+            BrdTracep start_trace = (BrdTracep) this;
             
             Collection<BrdItem> check_contacts = start_trace.get_normal_contacts(prev_contact_point, false);
             
@@ -1374,11 +1374,11 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
             {
             return true;
             }
-         if (! (curr_contact instanceof BrdTracePolyline)) continue;
+         if (! (curr_contact instanceof BrdTracep)) continue;
          
          if (p_ignore_items != null && p_ignore_items.contains(curr_contact)) continue;
 
-         BrdTracePolyline curr_trace = (BrdTracePolyline) curr_contact;
+         BrdTracep curr_trace = (BrdTracep) curr_contact;
          
          if (curr_trace.get_length() >= PROTECT_FANOUT_LENGTH * curr_trace.get_half_width())
             continue;
@@ -1390,10 +1390,10 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
                {
                return true;
                }
-            if (tmp_contact instanceof BrdTracePolyline && tmp_contact.get_fixed_state() == ItemFixState.SHOVE_FIXED)
+            if (tmp_contact instanceof BrdTracep && tmp_contact.get_fixed_state() == ItemFixState.SHOVE_FIXED)
                {
                // look for shove fixed exit traces of SMD-pins
-               BrdTracePolyline contact_trace = (BrdTracePolyline) tmp_contact;
+               BrdTracep contact_trace = (BrdTracep) tmp_contact;
                if (contact_trace.corner_count() == 2)
                   {
                   return true;

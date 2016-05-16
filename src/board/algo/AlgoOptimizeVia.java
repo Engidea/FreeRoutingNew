@@ -30,7 +30,7 @@ import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
@@ -73,8 +73,8 @@ public final class AlgoOptimizeVia
          }
       
       Collection<BrdItem> contacts = p_via.get_normal_contacts();
-      BrdTracePolyline first_trace = null;
-      BrdTracePolyline second_trace = null;
+      BrdTracep first_trace = null;
+      BrdTracep second_trace = null;
 
 
       boolean is_plane_or_fanout_via = contacts.size() == 1;
@@ -85,7 +85,7 @@ public final class AlgoOptimizeVia
 
          Iterator<BrdItem> it = contacts.iterator();
          BrdItem curr_item = it.next();
-         if (curr_item.is_shove_fixed() || !(curr_item instanceof BrdTracePolyline))
+         if (curr_item.is_shove_fixed() || !(curr_item instanceof BrdTracep))
             {
             if (curr_item instanceof BrdAreaConduction)
                {
@@ -98,11 +98,11 @@ public final class AlgoOptimizeVia
             }
          else
             {
-            first_trace = (BrdTracePolyline) curr_item;
+            first_trace = (BrdTracep) curr_item;
             }
          
          curr_item = it.next();
-         if (curr_item.is_shove_fixed() || !(curr_item instanceof BrdTracePolyline))
+         if (curr_item.is_shove_fixed() || !(curr_item instanceof BrdTracep))
             {
             if (curr_item instanceof BrdAreaConduction)
                {
@@ -115,7 +115,7 @@ public final class AlgoOptimizeVia
             }
          else
             {
-            second_trace = (BrdTracePolyline) curr_item;
+            second_trace = (BrdTracep) curr_item;
             }
          }
       
@@ -204,13 +204,13 @@ public final class AlgoOptimizeVia
       Collection<BrdItem> picked_items = r_board.pick_items(new_location, first_trace.get_layer(), filter);
       for (BrdItem curr_item : picked_items)
          {
-         ((BrdTracePolyline) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
+         ((BrdTracep) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
          }
       
       picked_items = r_board.pick_items(new_location, second_trace.get_layer(), filter);
       for (BrdItem curr_item : picked_items)
          {
-         ((BrdTracePolyline) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
+         ((BrdTracep) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
          }
       
       filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
@@ -239,7 +239,7 @@ public final class AlgoOptimizeVia
       if (contact_list.isEmpty()) return false;
       
       BrdAreaConduction contact_plane = null;
-      BrdTracePolyline contact_trace = null;
+      BrdTracep contact_trace = null;
       for (BrdItem curr_contact : contact_list)
          {
          if (curr_contact instanceof BrdAreaConduction)
@@ -248,11 +248,11 @@ public final class AlgoOptimizeVia
 
             contact_plane = (BrdAreaConduction) curr_contact;
             }
-         else if (curr_contact instanceof BrdTracePolyline)
+         else if (curr_contact instanceof BrdTracep)
             {
             if (curr_contact.is_shove_fixed() || contact_trace != null)  return false;
 
-            contact_trace = (BrdTracePolyline) curr_contact;
+            contact_trace = (BrdTracep) curr_contact;
             }
          else
             {
@@ -377,7 +377,7 @@ public final class AlgoOptimizeVia
       Collection<BrdItem> picked_items = r_board.pick_items(new_via_location, contact_trace.get_layer(), filter);
       for (BrdItem curr_item : picked_items)
          {
-         ((BrdTracePolyline) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
+         ((BrdTracep) curr_item).pull_tight(true, p_trace_pull_tight_accuracy );
          }
       
       if (new_via_location.equals(check_corner))

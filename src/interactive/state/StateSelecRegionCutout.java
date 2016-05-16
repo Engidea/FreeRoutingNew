@@ -32,7 +32,7 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 
 /**
  *
@@ -49,13 +49,13 @@ public class StateSelecRegionCutout extends StateSelectRegion
       {
       p_board_handling.display_layer_messsage();
       // filter items, whichh cannnot be cutout
-      Collection<BrdTracePolyline> item_list = new LinkedList<BrdTracePolyline>();
+      Collection<BrdTracep> item_list = new LinkedList<BrdTracep>();
 
       for (BrdItem curr_item : p_item_list)
          {
-         if (!curr_item.is_user_fixed() && curr_item instanceof BrdTracePolyline)
+         if (!curr_item.is_user_fixed() && curr_item instanceof BrdTracep)
             {
-            item_list.add((BrdTracePolyline) curr_item);
+            item_list.add((BrdTracep) curr_item);
             }
          }
 
@@ -69,7 +69,7 @@ public class StateSelecRegionCutout extends StateSelectRegion
       return new_instance;
       }
 
-   private StateSelecRegionCutout(Collection<BrdTracePolyline> p_item_list, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
+   private StateSelecRegionCutout(Collection<BrdTracep> p_item_list, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
       if (actlog != null)
@@ -110,7 +110,7 @@ public class StateSelecRegionCutout extends StateSelectRegion
 
       Set<Integer> changed_nets = new TreeSet<Integer>();
 
-      for (BrdTracePolyline curr_trace : trace_list)
+      for (BrdTracep curr_trace : trace_list)
          {
          board.shape.ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
          for (int i = 0; i < curr_trace.net_count(); ++i)
@@ -132,7 +132,7 @@ public class StateSelecRegionCutout extends StateSelectRegion
          return;
          }
 
-      for (BrdTracePolyline curr_trace : trace_list)
+      for (BrdTracep curr_trace : trace_list)
          {
 
          curr_trace.draw(p_graphics, i_brd.gdi_context, i_brd.gdi_context.get_hilight_color(), i_brd.gdi_context.get_hilight_color_intensity());
@@ -140,5 +140,5 @@ public class StateSelecRegionCutout extends StateSelectRegion
       super.draw(p_graphics);
       }
 
-   private final Collection<BrdTracePolyline> trace_list;
+   private final Collection<BrdTracep> trace_list;
    }

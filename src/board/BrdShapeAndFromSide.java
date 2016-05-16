@@ -18,7 +18,7 @@
 
 package board;
 
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
@@ -42,7 +42,7 @@ public final class BrdShapeAndFromSide
     * shove functions, p_in_shove_check is expected to be true. In the actual shove functions p_in_shove_check is expected to be
     * false.
     */
-   public BrdShapeAndFromSide(BrdTracePolyline p_trace, int p_index, boolean p_orthogonal, boolean p_in_shove_check)
+   public BrdShapeAndFromSide(BrdTracep p_trace, int p_index, boolean p_orthogonal, boolean p_in_shove_check)
       {
       ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
       ShapeTile curr_shape = p_trace.get_tree_shape(search_tree, p_index);
@@ -111,7 +111,7 @@ public final class BrdShapeAndFromSide
       from_side = curr_from_side;
       }
 
-   private static PlaLineInt calc_cutline_at_end(int p_index, BrdTracePolyline p_trace)
+   private static PlaLineInt calc_cutline_at_end(int p_index, BrdTracep p_trace)
       {
       Polyline polyline = p_trace.polyline();
       ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
@@ -135,7 +135,7 @@ public final class BrdShapeAndFromSide
       return null;
       }
 
-   private static PlaLineInt calc_cutline_at_start(int p_index, BrdTracePolyline p_trace)
+   private static PlaLineInt calc_cutline_at_start(int p_index, BrdTracep p_trace)
       {
       Polyline trace_lines = p_trace.polyline();
       ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();

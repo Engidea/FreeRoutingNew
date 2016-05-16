@@ -52,7 +52,7 @@ import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdArea;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.ItemFixState;
 
 /**
@@ -641,9 +641,9 @@ public final class StateSelectedItem extends StateInteractive
          
          i_brd.userPrintln("pull_tight: item "+curr_item);
          
-         if (curr_item instanceof BrdTracePolyline)
+         if (curr_item instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+            BrdTracep curr_trace = (BrdTracep) curr_item;
             boolean something_changed = curr_trace.pull_tight(!i_brd.itera_settings.push_enabled, i_brd.itera_settings.trace_pull_tight_accuracy, p_thread);
             if (!something_changed)
                {

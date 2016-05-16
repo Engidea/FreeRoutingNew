@@ -34,7 +34,7 @@ import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdOutline;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
 import board.shape.ShapeTreeObject;
@@ -195,7 +195,7 @@ public final class AlgoShoveTrace
       
       for (;;)
          {
-         BrdTracePolyline curr_substitute_trace = shape_entries.next_substitute_trace_piece();
+         BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
       
          if (curr_substitute_trace == null) break;
 
@@ -374,7 +374,7 @@ public final class AlgoShoveTrace
       PlaDirection line_direction = p_line_segment.get_line().direction();
       for (;;)
          {
-         BrdTracePolyline curr_substitute_trace = shape_entries.next_substitute_trace_piece();
+         BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
          if (curr_substitute_trace == null)
             {
             break;
@@ -511,7 +511,7 @@ public final class AlgoShoveTrace
       boolean is_orthogonal_mode = p_trace_shape instanceof ShapeTileBox;
       for (;;)
          {
-         BrdTracePolyline curr_substitute_trace = shape_entries.next_substitute_trace_piece();
+         BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
       
          if (curr_substitute_trace == null)  break;
 
@@ -578,7 +578,7 @@ public final class AlgoShoveTrace
             {
             for (int i = 0; i < 2; ++i)
                {
-               BrdTracePolyline tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
+               BrdTracep tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
 
                if (tail != null)
                   {
@@ -663,13 +663,13 @@ public final class AlgoShoveTrace
                {
                is_obstacle = false;
                }
-            else if (curr_item instanceof BrdTracePolyline)
+            else if (curr_item instanceof BrdTracep)
                {
                if (curr_item.is_shove_fixed())
                   {
                   is_obstacle = true;
                   
-                  if (curr_item instanceof BrdTracePolyline)
+                  if (curr_item instanceof BrdTracep)
                      {
                      // check for a shove fixed trace exit stub, which has to be be ignored at a tie pin.
                      Collection<BrdItem> curr_contacts = curr_item.get_normal_contacts();
@@ -731,7 +731,7 @@ public final class AlgoShoveTrace
          return p_polyline;
          }
 
-      if (p_recursion_depth <= 0 || found_obstacle instanceof BrdOutline || (found_obstacle instanceof BrdTracePolyline && !found_obstacle.is_shove_fixed()))
+      if (p_recursion_depth <= 0 || found_obstacle instanceof BrdOutline || (found_obstacle instanceof BrdTracep && !found_obstacle.is_shove_fixed()))
          {
          r_board.set_shove_failing_obstacle(found_obstacle);
          return null;
@@ -744,7 +744,7 @@ public final class AlgoShoveTrace
          Collection<BrdItem> contacts_on_layer = found_obstacle.get_all_contacts(p_layer);
          for (BrdItem curr_contact : contacts_on_layer)
             {
-            if (curr_contact instanceof BrdTracePolyline)
+            if (curr_contact instanceof BrdTracep)
                {
                try_spring_over = false;
                break;
@@ -754,7 +754,7 @@ public final class AlgoShoveTrace
       ShapeConvex obstacle_shape = null;
       if (try_spring_over)
          {
-         if (found_obstacle instanceof BrdArea || found_obstacle instanceof BrdTracePolyline)
+         if (found_obstacle instanceof BrdArea || found_obstacle instanceof BrdTracep)
             {
             if (found_obstacle.tree_shape_count(search_tree) == 1)
                {

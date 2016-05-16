@@ -112,9 +112,9 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
             BrdItem curr_item = (BrdItem) curr_ob;
             if (curr_item != this && curr_item.shares_net(this) && curr_item.shares_layer(this))
                {
-               if (curr_item instanceof BrdTracePolyline)
+               if (curr_item instanceof BrdTracep)
                   {
-                  BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+                  BrdTracep curr_trace = (BrdTracep) curr_item;
                   if (curr_shape.contains(curr_trace.corner_first()) || curr_shape.contains(curr_trace.corner_last()))
                      {
                      result.add(curr_item);

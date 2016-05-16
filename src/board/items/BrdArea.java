@@ -184,7 +184,7 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       {
       if (p_other.shares_net(this)) return false;
 
-      return p_other instanceof BrdTracePolyline || p_other instanceof BrdAbitVia;
+      return p_other instanceof BrdTracep || p_other instanceof BrdAbitVia;
       }
 
    @Override

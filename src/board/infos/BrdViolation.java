@@ -8,7 +8,7 @@ import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdOutline;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import freert.planar.PlaPointFloat;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
@@ -43,7 +43,7 @@ public final class BrdViolation implements Comparable<BrdViolation>, PrintableIn
          {
          result = resources.getString("via");
          }
-      else if (p_item instanceof BrdTracePolyline)
+      else if (p_item instanceof BrdTracep)
          {
          result = resources.getString("trace");
          }

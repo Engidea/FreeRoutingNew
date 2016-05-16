@@ -30,7 +30,7 @@ import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -121,8 +121,8 @@ final class DsnKeywordWiring extends DsnKeywordScope
       p_par.file.start_scope();
       p_par.file.write("wiring");
       // write the wires
-      Collection<BrdTracePolyline> board_wires = p_par.board.get_traces();
-      Iterator<BrdTracePolyline> it = board_wires.iterator();
+      Collection<BrdTracep> board_wires = p_par.board.get_traces();
+      Iterator<BrdTracep> it = board_wires.iterator();
       while (it.hasNext())
          {
          write_wire_scope(p_par, it.next());
@@ -188,14 +188,14 @@ final class DsnKeywordWiring extends DsnKeywordScope
       p_par.file.end_scope();
       }
 
-   private static void write_wire_scope(DsnWriteScopeParameter p_par, BrdTracePolyline p_wire) throws java.io.IOException
+   private static void write_wire_scope(DsnWriteScopeParameter p_par, BrdTracep p_wire) throws java.io.IOException
       {
-      if (!(p_wire instanceof BrdTracePolyline))
+      if (!(p_wire instanceof BrdTracep))
          {
          System.out.println("Wiring.write_wire_scope: trace type not yet implemented");
          return;
          }
-      BrdTracePolyline curr_wire = (BrdTracePolyline) p_wire;
+      BrdTracep curr_wire = (BrdTracep) p_wire;
       int layer_no = curr_wire.get_layer();
       board.BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
       DsnLayer curr_layer = new DsnLayer(board_layer.name, layer_no, board_layer.is_signal);
@@ -551,9 +551,9 @@ final class DsnKeywordWiring extends DsnKeywordScope
     */
    private void try_correct_net(BrdItem p_item)
       {
-      if (!(p_item instanceof BrdTracePolyline)) return;
+      if (!(p_item instanceof BrdTracep)) return;
 
-      BrdTracePolyline curr_trace = (BrdTracePolyline) p_item;
+      BrdTracep curr_trace = (BrdTracep) p_item;
       Set<BrdItem> contacts = curr_trace.get_normal_contacts(curr_trace.corner_first(), true);
       contacts.addAll(curr_trace.get_normal_contacts(curr_trace.corner_last(), true));
       int corrected_net_no = 0;

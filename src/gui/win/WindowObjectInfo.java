@@ -42,8 +42,7 @@ import board.infos.PrintableInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTrace;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.printable.PrintableShape;
 
 /**
@@ -83,6 +82,7 @@ public final class WindowObjectInfo extends GuiSubWindowTemp implements ObjectIn
       Integer via_count = 0;
       Integer trace_count = 0;
       double cumulative_trace_length = 0;
+      
       for (PrintableInfo curr_object : p_item_list)
          {
          curr_object.print_info(new_instance, p_board_frame.get_locale());
@@ -94,10 +94,10 @@ public final class WindowObjectInfo extends GuiSubWindowTemp implements ObjectIn
             {
             ++via_count;
             }
-         else if (curr_object instanceof BrdTrace)
+         else if (curr_object instanceof BrdTracep)
             {
             ++trace_count;
-            cumulative_trace_length += ((BrdTracePolyline) curr_object).get_length();
+            cumulative_trace_length += ((BrdTracep) curr_object).get_length();
             }
          }
       new_instance.append_bold(new_instance.resources.getString("summary") + " ");

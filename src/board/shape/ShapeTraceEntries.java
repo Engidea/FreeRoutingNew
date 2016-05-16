@@ -26,7 +26,7 @@ import board.items.BrdAreaConduction;
 import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.ItemFixState;
 import board.varie.ShapeTraceEntryPoint;
 import freert.planar.PlaLineInt;
@@ -110,9 +110,9 @@ public final class ShapeTraceEntries
                shove_via_list.add((BrdAbitVia) curr_item);
                }
             }
-         else if (curr_item instanceof BrdTracePolyline)
+         else if (curr_item instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+            BrdTracep curr_trace = (BrdTracep) curr_item;
 
             if (!store_trace(curr_trace))
                {
@@ -154,13 +154,13 @@ public final class ShapeTraceEntries
     * calculates the next substitute trace piece. 
     * @return null at he end of the substitute trace list.
     */
-   public BrdTracePolyline next_substitute_trace_piece()
+   public BrdTracep next_substitute_trace_piece()
       {
       ShapeTraceEntryPoint[] entries = pop_piece();
 
       if (entries == null) return null;
 
-      BrdTracePolyline curr_trace = entries[0].trace;
+      BrdTracep curr_trace = entries[0].trace;
       ShapeTile offset_shape;
       ShapeSearchTree search_tree = board.search_tree_manager.get_default_tree();
       if (search_tree.is_clearance_compensation_used())
@@ -205,7 +205,7 @@ public final class ShapeTraceEntries
          {
          Polyline piece_polyline = new Polyline(piece_lines);
          
-         return new BrdTracePolyline(
+         return new BrdTracep(
                piece_polyline, 
                layer, 
                curr_trace.get_half_width(), 
@@ -255,9 +255,9 @@ public final class ShapeTraceEntries
       while (it.hasNext())
          {
          BrdItem curr_item = it.next();
-         if (curr_item instanceof BrdTracePolyline && !curr_item.shares_net_no(own_net_nos))
+         if (curr_item instanceof BrdTracep && !curr_item.shares_net_no(own_net_nos))
             {
-            cutout_trace((BrdTracePolyline) curr_item, shape, cl_class);
+            cutout_trace((BrdTracep) curr_item, shape, cl_class);
             }
          }
       }
@@ -270,7 +270,7 @@ public final class ShapeTraceEntries
       return found_obstacle;
       }
 
-   public static void cutout_trace(BrdTracePolyline p_trace, ShapeConvex p_shape, int p_cl_class)
+   public static void cutout_trace(BrdTracep p_trace, ShapeConvex p_shape, int p_cl_class)
       {
       if (!p_trace.is_on_the_board())
          {
@@ -323,7 +323,7 @@ public final class ShapeTraceEntries
    /** 
     * Optimized function handling the performance critical standard cutout case 
     */
-   private static void fcutout_trace_fast(BrdTracePolyline p_trace, Polyline p_start_piece, Polyline p_end_piece)
+   private static void fcutout_trace_fast(BrdTracep p_trace, Polyline p_start_piece, Polyline p_end_piece)
       {
       RoutingBoard board = p_trace.r_board;
       
@@ -331,7 +331,7 @@ public final class ShapeTraceEntries
       p_trace.art_item_clear();
       
       board.item_list.save_for_undo(p_trace);
-      BrdTracePolyline start_piece = new BrdTracePolyline(
+      BrdTracep start_piece = new BrdTracep(
             p_start_piece, 
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
@@ -342,7 +342,7 @@ public final class ShapeTraceEntries
       board.item_list.insert(start_piece);
       start_piece.set_on_the_board(true);
 
-      BrdTracePolyline end_piece = new BrdTracePolyline(
+      BrdTracep end_piece = new BrdTracep(
             p_end_piece, 
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
@@ -363,7 +363,7 @@ public final class ShapeTraceEntries
     * Stores all intersection points of p_trace with the border of the internal shape enlarged by the half width and the clearance
     * of the corresponding trace pen.
     */
-   private boolean store_trace(BrdTracePolyline p_trace)
+   private boolean store_trace(BrdTracep p_trace)
       {
       ShapeSearchTree search_tree = board.search_tree_manager.get_default_tree();
       ShapeTile offset_shape;
@@ -432,10 +432,10 @@ public final class ShapeTraceEntries
                   return false;
                   }
                
-               if (contact_item instanceof BrdTracePolyline)
+               if (contact_item instanceof BrdTracep)
                   {
 
-                  if (contact_item.is_shove_fixed() || ((BrdTracePolyline) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_idx() != p_trace.clearance_idx())
+                  if (contact_item.is_shove_fixed() || ((BrdTracep) contact_item).get_half_width() != p_trace.get_half_width() || contact_item.clearance_idx() != p_trace.clearance_idx())
                      {
                      if (offset_shape.contains_inside(end_corner))
                         {
@@ -887,7 +887,7 @@ public final class ShapeTraceEntries
       return result;
       }
 
-   private void insert_entry_point(BrdTracePolyline p_trace, int p_trace_line_no, int p_edge_no, PlaPointFloat p_entry_approx)
+   private void insert_entry_point(BrdTracep p_trace, int p_trace_line_no, int p_edge_no, PlaPointFloat p_entry_approx)
       {
       ShapeTraceEntryPoint new_entry = new ShapeTraceEntryPoint(p_trace, p_trace_line_no, p_edge_no, p_entry_approx);
       ShapeTraceEntryPoint curr_prev = null;

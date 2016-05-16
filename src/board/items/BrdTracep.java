@@ -36,6 +36,7 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
 import freert.graphics.GdiContext;
+import freert.graphics.GdiDrawable;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -57,10 +58,11 @@ import freert.varie.TimeLimitStoppable;
 import gui.varie.ObjectInfoPanel;
 
 /**
- * Objects of class Trace, whose geometry is described by a Polyline
+ * Traces are just described by a Polyline, life is too short to immagine to implement two different "description" that are actually
+ * equivalent, yes, it is teoretically possible... but really.
  * @author Alfons Wirtz
  */
-public final class BrdTracePolyline extends BrdItem implements BrdConnectable, java.io.Serializable
+public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    
@@ -69,6 +71,34 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
    private final int trace_half_width; // half width of the trace pen
    private int layer_no; // board layer of the trace
    
+   
+   public BrdTracep(
+         Polyline p_polyline, 
+         int p_layer, 
+         int p_half_width, 
+         NetNosList p_net_no_arr, 
+         int p_clearance_type, 
+         int p_id_no, 
+         int p_group_no, 
+         ItemFixState p_fixed_state, 
+         RoutingBoard p_board)
+      {
+      super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
+      
+      trace_half_width = p_half_width;
+
+      if ( p_layer <= 0)
+         layer_no = 0;
+      else if ( p_layer >= p_board.get_layer_count() )
+         layer_no = p_board.get_layer_count() - 1;
+      else
+         layer_no = p_layer;
+
+      if ( ! p_polyline.is_valid())
+         throw new IllegalArgumentException("PolylineTrace: p_polyline.arr.length >= 3 expected");
+      
+      polyline = p_polyline;
+      }
 
 
 
@@ -105,8 +135,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
     */
    public final int get_compensated_half_width(ShapeSearchTree p_search_tree)
       {
-      int result = trace_half_width + p_search_tree.get_clearance_compensation(clearance_idx(), layer_no);
-      return result;
+      return trace_half_width + p_search_tree.get_clearance_compensation(clearance_idx(), layer_no);
       }
 
    @Override
@@ -116,20 +145,19 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
          {
          return false;
          }
+      
       if (p_other instanceof BrdAreaConduction && !((BrdAreaConduction) p_other).get_is_obstacle())
          {
          return false;
          }
-      if (! p_other.shares_net(this))
-         {
-         return true;
-         }
+
+      if (! p_other.shares_net(this)) return true;
+      
       return false;
       }
 
    /**
-    * Get a list of all items with a connection point on the layer of this trace
-    * equal to its first corner.
+    * Get a list of all items with a connection point on the layer of this trace equal to its first corner.
     */
    public Set<BrdItem> get_start_contacts()
       {
@@ -137,8 +165,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       }
 
    /**
-    * Get a list of all items with a connection point on the layer of this trace
-    * equal to its last corner.
+    * Get a list of all items with a connection point on the layer of this trace equal to its last corner.
     */
    public Set<BrdItem> get_end_contacts()
       {
@@ -164,35 +191,34 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
    @Override
    public boolean is_route()
       {
-      return !is_user_fixed() && net_count() > 0;
+      return ! is_user_fixed() && net_count() > 0;
       }
 
    /**
-    * Returns true, if this trace is not contacted at its first or at its last
-    * point.
+    * @return true, if this trace is not contacted at its first or at its last point.
     */
    public boolean is_tail()
       {
       Collection<BrdItem> contact_list = get_start_contacts();
-      if (contact_list.size() == 0)
-         {
-         return true;
-         }
+      
+      if (contact_list.size() == 0) return true;
+
       contact_list = get_end_contacts();
+
       return (contact_list.size() == 0);
       }
 
-   public java.awt.Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
+   public Color[] get_draw_colors(GdiContext p_graphics_context)
       {
       return p_graphics_context.get_trace_colors(is_user_fixed());
       }
 
    public int get_draw_priority()
       {
-      return freert.graphics.GdiDrawable.MAX_DRAW_PRIORITY;
+      return GdiDrawable.MAX_DRAW_PRIORITY;
       }
 
-   public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
+   public double get_draw_intensity( GdiContext p_graphics_context)
       {
       return p_graphics_context.get_trace_color_intensity();
       }
@@ -229,9 +255,9 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
          // skip there is no net sharing
          if ( ! (p_ignore_net || curr_item.shares_net(this))) continue;
          
-         if (curr_item instanceof BrdTracePolyline)
+         if (curr_item instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+            BrdTracep curr_trace = (BrdTracep) curr_item;
             if (p_point.equals(curr_trace.corner_first()) || p_point.equals(curr_trace.corner_last()))
                {
                result.add(curr_item);
@@ -264,7 +290,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       }
 
    @Override
-   public PlaPointInt normal_contact_point(BrdTracePolyline p_other)
+   public PlaPointInt normal_contact_point(BrdTracep p_other)
       {
       if ( layer_no != p_other.layer_no) return null;
 
@@ -294,15 +320,14 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
    public boolean is_overlap()
       {
       Set<BrdItem> start_contacts = get_start_contacts();
+      
       Set<BrdItem> end_contacts = get_end_contacts();
-      Iterator<BrdItem> it = end_contacts.iterator();
-      while (it.hasNext())
+      
+      for ( BrdItem end_contact : end_contacts )
          {
-         if (start_contacts.contains(it.next()))
-            {
-            return true;
-            }
+         if (start_contacts.contains(end_contact))  return true;
          }
+
       return false;
       }
 
@@ -319,7 +344,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       for (int curr_net_no : net_nos)
          {
          // do not check special nets
-         if ( ! freert.rules.RuleNets.is_normal_net_no(curr_net_no)) continue;
+         if ( ! RuleNets.is_normal_net_no(curr_net_no)) continue;
          
          // trace is fixed if the net is shove fixed
          if (nets.get(curr_net_no).get_class().is_shove_fixed()) return true;
@@ -329,15 +354,18 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       }
 
    /**
-    * returns the endpoint of this trace with the shortest distance to p_from_point
+    * @return the endpoint of this trace with the shortest distance to p_from_point
     */
    public PlaPoint nearest_end_point(PlaPointInt p_from_point)
       {
       PlaPoint p1 = corner_first();
+      
       PlaPoint p2 = corner_last();
+      
       PlaPointFloat from_point = p_from_point.to_float();
 
       double d1 = from_point.distance(p1.to_float());
+      
       double d2 = from_point.distance(p2.to_float());
 
       if (d1 < d2)
@@ -377,11 +405,9 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       
       for (BrdItem curr_contact : start_contacts)
          {
-         if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas))
-            {
-            return true;
-            }
+         if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) return true;
          }
+
       return false;
       }
 
@@ -474,56 +500,15 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       
       return result;
       }
-
-
-
-
    
    
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   public BrdTracePolyline(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
-      {
-      super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
-      
-      trace_half_width = p_half_width;
-
-      if ( p_layer <= 0)
-         layer_no = 0;
-      else if ( p_layer >= p_board.get_layer_count() )
-         layer_no = p_board.get_layer_count() - 1;
-      else
-         layer_no = p_layer;
-
-      if ( ! p_polyline.is_valid())
-         throw new IllegalArgumentException("PolylineTrace: p_polyline.arr.length >= 3 expected");
-      
-      polyline = p_polyline;
-      }
 
    @Override
    public BrdItem copy(int p_id_no)
       {
       NetNosList curr_net_no_arr = net_nos.copy();
       
-      return new BrdTracePolyline(polyline, get_layer(), get_half_width(), curr_net_no_arr, clearance_idx(), p_id_no, get_component_no(), get_fixed_state(), r_board);
+      return new BrdTracep(polyline, get_layer(), get_half_width(), curr_net_no_arr, clearance_idx(), p_id_no, get_component_no(), get_fixed_state(), r_board);
       }
 
    /**
@@ -540,7 +525,6 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
     * returns the first corner of this trace, which is the intersection of the first and second lines of its polyline
     * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
     */
-
    public PlaPoint corner_first()
       {
       return polyline.corner_first();
@@ -576,6 +560,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
    public ShapeTileBox bounding_box()
       {
       ShapeTileBox result = polyline.bounding_box();
+      
       return result.offset(get_half_width());
       }
 
@@ -588,6 +573,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       Color color = p_color_arr[layer];
       double display_width = get_half_width();
       double intensity = p_intensity * p_graphics_context.get_layer_visibility(layer);
+      
       p_graphics_context.draw(polyline.corner_approx_arr(), display_width, color, p_g, intensity);
       }
 
@@ -618,6 +604,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
    public void translate_by(PlaVectorInt p_vector)
       {
       polyline = polyline.translate_by(p_vector);
+      
       clear_derived_data();
       }
 
@@ -625,6 +612,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       polyline = polyline.turn_90_degree(p_factor, p_pole);
+      
       clear_derived_data();
       }
 
@@ -645,17 +633,19 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       }
 
    /**
-    * Looks, if other traces can be combined with this trace. Returns true, if
-    * Something has been combined. This trace will be the combined trace, so that
-    * only other traces may be deleted.
+    * Looks, if other traces can be combined with this trace. 
+    * Returns true, if Something has been combined. 
+    * This trace will be the combined trace, so that only other traces may be deleted.
     * looks, if this trace can be combined with other traces
+    * WARNING: This is a recursive call function, are we really sure that it is "good" ?
     * @return true, if Something has been combined.
     */
    public boolean combine()
       {
       if (! is_on_the_board()) return false;
 
-      boolean something_changed;
+      boolean something_changed = false;
+      
       if (combine_at_start(true))
          {
          something_changed = true;
@@ -666,16 +656,14 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
          something_changed = true;
          combine();
          }
-      else
-         {
-         something_changed = false;
-         }
+      
       if (something_changed)
          {
          // let the observers synchronize the changes
          r_board.observers.notify_changed(this);
          art_item_clear(); // need to clean up possible autoroute item;
          }
+      
       return something_changed;
       }
 
@@ -704,16 +692,16 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       
       if (contacts.size() != 1) return false;
       
-      BrdTracePolyline other_trace = null;
+      BrdTracep other_trace = null;
       boolean trace_found = false;
       boolean reverse_order = false;
       Iterator<BrdItem> it = contacts.iterator();
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdTracePolyline)
+         if (curr_ob instanceof BrdTracep)
             {
-            other_trace = (BrdTracePolyline) curr_ob;
+            other_trace = (BrdTracep) curr_ob;
             if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == get_fixed_state())
                {
                if (start_corner.equals(other_trace.corner_last()))
@@ -820,16 +808,16 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       
       if (contacts.size() != 1) return false;
       
-      BrdTracePolyline other_trace = null;
+      BrdTracep other_trace = null;
       boolean trace_found = false;
       boolean reverse_order = false;
       Iterator<BrdItem> it = contacts.iterator();
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdTracePolyline)
+         if (curr_ob instanceof BrdTracep)
             {
-            other_trace = (BrdTracePolyline) curr_ob;
+            other_trace = (BrdTracep) curr_ob;
             if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == get_fixed_state())
                {
                if (end_corner.equals(other_trace.corner_first()))
@@ -928,9 +916,9 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
     * If nothing is split, the result will contain just this Trace. 
     * If p_clip_shape != null, the split may be resticted to p_clip_shape.
     */
-   public Collection<BrdTracePolyline> split(ShapeTileOctagon p_clip_shape)
+   public Collection<BrdTracep> split(ShapeTileOctagon p_clip_shape)
       {
-      Collection<BrdTracePolyline> result = new LinkedList<BrdTracePolyline>();
+      Collection<BrdTracep> result = new LinkedList<BrdTracep>();
 
       if ( ! is_nets_normal())
          {
@@ -1002,15 +990,15 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
             
             if (!found_item.shares_net(this)) continue;
             
-            if (found_item instanceof BrdTracePolyline)
+            if (found_item instanceof BrdTracep)
                {
-               BrdTracePolyline found_trace = (BrdTracePolyline) found_item;
+               BrdTracep found_trace = (BrdTracep) found_item;
                
                PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(found_entry.shape_index_in_object + 1);
                
                PlaLineInt[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
                
-               Collection<BrdTracePolyline> split_pieces = new LinkedList<BrdTracePolyline>();
+               Collection<BrdTracep> split_pieces = new LinkedList<BrdTracep>();
 
                // try splitting the found trace first
                boolean found_trace_split = false;
@@ -1021,7 +1009,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
                      {
                      int line_no = found_entry.shape_index_in_object + 1;
                      
-                     BrdTracePolyline[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[jndex]);
+                     BrdTracep[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[jndex]);
 
                      if (curr_split_pieces != null)
                         {
@@ -1055,7 +1043,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
                
                for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
                   {
-                  BrdTracePolyline[] curr_split_pieces = split(index + 1, intersecting_lines[jndex]);
+                  BrdTracep[] curr_split_pieces = split(index + 1, intersecting_lines[jndex]);
                   if (curr_split_pieces != null)
                      {
                      own_trace_split = true;
@@ -1074,12 +1062,12 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
                if (found_trace_split || own_trace_split)
                   {
                   // something was split, remove cycles containing a split piece
-                  Iterator<BrdTracePolyline> it2 = split_pieces.iterator();
+                  Iterator<BrdTracep> it2 = split_pieces.iterator();
                   for (int j = 0; j < 2; ++j)
                      {
                      while (it2.hasNext())
                         {
-                        BrdTracePolyline curr_piece = it2.next();
+                        BrdTracep curr_piece = it2.next();
                         r_board.remove_if_cycle(curr_piece);
                         }
 
@@ -1169,9 +1157,9 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
             
             pad_found = true;
             }
-         else if (curr_item instanceof BrdTracePolyline)
+         else if (curr_item instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+            BrdTracep curr_trace = (BrdTracep) curr_item;
             
             if (curr_trace != this && curr_trace.corner_first().equals(intersection) || curr_trace.corner_last().equals(intersection))
                {
@@ -1189,7 +1177,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
     * This method does NOT change the trace, it returns pieces
     * @return the 2 pieces of the split trace, or null if nothing was split 
     */
-   public final BrdTracePolyline[] split(PlaPointInt p_point)
+   public final BrdTracep[] split(PlaPointInt p_point)
       {
       for (int index = 1; index < polyline.plalinelen(-1); index++)
          {
@@ -1202,7 +1190,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
 
          PlaLineInt split_line = new PlaLineInt(p_point, split_line_direction);
          
-         BrdTracePolyline[] result = split(index, split_line);
+         BrdTracep[] result = split(index, split_line);
          
          if (result != null)  return result;
          }
@@ -1215,7 +1203,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
     * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece. 
     * @return the 2 pieces of the splitted trace, or null, if nothing was splitted.
     */
-   private BrdTracePolyline[] split(int p_line_no, PlaLineInt p_new_end_line)
+   private BrdTracep[] split(int p_line_no, PlaLineInt p_new_end_line)
       {
       if (!is_on_the_board()) return null;
 
@@ -1227,7 +1215,7 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       if (split_polylines == null) return null;
       
       r_board.remove_item(this);
-      BrdTracePolyline[] result = new BrdTracePolyline[2];
+      BrdTracep[] result = new BrdTracep[2];
       result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       return result;
@@ -1247,14 +1235,14 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
       
       if (observers_activated) r_board.start_notify_observers();
       
-      Collection<BrdTracePolyline> split_pieces = split(p_clip_shape);
+      Collection<BrdTracep> split_pieces = split(p_clip_shape);
      
       boolean result =  split_pieces.size() != 1;
 
-      Iterator<BrdTracePolyline> it = split_pieces.iterator();
+      Iterator<BrdTracep> it = split_pieces.iterator();
       while (it.hasNext())
          {
-         BrdTracePolyline curr_split_trace = it.next();
+         BrdTracep curr_split_trace = it.next();
          if ( ! curr_split_trace.is_on_the_board()) continue;
          
          boolean trace_combined = curr_split_trace.combine();
@@ -1810,11 +1798,11 @@ public final class BrdTracePolyline extends BrdItem implements BrdConnectable, j
          return false;
          }
       BrdItem curr_contact = contact_list.iterator().next();
-      if (!(curr_contact.get_fixed_state() == ItemFixState.SHOVE_FIXED && (curr_contact instanceof BrdTracePolyline)))
+      if (!(curr_contact.get_fixed_state() == ItemFixState.SHOVE_FIXED && (curr_contact instanceof BrdTracep)))
          {
          return false;
          }
-      BrdTracePolyline contact_trace = (BrdTracePolyline) curr_contact;
+      BrdTracep contact_trace = (BrdTracep) curr_contact;
       Polyline contact_polyline = contact_trace.polyline();
       PlaLineInt contact_last_line = contact_polyline.plaline(contact_polyline.plalinelen(-2));
       // look, if this trace has a sharp angle with the contact trace.

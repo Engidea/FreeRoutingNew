@@ -46,7 +46,7 @@ import board.items.BrdAbit;
 import board.items.BrdAbitPin;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.BrdKeepPoint;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -448,9 +448,9 @@ public final class IteraRoute
          BrdAbit target = (BrdAbit) nearest_target_item;
          connection_point = target.center_get();
          }
-      else if (nearest_target_item instanceof BrdTracePolyline)
+      else if (nearest_target_item instanceof BrdTracep)
          {
-         return r_board.connect_to_trace(p_from_point, (BrdTracePolyline) nearest_target_item, pen_half_width_arr[layer_active_no], clearance_class);
+         return r_board.connect_to_trace(p_from_point, (BrdTracep) nearest_target_item, pen_half_width_arr[layer_active_no], clearance_class);
          }
       else if (nearest_target_item instanceof BrdAreaConduction)
          {
@@ -761,7 +761,7 @@ public final class IteraRoute
             PlaPointInt curr_point = ((BrdAbit) curr_ob).center_get();
             target_points.add(new IteraTargetPoint(curr_point.to_float(), curr_ob));
             }
-         else if (curr_ob instanceof BrdTracePolyline || curr_ob instanceof BrdAreaConduction)
+         else if (curr_ob instanceof BrdTracep || curr_ob instanceof BrdAreaConduction)
             {
             target_traces_and_areas.add(curr_ob);
             }
@@ -803,9 +803,9 @@ public final class IteraRoute
       while (it.hasNext())
          {
          BrdItem curr_item = it.next();
-         if (curr_item instanceof BrdTracePolyline)
+         if (curr_item instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+            BrdTracep curr_trace = (BrdTracep) curr_item;
             Polyline curr_polyline = curr_trace.polyline();
             if (curr_polyline.bounding_box().distance(p_from_point) < min_dist)
                {
@@ -892,9 +892,9 @@ public final class IteraRoute
       if (!prev_corner.equals(start_pin.center_get()))
          {
          BrdItem picked_item = r_board.pick_nearest_routing_item(prev_corner, layer_active_no, null);
-         if (picked_item instanceof BrdTracePolyline)
+         if (picked_item instanceof BrdTracep)
             {
-            if (((BrdTracePolyline) picked_item).get_half_width() > neck_down_halfwidth)
+            if (((BrdTracep) picked_item).get_half_width() > neck_down_halfwidth)
                {
                return prev_corner;
                }

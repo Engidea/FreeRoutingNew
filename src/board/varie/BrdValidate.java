@@ -27,7 +27,7 @@ import main.Ldbg;
 import main.Mdbg;
 import board.RoutingBoard;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeTreeObject;
 import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
@@ -86,7 +86,7 @@ public class BrdValidate
                ++conflict_ob_count;
                clearance_violation_count += cl_count;
                }
-            if (curr_ob instanceof BrdTracePolyline)
+            if (curr_ob instanceof BrdTracep)
                {
                ++trace_count;
                }
@@ -118,9 +118,9 @@ public class BrdValidate
                   }
 
                int curr_net_no = 0;
-               if (curr_ob instanceof BrdTracePolyline)
+               if (curr_ob instanceof BrdTracep)
                   {
-                  BrdTracePolyline curr_trace = (BrdTracePolyline) curr_ob;
+                  BrdTracep curr_trace = (BrdTracep) curr_ob;
                   if (curr_trace.net_count() > 0)
                      {
                      curr_net_no = curr_trace.get_net_no(0);
@@ -174,9 +174,9 @@ public class BrdValidate
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdTracePolyline)
+         if (curr_ob instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_ob;
+            BrdTracep curr_trace = (BrdTracep) curr_ob;
             if (!curr_trace.polyline().is_orthogonal())
                {
                System.out.print(p_s);
@@ -197,9 +197,9 @@ public class BrdValidate
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdTracePolyline)
+         if (curr_ob instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_ob;
+            BrdTracep curr_trace = (BrdTracep) curr_ob;
             if (!curr_trace.polyline().is_multiple_of_45_degree())
                {
                ++count;
@@ -240,9 +240,9 @@ public class BrdValidate
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdTracePolyline)
+         if (curr_ob instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_ob;
+            BrdTracep curr_trace = (BrdTracep) curr_ob;
             if (curr_trace.contains_net(p_net_no))
                {
                if (curr_trace.get_start_contacts().size() == 0)
@@ -272,9 +272,9 @@ public class BrdValidate
       while (it.hasNext())
          {
          BrdItem curr_item = it.next();
-         if (!(curr_item instanceof BrdTracePolyline)) continue;
+         if (!(curr_item instanceof BrdTracep)) continue;
 
-         if (((BrdTracePolyline) curr_item).is_cycle())
+         if (((BrdTracep) curr_item).is_cycle())
             {
             System.out.print(p_s);
             System.out.println(": cycle found");
@@ -295,9 +295,9 @@ public class BrdValidate
       while (it.hasNext())
          {
          BrdItem curr_ob = it.next();
-         if (curr_ob instanceof board.items.BrdTracePolyline)
+         if (curr_ob instanceof board.items.BrdTracep)
             {
-            if (((board.items.BrdTracePolyline) curr_ob).contains_net(p_net_no))
+            if (((board.items.BrdTracep) curr_ob).contains_net(p_net_no))
                {
                ++found_traces;
                }

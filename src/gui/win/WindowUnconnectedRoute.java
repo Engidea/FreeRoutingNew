@@ -31,7 +31,7 @@ import board.RoutingBoard;
 import board.infos.BrdUnconnectedRoute;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 
 /**
  *
@@ -69,7 +69,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
       Collection<BrdItem> board_items = routing_board.get_items();
       for (BrdItem curr_item : board_items)
          {
-         if (!(curr_item instanceof BrdTracePolyline || curr_item instanceof BrdAbitVia))
+         if (!(curr_item instanceof BrdTracep || curr_item instanceof BrdAbitVia))
             {
             // Skip what is not a trace or a via
             continue;
@@ -87,7 +87,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
          for (BrdItem curr_connnected_item : curr_connected_set)
             {
             handled_items.add(curr_connnected_item);
-            if (!(curr_connnected_item instanceof BrdTracePolyline || curr_connnected_item instanceof board.items.BrdAbitVia))
+            if (!(curr_connnected_item instanceof BrdTracep || curr_connnected_item instanceof board.items.BrdAbitVia))
                {
                terminal_item_found = true;
                }

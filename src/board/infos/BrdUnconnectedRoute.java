@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Locale;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 
 /**
  * Describes information of a connected set of unconnected traces and vias.
@@ -32,7 +32,7 @@ public final class BrdUnconnectedRoute implements Comparable<BrdUnconnectedRoute
       int curr_via_count = 0;
       for (BrdItem curr_item : p_item_list)
          {
-         if (curr_item instanceof BrdTracePolyline)
+         if (curr_item instanceof BrdTracep)
             {
             ++curr_trace_count;
             }

@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeLeaf;
 import freert.planar.Polyline;
@@ -295,7 +295,7 @@ public final class SearchTreeManager
     * Merges the tree entries from p_from_trace in front of p_to_trace. 
     * Special implementation for combine trace for performance reasons.
     */
-   public void merge_entries_in_front(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
+   public void merge_entries_in_front(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
       for (ShapeSearchTree curr_tree : compensated_search_trees)
          {
@@ -307,7 +307,7 @@ public final class SearchTreeManager
     * Merges the tree entries from p_from_trace to the end of p_to_trace. 
     * Special implementation for combine trace for performance reasons.
     */
-   public void merge_entries_at_end(BrdTracePolyline p_from_trace, BrdTracePolyline p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
+   public void merge_entries_at_end(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
       for (ShapeSearchTree curr_tree : compensated_search_trees)
          {
@@ -319,7 +319,7 @@ public final class SearchTreeManager
     * Changes the tree entries from p_keep_at_start_count + 1 to new_shape_count - 1 - keep_at_end_count to p_changed_entries.
     * Special implementation for change_trace for performance reasons
     */
-   public void change_entries(BrdTracePolyline p_obj, Polyline p_new_polyline, int p_keep_at_start_count, int p_keep_at_end_count)
+   public void change_entries(BrdTracep p_obj, Polyline p_new_polyline, int p_keep_at_start_count, int p_keep_at_end_count)
       {
       for (ShapeSearchTree curr_tree : compensated_search_trees)
          {
@@ -331,7 +331,7 @@ public final class SearchTreeManager
     * Trannsfers tree entries from p_from_trace to p_start and p_end_piece after a moddle piece was cut out. Special implementation
     * for ShapeTraceEntries.fast_cutout_trace for performance reasoms.
     */
-   public void reuse_entries_after_cutout(BrdTracePolyline p_from_trace, BrdTracePolyline p_start_piece, BrdTracePolyline p_end_piece)
+   public void reuse_entries_after_cutout(BrdTracep p_from_trace, BrdTracep p_start_piece, BrdTracep p_end_piece)
       {
       for (ShapeSearchTree curr_tree : compensated_search_trees)
          {

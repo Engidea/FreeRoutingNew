@@ -21,7 +21,7 @@ package board.algo;
 
 import board.RoutingBoard;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.BrdKeepPoint;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLimits;
@@ -564,7 +564,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       }
 
    @Override
-   protected Polyline smoothen_start_corner_at_trace(BrdTracePolyline p_trace)
+   protected Polyline smoothen_start_corner_at_trace(BrdTracep p_trace)
       {
       boolean acute_angle = false;
       boolean bend = false;
@@ -588,9 +588,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
       java.util.Collection<BrdItem> contact_list = p_trace.get_start_contacts();
       for (BrdItem curr_contact : contact_list)
          {
-         if (curr_contact instanceof BrdTracePolyline && !curr_contact.is_shove_fixed())
+         if (curr_contact instanceof BrdTracep && !curr_contact.is_shove_fixed())
             {
-            Polyline contact_trace_polyline = ((BrdTracePolyline) curr_contact).polyline();
+            Polyline contact_trace_polyline = ((BrdTracep) curr_contact).polyline();
             PlaPointFloat curr_other_trace_corner_approx;
             PlaLineInt curr_other_trace_line;
             PlaLineInt curr_other_prev_trace_line;
@@ -703,7 +703,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       }
 
    @Override
-   protected Polyline smoothen_end_corner_at_trace(BrdTracePolyline p_trace)
+   protected Polyline smoothen_end_corner_at_trace(BrdTracep p_trace)
       {
       boolean acute_angle = false;
       boolean bend = false;
@@ -726,9 +726,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
       java.util.Collection<BrdItem> contact_list = p_trace.get_end_contacts();
       for (BrdItem curr_contact : contact_list)
          {
-         if (curr_contact instanceof BrdTracePolyline && !curr_contact.is_shove_fixed())
+         if (curr_contact instanceof BrdTracep && !curr_contact.is_shove_fixed())
             {
-            Polyline contact_trace_polyline = ((BrdTracePolyline) curr_contact).polyline();
+            Polyline contact_trace_polyline = ((BrdTracep) curr_contact).polyline();
             PlaPointFloat curr_other_trace_corner_approx;
             PlaLineInt curr_other_trace_line;
             PlaLineInt curr_other_prev_trace_line;

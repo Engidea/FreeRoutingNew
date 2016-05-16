@@ -5,7 +5,7 @@ import java.util.Set;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import freert.planar.PlaPointFloat;
 import freert.varie.UndoableObjectNode;
 import gui.varie.UndoableObjectStorable;
@@ -83,9 +83,9 @@ public class BatchSortedRouteItems
             {
             break;
             }
-         if (curr_item instanceof BrdTracePolyline)
+         if (curr_item instanceof BrdTracep)
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+            BrdTracep curr_trace = (BrdTracep) curr_item;
             if (!curr_trace.is_shove_fixed())
                {
                PlaPointFloat first_corner = curr_trace.corner_first().to_float();

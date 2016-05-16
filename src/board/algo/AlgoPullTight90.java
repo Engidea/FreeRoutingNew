@@ -21,7 +21,7 @@
 package board.algo;
 
 import board.RoutingBoard;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.BrdKeepPoint;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
@@ -192,13 +192,13 @@ public final class AlgoPullTight90 extends AlgoPullTight
       }
 
    @Override
-   protected Polyline smoothen_start_corner_at_trace(BrdTracePolyline p_trace)
+   protected Polyline smoothen_start_corner_at_trace(BrdTracep p_trace)
       {
       return null;
       }
 
    @Override
-   protected Polyline smoothen_end_corner_at_trace(BrdTracePolyline p_trace)
+   protected Polyline smoothen_end_corner_at_trace(BrdTracep p_trace)
       {
       return null;
       }

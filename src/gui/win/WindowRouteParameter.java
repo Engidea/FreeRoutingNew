@@ -40,7 +40,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import main.Stat;
 import board.items.BrdOutline;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.TraceAngleRestriction;
 
 /**
@@ -438,13 +438,13 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    
    private boolean has_free_angle_traces ()
       {
-      Collection<BrdTracePolyline> trace_list = board_handling.get_routing_board().get_traces();
+      Collection<BrdTracep> trace_list = board_handling.get_routing_board().get_traces();
      
-      for (BrdTracePolyline curr_trace : trace_list)
+      for (BrdTracep curr_trace : trace_list)
          {
-         if ( ! (curr_trace instanceof BrdTracePolyline) ) continue;
+         if ( ! (curr_trace instanceof BrdTracep) ) continue;
          
-         BrdTracePolyline atrace = (BrdTracePolyline) curr_trace;
+         BrdTracep atrace = (BrdTracep) curr_trace;
          
          if (! atrace.polyline().is_orthogonal() )
             {

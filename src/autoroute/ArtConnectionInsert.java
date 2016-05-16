@@ -25,7 +25,7 @@ import board.RoutingBoard;
 import board.infos.BrdViaInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
@@ -101,15 +101,15 @@ public final class ArtConnectionInsert
          return false;
          }
       
-      if (p_connection.target_item instanceof BrdTracePolyline)
+      if (p_connection.target_item instanceof BrdTracep)
          {
-         BrdTracePolyline to_trace = (BrdTracePolyline) p_connection.target_item;
+         BrdTracep to_trace = (BrdTracep) p_connection.target_item;
          r_board.connect_to_trace(first_corner, to_trace, ctrl.trace_half_width[p_connection.start_layer], ctrl.trace_clearance_idx);
          }
       
-      if (p_connection.start_item instanceof BrdTracePolyline)
+      if (p_connection.start_item instanceof BrdTracep)
          {
-         BrdTracePolyline to_trace = (BrdTracePolyline) p_connection.start_item;
+         BrdTracep to_trace = (BrdTracep) p_connection.start_item;
          r_board.connect_to_trace(last_corner, to_trace, ctrl.trace_half_width[p_connection.target_layer], ctrl.trace_clearance_idx);
          }
       
@@ -242,7 +242,7 @@ public final class ArtConnectionInsert
          // the idea is that this code is always executed, unless you are debugging autoroute special C
          for (int index = 0; index < p_locate.size(-1); ++index)
             {
-            BrdTracePolyline trace_stub = r_board.get_trace_tail(p_locate.corner(index), p_locate.layer, net_no_arr);
+            BrdTracep trace_stub = r_board.get_trace_tail(p_locate.corner(index), p_locate.layer, net_no_arr);
 
             if (trace_stub == null) continue;
 

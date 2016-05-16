@@ -29,7 +29,7 @@ import autoroute.expand.ExpandRoomObstacle;
 import board.RoutingBoard;
 import board.items.BrdAbit;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
@@ -70,9 +70,9 @@ public final class MazeShoveTraceAlgo
       
       BrdItem an_item = p_obstacle_room.get_item();
       
-      if (!(an_item instanceof BrdTracePolyline))  return true;
+      if (!(an_item instanceof BrdTracep))  return true;
       
-      BrdTracePolyline obstacle_trace = (BrdTracePolyline)an_item;
+      BrdTracep obstacle_trace = (BrdTracep)an_item;
 
       int trace_layer = p_obstacle_room.get_layer();
       
@@ -368,7 +368,7 @@ public final class MazeShoveTraceAlgo
    /**
     * Check if the endpoints of p_trace and p_from_item are matching, so that the shove can continue through a link door.
     */
-   private boolean end_points_matching(BrdTracePolyline p_trace, BrdItem p_from_item)
+   private boolean end_points_matching(BrdTracep p_trace, BrdItem p_from_item)
       {
       if (p_from_item == p_trace) return true;
 
@@ -382,9 +382,9 @@ public final class MazeShoveTraceAlgo
          
          if ( from_center.equals(p_trace.corner_last()) ) return true;
          }
-      else if (p_from_item instanceof BrdTracePolyline)
+      else if (p_from_item instanceof BrdTracep)
          {
-         BrdTracePolyline from_trace = (BrdTracePolyline) p_from_item;
+         BrdTracep from_trace = (BrdTracep) p_from_item;
          
          if ( p_trace.corner_first().equals(from_trace.corner_first()) ) return true;
          

@@ -26,7 +26,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import board.RoutingBoard;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
 
@@ -166,11 +166,11 @@ public class BatchOptimize
       Set<BrdItem> ripped_items = new TreeSet<BrdItem>();
       ripped_items.add(p_item);
       
-      if (p_item instanceof BrdTracePolyline)
+      if (p_item instanceof BrdTracep)
          {
          // add also the fork items, especially because not all fork items may be
          // returned by ReadSortedRouteItems because of matching end points.
-         BrdTracePolyline curr_trace = (BrdTracePolyline) p_item;
+         BrdTracep curr_trace = (BrdTracep) p_item;
          Set<BrdItem> curr_contact_list = curr_trace.get_start_contacts();
          for (int i = 0; i < 2; ++i)
             {
@@ -210,7 +210,7 @@ public class BatchOptimize
          {
          ripup_costs *= ADDITIONAL_RIPUP_COST_FACTOR_AT_START;
          }
-      if (p_item instanceof BrdTracePolyline)
+      if (p_item instanceof BrdTracep)
          {
          // taking less ripup costs seems to produce better results
          ripup_costs = (int) Math.round(0.6 * (double) ripup_costs);
@@ -255,7 +255,7 @@ public class BatchOptimize
       {
       for (BrdItem curr_item : p_item_list)
          {
-         if (curr_item.is_user_fixed() || !(curr_item instanceof BrdTracePolyline))
+         if (curr_item.is_user_fixed() || !(curr_item instanceof BrdTracep))
             {
             return false;
             }
@@ -278,9 +278,9 @@ public class BatchOptimize
          
          if (curr_item == null)  break;
 
-         if ( ! ( curr_item instanceof BrdTracePolyline) ) continue;
+         if ( ! ( curr_item instanceof BrdTracep) ) continue;
          
-         BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+         BrdTracep curr_trace = (BrdTracep) curr_item;
          
          ItemFixState fixed_state = curr_trace.get_fixed_state();
 

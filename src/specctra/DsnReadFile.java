@@ -31,7 +31,7 @@ import board.RoutingBoard;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
 import board.items.BrdOutline;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.IdGenerator;
 
 public final class DsnReadFile
@@ -130,9 +130,9 @@ public final class DsnReadFile
       Collection<BrdItem> item_list = routing_board.get_items();
       for (BrdItem curr_item : item_list)
          {
-         if (curr_item instanceof BrdTracePolyline)
+         if (curr_item instanceof BrdTracep)
             {
-            int curr_layer = ((BrdTracePolyline) curr_item).get_layer();
+            int curr_layer = ((BrdTracep) curr_item).get_layer();
             layer_contains_wires_arr[curr_layer] = true;
             }
          else if (curr_item instanceof BrdAreaConduction)

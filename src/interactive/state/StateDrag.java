@@ -26,7 +26,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import board.items.BrdAbit;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import freert.planar.PlaPointFloat;
 
 /**
@@ -67,7 +67,7 @@ public abstract class StateDrag extends StateInteractive
                {
                item_found = true;
                BrdItem curr_item = it.next();
-               if (curr_item instanceof BrdTracePolyline)
+               if (curr_item instanceof BrdTracep)
                   {
                   continue; // traces are not moved
                   }

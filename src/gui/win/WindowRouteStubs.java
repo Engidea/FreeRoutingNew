@@ -33,7 +33,7 @@ import board.RoutingBoard;
 import board.infos.BrdRouteStub;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 
 /**
  *
@@ -70,7 +70,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
       Collection<BrdItem> board_items = routing_board.get_items();
       for (BrdItem curr_item : board_items)
          {
-         if (!(curr_item instanceof BrdTracePolyline || curr_item instanceof BrdAbitVia))
+         if (!(curr_item instanceof BrdTracep || curr_item instanceof BrdAbitVia))
             {
             continue;
             }
@@ -121,7 +121,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
             }
          else
             {
-            BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+            BrdTracep curr_trace = (BrdTracep) curr_item;
             if (curr_trace.get_start_contacts().isEmpty())
                {
                stub_location = curr_trace.corner_first().to_float();

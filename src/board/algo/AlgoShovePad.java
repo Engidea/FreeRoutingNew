@@ -28,7 +28,7 @@ import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
 import board.varie.BrdStopConnection;
@@ -161,7 +161,7 @@ public final class AlgoShovePad
       
       for (;;)
          {
-         BrdTracePolyline curr_substitute_trace = shape_entries.next_substitute_trace_piece();
+         BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
       
          if (curr_substitute_trace == null)  break;
 
@@ -272,7 +272,7 @@ public final class AlgoShovePad
 
       for (;;)
          {
-         BrdTracePolyline curr_substitute_trace = shape_entries.next_substitute_trace_piece();
+         BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
          
          if (curr_substitute_trace == null) break;
 
@@ -325,7 +325,7 @@ public final class AlgoShovePad
          
          for (int index = 0; index < 2; ++index)
             {
-            BrdTracePolyline tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
+            BrdTracep tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
             
             if (tail == null) continue;
 

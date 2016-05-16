@@ -38,7 +38,7 @@ import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.BrdStopConnection;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -129,9 +129,9 @@ public class StateRoute extends StateInteractive
       
       boolean start_ok = true;
       
-      if (picked_item instanceof BrdTracePolyline)
+      if (picked_item instanceof BrdTracep)
          {
-         BrdTracePolyline picked_trace = (BrdTracePolyline) picked_item;
+         BrdTracep picked_trace = (BrdTracep) picked_item;
          
          PlaPoint picked_corner = picked_trace.nearest_end_point(location);
          
@@ -410,7 +410,7 @@ public class StateRoute extends StateInteractive
 
    public StateInteractive cancel()
       {
-      BrdTracePolyline tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_nos);
+      BrdTracep tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_nos);
       
       if (tail != null)
          {

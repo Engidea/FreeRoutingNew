@@ -33,7 +33,7 @@ import autoroute.expand.ExpandRoomFreespaceIncomplete;
 import autoroute.expand.ExpandRoomObstacle;
 import board.BrdConnectable;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeEntry;
 import board.shape.ShapeTreeObject;
@@ -317,11 +317,11 @@ public final class SortedRooms_xx_Top
       
       BrdItem curr_item = p_room.get_item();
 
-      if (curr_item instanceof BrdTracePolyline)
+      if (curr_item instanceof BrdTracep)
          {
       
          int room_index = p_room.get_index_in_item();
-         BrdTracePolyline curr_trace = (BrdTracePolyline) curr_item;
+         BrdTracep curr_trace = (BrdTracep) curr_item;
          if (room_index == 0 || room_index == curr_trace.tile_shape_count() - 1)
             {
             PlaLineInt curr_trace_line = curr_trace.polyline().plaline(room_index + 1);

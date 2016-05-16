@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import freert.planar.PlaPointInt;
 
 /**
@@ -92,11 +92,11 @@ public final class ArtConnection
          int prev_contact_layer = p_item.first_common_layer(curr_item);
          boolean fork_found = false;
          
-         if (p_item instanceof BrdTracePolyline)
+         if (p_item instanceof BrdTracep)
             {
             // Check, that there is only 1 contact at this location.
             // Only for pins and vias items of more than 1 connection are collected
-            BrdTracePolyline start_trace = (BrdTracePolyline) p_item;
+            BrdTracep start_trace = (BrdTracep) p_item;
             Collection<BrdItem> check_contacts = start_trace.get_normal_contacts(prev_contact_point, false);
             if (check_contacts.size() != 1)
                {
@@ -185,9 +185,9 @@ public final class ArtConnection
       double result = 0;
       for (BrdItem curr_item : item_list)
          {
-         if (curr_item instanceof BrdTracePolyline)
+         if (curr_item instanceof BrdTracep)
             {
-            result += ((BrdTracePolyline) curr_item).get_length();
+            result += ((BrdTracep) curr_item).get_length();
             }
          }
       return result;

@@ -3,7 +3,7 @@ package board.infos;
 import interactive.IteraBoard;
 import main.Stat;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import freert.planar.PlaPointFloat;
 import freert.rules.RuleNet;
 import freert.varie.Signum;
@@ -39,7 +39,7 @@ public final class BrdRouteStub implements Comparable<BrdRouteStub>, PrintableIn
    public String toString()
       {
       String item_string;
-      if (stub_item instanceof BrdTracePolyline)
+      if (stub_item instanceof BrdTracep)
          {
          item_string = resources.getString("trace");
          }

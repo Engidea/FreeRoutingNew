@@ -35,7 +35,7 @@ import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.varie.ItemFixState;
 
 /**
@@ -329,7 +329,7 @@ public final class SpectraWriteSesFile
             continue;
             }
          
-         boolean is_wire = curr_item instanceof BrdTracePolyline;
+         boolean is_wire = curr_item instanceof BrdTracep;
          boolean is_via = curr_item instanceof BrdAbitVia;
          boolean is_conduction_area = curr_item instanceof BrdAreaConduction && r_board.layer_structure.is_signal(curr_item.first_layer());
          
@@ -350,7 +350,7 @@ public final class SpectraWriteSesFile
             }
          if (is_wire)
             {
-            write_wire((BrdTracePolyline) curr_item, p_identifier_type, p_coordinate_transform );
+            write_wire((BrdTracep) curr_item, p_identifier_type, p_coordinate_transform );
             }
          else if (is_via)
             {
@@ -367,7 +367,7 @@ public final class SpectraWriteSesFile
          }
       }
 
-   private void write_wire(BrdTracePolyline p_wire,  DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform ) throws IOException
+   private void write_wire(BrdTracep p_wire,  DsnIdentifier p_identifier_type, DsnCoordinateTransform p_coordinate_transform ) throws IOException
       {
       int layer_no = p_wire.get_layer();
       board.BrdLayer board_layer = r_board.layer_structure.get(layer_no);

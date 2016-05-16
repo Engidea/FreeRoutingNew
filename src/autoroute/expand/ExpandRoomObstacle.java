@@ -28,7 +28,7 @@ import java.util.List;
 import freert.planar.PlaDimension;
 import freert.planar.ShapeTile;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeObject;
 
@@ -109,7 +109,7 @@ public final class ExpandRoomObstacle implements ExpandRoomComplete
 
       if ( item == p_other.item)
          {
-         if (!( item instanceof BrdTracePolyline)) return false;
+         if (!( item instanceof BrdTracep)) return false;
 
          // create only doors between consecutive trace segments
          if ( index_in_item != p_other.index_in_item + 1 &&  index_in_item != p_other.index_in_item - 1)

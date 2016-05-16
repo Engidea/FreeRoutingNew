@@ -48,7 +48,7 @@ import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
-import board.items.BrdTracePolyline;
+import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeObject;
 import board.varie.ItemFixState;
@@ -467,7 +467,7 @@ public final class MazeSearch
             if (ripup_costs != ALREADY_RIPPED_COSTS && next_room_is_thick)
                {
                BrdItem obstacle_item = obstacle_room.get_item();
-               if (!curr_door_is_small && art_ctrl.max_shove_trace_recursion_depth > 0 && obstacle_item instanceof board.items.BrdTracePolyline)
+               if (!curr_door_is_small && art_ctrl.max_shove_trace_recursion_depth > 0 && obstacle_item instanceof board.items.BrdTracep)
                   {
                   if (!shove_trace_room(p_element, obstacle_room))
                      {
@@ -1022,11 +1022,11 @@ public final class MazeSearch
          
          for (BrdItem curr_contact : pin_contacts)
             {
-            if (!(curr_contact instanceof BrdTracePolyline) ) continue;
+            if (!(curr_contact instanceof BrdTracep) ) continue;
             
             if ( curr_contact.contains_net(p_own_net_no) ) continue;
             
-            p_autoroute_tree.reduce_trace_shape_at_tie_pin(curr_tie_pin, (BrdTracePolyline) curr_contact);
+            p_autoroute_tree.reduce_trace_shape_at_tie_pin(curr_tie_pin, (BrdTracep) curr_contact);
             }
          }
       }
@@ -1036,9 +1036,9 @@ public final class MazeSearch
       BrdItem obstacle_item = p_obstacle_room.get_item();
       int layer = p_obstacle_room.get_layer();
       double obstacle_half_width;
-      if (obstacle_item instanceof BrdTracePolyline)
+      if (obstacle_item instanceof BrdTracep)
          {
-         obstacle_half_width = ((BrdTracePolyline) obstacle_item).get_half_width() + search_tree.get_clearance_compensation(obstacle_item.clearance_idx(), layer);
+         obstacle_half_width = ((BrdTracep) obstacle_item).get_half_width() + search_tree.get_clearance_compensation(obstacle_item.clearance_idx(), layer);
          }
       else if (obstacle_item instanceof BrdAbitVia)
          {
@@ -1098,9 +1098,9 @@ public final class MazeSearch
 
       double fanout_via_cost_factor = 1.0;
       double cost_factor = 1;
-      if (p_obstacle_item instanceof BrdTracePolyline)
+      if (p_obstacle_item instanceof BrdTracep)
          {
-         BrdTracePolyline obstacle_trace = (BrdTracePolyline) p_obstacle_item;
+         BrdTracep obstacle_trace = (BrdTracep) p_obstacle_item;
          cost_factor = obstacle_trace.get_half_width();
          if (!art_ctrl.stop_remove_fanout_vias)
             {
@@ -1115,12 +1115,12 @@ public final class MazeSearch
          int contact_count = 0;
          for (BrdItem curr_contact : contact_list)
             {
-            if (!(curr_contact instanceof BrdTracePolyline) || curr_contact.is_user_fixed())
+            if (!(curr_contact instanceof BrdTracep) || curr_contact.is_user_fixed())
                {
                return -1;
                }
             ++contact_count;
-            BrdTracePolyline obstacle_trace = (BrdTracePolyline) curr_contact;
+            BrdTracep obstacle_trace = (BrdTracep) curr_contact;
             cost_factor = Math.max(cost_factor, obstacle_trace.get_half_width());
             if (look_if_fanout_via)
                {
@@ -1170,7 +1170,7 @@ public final class MazeSearch
    /**
     * Return the additional cost factor for ripping the trace, if it is connected to a fanout via or 1, if no fanout via was found.
     */
-   private static double calc_fanout_via_ripup_cost_factor(BrdTracePolyline p_trace)
+   private static double calc_fanout_via_ripup_cost_factor(BrdTracep p_trace)
       {
       final double FANOUT_COST_CONST = 20000;
       Collection<BrdItem> curr_end_contacts;
@@ -1194,10 +1194,10 @@ public final class MazeSearch
             {
             protect_fanout_via = true;
             }
-         else if (curr_trace_contact instanceof BrdTracePolyline && curr_trace_contact.get_fixed_state() == ItemFixState.SHOVE_FIXED)
+         else if (curr_trace_contact instanceof BrdTracep && curr_trace_contact.get_fixed_state() == ItemFixState.SHOVE_FIXED)
             {
             // look for shove fixed exit traces of SMD-pins
-            BrdTracePolyline contact_trace = (BrdTracePolyline) curr_trace_contact;
+            BrdTracep contact_trace = (BrdTracep) curr_trace_contact;
             if (contact_trace.corner_count() == 2)
                {
                protect_fanout_via = true;
