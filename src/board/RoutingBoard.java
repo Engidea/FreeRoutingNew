@@ -2280,10 +2280,35 @@ public final class RoutingBoard implements java.io.Serializable
       return true;
       }
 
+   
+   private final BrdTracep pick_one_trace (PlaPointInt from_corner, int p_layer, NetNosList p_net_no_arr, int p_half_width, int p_clearance_class_no )
+      {
+      ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.TRACES);
+      
+      Set<BrdItem> picked_items = pick_items(from_corner, p_layer, filter);
+      
+      for ( BrdItem an_item : picked_items )
+         {
+         BrdTracep curr_trace = (BrdTracep) an_item;
+
+         if ( ! curr_trace.nets_equal(p_net_no_arr) ) continue; 
+
+         if ( curr_trace.get_half_width() != p_half_width ) continue;
+         
+         if ( curr_trace.clearance_idx() != p_clearance_class_no ) continue;
+         
+         return curr_trace;
+         }
+
+      return null;
+      }
+   
+   
+   
    /**
     * Tries to insert a trace polyline with the input parameters from while shoving aside obstacle traces and vias. 
     * Returns the last corner on the polyline, to which the shove succeeded. 
-    * Returns null if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
+    * @returns null if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
     */
    public final PlaPointInt insert_trace_polyline(
          Polyline p_polyline, 
@@ -2305,8 +2330,8 @@ public final class RoutingBoard implements java.io.Serializable
       
       if (! (from_corner_point instanceof PlaPointInt ))
          {
+         // So, a trace polyline has always a first corner int, right ?
          System.err.println(classname+"insert_trace_polyline: from_corner_point NOT int");
-         // really. what is the point of returning this ? I did not actually route up to this !
          return null;
          }      
       
@@ -2326,22 +2351,11 @@ public final class RoutingBoard implements java.io.Serializable
       if (from_corner.equals(to_corner)) return to_corner;
       
       start_marking_changed_area();
+      
       // Check, if there ends a item of the same net at p_from_corner.
       // If so, its geometry will be used to cut off dog ears of the check shape.
-      BrdTracep picked_trace = null;
-      ItemSelectionFilter filter = new ItemSelectionFilter(ItemSelectionChoice.TRACES);
-      Set<BrdItem> picked_items = pick_items(from_corner, p_layer, filter);
       
-      if (picked_items.size() == 1)
-         {
-         BrdTracep curr_picked_trace = (BrdTracep) picked_items.iterator().next();
-         if (curr_picked_trace.nets_equal(p_net_no_arr) && curr_picked_trace.get_half_width() == p_half_width && curr_picked_trace.clearance_idx() == p_clearance_class_no
-               && (curr_picked_trace instanceof BrdTracep))
-            {
-            // can combine with the picked trace
-            picked_trace = curr_picked_trace;
-            }
-         }
+      BrdTracep picked_trace = pick_one_trace(from_corner, p_layer, p_net_no_arr, p_half_width, p_clearance_class_no);
       
       ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
@@ -2350,21 +2364,9 @@ public final class RoutingBoard implements java.io.Serializable
 
       if (new_polyline == null) return from_corner;
 
-      Polyline combined_polyline;
-      if (picked_trace == null)
-         {
-         combined_polyline = new_polyline;
-         }
-      else
-         {
-         BrdTracep combine_trace = (BrdTracep) picked_trace;
-         combined_polyline = new_polyline.combine(combine_trace.polyline());
-         }
+      Polyline combined_polyline = picked_trace == null ? new_polyline : new_polyline.combine(picked_trace.polyline());
       
-      if ( ! combined_polyline.is_valid() ) 
-         {
-         return from_corner;
-         }
+      if ( ! combined_polyline.is_valid() ) return from_corner;
       
       int start_shape_no = combined_polyline.plalinelen() - new_polyline.plalinelen();
       // calculate the last shapes of combined_polyline for checking

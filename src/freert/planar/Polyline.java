@@ -1110,9 +1110,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
    /**
     * Combines the two polylines, if they have a common end corner. 
     * The order of lines in this polyline will be preserved. 
-    * @returns the combined polyline or this polyline, if this polyline and p_other have no common end corner. 
-    * If there is something to combine at the start of this polyline, p_other is inserted in front of this polyline. 
-    * If there is something to combine at the end of this polyline, this polyline is inserted in front of p_other.
+    * @returns this polyline, if this polyline and p_other have no common end corner. 
+    * or If there is something to combine at the start of this polyline, p_other is inserted in front of this polyline. 
+    * or there is something to combine at the end of this polyline, this polyline is inserted in front of p_other.
     */
    public Polyline combine(Polyline p_other)
       {
@@ -1159,50 +1159,47 @@ public final class Polyline implements java.io.Serializable, PlaObject
          // insert the lines of p_other in front
          if (combine_other_at_start)
             {
-            // insert in reverse order, skip the first line of p_other
+            // insert in reverse order, skip the last line of p_other
+            int from_index = p_other.plalinelen(-1);
+            
             for (int index = 0; index < p_other.plalinelen(-1); ++index)
-               {
-               lines_list.add( p_other.plaline(p_other.plalinelen() - index - 1).opposite());
-               }
+               lines_list.add( p_other.plaline(from_index--).opposite());
+
             }
          else
             {
             // skip the last line of p_other
             for (int index = 0; index < p_other.plalinelen(-1); ++index)
-               {
                lines_list.add(p_other.plaline(index));
-               }
+
             }
          
          // append the lines of this polyline, skip the first line
          for (int iindex = 1; iindex < plalinelen(); ++iindex)
-            {
             lines_list.add( plaline(iindex));
-            }
+
          }
       else
          {
          // insert the lines of this polyline in front, skip the last line
          for (int index = 0; index < plalinelen(-1); ++index)
-            {
             lines_list.add( plaline(index));
-            }
          
          if (combine_other_at_start)
             {
             // skip the first line of p_other
             for (int index = 1; index < p_other.plalinelen(); ++index)
-               {
                lines_list.add( p_other.plaline(index));
-               }
+
             }
          else
             {
             // insert in reverse order, skip the last line of p_other
+            int from_index = p_other.plalinelen(-2);
+
             for (int index = 1; index < p_other.plalinelen(); ++index)
-               {
-               lines_list.add( p_other.plaline(p_other.plalinelen() - index - 1).opposite());
-               }
+               lines_list.add( p_other.plaline(from_index--).opposite());
+
             }
          }
       
@@ -1360,6 +1357,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       PlaPointFloat last_corner = corner_approx(p_new_line_count - 2);
       PlaPointFloat prev_last_corner = corner_approx(p_new_line_count - 3);
+      
       PlaPointInt new_last_corner = prev_last_corner.change_length(last_corner, p_last_segment_length).round();
       
       if (new_last_corner.equals(corner(corner_count() - 2)))
@@ -1368,17 +1366,22 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return skip_lines(p_new_line_count - 1, p_new_line_count - 1);
          }
       
-      PlaLineInt[] new_lines = new PlaLineInt[p_new_line_count];
-      plaline_copy(0, new_lines, 0, p_new_line_count - 2);
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(p_new_line_count);
+      
+      plaline_append(new_lines, 0, p_new_line_count - 2);
+      
       // create the last 2 lines of the new polyline
       PlaPointInt first_line_point = plaline(p_new_line_count - 2).point_a;
+      
       if (first_line_point.equals(new_last_corner))
          {
          first_line_point = plaline(p_new_line_count - 2).point_b;
          }
+      
       PlaLineInt new_prev_last_line = new PlaLineInt(first_line_point, new_last_corner);
-      new_lines[p_new_line_count - 2] = new_prev_last_line;
-      new_lines[p_new_line_count - 1] = new PlaLineInt(new_last_corner, new_prev_last_line.direction().turn_45_degree(6));
+      new_lines.add( new_prev_last_line );
+      new_lines.add( new PlaLineInt(new_last_corner, new_prev_last_line.direction().turn_45_degree(6) ));
+      
       return new Polyline(new_lines);
       }
    
