@@ -1243,31 +1243,22 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       PlaLineIntAlist first_piece = new PlaLineIntAlist(plalinelen());
       
-      if (corner(p_line_no - 1).equals(new_end_corner))
-         {
-         // skip line segment of length 0 at the end of the first piece
-         plaline_append(first_piece, 0, p_line_no + 1);
-         }
-      else
-         {
-         plaline_append(first_piece, 0, p_line_no + 1);
-         first_piece.add(p_end_line);
-         }
+      // Copy from the beginning up to the closing line, that is the line after the one we wish the split
+      plaline_append(first_piece, 0, p_line_no + 1);
+
+      // if the corners do not overlap then I can actually add the end line
+      if ( ! corner(p_line_no - 1).equals(new_end_corner)) first_piece.add(p_end_line);
       
       PlaLineIntAlist second_piece = new PlaLineIntAlist(plalinelen());
       
-      if (corner(p_line_no).equals(new_end_corner))
-         {
-         // skip line segment of length 0 at the beginning of the second piece
-         plaline_append(second_piece, p_line_no);
-         }
-      else
-         {
-         second_piece.add( p_end_line );
-         plaline_append(second_piece, p_line_no);
-         }
+      // if the corners do not overlap I can add the endline as beginning
+      if ( ! corner(p_line_no).equals(new_end_corner)) second_piece.add( p_end_line );
+
+      // and the rest of lines, up until the end
+      plaline_append(second_piece, p_line_no);
       
       Polyline[] result = new Polyline[2];
+
       result[0] = new Polyline(first_piece);
 
       if (result[0].has_corner_loopt() ) return null;
