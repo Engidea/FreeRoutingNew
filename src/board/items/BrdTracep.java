@@ -1261,10 +1261,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Splits this trace into two at p_point. 
     * can return null i for example p_point is not located on this trace.
-    * This method does NOT change the trace, it returns pieces
-    * @return the 2 pieces of the split trace, or null if nothing was split 
+    * @return true if the trace has been split 
     */
-   public final BrdTracep[] split_at_point(PlaPointInt p_point)
+   public final boolean split_at_point(PlaPointInt p_point)
       {
       for (int index = 1; index < polyline.plalinelen(-1); index++)
          {
@@ -1273,21 +1272,22 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          // The split point (an integer) is within the current line segment
          if ( ! curr_line_segment.contains(p_point)) continue;
          
-         PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+         PlaDirection split_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
 
-         PlaLineInt split_line = new PlaLineInt(p_point, split_line_direction);
+         PlaLineInt split_line = new PlaLineInt(p_point, split_direction);
          
          BrdTracep[] result = split_with_end_line(index, split_line);
          
-         if (result != null)  return result;
+         if (result != null)  return true;
          }
 
-      return null;
+      return false;
       }
 
    /**
     * Splits this trace at the line with number p_line_no into two 
-    * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece. 
+    * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece
+    * Note that this actually changes the items on the board...
     * @return the 2 pieces of the splitted trace, or null, if nothing was splitted.
     */
    private BrdTracep[] split_with_end_line(int p_line_no, PlaLineInt p_new_end_line)

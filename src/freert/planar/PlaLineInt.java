@@ -370,25 +370,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    
-/*   
-   private PlaPointInt intersect ( PlaLineInt line_a, PlaLineInt line_b )
-      {
-      PlaDirection bottom = line_a.line_dir.subtract(line_b.line_dir);
-
-      
-      
-      double top_x = line_b.cf_q - line_a.cf_q;
-      
-      double new_x = top_x / bottom;
-      
-      double top_y = line_a.cf_m*line_b.cf_q - line_b.cf_m*line_a.cf_q;
-      
-      double new_y = top_y / bottom;
-      
-      return new PlaPointInt ( new_x, new_y);
-      }
-     */ 
-   
    /**
     * Returns an approximation of the intersection of the 2 lines by a FloatPoint. 
     * If the lines are parallel the result coordinates will be a NaN PointFloat 
@@ -419,7 +400,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       return new PlaPointFloat(is_x, is_y);
       }
-
+   
+   
    /**
     * returns the perpendicular projection of p_point onto this line
     */

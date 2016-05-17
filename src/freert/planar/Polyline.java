@@ -1226,9 +1226,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return null;
          }
       
-      if (plaline(p_line_no).is_parallel(p_end_line)) return null;
+      PlaLineInt s_line = plaline(p_line_no); 
       
-      PlaPointFloat a_corner = plaline(p_line_no).intersection_approx(p_end_line);
+      if (s_line.is_parallel(p_end_line)) return null;
+      
+      PlaPointFloat a_corner = s_line.intersection_approx(p_end_line);
       
       if ( a_corner.is_NaN() ) return null;
       
@@ -1240,7 +1242,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (p_line_no == 1 && new_end_corner.equals(corner_first()) ) return null;
       
       if ( p_line_no == plalinelen(-2) && new_end_corner.equals(corner_last()) ) return null;
-      
+
       PlaLineIntAlist first_piece = new PlaLineIntAlist(plalinelen());
       
       // Copy from the beginning up to the closing line, that is the line after the one we wish the split

@@ -563,7 +563,7 @@ public abstract class AlgoPullTight
 
    /**
     * Splits the traces containing this.keep_point if this.keep_point != null
-    * TODO this does not actually split the trace, just test if it can be split, right ?
+    * This actually splits the trace since lower down pieces are inserted in the board, if successful
     * @return true, if something was split.
     */
    public boolean split_traces_at_keep_point()
@@ -577,9 +577,10 @@ public abstract class AlgoPullTight
       
       for (BrdItem curr_item : picked_items)
          {
-         BrdTracep[] split_pieces = ((BrdTracep) curr_item).split_at_point( keep_point.keep_point);
-
-         if (split_pieces != null) return true;
+         BrdTracep a_trace = (BrdTracep)curr_item;
+         
+         // normally there is just one trace at a given keep point, no ?
+         if ( a_trace.split_at_point( keep_point.keep_point) ) return true;
          }
 
       return false;
