@@ -1431,12 +1431,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
    /**
     * Copy current plaline array into a new one skipping index given
     * The resulting copy will be one line short, obviously
-    * Content is copied
-    * @return
     */
    public PlaLineIntAlist plaline_copy(int skip_index)
       {
-      int src_len   = plalinelen();
+      int src_len = plalinelen();
       int index;
       
       PlaLineIntAlist risul = new PlaLineIntAlist(src_len);

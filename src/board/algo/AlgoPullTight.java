@@ -60,9 +60,8 @@ public abstract class AlgoPullTight
    {
    private static final String classname="PullTightAlgo.";
    
-   protected static final double c_max_cos_angle = 0.999;
-   // with angles to close to 180 degree the algorithm becomes numerically unstable
-   protected static final double c_min_corner_dist_square = 0.9;
+   
+   private static final double c_min_corner_dist_square = 1;
 
    protected final RoutingBoard r_board;
    // If only_net_no > 0, only nets with this net numbers are optimized
@@ -452,40 +451,41 @@ public abstract class AlgoPullTight
             }
          else
             {
+            // this is the general case for testing if to skip
             PlaPointFloat prev_corner = p_polyline.corner_approx(index - 1);
             PlaPointFloat curr_corner = p_polyline.corner_approx(index);
             try_skip = curr_corner.length_square(prev_corner) < c_min_corner_dist_square;
             }
 
-         if (try_skip)
+         if ( ! try_skip) continue;
+         
+         // check, if skipping the line of length 0 does not result in a clearance violation
+         // Now, what happens is that the resulting polyline is invalid since it ends up with parallel lines
+         
+         PlaLineIntAlist curr_lines = p_polyline.plaline_copy(index);
+         
+         Polyline tmp = new Polyline(curr_lines);
+         
+         boolean check_ok = tmp.plalinelen() == curr_lines.size();
+         
+         if (check_ok && ! p_polyline.plaline(index).is_multiple_of_45_degree())
             {
-            // check, if skipping the line of length 0 does not result in a clearance violation
-            // Now, what happens is that the resulting polyline is invalid since it ends up with parallel lines
-            
-            PlaLineIntAlist curr_lines = p_polyline.plaline_copy(index);
-            
-            Polyline tmp = new Polyline(curr_lines);
-            
-            boolean check_ok = tmp.plalinelen() == curr_lines.size();
-            
-            if (check_ok && ! p_polyline.plaline(index).is_multiple_of_45_degree())
+            // no check necessary for skipping 45 degree lines, because the check is performance critical and the line shapes
+            // are intersected with the bounding octagon anyway.
+            if (index > 1)
                {
-               // no check necessary for skipping 45 degree lines, because the check is performance critical and the line shapes
-               // are intersected with the bounding octagon anyway.
-               if (index > 1)
-                  {
-                  ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 2);
-                  check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
-                  }
-               if (check_ok && (index < p_polyline.plalinelen(-2)))
-                  {
-                  ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 1);
-                  check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
-                  }
+               ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 2);
+               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             
-            if (check_ok) p_polyline = tmp;
+            if (check_ok && (index < p_polyline.plalinelen(-2)))
+               {
+               ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 1);
+               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+               }
             }
+         
+         if (check_ok) p_polyline = tmp;
          }
 
       return p_polyline;
@@ -592,7 +592,9 @@ public abstract class AlgoPullTight
     */
    private Polyline smoothen_end_corners_at_trace_two(BrdTracep p_trace)
       {
-      if (p_trace == null || !p_trace.is_on_the_board()) return null;
+      if (p_trace == null ) return null;
+      
+      if ( ! p_trace.is_on_the_board()) return null;
       
       Polyline result = smoothen_start_corner_at_trace(p_trace);
 

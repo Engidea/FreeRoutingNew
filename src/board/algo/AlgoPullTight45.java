@@ -19,6 +19,7 @@
  */
 package board.algo;
 
+import java.util.Collection;
 import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracep;
@@ -713,20 +714,18 @@ public final class AlgoPullTight45 extends AlgoPullTight
       Polyline trace_polyline = p_trace.polyline();
       PlaPoint curr_end_corner = trace_polyline.corner_last();
 
-      if (curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner))
-         {
-         return null;
-         }
+      if (curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner)) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
       PlaSide prev_corner_side = null;
       PlaDirection line_direction = trace_polyline.plaline(trace_polyline.plalinelen(-2)).direction().opposite();
       PlaDirection prev_line_direction = trace_polyline.plaline(trace_polyline.plalinelen(-3)).direction().opposite();
 
-      java.util.Collection<BrdItem> contact_list = p_trace.get_end_contacts();
+      Collection<BrdItem> contact_list = p_trace.get_end_contacts();
+      
       for (BrdItem curr_contact : contact_list)
          {
-         if (curr_contact instanceof BrdTracep && !curr_contact.is_shove_fixed())
+         if (curr_contact instanceof BrdTracep && ! curr_contact.is_shove_fixed())
             {
             Polyline contact_trace_polyline = ((BrdTracep) curr_contact).polyline();
             PlaPointFloat curr_other_trace_corner_approx;
@@ -845,6 +844,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             return new Polyline(new_lines);
             }
          }
+      
       return null;
       }
    }

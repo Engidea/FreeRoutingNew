@@ -220,6 +220,7 @@ public final class AlgoOptimizeVia
          optimize_via_location( (BrdAbitVia) curr_item, p_trace_cost_arr, p_trace_pull_tight_accuracy, p_max_recursion_depth - 1);
          break;
          }
+      
       return true;
       }
 

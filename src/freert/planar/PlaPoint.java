@@ -38,11 +38,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
    
    public abstract PlaPoint translate_by(PlaVectorInt p_vector);
 
-   /**
-    * returns the difference vector of this point and p_other
-    */
-//   public abstract PlaVector difference_by(PlaPointInt p_other);
-   
    
    public final boolean equals ( PlaPoint p_other )
       {
@@ -64,7 +59,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
    
    public abstract boolean equals(PlaPointRational p_other);
 
-   
    
    /**
     * approximates the coordinates of this point by float coordinates
