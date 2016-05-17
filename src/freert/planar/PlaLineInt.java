@@ -147,7 +147,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaSide side_of(PlaPointFloat p_point)
       {
-      return side_of(p_point, 0);
+      return side_of(p_point, PlaSide.OPTIMAL_side_tolerance );
       }
 
    /**
@@ -345,7 +345,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       
       if (signum < 0)
          {
-         // we wish the denominator to be alsays positive
+         // we wish the denominator to be always positive
          det  = det.negate();
          is_x = is_x.negate();
          is_y = is_y.negate();
