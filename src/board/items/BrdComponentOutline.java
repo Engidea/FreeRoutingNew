@@ -73,7 +73,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       return false;
       }
 
-   public int get_layer()
+   private int get_layer()
       {
       return is_front ?  0 : r_board.get_layer_count() - 1;
       }
@@ -185,6 +185,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       clear_derived_data();
       }
 
+   @Override
    public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
       {
       double turn_angle = p_angle_in_degree;
@@ -266,10 +267,12 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       precalculated_absolute_area = null;
       }
 
+   @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       }
 
+   @Override
    public boolean write(java.io.ObjectOutputStream p_stream)
       {
       try

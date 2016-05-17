@@ -1587,24 +1587,23 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean remove_if_cycle(BrdTracep p_trace)
       {
-      if (!p_trace.is_on_the_board()) return false;
+      if ( ! p_trace.is_on_the_board()) return false;
 
-      if (!p_trace.is_cycle()) return false;
+      if ( ! p_trace.has_cycle()) return false;
       
       // Remove tails at the endpoints after removing the cycle, if there was no tail before.
       
-      boolean[] tail_at_endpoint_before = null;
-      PlaPoint[] end_corners = null;
       int curr_layer = p_trace.get_layer();
-      NetNosList curr_net_no_arr = p_trace.net_nos;
-      end_corners = new PlaPoint[2];
+      
+      PlaPoint[] end_corners = new PlaPoint[2];
       end_corners[0] = p_trace.corner_first();
       end_corners[1] = p_trace.corner_last();
-      tail_at_endpoint_before = new boolean[2];
+      
+      boolean[] tail_at_endpoint_before = new boolean[2];
       
       for (int index = 0; index < 2; ++index)
          {
-         BrdTracep tail = get_trace_tail(end_corners[index], curr_layer, curr_net_no_arr);
+         BrdTracep tail = get_trace_tail(end_corners[index], curr_layer, p_trace.net_nos);
          tail_at_endpoint_before[index] = (tail != null);
          }
       
@@ -1612,17 +1611,17 @@ public final class RoutingBoard implements java.io.Serializable
       
       remove_items_unfixed(connection_items);
       
-      for (int i = 0; i < 2; ++i)
+      for (int index = 0; index < 2; ++index)
          {
-         if (!tail_at_endpoint_before[i])
-            {
-            BrdTracep tail = get_trace_tail(end_corners[i], curr_layer, curr_net_no_arr);
-            if (tail != null)
-               {
-               remove_items_unfixed(tail.get_connection_items());
-               }
-            }
+         if ( tail_at_endpoint_before[index] ) continue;
+         
+         BrdTracep tail = get_trace_tail(end_corners[index], curr_layer, p_trace.net_nos);
+         
+         if (tail == null) continue;
+
+         remove_items_unfixed(tail.get_connection_items());
          }
+
       return true;
       }
 

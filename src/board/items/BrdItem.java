@@ -689,39 +689,30 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Recursive part of Trace.is_cycle. If p_ignore_areas is true, cycles where conduction areas are involved are ignored.
+    * Recursive part of Trace.is_cycle. 
+    * If p_ignore_areas is true, cycles where conduction areas are involved are ignored.
     */
-   protected final boolean is_cycle_recu(Set<BrdItem> p_visited_items, BrdItem p_search_item, BrdItem p_come_from_item, boolean p_ignore_areas)
+   protected final boolean has_cycle_recu(Set<BrdItem> p_visited_items, BrdItem p_search_item, BrdItem p_come_from_item, boolean p_ignore_areas)
       {
-      if (p_ignore_areas && this instanceof BrdAreaConduction)
-         {
-         return false;
-         }
+      if ( p_ignore_areas && ( this instanceof BrdAreaConduction ) ) return false;
+      
       Collection<BrdItem> contact_list = get_normal_contacts();
-      if (contact_list == null)
+      
+      if (contact_list == null) return false;
+
+      for ( BrdItem curr_contact : contact_list )
          {
-         return false;
+         if (curr_contact == p_come_from_item) continue;
+
+         if (curr_contact == p_search_item) return true;
+
+         // if the set already had this element continue scanning
+         if ( ! p_visited_items.add(curr_contact)) continue;
+
+         // recursive search this contact passing the visited items
+         if (curr_contact.has_cycle_recu(p_visited_items, p_search_item, this, p_ignore_areas)) return true;
          }
-      Iterator<BrdItem> it = contact_list.iterator();
-      while (it.hasNext())
-         {
-         BrdItem curr_contact = it.next();
-         if (curr_contact == p_come_from_item)
-            {
-            continue;
-            }
-         if (curr_contact == p_search_item)
-            {
-            return true;
-            }
-         if (p_visited_items.add(curr_contact))
-            {
-            if (curr_contact.is_cycle_recu(p_visited_items, p_search_item, this, p_ignore_areas))
-               {
-               return true;
-               }
-            }
-         }
+
       return false;
       }
 

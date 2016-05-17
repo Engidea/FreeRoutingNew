@@ -374,20 +374,25 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          return p2;
       }
 
+   
+   
+   
+   
    /**
     * Checks, if this trace can be reached by other items via more than one path
+    * a cycle exists if through expanding the start contact we reach this trace again via an end contact
     */
-   public boolean is_cycle()
+   public boolean has_cycle()
       {
-      if (is_overlap()) return true;
+      if ( is_overlap() ) return true;
 
       Set<BrdItem> visited_items = new TreeSet<BrdItem>();
+      
       Collection<BrdItem> start_contacts = get_start_contacts();
-      // a cycle exists if through expanding the start contact we reach this trace again via an end contact
+
       for (BrdItem curr_contact : start_contacts)
          {
-         // make shure, that all direct neighbours are expanded from here, to block coming back to
-         // this trace via a start contact.
+         // make shure, that all direct neighbours are expanded from here, to block coming back to this trace via a start contact.
          visited_items.add(curr_contact);
          }
       
@@ -405,7 +410,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       for (BrdItem curr_contact : start_contacts)
          {
-         if (curr_contact.is_cycle_recu(visited_items, this, this, ignore_areas)) return true;
+         if ( curr_contact.has_cycle_recu(visited_items, this, this, ignore_areas)) return true;
          }
 
       return false;
@@ -911,10 +916,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Looks up traces intersecting with this trace and splits them at the intersection points. 
     * In case of an overlaps, the traces are split at their first and their last common point. 
-    * Returns the pieces resulting from splitting. 
     * Found cycles are removed. 
     * If nothing is split, the result will contain just this Trace. 
     * If p_clip_shape != null, the split may be resticted to p_clip_shape.
+    * @return the pieces resulting from splitting
     */
    public Collection<BrdTracep> split(ShapeTileOctagon p_clip_shape)
       {
@@ -1316,16 +1321,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    public boolean normalize(ShapeTileOctagon p_clip_shape)
       {
-      boolean observers_activated = false;
-
-      // Let the observers know the trace changes.
-      observers_activated = ! r_board.observers_active();
-      
-      if (observers_activated) r_board.start_notify_observers();
+      r_board.start_notify_observers();
       
       Collection<BrdTracep> split_pieces = split(p_clip_shape);
      
-      boolean result =  split_pieces.size() != 1;
+      boolean result = split_pieces.size() != 1;
 
       Iterator<BrdTracep> it = split_pieces.iterator();
       while (it.hasNext())
@@ -1347,7 +1347,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             }
          }
       
-      if (observers_activated) r_board.end_notify_observers();
+      r_board.end_notify_observers();
 
       return result;
       }

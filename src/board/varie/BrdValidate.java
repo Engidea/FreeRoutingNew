@@ -274,7 +274,7 @@ public class BrdValidate
          BrdItem curr_item = it.next();
          if (!(curr_item instanceof BrdTracep)) continue;
 
-         if (((BrdTracep) curr_item).is_cycle())
+         if (((BrdTracep) curr_item).has_cycle())
             {
             System.out.print(p_s);
             System.out.println(": cycle found");
