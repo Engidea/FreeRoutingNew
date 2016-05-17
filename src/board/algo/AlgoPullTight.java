@@ -577,7 +577,7 @@ public abstract class AlgoPullTight
       
       for (BrdItem curr_item : picked_items)
          {
-         BrdTracep[] split_pieces = ((BrdTracep) curr_item).split( keep_point.keep_point);
+         BrdTracep[] split_pieces = ((BrdTracep) curr_item).split_at_point( keep_point.keep_point);
 
          if (split_pieces != null) return true;
          }

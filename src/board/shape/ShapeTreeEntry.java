@@ -4,7 +4,7 @@ package board.shape;
 /**
  * Information of a single object stored in a tree
  */
-public class ShapeTreeEntry
+public final class ShapeTreeEntry
    {
    public final ShapeTreeStorable object;
    public final int shape_index_in_object;

@@ -223,7 +223,7 @@ public final class NetClass implements java.io.Serializable, PrintableInfo
       }
 
    /**
-    * Returns, if the cycle remove algorithm ignores cycles, where conduction areas are involved
+    * @returns if the cycle remove algorithm ignores cycles, where conduction areas are involved
     */
    public boolean get_ignore_cycles_with_areas()
       {

@@ -941,7 +941,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    /**
-    * Returns true, if it is not allowed to change this item except evtl. shoving the item
+    * @return true, if it is not allowed to change this item except evtl. shoving the item
     */
    public final boolean is_user_fixed()
       {

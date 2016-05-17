@@ -944,7 +944,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          
          PlaSegmentInt curr_line_segment = polyline.segment_get(index + 1);
          
-         Collection<ShapeTreeEntry> over_tree_entries = new LinkedList<ShapeTreeEntry>();
+         LinkedList<ShapeTreeEntry> over_tree_entries = new LinkedList<ShapeTreeEntry>();
 
          // look for intersecting traces with the i-th line segment
          
@@ -957,51 +957,28 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             // this trace has been deleted in a cleanup operation
             if (!is_on_the_board()) return result;
             
-            ShapeTreeEntry found_entry = over_tree_iter.next();
+            ShapeTreeEntry overlap_tentry = over_tree_iter.next();
             
-            if (!(found_entry.object instanceof BrdItem)) continue;
+            if (!(overlap_tentry.object instanceof BrdItem)) continue;
             
-            BrdItem found_item = (BrdItem) found_entry.object;
+            BrdItem overlap_item = (BrdItem) overlap_tentry.object;
 
-            if (found_item == this)
-               {
-               if (found_entry.shape_index_in_object >= index - 1 && found_entry.shape_index_in_object <= index + 1)
-                  {
-                  // don't split own trace at this line or at neighbour lines
-                  continue;
-                  }
-
-               // try to handle intermediate segments of length 0 by comparing end corners
-               if (index < found_entry.shape_index_in_object)
-                  {
-                  if (polyline.corner(index + 1).equals(polyline.corner(found_entry.shape_index_in_object)))
-                     {
-                     continue;
-                     }
-                  }
-               else if (found_entry.shape_index_in_object < index)
-                  {
-                  if (polyline.corner(found_entry.shape_index_in_object + 1).equals(polyline.corner(index)))
-                     {
-                     continue;
-                     }
-                  }
-               }
+            if ( split_avoid_this_item(index, overlap_tentry, overlap_item)) continue;
             
-            if (!found_item.shares_net(this)) continue;
+            if (!overlap_item.shares_net(this)) continue;
                
-            if (found_item instanceof BrdTracep)
+            if (overlap_item instanceof BrdTracep)
                {
-               BrdTracep found_trace = (BrdTracep) found_item;
+               BrdTracep found_trace = (BrdTracep) overlap_item;
                
-               PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(found_entry.shape_index_in_object + 1);
+               PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
                
                PlaLineInt[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
                
                LinkedList<BrdTracep> split_pieces = new LinkedList<BrdTracep>();
 
                // try splitting the found trace first
-               boolean found_trace_split = split_tracep_other (found_trace, split_pieces, intersecting_lines, found_entry);
+               boolean found_trace_split = split_tracep_other (found_trace, split_pieces, intersecting_lines, overlap_tentry);
 
                if (found_trace_split)
                   {
@@ -1023,36 +1000,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                
                if (own_trace_split) break;
                }
-            else if (found_item instanceof BrdAbit)
+            else if (overlap_item instanceof BrdAbit)
                {
-               split_abit (index,  (BrdAbit)found_item, curr_line_segment);
+               split_abit (index,  (BrdAbit)overlap_item, curr_line_segment);
                }
-            else if (!is_user_fixed() && (found_item instanceof BrdAreaConduction))
+            else if ( overlap_item instanceof BrdAreaConduction )
                {
-               boolean ignore_areas = false;
-               
-               if (! net_nos.is_empty())
-                  {
-                  RuleNet curr_net = r_board.brd_rules.nets.get(net_nos.first());
-                  
-                  if (curr_net != null && curr_net.get_class() != null)
-                     {
-                     ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
-                     }
-                  }
-               if (!ignore_areas && get_start_contacts().contains(found_item) && get_end_contacts().contains(found_item))
-                  {
-                  // this trace can be removed because of cycle with conduction area
-                  r_board.remove_item(this);
-                  return result;
-                  }
+               if ( split_conduction ( (BrdAreaConduction)overlap_item ) ) return result;
                }
             }
          
-         if (own_trace_split)  break;
+         if ( own_trace_split )  break;
          }
       
-      if (!own_trace_split) result.add(this);
+      if ( ! own_trace_split ) result.add(this);
       
       if (result.size() > 1)
          {
@@ -1063,6 +1024,67 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return result;
       }
    
+   /**
+    * check if I should aboid testing this segment
+    * @return
+    */
+   private boolean split_avoid_this_item (int index, ShapeTreeEntry found_entry, BrdItem overlap_item)
+      {
+      if (overlap_item != this) return false;
+      
+      int line_index_in_object = found_entry.shape_index_in_object; 
+      
+      if ( line_index_in_object >= index - 1 && line_index_in_object <= index + 1)
+         {
+         // don't split own trace at this line or at neighbour lines
+         return true;
+         }
+
+      // try to handle intermediate segments of length 0 by comparing end corners
+      if (index < line_index_in_object)
+         {
+         if (polyline.corner(index + 1).equals(polyline.corner(line_index_in_object)))
+            {
+            return true;
+            }
+         }
+      else if (line_index_in_object < index)
+         {
+         if (polyline.corner(line_index_in_object + 1).equals(polyline.corner(index)))
+            {
+            return true;
+            }
+         }
+      
+      return false;
+      }
+
+   
+   private boolean split_conduction ( BrdAreaConduction c_area )
+      {
+      boolean ignore_areas = false;
+      
+      if ( is_user_fixed() ) return false;
+      
+      RuleNet curr_net = r_board.brd_rules.nets.get(net_nos.first());
+      
+      if (curr_net != null && curr_net.get_class() != null)
+         {
+         ignore_areas = curr_net.get_class().get_ignore_cycles_with_areas();
+         }
+
+      if ( ignore_areas ) return false;
+      
+      if ( get_start_contacts().contains(c_area) && get_end_contacts().contains(c_area))
+         {
+         // this trace can be removed because of cycle with conduction area
+         // Hmmm, surely I should split up until where conduction area begins ?
+         r_board.remove_item(this);
+         return true;
+         }
+      
+      return false;
+      }
    
    private void split_abit (int index,  BrdAbit curr_drill_item, PlaSegmentInt curr_line_segment )
       {
@@ -1075,7 +1097,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
    
       // Icould have a split with int point parameter, it is then known that I am splitting at int point...
-      split(index + 1, split_line);
+      split_with_end_line(index + 1, split_line);
       }
 
    private void split_tracep_remove_cycles ( LinkedList<BrdTracep> a_collection )
@@ -1089,7 +1111,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
          {
-         BrdTracep[] curr_split_pieces = split(index + 1, intersecting_lines[jndex]);
+         BrdTracep[] curr_split_pieces = split_with_end_line(index + 1, intersecting_lines[jndex]);
          if (curr_split_pieces != null)
             {
             own_trace_split = true;
@@ -1122,7 +1144,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          int line_no = found_entry.shape_index_in_object + 1;
          
-         BrdTracep[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[jndex]);
+         BrdTracep[] curr_split_pieces = found_trace.split_with_end_line(line_no, intersecting_lines[jndex]);
 
          if (curr_split_pieces != null)
             {
@@ -1243,7 +1265,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * This method does NOT change the trace, it returns pieces
     * @return the 2 pieces of the split trace, or null if nothing was split 
     */
-   public final BrdTracep[] split(PlaPointInt p_point)
+   public final BrdTracep[] split_at_point(PlaPointInt p_point)
       {
       for (int index = 1; index < polyline.plalinelen(-1); index++)
          {
@@ -1256,7 +1278,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
          PlaLineInt split_line = new PlaLineInt(p_point, split_line_direction);
          
-         BrdTracep[] result = split(index, split_line);
+         BrdTracep[] result = split_with_end_line(index, split_line);
          
          if (result != null)  return result;
          }
@@ -1269,7 +1291,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece. 
     * @return the 2 pieces of the splitted trace, or null, if nothing was splitted.
     */
-   private BrdTracep[] split(int p_line_no, PlaLineInt p_new_end_line)
+   private BrdTracep[] split_with_end_line(int p_line_no, PlaLineInt p_new_end_line)
       {
       if (!is_on_the_board()) return null;
 
