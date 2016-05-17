@@ -297,7 +297,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     * Looks up the intersections of this line segment with p_other. 
     * The result array may have length 0, 1 or 2. 
     * If the segments do not intersect the result array will have length 0. 
-    * The result lines are so that the intersections of the result lines with this line segment will deliver the intersection points. 
+    * The result lines are so that the intersections of the result lines with this line segment will deliver the intersection points
     * If the segments overlap, the result array has length 2 and the intersection points are the first and the last overlap point. 
     * Otherwise the result array has length 1 and the intersection point is the the unique intersection or touching point. 
     * The result is not symmetric in this and p_other, because intersecting lines and not the intersection points are returned.
@@ -329,12 +329,14 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
             left_line = other_sorted;
             right_line = this_sorted;
             }
+         
          int cmp = left_line.end_point().compare_x_y(right_line.start_point());
          if (cmp < 0)
             {
             // end point of the left line is to the lsft of the start point of the right line
             return new PlaLineInt[0];
             }
+         
          if (cmp == 0)
             {
             // end point of the left line is equal to the start point of the right line
@@ -342,6 +344,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
             result[0] = left_line.end;
             return result;
             }
+         
          // now there is a real overlap
          PlaLineInt[] result = new PlaLineInt[2];
          result[0] = right_line.start;
@@ -374,6 +377,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    public boolean intersects(PlaSegmentInt p_other)
       {
       PlaLineInt[] intersections = intersection(p_other);
+      
       return intersections.length > 0;
       }
 
@@ -383,6 +387,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    public boolean overlaps(PlaSegmentInt p_other)
       {
       PlaLineInt[] intersections = intersection(p_other);
+      
       return intersections.length > 1;
       }
 

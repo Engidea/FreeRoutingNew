@@ -918,7 +918,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    public Collection<BrdTracep> split(ShapeTileOctagon p_clip_shape)
       {
-      Collection<BrdTracep> result = new LinkedList<BrdTracep>();
+      LinkedList<BrdTracep> result = new LinkedList<BrdTracep>();
 
       if ( ! is_nets_normal())
          {
@@ -998,83 +998,28 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                
                PlaLineInt[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
                
-               Collection<BrdTracep> split_pieces = new LinkedList<BrdTracep>();
+               LinkedList<BrdTracep> split_pieces = new LinkedList<BrdTracep>();
 
                // try splitting the found trace first
-               boolean found_trace_split = false;
+               boolean found_trace_split = split_tracep_other (found_trace, split_pieces, intersecting_lines, found_entry);
 
-               if (found_trace != this)
+               if (found_trace_split)
                   {
-                  for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
-                     {
-                     int line_no = found_entry.shape_index_in_object + 1;
-                     
-                     BrdTracep[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[jndex]);
-
-                     if (curr_split_pieces != null)
-                        {
-                        for (int k = 0; k < 2; ++k)
-                           {
-                           if (curr_split_pieces[k] != null)
-                              {
-                              found_trace_split = true;
-                              split_pieces.add(curr_split_pieces[k]);
-                              }
-                           }
-
-                        if (found_trace_split)
-                           {
-                           // reread the overlapping tree entries and reset the iterator, because the board has changed
-                           default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
-                           it = overlapping_tree_entries.iterator();
-                           break;
-                           }
-                        }
-                     }
-                  if (!found_trace_split)
-                     {
-                     split_pieces.add(found_trace);
-                     }
+                  // reread the overlapping tree entries and reset the iterator, because the board has changed
+                  default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
+                  it = overlapping_tree_entries.iterator();
                   }
                
                // now try splitting the own trace
-
                intersecting_lines = curr_line_segment.intersection(found_line_segment);
                
-               for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
-                  {
-                  BrdTracep[] curr_split_pieces = split(index + 1, intersecting_lines[jndex]);
-                  if (curr_split_pieces != null)
-                     {
-                     own_trace_split = true;
-                     // this trace was split itself into 2.
-                     if (curr_split_pieces[0] != null)
-                        {
-                        result.addAll(curr_split_pieces[0].split(p_clip_shape));
-                        }
-                     if (curr_split_pieces[1] != null)
-                        {
-                        result.addAll(curr_split_pieces[1].split(p_clip_shape));
-                        }
-                     break;
-                     }
-                  }
-               if (found_trace_split || own_trace_split)
-                  {
-                  // something was split, remove cycles containing a split piece
-                  Iterator<BrdTracep> it2 = split_pieces.iterator();
-                  for (int j = 0; j < 2; ++j)
-                     {
-                     while (it2.hasNext())
-                        {
-                        BrdTracep curr_piece = it2.next();
-                        r_board.remove_if_cycle(curr_piece);
-                        }
+               // no need to readjust the iterator since we are actually exiting
+               own_trace_split = split_tracep_own (index,result,intersecting_lines, p_clip_shape);
+     
+               if ( found_trace_split ) split_tracep_remove_cycles (split_pieces);
 
-                     // remove cycles in the own split pieces last to preserve them, if possible
-                     it2 = result.iterator();
-                     }
-                  }
+               // do this last to preserve traces if possible
+               if ( own_trace_split ) split_tracep_remove_cycles (result);
                
                if (own_trace_split) break;
                }
@@ -1125,6 +1070,72 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return result;
       }
 
+   private void split_tracep_remove_cycles ( LinkedList<BrdTracep> a_collection )
+      {
+      for ( BrdTracep curr_piece : a_collection ) r_board.remove_if_cycle(curr_piece);
+      }
+
+   private boolean split_tracep_own (int index, LinkedList<BrdTracep> result, PlaLineInt[] intersecting_lines, ShapeTileOctagon p_clip_shape )
+      {
+      boolean own_trace_split = false;
+      
+      for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
+         {
+         BrdTracep[] curr_split_pieces = split(index + 1, intersecting_lines[jndex]);
+         if (curr_split_pieces != null)
+            {
+            own_trace_split = true;
+            // this trace was split itself into 2.
+            if (curr_split_pieces[0] != null)
+               {
+               result.addAll(curr_split_pieces[0].split(p_clip_shape));
+               }
+            if (curr_split_pieces[1] != null)
+               {
+               result.addAll(curr_split_pieces[1].split(p_clip_shape));
+               }
+            break;
+            }
+         }
+      
+      return own_trace_split;
+      }
+   
+   /**
+    * return true if some other trace was split
+    */
+   private boolean split_tracep_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, PlaLineInt[] intersecting_lines, ShapeTreeEntry found_entry )
+      {
+      if ( found_trace == this ) return false;
+      
+      boolean found_trace_split = false;
+      
+      for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
+         {
+         int line_no = found_entry.shape_index_in_object + 1;
+         
+         BrdTracep[] curr_split_pieces = found_trace.split(line_no, intersecting_lines[jndex]);
+
+         if (curr_split_pieces != null)
+            {
+            for (int kndex = 0; kndex < 2; ++kndex)
+               {
+               if (curr_split_pieces[kndex] == null) continue;
+
+               found_trace_split = true;
+               split_pieces.add(curr_split_pieces[kndex]);
+               }
+            
+            if ( found_trace_split ) break;
+            }
+         }
+   
+      if ( ! found_trace_split) split_pieces.add(found_trace);
+
+      return found_trace_split;
+      }
+   
+   
    /**
     * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the pad of a pin. 
     * In this case the trace will be split only, if the intersection is at the center of the pin. 
