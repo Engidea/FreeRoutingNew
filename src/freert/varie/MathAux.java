@@ -12,6 +12,7 @@
 package freert.varie;
 
 import java.math.BigInteger;
+import freert.planar.PlaPointFloat;
 
 /**
  *
@@ -20,8 +21,35 @@ import java.math.BigInteger;
  * @author Alfons Wirtz
  */
 
-public class BigIntAux
+public final class MathAux
    {
+   private MathAux() // disallow instantiation
+      {
+      }
+
+   
+   public static long determinant ( long a_x, long a_y, int b_x, int b_y  )
+      {
+      return a_x * b_y - a_y * b_x;
+      }
+   
+   public static double determinant ( double a_x, double a_y, double b_x, double b_y  )
+      {
+      return a_x * b_y - a_y * b_x;
+      }
+
+   /**
+    * You can use this one to decide if two "directions" are colinear or on the right or left
+    * @param p_a
+    * @param p_b
+    * @return
+    */
+    public static final double determinant (PlaPointFloat p_a, PlaPointFloat p_b )
+       {
+       return p_a.v_x * p_b.v_y - p_a.v_y * p_b.v_x;
+       }
+   
+   
    /**
     * calculates the determinant of the vectors (p_x_1, p_y_1) and (p_x_2, p_y_2)
     */
@@ -62,7 +90,4 @@ public class BigIntAux
       }
 
 
-   private BigIntAux() // disallow instantiation
-      {
-      }
    }

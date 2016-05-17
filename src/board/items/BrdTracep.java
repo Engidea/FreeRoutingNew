@@ -65,7 +65,7 @@ import gui.varie.ObjectInfoPanel;
 public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
-   private static final String classname="BrdTracep";
+   private static final String classname="BrdTracep.";
    
    private Polyline polyline;   // the actual line of the trace
  
@@ -1308,6 +1308,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return result;
       }
 
+   
    /**
     * Splits this trace and overlapping traces, and combines this trace.
     * If p_clip_shape != null, splitting is restricted to p_clip_shape. 
@@ -1315,7 +1316,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    public boolean normalize(ShapeTileOctagon p_clip_shape)
       {
+      return normalize_recu(p_clip_shape, 10);
+      }
+   
+   private boolean normalize_recu(ShapeTileOctagon p_clip_shape, int loop_countdown)
+      {
       r_board.start_notify_observers();
+      
+      if ( loop_countdown <= 0 )
+         {
+         System.err.println(classname+"normalize_recu: countdown exceeded");
+         return false;
+         }
+      
+      loop_countdown--;
       
       LinkedList<BrdTracep> split_traces_list = split(p_clip_shape);
      
@@ -1335,7 +1349,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             }
          else if (trace_combined)
             {
-            split_trace.normalize(p_clip_shape);
+            split_trace.normalize_recu(p_clip_shape,loop_countdown);
             result = true;
             }
          }
@@ -1936,8 +1950,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    public String toString()
       {
       StringBuilder risul = new StringBuilder(200);
-      risul.append(getClass().getName());
-      risul.append(" l=");
+      risul.append(classname);
+      risul.append("trace l=");
       risul.append((int)get_length());
       risul.append(" id=");
       risul.append(get_id_no());

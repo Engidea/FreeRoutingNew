@@ -17,6 +17,7 @@
 package freert.planar;
 
 import java.math.BigInteger;
+import freert.varie.MathAux;
 import freert.varie.Signum;
 
 /**
@@ -114,14 +115,18 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * @param p_point
-    * @return
+    * To discover the side of a point, immagine to traslate point_b of this line and p_point relative to point_a
+    * Essentially set as origin point_a, then the determinant of the two points will tell you if they are colinear
     */
-   public final PlaSide side_of(PlaPointInt p_point)
+   public final PlaSide side_of( PlaPointInt p_point )
       {
-      PlaSide result = p_point.side_of(this);
+      int p_b_x = point_b.v_x - point_a.v_x;
+      int p_b_y = point_b.v_y - point_a.v_y;
       
-      return result.negate();
+      int p_p_x = p_point.v_x - point_a.v_x;
+      int p_p_y = p_point.v_y - point_a.v_y;
+      
+      return PlaSide.get_side_of(MathAux.determinant(p_b_x, p_b_y, p_p_x, p_p_y));
       }
    
    

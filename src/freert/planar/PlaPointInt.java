@@ -19,6 +19,7 @@
 package freert.planar;
 
 import java.math.BigInteger;
+import freert.varie.MathAux;
 
 /**
  * Implementation of the abstract class Point as a tuple of int
@@ -153,7 +154,7 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       // center the second point to pf_1, and this becomes a "direction" of the line
       PlaPointFloat line_dir = new PlaPointFloat(pf_2.v_x - pf_1.v_x, pf_2.v_y - pf_1.v_y);
       
-      double determinant = PlaDirection.determinant(point_dir, line_dir);
+      double determinant = MathAux.determinant(point_dir, line_dir);
       
       PlaSide b_risul = PlaSide.get_side_of(determinant);
       

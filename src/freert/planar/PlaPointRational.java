@@ -21,7 +21,7 @@
 package freert.planar;
 
 import java.math.BigInteger;
-import freert.varie.BigIntAux;
+import freert.varie.MathAux;
 
 /**
  *
@@ -115,11 +115,11 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
 
       PlaPointRational other = (PlaPointRational) p_ob;
 
-      BigInteger det = BigIntAux.determinant(rp_x, other.rp_x, rp_z, other.rp_z);
+      BigInteger det = MathAux.determinant(rp_x, other.rp_x, rp_z, other.rp_z);
       
       if (det.signum() != 0) return false;
 
-      det = BigIntAux.determinant(rp_y, other.rp_y, rp_z, other.rp_z);
+      det = MathAux.determinant(rp_y, other.rp_y, rp_z, other.rp_z);
 
       return (det.signum() == 0);
       }
@@ -137,11 +137,11 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       
       if (this == p_ob) return true;
       
-      BigInteger det = BigIntAux.determinant(rp_x, p_ob.rp_x, rp_z, p_ob.rp_z);
+      BigInteger det = MathAux.determinant(rp_x, p_ob.rp_x, rp_z, p_ob.rp_z);
       
       if (det.signum() != 0) return false;
 
-      det = BigIntAux.determinant(rp_y, p_ob.rp_y, rp_z, p_ob.rp_z);
+      det = MathAux.determinant(rp_y, p_ob.rp_y, rp_z, p_ob.rp_z);
 
       return det.signum() == 0;
       }
@@ -188,7 +188,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       v2[0] = BigInteger.valueOf(p_vector.v_x);
       v2[1] = BigInteger.valueOf(p_vector.v_y);
       v2[2] = BigInteger.ONE;
-      BigInteger[] result = BigIntAux.add_rational_coordinates(v1, v2);
+      BigInteger[] result = MathAux.add_rational_coordinates(v1, v2);
       
       return new PlaPointRational(result[0], result[1], result[2]);
       }
@@ -218,7 +218,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       // center the second point to pf_1, and this becomes a "direction" of the line
       PlaPointFloat line_dir = new PlaPointFloat(pf_2.v_x - pf_1.v_x, pf_2.v_y - pf_1.v_y);
       
-      double determinant = PlaDirection.determinant(point_dir, line_dir);
+      double determinant = MathAux.determinant(point_dir, line_dir);
       
       PlaSide b_risul = PlaSide.get_side_of(determinant);
       
