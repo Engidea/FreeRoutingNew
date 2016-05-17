@@ -749,6 +749,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          --new_line_count;
          }
+      
       PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
       other_lines.plaline_copy(0, new_lines, 0, other_lines.plalinelen(-1));
       int join_pos = other_lines.plalinelen(-1);

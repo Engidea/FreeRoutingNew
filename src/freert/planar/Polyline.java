@@ -1241,32 +1241,30 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       if ( p_line_no == plalinelen(-2) && new_end_corner.equals(corner_last()) ) return null;
       
-      PlaLineInt[] first_piece;
+      PlaLineIntAlist first_piece = new PlaLineIntAlist(plalinelen());
+      
       if (corner(p_line_no - 1).equals(new_end_corner))
          {
          // skip line segment of length 0 at the end of the first piece
-         first_piece = new PlaLineInt[p_line_no + 1];
-         plaline_copy(0, first_piece, 0, first_piece.length);
+         plaline_append(first_piece, 0, p_line_no + 1);
          }
       else
          {
-         first_piece = new PlaLineInt[p_line_no + 2];
-         plaline_copy(0, first_piece, 0, p_line_no + 1);
-         first_piece[p_line_no + 1] = p_end_line;
+         plaline_append(first_piece, 0, p_line_no + 1);
+         first_piece.add(p_end_line);
          }
       
-      PlaLineInt[] second_piece;
+      PlaLineIntAlist second_piece = new PlaLineIntAlist(plalinelen());
+      
       if (corner(p_line_no).equals(new_end_corner))
          {
          // skip line segment of length 0 at the beginning of the second piece
-         second_piece = new PlaLineInt[plalinelen() - p_line_no];
-         plaline_copy(p_line_no, second_piece, 0, second_piece.length);
+         plaline_append(second_piece, p_line_no);
          }
       else
          {
-         second_piece = new PlaLineInt[plalinelen() - p_line_no + 1];
-         second_piece[0] = p_end_line;
-         plaline_copy(p_line_no, second_piece, 1, second_piece.length - 1);
+         second_piece.add( p_end_line );
+         plaline_append(second_piece, p_line_no);
          }
       
       Polyline[] result = new Polyline[2];
@@ -1467,6 +1465,32 @@ public final class Polyline implements java.io.Serializable, PlaObject
          dest[dest_pos+index] = plaline(src_pos+index);
       }
    
+   /**
+    * Append to dest the number of lines starting from sr_cpos
+    * @param dest
+    * @param src_pos
+    * @param length
+    */
+   public void plaline_append(PlaLineIntAlist dest, int src_pos, int length )
+      {
+      for (int index=0; index<length; index++)
+         dest.add( plaline(src_pos+index));
+      }
+
+   /**
+    * Append to dest the remaining lines starting from pos
+    * @param dest
+    * @param src_pos
+    * @param length
+    */
+   public void plaline_append(PlaLineIntAlist dest, int src_pos )
+      {
+      int poly_len = plalinelen();
+      
+      for (int index=src_pos; index<poly_len; index++)
+         dest.add( plaline(index));
+      }
+
    
    public PlaSegmentInt segment_get ( int index )
       {
