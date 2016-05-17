@@ -944,20 +944,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          
          PlaSegmentInt curr_line_segment = polyline.segment_get(index + 1);
          
-         Collection<ShapeTreeEntry> overlapping_tree_entries = new LinkedList<ShapeTreeEntry>();
+         Collection<ShapeTreeEntry> over_tree_entries = new LinkedList<ShapeTreeEntry>();
 
          // look for intersecting traces with the i-th line segment
          
-         default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
+         default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), over_tree_entries);
          
-         Iterator<ShapeTreeEntry> it = overlapping_tree_entries.iterator();
+         Iterator<ShapeTreeEntry> over_tree_iter = over_tree_entries.iterator();
          
-         while (it.hasNext())
+         while (over_tree_iter.hasNext())
             {
             // this trace has been deleted in a cleanup operation
             if (!is_on_the_board()) return result;
             
-            ShapeTreeEntry found_entry = it.next();
+            ShapeTreeEntry found_entry = over_tree_iter.next();
             
             if (!(found_entry.object instanceof BrdItem)) continue;
             
@@ -989,7 +989,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                }
             
             if (!found_item.shares_net(this)) continue;
-            
+               
             if (found_item instanceof BrdTracep)
                {
                BrdTracep found_trace = (BrdTracep) found_item;
@@ -1006,8 +1006,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                if (found_trace_split)
                   {
                   // reread the overlapping tree entries and reset the iterator, because the board has changed
-                  default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), overlapping_tree_entries);
-                  it = overlapping_tree_entries.iterator();
+                  default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), over_tree_entries);
+                  over_tree_iter = over_tree_entries.iterator();
                   }
                
                // now try splitting the own trace
@@ -1025,14 +1025,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                }
             else if (found_item instanceof BrdAbit)
                {
-               BrdAbit curr_drill_item = (BrdAbit) found_item;
-               PlaPointInt split_point = curr_drill_item.center_get();
-               if (curr_line_segment.contains(split_point))
-                  {
-                  PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
-                  PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
-                  split(index + 1, split_line);
-                  }
+               split_abit (index,  (BrdAbit)found_item, curr_line_segment);
                }
             else if (!is_user_fixed() && (found_item instanceof BrdAreaConduction))
                {
@@ -1068,6 +1061,21 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          }
       
       return result;
+      }
+   
+   
+   private void split_abit (int index,  BrdAbit curr_drill_item, PlaSegmentInt curr_line_segment )
+      {
+      PlaPointInt split_point = curr_drill_item.center_get();
+   
+      if ( ! curr_line_segment.contains(split_point) ) return;
+      
+      PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+      
+      PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
+   
+      // Icould have a split with int point parameter, it is then known that I am splitting at int point...
+      split(index + 1, split_line);
       }
 
    private void split_tracep_remove_cycles ( LinkedList<BrdTracep> a_collection )
@@ -1182,6 +1190,53 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return pad_found;
       }
 
+
+   /**
+    * Checks, if the given point is inside the pad of a pin or endpoint of traces 
+    * In this case the trace will be split only, if the intersection is at the center of the pin. 
+    * Extending the function to vias leaded to broken connection problems wenn the autorouter connected to a trace.
+    */
+   private boolean split_inside_drill_pad_prohibited(int p_line_no, PlaPointInt a_point)
+      {
+      if ( a_point.is_NaN() ) return true;
+      
+      Collection<BrdItem> overlap_items = r_board.pick_items(a_point, get_layer() );
+      
+      boolean pad_found = false;
+      
+      for (BrdItem curr_item : overlap_items)
+         {
+         if ( ! curr_item.shares_net(this)) continue;
+
+         if (curr_item instanceof BrdAbitPin)
+            {
+            BrdAbit curr_drill_item = (BrdAbit) curr_item;
+            pad_found = true;
+            
+            if (curr_drill_item.center_get().equals(a_point))
+               {
+               // split allowed at the center of a drill item.
+               return false; 
+               }
+            }
+         else if (curr_item instanceof BrdTracep)
+            {
+            BrdTracep curr_trace = (BrdTracep) curr_item;
+            
+            if (curr_trace != this && curr_trace.corner_first().equals(a_point) || curr_trace.corner_last().equals(a_point))
+               {
+               return false;
+               }
+            }
+         }
+      
+      return pad_found;
+      }
+   
+   
+   
+   
+   
    /**
     * Splits this trace into two at p_point. 
     * can return null i for example p_point is not located on this trace.
