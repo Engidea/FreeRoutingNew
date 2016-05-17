@@ -41,9 +41,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
    // the array of lines of this Polyline.
    private final ArrayList<PlaLineInt> lines_list;
 
-   private transient PlaPointFloat[] precalculated_float_corners = null;
-   private transient PlaPoint[]      precalculated_corners = null;        // need to ba an array since not all are calculated 
-   private transient ShapeTileBox    precalculated_bounding_box = null;
+   private PlaPointFloat[] precalculated_float_corners = null;
+   private PlaPoint[]      precalculated_corners = null;        // need to ba an array since not all are calculated 
+   private ShapeTileBox    precalculated_bounding_box = null;
 
    private  PlaPointInt corner_first;
    private  PlaPointInt corner_last;

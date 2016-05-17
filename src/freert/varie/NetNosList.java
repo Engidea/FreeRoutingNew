@@ -1,5 +1,6 @@
 package freert.varie;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -31,8 +32,10 @@ import board.shape.ShapeTreeObject;
  * @author damiano
  *
  */
-public final class NetNosList implements Iterable<Integer>
+public final class NetNosList implements Iterable<Integer> , Serializable
    {
+   private static final long serialVersionUID = 1L;
+
    private final int[] net_nos_arr;
 
    public static final NetNosList EMPTY = new NetNosList();

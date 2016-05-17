@@ -65,6 +65,7 @@ import gui.varie.ObjectInfoPanel;
 public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
+   private static final String classname="BrdTracep";
    
    private Polyline polyline;   // the actual line of the trace
  
@@ -639,27 +640,34 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
    /**
     * Looks, if other traces can be combined with this trace. 
-    * Returns true, if Something has been combined. 
     * This trace will be the combined trace, so that only other traces may be deleted.
-    * looks, if this trace can be combined with other traces
     * WARNING: This is a recursive call function, are we really sure that it is "good" ?
     * @return true, if Something has been combined.
     */
-   public boolean combine()
+   public boolean combine(int recursion_depth)
       {
       if (! is_on_the_board()) return false;
 
+      // we have exausted the recursion depth
+      if ( recursion_depth <= 0 )
+         {
+         System.err.println(classname+"combine: recursion exausted");
+         return false;
+         }
+      
+      recursion_depth--;
+      
       boolean something_changed = false;
       
       if (combine_at_start(true))
          {
          something_changed = true;
-         combine();
+         combine(recursion_depth);
          }
       else if (combine_at_end(true))
          {
          something_changed = true;
-         combine();
+         combine(recursion_depth);
          }
       
       if (something_changed)
@@ -921,7 +929,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * If p_clip_shape != null, the split may be resticted to p_clip_shape.
     * @return the pieces resulting from splitting
     */
-   public Collection<BrdTracep> split(ShapeTileOctagon p_clip_shape)
+   public LinkedList<BrdTracep> split(ShapeTileOctagon p_clip_shape)
       {
       LinkedList<BrdTracep> result = new LinkedList<BrdTracep>();
 
@@ -1323,26 +1331,25 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       {
       r_board.start_notify_observers();
       
-      Collection<BrdTracep> split_pieces = split(p_clip_shape);
+      LinkedList<BrdTracep> split_traces_list = split(p_clip_shape);
      
-      boolean result = split_pieces.size() != 1;
+      boolean result = split_traces_list.size() != 1;
 
-      Iterator<BrdTracep> it = split_pieces.iterator();
-      while (it.hasNext())
+      for ( BrdTracep split_trace : split_traces_list )
          {
-         BrdTracep curr_split_trace = it.next();
-         if ( ! curr_split_trace.is_on_the_board()) continue;
+         if ( ! split_trace.is_on_the_board()) continue;
          
-         boolean trace_combined = curr_split_trace.combine();
-         if (curr_split_trace.corner_count() == 2 && curr_split_trace.corner_first().equals(curr_split_trace.corner_last()))
+         boolean trace_combined = split_trace.combine(10);
+         
+         if (split_trace.corner_count() == 2 && split_trace.corner_first().equals(split_trace.corner_last()))
             {
-            // remove trace with only 1 corner
-            r_board.remove_item(curr_split_trace);
+            // This should not be even possible !!! remove trace with only 1 corner
+            r_board.remove_item(split_trace);
             result = true;
             }
          else if (trace_combined)
             {
-            curr_split_trace.normalize(p_clip_shape);
+            split_trace.normalize(p_clip_shape);
             result = true;
             }
          }
@@ -1871,6 +1878,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       {
       Polyline trace_polyline;
       Collection<BrdItem> contact_list;
+
       if (p_at_start)
          {
          trace_polyline = polyline();
@@ -1881,15 +1889,17 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          trace_polyline = polyline().reverse();
          contact_list = get_end_contacts();
          }
-      if (contact_list.size() != 1)
-         {
-         return false;
-         }
+      
+      
+      if (contact_list.size() != 1) return false;
+
       BrdItem curr_contact = contact_list.iterator().next();
+      
       if (!(curr_contact.get_fixed_state() == ItemFixState.SHOVE_FIXED && (curr_contact instanceof BrdTracep)))
          {
          return false;
          }
+      
       BrdTracep contact_trace = (BrdTracep) curr_contact;
       Polyline contact_polyline = contact_trace.polyline();
       PlaLineInt contact_last_line = contact_polyline.plaline(contact_polyline.plalinelen(-2));
@@ -1906,10 +1916,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             check_swap = (contact_last_line.direction().projection(trace_polyline.plaline(2).direction()) == Signum.NEGATIVE);
             }
          }
-      if (!check_swap)
-         {
-         return false;
-         }
+      
+      if (!check_swap) return false;
+
       BrdAbitPin contact_pin = null;
       Collection<BrdItem> curr_contacts = contact_trace.get_start_contacts();
       for (BrdItem tmp_contact : curr_contacts)
@@ -1920,18 +1929,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             break;
             }
          }
-      if (contact_pin == null)
-         {
-         return false;
-         }
+      
+      if (contact_pin == null) return false;
+
       Polyline combined_polyline = contact_polyline.combine(trace_polyline);
       PlaDirection nearest_pin_exit_direction = contact_pin.calc_nearest_exit_restriction_direction(combined_polyline, get_half_width(), get_layer());
       if (nearest_pin_exit_direction == null || nearest_pin_exit_direction.equals(contact_polyline.plaline(1).direction()))
          {
          return false; // direction would not be changed
          }
+      
       contact_trace.set_fixed_state(get_fixed_state());
-      combine();
+      
+      combine(10);
+      
       return true;
       }
    

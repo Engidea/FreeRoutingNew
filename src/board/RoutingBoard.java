@@ -828,7 +828,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       BrdTracep a_trace = (BrdTracep)p_item;
       
-      return a_trace.combine();
+      return a_trace.combine(10);
       }
    
    /**
@@ -887,6 +887,7 @@ public final class RoutingBoard implements java.io.Serializable
                }
             catch (ConcurrentModificationException e)
                {
+               System.out.println(classname+"normalize_traces: concurrent change");
                something_changed = true;
                break;
                }
@@ -900,6 +901,7 @@ public final class RoutingBoard implements java.io.Serializable
             if ( ! ( curr_item instanceof BrdTracep ) ) continue;
 
             BrdTracep curr_trace = (BrdTracep) curr_item;
+            
             if (curr_trace.normalize(null))
                {
                something_changed = true;
@@ -2527,7 +2529,7 @@ public final class RoutingBoard implements java.io.Serializable
             new_polyline, p_layer, p_half_width, p_net_no_arr,
             p_clearance_class_no, ItemFixState.UNFIXED);
       
-      new_trace.combine();
+      new_trace.combine(10);
 
       ShapeTileOctagon tidy_region = null;
       if (p_tidy_width < Integer.MAX_VALUE)
