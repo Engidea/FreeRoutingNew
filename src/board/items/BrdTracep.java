@@ -227,10 +227,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Get a list of all items having a connection point at p_point on the layer of this trace. 
     * If p_ignore_net is false, only contacts to items sharing a net with this trace are calculated. This is the normal case.
+    * @param p_skip_areas if true the skip elements of type BrdAreaConduction
     */
-   public Set<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net)
+   public TreeSet<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net, boolean p_skip_areas )
       {
-      Set<BrdItem> result = new TreeSet<BrdItem>();
+      TreeSet<BrdItem> result = new TreeSet<BrdItem>();
 
       if ( p_point == null ) return result;
 
@@ -275,13 +276,19 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          else if (curr_item instanceof BrdAreaConduction)
             {
             BrdAreaConduction curr_area = (BrdAreaConduction) curr_item;
-            if (curr_area.get_area().contains(p_point))
+            
+            if ( ! p_skip_areas  && curr_area.get_area().contains(p_point))
                {
                result.add(curr_item);
                }
             }
          }
       return result;
+      }
+   
+   public TreeSet<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net)
+      {
+      return get_normal_contacts(p_point,p_ignore_net, false);
       }
 
    @Override
@@ -651,7 +658,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // we have exausted the recursion depth
       if ( recursion_depth <= 0 )
          {
-         System.err.println(classname+"combine: recursion exausted");
+         System.out.println(classname+"combine: recursion exausted trace "+this);
          return false;
          }
       
@@ -682,26 +689,15 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
    /**
     * looks, if this trace can be combined at its first point with an other trace. 
-    * Returns true, if somthing was combined. 
     * The corners of the other trace will be inserted in front of thie trace. 
     * In case of combine the other trace will be deleted and this trace will remain.
+    * @returns true, if somthing was combined. 
     */
    private boolean combine_at_start(boolean p_ignore_areas)
       {
       PlaPoint start_corner = corner_first();
-      Collection<BrdItem> contacts = get_normal_contacts(start_corner, false);
-      if (p_ignore_areas)
-         {
-         // remove conduction areas from the list
-         Iterator<BrdItem> it = contacts.iterator();
-         while (it.hasNext())
-            {
-            if (it.next() instanceof BrdAreaConduction)
-               {
-               it.remove();
-               }
-            }
-         }
+      
+      TreeSet<BrdItem> contacts = get_normal_contacts(start_corner, false, p_ignore_areas );
       
       if (contacts.size() != 1) return false;
       
@@ -731,6 +727,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                }
             }
          }
+      
       if (!trace_found)
          {
          return false;
@@ -804,20 +801,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    private boolean combine_at_end(boolean p_ignore_areas)
       {
       PlaPoint end_corner = corner_last();
-      Collection<BrdItem> contacts = get_normal_contacts(end_corner, false);
       
-      if (p_ignore_areas)
-         {
-         // remove conduction areas from the list
-         Iterator<BrdItem> it = contacts.iterator();
-         while (it.hasNext())
-            {
-            if (it.next() instanceof BrdAreaConduction)
-               {
-               it.remove();
-               }
-            }
-         }
+      TreeSet<BrdItem> contacts = get_normal_contacts(end_corner, false, p_ignore_areas);
       
       if (contacts.size() != 1) return false;
       
