@@ -162,7 +162,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Get a list of all items with a connection point on the layer of this trace equal to its first corner.
     */
-   public Set<BrdItem> get_start_contacts()
+   public final Set<BrdItem> get_start_contacts()
       {
       return get_normal_contacts(corner_first(), false);
       }
@@ -170,24 +170,30 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Get a list of all items with a connection point on the layer of this trace equal to its last corner.
     */
-   public Set<BrdItem> get_end_contacts()
+   public final Set<BrdItem> get_end_contacts()
       {
       return get_normal_contacts(corner_last(), false);
       }
    
+   @Override
    public Set<BrdItem> get_normal_contacts()
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
+      
       PlaPoint start_corner = corner_first();
+      
       if (start_corner != null)
          {
          result.addAll(get_normal_contacts(start_corner, false));
          }
+      
       PlaPoint end_corner = corner_last();
+      
       if (end_corner != null)
          {
          result.addAll(get_normal_contacts(end_corner, false));
          }
+      
       return result;
       }
 
@@ -1191,48 +1197,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return pad_found;
       }
 
-
-   /**
-    * Checks, if the given point is inside the pad of a pin or endpoint of traces 
-    * In this case the trace will be split only, if the intersection is at the center of the pin. 
-    * Extending the function to vias leaded to broken connection problems wenn the autorouter connected to a trace.
-    */
-   private boolean split_inside_drill_pad_prohibited(int p_line_no, PlaPointInt a_point)
-      {
-      if ( a_point.is_NaN() ) return true;
-      
-      Collection<BrdItem> overlap_items = r_board.pick_items(a_point, get_layer() );
-      
-      boolean pad_found = false;
-      
-      for (BrdItem curr_item : overlap_items)
-         {
-         if ( ! curr_item.shares_net(this)) continue;
-
-         if (curr_item instanceof BrdAbitPin)
-            {
-            BrdAbit curr_drill_item = (BrdAbit) curr_item;
-            pad_found = true;
-            
-            if (curr_drill_item.center_get().equals(a_point))
-               {
-               // split allowed at the center of a drill item.
-               return false; 
-               }
-            }
-         else if (curr_item instanceof BrdTracep)
-            {
-            BrdTracep curr_trace = (BrdTracep) curr_item;
-            
-            if (curr_trace != this && curr_trace.corner_first().equals(a_point) || curr_trace.corner_last().equals(a_point))
-               {
-               return false;
-               }
-            }
-         }
-      
-      return pad_found;
-      }
    
    
    
@@ -1465,6 +1429,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return pull_tight_algo.smoothen_end_corners_at_trace(this);
       }
 
+   @Override
    public ShapeTile get_trace_connection_shape(ShapeSearchTree p_search_tree, int p_index)
       {
       if (p_index < 0 || p_index >= tile_shape_count())
@@ -1572,13 +1537,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * checks, that the connection restrictions to the contact pins are satisfied. 
     * If p_at_start, the start of this trace is checked, else the end. 
     * @return false, if a pin is at that end, where the connection is checked and the connection is not ok.
-
-    * checks, that the connection restrictions to the contact pins are
-    * satisfied. If p_at_start, the start of this trace is checked, else the
-    * end. Returns false, if a pin is at that end, where the connection is
-    * checked and the connection is not ok.
     */
-   public boolean check_connection_to_pin(boolean p_at_start)
+   private boolean check_connection_to_pin(boolean p_at_start)
       {
       if (corner_count() < 2) return true;
 

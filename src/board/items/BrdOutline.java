@@ -248,8 +248,8 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       }
 
    /**
-    * The board shape outside the outline curves, where a keepout will be generated The outline curves are holes of the
-    * keepout_area.
+    * The board shape outside the outline curves, where a keepout will be generated 
+    * The outline curves are holes of the keepout_area.
     */
    public PlaArea get_keepout_area()
       {
@@ -262,6 +262,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
             }
          keepout_area = new PolylineArea(r_board.bounding_box, hole_arr);
          }
+      
       return keepout_area;
       }
 

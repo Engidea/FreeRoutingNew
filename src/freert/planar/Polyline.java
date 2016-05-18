@@ -960,12 +960,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline mirror_vertical(PlaPointInt p_pole)
       {
-      PlaLineInt[] new_arr = new PlaLineInt[plalinelen()];
+      PlaLineIntAlist new_arr = new PlaLineIntAlist(plalinelen());
     
-      for (int index = 0; index < new_arr.length; ++index)
+      int len = plalinelen();
+      
+      for (int index = 0; index < len; ++index)
          {
-         new_arr[index] = plaline(index).mirror_vertical(p_pole);
+         new_arr.add( plaline(index).mirror_vertical(p_pole));
          }
+      
       return new Polyline(new_arr);
       }
 

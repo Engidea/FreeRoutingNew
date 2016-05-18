@@ -792,7 +792,8 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    /**
-    * Calculates the nearest trace exit point of the pin on p_layer. Returns null, if the pin has no trace exit restrictions.
+    * Calculates the nearest trace exit point of the pin on p_layer. 
+    * @return null, if the pin has no trace exit restrictions.
     */
    public PlaPointFloat nearest_trace_exit_corner(PlaPointFloat p_from_point, int p_trace_half_width, int p_layer)
       {

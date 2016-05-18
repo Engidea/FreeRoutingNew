@@ -91,8 +91,7 @@ public interface PlaArea extends PlaObject
    boolean contains(PlaPoint p_point);
 
    /**
-    * Calculates an approximation of the nearest point of the shape to
-    * p_from_point
+    * Calculates an approximation of the nearest point of the shape to p_from_point
     */
    PlaPointFloat nearest_point_approx(PlaPointFloat p_ftom_point);
 
