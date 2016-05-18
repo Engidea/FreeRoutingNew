@@ -40,6 +40,7 @@ import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
+import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -709,27 +710,27 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if (other.reverse_order) other_poly = other_poly.reverse();
       
-      boolean skip_line = other_poly.plaline(other_poly.plalinelen(-2)).is_equal_or_opposite(polyline.plaline(1));
-      int new_line_count = polyline.plalinelen() + other_poly.plalinelen() - 2;
-      if (skip_line)
-         {
-         --new_line_count;
-         }
+      boolean skip_line = other_poly.plaline_last_next().is_equal_or_opposite(polyline.plaline_first_next());
       
-      PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
-      other_poly.plaline_copy(0, new_lines, 0, other_poly.plalinelen(-1));
-      int join_pos = other_poly.plalinelen(-1);
-      if (skip_line)
-         {
-         --join_pos;
-         }
+      // assume I want to copy other up until the end line
+      int my_copy_count = other_poly.plalinelen(-1);
       
-      polyline.plaline_copy(1, new_lines, join_pos, polyline.plalinelen(-1));
+      // but if I need to stip the previous one, copy one less
+      if (skip_line) my_copy_count--;
+      
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plalinelen() + other_poly.plalinelen());
+      
+      // append other up until the last line or less, if requested
+      other_poly.plaline_append(new_lines, 0, my_copy_count);
+      
+      // then append myself, after the first line to the end
+      polyline.plaline_append(new_lines, 1);
+
       Polyline joined_polyline = new Polyline(new_lines);
-      if (joined_polyline.plalinelen() != new_line_count)
+
+      if (joined_polyline.plalinelen() != new_lines.size())
          {
-         // consecutive parallel lines where skipped at the join location
-         // combine without performance optimation
+         // consecutive parallel lines where skipped at the join location combine without performance optimation
          r_board.search_tree_manager.remove(this);
          polyline = joined_polyline;
          clear_derived_data();
@@ -737,13 +738,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          }
       else
          {
-         // reuse the tree entries for better performance
-         // create the changed line shape at the join location
+         // reuse the tree entries for better performance create the changed line shape at the join location
          int to_no = other_poly.plalinelen();
-         if (skip_line)
-            {
-            --to_no;
-            }
+
+         if (skip_line) --to_no;
+
          r_board.search_tree_manager.merge_entries_in_front(other.other_trace, this, joined_polyline, other_poly.plalinelen(-3), to_no);
          other.other_trace.clear_search_tree_entries();
          polyline = joined_polyline;
@@ -838,29 +837,25 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if (other.reverse_order) other_poly = other_poly.reverse();
       
-      boolean skip_line = polyline.plaline(polyline.plalinelen(-2)).is_equal_or_opposite(other_poly.plaline(1));
+      boolean skip_line = polyline.plaline_last_next().is_equal_or_opposite(other_poly.plaline_first_next());
       
-      int new_line_count = polyline.plalinelen() + other_poly.plalinelen() - 2;
+      // assume I want to copy myself up until the end line
+      int my_copy_count = polyline.plalinelen(-1);
       
-      if (skip_line)
-         {
-         --new_line_count;
-         }
+      // but if I need to stip the previous one, copy one less
+      if (skip_line) my_copy_count--;
       
-      PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
-      polyline.plaline_copy( 0, new_lines, 0, polyline.plalinelen(-1));
-      int join_pos = polyline.plalinelen(-1);
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plalinelen() + other_poly.plalinelen());
       
-      if (skip_line)
-         {
-         --join_pos;
-         }
+      // append myself up until the last line or less, if requested
+      polyline.plaline_append(new_lines, 0, my_copy_count);
       
-      other_poly.plaline_copy( 1, new_lines, join_pos, other_poly.plalinelen(-1));
+      // then append other, after the first line to the end
+      other_poly.plaline_append(new_lines, 1);
       
       Polyline joined_polyline = new Polyline(new_lines);
       
-      if (joined_polyline.plalinelen() != new_line_count)
+      if (joined_polyline.plalinelen() != new_lines.size())
          {
          // consecutive parallel lines where skipped at the join location combine without performance optimation
          r_board.search_tree_manager.remove(this);
@@ -873,10 +868,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          // reuse tree entries for better performance create the changed line shape at the join location
          int to_no = polyline.plalinelen();
-         if (skip_line)
-            {
-            --to_no;
-            }
+
+         if (skip_line) --to_no;
          
          r_board.search_tree_manager.merge_entries_at_end(other.other_trace, this, joined_polyline, polyline.plalinelen(-3), to_no);
          other.other_trace.clear_search_tree_entries();

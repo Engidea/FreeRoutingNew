@@ -1396,6 +1396,39 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
    
    /**
+    * this would be the "starting line
+    */
+   public PlaLineInt plaline_first ( )
+      {
+      return plaline(0);
+      }
+   
+   /**
+    * this would be the first actual line in polyline
+    */
+   public PlaLineInt plaline_first_next ( )
+      {
+      return plaline(1);
+      }
+   
+   /**
+    * this would be the "ending" line
+    */
+   public PlaLineInt plaline_last ( )
+      {
+      return plaline(plalinelen(-1));
+      }
+
+   /**
+    * this would be the actual last line before the ending
+    */
+   public PlaLineInt plaline_last_next ( )
+      {
+      return plaline(plalinelen(-2));
+      }
+
+   
+   /**
     * replacement for getting len instead of using direct array
     * @return
     */
