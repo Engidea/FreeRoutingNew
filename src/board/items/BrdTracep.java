@@ -1498,6 +1498,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    public void change(Polyline p_new_polyline)
       {
+      if ( p_new_polyline == null ) return;
+
+      art_item_clear(); // need to clean up possible autoroute item
+      
       if (! is_on_the_board())
          {
          // Just change the polyline of this trace.
@@ -1505,20 +1509,16 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          return;
          }
 
-      art_item_clear(); // need to clean up possible autoroute item
-
-      // The precalculated tile shapes must not be cleared here here because
-      // they are used and modified
+      // The precalculated tile shapes must not be cleared here here because they are used and modified
       // in ShapeSearchTree.change_entries.
 
       r_board.item_list.save_for_undo(this);
 
-      // for performance reasons there is some effort to reuse
-      // ShapeTree entries of the old trace in the changed trace
+      // for performance reasons there is some effort to reuse ShapeTree entries of the old trace in the changed trace
 
-      // look for the first line in p_new_polyline different from
-      // the lines of the existung trace
+      // look for the first line in p_new_polyline different from the lines of the existung trace
       int last_index = Math.min(p_new_polyline.plalinelen(), polyline.plalinelen());
+      
       int index_of_first_different_line = last_index;
 
       for (int index = 0; index < last_index; ++index)
@@ -1529,12 +1529,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             break;
             }
          }
-      if (index_of_first_different_line == last_index)
-         {
-         return; // both polylines are equal, no change nessesary
-         }
-      // look for the last line in p_new_polyline different from
-      // the lines of the existung trace
+      
+      // both polylines are equal, no change nessesary, does this ever happen ?
+      if (index_of_first_different_line == last_index)  return; 
+
+      // look for the last line in p_new_polyline different from the lines of the existung trace
       int index_of_last_different_line = -1;
 
       for (int index = 1; index <= last_index; ++index)
@@ -1545,10 +1544,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             break;
             }
          }
-      if (index_of_last_different_line < 0)
-         {
-         return; // both polylines are equal, no change nessesary
-         }
+      
+      /// both polylines are equal, no change nessesary      
+      if ( index_of_last_different_line < 0) return; 
+      
       int keep_at_start_count = Math.max(index_of_first_different_line - 2, 0);
       int keep_at_end_count = Math.max(p_new_polyline.plalinelen() - index_of_last_different_line - 3, 0);
       r_board.search_tree_manager.change_entries(this, p_new_polyline, keep_at_start_count, keep_at_end_count);
@@ -1566,7 +1565,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          clip_shape = changed_area.get_area(get_layer());
          }
 
-      normalize(clip_shape);
+      normalize_recu(clip_shape, 11);
       }
 
    /**
@@ -1837,11 +1836,14 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       change(changed_polyline);
 
       // create an shove_fixed exit line. Interesting...
-      curr_lines = new PlaLineInt[3];
-      curr_lines[0] = new PlaLineInt(pin_center, pin_exit_direction.turn_45_degree(2));
-      curr_lines[1] = nearest_pin_exit_ray;
-      curr_lines[2] = offset_pin_shape.border_line(nearest_border_line_no);
-      Polyline exit_line_segment = new Polyline(curr_lines);
+      
+      PlaLineIntAlist s_lines = new PlaLineIntAlist(3);
+      
+      s_lines.add( new PlaLineInt(pin_center, pin_exit_direction.turn_45_degree(2)));
+      s_lines.add( nearest_pin_exit_ray );
+      s_lines.add( offset_pin_shape.border_line(nearest_border_line_no) );
+
+      Polyline exit_line_segment = new Polyline(s_lines);
       
       r_board.insert_trace(exit_line_segment, get_layer(), get_half_width(), net_nos, clearance_idx(), ItemFixState.SHOVE_FIXED);
       
