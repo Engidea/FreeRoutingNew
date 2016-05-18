@@ -873,13 +873,16 @@ public final class RoutingBoard implements java.io.Serializable
       boolean result = false;
       boolean something_changed = true;
       BrdItem curr_item = null;
+      
+      // It was getting stuck, so, the simplest thing to do is to add a timeout, until the whole system is fixed
+      long time_end = System.currentTimeMillis() + 20 * 1000;
 
-      while (something_changed)
+      while (something_changed && System.currentTimeMillis() < time_end  )
          {
          something_changed = false;
          Iterator<UndoableObjectNode> it = item_list.start_read_object();
          
-         for (;;)
+         while ( System.currentTimeMillis() < time_end )
             {
             try
                {
