@@ -20,6 +20,8 @@
 
 package freert.planar;
 
+import java.util.ArrayList;
+
 /**
  * Interface describing functionality for connected 2-dimensional shapes in the plane. A Shape object is expected to be simply
  * connected, that means, it may not contain holes.
@@ -101,7 +103,7 @@ public interface PlaShape extends PlaArea
     * Cuts out the parts of p_polyline in the interiour of this shape and returns a list of the remaining pieces of p_polyline.
     * Pieces completely contained in the border of this shape are not returned.
     */
-   Polyline[] cutout(Polyline p_polyline);
+   ArrayList<Polyline> cutout(Polyline p_polyline);
 
    /**
     * Auxiliary function to implement the same function with parameter type Shape.

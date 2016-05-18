@@ -21,6 +21,7 @@
 package freert.planar;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 /**
  * Describes functionality of a circle shape in the plane.
@@ -349,7 +350,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public Polyline[] cutout(Polyline p_polyline)
+   public ArrayList<Polyline> cutout(Polyline p_polyline)
       {
       System.out.println("Circle.cutout not yet implemented");
       return null;

@@ -964,8 +964,11 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
     * Cuts out the parts of p_polyline in the interiour of this shape and returns a list of the remaining pieces of p_polyline.
     * Pieces completely contained in the border of this shape are not returned.
     */
-   public Polyline[] cutout(Polyline p_polyline)
+   @Override
+   public ArrayList<Polyline> cutout(Polyline p_polyline)
       {
+      ArrayList<Polyline> risul = new ArrayList<Polyline>(3);
+      
       int[][] intersection_no = entrance_points(p_polyline);
       PlaPoint first_corner = p_polyline.corner_first();
       boolean first_corner_is_inside = contains_inside(first_corner);
@@ -974,19 +977,15 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          {
          // no intersections
 
-         if (first_corner_is_inside)
          // p_polyline is contained completely in this shape
-            {
-            return new Polyline[0];
-            }
+         if (first_corner_is_inside) return risul;
          
          // p_polyline is completely outside
-         Polyline[] result = new Polyline[1];
-         result[0] = p_polyline;
-         return result;
+         risul.add( p_polyline);
+         return risul;
          }
       
-      Collection<Polyline> pieces = new LinkedList<Polyline>();
+      LinkedList<Polyline> pieces = new LinkedList<Polyline>();
       int curr_intersection_no = 0;
       int[] curr_intersection_tuple = intersection_no[curr_intersection_no];
       
@@ -1003,12 +1002,12 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
             // otherwise skip 1 point outside polyline at the start
             int curr_polyline_intersection_no = curr_intersection_tuple[0];
             
-            PlaLineInt[] curr_lines = new PlaLineInt[curr_polyline_intersection_no + 2];
+            PlaLineIntAlist curr_lines = new PlaLineIntAlist(curr_polyline_intersection_no + 2);
             
-            p_polyline.plaline_copy(0, curr_lines, 0, curr_polyline_intersection_no + 1);
+            p_polyline.plaline_append(curr_lines, 0, curr_polyline_intersection_no + 1);
             
             // close the polyline piece with the intersected edge line.
-            curr_lines[curr_polyline_intersection_no + 1] = border_line(curr_intersection_tuple[1]);
+            curr_lines.add(border_line(curr_intersection_tuple[1]) );
 
             // remove try catch and added a validation test before add
             Polyline curr_piece = new Polyline(curr_lines);
@@ -1042,12 +1041,15 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
 
          if (insert_piece)
             {
-            PlaLineInt[] curr_lines = new PlaLineInt[next_intersection_no_of_polyline - curr_intersection_no_of_polyline + 3];
-            curr_lines[0] = border_line(curr_intersection_tuple[1]);
+            int want_len = next_intersection_no_of_polyline - curr_intersection_no_of_polyline + 3;
             
-            p_polyline.plaline_copy(curr_intersection_no_of_polyline, curr_lines, 1, curr_lines.length - 2);
+            PlaLineIntAlist curr_lines = new PlaLineIntAlist(want_len);
             
-            curr_lines[curr_lines.length - 1] = border_line(next_intersection_tuple[1]);
+            curr_lines.add( border_line(curr_intersection_tuple[1]));
+            
+            p_polyline.plaline_append( curr_lines, curr_intersection_no_of_polyline, want_len - 2);
+            
+            curr_lines.add( border_line(next_intersection_tuple[1]));
 
             // remove try catch and added a validation test before add
             Polyline curr_piece = new Polyline(curr_lines);
@@ -1063,11 +1065,14 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          {
          curr_intersection_tuple = intersection_no[curr_intersection_no];
          int curr_polyline_intersection_no = curr_intersection_tuple[0];
-         PlaLineInt[] curr_lines = new PlaLineInt[p_polyline.plalinelen(-curr_polyline_intersection_no + 1)];
-
-         curr_lines[0] = border_line(curr_intersection_tuple[1]);
          
-         p_polyline.plaline_copy(curr_polyline_intersection_no, curr_lines, 1, curr_lines.length - 1);
+         int want_len = p_polyline.plalinelen(-curr_polyline_intersection_no + 1);
+         
+         PlaLineIntAlist curr_lines = new PlaLineIntAlist(want_len);
+
+         curr_lines.add( border_line(curr_intersection_tuple[1]));
+         
+         p_polyline.plaline_append( curr_lines, curr_polyline_intersection_no, want_len - 1);
 
          // remove try catch and added a validation test before add
          Polyline curr_piece = new Polyline(curr_lines);
@@ -1075,13 +1080,11 @@ public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
          if ( curr_piece.is_valid() )  pieces.add(curr_piece);
          }
 
-      Polyline[] result = new Polyline[pieces.size()];
+      risul.ensureCapacity(pieces.size());
+
+      risul.addAll(pieces);
       
-      Iterator<Polyline> it = pieces.iterator();
-      
-      for (int index = 0; index < result.length; ++index) result[index] = it.next();
-      
-      return result;
+      return risul;
       }
 
    public ShapeTile[] split_to_convex()

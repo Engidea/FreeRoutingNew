@@ -271,6 +271,7 @@ public abstract class AlgoPullTight
 
    /**
     * tries to shorten p_polyline by relocating its lines
+    * This is overridden in any angle (not used) and instead used in 45 an 90 degrees
     */
    protected Polyline reposition_lines(Polyline p_polyline)
       {
@@ -462,7 +463,7 @@ public abstract class AlgoPullTight
          // check, if skipping the line of length 0 does not result in a clearance violation
          // Now, what happens is that the resulting polyline is invalid since it ends up with parallel lines
          
-         PlaLineIntAlist curr_lines = p_polyline.plaline_copy(index);
+         PlaLineIntAlist curr_lines = p_polyline.plaline_skip(index,index);
          
          Polyline tmp = new Polyline(curr_lines);
          

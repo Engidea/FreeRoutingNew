@@ -1269,24 +1269,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return result;
       }
 
-   /**
-    * create a new Polyline by skipping the lines of this Polyline from p_from_no to p_to_no
-    */
-   public Polyline skip_lines(int p_from_no, int p_to_no)
-      {
-      if (p_from_no < 0 || p_to_no > plalinelen(-1) || p_from_no > p_to_no)
-         {
-         return this;
-         }
-      
-      PlaLineIntAlist new_lines = new PlaLineIntAlist(plalinelen());
-      
-      plaline_append(new_lines, 0, p_from_no);
-      
-      plaline_append( new_lines, p_to_no + 1);
-      
-      return new Polyline(new_lines);
-      }
 
    public boolean contains(PlaPointInt p_point)
       {
@@ -1366,7 +1348,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (new_last_corner.equals(corner(corner_count() - 2)))
          {
          // skip the last line
-         return skip_lines(p_new_line_count - 1, p_new_line_count - 1);
+         return new Polyline( plaline_skip(p_new_line_count - 1, p_new_line_count - 1));
          }
       
       PlaLineIntAlist new_lines = new PlaLineIntAlist(p_new_line_count);
@@ -1467,32 +1449,25 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return risul;
       }
    
+   
    /**
-    * Copy current plaline array into a new one skipping index given
-    * The resulting copy will be one line short, obviously
+    * create a new Polyline by skipping the lines of this Polyline from p_from_no to p_to_no
+    * The numebr are indices, so if you say 2,2 the elements 0,1,3,4... will be copyed
     */
-   public PlaLineIntAlist plaline_copy(int skip_index)
+   public PlaLineIntAlist plaline_skip(int p_from_no, int p_to_no)
       {
-      int src_len = plalinelen();
-      int index;
+      if (p_from_no < 0 || p_to_no > plalinelen(-1) || p_from_no > p_to_no)
+         {
+         return null;
+         }
       
-      PlaLineIntAlist risul = new PlaLineIntAlist(src_len);
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(plalinelen());
       
-      for (index=0; index<skip_index; index++)
-         risul.add( plaline(index) );
+      plaline_append(new_lines, 0, p_from_no);
       
-      index++; // skip the skip_index
+      plaline_append( new_lines, p_to_no + 1);
       
-      for (; index<src_len; index++)
-         risul.add ( plaline(index) );
-      
-      return risul;
-      }
-
-   public void plaline_copy(int src_pos, PlaLineInt [] dest, int dest_pos, int length )
-      {
-      for (int index=0; index<length; index++)
-         dest[dest_pos+index] = plaline(src_pos+index);
+      return new_lines;
       }
    
    /**

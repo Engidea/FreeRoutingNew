@@ -16,6 +16,7 @@
 
 package board.shape;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import board.BrdFromSide;
@@ -294,23 +295,24 @@ public final class ShapeTraceEntries
          offset_shape = offset_shape.offset(cl_offset);
          }
       Polyline trace_lines = p_trace.polyline();
-      Polyline[] pieces = offset_shape.cutout(trace_lines);
-      if (pieces.length == 1 && pieces[0] == trace_lines)
+      ArrayList<Polyline> pieces = offset_shape.cutout(trace_lines);
+      if (pieces.size() == 1 && pieces.get(0) == trace_lines)
          {
          // nothing cut off
          return;
          }
-      if (pieces.length == 2 && offset_shape.is_outside(pieces[0].corner_first()) && offset_shape.is_outside(pieces[1].corner_last()))
+      
+      if (pieces.size() == 2 && offset_shape.is_outside(pieces.get(0).corner_first()) && offset_shape.is_outside(pieces.get(1).corner_last()))
          {
-         fcutout_trace_fast(p_trace, pieces[0], pieces[1]);
+         fcutout_trace_fast(p_trace, pieces.get(0), pieces.get(1));
          }
       else
          {
          board.remove_item(p_trace);
-         for (int index = 0; index < pieces.length; ++index)
+         for (int index = 0; index < pieces.size(); ++index)
             {
             board.insert_trace_without_cleaning(
-                  pieces[index], 
+                  pieces.get(index), 
                   p_trace.get_layer(), 
                   p_trace.get_half_width(), 
                   p_trace.net_nos, 

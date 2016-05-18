@@ -823,7 +823,8 @@ public final class AlgoShoveTrace
          return null;
          }
       
-      Polyline[] pieces = offset_shape.cutout(p_polyline); 
+      ArrayList<Polyline> pieces = offset_shape.cutout(p_polyline); 
+      
       // build a circuit around the offset_shape in counter clock sense
       // from the first intersection point to the second intersection point
       int first_intersection_side_no = entries[0][1];
@@ -865,14 +866,14 @@ public final class AlgoShoveTrace
       Polyline substitute_polyline = new Polyline(substitute_lines);
       Polyline result = substitute_polyline;
 
-      if (pieces.length > 0)
+      if (pieces.size() > 0)
          {
-         result = pieces[0].combine(substitute_polyline);
+         result = pieces.get(0).combine(substitute_polyline);
          }
       
-      if (pieces.length > 1)
+      if (pieces.size() > 1)
          {
-         result = result.combine(pieces[1]);
+         result = result.combine(pieces.get(1));
          }
       
       return spring_over(result, p_half_width, p_layer, p_net_no_arr, p_cl_type, p_over_connected_pins, p_recursion_depth - 1, p_contact_pins);

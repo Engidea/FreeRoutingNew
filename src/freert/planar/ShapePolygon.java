@@ -216,7 +216,7 @@ public final class ShapePolygon extends ShapePolyline
       }
 
    @Override
-   public Polyline[] cutout(Polyline p_polyline)
+   public ArrayList<Polyline> cutout(Polyline p_polyline)
       {
       System.out.println("PolygonShape.cutout not yet implemented");
       return null;
