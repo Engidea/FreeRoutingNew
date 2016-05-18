@@ -55,6 +55,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -333,7 +335,7 @@ public final class BoardFrame
          {
          // Read the default GUI settings, if GUI default file exists.
          stat.userPrintln("try open "+defaults_file);
-         InputStream input_stream = new java.io.FileInputStream(defaults_file);
+         InputStream input_stream = new FileInputStream(defaults_file);
          GuiConfigFile.read(this, board_panel.board_handling, input_stream);
          input_stream.close();
          }
@@ -376,7 +378,7 @@ public final class BoardFrame
          File to_file = design_file.get_output_file();
          stat.userPrintln(classname+"save to_file "+to_file);
 
-         java.io.OutputStream  output_stream = new java.io.FileOutputStream(to_file);
+         java.io.OutputStream  output_stream = new FileOutputStream(to_file);
          java.io.ObjectOutputStream object_stream = new java.io.ObjectOutputStream(output_stream);
          
          board_panel.board_handling.save_design_file(object_stream);

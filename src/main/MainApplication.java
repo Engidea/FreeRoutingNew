@@ -21,16 +21,19 @@
 package main;
 
 import gui.BoardFrame;
+import gui.varie.FileFilter;
 import gui.varie.GuiResources;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.LinkedList;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import board.varie.DesignFile;
@@ -106,7 +109,7 @@ public class MainApplication extends JFrame
     */
    private void open_board_design_action()
       {
-      DesignFile design_file = DesignFile.open_dialog(stat, main_options.design_dir_name);
+      DesignFile design_file = open_dialog(stat, main_options.design_dir_name);
       
       if (design_file == null)
          {
@@ -130,6 +133,23 @@ public class MainApplication extends JFrame
       }
 
 
+   /**
+    * Shows a file chooser for opening a design file
+    */
+   private DesignFile open_dialog(Stat stat, String p_design_dir_name)
+      {
+      JFileChooser file_chooser = new JFileChooser(p_design_dir_name);
+      FileFilter file_filter = new FileFilter(DesignFile.all_file_extensions);
+      file_chooser.setFileFilter(file_filter);
+      file_chooser.showOpenDialog(null);
+      
+      File curr_design_file = file_chooser.getSelectedFile();
+      
+      if (curr_design_file == null) return null;
+      
+      return new DesignFile(stat, curr_design_file, file_chooser);
+      }
+   
    /**
     * Creates a new board frame containing the data of the input design file.
     * Returns null, if an error occurred.
@@ -163,9 +183,10 @@ public class MainApplication extends JFrame
          String file_name = p_design_file.get_name();
          String[] name_parts = file_name.split("\\.");
          String confirm_import_rules_message = resources.getString("confirm_import_rules");
-         DesignFile.read_rules_file(name_parts[0], p_design_file.get_parent(), new_frame.board_panel.board_handling, confirm_import_rules_message);
+         p_design_file.read_rules_file(name_parts[0], p_design_file.get_parent(), new_frame.board_panel.board_handling, confirm_import_rules_message);
          new_frame.refresh_windows();
          }
+      
       return new_frame;
       }
 

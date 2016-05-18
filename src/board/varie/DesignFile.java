@@ -24,7 +24,11 @@ import gui.BoardFrame;
 import gui.varie.FileFilter;
 import gui.varie.GuiResources;
 import gui.win.WindowMessage;
+import interactive.IteraBoard;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.OutputStream;
 import javax.swing.JFileChooser;
 import main.Stat;
@@ -48,51 +52,21 @@ public final class DesignFile
    private File output_file;
    private final File input_file;
 
-   private javax.swing.JFileChooser file_chooser;
+   private JFileChooser file_chooser;
 
-   public static DesignFile get_instance(Stat stat, String p_design_file_name)
-      {
-      if (p_design_file_name == null)
-         {
-         return null;
-         }
-      DesignFile result = new DesignFile(stat, new java.io.File(p_design_file_name), null);
-      return result;
-      }
-
-   /**
-    * Shows a file chooser for opening a design file
-    */
-   public static DesignFile open_dialog(Stat stat, String p_design_dir_name)
-      {
-      DesignFile result;
-
-      JFileChooser file_chooser = new JFileChooser(p_design_dir_name);
-      FileFilter file_filter = new FileFilter(all_file_extensions);
-      file_chooser.setFileFilter(file_filter);
-      file_chooser.showOpenDialog(null);
-      java.io.File curr_design_file = file_chooser.getSelectedFile();
-      if (curr_design_file == null)
-         {
-         return null;
-         }
-      
-      result = new DesignFile(stat, curr_design_file, file_chooser);
-      return result;
-      }
 
    /**
     * Creates a new instance of DesignFile. If p_is_webstart, the application was opened with Java Web Start.
     */
-   public DesignFile(Stat stat, File p_design_file, javax.swing.JFileChooser p_file_chooser)
+   public DesignFile(Stat p_stat, File p_design_file, JFileChooser p_file_chooser)
       {
-      this.stat = stat;
+      stat = p_stat;
       
       resources = new GuiResources(stat, "gui.resources.BoardMenuFile");      
 
-      this.file_chooser = p_file_chooser;
-      this.input_file = p_design_file;
-      this.output_file = p_design_file;
+      file_chooser = p_file_chooser;
+      input_file = p_design_file;
+      output_file = p_design_file;
 
       if (p_design_file != null)
          {
@@ -101,7 +75,7 @@ public final class DesignFile
          if (name_parts[name_parts.length - 1].compareToIgnoreCase(binary_file_extension) != 0)
             {
             String binfile_name = name_parts[0] + "." + binary_file_extension;
-            this.output_file = new java.io.File(p_design_file.getParent(), binfile_name);
+            output_file = new File(p_design_file.getParent(), binfile_name);
             }
          }
       }
@@ -118,7 +92,7 @@ public final class DesignFile
 
       try
          {
-         return new java.io.FileInputStream(input_file);
+         return new FileInputStream(input_file);
          }
       catch (Exception e)
          {
@@ -147,27 +121,27 @@ public final class DesignFile
     */
    public void save_as_dialog(java.awt.Component p_parent, BoardFrame p_board_frame)
       {
-      String[] file_name_parts = this.get_name().split("\\.", 2);
+      String[] file_name_parts = get_name().split("\\.", 2);
       String design_name = file_name_parts[0];
 
-      if (this.file_chooser == null)
+      if (file_chooser == null)
          {
          String design_dir_name;
-         if (this.output_file == null)
+         if (output_file == null)
             {
             design_dir_name = null;
             }
          else
             {
-            design_dir_name = this.output_file.getParent();
+            design_dir_name = output_file.getParent();
             }
-         this.file_chooser = new javax.swing.JFileChooser(design_dir_name);
+         file_chooser = new JFileChooser(design_dir_name);
          FileFilter file_filter = new FileFilter(all_file_extensions);
-         this.file_chooser.setFileFilter(file_filter);
+         file_chooser.setFileFilter(file_filter);
          }
 
-      this.file_chooser.showSaveDialog(p_parent);
-      java.io.File new_file = file_chooser.getSelectedFile();
+      file_chooser.showSaveDialog(p_parent);
+      File new_file = file_chooser.getSelectedFile();
       if (new_file == null)
          {
          p_board_frame.screen_messages.set_status_message(resources.getString("message_1"));
@@ -179,7 +153,7 @@ public final class DesignFile
       if (found_file_extension.compareToIgnoreCase(binary_file_extension) == 0)
          {
          p_board_frame.screen_messages.set_status_message(resources.getString("message_2") + " " + new_file.getName());
-         this.output_file = new_file;
+         output_file = new_file;
          p_board_frame.save();
          }
       else
@@ -192,7 +166,7 @@ public final class DesignFile
          java.io.OutputStream output_stream;
          try
             {
-            output_stream = new java.io.FileOutputStream(new_file);
+            output_stream = new FileOutputStream(new_file);
             }
          catch (Exception e)
             {
@@ -215,16 +189,16 @@ public final class DesignFile
     */
    public boolean write_specctra_ses_file(BoardFrame p_board_frame)
       {
-      String design_file_name = this.get_name();
+      String design_file_name = get_name();
       String[] file_name_parts = design_file_name.split("\\.", 2);
       String design_name = file_name_parts[0];
          {
          String output_file_name = design_name + ".ses";
-         java.io.File curr_output_file = new java.io.File(get_parent(), output_file_name);
+         File curr_output_file = new File(get_parent(), output_file_name);
          java.io.OutputStream output_stream;
          try
             {
-            output_stream = new java.io.FileOutputStream(curr_output_file);
+            output_stream = new FileOutputStream(curr_output_file);
             }
          catch (Exception e)
             {
@@ -256,13 +230,13 @@ public final class DesignFile
       {
       String rules_file_name = p_design_name + RULES_FILE_EXTENSION;
 
-      File rules_file = new java.io.File(this.get_parent(), rules_file_name);
+      File rules_file = new File(get_parent(), rules_file_name);
       
       stat.userPrintln("board write rule to "+rules_file);
       
       try
          {
-         OutputStream output_stream = new java.io.FileOutputStream(rules_file);
+         OutputStream output_stream = new FileOutputStream(rules_file);
          RulesFile.write(p_board_handling, output_stream, p_design_name);
          }
       catch (java.io.IOException e)
@@ -275,44 +249,42 @@ public final class DesignFile
       return true;
       }
 
-   public static boolean read_rules_file(String p_design_name, String p_parent_name, interactive.IteraBoard p_board_handling, String p_confirm_message)
+   public boolean read_rules_file(String p_design_name, String p_parent_name, IteraBoard p_board_handling, String p_confirm_message)
       {
-
       boolean result = true;
       String rule_file_name = p_design_name + ".rules";
       boolean dsn_file_generated_by_host = p_board_handling.get_routing_board().host_com.specctra_parser_info.dsn_file_generated_by_host;
 
+      try
          {
+         File rules_file = new File(p_parent_name, rule_file_name);
+         java.io.InputStream input_stream = new FileInputStream(rules_file);
+         if (input_stream != null && dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message))
+            {
+            result = RulesFile.read(input_stream, p_design_name, p_board_handling);
+            }
+         else
+            {
+            result = false;
+            }
          try
             {
-            java.io.File rules_file = new java.io.File(p_parent_name, rule_file_name);
-            java.io.InputStream input_stream = new java.io.FileInputStream(rules_file);
-            if (input_stream != null && dsn_file_generated_by_host && WindowMessage.confirm(p_confirm_message))
+            if (input_stream != null)
                {
-               result = board.varie.RulesFile.read(input_stream, p_design_name, p_board_handling);
+               input_stream.close();
                }
-            else
-               {
-               result = false;
-               }
-            try
-               {
-               if (input_stream != null)
-                  {
-                  input_stream.close();
-                  }
-               rules_file.delete();
-               }
-            catch (java.io.IOException e)
-               {
-               result = false;
-               }
+            rules_file.delete();
             }
-         catch (java.io.FileNotFoundException e)
+         catch (java.io.IOException e)
             {
             result = false;
             }
          }
+      catch (FileNotFoundException e)
+         {
+         result = false;
+         }
+
       return result;
       }
 
@@ -330,11 +302,11 @@ public final class DesignFile
       String design_name = file_name_parts[0];
       String output_file_name = design_name + ".scr";
          {
-         java.io.File curr_output_file = new java.io.File(get_parent(), output_file_name);
+         File curr_output_file = new File(get_parent(), output_file_name);
          java.io.OutputStream output_stream;
          try
             {
-            output_stream = new java.io.FileOutputStream(curr_output_file);
+            output_stream = new FileOutputStream(curr_output_file);
             }
          catch (Exception e)
             {
@@ -360,14 +332,14 @@ public final class DesignFile
     * Gets the binary file for saving or null, if the design file is not available because the application is run with Java Web
     * Start.
     */
-   public java.io.File get_output_file()
+   public File get_output_file()
       {
-      return this.output_file;
+      return output_file;
       }
 
-   public java.io.File get_input_file()
+   public File get_input_file()
       {
-      return this.input_file;
+      return input_file;
       }
 
    public String get_parent()
@@ -379,7 +351,7 @@ public final class DesignFile
       return null;
       }
 
-   public java.io.File get_parent_file()
+   public File get_parent_file()
       {
       if (input_file != null)
          {
@@ -390,7 +362,7 @@ public final class DesignFile
 
    public boolean is_created_from_text_file()
       {
-      return this.input_file != this.output_file;
+      return input_file != output_file;
       }
 
    }
