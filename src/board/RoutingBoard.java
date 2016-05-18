@@ -867,10 +867,10 @@ public final class RoutingBoard implements java.io.Serializable
 
    /**
     * Normalizes the traces of this net
+    * No return value since nobody is checking...
     */
-   public boolean normalize_traces(int p_net_no)
+   public void normalize_traces(int p_net_no)
       {
-      boolean result = false;
       boolean something_changed = true;
       BrdItem curr_item = null;
       
@@ -880,21 +880,22 @@ public final class RoutingBoard implements java.io.Serializable
       while (something_changed && System.currentTimeMillis() < time_end  )
          {
          something_changed = false;
-         Iterator<UndoableObjectNode> it = item_list.start_read_object();
+         Iterator<UndoableObjectNode> itera = item_list.start_read_object();
          
          while ( System.currentTimeMillis() < time_end )
             {
             try
                {
-               curr_item = (BrdItem) item_list.read_object(it);
+               curr_item = (BrdItem) item_list.read_object(itera);
                }
             catch (ConcurrentModificationException e)
                {
                System.out.println(classname+"normalize_traces: concurrent change");
-               something_changed = true;
-               break;
+               // well, if it happens I may as well get out and let the whole system try again
+               return;
                }
             
+            // this just measn end of items.
             if (curr_item == null) break;
             
             if ( ! curr_item.is_on_the_board() ) continue;
@@ -908,17 +909,13 @@ public final class RoutingBoard implements java.io.Serializable
             if (curr_trace.normalize(null))
                {
                something_changed = true;
-               result = true;
                }
             else if (!curr_trace.is_user_fixed() && remove_if_cycle(curr_trace))
                {
                something_changed = true;
-               result = true;
                }
             }
          }
-      
-      return result;
       }
 
    /**

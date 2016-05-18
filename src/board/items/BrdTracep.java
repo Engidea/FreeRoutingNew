@@ -31,6 +31,7 @@ import board.shape.ShapeTreeEntry;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdChangedArea;
 import board.varie.BrdTraceExitRestriction;
+import board.varie.BrdTracepCombineFound;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -695,64 +696,29 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    private boolean combine_at_start(boolean p_ignore_areas)
       {
-      PlaPoint start_corner = corner_first();
+      PlaPoint end_corner = corner_first();
+
+      BrdTracepCombineFound other = search_end(end_corner, p_ignore_areas, false);
       
-      TreeSet<BrdItem> contacts = get_normal_contacts(start_corner, false, p_ignore_areas );
-      
-      if (contacts.size() != 1) return false;
-      
-      BrdTracep other_trace = null;
-      boolean trace_found = false;
-      boolean reverse_order = false;
-      Iterator<BrdItem> it = contacts.iterator();
-      while (it.hasNext())
-         {
-         BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdTracep)
-            {
-            other_trace = (BrdTracep) curr_ob;
-            if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == get_fixed_state())
-               {
-               if (start_corner.equals(other_trace.corner_last()))
-                  {
-                  trace_found = true;
-                  break;
-                  }
-               else if (start_corner.equals(other_trace.corner_first()))
-                  {
-                  reverse_order = true;
-                  trace_found = true;
-                  break;
-                  }
-               }
-            }
-         }
-      
-      if (!trace_found)
-         {
-         return false;
-         }
+      if (other.other_trace == null ) return false;
 
       r_board.item_list.save_for_undo(this);
 
       // create the lines of the joined polyline
-      Polyline other_lines;
-
-      if (reverse_order)
-         other_lines = other_trace.polyline.reverse();
-      else
-         other_lines = other_trace.polyline;
+      Polyline other_poly = other.other_trace.polyline;
       
-      boolean skip_line = other_lines.plaline(other_lines.plalinelen(-2)).is_equal_or_opposite(polyline.plaline(1));
-      int new_line_count = polyline.plalinelen() + other_lines.plalinelen() - 2;
+      if (other.reverse_order) other_poly = other_poly.reverse();
+      
+      boolean skip_line = other_poly.plaline(other_poly.plalinelen(-2)).is_equal_or_opposite(polyline.plaline(1));
+      int new_line_count = polyline.plalinelen() + other_poly.plalinelen() - 2;
       if (skip_line)
          {
          --new_line_count;
          }
       
       PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
-      other_lines.plaline_copy(0, new_lines, 0, other_lines.plalinelen(-1));
-      int join_pos = other_lines.plalinelen(-1);
+      other_poly.plaline_copy(0, new_lines, 0, other_poly.plalinelen(-1));
+      int join_pos = other_poly.plalinelen(-1);
       if (skip_line)
          {
          --join_pos;
@@ -773,26 +739,83 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          // reuse the tree entries for better performance
          // create the changed line shape at the join location
-         int to_no = other_lines.plalinelen();
+         int to_no = other_poly.plalinelen();
          if (skip_line)
             {
             --to_no;
             }
-         r_board.search_tree_manager.merge_entries_in_front(other_trace, this, joined_polyline, other_lines.plalinelen(-3), to_no);
-         other_trace.clear_search_tree_entries();
+         r_board.search_tree_manager.merge_entries_in_front(other.other_trace, this, joined_polyline, other_poly.plalinelen(-3), to_no);
+         other.other_trace.clear_search_tree_entries();
          polyline = joined_polyline;
          }
+      
       if ( ! polyline.is_valid() )
          {
          r_board.remove_item(this);
          }
-      r_board.remove_item(other_trace);
+      
+      r_board.remove_item(other.other_trace);
 
-      r_board.join_changed_area(start_corner.to_float(), get_layer());
+      r_board.join_changed_area(end_corner.to_float(), get_layer());
 
       return true;
       }
 
+   private BrdTracepCombineFound search_end (PlaPoint end_corner, boolean p_ignore_areas, boolean at_end )
+      {
+      PlaPoint a_corner,b_corner;
+      
+      BrdTracepCombineFound risul = new BrdTracepCombineFound();
+      
+      TreeSet<BrdItem> contacts = get_normal_contacts(end_corner, false, p_ignore_areas);
+      
+      
+      // combine cannot work with more than one contact...
+      if ( contacts.size() != 1 ) return risul;
+      
+      for ( BrdItem curr_ob : contacts )
+         {
+         if ( ! ( curr_ob instanceof BrdTracep) ) continue;
+         
+         BrdTracep other_trace = (BrdTracep) curr_ob;
+
+         if ( other_trace.get_layer() != get_layer() ) continue; 
+               
+         if ( ! other_trace.nets_equal(this) ) continue;
+         
+         if ( other_trace.get_half_width() != get_half_width() ) continue;
+         
+         // maybe this could be different ?
+         if ( other_trace.get_fixed_state() != get_fixed_state() ) continue;
+
+         if ( at_end )
+            {
+            a_corner = other_trace.corner_first();
+            b_corner = other_trace.corner_last();
+            }
+         else
+            {
+            a_corner = other_trace.corner_last();
+            b_corner = other_trace.corner_first();
+            }
+
+         if (end_corner.equals(a_corner))
+            {
+            risul.other_trace = other_trace;
+            return risul;
+            }
+         
+         if (end_corner.equals(b_corner))
+            {
+            risul.other_trace = other_trace;
+            risul.reverse_order = true;
+            return risul;
+            }
+         }
+      
+      return risul;
+      }
+   
    /**
     * looks, if this trace can be combined at its last point with another trace.
     * Returns true, if somthing was combined. The corners of the other trace
@@ -802,54 +825,18 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    private boolean combine_at_end(boolean p_ignore_areas)
       {
       PlaPoint end_corner = corner_last();
+
+      BrdTracepCombineFound other = search_end(end_corner, p_ignore_areas, true);
       
-      TreeSet<BrdItem> contacts = get_normal_contacts(end_corner, false, p_ignore_areas);
-      
-      if (contacts.size() != 1) return false;
-      
-      BrdTracep other_trace = null;
-      boolean trace_found = false;
-      boolean reverse_order = false;
-      Iterator<BrdItem> it = contacts.iterator();
-      while (it.hasNext())
-         {
-         BrdItem curr_ob = it.next();
-         if (curr_ob instanceof BrdTracep)
-            {
-            other_trace = (BrdTracep) curr_ob;
-            if (other_trace.get_layer() == get_layer() && other_trace.nets_equal(this) && other_trace.get_half_width() == get_half_width() && other_trace.get_fixed_state() == get_fixed_state())
-               {
-               if (end_corner.equals(other_trace.corner_first()))
-                  {
-                  trace_found = true;
-                  break;
-                  }
-               else if (end_corner.equals(other_trace.corner_last()))
-                  {
-                  reverse_order = true;
-                  trace_found = true;
-                  break;
-                  }
-               }
-            }
-         }
-      
-      if ( ! trace_found ) return false;
+      if (other.other_trace == null ) return false;
 
       r_board.item_list.save_for_undo(this);
       
       // create the lines of the joined polyline
 
-      Polyline other_poly;
+      Polyline other_poly = other.other_trace.polyline;
       
-      if (reverse_order)
-         {
-         other_poly = other_trace.polyline.reverse();
-         }
-      else
-         {
-         other_poly = other_trace.polyline;
-         }
+      if (other.reverse_order) other_poly = other_poly.reverse();
       
       boolean skip_line = polyline.plaline(polyline.plalinelen(-2)).is_equal_or_opposite(other_poly.plaline(1));
       
@@ -890,8 +877,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             {
             --to_no;
             }
-         r_board.search_tree_manager.merge_entries_at_end(other_trace, this, joined_polyline, polyline.plalinelen(-3), to_no);
-         other_trace.clear_search_tree_entries();
+         
+         r_board.search_tree_manager.merge_entries_at_end(other.other_trace, this, joined_polyline, polyline.plalinelen(-3), to_no);
+         other.other_trace.clear_search_tree_entries();
          polyline = joined_polyline;
          }
       
@@ -900,7 +888,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          r_board.remove_item(this);
          }
       
-      r_board.remove_item(other_trace);
+      r_board.remove_item(other.other_trace);
 
       r_board.join_changed_area(end_corner.to_float(), get_layer());
 
