@@ -668,12 +668,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       boolean something_changed = false;
       
-      if (combine_at_start(true))
+      if (combine_at_start())
          {
          something_changed = true;
          combine(recursion_depth);
          }
-      else if (combine_at_end(true))
+      else if (combine_at_end())
          {
          something_changed = true;
          combine(recursion_depth);
@@ -695,11 +695,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * In case of combine the other trace will be deleted and this trace will remain.
     * @returns true, if somthing was combined. 
     */
-   private boolean combine_at_start(boolean p_ignore_areas)
+   private boolean combine_at_start()
       {
       PlaPoint end_corner = corner_first();
 
-      BrdTracepCombineFound other = search_end(end_corner, p_ignore_areas, false);
+      BrdTracepCombineFound other = search_end(end_corner, false);
       
       if (other.other_trace == null ) return false;
 
@@ -760,14 +760,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return true;
       }
 
-   private BrdTracepCombineFound search_end (PlaPoint end_corner, boolean p_ignore_areas, boolean at_end )
+   private BrdTracepCombineFound search_end (PlaPoint end_corner, boolean at_end )
       {
       PlaPoint a_corner,b_corner;
       
       BrdTracepCombineFound risul = new BrdTracepCombineFound();
       
-      TreeSet<BrdItem> contacts = get_normal_contacts(end_corner, false, p_ignore_areas);
-      
+      TreeSet<BrdItem> contacts = get_normal_contacts(end_corner, false, true);
       
       // combine cannot work with more than one contact...
       if ( contacts.size() != 1 ) return risul;
@@ -821,11 +820,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * will be inserted at the end of thie trace. In case of combine the other
     * trace will be deleted and this trace will remain.
     */
-   private boolean combine_at_end(boolean p_ignore_areas)
+   private boolean combine_at_end()
       {
       PlaPoint end_corner = corner_last();
 
-      BrdTracepCombineFound other = search_end(end_corner, p_ignore_areas, true);
+      BrdTracepCombineFound other = search_end(end_corner, true);
       
       if (other.other_trace == null ) return false;
 

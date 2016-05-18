@@ -1279,9 +1279,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return this;
          }
       
-      PlaLineInt[] new_lines = new PlaLineInt[plalinelen() - (p_to_no - p_from_no + 1)];
-      plaline_copy(0, new_lines, 0, p_from_no);
-      plaline_copy(p_to_no + 1, new_lines, p_from_no, new_lines.length - p_from_no);
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(plalinelen());
+      
+      plaline_append(new_lines, 0, p_from_no);
+      
+      plaline_append( new_lines, p_to_no + 1);
+      
       return new Polyline(new_lines);
       }
 
