@@ -29,29 +29,8 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
    private static final long serialVersionUID = 1L;
 
    private final ArrayList<PlaPointInt> corners; 
-   
-   /**
-    * 
-    * @param p_point_arr
-    * @deprecated
-    */
-   public PlaPolygon(PlaPointInt[] p_point_arr)
-      {
-      corners = new ArrayList<PlaPointInt>(p_point_arr.length);
-      
-      for (PlaPointInt a_point : p_point_arr )
-         {
-         // if this point is already in the list
-         if ( has_point(a_point) ) continue;
-         
-         // if this point is "colinear" with some points in the list
-         if ( has_colinear(a_point)) continue;
-         
-         corners.add(a_point);
-         }
-      }
 
-   public PlaPolygon(ArrayList<PlaPointInt> p_point_list)
+   public PlaPolygon(PlaPointIntAlist p_point_list)
       {
       corners = new ArrayList<PlaPointInt>(p_point_list.size());
 
@@ -180,7 +159,7 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
       int corner_count = corners.size();
       int from_idx = corner_count-1;
       
-      ArrayList<PlaPointInt> reverse_corner_arr = new ArrayList<PlaPointInt>(corner_count);
+      PlaPointIntAlist reverse_corner_arr = new PlaPointIntAlist(corner_count);
 
       for (int index = 0; index < corner_count; ++index)
          reverse_corner_arr.add( corners.get(from_idx--) );

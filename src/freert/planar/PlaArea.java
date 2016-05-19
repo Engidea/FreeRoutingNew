@@ -24,7 +24,7 @@ package freert.planar;
 /**
  * An Area is a not necessarily simply connected Shape, which means, that it may
  * contain holes. The border and the holes of an Area are of class Shape.
- *
+ * An Area may not be defined by stratight lines, it could be curves...
  * @author Alfons Wirtz
  */
 public interface PlaArea extends PlaObject
@@ -59,7 +59,7 @@ public interface PlaArea extends PlaObject
    PlaShape get_border();
 
    /**
-    * Returns the array of holes, of this area.
+    * @return the array of holes, of this area.
     */
    PlaShape[] get_holes();
 

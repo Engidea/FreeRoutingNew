@@ -21,7 +21,7 @@
 package specctra;
 
 import freert.planar.PlaPointFloat;
-import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.PlaShape;
 import freert.planar.ShapePolygon;
 import freert.planar.ShapeTileOctagon;
@@ -100,10 +100,10 @@ public class DsnPolygonPath extends DsnPath
          return bounding_oct.enlarge(offset);
          }
       
-      PlaPointInt[] rounded_corner_arr = new PlaPointInt[corner_arr.length];
+      PlaPointIntAlist rounded_corner_arr = new PlaPointIntAlist(corner_arr.length);
       for (int i = 0; i < corner_arr.length; ++i)
          {
-         rounded_corner_arr[i] = corner_arr[i].round();
+         rounded_corner_arr.add( corner_arr[i].round());
          }
       
       PlaShape result = new ShapePolygon(rounded_corner_arr);
@@ -130,12 +130,15 @@ public class DsnPolygonPath extends DsnPath
          ShapeTileOctagon bounding_oct = bounding_octagon(corner_arr);
          return bounding_oct.enlarge(offset);
          }
-      PlaPointInt[] rounded_corner_arr = new PlaPointInt[corner_arr.length];
+      
+      PlaPointIntAlist rounded_corner_arr = new PlaPointIntAlist(corner_arr.length);
       for (int i = 0; i < corner_arr.length; ++i)
          {
-         rounded_corner_arr[i] = corner_arr[i].round();
+         rounded_corner_arr.add(corner_arr[i].round());
          }
-      freert.planar.PlaShape result = new freert.planar.ShapePolygon(rounded_corner_arr);
+      
+      PlaShape result = new freert.planar.ShapePolygon(rounded_corner_arr);
+      
       if (offset > 0)
          {
          result = result.bounding_tile().enlarge(offset);

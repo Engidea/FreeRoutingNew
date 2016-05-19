@@ -286,9 +286,9 @@ public abstract class ShapeSegments implements PlaShape, java.io.Serializable
       }
 
    @Override
-   public PlaShape[] get_holes()
+   public ShapeSegments[] get_holes()
       {
-      return new PlaShape[0];
+      return new ShapeSegments[0];
       }
 
    /**

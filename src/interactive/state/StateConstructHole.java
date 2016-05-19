@@ -24,17 +24,17 @@ import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Collection;
-import java.util.Iterator;
 import board.items.BrdArea;
 import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.planar.PlaArea;
-import freert.planar.ShapeCircle;
+import freert.planar.PlaAreaLinear;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.PlaShape;
-import freert.planar.PlaAreaLinear;
+import freert.planar.ShapeCircle;
 import freert.planar.ShapePolygon;
 import freert.planar.ShapeSegments;
 
@@ -153,15 +153,15 @@ public class StateConstructHole extends StateConstructCorner
                }
             }
          }
+      
       if (construction_succeeded)
          {
-         PlaPointInt[] new_hole_corners = new PlaPointInt[corner_count];
-         Iterator<PlaPointInt> it = corner_list.iterator();
-         for (int i = 0; i < corner_count; ++i)
-            {
-            new_hole_corners[i] = it.next();
-            }
+         PlaPointIntAlist new_hole_corners = new PlaPointIntAlist(corner_count);
+         
+         for ( PlaPointInt a_point : corner_list ) new_hole_corners.add(a_point);
+         
          new_holes[new_holes.length - 1] = new ShapePolygon(new_hole_corners);
+
          PlaAreaLinear new_obs_area = new PlaAreaLinear(new_border, new_holes);
 
          if (new_obs_area.split_to_convex() == null)

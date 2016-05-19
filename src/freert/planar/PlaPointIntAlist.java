@@ -52,6 +52,11 @@ public final class PlaPointIntAlist implements Iterable<PlaPointInt>
       return a_list.size();
       }
    
+   public void remove ( int index )
+      {
+      a_list.remove(index);
+      }
+   
    
    @Override
    public Iterator<PlaPointInt> iterator()

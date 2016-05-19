@@ -827,14 +827,13 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
       int points_count = border_line_count();
       
-      ArrayList<PlaPointInt> new_corners = new ArrayList<PlaPointInt>(points_count);
+      PlaPointIntAlist new_corners = new PlaPointIntAlist(points_count);
       
       for (int index = 0; index < points_count; ++index)
-         {
          new_corners.add( corner_approx(index).rotate(p_angle, p_pole).round() );
-         }
 
       PlaPolygon corner_polygon = new PlaPolygon(new_corners);
+      
       PlaPointInt[] polygon_corners = corner_polygon.corner_array();
 
       if (polygon_corners.length >= 3)

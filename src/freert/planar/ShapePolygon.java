@@ -129,13 +129,7 @@ public final class ShapePolygon extends ShapeSegments
       corners = result;
       }
 
-   public ShapePolygon(ArrayList<PlaPointInt> p_corner_arr)
-      {
-      this(new PlaPolygon(p_corner_arr));
-      }
-
-   
-   public ShapePolygon(PlaPointInt [] p_corner_arr)
+   public ShapePolygon(PlaPointIntAlist p_corner_arr)
       {
       this(new PlaPolygon(p_corner_arr));
       }
@@ -303,10 +297,10 @@ public final class ShapePolygon extends ShapeSegments
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
       
-      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
+      PlaPointIntAlist new_corners = new PlaPointIntAlist(corners.length);
       
       for (int index = 0; index < corners.length; ++index)
-         new_corners[index] = corners[index].translate_by(p_vector);
+         new_corners.add( corners[index].translate_by(p_vector) );
       
       return new ShapePolygon(new_corners);
       }
@@ -435,34 +429,30 @@ public final class ShapePolygon extends ShapeSegments
       PlaPointInt prev_point = corners[corners.length - 1];
       PlaPointInt curr_point = corners[0];
       PlaPointInt next_point;
+      
       for (int ind = 0; ind < corners.length; ++ind)
          {
          if (ind == corners.length - 1)
-            {
             next_point = corners[0];
-            }
          else
-            {
             next_point = corners[ind + 1];
-            }
+         
          if (next_point.side_of(prev_point, curr_point) != PlaSide.ON_THE_LEFT)
             {
-            // skip curr_point;
-            PlaPointInt[] new_corners = new PlaPointInt[corners.length - 1];
-            for (int index = 0; index < ind; ++index)
-               {
-               new_corners[index] = corners[index];
-               }
-            for (int i = ind; i < new_corners.length; ++i)
-               {
-               new_corners[i] = corners[i + 1];
-               }
+            // import current points and then skip curr_point
+            PlaPointIntAlist new_corners = new PlaPointIntAlist(corners);
+            
+            new_corners.remove(ind);
+            
             ShapePolygon result = new ShapePolygon(new_corners);
+            
             return result.convex_hull();
             }
+         
          prev_point = curr_point;
          curr_point = next_point;
          }
+      
       return this;
       }
 
@@ -470,11 +460,13 @@ public final class ShapePolygon extends ShapeSegments
    public ShapeTile bounding_tile()
       {
       ShapePolygon hull = convex_hull();
+      
       PlaLineInt[] bounding_lines = new PlaLineInt[hull.corners.length];
       for (int index = 0; index < bounding_lines.length - 1; ++index)
          {
          bounding_lines[index] = new PlaLineInt(hull.corners[index], hull.corners[index + 1]);
          }
+      
       bounding_lines[bounding_lines.length - 1] = new PlaLineInt(hull.corners[hull.corners.length - 1], hull.corners[0]);
       
       return ShapeTile.get_instance(bounding_lines);
@@ -571,10 +563,10 @@ public final class ShapePolygon extends ShapeSegments
    @Override
    public ShapePolygon turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
+      PlaPointIntAlist new_corners = new PlaPointIntAlist(corners.length);
       for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[index] = corners[index].turn_90_degree(p_factor, p_pole);
+         new_corners.add( corners[index].turn_90_degree(p_factor, p_pole));
          }
       return new ShapePolygon(new_corners);
       }
@@ -584,34 +576,39 @@ public final class ShapePolygon extends ShapeSegments
       {
       if (p_angle == 0) return this;
 
-      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
+      PlaPointIntAlist new_corners = new PlaPointIntAlist(corners.length);
+      
       for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[index] = corners[index].to_float().rotate(p_angle, p_pole).round();
+         new_corners.add( corners[index].to_float().rotate(p_angle, p_pole).round());
          }
+      
       return new ShapePolygon(new_corners);
       }
 
    @Override
    public ShapePolygon mirror_vertical(PlaPointInt p_pole)
       {
-      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
+      PlaPointIntAlist new_corners = new PlaPointIntAlist(corners.length);
+      
       for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[index] = corners[index].mirror_vertical(p_pole);
+         new_corners.add( corners[index].mirror_vertical(p_pole));
          }
+      
       return new ShapePolygon(new_corners);
       }
 
    @Override
    public ShapePolygon mirror_horizontal(PlaPointInt p_pole)
       {
-      PlaPointInt[] new_corners = new PlaPointInt[corners.length];
+      PlaPointIntAlist new_corners = new PlaPointIntAlist(corners.length);
       
       for (int index = 0; index < corners.length; ++index)
          {
-         new_corners[index] = corners[index].mirror_horizontal(p_pole);
+         new_corners.add( corners[index].mirror_horizontal(p_pole));
          }
+      
       return new ShapePolygon(new_corners);
       }
 
@@ -699,37 +696,46 @@ public final class ShapePolygon extends ShapeSegments
 
       if (corner_count < 0)
          corner_count += corners.length;
+      
       ++corner_count;
-      PlaPointInt[] first_arr = new PlaPointInt[corner_count];
+      
+      PlaPointIntAlist first_arr = new PlaPointIntAlist(corner_count);
       int corner_ind = concave_corner_no;
 
       for (int index = 0; index < corner_count - 1; ++index)
          {
-         first_arr[index] = corners[corner_ind];
+         first_arr.add( corners[corner_ind]);
          corner_ind = (corner_ind + 1) % corners.length;
          }
-      first_arr[corner_count - 1] = d.projection.round();
+      
+      first_arr.add( d.projection.round());
+      
       ShapePolygon first_piece = new ShapePolygon(first_arr);
 
       corner_count = concave_corner_no - d.corner_no_after_projection;
       if (corner_count < 0)
          corner_count += corners.length;
       corner_count += 2;
-      PlaPointInt[] last_arr = new PlaPointInt[corner_count];
-      last_arr[0] = d.projection.round();
+      
+      PlaPointIntAlist last_arr = new PlaPointIntAlist(corner_count);
+      last_arr.add( d.projection.round() );
+
       corner_ind = d.corner_no_after_projection;
       for (int index = 1; index < corner_count; ++index)
          {
-         last_arr[index] = corners[corner_ind];
+         last_arr.add( corners[corner_ind]);
          corner_ind = (corner_ind + 1) % corners.length;
          }
+      
       ShapePolygon last_piece = new ShapePolygon(last_arr);
+      
       Collection<ShapePolygon> c1 = first_piece.split_to_convex_recu();
-      if (c1 == null)
-         return null;
+      
+      if (c1 == null) return null;
+      
       Collection<ShapePolygon> c2 = last_piece.split_to_convex_recu();
-      if (c2 == null)
-         return null;
+      
+      if (c2 == null) return null;
       result.addAll(c1);
       result.addAll(c2);
       return result;

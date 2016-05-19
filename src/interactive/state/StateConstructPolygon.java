@@ -23,9 +23,9 @@ package interactive.state;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
-import java.util.Iterator;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.ShapePolygon;
 import freert.rules.BoardRules;
 import freert.varie.NetNosList;
@@ -65,13 +65,12 @@ public class StateConstructPolygon extends StateConstructCorner
       boolean construction_succeeded = (corner_count > 2);
       if (construction_succeeded)
          {
-         PlaPointInt[] corner_arr = new PlaPointInt[corner_count];
-         Iterator<PlaPointInt> it = corner_list.iterator();
-         for (int i = 0; i < corner_count; ++i)
-            {
-            corner_arr[i] = it.next();
-            }
+         PlaPointIntAlist corner_arr = new PlaPointIntAlist(corner_count);
+         
+         for ( PlaPointInt a_point : corner_list ) corner_arr.add(a_point);
+         
          ShapePolygon obstacle_shape = new ShapePolygon(corner_arr);
+         
          int cl_class = BoardRules.clearance_null_idx;
          if (obstacle_shape.split_to_convex() == null)
             {
