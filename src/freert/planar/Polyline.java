@@ -147,9 +147,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
          // the given point is not on the same line as start end
          if (a_point.side_of(start, end) != PlaSide.COLLINEAR) continue;
 
-         double d_start_p   = start.distance(a_point);
-         double d_p_end     = a_point.distance(end);
-         double d_start_end = start.distance(end);
+         // use distance square instread of distance to avoid a square root calculation
+         double d_start_p   = start.distance_square(a_point);
+         double d_p_end     = a_point.distance_square(end);
+         double d_start_end = start.distance_square(end);
 
          if ( d_start_end >= d_start_p )
             {
@@ -396,22 +397,26 @@ public final class Polyline implements java.io.Serializable, PlaObject
    
    
    
-   
+   // working on this
    
    private void adjust_direction ()
       {
+      int test_len = plalinelen(-1);
+      
       // turn  the direction of the lines that they point always from the previous corner to the next corner
       // Now, why is not the first and last line checked ? first should point to first and last should point away, no ?
-      for (int index = 1; index < plalinelen(-1); index++)
+      for (int index = 1; index < test_len; index++)
          {
          PlaLineInt pre_l = plaline(index-1);
-         PlaLineInt cur_l = plaline(index);
          
          PlaSide side_of_line = pre_l.side_of(precalculated_float_corners[index]);
    
          if (side_of_line == PlaSide.COLLINEAR) continue;
    
          PlaDirection d0 = pre_l.direction();
+
+         PlaLineInt cur_l = plaline(index);
+         
          PlaDirection d1 = cur_l.direction();
    
          PlaSide side1 = d0.side_of(d1);

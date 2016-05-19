@@ -140,10 +140,6 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
    @Override   
    public final PlaSide side_of(PlaPoint p_1, PlaPoint p_2)
       {
-//      PlaVector v1 = difference_by(p_1);
-//      PlaVector v2 = p_2.difference_by(p_1);
-//      PlaSide a_risul = v1.side_of(v2);
-      
       // now, another way to calculate this, consider the line p_1 -> p_2 as reference and set origins on p_1
       PlaPointFloat pf_1 = p_1.to_float();
       PlaPointFloat pf_2 = p_2.to_float();
@@ -157,10 +153,7 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       double determinant = MathAux.determinant(point_dir, line_dir);
       
       PlaSide b_risul = PlaSide.get_side_of(determinant);
-      
-//      if ( a_risul != b_risul )
-//         System.err.println(classname+"a_risul="+a_risul+" b_risul="+b_risul);
-      
+
       return b_risul;
       }
    

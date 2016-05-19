@@ -132,10 +132,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    
    /**
     * Returns Side.COLLINEAR, if p_point is on the line with tolerance p_tolerance. 
-    * Why is this not using direction ? seems a good candidate, no ?
     * Side.ON_THE_LEFT, if this line is on the left of p_point, 
     * Side.ON_THE_RIGHT, if this line is on the right of p_point,
-    * TODO try to use direction adn side_of with the same params
     * Occio che è la linea che è a destra o sinistra, NON il punto !!!
     */
    public PlaSide side_of(PlaPointFloat p_point, double p_tolerance)
@@ -147,8 +145,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * returns Side.ON_THE_LEFT, if this line is on the left of p_point, Side.ON_THE_RIGHT, if this line is on the right of p_point,
-    * Side.COLLINEAR otherwise.
+    * returns Side.ON_THE_LEFT, if this line direction is on the left of p_point, 
+    * Side.ON_THE_RIGHT, if this line direction is on the right of p_point,
+    * Side.COLLINEAR otherwise
     */
    public PlaSide side_of(PlaPointFloat p_point)
       {

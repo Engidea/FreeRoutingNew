@@ -75,9 +75,10 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
          // the given point is not on the same line as start end
          if (a_point.side_of(start, end) != PlaSide.COLLINEAR) continue;
 
-         double d_start_p   = start.distance(a_point);
-         double d_p_end     = a_point.distance(end);
-         double d_start_end = start.distance(end);
+         // use distance square instread of distance to avoid a square root calculation
+         double d_start_p   = start.distance_square(a_point);
+         double d_p_end     = a_point.distance_square(end);
+         double d_start_end = start.distance_square(end);
 
          if ( d_start_end >= d_start_p )
             {
