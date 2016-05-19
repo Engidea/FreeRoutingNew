@@ -59,9 +59,4 @@ public final class BoardMenuBar extends JMenuBar
       add(help_menu);
       }
 
-   public void add_design_dependent_items()
-      {
-      file_menu.add_design_dependent_items();
-      }
-
    }

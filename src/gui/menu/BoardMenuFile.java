@@ -54,9 +54,9 @@ public final class BoardMenuFile extends JMenu
    private JMenuItem write_spectra_file_item;
    private JMenuItem write_eagle_script_item;
 
-   public BoardMenuFile(Stat stat, BoardFrame p_board_frame )
+   public BoardMenuFile(Stat p_stat, BoardFrame p_board_frame )
       {
-      this.stat = stat;
+      stat = p_stat;
 
       board_frame = p_board_frame;
 
@@ -75,24 +75,19 @@ public final class BoardMenuFile extends JMenu
 
       save_settings_item = resources.newJMenuItem("settings", "settings_tooltip", listener);
       add(save_settings_item);
-      }
 
-   public void add_design_dependent_items()
-      {
       write_spectra_file_item = resources.newJMenuItem("session_file", "session_file_tooltip", listener);
-
-      this.add(write_spectra_file_item);
+      add(write_spectra_file_item);
 
       write_eagle_script_item = resources.newJMenuItem("eagle_script", "eagle_script_tooltip", listener);
-
       add(write_eagle_script_item);
       }
 
    private void save_as_action()
       {
-      if (this.board_frame.design_file != null)
+      if (board_frame.design_file != null)
          {
-         this.board_frame.design_file.save_as_dialog(this, this.board_frame);
+         board_frame.design_file.save_as_dialog(this, board_frame);
          }
       }
 

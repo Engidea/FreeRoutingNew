@@ -36,6 +36,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingWorker;
 import board.varie.DesignFile;
 
 /**
@@ -121,17 +122,12 @@ public class MainApplication extends JFrame
 
       stat.userPrintln(message); 
 
-      BoardFrame board_frame = create_board_frame(design_file, stat);
+      BoardFrame board_frame = new BoardFrame(design_file, stat);
 
-      if (board_frame == null) return;
+      ImportDesign d_import = new ImportDesign(board_frame);
       
-      stat.userPrintln(resources.getString("message_4") + " " + design_file.get_name() + " " + resources.getString("message_5"));
-
-      board_frames.add(board_frame);
-      
-      board_frame.get_JFrame().addWindowListener(new BoardFrameWindowListener(board_frame));
+      d_import.execute();
       }
-
 
    /**
     * Shows a file chooser for opening a design file
@@ -150,46 +146,83 @@ public class MainApplication extends JFrame
       return new DesignFile(stat, curr_design_file, file_chooser);
       }
    
-   /**
-    * Creates a new board frame containing the data of the input design file.
-    * Returns null, if an error occurred.
-    */
-   private BoardFrame create_board_frame(DesignFile p_design_file, Stat stat)
+
+   private boolean open_board_file (BoardFrame b_frame)
       {
-      InputStream input_stream = p_design_file.get_input_stream();
-      boolean read_ok = false;
+      InputStream input_stream = b_frame.design_file.get_input_stream();
       
       if (input_stream == null)
          {
-         stat.userPrintln(resources.getString("message_8") + " " + p_design_file.get_name());
-         return null;
+         stat.userPrintln(resources.getString("message_8") + " " + b_frame.design_file.get_name());
+         return false;
          }
 
-      BoardFrame new_frame = new BoardFrame(p_design_file, stat );
+      boolean read_ok;
       
-      if ( p_design_file.is_created_from_text_file() )
-         read_ok = new_frame.import_design(input_stream);
+      if ( b_frame.design_file.is_created_from_text_file() )
+         read_ok = b_frame.import_design(input_stream);
       else
-         read_ok = new_frame.open_design(input_stream);
+         read_ok = b_frame.open_design(input_stream);
       
-      if (!read_ok) return null;
+      if (!read_ok) return false;
       
-      new_frame.menubar.add_design_dependent_items();
-      
-      if (p_design_file.is_created_from_text_file())
+      if (b_frame.design_file.is_created_from_text_file())
          {
          // Read the file with the saved rules, if it is existing.
-
-         String file_name = p_design_file.get_name();
+   
+         String file_name = b_frame.design_file.get_name();
          String[] name_parts = file_name.split("\\.");
          String confirm_import_rules_message = resources.getString("confirm_import_rules");
-         p_design_file.read_rules_file(name_parts[0], p_design_file.get_parent(), new_frame.board_panel.board_handling, confirm_import_rules_message);
-         new_frame.refresh_windows();
+         b_frame.design_file.read_rules_file(name_parts[0], b_frame.design_file.get_parent(), b_frame.board_panel.board_handling, confirm_import_rules_message);
          }
       
-      return new_frame;
+      return true;
+      }
+   
+   private void open_board_file_gui (BoardFrame b_frame, boolean read_ok )
+      {
+      
+      if ( read_ok )
+         {
+         b_frame.refresh_windows();
+         stat.userPrintln(resources.getString("message_4") + " " + b_frame.design_file.get_name() + " " + resources.getString("message_5"));
+  
+         board_frames.add(b_frame);
+         
+         b_frame.get_JFrame().addWindowListener(new BoardFrameWindowListener(b_frame));
+         }
+      
+      }
+   
+   
+private class ImportDesign extends SwingWorker<Boolean, Integer>
+   {
+   private final BoardFrame b_frame;
+   
+   ImportDesign ( BoardFrame p_b_frame )
+      {
+      b_frame = p_b_frame;
+      }
+   
+   protected Boolean doInBackground() throws Exception
+      {
+      return open_board_file ( b_frame );
       }
 
+    protected void done()
+       {
+       try
+          {
+          open_board_file_gui ( b_frame, get());
+          }
+       catch ( Exception exc )
+          {
+          stat.log.exceptionShow("ImportDesign", exc);
+          }
+       }
+    }
+   
+   
    private class BoardFrameWindowListener extends WindowAdapter
       {
       private BoardFrame board_frame;
