@@ -545,8 +545,8 @@ public final class AlgoOptimizeVia
       
       PlaPointInt result = null;
 
-      double curr_weighted_distance_1 = via_location_float.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-      double curr_weighted_distance_2 = via_location_float.weighted_distance(first_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+      double curr_weighted_distance_1 = via_location_float.distance_weighted(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+      double curr_weighted_distance_2 = via_location_float.distance_weighted(first_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
       if (curr_weighted_distance_1 > curr_weighted_distance_2)
          {
@@ -556,8 +556,8 @@ public final class AlgoOptimizeVia
          if (result != null) return result;
          }
 
-      curr_weighted_distance_1 = via_location_float.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-      curr_weighted_distance_2 = via_location_float.weighted_distance(second_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+      curr_weighted_distance_1 = via_location_float.distance_weighted(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+      curr_weighted_distance_2 = via_location_float.distance_weighted(second_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
 
       if (curr_weighted_distance_1 > curr_weighted_distance_2)
          {
@@ -590,8 +590,8 @@ public final class AlgoOptimizeVia
             float_to_point_2 = second_trace_from_corner_float;
             }
          
-         curr_weighted_distance_1 = float_to_point_1.weighted_distance(float_to_point_2, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-         curr_weighted_distance_2 = float_to_point_1.weighted_distance(float_to_point_2, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_1 = float_to_point_1.distance_weighted(float_to_point_2, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_2 = float_to_point_1.distance_weighted(float_to_point_2, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2)
             {
@@ -621,9 +621,9 @@ public final class AlgoOptimizeVia
          {
          PlaPointFloat float_check_location = new PlaPointFloat(via_location_float.v_x, first_trace_from_corner_float.v_y);
 
-         curr_weighted_distance_1 = via_location_float.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-         double curr_weighted_distance_3 = float_check_location.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_1 = via_location_float.distance_weighted(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.distance_weighted(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         double curr_weighted_distance_3 = float_check_location.distance_weighted(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
@@ -644,8 +644,8 @@ public final class AlgoOptimizeVia
 
          float_check_location = new PlaPointFloat(first_trace_from_corner_float.v_x, via_location_float.v_y);
 
-         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-         curr_weighted_distance_3 = float_check_location.weighted_distance(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.distance_weighted(float_check_location, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_3 = float_check_location.distance_weighted(first_trace_from_corner_float, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
@@ -669,9 +669,9 @@ public final class AlgoOptimizeVia
          {
          PlaPointFloat float_check_location = new PlaPointFloat(via_location_float.v_x, second_trace_from_corner_float.v_y);
 
-         curr_weighted_distance_1 = via_location_float.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
-         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-         double curr_weighted_distance_3 = float_check_location.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_1 = via_location_float.distance_weighted(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.distance_weighted(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         double curr_weighted_distance_3 = float_check_location.distance_weighted(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {
@@ -684,8 +684,8 @@ public final class AlgoOptimizeVia
 
          float_check_location = new PlaPointFloat(second_trace_from_corner_float.v_x, via_location_float.v_y);
 
-         curr_weighted_distance_2 = via_location_float.weighted_distance(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
-         curr_weighted_distance_3 = float_check_location.weighted_distance(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
+         curr_weighted_distance_2 = via_location_float.distance_weighted(float_check_location, p_first_trace_costs.horizontal, p_first_trace_costs.vertical);
+         curr_weighted_distance_3 = float_check_location.distance_weighted(second_trace_from_corner_float, p_second_trace_costs.horizontal, p_second_trace_costs.vertical);
 
          if (curr_weighted_distance_1 > curr_weighted_distance_2 + curr_weighted_distance_3)
             {

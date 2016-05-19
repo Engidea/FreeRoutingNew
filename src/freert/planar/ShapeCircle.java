@@ -105,7 +105,7 @@ public final class ShapeCircle implements ShapeConvex , Serializable
    public boolean is_outside(PlaPoint p_point)
       {
       PlaPointFloat fp = p_point.to_float();
-      return fp.length_square(center.to_float()) > (double) radius * radius;
+      return fp.dustance_square(center.to_float()) > (double) radius * radius;
       }
 
    @Override
@@ -118,20 +118,20 @@ public final class ShapeCircle implements ShapeConvex , Serializable
    public boolean contains_inside(PlaPoint p_point)
       {
       PlaPointFloat fp = p_point.to_float();
-      return fp.length_square(center.to_float()) < (double) radius * radius;
+      return fp.dustance_square(center.to_float()) < (double) radius * radius;
       }
 
    @Override
    public boolean contains_on_border(PlaPoint p_point)
       {
       PlaPointFloat fp = p_point.to_float();
-      return fp.length_square(center.to_float()) == (double) radius * radius;
+      return fp.dustance_square(center.to_float()) == (double) radius * radius;
       }
 
    @Override
    public boolean contains(PlaPointFloat p_point)
       {
-      return p_point.length_square(center.to_float()) <= (double) radius * radius;
+      return p_point.dustance_square(center.to_float()) <= (double) radius * radius;
       }
 
    @Override

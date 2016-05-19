@@ -354,8 +354,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
       
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
       double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
-      double prev_dist = Math.abs(translate_line.signed_distance(prev_corner));
-      double next_dist = Math.abs(translate_line.signed_distance(next_corner));
+      double prev_dist = Math.abs(translate_line.distance_signed(prev_corner));
+      double next_dist = Math.abs(translate_line.distance_signed(next_corner));
       translate_dist = Math.min(translate_dist, prev_dist);
       translate_dist = Math.min(translate_dist, next_dist);
       if (translate_dist < 0.99)
@@ -478,8 +478,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
       
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), new_line_dir);
       
-      double prev_dist = Math.abs(translate_line.signed_distance(prev_corner));
-      double next_dist = Math.abs(translate_line.signed_distance(next_corner));
+      double prev_dist = Math.abs(translate_line.distance_signed(prev_corner));
+      double next_dist = Math.abs(translate_line.distance_signed(next_corner));
 
       if (prev_dist == 0 || next_dist == 0) return null;
  
@@ -654,8 +654,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
          double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
-         double prev_corner_dist = Math.abs(translate_line.signed_distance(curr_prev_end_corner.to_float()));
-         double other_dist = Math.abs(translate_line.signed_distance(other_trace_corner_approx));
+         double prev_corner_dist = Math.abs(translate_line.distance_signed(curr_prev_end_corner.to_float()));
+         double other_dist = Math.abs(translate_line.distance_signed(other_trace_corner_approx));
          translate_dist = Math.min(translate_dist, prev_corner_dist);
          translate_dist = Math.min(translate_dist, other_dist);
          if (translate_dist >= 0.99)
@@ -790,8 +790,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
          double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
-         double prev_corner_dist = Math.abs(translate_line.signed_distance(curr_prev_end_corner.to_float()));
-         double other_dist = Math.abs(translate_line.signed_distance(other_trace_corner_approx));
+         double prev_corner_dist = Math.abs(translate_line.distance_signed(curr_prev_end_corner.to_float()));
+         double other_dist = Math.abs(translate_line.distance_signed(other_trace_corner_approx));
          translate_dist = Math.min(translate_dist, prev_corner_dist);
          translate_dist = Math.min(translate_dist, other_dist);
          if (translate_dist >= 0.99)

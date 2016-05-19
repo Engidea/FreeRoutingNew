@@ -374,7 +374,7 @@ public final class ShapeTileSimplex extends ShapeTile
 
       for (int i = 0; i < border_line_count(); ++i)
          {
-         double curr_distance = Math.abs(lines_arr[i].signed_distance(gravity_point));
+         double curr_distance = Math.abs(lines_arr[i].distance_signed(gravity_point));
 
          if (curr_distance > max_distance)
             {
@@ -402,7 +402,7 @@ public final class ShapeTileSimplex extends ShapeTile
 
       for (int i = 0; i < border_line_count(); ++i)
          {
-         double curr_distance = Math.abs(lines_arr[i].signed_distance(gravity_point));
+         double curr_distance = Math.abs(lines_arr[i].distance_signed(gravity_point));
 
          if (curr_distance < min_distance)
             {
@@ -1284,7 +1284,7 @@ public final class ShapeTileSimplex extends ShapeTile
          boolean projection_visible = prev_inner_dir.determinant(curr_projection_dir) >= 0;
          if (projection_visible)
             {
-            double curr_distance = Math.abs(outer_line.signed_distance(inner_corner.to_float()));
+            double curr_distance = Math.abs(outer_line.distance_signed(inner_corner.to_float()));
             boolean second_division_necessary = curr_projection_dir.determinant(next_inner_dir) < 0;
             // may occor at a sharp angle
             PlaDirection curr_second_projection_dir = curr_projection_dir;
@@ -1326,7 +1326,7 @@ public final class ShapeTileSimplex extends ShapeTile
 
                   second_projection_visible = curr_second_projection_dir.determinant(next_inner_dir) >= 0;
                   }
-               curr_distance += Math.abs(p_outer_simplex.lines_arr[tmp_outer_line_no].signed_distance(inner_corner.to_float()));
+               curr_distance += Math.abs(p_outer_simplex.lines_arr[tmp_outer_line_no].distance_signed(inner_corner.to_float()));
                }
             if (curr_distance < min_distance)
                {

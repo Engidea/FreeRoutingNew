@@ -327,8 +327,8 @@ public abstract class AlgoPullTight
 
       if ( next_corner.is_NaN() ) return null;
 
-      double prev_dist = translate_line.signed_distance(prev_corner.to_float());
-      double next_dist = translate_line.signed_distance(next_corner.to_float());
+      double prev_dist = translate_line.distance_signed(prev_corner.to_float());
+      double next_dist = translate_line.distance_signed(next_corner.to_float());
       
       // the 2 corners are at different sides of translate_line
       if (Signum.of(prev_dist) != Signum.of(next_dist)) return null;
@@ -455,7 +455,7 @@ public abstract class AlgoPullTight
             // this is the general case for testing if to skip
             PlaPointFloat prev_corner = p_polyline.corner_approx(index - 1);
             PlaPointFloat curr_corner = p_polyline.corner_approx(index);
-            try_skip = curr_corner.length_square(prev_corner) < c_min_corner_dist_square;
+            try_skip = curr_corner.dustance_square(prev_corner) < c_min_corner_dist_square;
             }
 
          if ( ! try_skip) continue;

@@ -756,7 +756,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          int curr_intersecting_border_line_no = offset_pin_shape.intersecting_border_line_no(pin_center, curr_exit_restriction.direction);
          PlaLineInt curr_pin_exit_ray = new PlaLineInt(pin_center, curr_exit_restriction.direction);
          PlaPointFloat curr_exit_corner = curr_pin_exit_ray.intersection_approx(offset_pin_shape.border_line(curr_intersecting_border_line_no));
-         double curr_exit_corner_distance = curr_exit_corner.length_square(trace_entry_location_approx);
+         double curr_exit_corner_distance = curr_exit_corner.dustance_square(trace_entry_location_approx);
          boolean new_nearest_corner_found = false;
          if (curr_exit_corner_distance + TOLERANCE < min_exit_corner_distance)
             {
@@ -768,8 +768,8 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
             for (int i = 1; i < p_trace_polyline.corner_count(); ++i)
                {
                PlaPointFloat curr_trace_corner = p_trace_polyline.corner_approx(i);
-               double curr_trace_corner_distance = curr_trace_corner.length_square(curr_exit_corner);
-               double old_trace_corner_distance = curr_trace_corner.length_square(nearest_exit_corner);
+               double curr_trace_corner_distance = curr_trace_corner.dustance_square(curr_exit_corner);
+               double old_trace_corner_distance = curr_trace_corner.dustance_square(nearest_exit_corner);
                if (curr_trace_corner_distance + TOLERANCE < old_trace_corner_distance)
                   {
                   new_nearest_corner_found = true;
@@ -825,7 +825,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          // here it seems that the right thing to do is continue
          if ( curr_exit_corner.is_NaN() ) continue;
          
-         double curr_exit_corner_distance = curr_exit_corner.length_square(p_from_point);
+         double curr_exit_corner_distance = curr_exit_corner.dustance_square(p_from_point);
          if (curr_exit_corner_distance < min_exit_corner_distance)
             {
             min_exit_corner_distance = curr_exit_corner_distance;

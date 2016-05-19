@@ -642,7 +642,7 @@ public final class MazeSearch
          else
             {
             // expand only doors on the opposite side of the room from the shape_entry.
-            if (p_to_door.dimension.is_line() && i == 0 && line_sections[0].point_b.length_square(line_sections[0].point_a) < 1)
+            if (p_to_door.dimension.is_line() && i == 0 && line_sections[0].point_b.dustance_square(line_sections[0].point_a) < 1)
                {
                // p_to_door is small belonging to a via or thin room
                continue;
@@ -715,7 +715,7 @@ public final class MazeSearch
       int layer = p_from_element.next_room.get_layer();
       PlaPointFloat shape_entry_middle = p_shape_entry.point_a.middle_point(p_shape_entry.point_b);
       double expansion_value = p_from_element.expansion_value + p_add_costs
-            + shape_entry_middle.weighted_distance(p_from_element.shape_entry.point_a.middle_point(p_from_element.shape_entry.point_b), art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical);
+            + shape_entry_middle.distance_weighted(p_from_element.shape_entry.point_a.middle_point(p_from_element.shape_entry.point_b), art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical);
       double sorting_value = expansion_value + destination_distance.calculate(shape_entry_middle, layer);
       boolean room_ripped = p_add_costs > 0 && p_adjustment == MazeAdjustment.NONE || p_from_element.already_checked && p_from_element.room_ripped;
 
@@ -760,7 +760,7 @@ public final class MazeSearch
       PlaPointFloat nearest_point = shrinked_drill_shape.nearest_point_approx(compare_corner);
       PlaSegmentFloat shape_entry = new PlaSegmentFloat(nearest_point, nearest_point);
       int section_no = layer - p_drill.first_layer_no;
-      double expansion_value = p_from_element.expansion_value + p_add_costs + nearest_point.weighted_distance(compare_corner, art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical);
+      double expansion_value = p_from_element.expansion_value + p_add_costs + nearest_point.distance_weighted(compare_corner, art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical);
       ExpandObject new_backtrack_door;
       int new_section_no_of_backtrack_door;
       if (p_from_element.door instanceof ExpandDrillPage)
@@ -793,7 +793,7 @@ public final class MazeSearch
       PlaPointFloat from_element_shape_entry_middle = p_from_element.shape_entry.point_a.middle_point(p_from_element.shape_entry.point_b);
       PlaPointFloat nearest_point = p_drill_page.page_shape.nearest_point(from_element_shape_entry_middle);
       double expansion_value = p_from_element.expansion_value + art_ctrl.min_normal_via_cost;
-      double sorting_value = expansion_value + nearest_point.weighted_distance(from_element_shape_entry_middle, art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical)
+      double sorting_value = expansion_value + nearest_point.distance_weighted(from_element_shape_entry_middle, art_ctrl.trace_costs[layer].horizontal, art_ctrl.trace_costs[layer].vertical)
             + destination_distance.calculate(nearest_point, layer);
       MazeListElement new_element = new MazeListElement(p_drill_page, layer, p_from_element.door, p_from_element.section_no_of_door, expansion_value, sorting_value, p_from_element.next_room,
             p_from_element.shape_entry, p_from_element.room_ripped, MazeAdjustment.NONE, false);
@@ -1316,7 +1316,7 @@ public final class MazeSearch
             {
             result_a = p_to_segment.point_a;
             }
-         else if (first_projection.point_a.length_square(p_to_segment.point_a) <= second_projection.point_a.length_square(p_to_segment.point_a))
+         else if (first_projection.point_a.dustance_square(p_to_segment.point_a) <= second_projection.point_a.dustance_square(p_to_segment.point_a))
             {
             result_a = first_projection.point_a;
             }
@@ -1329,7 +1329,7 @@ public final class MazeSearch
             {
             result_b = p_to_segment.point_b;
             }
-         else if (first_projection.point_b.length_square(p_to_segment.point_b) <= second_projection.point_b.length_square(p_to_segment.point_b))
+         else if (first_projection.point_b.dustance_square(p_to_segment.point_b) <= second_projection.point_b.dustance_square(p_to_segment.point_b))
             {
             result_b = first_projection.point_b;
             }
@@ -1369,7 +1369,7 @@ public final class MazeSearch
          {
          // skip lines of lenghth 0
          PlaPointFloat next_corner = door_shape.corner_approx(i);
-         if (next_corner.length_square(prev_corner) > 1)
+         if (next_corner.dustance_square(prev_corner) > 1)
             {
             door_line = door_shape.border_line(i - 1);
             break;

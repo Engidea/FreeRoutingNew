@@ -214,10 +214,10 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * Returns the signed distance of this line from p_point. 
     * The result will be positive, if the line is on the left of p_point else negative.
+    * @returns the signed distance of this line from p_point. 
     */
-   public double signed_distance(PlaPointFloat p_point)
+   public double distance_signed(PlaPointFloat p_point)
       {
       // only implemented for IntPoint lines for performance reasons
       double dx = point_b.v_x - point_a.v_x;
@@ -644,7 +644,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
 
       PlaPointFloat nearest_line_point = p_from_point.to_float().projection_approx(this);
       
-      if (nearest_line_point.length_square(check_point_1.to_float()) <= nearest_line_point.length_square(check_point_2.to_float()))
+      if (nearest_line_point.dustance_square(check_point_1.to_float()) <= nearest_line_point.dustance_square(check_point_2.to_float()))
          return dir1;
       else
          return dir2;

@@ -171,7 +171,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (ok)
                {
                PlaPointFloat check_is = curr_lines[0].intersection_approx(curr_lines[1]);
-               double dist = check_is.length_square(new_a);
+               double dist = check_is.dustance_square(new_a);
 
                if (dist > check_dist)
                   {
@@ -181,7 +181,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (ok)
                {
                PlaPointFloat check_is = curr_lines[1].intersection_approx(curr_lines[2]);
-               double dist = check_is.length_square(new_b);
+               double dist = check_is.dustance_square(new_b);
                if (dist > check_dist)
                   {
                   ok = false;
@@ -372,8 +372,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
          PlaLineInt translate_line = p_polyline.plaline(index);
          
-         double prev_dist = translate_line.signed_distance(prev_corner);
-         double next_dist = translate_line.signed_distance(next_corner);
+         double prev_dist = translate_line.distance_signed(prev_corner);
+         double next_dist = translate_line.distance_signed(next_corner);
          
          // the 2 corners are on different sides of the translate_line
          if (Signum.of(prev_dist) != Signum.of(next_dist))  continue;
@@ -504,8 +504,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaDirection next_dir = p_line_arr[p_start_no + 2].direction();
       PlaDirection middle_dir = prev_dir.middle_approx(next_dir);
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), middle_dir);
-      double prev_dist = translate_line.signed_distance(prev_corner);
-      double next_dist = translate_line.signed_distance(next_corner);
+      double prev_dist = translate_line.distance_signed(prev_corner);
+      double next_dist = translate_line.distance_signed(next_corner);
       PlaPointFloat nearest_point;
       double max_translate_dist;
       if (Math.abs(prev_dist) < Math.abs(next_dist))
@@ -611,7 +611,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       
       PlaPointFloat next_corner = p_line_arr[p_start_no + 3].intersection_approx(p_line_arr[p_start_no + 4]);
       
-      double prev_dist = translate_line.signed_distance(prev_corner);
+      double prev_dist = translate_line.distance_signed(prev_corner);
       
       int corners_skipped_before = 0;
       
@@ -629,10 +629,10 @@ public final class AlgoPullTightAny extends AlgoPullTight
          if (curr_no < 0) return null;
 
          prev_corner = p_line_arr[curr_no].intersection_approx(p_line_arr[curr_no + 1]);
-         prev_dist = translate_line.signed_distance(prev_corner);
+         prev_dist = translate_line.distance_signed(prev_corner);
          }
       
-      double next_dist = translate_line.signed_distance(next_corner);
+      double next_dist = translate_line.distance_signed(next_corner);
       while (Math.abs(next_dist) < c_epsilon)
          {
          // move also all lines trough the end corner of the line to translate
@@ -644,7 +644,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             return null;
             }
          next_corner = p_line_arr[curr_no].intersection_approx(p_line_arr[curr_no + 1]);
-         next_dist = translate_line.signed_distance(next_corner);
+         next_dist = translate_line.distance_signed(next_corner);
          }
       if (Signum.of(prev_dist) != Signum.of(next_dist))
          {
@@ -725,7 +725,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                if ( curr_prev_corner.is_NaN() ) return null;
                
                PlaLineInt curr_translate_line = p_line_arr[p_start_no + 1 - i];
-               double curr_translate_dist = curr_translate_line.signed_distance(curr_prev_corner);
+               double curr_translate_dist = curr_translate_line.distance_signed(curr_prev_corner);
                prev_translated_line = curr_translate_line.translate(-curr_translate_dist);
                curr_lines[p_start_no + 1 - i] = prev_translated_line;
                }
@@ -742,7 +742,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                if ( curr_next_corner.is_NaN() ) return null;
                
                PlaLineInt curr_translate_line = p_line_arr[p_start_no + 3 + i];
-               double curr_translate_dist = curr_translate_line.signed_distance(curr_next_corner);
+               double curr_translate_dist = curr_translate_line.distance_signed(curr_next_corner);
                prev_translated_line = curr_translate_line.translate(-curr_translate_dist);
                curr_lines[p_start_no + 3 + i] = prev_translated_line;
                }
@@ -929,7 +929,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_first_next();
 
-      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().length_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
+      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().dustance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
       
       int start_line_no = 1;
 
@@ -1024,8 +1024,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
          double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
-         double prev_corner_dist = Math.abs(translate_line.signed_distance(curr_prev_end_corner.to_float()));
-         double other_dist = Math.abs(translate_line.signed_distance(other_trace_corner_approx));
+         double prev_corner_dist = Math.abs(translate_line.distance_signed(curr_prev_end_corner.to_float()));
+         double other_dist = Math.abs(translate_line.distance_signed(other_trace_corner_approx));
          translate_dist = Math.min(translate_dist, prev_corner_dist);
          translate_dist = Math.min(translate_dist, other_dist);
          if (translate_dist >= 0.99)
@@ -1088,7 +1088,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner(trace_polyline.corner_count() - 2);
 
-      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().length_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
+      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().dustance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
       
       int end_line_no = trace_polyline.plalinelen(-2);
       if (skip_short_segment)
@@ -1179,8 +1179,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
          double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
-         double prev_corner_dist = Math.abs(translate_line.signed_distance(curr_prev_end_corner.to_float()));
-         double other_dist = Math.abs(translate_line.signed_distance(other_trace_corner_approx));
+         double prev_corner_dist = Math.abs(translate_line.distance_signed(curr_prev_end_corner.to_float()));
+         double other_dist = Math.abs(translate_line.distance_signed(other_trace_corner_approx));
          translate_dist = Math.min(translate_dist, prev_corner_dist);
          translate_dist = Math.min(translate_dist, other_dist);
          if (translate_dist >= 0.99)

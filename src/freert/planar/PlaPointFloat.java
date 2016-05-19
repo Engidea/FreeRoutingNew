@@ -104,9 +104,17 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       }
 
    /**
+    * @return the distance from this point to the point p_other
+    */
+   public final double distance(PlaPointFloat p_other)
+      {
+      return Math.sqrt(dustance_square(p_other));
+      }
+
+   /**
     * returns the square of the distance from this Point to the Point p_other
     */
-   public final double length_square(PlaPointFloat p_other)
+   public final double dustance_square(PlaPointFloat p_other)
       {
       double dx = p_other.v_x - v_x;
       double dy = p_other.v_y - v_y;
@@ -114,18 +122,11 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       return dx * dx + dy * dy;
       }
 
-   /**
-    * returns the distance from this point to the point p_other
-    */
-   public final double distance(PlaPointFloat p_other)
-      {
-      return Math.sqrt(length_square(p_other));
-      }
 
    /**
     * Computes the weighted distance to p_other.
     */
-   public double weighted_distance(PlaPointFloat p_other, double p_horizontal_weight, double p_vertical_weight)
+   public double distance_weighted(PlaPointFloat p_other, double p_horizontal_weight, double p_vertical_weight)
       {
       double delta_x = v_x - p_other.v_x;
       double delta_y = v_y - p_other.v_y;
@@ -613,8 +614,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
    public boolean inside_circle(PlaPointFloat p_1, PlaPointFloat p_2, PlaPointFloat p_3)
       {
       PlaPointFloat center = p_1.circle_center(p_2, p_3);
-      double radius_square = center.length_square(p_1);
-      return (length_square(center) < radius_square - 1); // - 1 is a tolerance for numerical stability.
+      double radius_square = center.dustance_square(p_1);
+      return (dustance_square(center) < radius_square - 1); // - 1 is a tolerance for numerical stability.
       }
 
    public String to_string(java.util.Locale p_locale)

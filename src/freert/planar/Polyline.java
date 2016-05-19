@@ -272,8 +272,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       adjust_direction();
       
+      
 //      adjust_corners();
       }
+   
+   
+
+   
    
    /**
     * I should make the corners all ints and lines join at corners
@@ -283,107 +288,60 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       int check_len = plalinelen(-2);
       
-      adjust_corner_first (0, plaline(0), plaline(1));
-
+      adjust_corner (0, plaline(0), plaline(1));
+      
       for (int index = 1; index < check_len; index++)
          {
          adjust_corner (index, plaline(index), plaline(index+1));
          }
       }
 
-   private void adjust_corner_first (int c_index, PlaLineInt l_cur, PlaLineInt l_next )
+   private void adjust_corner (int c_index, PlaLineInt l_cur, PlaLineInt l_next )
       {
-      PlaPointInt i_point = l_cur.point_a;
-      
-      if ( ! i_point.is_rational() && i_point.equals(l_next.point_a) ) 
-         {
-         // point is not rational and it matches with the next point, we are agood
-         precalculated_corners[c_index] = i_point;
-         return;
-         }
-
       PlaPoint x_point = corner(c_index);
       
-      if ( x_point.is_rational() )
-         {
-         System.err.println("adjust_corner_first index="+c_index);
-         x_point = x_point.round();
-         }
+      if ( ! x_point.is_rational() ) return;
+
+      System.err.println("adjust_corner_first index="+c_index);
       
-      i_point = (PlaPointInt)x_point;
+      PlaPointInt i_point = x_point.round();
       
-      lines_list.set(c_index,adjust_line_first_cur(l_cur,i_point) );
-      lines_list.set(c_index+1,adjust_line_first_next(l_next,i_point) );
+      lines_list.set(c_index  ,adjust_line(l_cur ,i_point) );
+      lines_list.set(c_index+1,adjust_line(l_next,i_point) );
       
       precalculated_corners[c_index] = i_point;
       }
    
    /**
-    * First line has point_a as nearest to the intersection
+    * I should strive to make the distance from p_a and p_b bigger.... so, change either as long as distance is "better
     */
-   private PlaLineInt adjust_line_first_cur ( PlaLineInt x_line, PlaPointInt i_point )
+   private PlaLineInt adjust_line ( PlaLineInt x_line, PlaPointInt i_point )
       {
+      double dist_a_b = x_line.point_a.distance_square(x_line.point_b);
+      
       double dist_ia = i_point.distance_square(x_line.point_a);
       double dist_ib = i_point.distance_square(x_line.point_b);
       
-      if ( dist_ia < dist_ib )
+      if ( dist_ib >= dist_a_b )
          {
-//         System.err.println("Norm");
+         System.err.println("Change a");
          return new PlaLineInt (i_point, x_line.point_b );
          }
-      else
+      else if ( dist_ia >= dist_a_b )
          {
-//         System.err.println("INV");
+         System.err.println("Chnage b");
          return new PlaLineInt (i_point, x_line.point_a );
          }
-      }
-
-   /**
-    * First line next has point_a as nearest to the intersection
-    * I trust that points are "ordered"
-    */
-   private PlaLineInt adjust_line_first_next ( PlaLineInt x_line, PlaPointInt i_point )
-      {
-      if ( i_point.equals(x_line.point_a)) return x_line;
-
-      System.err.println("Fix");
-
-      return new PlaLineInt (i_point, x_line.point_b );
-      }
-
-   
-   private void adjust_corner (int c_index, PlaLineInt l_cur, PlaLineInt l_next )
-      {
-      PlaPointInt i_point = l_cur.point_b;
-      
-      if ( ! i_point.is_rational() &&  i_point.equals(l_next.point_a) ) 
+      else 
          {
-         // point is not rational and it matches with the next point, we are agood
-         precalculated_corners[c_index] = i_point;
-         return;
+         System.err.println("Chnage nochange");
+         return x_line;
          }
-
-      PlaPoint x_point = corner(c_index);
-      
-      if ( x_point.is_rational() )
-         {
-         System.err.println("adjust_corner index="+c_index);
-         x_point = x_point.round();
-         }
-      
-      i_point = (PlaPointInt)x_point;
-      
-      // this should adjust the B point of the current line
-      lines_list.set(c_index,new PlaLineInt(l_cur.point_a,i_point) );
-      
-      // and this instead should fix the a point
-      lines_list.set(c_index+1,new PlaLineInt(i_point,l_next.point_b) );
-      
-      precalculated_corners[c_index] = i_point;
       }
 
 
 
+
    
    
    
@@ -394,38 +352,46 @@ public final class Polyline implements java.io.Serializable, PlaObject
    
    
    
-   
-   
-   
-   // working on this
    
    private void adjust_direction ()
       {
       int test_len = plalinelen(-1);
-      
+
       // turn  the direction of the lines that they point always from the previous corner to the next corner
       // Now, why is not the first and last line checked ? first should point to first and last should point away, no ?
       for (int index = 1; index < test_len; index++)
          {
-         PlaLineInt pre_l = plaline(index-1);
-         
-         PlaSide side_of_line = pre_l.side_of(precalculated_float_corners[index]);
-   
-         if (side_of_line == PlaSide.COLLINEAR) continue;
-   
-         PlaDirection d0 = pre_l.direction();
+         boolean adjust_a = adjust_direction_test(index);
 
-         PlaLineInt cur_l = plaline(index);
-         
-         PlaDirection d1 = cur_l.direction();
-   
-         PlaSide side1 = d0.side_of(d1);
-      
-         if (side1 == side_of_line) continue;
-         
-         lines_list.set(index, cur_l.opposite() );
+         if (  adjust_a ) lines_list.set(index, plaline(index).opposite() );
          }
       }
+   
+   /**
+    * @return true if it needs to be swapped
+    */
+   private boolean adjust_direction_test ( int index )
+      {
+      PlaLineInt pre_l = plaline(index-1);
+      PlaLineInt cur_l = plaline(index);
+      
+      PlaSide side_pre = pre_l.side_of(precalculated_float_corners[index]);
+   
+      if (side_pre == PlaSide.COLLINEAR) return false;
+   
+      PlaDirection pre_l_dir = pre_l.direction();
+
+      PlaDirection cur_l_dir = cur_l.direction();
+   
+      PlaSide side1 = pre_l_dir.side_of(cur_l_dir);
+   
+      if (side1 == side_pre) return false;
+      
+      return true;
+      }
+
+   
+   
    
    
    @Override
@@ -759,7 +725,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          
          for (int jndex = index + 2; jndex < plalinelen(-1); ++jndex)
             {
-            if (corner_approx(jndex - 1).length_square(check_distance_corner) > check_dist_square)
+            if (corner_approx(jndex - 1).dustance_square(check_distance_corner) > check_dist_square)
                {
                break;
                }
@@ -807,7 +773,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          direction_changed = false;
          for (int jndex = index - 2; jndex >= 1; --jndex)
             {
-            if (corner_approx(jndex).length_square(check_distance_corner) > check_dist_square)
+            if (corner_approx(jndex).dustance_square(check_distance_corner) > check_dist_square)
                {
                break;
                }

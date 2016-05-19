@@ -404,7 +404,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       for (int index = 0; index < line_count; ++index)
          {
          PlaPointFloat curr_corner_f = corner_approx(index);
-         double curr_dist = curr_corner_f.length_square(from_point_f);
+         double curr_dist = curr_corner_f.dustance_square(from_point_f);
          if (curr_dist < min_dist)
             {
             min_dist = curr_dist;
@@ -424,7 +424,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
                && (!corner_is_bounded(next_ind) || border_line(next_ind).side_of(projection) == PlaSide.ON_THE_RIGHT))
             {
             PlaPointFloat projection_f = projection.to_float();
-            double curr_dist = projection_f.length_square(from_point_f);
+            double curr_dist = projection_f.dustance_square(from_point_f);
             if (curr_dist < min_dist)
                {
                min_dist = curr_dist;
@@ -492,7 +492,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          if (corner_is_bounded(i))
             {
             PlaPointFloat curr_corner = corner_approx(i);
-            double curr_dist = curr_corner.length_square(p_from_point);
+            double curr_dist = curr_corner.dustance_square(p_from_point);
             for (int j = 0; j < result_count; ++j)
                {
                if (curr_dist < min_dists[j])
@@ -519,7 +519,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == PlaSide.ON_THE_RIGHT)
                && (!corner_is_bounded(next_ind) || border_line(next_ind).side_of(projection) == PlaSide.ON_THE_RIGHT))
             {
-            double curr_dist = projection.length_square(p_from_point);
+            double curr_dist = projection.dustance_square(p_from_point);
             for (int j = 0; j < result_count; ++j)
                {
                if (curr_dist < min_dists[j])
@@ -611,7 +611,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
             if (border_line(curr_ind).side_of(curr_corner) == PlaSide.ON_THE_RIGHT)
                {
                PlaPointFloat projection = curr_corner.projection_approx(border_line(curr_ind));
-               double curr_dist = projection.length_square(curr_corner);
+               double curr_dist = projection.dustance_square(curr_corner);
                if (curr_dist > curr_max_dist)
                   {
                   curr_max_dist = curr_dist;
@@ -655,28 +655,21 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
     */
    public double length()
       {
-      if ( ! is_bounded())
-         {
-         return Integer.MAX_VALUE;
-         }
+      if ( ! is_bounded()) return Integer.MAX_VALUE;
       
-      if (dimension().is_empty())
-         {
-         return 0;
-         }
+      if (dimension().is_empty()) return 0;
       
-      if (dimension().is_line())
-         {
-         return circumference() / 2;
-         }
+      if (dimension().is_line()) return circumference() / 2;
       
       // now the shape is 2-dimensional
       double max_distance = -1;
       double max_distance_2 = -1;
       PlaPointFloat gravity_point = centre_of_gravity();
-      for (int i = 0; i < border_line_count(); ++i)
+      
+      for (int index = 0; index < border_line_count(); ++index)
          {
-         double curr_distance = Math.abs(border_line(i).signed_distance(gravity_point));
+         double curr_distance = Math.abs(border_line(index).distance_signed(gravity_point));
+
          if (curr_distance > max_distance)
             {
             max_distance_2 = max_distance;
@@ -687,6 +680,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
             max_distance_2 = curr_distance;
             }
          }
+      
       return max_distance + max_distance_2;
       }
 
@@ -749,28 +743,29 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * Calculates the minimal distance of p_line to this shape, assuming, that p_line is on the left of this shape. Returns -1, if
-    * p_line is on the right of this shape or intersects with the interiour of this shape.
+    * Calculates the minimal distance of p_line to this shape, assuming, that p_line is on the left of this shape. 
+    * @eturn -1, if  p_line is on the right of this shape or intersects with the interiour of this shape.
     */
    public double distance_to_the_left(PlaLineInt p_line)
       {
       double result = Integer.MAX_VALUE;
-      for (int i = 0; i < border_line_count(); ++i)
+      
+      for (int index = 0; index < border_line_count(); ++index)
          {
-         PlaPointFloat curr_corner = corner_approx(i);
+         PlaPointFloat curr_corner = corner_approx(index);
          PlaSide line_side = p_line.side_of(curr_corner, 1);
+         
          if (line_side == PlaSide.COLLINEAR)
             {
-            line_side = p_line.side_of(corner(i));
+            line_side = p_line.side_of(corner(index));
             }
-         if (line_side == PlaSide.ON_THE_RIGHT)
-            {
-            // curr_point would be outside the result shape
-            result = -1;
-            break;
-            }
-         result = Math.min(result, p_line.signed_distance(curr_corner));
+         
+         // curr_point would be outside the result shape
+         if (line_side == PlaSide.ON_THE_RIGHT) return -1;
+         
+         result = Math.min(result, p_line.distance_signed(curr_corner));
          }
+      
       return result;
       }
 
@@ -897,10 +892,10 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       
          if (curr_intersection.is_NaN()) continue; // lines are parallel
          
-         double curr_distence = curr_intersection.length_square(from_point);
+         double curr_distence = curr_intersection.dustance_square(from_point);
          if (curr_distence < min_distance)
             {
-            boolean direction_ok = curr_border_line.side_of(second_line_point) == PlaSide.ON_THE_LEFT || second_line_point.length_square(curr_intersection) < curr_distence;
+            boolean direction_ok = curr_border_line.side_of(second_line_point) == PlaSide.ON_THE_LEFT || second_line_point.dustance_square(curr_intersection) < curr_distence;
             if (direction_ok)
                {
                result = index;
