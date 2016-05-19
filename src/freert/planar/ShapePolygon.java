@@ -34,7 +34,7 @@ import java.util.Random;
  *
  * @author Alfons Wirtz
  */
-public final class ShapePolygon extends ShapePolyline
+public final class ShapePolygon extends ShapeSegments
    {
    private static final long serialVersionUID = 1L;
    private static final int seed = 99;
@@ -167,7 +167,7 @@ public final class ShapePolygon extends ShapePolyline
       }
 
    @Override
-   public boolean intersects(PlaCircle p_circle)
+   public boolean intersects(ShapeCircle p_circle)
       {
       ShapeTile[] convex_pieces = split_to_convex();
       for (int index = 0; index < convex_pieces.length; ++index)

@@ -32,7 +32,7 @@ import board.RoutingBoard;
 import board.items.BrdAreaConduction;
 import board.varie.ItemFixState;
 import freert.host.HostCom;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTileBox;
 import freert.rules.BoardRules;
 import freert.rules.ClearanceMatrix;
@@ -898,7 +898,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       ShapeTileBox bounds = bounding_box.transform_to_board(p_par.coordinate_transform);
       bounds = bounds.offset(1000);
 
-      Collection<ShapePolyline> board_outline_shapes = new LinkedList<ShapePolyline>();
+      Collection<ShapeSegments> board_outline_shapes = new LinkedList<ShapeSegments>();
       for (DsnShape curr_shape : p_board_construction_info.outline_shapes)
          {
          if (curr_shape instanceof DsnPolygonPath)
@@ -911,7 +911,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                curr_shape = new DsnPolygonPath(curr_path.layer, 0, curr_path.coordinate_arr);
                }
             }
-         ShapePolyline curr_board_shape = (ShapePolyline) curr_shape.transform_to_board(p_par.coordinate_transform);
+         ShapeSegments curr_board_shape = (ShapeSegments) curr_shape.transform_to_board(p_par.coordinate_transform);
 
          if ( ! curr_board_shape.dimension().is_empty() )
             {
@@ -922,10 +922,10 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          {
          // construct an outline from the bounding_shape, if the outline is
          // missing.
-         ShapePolyline curr_board_shape = (ShapePolyline) p_board_construction_info.bounding_shape.transform_to_board(p_par.coordinate_transform);
+         ShapeSegments curr_board_shape = (ShapeSegments) p_board_construction_info.bounding_shape.transform_to_board(p_par.coordinate_transform);
          board_outline_shapes.add(curr_board_shape);
          }
-      Collection<ShapePolyline> hole_shapes = separate_holes(board_outline_shapes);
+      Collection<ShapeSegments> hole_shapes = separate_holes(board_outline_shapes);
       
       ClearanceMatrix clearance_matrix = ClearanceMatrix.get_default_instance(board_layer_structure, 0);
       
@@ -935,8 +935,8 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       
       HostCom board_communication = new HostCom(p_par.dsn_unit_meas, p_par.dsn_resolution, specctra_parser_info, p_par.coordinate_transform, p_par.item_id_no_generator);
 
-      ShapePolyline[] outline_shape_arr = new ShapePolyline[board_outline_shapes.size()];
-      Iterator<ShapePolyline> it2 = board_outline_shapes.iterator();
+      ShapeSegments[] outline_shape_arr = new ShapeSegments[board_outline_shapes.size()];
+      Iterator<ShapeSegments> it2 = board_outline_shapes.iterator();
       for (int i = 0; i < outline_shape_arr.length; ++i)
          {
          outline_shape_arr[i] = it2.next();
@@ -949,7 +949,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       RoutingBoard board = p_par.i_board.get_routing_board();
 
       // Insert the holes in the board outline as keepouts.
-      for (ShapePolyline curr_outline_hole : hole_shapes)
+      for (ShapeSegments curr_outline_hole : hole_shapes)
          {
          for (int i = 0; i < board_layer_structure.size(); ++i)
             {
@@ -1012,10 +1012,10 @@ public final class DsnKeywordStructure extends DsnKeywordScope
     * Calculates shapes in p_outline_shapes, which are holes in the outline and
     * returns them in the result list.
     */
-   private static Collection<ShapePolyline> separate_holes(Collection<ShapePolyline> p_outline_shapes)
+   private static Collection<ShapeSegments> separate_holes(Collection<ShapeSegments> p_outline_shapes)
       {
       DsnStructureOutlineShape shape_arr[] = new DsnStructureOutlineShape[p_outline_shapes.size()];
-      Iterator<ShapePolyline> it = p_outline_shapes.iterator();
+      Iterator<ShapeSegments> it = p_outline_shapes.iterator();
       for (int i = 0; i < shape_arr.length; ++i)
          {
          shape_arr[i] = new DsnStructureOutlineShape(it.next());
@@ -1038,7 +1038,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
             curr_shape.is_hole = other_shape.contains_all_corners(curr_shape);
             }
          }
-      Collection<ShapePolyline> hole_list = new LinkedList<ShapePolyline>();
+      Collection<ShapeSegments> hole_list = new LinkedList<ShapeSegments>();
       for (int i = 0; i < shape_arr.length; ++i)
          {
          if (shape_arr[i].is_hole)

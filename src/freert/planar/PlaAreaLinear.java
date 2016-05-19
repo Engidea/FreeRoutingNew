@@ -26,19 +26,19 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * A PolylineArea is an Area, where the outside border curve and the hole borders consist of straight lines.
+ * A PlaAreaLinear is an Area, where the outside border curve and the hole borders consist of straight lines.
  *
  * @author Alfons Wirtz
  */
-public final class PolylineArea implements PlaArea, Serializable
+public final class PlaAreaLinear implements PlaArea, Serializable
    {
    private static final long serialVersionUID = 1L;
 
-   final ShapePolyline border_shape;
-   final ShapePolyline[] hole_arr;
+   final ShapeSegments border_shape;
+   final ShapeSegments[] hole_arr;
    transient private ShapeTile[] precalculated_convex_pieces = null;
 
-   public PolylineArea(ShapePolyline p_border_shape, ShapePolyline[] p_hole_arr)
+   public PlaAreaLinear(ShapeSegments p_border_shape, ShapeSegments[] p_hole_arr)
       {
       border_shape = p_border_shape;
       hole_arr = p_hole_arr;
@@ -75,13 +75,13 @@ public final class PolylineArea implements PlaArea, Serializable
       }
 
    @Override
-   public ShapePolyline get_border()
+   public ShapeSegments get_border()
       {
       return border_shape;
       }
 
    @Override
-   public ShapePolyline[] get_holes()
+   public ShapeSegments[] get_holes()
       {
       return hole_arr;
       }
@@ -152,20 +152,20 @@ public final class PolylineArea implements PlaArea, Serializable
       }
 
    @Override
-   public PolylineArea translate_by(PlaVectorInt p_vector)
+   public PlaAreaLinear translate_by(PlaVectorInt p_vector)
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
 
-      ShapePolyline translated_border = border_shape.translate_by(p_vector);
+      ShapeSegments translated_border = border_shape.translate_by(p_vector);
 
-      ShapePolyline[] translated_holes = new ShapePolyline[hole_arr.length];
+      ShapeSegments[] translated_holes = new ShapeSegments[hole_arr.length];
       
       for (int index = 0; index < hole_arr.length; ++index)
          {
          translated_holes[index] = hole_arr[index].translate_by(p_vector);
          }
       
-      return new PolylineArea(translated_border, translated_holes);
+      return new PlaAreaLinear(translated_border, translated_holes);
       }
 
    @Override
@@ -262,52 +262,52 @@ public final class PolylineArea implements PlaArea, Serializable
       }
 
    @Override
-   public PolylineArea turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public PlaAreaLinear turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      ShapePolyline new_border = border_shape.turn_90_degree(p_factor, p_pole);
-      ShapePolyline[] new_hole_arr = new ShapePolyline[hole_arr.length];
+      ShapeSegments new_border = border_shape.turn_90_degree(p_factor, p_pole);
+      ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
       for (int i = 0; i < new_hole_arr.length; ++i)
          {
          new_hole_arr[i] = hole_arr[i].turn_90_degree(p_factor, p_pole);
          }
-      return new PolylineArea(new_border, new_hole_arr);
+      return new PlaAreaLinear(new_border, new_hole_arr);
       }
 
    @Override
-   public PolylineArea rotate_approx(double p_angle, PlaPointFloat p_pole)
+   public PlaAreaLinear rotate_approx(double p_angle, PlaPointFloat p_pole)
       {
-      ShapePolyline new_border = border_shape.rotate_approx(p_angle, p_pole);
-      ShapePolyline[] new_hole_arr = new ShapePolyline[hole_arr.length];
+      ShapeSegments new_border = border_shape.rotate_approx(p_angle, p_pole);
+      ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
       for (int i = 0; i < new_hole_arr.length; ++i)
          {
          new_hole_arr[i] = hole_arr[i].rotate_approx(p_angle, p_pole);
          }
-      return new PolylineArea(new_border, new_hole_arr);
+      return new PlaAreaLinear(new_border, new_hole_arr);
       }
 
    @Override
-   public PolylineArea mirror_vertical(PlaPointInt p_pole)
+   public PlaAreaLinear mirror_vertical(PlaPointInt p_pole)
       {
-      ShapePolyline new_border = border_shape.mirror_vertical(p_pole);
-      ShapePolyline[] new_hole_arr = new ShapePolyline[hole_arr.length];
+      ShapeSegments new_border = border_shape.mirror_vertical(p_pole);
+      ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
       for (int i = 0; i < new_hole_arr.length; ++i)
          {
          new_hole_arr[i] = hole_arr[i].mirror_vertical(p_pole);
          }
-      return new PolylineArea(new_border, new_hole_arr);
+      return new PlaAreaLinear(new_border, new_hole_arr);
 
       }
 
    @Override
-   public PolylineArea mirror_horizontal(PlaPointInt p_pole)
+   public PlaAreaLinear mirror_horizontal(PlaPointInt p_pole)
       {
-      ShapePolyline new_border = border_shape.mirror_horizontal(p_pole);
-      ShapePolyline[] new_hole_arr = new ShapePolyline[hole_arr.length];
+      ShapeSegments new_border = border_shape.mirror_horizontal(p_pole);
+      ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
       for (int i = 0; i < new_hole_arr.length; ++i)
          {
          new_hole_arr[i] = hole_arr[i].mirror_horizontal(p_pole);
          }
-      return new PolylineArea(new_border, new_hole_arr);
+      return new PlaAreaLinear(new_border, new_hole_arr);
 
       }
 

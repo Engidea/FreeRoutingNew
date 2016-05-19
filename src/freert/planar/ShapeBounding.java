@@ -54,7 +54,7 @@ public interface ShapeBounding
    /**
     * Auxiliary function to implement the same function with parameter type ConvexShape.
     */
-   ShapeTileRegular bounds(PlaCircle p_circle);
+   ShapeTileRegular bounds(ShapeCircle p_circle);
 
    /**
     * Auxiliary function to implement the same function with parameter type ConvexShape.

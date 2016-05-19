@@ -75,7 +75,7 @@ import freert.host.HostCom;
 import freert.planar.PlaCoordTransform;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTileBox;
 import freert.rules.BoardRules;
 import freert.rules.NetClass;
@@ -656,7 +656,7 @@ public final class IteraBoard
    public void create_board(
          ShapeTileBox p_bounding_box, 
          BrdLayerStructure p_layer_structure, 
-         ShapePolyline[] p_outline_shapes, 
+         ShapeSegments[] p_outline_shapes, 
          String p_outline_clearance_class_name, 
          BoardRules p_rules,
          HostCom p_communication )

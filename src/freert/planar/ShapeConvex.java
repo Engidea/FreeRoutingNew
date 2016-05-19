@@ -21,7 +21,8 @@
 package freert.planar;
 
 /**
- * A shape is defined as convex, if for each line segment with both endpoints contained in the shape the whole segment is contained completely in the shape.
+ * A shape is defined as convex, if for each line segment with both endpoints contained in the shape 
+ * the whole segment is contained completely in the shape.
  * @author Alfons Wirtz
  */
 public interface ShapeConvex extends PlaShape

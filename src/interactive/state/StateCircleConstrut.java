@@ -25,7 +25,7 @@ import interactive.IteraBoard;
 import interactive.LogfileScope;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
-import freert.planar.PlaCircle;
+import freert.planar.ShapeCircle;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapeConvex;
@@ -90,7 +90,7 @@ public class StateCircleConstrut extends StateInteractive
       
       if (construction_succeeded)
          {
-         obstacle_shape = new PlaCircle(center, radius);
+         obstacle_shape = new ShapeCircle(center, radius);
          if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
             {
             obstacle_shape = obstacle_shape.bounding_box();

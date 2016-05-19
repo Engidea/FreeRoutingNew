@@ -591,7 +591,7 @@ public class SpectraSesToEagle extends javax.swing.JFrame
       out_file.write(via_diameter.toString());
 
       // Shape lesen und einsetzen Square / Round / Octagon
-      if (via_shape instanceof freert.planar.PlaCircle)
+      if (via_shape instanceof freert.planar.ShapeCircle)
          {
          out_file.write(" round ");
          }

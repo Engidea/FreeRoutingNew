@@ -24,7 +24,7 @@ import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTileBox;
 
 /**
@@ -210,15 +210,15 @@ public final class DsnCoordinateTransform implements java.io.Serializable
          {
          result = new DsnRectangle(p_layer, board_to_dsn((ShapeTileBox) p_board_shape));
          }
-      else if (p_board_shape instanceof ShapePolyline)
+      else if (p_board_shape instanceof ShapeSegments)
          {
-         PlaPointFloat[] corners = ((ShapePolyline) p_board_shape).corner_approx_arr();
+         PlaPointFloat[] corners = ((ShapeSegments) p_board_shape).corner_approx_arr();
          double[] coors = board_to_dsn(corners);
          result = new DsnPolygon(p_layer, coors);
          }
-      else if (p_board_shape instanceof freert.planar.PlaCircle)
+      else if (p_board_shape instanceof freert.planar.ShapeCircle)
          {
-         freert.planar.PlaCircle board_circle = (freert.planar.PlaCircle) p_board_shape;
+         freert.planar.ShapeCircle board_circle = (freert.planar.ShapeCircle) p_board_shape;
          double diameter = 2 * board_to_dsn(board_circle.radius);
          double[] center_coor = board_to_dsn(board_circle.center.to_float());
          result = new DsnCircle(p_layer, diameter, center_coor[0], center_coor[1]);
@@ -241,15 +241,15 @@ public final class DsnCoordinateTransform implements java.io.Serializable
          {
          result = new DsnRectangle(p_layer, board_to_dsn_rel((ShapeTileBox) p_board_shape));
          }
-      else if (p_board_shape instanceof ShapePolyline)
+      else if (p_board_shape instanceof ShapeSegments)
          {
-         PlaPointFloat[] corners = ((ShapePolyline) p_board_shape).corner_approx_arr();
+         PlaPointFloat[] corners = ((ShapeSegments) p_board_shape).corner_approx_arr();
          double[] coors = board_to_dsn_rel(corners);
          result = new DsnPolygon(p_layer, coors);
          }
-      else if (p_board_shape instanceof freert.planar.PlaCircle)
+      else if (p_board_shape instanceof freert.planar.ShapeCircle)
          {
-         freert.planar.PlaCircle board_circle = (freert.planar.PlaCircle) p_board_shape;
+         freert.planar.ShapeCircle board_circle = (freert.planar.ShapeCircle) p_board_shape;
          double diameter = 2 * board_to_dsn(board_circle.radius);
          double[] center_coor = board_to_dsn_rel(board_circle.center.to_float());
          result = new DsnCircle(p_layer, diameter, center_coor[0], center_coor[1]);

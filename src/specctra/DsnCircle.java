@@ -56,7 +56,7 @@ public class DsnCircle extends DsnShape
       location[1] = coor[2];
       PlaPointInt center = p_coordinate_transform.dsn_to_board(location).round();
       int radius = (int) Math.round(p_coordinate_transform.dsn_to_board(coor[0]) / 2);
-      return new freert.planar.PlaCircle(center, radius);
+      return new freert.planar.ShapeCircle(center, radius);
       }
 
    public freert.planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
@@ -67,7 +67,7 @@ public class DsnCircle extends DsnShape
          {
          new_coor[i] = Math.round(p_coordinate_transform.dsn_to_board(coor[i]));
          }
-      return new freert.planar.PlaCircle(new PlaPointInt(new_coor[1], new_coor[2]), (int)new_coor[0]);
+      return new freert.planar.ShapeCircle(new PlaPointInt(new_coor[1], new_coor[2]), (int)new_coor[0]);
       }
 
    public DsnRectangle bounding_box()

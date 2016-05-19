@@ -92,17 +92,17 @@ public final class PlaCoordTransform implements java.io.Serializable
    public PrintableShape board_to_user(PlaShape p_shape, java.util.Locale p_locale)
       {
       PrintableShape result;
-      if (p_shape instanceof PlaCircle)
+      if (p_shape instanceof ShapeCircle)
          {
-         result = board_to_user((PlaCircle) p_shape, p_locale);
+         result = board_to_user((ShapeCircle) p_shape, p_locale);
          }
       else if (p_shape instanceof ShapeTileBox)
          {
          result = board_to_user((ShapeTileBox) p_shape, p_locale);
          }
-      else if (p_shape instanceof ShapePolyline)
+      else if (p_shape instanceof ShapeSegments)
          {
-         result = board_to_user((ShapePolyline) p_shape, p_locale);
+         result = board_to_user((ShapeSegments) p_shape, p_locale);
          }
       else
          {
@@ -112,7 +112,7 @@ public final class PlaCoordTransform implements java.io.Serializable
       return result;
       }
 
-   public PrintableCircle board_to_user(freert.planar.PlaCircle p_circle, java.util.Locale p_locale)
+   public PrintableCircle board_to_user(freert.planar.ShapeCircle p_circle, java.util.Locale p_locale)
       {
       return new PrintableCircle(board_to_user(p_circle.center.to_float()), board_to_user(p_circle.radius), p_locale);
       }
@@ -122,7 +122,7 @@ public final class PlaCoordTransform implements java.io.Serializable
       return new PrintableRectangle(board_to_user(p_box.box_ll.to_float()), board_to_user(p_box.box_ur.to_float()), p_locale);
       }
 
-   public PrintablePolygon board_to_user(freert.planar.ShapePolyline p_shape, java.util.Locale p_locale)
+   public PrintablePolygon board_to_user(freert.planar.ShapeSegments p_shape, java.util.Locale p_locale)
       {
       PlaPointFloat[] corners = p_shape.corner_approx_arr();
       PlaPointFloat[] transformed_corners = new PlaPointFloat[corners.length];

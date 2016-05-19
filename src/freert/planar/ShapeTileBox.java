@@ -859,7 +859,7 @@ public final class ShapeTileBox extends ShapeTileRegular
       }
 
    @Override
-   public boolean intersects(PlaCircle p_other)
+   public boolean intersects(ShapeCircle p_other)
       {
       return p_other.intersects(this);
       }

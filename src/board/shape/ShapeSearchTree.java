@@ -44,7 +44,7 @@ import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeBounding;
 import freert.planar.ShapeConvex;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
@@ -1043,7 +1043,7 @@ public class ShapeSearchTree extends ShapeTreeMinArea
             {
             for (int shape_no = 0; shape_no < p_board_outline.shape_count(); ++shape_no)
                {
-               ShapePolyline curr_outline_shape = p_board_outline.get_shape(shape_no);
+               ShapeSegments curr_outline_shape = p_board_outline.get_shape(shape_no);
                int border_line_count = curr_outline_shape.border_line_count();
                curr_line_arr[0] = curr_outline_shape.border_line(border_line_count - 1);
                

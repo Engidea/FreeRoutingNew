@@ -37,11 +37,11 @@ import java.io.ObjectOutputStream;
 import main.Stat;
 import board.BrdLayerStructure;
 import freert.planar.PlaArea;
-import freert.planar.PlaCircle;
+import freert.planar.ShapeCircle;
 import freert.planar.PlaEllipse;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaShape;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 
@@ -242,7 +242,7 @@ public final class GdiContext implements java.io.Serializable
     */
    public void draw_boundary(PlaShape p_shape, double p_draw_half_width, Color p_color, Graphics p_g, double p_translucency_factor)
       {
-      if (p_shape instanceof ShapePolyline)
+      if (p_shape instanceof ShapeSegments)
          {
          PlaPointFloat[] draw_corners = p_shape.corner_approx_arr();
 
@@ -255,9 +255,9 @@ public final class GdiContext implements java.io.Serializable
          closed_draw_corners[closed_draw_corners.length - 1] = draw_corners[0];
          draw(closed_draw_corners, p_draw_half_width, p_color, p_g, p_translucency_factor);
          }
-      else if (p_shape instanceof PlaCircle)
+      else if (p_shape instanceof ShapeCircle)
          {
-         PlaCircle curr_circle = (PlaCircle) p_shape;
+         ShapeCircle curr_circle = (ShapeCircle) p_shape;
          draw_circle(curr_circle.center.to_float(), curr_circle.radius, p_draw_half_width, p_color, p_g, p_translucency_factor);
          }
       }
@@ -278,7 +278,7 @@ public final class GdiContext implements java.io.Serializable
    /**
     * Draws the interiour of a circle
     */
-   public void fill_circle(PlaCircle p_circle, Graphics p_g, Color p_color, double p_translucency_factor)
+   public void fill_circle(ShapeCircle p_circle, Graphics p_g, Color p_color, double p_translucency_factor)
       {
       if (p_color == null)
          {
@@ -425,13 +425,13 @@ public final class GdiContext implements java.io.Serializable
       {
       if (p_color == null || p_area.is_empty()) return;
 
-      if (p_area instanceof PlaCircle)
+      if (p_area instanceof ShapeCircle)
          {
-         fill_circle((PlaCircle) p_area, p_g, p_color, p_translucency_factor);
+         fill_circle((ShapeCircle) p_area, p_g, p_color, p_translucency_factor);
          }
       else
          {
-         ShapePolyline border = (ShapePolyline) p_area.get_border();
+         ShapeSegments border = (ShapeSegments) p_area.get_border();
          if (!border.is_bounded())
             {
             System.out.println("GraphicsContext.fill_area: shape not bounded");
@@ -448,14 +448,14 @@ public final class GdiContext implements java.io.Serializable
          PlaPointFloat[][] draw_polygons = new PlaPointFloat[holes.length + 1][];
          for (int j = 0; j < draw_polygons.length; ++j)
             {
-            ShapePolyline curr_draw_shape;
+            ShapeSegments curr_draw_shape;
             if (j == 0)
                {
                curr_draw_shape = border;
                }
             else
                {
-               curr_draw_shape = (ShapePolyline) holes[j - 1];
+               curr_draw_shape = (ShapeSegments) holes[j - 1];
                }
             draw_polygons[j] = new PlaPointFloat[curr_draw_shape.border_line_count() + 1];
             PlaPointFloat curr_draw_polygon[] = draw_polygons[j];

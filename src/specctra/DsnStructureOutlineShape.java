@@ -1,7 +1,7 @@
 package specctra;
 
 import freert.planar.PlaPointInt;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 
@@ -10,12 +10,12 @@ import freert.planar.ShapeTileBox;
  */
 public final class DsnStructureOutlineShape
    {
-   final ShapePolyline shape;
+   final ShapeSegments shape;
    final ShapeTileBox bounding_box;
    final ShapeTile[] convex_shapes;
    boolean is_hole;
 
-   public DsnStructureOutlineShape(ShapePolyline p_shape)
+   public DsnStructureOutlineShape(ShapeSegments p_shape)
       {
       shape = p_shape;
       bounding_box = p_shape.bounding_box();

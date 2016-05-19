@@ -27,7 +27,7 @@ import board.varie.ItemFixState;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
 import freert.library.LibPadstack;
-import freert.planar.PlaCircle;
+import freert.planar.ShapeCircle;
 import freert.planar.PlaLimits;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -77,7 +77,7 @@ public final class AlgoShoveVia
          {
          return ShoveDrillResult.NOT_DRILLABLE;
          }
-      ShapeConvex via_shape = new PlaCircle((PlaPointInt) p_location, (int) Math.ceil(p_via_radius));
+      ShapeConvex via_shape = new ShapeCircle((PlaPointInt) p_location, (int) Math.ceil(p_via_radius));
 
       double check_radius = p_via_radius + 0.5 * r_board.get_clearance(p_cl_class, p_cl_class, p_layer) + r_board.get_min_trace_half_width();
 
@@ -197,11 +197,11 @@ public final class AlgoShoveVia
          
          curr_pad_shape = (PlaShape) curr_pad_shape.translate_by(translate_vector);
          ShapeTile tile_shape;
-         PlaCircle start_trace_circle;
+         ShapeCircle start_trace_circle;
          
          if (p_trace_pen_halfwidth_arr[index] > 0 && p_location instanceof PlaPointInt)
             {
-            start_trace_circle = new PlaCircle((PlaPointInt) p_location, p_trace_pen_halfwidth_arr[index]);
+            start_trace_circle = new ShapeCircle((PlaPointInt) p_location, p_trace_pen_halfwidth_arr[index]);
             }
          else
             {

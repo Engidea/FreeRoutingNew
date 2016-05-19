@@ -30,13 +30,13 @@ import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.planar.PlaArea;
-import freert.planar.PlaCircle;
+import freert.planar.ShapeCircle;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
-import freert.planar.PolylineArea;
+import freert.planar.PlaAreaLinear;
 import freert.planar.ShapePolygon;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 
 /**
  * Interactive cutting a hole into an obstacle shape
@@ -85,7 +85,7 @@ public class StateConstructHole extends StateConstructCorner
          return false;
          }
       item_to_modify = (BrdArea) found_item;
-      if (item_to_modify.get_area() instanceof PlaCircle)
+      if (item_to_modify.get_area() instanceof ShapeCircle)
          {
          i_brd.screen_messages.set_status_message(resources.getString("adding_hole_to_circle_not_yet_implemented"));
          return false;
@@ -128,23 +128,23 @@ public class StateConstructHole extends StateConstructCorner
       add_corner_for_snap_angle();
       int corner_count = corner_list.size();
       boolean construction_succeeded = (corner_count > 2);
-      ShapePolyline[] new_holes = null;
-      ShapePolyline new_border = null;
+      ShapeSegments[] new_holes = null;
+      ShapeSegments new_border = null;
       if (construction_succeeded)
          {
          PlaArea obs_area = item_to_modify.get_area();
          PlaShape[] old_holes = obs_area.get_holes();
-         new_border = (ShapePolyline) obs_area.get_border();
+         new_border = (ShapeSegments) obs_area.get_border();
          if (new_border == null)
             {
             construction_succeeded = false;
             }
          else
             {
-            new_holes = new ShapePolyline[old_holes.length + 1];
+            new_holes = new ShapeSegments[old_holes.length + 1];
             for (int i = 0; i < old_holes.length; ++i)
                {
-               new_holes[i] = (ShapePolyline) old_holes[i];
+               new_holes[i] = (ShapeSegments) old_holes[i];
                if (new_holes[i] == null)
                   {
                   construction_succeeded = false;
@@ -162,7 +162,7 @@ public class StateConstructHole extends StateConstructCorner
             new_hole_corners[i] = it.next();
             }
          new_holes[new_holes.length - 1] = new ShapePolygon(new_hole_corners);
-         PolylineArea new_obs_area = new PolylineArea(new_border, new_holes);
+         PlaAreaLinear new_obs_area = new PlaAreaLinear(new_border, new_holes);
 
          if (new_obs_area.split_to_convex() == null)
             {

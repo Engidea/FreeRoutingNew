@@ -24,18 +24,19 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * Describes functionality of a circle shape in the plane.
+ * Describes functionality of a circle shape in the plane
+ * So, if we look at the class hierarchy.... this should not be a Shape, since is is a curved one...
  *
  * @author Alfons Wirtz
  */
-public final class PlaCircle implements ShapeConvex , Serializable
+public final class ShapeCircle implements ShapeConvex , Serializable
    {
    private static final long serialVersionUID = 1L;
 
    public final PlaPointInt center;
    public final int radius;
    
-   public PlaCircle(PlaPointInt p_center, int p_radius)
+   public ShapeCircle(PlaPointInt p_center, int p_radius)
       {
       center = p_center;
       if (p_radius < 0)
@@ -49,7 +50,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
          }
       }
    
-   public PlaCircle(PlaPointInt p_center, double p_radius)
+   public ShapeCircle(PlaPointInt p_center, double p_radius)
       {
       this(p_center, (int)Math.round(p_radius));
       }
@@ -248,31 +249,31 @@ public final class PlaCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public PlaCircle turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public ShapeCircle turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       PlaPointInt new_center = center.turn_90_degree(p_factor, p_pole);
-      return new PlaCircle(new_center, radius);
+      return new ShapeCircle(new_center, radius);
       }
 
    @Override
-   public PlaCircle rotate_approx(double p_angle, PlaPointFloat p_pole)
+   public ShapeCircle rotate_approx(double p_angle, PlaPointFloat p_pole)
       {
       PlaPointInt new_center = center.to_float().rotate(p_angle, p_pole).round();
-      return new PlaCircle(new_center, radius);
+      return new ShapeCircle(new_center, radius);
       }
 
    @Override
-   public PlaCircle mirror_vertical(PlaPointInt p_pole)
+   public ShapeCircle mirror_vertical(PlaPointInt p_pole)
       {
       PlaPointInt new_center = center.mirror_vertical(p_pole);
-      return new PlaCircle(new_center, radius);
+      return new ShapeCircle(new_center, radius);
       }
 
    @Override
-   public PlaCircle mirror_horizontal(PlaPointInt p_pole)
+   public ShapeCircle mirror_horizontal(PlaPointInt p_pole)
       {
       PlaPointInt new_center = center.mirror_horizontal(p_pole);
-      return new PlaCircle(new_center, radius);
+      return new ShapeCircle(new_center, radius);
       }
 
    @Override
@@ -294,30 +295,30 @@ public final class PlaCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public PlaCircle offset(double p_offset)
+   public ShapeCircle offset(double p_offset)
       {
       double new_radius = radius + p_offset;
       int r = (int) Math.round(new_radius);
-      return new PlaCircle(center, r);
+      return new ShapeCircle(center, r);
       }
 
    @Override
-   public PlaCircle shrink(double p_offset)
+   public ShapeCircle shrink(double p_offset)
       {
       double new_radius = radius - p_offset;
       int r = Math.max((int) Math.round(new_radius), 1);
-      return new PlaCircle(center, r);
+      return new ShapeCircle(center, r);
       }
 
 
    @Override
-   public PlaCircle translate_by(PlaVectorInt p_vector)
+   public ShapeCircle translate_by(PlaVectorInt p_vector)
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
 
       PlaPointInt new_center = center.translate_by(p_vector);
       
-      return new PlaCircle(new_center, radius);
+      return new ShapeCircle(new_center, radius);
       }
 
    @Override
@@ -335,12 +336,12 @@ public final class PlaCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public PlaCircle enlarge(double p_offset)
+   public ShapeCircle enlarge(double p_offset)
       {
       if (p_offset == 0) return this;
 
       int new_radius = radius + (int) Math.round(p_offset);
-      return new PlaCircle(center, new_radius);
+      return new ShapeCircle(center, new_radius);
       }
 
    @Override
@@ -357,7 +358,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public boolean intersects(PlaCircle p_other)
+   public boolean intersects(ShapeCircle p_other)
       {
       double d_square = radius + p_other.radius;
       d_square *= d_square;
@@ -391,7 +392,7 @@ public final class PlaCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public PlaCircle get_border()
+   public ShapeCircle get_border()
       {
       return this;
       }

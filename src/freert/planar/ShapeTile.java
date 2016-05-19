@@ -26,7 +26,7 @@ import java.util.LinkedList;
  *
  * @author Alfons Wirtz
  */
-public abstract class ShapeTile extends ShapePolyline implements ShapeConvex
+public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    {
    private static final long serialVersionUID = 1L;
 

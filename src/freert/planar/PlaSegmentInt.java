@@ -71,7 +71,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    /**
     * Creates the p_no-th line segment of p_shape for p_no between 0 and p_shape.line_count - 1.
     */
-   public PlaSegmentInt(ShapePolyline p_shape, int p_no)
+   public PlaSegmentInt(ShapeSegments p_shape, int p_no)
       {
       int line_count = p_shape.border_line_count();
       

@@ -30,8 +30,8 @@ import freert.planar.PlaArea;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
-import freert.planar.PolylineArea;
-import freert.planar.ShapePolyline;
+import freert.planar.PlaAreaLinear;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.varie.NetNosList;
@@ -48,14 +48,14 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    public static final int HALF_WIDTH = 100;
 
    // The board shapes inside the outline curves
-   private ShapePolyline[] shapes;
+   private ShapeSegments[] shapes;
    // The board shape outside the outline curves, where a keepout will be generated The outline curves are holes of the keepout_area.
    private PlaArea keepout_area = null;
    // Used instead of keepout_area if only the line shapes of the outlines are inserted as keepout.
    private ShapeTile[] keepout_lines = null;
    private boolean keepout_outside_outline = false;
    
-   public BrdOutline(ShapePolyline[] p_shapes, int p_clearance_class_no, int p_id_no, RoutingBoard p_board)
+   public BrdOutline(ShapeSegments[] p_shapes, int p_clearance_class_no, int p_id_no, RoutingBoard p_board)
       {
       super(NetNosList.EMPTY, p_clearance_class_no, p_id_no, 0, ItemFixState.SYSTEM_FIXED, p_board);
       shapes = p_shapes;
@@ -115,7 +115,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    public ShapeTileBox bounding_box()
       {
       ShapeTileBox result = ShapeTileBox.EMPTY;
-      for (ShapePolyline curr_shape : shapes)
+      for (ShapeSegments curr_shape : shapes)
          {
          result = result.union(curr_shape.bounding_box());
          }
@@ -143,7 +143,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    @Override
    public void translate_by(PlaVectorInt p_vector)
       {
-      for (ShapePolyline curr_shape : shapes)
+      for (ShapeSegments curr_shape : shapes)
          {
          curr_shape = curr_shape.translate_by(p_vector);
          }
@@ -157,7 +157,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      for (ShapePolyline curr_shape : shapes)
+      for (ShapeSegments curr_shape : shapes)
          {
          curr_shape = curr_shape.turn_90_degree(p_factor, p_pole);
          }
@@ -172,7 +172,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
       {
       double angle = Math.toRadians(p_angle_in_degree);
-      for (ShapePolyline curr_shape : shapes)
+      for (ShapeSegments curr_shape : shapes)
          {
          curr_shape = curr_shape.rotate_approx(angle, p_pole);
 
@@ -187,7 +187,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
-      for (ShapePolyline curr_shape : shapes)
+      for (ShapeSegments curr_shape : shapes)
          {
          curr_shape = curr_shape.mirror_vertical(p_pole);
          }
@@ -216,7 +216,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       return shapes.length;
       }
 
-   public ShapePolyline get_shape(int p_index)
+   public ShapeSegments get_shape(int p_index)
       {
       if (p_index < 0 || p_index >= shapes.length)
          {
@@ -255,12 +255,12 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       {
       if (keepout_area == null)
          {
-         ShapePolyline[] hole_arr = new ShapePolyline[shapes.length];
+         ShapeSegments[] hole_arr = new ShapeSegments[shapes.length];
          for (int i = 0; i < hole_arr.length; ++i)
             {
             hole_arr[i] = shapes[i];
             }
-         keepout_area = new PolylineArea(r_board.bounding_box, hole_arr);
+         keepout_area = new PlaAreaLinear(r_board.bounding_box, hole_arr);
          }
       
       return keepout_area;
@@ -280,7 +280,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       {
       if (p_graphics_context == null || p_intensity <= 0) return;
 
-      for (ShapePolyline curr_shape : shapes)
+      for (ShapeSegments curr_shape : shapes)
          {
          PlaPointFloat[] draw_corners = curr_shape.corner_approx_arr();
          PlaPointFloat[] closed_draw_corners = new PlaPointFloat[draw_corners.length + 1];
@@ -348,7 +348,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    public int line_count()
       {
       int result = 0;
-      for (ShapePolyline curr_shape : shapes)
+      for (ShapeSegments curr_shape : shapes)
          {
          result += curr_shape.border_line_count();
          }

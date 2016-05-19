@@ -52,7 +52,7 @@ public final class ShapeBounding_45_Degree implements ShapeBounding
       return p_simplex.bounding_octagon();
       }
 
-   public ShapeTileRegular bounds(PlaCircle p_circle)
+   public ShapeTileRegular bounds(ShapeCircle p_circle)
       {
       return p_circle.bounding_octagon();
       }

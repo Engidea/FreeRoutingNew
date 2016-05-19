@@ -1220,7 +1220,7 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    @Override   
-   public boolean intersects(PlaCircle p_circle)
+   public boolean intersects(ShapeCircle p_circle)
       {
       return p_circle.intersects(this);
       }

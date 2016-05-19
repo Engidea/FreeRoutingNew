@@ -76,7 +76,7 @@ import freert.planar.PlaSegmentInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
-import freert.planar.ShapePolyline;
+import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
@@ -147,7 +147,7 @@ public final class RoutingBoard implements java.io.Serializable
    public RoutingBoard(
          ShapeTileBox p_bounding_box, 
          BrdLayerStructure p_layer_structure, 
-         ShapePolyline[] p_outline_shapes, 
+         ShapeSegments[] p_outline_shapes, 
          int p_outline_cl_class_no, 
          BoardRules p_rules, 
          HostCom p_host_com,
@@ -427,7 +427,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts an Outline into the board.
     */
-   public BrdOutline insert_outline(ShapePolyline[] p_outline_shapes, int p_clearance_class_no)
+   public BrdOutline insert_outline(ShapeSegments[] p_outline_shapes, int p_clearance_class_no)
       {
       BrdOutline result = new BrdOutline(p_outline_shapes, p_clearance_class_no, 0, this);
       insert_item(result);

@@ -35,7 +35,7 @@ import board.shape.ShapeTreeEntry;
 import freert.graphics.GdiContext;
 import freert.planar.PlaDimension;
 import freert.planar.PlaPointInt;
-import freert.planar.PolylineArea;
+import freert.planar.PlaAreaLinear;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 
@@ -125,7 +125,7 @@ public final class ExpandDrillPage implements ExpandObject
          holes[index] = iter.next();
          }
       
-      PolylineArea shape_with_holes = new PolylineArea(page_shape, holes);
+      PlaAreaLinear shape_with_holes = new PlaAreaLinear(page_shape, holes);
       ShapeTile[] drill_shapes = shape_with_holes.split_to_convex();
 
       // Use the center points of these drill shapes to try making a via.

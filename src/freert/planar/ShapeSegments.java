@@ -22,11 +22,11 @@ package freert.planar;
 
 
 /**
- * Abstract class with functions for shapes, whose borders consist of straight lines.
+ * Abstract class with functions for shapes, whose borders consist of straight segments.
  *
  * @author Alfons Wirtz
  */
-public abstract class ShapePolyline implements PlaShape, java.io.Serializable
+public abstract class ShapeSegments implements PlaShape, java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
@@ -60,31 +60,31 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
     * Turns this shape by p_factor times 90 degree around p_pole.
     */
    @Override
-   public abstract ShapePolyline turn_90_degree(int p_factor, PlaPointInt p_pole);
+   public abstract ShapeSegments turn_90_degree(int p_factor, PlaPointInt p_pole);
 
    /**
     * Rotates this shape around p_pole by p_angle. The result may be not exact.
     */
    @Override
-   public abstract ShapePolyline rotate_approx(double p_angle, PlaPointFloat p_pole);
+   public abstract ShapeSegments rotate_approx(double p_angle, PlaPointFloat p_pole);
 
    /**
     * Mirrors this shape at the horizontal line through p_pole.
     */
    @Override
-   public abstract ShapePolyline mirror_horizontal(PlaPointInt p_pole);
+   public abstract ShapeSegments mirror_horizontal(PlaPointInt p_pole);
 
    /**
     * Mirrors this shape at the vertical line through p_pole.
     */
    @Override
-   public abstract ShapePolyline mirror_vertical(PlaPointInt p_pole);
+   public abstract ShapeSegments mirror_vertical(PlaPointInt p_pole);
 
    /**
     * Returns the affine translation of the area by p_vector
     */
    @Override
-   public abstract ShapePolyline translate_by(PlaVectorInt p_vector);
+   public abstract ShapeSegments translate_by(PlaVectorInt p_vector);
 
    /**
     * Returns an approximation of the p_no-th corner of this shape for p_no between 0 and border_line_count() - 1. If the shape is
@@ -280,7 +280,7 @@ public abstract class ShapePolyline implements PlaShape, java.io.Serializable
       }
 
    @Override
-   public ShapePolyline get_border()
+   public ShapeSegments get_border()
       {
       return this;
       }

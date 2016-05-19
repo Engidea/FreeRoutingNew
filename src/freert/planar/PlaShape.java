@@ -123,5 +123,5 @@ public interface PlaShape extends PlaArea
    /**
     * Auxiliary function to implement the same function with parameter type Shape.
     */
-   boolean intersects(PlaCircle p_other);
+   boolean intersects(ShapeCircle p_other);
    }

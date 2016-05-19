@@ -21,8 +21,8 @@ package specctra;
 
 import freert.planar.PlaArea;
 import freert.planar.PlaShape;
-import freert.planar.PolylineArea;
-import freert.planar.ShapePolyline;
+import freert.planar.PlaAreaLinear;
+import freert.planar.ShapeSegments;
 import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
@@ -712,24 +712,24 @@ public abstract class DsnShape
       else
          {
          // Area with holes
-         if (!(boundary_shape instanceof ShapePolyline))
+         if (!(boundary_shape instanceof ShapeSegments))
             {
             System.out.println("Shape.transform_area_to_board: PolylineShape expected");
             return null;
             }
-         ShapePolyline border = (ShapePolyline) boundary_shape;
-         ShapePolyline[] holes = new ShapePolyline[hole_count];
+         ShapeSegments border = (ShapeSegments) boundary_shape;
+         ShapeSegments[] holes = new ShapeSegments[hole_count];
          for (int i = 0; i < holes.length; ++i)
             {
             PlaShape hole_shape = it.next().transform_to_board(p_coordinate_transform);
-            if (!(hole_shape instanceof ShapePolyline))
+            if (!(hole_shape instanceof ShapeSegments))
                {
                System.out.println("Shape.transform_area_to_board: PolylineShape expected");
                return null;
                }
-            holes[i] = (ShapePolyline) hole_shape;
+            holes[i] = (ShapeSegments) hole_shape;
             }
-         result = new PolylineArea(border, holes);
+         result = new PlaAreaLinear(border, holes);
          }
       return result;
       }
@@ -757,24 +757,24 @@ public abstract class DsnShape
       else
          {
          // Area with holes
-         if (!(boundary_shape instanceof ShapePolyline))
+         if (!(boundary_shape instanceof ShapeSegments))
             {
             System.out.println("Shape.transform_area_to_board_rel: PolylineShape expected");
             return null;
             }
-         ShapePolyline border = (ShapePolyline) boundary_shape;
-         ShapePolyline[] holes = new ShapePolyline[hole_count];
+         ShapeSegments border = (ShapeSegments) boundary_shape;
+         ShapeSegments[] holes = new ShapeSegments[hole_count];
          for (int i = 0; i < holes.length; ++i)
             {
             PlaShape hole_shape = it.next().transform_to_board_rel(p_coordinate_transform);
-            if (!(hole_shape instanceof ShapePolyline))
+            if (!(hole_shape instanceof ShapeSegments))
                {
                System.out.println("Shape.transform_area_to_board: PolylineShape expected");
                return null;
                }
-            holes[i] = (ShapePolyline) hole_shape;
+            holes[i] = (ShapeSegments) hole_shape;
             }
-         result = new PolylineArea(border, holes);
+         result = new PlaAreaLinear(border, holes);
          }
       return result;
       }
