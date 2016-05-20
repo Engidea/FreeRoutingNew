@@ -58,6 +58,7 @@ public final class SearchTreeManager
 
    /**
     * Inserts the tree shapes of p_item into all active search trees.
+    * This is possibly the entry point in the search tree system
     */
    public void insert(BrdItem p_item)
       {

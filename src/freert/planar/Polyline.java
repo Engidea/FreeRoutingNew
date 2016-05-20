@@ -1381,7 +1381,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    /**
     * this would be the actual last line before the ending
     */
-   public PlaLineInt plaline_last_next ( )
+   public PlaLineInt plaline_last_prev ( )
       {
       return plaline(plalinelen(-2));
       }

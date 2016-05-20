@@ -828,7 +828,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       BrdTracep a_trace = (BrdTracep)p_item;
       
-      return a_trace.combine(10);
+      return a_trace.combine(20);
       }
    
    /**

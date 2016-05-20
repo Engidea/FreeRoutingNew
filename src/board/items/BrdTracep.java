@@ -668,6 +668,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( recursion_depth <= 0 )
          {
          System.out.println(classname+"combine: recursion exausted trace "+this);
+//         new IllegalArgumentException("combine: recursion exausted").printStackTrace();
          return false;
          }
       
@@ -678,11 +679,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if (combine_at_start())
          {
          something_changed = true;
+         // note that now I do not care of return code
          combine(recursion_depth);
          }
       else if (combine_at_end())
          {
          something_changed = true;
+         // note that now I do not care of return code
          combine(recursion_depth);
          }
       
@@ -717,7 +720,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if (other.reverse_order) other_poly = other_poly.reverse();
       
-      boolean skip_line = other_poly.plaline_last_next().is_equal_or_opposite(polyline.plaline_first_next());
+      boolean skip_line = other_poly.plaline_last_prev().is_equal_or_opposite(polyline.plaline_first_next());
       
       // assume I want to copy other up until the end line
       int my_copy_count = other_poly.plalinelen(-1);
@@ -843,7 +846,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if (other.reverse_order) other_poly = other_poly.reverse();
       
-      boolean skip_line = polyline.plaline_last_next().is_equal_or_opposite(other_poly.plaline_first_next());
+      boolean skip_line = polyline.plaline_last_prev().is_equal_or_opposite(other_poly.plaline_first_next());
       
       // assume I want to copy myself up until the end line
       int my_copy_count = polyline.plalinelen(-1);
@@ -1284,7 +1287,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          if ( ! split_trace.is_on_the_board()) continue;
          
-         boolean trace_combined = split_trace.combine(10);
+         boolean trace_combined = split_trace.combine(30);
          
          if (split_trace.corner_count() == 2 && split_trace.corner_first().equals(split_trace.corner_last()))
             {
@@ -1812,10 +1815,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    /**
-    * Looks, if an other pin connection restriction fits better than the current
-    * connection restriction and changes this trace in this case. If p_at_start,
-    * the start of the trace polygon is changed, else the end. Returns true, if
-    * this trace was changed.
+    * Looks, if an other pin connection restriction fits better than the current connection restriction 
+    * changes this trace in this case. 
+    * If p_at_start, the start of the trace polygon is changed, else the end. 
+    * @returns true, if this trace was changed.
     */
    public boolean swap_connection_to_pin(boolean p_at_start)
       {
@@ -1845,11 +1848,15 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       BrdTracep contact_trace = (BrdTracep) curr_contact;
       Polyline contact_polyline = contact_trace.polyline();
-      PlaLineInt contact_last_line = contact_polyline.plaline(contact_polyline.plalinelen(-2));
+      
+      PlaLineInt contact_last_line = contact_polyline.plaline_last_prev();
+      
       // look, if this trace has a sharp angle with the contact trace.
-      PlaLineInt first_line = trace_polyline.plaline(1);
+      PlaLineInt first_line = trace_polyline.plaline_first_next();
+      
       // check for sharp angle
       boolean check_swap = contact_last_line.direction().projection(first_line.direction()) == Signum.NEGATIVE;
+      
       if (!check_swap)
          {
          double half_width = get_half_width();
@@ -1863,7 +1870,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if (!check_swap) return false;
 
       BrdAbitPin contact_pin = null;
+      
       Collection<BrdItem> curr_contacts = contact_trace.get_start_contacts();
+      
       for (BrdItem tmp_contact : curr_contacts)
          {
          if (tmp_contact instanceof BrdAbitPin)
@@ -1876,15 +1885,17 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if (contact_pin == null) return false;
 
       Polyline combined_polyline = contact_polyline.combine(trace_polyline);
+      
       PlaDirection nearest_pin_exit_direction = contact_pin.calc_nearest_exit_restriction_direction(combined_polyline, get_half_width(), get_layer());
-      if (nearest_pin_exit_direction == null || nearest_pin_exit_direction.equals(contact_polyline.plaline(1).direction()))
+      
+      if (nearest_pin_exit_direction == null || nearest_pin_exit_direction.equals(contact_polyline.plaline_first_next().direction()))
          {
          return false; // direction would not be changed
          }
       
       contact_trace.set_fixed_state(get_fixed_state());
       
-      combine(10);
+      combine(20);
       
       return true;
       }
