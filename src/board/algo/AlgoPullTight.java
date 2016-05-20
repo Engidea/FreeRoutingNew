@@ -297,6 +297,7 @@ public abstract class AlgoPullTight
 
    /**
     * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter
+    * Note that PullTightAny defines its own and does not use this one
     * @return null if it fails to shorten
     */
    protected PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_no)

@@ -330,22 +330,23 @@ public final class AlgoPullTightAny extends AlgoPullTight
       for (int index = 0; index < line_arr.length - 4; ++index)
          {
          PlaLineInt new_line = reposition_line(line_arr, index);
-         if (new_line != null)
+         
+         if (new_line == null) continue;
+
+         polyline_changed = true;
+         
+         line_arr[index + 2] = new_line;
+         
+         if (line_arr[index + 2].is_parallel(line_arr[index + 1]) || line_arr[index + 2].is_parallel(line_arr[index + 3]))
             {
-            polyline_changed = true;
-            line_arr[index + 2] = new_line;
-            if (line_arr[index + 2].is_parallel(line_arr[index + 1]) || line_arr[index + 2].is_parallel(line_arr[index + 3]))
-               {
-               // calculation of corners not possible before skipping
-               // parallel lines
-               break;
-               }
+            // calculation of corners not possible before skipping parallel lines
+            break;
             }
          }
       
-      if ( ! polyline_changed) return p_polyline;
-
-      return new Polyline(line_arr);
+      if ( polyline_changed ) return new Polyline(line_arr);
+      
+      return p_polyline;
       }
 
    /**
@@ -586,7 +587,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
       return result;
       }
    
-   
+   /**
+    * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter
+    * Note that PullTightAny defines its own and does not use this one
+    * @return null if it fails to shorten
+    */
    @Override
    protected PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_start_no)
       {
@@ -629,14 +634,17 @@ public final class AlgoPullTightAny extends AlgoPullTight
          if (curr_no < 0) return null;
 
          prev_corner = p_line_arr[curr_no].intersection_approx(p_line_arr[curr_no + 1]);
+         
          prev_dist = translate_line.distance_signed(prev_corner);
          }
       
       double next_dist = translate_line.distance_signed(next_corner);
+
       while (Math.abs(next_dist) < c_epsilon)
          {
          // move also all lines trough the end corner of the line to translate
          ++corners_skipped_after;
+         
          int curr_no = p_start_no + 3 + corners_skipped_after;
          if (curr_no >= p_line_arr.length - 2)
             {
@@ -646,11 +654,14 @@ public final class AlgoPullTightAny extends AlgoPullTight
          next_corner = p_line_arr[curr_no].intersection_approx(p_line_arr[curr_no + 1]);
          next_dist = translate_line.distance_signed(next_corner);
          }
+      
+      
       if (Signum.of(prev_dist) != Signum.of(next_dist))
          {
          // the 2 corners are at different sides of translate_line
          return null;
          }
+      
       PlaPointFloat nearest_point;
       double max_translate_dist;
       if (Math.abs(prev_dist) < Math.abs(next_dist))
@@ -687,6 +698,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          boolean check_ok = false;
          
          PlaLineInt new_line = translate_line.translate(-translate_dist);
+         
          if (first_time && Math.abs(translate_dist) < 1)
             {
             if (new_line.equals(translate_line))
@@ -715,23 +727,25 @@ public final class AlgoPullTightAny extends AlgoPullTight
             // happens very rarely. But this handling seems to be important because there are situations which no other
             // tightening function can solve. For example when 3 ore more consecutive corners are equal.
             PlaLineInt prev_translated_line = new_line;
-            for (int i = 0; i < corners_skipped_before; ++i)
+         
+            for (int index = 0; index < corners_skipped_before; ++index)
                {
                // Translate the previous lines onto or past the intersection of new_line with the first untranslated line.
                int prev_line_no = p_start_no + 1 - corners_skipped_before;
+               
                PlaPointFloat curr_prev_corner = prev_translated_line.intersection_approx(curr_lines[prev_line_no]);
                
                // apparently this is a somewhat correct  thing to do
                if ( curr_prev_corner.is_NaN() ) return null;
                
-               PlaLineInt curr_translate_line = p_line_arr[p_start_no + 1 - i];
+               PlaLineInt curr_translate_line = p_line_arr[p_start_no + 1 - index];
                double curr_translate_dist = curr_translate_line.distance_signed(curr_prev_corner);
                prev_translated_line = curr_translate_line.translate(-curr_translate_dist);
-               curr_lines[p_start_no + 1 - i] = prev_translated_line;
+               curr_lines[p_start_no + 1 - index] = prev_translated_line;
                }
             
             prev_translated_line = new_line;
-            for (int i = 0; i < corners_skipped_after; ++i)
+            for (int index = 0; index < corners_skipped_after; ++index)
                {
                // Translate the next lines onto or past the intersection of new_line with the first untranslated line.
                int next_line_no = p_start_no + 3 + corners_skipped_after;
@@ -741,11 +755,12 @@ public final class AlgoPullTightAny extends AlgoPullTight
                // apparently this is a somewhat correct  thing to do
                if ( curr_next_corner.is_NaN() ) return null;
                
-               PlaLineInt curr_translate_line = p_line_arr[p_start_no + 3 + i];
+               PlaLineInt curr_translate_line = p_line_arr[p_start_no + 3 + index];
                double curr_translate_dist = curr_translate_line.distance_signed(curr_next_corner);
                prev_translated_line = curr_translate_line.translate(-curr_translate_dist);
-               curr_lines[p_start_no + 3 + i] = prev_translated_line;
+               curr_lines[p_start_no + 3 + index] = prev_translated_line;
                }
+            
             Polyline tmp = new Polyline(curr_lines);
 
             if (tmp.plalinelen() == curr_lines.length)
@@ -759,11 +774,10 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (check_ok)
                {
                result = curr_lines[p_start_no + 2];
-               if (translate_dist == max_translate_dist)
-                  {
-                  // biggest possible change
-                  break;
-                  }
+               
+               // biggest possible change
+               if (translate_dist == max_translate_dist) break;
+               
                translate_dist += delta_dist;
                }
             else
@@ -772,19 +786,16 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             }
          else
-            // moved a little bit to far at the first time
-            // because of numerical inaccuracy
             {
+            // moved a little bit to far at the first time because of numerical inaccuracy
             double shorten_value = sign * 0.5;
             max_translate_dist -= shorten_value;
             translate_dist -= shorten_value;
             delta_dist -= shorten_value;
             }
          }
-      if (result == null)
-         {
-         return null;
-         }
+
+      if (result == null) return null;
 
       if (r_board.changed_area != null)
          {
@@ -793,6 +804,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          r_board.changed_area.join(new_prev_corner, curr_layer);
          r_board.changed_area.join(new_next_corner, curr_layer);
          }
+
       return result;
       }
 

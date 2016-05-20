@@ -174,6 +174,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    /**
     * @returns true, if p_point is not contained in the inside or the edge of the shape
     */
+   @Override
    public boolean is_outside(PlaPoint p_point)
       {
       int line_count = border_line_count();
