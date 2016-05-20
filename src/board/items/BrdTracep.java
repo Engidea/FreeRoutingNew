@@ -46,6 +46,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentInt;
 import freert.planar.PlaShape;
+import freert.planar.PlaToupleInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
@@ -1676,13 +1677,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          offset_pin_shape = offset_pin_shape.bounding_octagon();
          }
       
-      int[][] entries = offset_pin_shape.entrance_points(trace_polyline);
+      ArrayList<PlaToupleInt> entries = offset_pin_shape.entrance_points(trace_polyline);
       
-      if (entries.length == 0) return false;
+      if (entries.size() == 0) return false;
 
-      int[] latest_entry_tuple = entries[entries.length - 1];
+      PlaToupleInt latest_entry_tuple = entries.get(entries.size() - 1);
       
-      PlaPointFloat trace_entry_location_approx = trace_polyline.plaline(latest_entry_tuple[0]).intersection_approx(offset_pin_shape.border_line(latest_entry_tuple[1]));
+      PlaPointFloat trace_entry_location_approx = trace_polyline.plaline(latest_entry_tuple.v_a).intersection_approx(offset_pin_shape.border_line(latest_entry_tuple.v_b));
 
       if ( trace_entry_location_approx.is_NaN() ) return false;
       
@@ -1738,8 +1739,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       PlaLineInt[] curr_lines;
 
       int corner_count = offset_pin_shape.border_line_count();
-      int clock_wise_side_diff = (nearest_border_line_no - latest_entry_tuple[1] + corner_count) % corner_count;
-      int counter_clock_wise_side_diff = (latest_entry_tuple[1] - nearest_border_line_no + corner_count) % corner_count;
+      int clock_wise_side_diff = (nearest_border_line_no - latest_entry_tuple.v_b + corner_count) % corner_count;
+      int counter_clock_wise_side_diff = (latest_entry_tuple.v_b - nearest_border_line_no + corner_count) % corner_count;
       int curr_border_line_no = nearest_border_line_no;
       
       if (counter_clock_wise_side_diff <= clock_wise_side_diff)
@@ -1761,7 +1762,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             }
          }
       curr_lines[0] = nearest_pin_exit_ray;
-      curr_lines[curr_lines.length - 1] = trace_polyline.plaline(latest_entry_tuple[0]);
+      curr_lines[curr_lines.length - 1] = trace_polyline.plaline(latest_entry_tuple.v_a);
 
       Polyline border_polyline = new Polyline(curr_lines);
       
@@ -1770,12 +1771,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          return false;
          }
 
-      PlaLineInt[] cut_lines = new PlaLineInt[trace_polyline.plalinelen( - latest_entry_tuple[0] + 1)];
+      PlaLineInt[] cut_lines = new PlaLineInt[trace_polyline.plalinelen( - latest_entry_tuple.v_a + 1)];
       cut_lines[0] = curr_lines[curr_lines.length - 2];
       
       for (int index = 1; index < cut_lines.length; ++index)
          {
-         cut_lines[index] = trace_polyline.plaline(latest_entry_tuple[0] + index - 1);
+         cut_lines[index] = trace_polyline.plaline(latest_entry_tuple.v_a + index - 1);
          }
 
       Polyline cut_polyline = new Polyline(cut_lines);

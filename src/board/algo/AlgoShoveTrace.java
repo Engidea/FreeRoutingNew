@@ -46,6 +46,7 @@ import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSegmentInt;
+import freert.planar.PlaToupleInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
@@ -811,13 +812,13 @@ public final class AlgoShoveTrace
          return null;
          }
       
-      int[][] entries = offset_shape.entrance_points(p_polyline);
-      if (entries.length == 0)
+      ArrayList<PlaToupleInt> entries = offset_shape.entrance_points(p_polyline);
+      if (entries.size() == 0)
          {
          return p_polyline; // no obstacle
          }
 
-      if (entries.length < 2)
+      if (entries.size() < 2)
          {
          r_board.set_shove_failing_obstacle(found_obstacle);
          return null;
@@ -827,10 +828,16 @@ public final class AlgoShoveTrace
       
       // build a circuit around the offset_shape in counter clock sense
       // from the first intersection point to the second intersection point
-      int first_intersection_side_no = entries[0][1];
-      int last_intersection_side_no = entries[entries.length - 1][1];
-      int first_intersection_line_no = entries[0][0];
-      int last_intersection_line_no = entries[entries.length - 1][0];
+      
+      
+      PlaToupleInt a_first = entries.get(0);
+      PlaToupleInt a_last = entries.get(entries.size()-1);
+      
+      int first_intersection_side_no = a_first.v_b;
+      int last_intersection_side_no = a_last.v_b;
+      
+      int first_intersection_line_no = a_first.v_a;
+      int last_intersection_line_no = a_last.v_a;
       int side_diff = last_intersection_side_no - first_intersection_side_no;
       if (side_diff < 0)
          {

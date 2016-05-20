@@ -2527,11 +2527,9 @@ public final class RoutingBoard implements java.io.Serializable
          join_changed_area(new_polyline.corner_approx(index), p_layer);
          }
       
-      BrdTracep new_trace = insert_trace_without_cleaning(
-            new_polyline, p_layer, p_half_width, p_net_no_arr,
-            p_clearance_class_no, ItemFixState.UNFIXED);
+      BrdTracep new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr,p_clearance_class_no, ItemFixState.UNFIXED);
       
-      new_trace.combine(10);
+      new_trace.combine(20);
 
       ShapeTileOctagon tidy_region = null;
       if (p_tidy_width < Integer.MAX_VALUE)

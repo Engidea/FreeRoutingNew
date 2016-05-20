@@ -1086,7 +1086,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       if ( curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner)) return null;
 
-      PlaPoint curr_prev_end_corner = trace_polyline.corner(trace_polyline.corner_count() - 2);
+      PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
 
       boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().dustance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
       

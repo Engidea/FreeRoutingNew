@@ -33,6 +33,7 @@ import board.varie.ShapeTraceEntryPoint;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaToupleInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
@@ -382,17 +383,17 @@ public final class ShapeTraceEntries
          offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
          }
 
-      // using enlarge here instead offset causes problems because of a
-      // comparison in the constructor of class EntryPoint
-      int[][] entries = offset_shape.entrance_points(p_trace.polyline());
-      for (int i = 0; i < entries.length; ++i)
+      // using enlarge here instead offset causes problems because of a comparison in the constructor of class EntryPoint
+      
+      ArrayList<PlaToupleInt> entries = offset_shape.entrance_points(p_trace.polyline());
+      
+      for (PlaToupleInt entry_tuple : entries )
          {
-         int[] entry_tuple = entries[i];
-         PlaPointFloat entry_approx = p_trace.polyline().plaline(entry_tuple[0]).intersection_approx(offset_shape.border_line(entry_tuple[1]));
+         PlaPointFloat entry_approx = p_trace.polyline().plaline(entry_tuple.v_a).intersection_approx(offset_shape.border_line(entry_tuple.v_b));
          
          if ( entry_approx.is_NaN() ) System.err.println("store_trace entry_approx.isNaN, fix it !");
          
-         insert_entry_point(p_trace, entry_tuple[0], entry_tuple[1], entry_approx);
+         insert_entry_point(p_trace, entry_tuple.v_a, entry_tuple.v_b, entry_approx);
          }
 
       // Look, if an end point of the trace lies in the interiour of the shape. This may be the case, if a via touches the shape

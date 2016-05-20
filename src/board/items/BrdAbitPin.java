@@ -21,6 +21,7 @@
 package board.items;
 
 import java.awt.Color;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import board.RoutingBoard;
@@ -38,6 +39,7 @@ import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
+import freert.planar.PlaToupleInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
@@ -736,12 +738,13 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       if (edge_to_turn_dist < 0) return null;
 
       ShapeTile offset_pin_shape = (ShapeTile) ((ShapeTile) pin_shape).offset(edge_to_turn_dist + p_trace_half_width);
-      int[][] entries = offset_pin_shape.entrance_points(p_trace_polyline);
+      ArrayList<PlaToupleInt> entries = offset_pin_shape.entrance_points(p_trace_polyline);
 
-      if (entries.length == 0) return null;
+      if (entries.size() == 0) return null;
 
-      int[] latest_entry_tuple = entries[entries.length - 1];
-      PlaPointFloat trace_entry_location_approx = p_trace_polyline.plaline(latest_entry_tuple[0]).intersection_approx(offset_pin_shape.border_line(latest_entry_tuple[1]));
+      PlaToupleInt latest_entry_tuple = entries.get(entries.size() - 1);
+      
+      PlaPointFloat trace_entry_location_approx = p_trace_polyline.plaline(latest_entry_tuple.v_a).intersection_approx(offset_pin_shape.border_line(latest_entry_tuple.v_b));
 
       // it means that the location is an impossible one
       if ( trace_entry_location_approx.is_NaN() ) return null;
