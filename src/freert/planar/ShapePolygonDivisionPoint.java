@@ -1,10 +1,10 @@
 package freert.planar;
 
+import java.util.ArrayList;
+
 
 final class ShapePolygonDivisionPoint implements PlaObject
    {
-   public final PlaPointInt[] corners;
-
    final int corner_no_after_projection;
    final PlaPointFloat projection;
 
@@ -12,24 +12,22 @@ final class ShapePolygonDivisionPoint implements PlaObject
     * At a concave corner of the closed polygon, a minimal axis parallel division line is constructed, to divide the closed polygon
     * into two.
     */
-   ShapePolygonDivisionPoint(PlaPointInt[] p_corners, int p_concave_corner_no)
+   ShapePolygonDivisionPoint(ArrayList<PlaPointInt> corners, int p_concave_corner_no)
       {
-      corners = p_corners;
-
-      PlaPointFloat concave_corner = corners[p_concave_corner_no].to_float();
+      PlaPointFloat concave_corner = corners.get(p_concave_corner_no).to_float();
       PlaPointFloat before_concave_corner;
 
       if (p_concave_corner_no != 0)
-         before_concave_corner = corners[p_concave_corner_no - 1].to_float();
+         before_concave_corner = corners.get(p_concave_corner_no - 1).to_float();
       else
-         before_concave_corner = corners[corners.length - 1].to_float();
+         before_concave_corner = corners.get(corners.size() - 1).to_float();
 
       PlaPointFloat after_concave_corner;
 
-      if (p_concave_corner_no == corners.length - 1)
-         after_concave_corner = corners[0].to_float();
+      if (p_concave_corner_no == corners.size() - 1)
+         after_concave_corner = corners.get(0).to_float();
       else
-         after_concave_corner = corners[p_concave_corner_no + 1].to_float();
+         after_concave_corner = corners.get(p_concave_corner_no + 1).to_float();
 
       boolean search_right = before_concave_corner.v_y > concave_corner.v_y || concave_corner.v_y > after_concave_corner.v_y;
 
@@ -43,21 +41,21 @@ final class ShapePolygonDivisionPoint implements PlaObject
       PlaPointFloat min_projection = null;
       int corner_no_after_min_projection = 0;
 
-      int corner_no_after_curr_projection = (p_concave_corner_no + 2) % corners.length;
+      int corner_no_after_curr_projection = (p_concave_corner_no + 2) % corners.size();
 
       PlaPointInt corner_before_curr_projection;
       if (corner_no_after_curr_projection != 0)
-         corner_before_curr_projection = corners[corner_no_after_curr_projection - 1];
+         corner_before_curr_projection = corners.get(corner_no_after_curr_projection - 1);
       else
-         corner_before_curr_projection = corners[corners.length - 1];
+         corner_before_curr_projection = corners.get(corners.size() - 1);
       PlaPointFloat corner_before_projection_approx = corner_before_curr_projection.to_float();
 
       double curr_dist;
-      int loop_end = corners.length - 2;
+      int loop_end = corners.size() - 2;
 
       for (int i = 0; i < loop_end; ++i)
          {
-         PlaPointInt corner_after_curr_projection = corners[corner_no_after_curr_projection];
+         PlaPointInt corner_after_curr_projection = corners.get(corner_no_after_curr_projection);
          PlaPointFloat corner_after_projection_approx = corner_after_curr_projection.to_float();
          if (corner_before_projection_approx.v_y != corner_after_projection_approx.v_y)
          // try a horizontal division
@@ -130,7 +128,7 @@ final class ShapePolygonDivisionPoint implements PlaObject
             }
          corner_before_curr_projection = corner_after_curr_projection;
          corner_before_projection_approx = corner_after_projection_approx;
-         if (corner_no_after_curr_projection == corners.length - 1)
+         if (corner_no_after_curr_projection == corners.size() - 1)
             {
             corner_no_after_curr_projection = 0;
             }

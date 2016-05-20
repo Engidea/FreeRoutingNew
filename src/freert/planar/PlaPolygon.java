@@ -115,14 +115,10 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
       }
    
    /**
-    * Return true if there is already this exact point in the list
-    * @param a_point
-    * @return
+    * @return true if there is already this exact point in the list
     */
-   private boolean has_point (PlaPoint a_point)
+   private boolean has_point (PlaPointInt a_point)
       {
-      if ( a_point == null ) return false;
-      
       int count = corners.size();
       
       for (int index=0; index<count; index++)
@@ -152,12 +148,23 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
       return result;
       }
 
+   public PlaPointInt corner ( int index )
+      {
+      return corners.get(index);
+      }
+
+   public int corner_size ()
+      {
+      return corners.size();
+      }
+   
    /**
     * Reverts the order of the corners of this polygon.
     */
    public PlaPolygon revert_corners()
       {
       int corner_count = corners.size();
+      
       int from_idx = corner_count-1;
       
       PlaPointIntAlist reverse_corner_arr = new PlaPointIntAlist(corner_count);
@@ -175,17 +182,15 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
     */
    public int winding_number_after_closing()
       {
-      PlaPointInt[] corner_arr = corner_array();
-      
-      if (corner_arr.length < 2) return 0;
+      if (corner_size() < 2) return 0;
 
-      PlaVectorInt first_side_vector = corner_arr[1].difference_by(corner_arr[0]);
+      PlaVectorInt first_side_vector = corner(1).difference_by(corner(0));
       
       PlaVectorInt prev_side_vector = first_side_vector;
       
-      int corner_count = corner_arr.length;
+      int corner_count = corner_size();
       // Skip the last corner, if it is equal to the first corner.
-      if (corner_arr[0].equals(corner_arr[corner_count - 1]))
+      if (corner(0).equals(corner(corner_count - 1)))
          {
          --corner_count;
          }
@@ -197,7 +202,7 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
          PlaVectorInt next_side_vector;
          if (index == corner_count - 1)
             {
-            next_side_vector = corner_arr[0].difference_by(corner_arr[index]);
+            next_side_vector = corner(0).difference_by(corner(index));
             }
          
          else if (index == corner_count)
@@ -206,7 +211,7 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
             }
          else
             {
-            next_side_vector = corner_arr[index + 1].difference_by(corner_arr[index]);
+            next_side_vector = corner(index + 1).difference_by(corner(index));
             }
          
          angle_sum += prev_side_vector.angle_approx(next_side_vector);

@@ -36,11 +36,13 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    public static ShapeTile get_instance(PlaLineInt[] p_line_arr)
       {
       ShapeTileSimplex result = ShapeTileSimplex.get_instance(p_line_arr);
+      
       return result.simplify();
       }
 
    /**
     * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
+    * @deprecated
     */
    public static ShapeTile get_instance(PlaPointInt[] p_convex_polygon)
       {
@@ -56,6 +58,24 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       return get_instance(line_arr);
       }
 
+   /**
+    * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
+    */
+   public static ShapeTile get_instance(ArrayList<PlaPointInt> p_convex_polygon)
+      {
+      PlaLineInt[] line_arr = new PlaLineInt[p_convex_polygon.size()];
+      
+      for (int jndex = 0; jndex < line_arr.length - 1; ++jndex)
+         {
+         line_arr[jndex] = new PlaLineInt(p_convex_polygon.get(jndex), p_convex_polygon.get(jndex + 1));
+         }
+      
+      line_arr[line_arr.length - 1] = new PlaLineInt(p_convex_polygon.get(line_arr.length - 1), p_convex_polygon.get(0));
+      
+      return get_instance(line_arr);
+      }
+
+   
    /**
     * creates a half_plane from a directed line
     */
