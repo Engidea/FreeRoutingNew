@@ -191,7 +191,9 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       {
       is_front = ! is_front;
       PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
-      translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPointInt.ZERO);
+      
+      translation = rel_location.mirror_vertical(p_pole).to_vector();
+      
       clear_derived_data();
       }
 
@@ -215,7 +217,8 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       set_rotation ( p_angle_in_degree );
 
       PlaPointFloat new_translation = translation.to_float().rotate(Math.toRadians(rotation_in_degree), p_pole);
-      translation = new_translation.round().difference_by(PlaPointInt.ZERO);
+
+      translation = new_translation.to_vector();
       
       clear_derived_data();
       }
@@ -227,7 +230,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       
       PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
       
-      translation = rel_location.turn_90_degree(p_factor, p_pole).difference_by(PlaPointInt.ZERO);
+      translation = rel_location.turn_90_degree(p_factor, p_pole).to_vector();
       
       clear_derived_data();
       }

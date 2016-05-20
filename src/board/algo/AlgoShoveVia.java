@@ -27,13 +27,13 @@ import board.varie.ItemFixState;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
 import freert.library.LibPadstack;
-import freert.planar.ShapeCircle;
 import freert.planar.PlaLimits;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
+import freert.planar.ShapeCircle;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -73,10 +73,15 @@ public final class AlgoShoveVia
          {
          return ShoveDrillResult.DRILLABLE;
          }
-      if (!(p_location instanceof PlaPointInt))
+      
+      
+      if ( p_location.is_rational() )
          {
+         // ahhh the pleasure of rationals...
          return ShoveDrillResult.NOT_DRILLABLE;
          }
+      
+      
       ShapeConvex via_shape = new ShapeCircle((PlaPointInt) p_location, (int) Math.ceil(p_via_radius));
 
       double check_radius = p_via_radius + 0.5 * r_board.get_clearance(p_cl_class, p_cl_class, p_layer) + r_board.get_min_trace_half_width();
@@ -123,7 +128,7 @@ public final class AlgoShoveVia
          int p_max_recursion_depth, 
          int p_max_via_recursion_depth )
       {
-      PlaVectorInt translate_vector = p_location.difference_by(PlaPointInt.ZERO);
+      PlaVectorInt translate_vector = p_location.to_vector();
       
       int calc_from_side_offset = r_board.get_min_trace_half_width();
 
@@ -184,7 +189,7 @@ public final class AlgoShoveVia
          int p_max_recursion_depth,
          int p_max_via_recursion_depth )
       {
-      PlaVectorInt translate_vector = p_location.difference_by(PlaPointInt.ZERO);
+      PlaVectorInt translate_vector = p_location.to_vector();
       
       int calc_from_side_offset = r_board.get_min_trace_half_width();
 

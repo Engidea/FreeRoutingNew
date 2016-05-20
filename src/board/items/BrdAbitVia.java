@@ -89,7 +89,9 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       for (int index = 0; index < precalculated_shapes.length; ++index)
          {
          int padstack_layer = index + first_layer();
-         PlaVectorInt translate_vector = center_get().difference_by(PlaPointInt.ZERO);
+         
+         PlaVectorInt translate_vector = center_get().to_vector();
+         
          PlaShape curr_shape = padstack.get_shape(padstack_layer);
 
          if (curr_shape == null)

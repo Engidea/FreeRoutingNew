@@ -103,7 +103,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          // rotation may be not exact
          PlaPointFloat location_approx = rel_location.to_float();
          location_approx = location_approx.rotate(Math.toRadians(component_rotation), PlaPointFloat.ZERO);
-         rel_location = location_approx.round().difference_by(PlaPointInt.ZERO);
+         rel_location = location_approx.to_vector();
          }
       
       if (!component.is_on_front() && r_board.brd_components.get_flip_style_rotate_first())
@@ -215,8 +215,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
 
       LibPadstack padstack = get_padstack();
       
-      // all shapes have to be calculated at once, because otherwise calculation
-      // of from_layer and to_layer may not be correct
+      // all shapes have to be calculated at once, because otherwise calculation of from_layer and to_layer may not be correct
       precalculated_shapes = new PlaShape[padstack.to_layer() - padstack.from_layer() + 1];
 
       BrdComponent component = r_board.brd_components.get(get_component_no());
@@ -251,11 +250,10 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          rel_location = package_pin.relative_location.mirror_at_y_axis();
          }
 
-      PlaVectorInt component_translation = component.get_location().difference_by(PlaPointInt.ZERO);
+      PlaVectorInt component_translation = component.get_location().to_vector();
 
       for (int index = 0; index < precalculated_shapes.length; ++index)
          {
-
          int padstack_layer = get_padstack_layer(index);
 
          ShapeConvex curr_shape = padstack.get_shape(padstack_layer);
@@ -414,13 +412,11 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
     */
    public boolean has_trace_exit_restrictions()
       {
-      for (int i = first_layer(); i <= last_layer(); ++i)
+      for (int index = first_layer(); index <= last_layer(); ++index)
          {
-         java.util.Collection<BrdTraceExitRestriction> curr_exit_restrictions = get_trace_exit_restrictions(i);
-         if (curr_exit_restrictions.size() > 0)
-            {
-            return true;
-            }
+         Collection<BrdTraceExitRestriction> curr_exit_restrictions = get_trace_exit_restrictions(index);
+         
+         if (curr_exit_restrictions.size() > 0)  return true;
          }
       return false;
       }

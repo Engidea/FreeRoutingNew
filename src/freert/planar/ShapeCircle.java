@@ -419,11 +419,10 @@ public final class ShapeCircle implements ShapeConvex , Serializable
    public String to_string(java.util.Locale p_locale)
       {
       String result = "Circle: ";
-      if (! center.equals(PlaPointInt.ZERO) )
-         {
-         String center_string = "center " + center.toString();
-         result += center_string;
-         }
+      
+      String center_string = "center " + center.toString();
+      result += center_string;
+      
       java.text.NumberFormat nf = java.text.NumberFormat.getInstance(p_locale);
       String radius_string = "radius " + nf.format(radius);
       result += radius_string;

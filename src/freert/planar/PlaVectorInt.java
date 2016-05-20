@@ -125,11 +125,9 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
 
    public final PlaVectorInt turn_90_degree(int p_factor)
       {
-      while (p_factor < 0)
-         p_factor += 4;
+      while (p_factor < 0)  p_factor += 4;
 
-      while (p_factor >= 4)
-         p_factor -= 4;
+      while (p_factor >= 4) p_factor -= 4;
 
       int new_x;
       int new_y;
@@ -175,6 +173,14 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       }
 
    /**
+    * @return the Point, which results from adding this vector to p_point
+    */
+   public final PlaPointInt add(PlaPointInt p_point)
+      {
+      return new PlaPointInt(v_x + p_point.v_x, v_y + p_point.v_y);
+      }
+   
+   /**
     * Returns true, if the vector is orthogonal or diagonal
     */
    public boolean is_multiple_of_45_degree()
@@ -182,13 +188,6 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       return is_orthogonal() || is_diagonal();
       }
 
-   /**
-    * returns the Point, which results from adding this vector to p_point
-    */
-   public final PlaPointInt add_to(PlaPointInt p_point)
-      {
-      return new PlaPointInt(p_point.v_x + v_x, p_point.v_y + v_y);
-      }
 
    /**
     * Let L be the line from the Zero Vector to p_other. 
@@ -253,7 +252,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       {
       PlaPointFloat new_point = to_float().change_size(p_length);
       
-      return new_point.round().difference_by(PlaPointInt.ZERO);
+      return new_point.round().to_vector();
       }
    
 

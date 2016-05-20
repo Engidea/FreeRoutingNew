@@ -34,7 +34,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
    private static final long serialVersionUID = 1L;
    private static final String classname="PlaPoint.";
    
-   public abstract PlaPointInt round();
    
    public abstract PlaPoint translate_by(PlaVectorInt p_vector);
 
@@ -64,6 +63,12 @@ public abstract class PlaPoint implements PlaObject, Serializable
     * approximates the coordinates of this point by float coordinates
     */
    public abstract PlaPointFloat to_float();
+
+   /**
+    * round this point to an int point
+    * @return
+    */
+   public abstract PlaPointInt round();
 
    /**
     * Returns true, if this point lies in the interiour or on the border of p_box.
@@ -100,6 +105,7 @@ public abstract class PlaPoint implements PlaObject, Serializable
       }
 
    public abstract int compare_x_y(PlaPointInt p_other);
+   
    public abstract int compare_x_y(PlaPointRational p_other);
 
 

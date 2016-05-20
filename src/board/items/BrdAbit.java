@@ -229,20 +229,27 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       return precalculated_last_layer;
       }
 
+   /**
+    * Need to have the shape...
+    * @param p_index
+    * @return
+    */
    public abstract PlaShape get_shape(int p_index);
 
    @Override
    public ShapeTileBox bounding_box()
       {
       ShapeTileBox result = ShapeTileBox.EMPTY;
-      for (int i = 0; i < tile_shape_count(); ++i)
+      
+      for (int index = 0; index < tile_shape_count(); ++index)
          {
-         PlaShape curr_shape = get_shape(i);
-         if (curr_shape != null)
-            {
-            result = result.union(curr_shape.bounding_box());
-            }
+         PlaShape curr_shape = get_shape(index);
+
+         if (curr_shape == null) continue;
+
+         result = result.union(curr_shape.bounding_box());
          }
+
       return result;
       }
 
@@ -267,15 +274,18 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    public final double smallest_radius()
       {
       double result = Double.MAX_VALUE;
-      PlaPointFloat c = center_get().to_float();
-      for (int i = 0; i < tile_shape_count(); ++i)
+      
+      PlaPointFloat center = center_get().to_float();
+      
+      for (int index = 0; index < tile_shape_count(); ++index)
          {
-         PlaShape curr_shape = get_shape(i);
-         if (curr_shape != null)
-            {
-            result = Math.min(result, curr_shape.border_distance(c));
-            }
+         PlaShape curr_shape = get_shape(index);
+         
+         if (curr_shape == null) continue;
+         
+         result = Math.min(result, curr_shape.border_distance(center));
          }
+
       return result;
       }
 

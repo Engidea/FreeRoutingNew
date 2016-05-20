@@ -248,7 +248,7 @@ public final class AlgoMoveDrillItem
          PlaPointInt new_via_center = null;
          double max_dist = 0.5 * curr_via.get_shape_on_layer(p_layer).bounding_box().max_width() + shape_radius;
          double max_dist_square = max_dist * max_dist;
-         PlaPointInt curr_via_center = (PlaPointInt) curr_via.center_get();
+         PlaPointInt curr_via_center = curr_via.center_get();
          PlaPointFloat check_via_center = curr_via_center.to_float();
          PlaVectorInt rel_coor = null;
 
@@ -323,7 +323,8 @@ public final class AlgoMoveDrillItem
       // The additional constant 2 is an empirical value for the tolerance in case of diagonal shoving.
       shove_distance += 2;
 
-      PlaPointInt curr_via_center = (PlaPointInt) p_via.center_get();
+      PlaPointInt curr_via_center = p_via.center_get();
+      
       PlaPointInt[] try_via_centers;
 
       int try_count = 1;
@@ -361,7 +362,7 @@ public final class AlgoMoveDrillItem
          
          for (int index = 0; index < try_via_centers.length; ++index)
             {
-            PlaVectorInt curr_delta = shove_deltas[index].round().difference_by(PlaPointInt.ZERO);
+            PlaVectorInt curr_delta = shove_deltas[index].to_vector();
             try_via_centers[index] = curr_via_center.translate_by(curr_delta);
             }
          }

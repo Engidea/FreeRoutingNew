@@ -26,8 +26,8 @@ import board.infos.PrintableInfo;
 import freert.planar.PlaShape;
 
 /**
- * Component package templates describing the padstacks and relative locations of the packege pins, and optional other stuff like an
- * outline package keepouts.
+ * Component package templates describing the padstacks and relative locations of the packege pins, 
+ * and optional other stuff like an outline package keepouts.
  *
  * @author alfons
  */

@@ -2330,7 +2330,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       PlaPoint from_corner_point = p_polyline.corner_first();
       
-      if (! (from_corner_point instanceof PlaPointInt ))
+      if ( from_corner_point.is_rational() )
          {
          // So, a trace polyline has always a first corner int, right ?
          System.err.println(classname+"insert_trace_polyline: from_corner_point NOT int");

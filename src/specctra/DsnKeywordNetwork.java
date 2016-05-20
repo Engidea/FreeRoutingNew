@@ -1350,7 +1350,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          return; // component is not yet placed.
          }
       
-      PlaVectorInt component_translation = component_location.difference_by(PlaPointInt.ZERO);
+      PlaVectorInt component_translation = component_location.to_vector();
 
       ItemFixState fixed_state;
       if (p_location.position_fixed)

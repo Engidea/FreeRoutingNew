@@ -5,7 +5,7 @@ import freert.planar.PlaVectorInt;
 /**
  * Describes a pin padstack of a package.
  */
-public class LibPackagePin implements java.io.Serializable
+public final class LibPackagePin implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 

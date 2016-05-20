@@ -213,6 +213,11 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
       return new PlaVectorInt(v_x - p_other.v_x, v_y - p_other.v_y);
       }
 
+   public final PlaVectorInt to_vector()
+      {
+      return new PlaVectorInt(v_x, v_y);
+      }
+
    @Override
    public PlaSide side_of(PlaLineInt p_line)
       {
