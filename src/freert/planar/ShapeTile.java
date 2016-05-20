@@ -42,24 +42,6 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
    /**
     * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
-    * @deprecated
-    */
-   public static ShapeTile get_instance(PlaPointInt[] p_convex_polygon)
-      {
-      PlaLineInt[] line_arr = new PlaLineInt[p_convex_polygon.length];
-      
-      for (int jndex = 0; jndex < line_arr.length - 1; ++jndex)
-         {
-         line_arr[jndex] = new PlaLineInt(p_convex_polygon[jndex], p_convex_polygon[jndex + 1]);
-         }
-      
-      line_arr[line_arr.length - 1] = new PlaLineInt(p_convex_polygon[line_arr.length - 1], p_convex_polygon[0]);
-      
-      return get_instance(line_arr);
-      }
-
-   /**
-    * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
     */
    public static ShapeTile get_instance(ArrayList<PlaPointInt> p_convex_polygon)
       {
@@ -190,7 +172,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * Returns true, if p_point is not contained in the inside or the edge of the shape
+    * @returns true, if p_point is not contained in the inside or the edge of the shape
     */
    public boolean is_outside(PlaPoint p_point)
       {
@@ -198,13 +180,11 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
       if (line_count == 0) return true;
 
-      for (int i = 0; i < line_count; ++i)
+      for (int index = 0; index < line_count; ++index)
          {
-         if (border_line(i).side_of(p_point) == PlaSide.ON_THE_LEFT)
-            {
-            return true;
-            }
+         if (border_line(index).side_of(p_point) == PlaSide.ON_THE_LEFT) return true;
          }
+
       return false;
       }
 
@@ -849,21 +829,21 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
       PlaPolygon corner_polygon = new PlaPolygon(new_corners);
       
-      PlaPointInt[] polygon_corners = corner_polygon.corner_array();
+      ArrayList<PlaPointInt> polygon_corners = corner_polygon.corners();
 
-      if (polygon_corners.length >= 3)
+      if (polygon_corners.size() >= 3)
          {
          return get_instance(polygon_corners);
          }
-      else if (polygon_corners.length == 2)
+      else if (polygon_corners.size() == 2)
          {
-         Polyline curr_polyline = new Polyline(polygon_corners);
+         Polyline curr_polyline = new Polyline(new PlaPointIntAlist(polygon_corners));
          PlaSegmentInt curr_segment = curr_polyline.segment_get(1);
          return curr_segment.to_simplex();
          }
-      else if (polygon_corners.length == 1)
+      else if (polygon_corners.size() == 1)
          {
-         return new ShapeTileBox(polygon_corners[0]);
+         return new ShapeTileBox(polygon_corners.get(0));
          }
       else
          {

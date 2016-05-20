@@ -46,6 +46,14 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
          }
       }
 
+   /**
+    * Use when you know corners are already good
+    * @param p_corners
+    */
+   private PlaPolygon ( ArrayList<PlaPointInt> p_corners )
+      {
+      corners = p_corners;
+      }
    
    @Override
    public final boolean is_NaN ()
@@ -134,18 +142,9 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
    /**
     * @return the array of corners of this polygon
     */
-   public PlaPointInt[] corner_array()
+   public ArrayList<PlaPointInt> corners()
       {
-      int corner_count = corners.size();
-      
-      PlaPointInt[] result = new PlaPointInt[corner_count];
-      
-      for (int index = 0; index < corner_count; ++index)
-         {
-         result[index] = corners.get(index);
-         }
-      
-      return result;
+      return corners;
       }
 
    public PlaPointInt corner ( int index )
@@ -167,7 +166,7 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
       
       int from_idx = corner_count-1;
       
-      PlaPointIntAlist reverse_corner_arr = new PlaPointIntAlist(corner_count);
+      ArrayList<PlaPointInt> reverse_corner_arr = new ArrayList<PlaPointInt>(corner_count);
 
       for (int index = 0; index < corner_count; ++index)
          reverse_corner_arr.add( corners.get(from_idx--) );

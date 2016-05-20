@@ -56,21 +56,19 @@ public final class ShapePolygon extends ShapeSegments
    
    public ShapePolygon(PlaPolygon p_polygon)
       {
-      PlaPolygon curr_polygon = p_polygon;
-      
       if (p_polygon.winding_number_after_closing() < 0)
          {
          // the the corners of the polygon are in clockwise sense
-         curr_polygon = p_polygon.revert_corners();
+         p_polygon = p_polygon.revert_corners();
          }
       
-      PlaPointInt[] curr_corners = curr_polygon.corner_array();
+      ArrayList<PlaPointInt> curr_corners = p_polygon.corners();
 
-      int last_corner_no = curr_corners.length - 1;
+      int last_corner_no = curr_corners.size() - 1;
 
       if (last_corner_no > 0)
          {
-         if (curr_corners[0].equals(curr_corners[last_corner_no]))
+         if (curr_corners.get(0).equals(curr_corners.get(last_corner_no)))
             {
             // skip last point
             --last_corner_no;
@@ -81,7 +79,7 @@ public final class ShapePolygon extends ShapeSegments
 
       if (last_corner_no >= 2)
          {
-         last_point_collinear = curr_corners[last_corner_no].side_of(curr_corners[last_corner_no - 1], curr_corners[0]) == PlaSide.COLLINEAR;
+         last_point_collinear = curr_corners.get(last_corner_no).side_of(curr_corners.get(last_corner_no - 1), curr_corners.get(0)) == PlaSide.COLLINEAR;
          }
       if (last_point_collinear)
          {
@@ -95,7 +93,7 @@ public final class ShapePolygon extends ShapeSegments
 
       if (last_corner_no - first_corner_no >= 2)
          {
-         first_point_collinear = curr_corners[0].side_of(curr_corners[1], curr_corners[last_corner_no]) == PlaSide.COLLINEAR;
+         first_point_collinear = curr_corners.get(0).side_of(curr_corners.get(1), curr_corners.get(last_corner_no)) == PlaSide.COLLINEAR;
          }
 
       if (first_point_collinear)
@@ -106,10 +104,10 @@ public final class ShapePolygon extends ShapeSegments
       
       // search the point with the lowest y and then with the lowest x
       int start_corner_no = first_corner_no;
-      PlaPointFloat start_corner = curr_corners[start_corner_no].to_float();
+      PlaPointFloat start_corner = curr_corners.get(start_corner_no).to_float();
       for (int index = start_corner_no + 1; index <= last_corner_no; ++index)
          {
-         PlaPointFloat curr_corner = curr_corners[index].to_float();
+         PlaPointFloat curr_corner = curr_corners.get(index).to_float();
          if (curr_corner.v_y < start_corner.v_y || curr_corner.v_y == start_corner.v_y && curr_corner.v_x < start_corner.v_x)
             {
             start_corner_no = index;
@@ -123,12 +121,12 @@ public final class ShapePolygon extends ShapeSegments
       
       for (int index = start_corner_no; index <= last_corner_no; ++index)
          {
-         corners.add( curr_corners[index]);
+         corners.add( curr_corners.get(index));
          }
       
       for (int i = first_corner_no; i < start_corner_no; ++i)
          {
-         corners.add( curr_corners[i]);
+         corners.add( curr_corners.get(i));
          }
 
       }
@@ -264,11 +262,12 @@ public final class ShapePolygon extends ShapeSegments
    public boolean is_outside(PlaPoint p_point)
       {
       ShapeTile[] convex_pieces = split_to_convex();
-      for (int i = 0; i < convex_pieces.length; ++i)
+      
+      for (int index = 0; index < convex_pieces.length; ++index)
          {
-         if (!convex_pieces[i].is_outside(p_point))
-            return false;
+         if (!convex_pieces[index].is_outside(p_point)) return false;
          }
+      
       return true;
       }
 
