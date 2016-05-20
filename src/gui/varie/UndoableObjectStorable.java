@@ -9,9 +9,9 @@ public interface UndoableObjectStorable extends Comparable<Object>
    {
    /**
     * Creates an exact copy of this object
-    * Public overwriting of the protected clone method in java.lang.Object,
+    * To avoid confuzion with java Clone there is a specific method...
     */
-   Object clone();
+   public Object copy();
 
    }
 

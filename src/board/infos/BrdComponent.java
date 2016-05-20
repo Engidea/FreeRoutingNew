@@ -95,8 +95,17 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       lib_package_back = p_other.lib_package_back;
       position_fixed = p_other.position_fixed;
       logical_part = p_other.logical_part;
+      rotation_in_degree = p_other.rotation_in_degree;
       }
    
+   /**
+    * this is not like the normal copy in the BrdItem
+    */
+   @Override
+   public BrdComponent copy()
+      {
+      return new BrdComponent(this);
+      }
 
    private double normalize_rotation (double p_rotation_degrees)
       {
@@ -213,14 +222,6 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       return 1;
       }
 
-   /**
-    * Creates a copy of this component.
-    */
-   @Override
-   public BrdComponent clone()
-      {
-      return new BrdComponent(this);
-      }
 
    public String toString()
       {

@@ -256,7 +256,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    public abstract BrdItem copy(int p_id_no);
 
    @Override
-   public final Object clone()
+   public final Object copy()
       {
       return copy(get_id_no());
       }

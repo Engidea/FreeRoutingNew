@@ -349,7 +349,7 @@ public final class UndoableObjects implements java.io.Serializable
 
       if (curr_node.undo_level < stack_level)
          {
-         UndoableObjectNode old_node = new UndoableObjectNode((UndoableObjectStorable) p_object.clone(), curr_node.undo_level);
+         UndoableObjectNode old_node = new UndoableObjectNode((UndoableObjectStorable) p_object.copy(), curr_node.undo_level);
          old_node.undo_object  = curr_node.undo_object;
          old_node.redo_object  = curr_node;
          curr_node.undo_object = old_node;
