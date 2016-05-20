@@ -63,10 +63,7 @@ public class StateConstructCorner extends StateInteractive
       // make shure that the coordinates are integer
       corner_list.add(location);
       i_brd.repaint();
-      if (actlog != null)
-         {
-         actlog.add_corner(p_location);
-         }
+      actlog_add_corner(p_location);
       return this;
       }
 

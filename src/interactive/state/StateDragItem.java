@@ -55,11 +55,12 @@ public class StateDragItem extends StateDrag
 
    /**
     * Moves the items of the group to p_to_location. 
-    * @return this.return_state, if an error accrued while moving, so that an undo may be necessary.
+    * @return return_state, if an error accrued while moving, so that an undo may be necessary.
     */
    public StateInteractive move_to(PlaPointFloat p_to_location)
       {
       PlaPointInt to_location = p_to_location.round();
+      
       PlaPointInt from_location = previous_location.round();
       
       if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
@@ -89,6 +90,7 @@ public class StateDragItem extends StateDrag
       for (int index = 0; index < 2; ++index)
          {
          move_component = new IteraMoveComponent(item_to_move, rel_coor, 99, 5);
+         
          if (move_component.check_move())
             {
             shove_ok = true;
@@ -97,8 +99,7 @@ public class StateDragItem extends StateDrag
          
          if (index == 0)
             {
-            // reduce evtl. the shove distance to make the check shove function
-            // work properly, if more than 1 trace have to be shoved.
+            // reduce evtl. the shove distance to make the check shove function work properly, if more than 1 trace have to be shoved.
             double sample_width = 2 * r_brd.get_min_trace_half_width();
             if (length > sample_width)
                {
@@ -107,7 +108,7 @@ public class StateDragItem extends StateDrag
             }
          }
 
-      if (shove_ok)
+      if ( shove_ok)
          {
          if (!something_dragged)
             {
@@ -121,35 +122,36 @@ public class StateDragItem extends StateDrag
             r_brd.generate_snapshot();
       
             // Delayed till here because otherwise the mouse might have been only clicked for selecting and not pressed for moving.
-            if (actlog != null)  actlog.start_scope(LogfileScope.DRAGGING_ITEMS, this.previous_location);
+            if (actlog != null)  actlog.start_scope(LogfileScope.DRAGGING_ITEMS, previous_location);
             
             something_dragged = true;
             }
+         
          if (!move_component.insert(i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pull_tight_accuracy))
             {
             // an insert error occurred, end the drag state
             return return_state;
             }
+         
          i_brd.repaint();
          }
       
-      previous_location = p_to_location;// (IntPoint)this.curr_location.translate_by(rel_coor);
+      previous_location = p_to_location;
       return this;
       }
 
    public StateInteractive button_released()
       {
-      if (this.observers_activated)
+      if (observers_activated)
          {
          r_brd.end_notify_observers();
-         this.observers_activated = false;
+         observers_activated = false;
          }
-      if (actlog != null && something_dragged)
-         {
-         actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
-         }
+      
       if (something_dragged)
          {
+         actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
+         
          // Update the incomplete for the nets of the moved items.
          if (item_to_move.get_component_no() == 0)
             {
@@ -181,7 +183,9 @@ public class StateDragItem extends StateDrag
          {
          i_brd.show_ratsnest();
          }
+      
       i_brd.screen_messages.set_status_message("");
-      return this.return_state;
+      
+      return return_state;
       }
    }

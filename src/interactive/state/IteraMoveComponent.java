@@ -48,9 +48,10 @@ public final class IteraMoveComponent
    private final int max_recursion_depth;
    private final int max_via_recursion_depth;
    private final RoutingBoard r_board;
-   private boolean all_items_movable = true;
    private final TreeSet<SortedItemDouble> item_group_arr = new TreeSet<SortedItemDouble>();
+
    private BrdComponent component = null;
+   private boolean all_items_movable = true;
 
    public IteraMoveComponent(BrdItem p_item, PlaVectorInt p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
       {
@@ -61,6 +62,7 @@ public final class IteraMoveComponent
 
       Collection<BrdItem> item_group_list;
       int component_no = p_item.get_component_no();
+      
       if (component_no > 0)
          {
          item_group_list = r_board.get_component_items(component_no);

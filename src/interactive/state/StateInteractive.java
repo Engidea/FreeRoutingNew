@@ -65,7 +65,13 @@ public class StateInteractive
       actlog.start_scope ( actevent);
       }
 
-   
+   protected final void actlog_add_corner ( PlaPointFloat apoint )
+      {
+      if ( actlog == null ) return;
+      
+      actlog.add_corner(apoint);
+      }
+
    protected final void actlog_start_scope (  LogfileScope actevent, PlaPointFloat apoint )
       {
       if ( actlog == null ) return;

@@ -48,19 +48,18 @@ public final class StateSelectRegionZoom extends StateSelectRegion
       
       zoom_region();
 
-      if ( actlog != null) actlog.add_corner(corner2);
+      actlog.add_corner(corner2);
 
       return this.return_state;
       }
 
    private void zoom_region()
       {
-      if (corner1 == null || corner2 == null)
-         {
-         return;
-         }
+      if (corner1 == null || corner2 == null) return;
+
       Point2D sc_corner1 = i_brd.gdi_context.coordinate_transform.board_to_screen(corner1);
       Point2D sc_corner2 = i_brd.gdi_context.coordinate_transform.board_to_screen(corner2);
+
       i_brd.get_panel().zoom_frame(sc_corner1, sc_corner2);
       }
    }

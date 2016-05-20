@@ -48,7 +48,7 @@ import board.varie.ItemSelectionFilter;
  *
  * @author Alfons Wirtz
  */
-public class StateRoute extends StateInteractive
+public abstract class StateRoute extends StateInteractive
    {
    protected IteraRoute route = null;
    private Set<BrdItem> routing_target_set = null;
@@ -61,12 +61,13 @@ public class StateRoute extends StateInteractive
       {
       super(p_parent_state, p_board_handling, p_logfile);
       }
+
    
    /**
     * Returns a new instance of this class or null, if starting a new route was not possible at p_location. 
     * If p_actlog != null the creation of the route is stored in the logfile.
     **/
-   public static StateRoute get_instance(PlaPointFloat p_location, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_actlog)
+   public static StateRoute get_instance(PlaPointFloat p_location, StateInteractive p_parent_state, IteraBoard i_board, Actlog p_actlog)
       {
       if (!(p_parent_state instanceof StateMenu))
          {
@@ -74,11 +75,11 @@ public class StateRoute extends StateInteractive
          return null;
          }
       
-      p_board_handling.display_layer_messsage();
+      i_board.display_layer_messsage();
       
       PlaPointInt location = p_location.round();
       
-      BrdItem picked_item = pick_start_item(location, p_board_handling);
+      BrdItem picked_item = pick_start_item(location, i_board);
       
       if (picked_item == null) return null;
       
@@ -91,41 +92,38 @@ public class StateRoute extends StateInteractive
       if (picked_item instanceof BrdAbitPin && net_count > 1)
          {
          // tie pin, remove nets, which are already conneccted to this pin on the current layer.
-         route_net_no_arr = new NetNosList ( get_route_net_numbers_at_tie_pin((BrdAbitPin) picked_item, p_board_handling.itera_settings.layer_no) );
+         route_net_no_arr = new NetNosList ( get_route_net_numbers_at_tie_pin((BrdAbitPin) picked_item, i_board.itera_settings.layer_no) );
          }
       else
          {
-         int [] a_net_no_arr = new int[net_count];
-      
-         for (int index = 0; index < net_count; ++index) a_net_no_arr[index] = picked_item.get_net_no(index);
-         
-         route_net_no_arr = new NetNosList(a_net_no_arr);
+         route_net_no_arr = picked_item.net_nos.copy();
          }
       
       if (route_net_no_arr.is_empty() ) return null;
       
       // uff, this static stuff is really annoying....
-      RoutingBoard routing_board = p_board_handling.get_routing_board();
+      RoutingBoard routing_board = i_board.get_routing_board();
       
       int[] trace_half_widths = new int[routing_board.get_layer_count()];
+      
       boolean[] layer_active_arr = new boolean[trace_half_widths.length];
       
       for (int index = 0; index < trace_half_widths.length; ++index)
          {
-         trace_half_widths[index] = p_board_handling.get_trace_halfwidth(route_net_no_arr.first(), index);
+         trace_half_widths[index] = i_board.get_trace_halfwidth(route_net_no_arr.first(), index);
          
          layer_active_arr[index] = false;
          
          for (int route_net_no : route_net_no_arr )
             {
-            if ( p_board_handling.is_active_routing_layer(route_net_no, index))
+            if ( i_board.is_active_routing_layer(route_net_no, index))
                {
                layer_active_arr[index] = true;
                }
             }
          }
 
-      int trace_clearance_class = p_board_handling.get_trace_clearance_class(route_net_no_arr.first() );
+      int trace_clearance_class = i_board.get_trace_clearance_class(route_net_no_arr.first() );
       
       boolean start_ok = true;
       
@@ -135,9 +133,9 @@ public class StateRoute extends StateInteractive
          
          PlaPoint picked_corner = picked_trace.nearest_end_point(location);
          
-         if (picked_corner instanceof PlaPointInt && p_location.distance(picked_corner.to_float()) < 5 * picked_trace.get_half_width())
+         if ( (picked_corner instanceof PlaPointInt)  && p_location.distance(picked_corner.to_float()) < 5 * picked_trace.get_half_width())
             {
-            // Why should it fail if it is a rational ? pippo
+            // Why should it fail if it is a rational ... anyway, the check for distance is somewhat correct
             location = (PlaPointInt) picked_corner;
             }
          else
@@ -146,13 +144,10 @@ public class StateRoute extends StateInteractive
 
             location = nearest_point.round();
             
-            if ( ! routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_idx()))
-               {
-               start_ok = false;
-               }
+            start_ok = routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_idx());
             }
          
-         if (start_ok && !p_board_handling.itera_settings.manual_rule_selection)
+         if (start_ok && ! i_board.itera_settings.manual_rule_selection)
             {
             // Pick up the half with and the clearance class of the found trace.
             int[] new_trace_half_widths = new int[trace_half_widths.length];
@@ -176,37 +171,38 @@ public class StateRoute extends StateInteractive
       if (curr_net == null)  return null;
 
       // Switch to stitch mode for nets, which are shove fixed.
-      boolean is_stitch_route = p_board_handling.itera_settings.is_stitch_route || curr_net.get_class().is_shove_fixed() || !curr_net.get_class().can_pull_tight();
+      boolean is_stitch_route = i_board.itera_settings.is_stitch_route || curr_net.get_class().is_shove_fixed() || !curr_net.get_class().can_pull_tight();
+      
       routing_board.generate_snapshot();
       
       StateRoute new_instance;
 
       if (is_stitch_route)
          {
-         new_instance = new StateRouteStitch(p_parent_state, p_board_handling, p_actlog);
+         new_instance = new StateRouteStitch(p_parent_state, i_board, p_actlog);
          }
       else
          {
-         new_instance = new StateRouteDynamic(p_parent_state, p_board_handling, p_actlog);
+         new_instance = new StateRouteDynamic(p_parent_state, i_board, p_actlog);
          }
       
       new_instance.routing_target_set = picked_item.get_unconnected_set(-1);
 
       new_instance.route = new IteraRoute(location, 
-            p_board_handling.itera_settings.layer_no, 
+            i_board.itera_settings.layer_no, 
             trace_half_widths, 
             layer_active_arr, 
             route_net_no_arr, 
             trace_clearance_class,
-            p_board_handling.get_via_rule(route_net_no_arr.first()), 
-            p_board_handling.itera_settings.push_enabled, 
+            i_board.get_via_rule(route_net_no_arr.first()), 
+            i_board.itera_settings.push_enabled, 
             picked_item, 
             new_instance.
             routing_target_set, 
             routing_board, 
             is_stitch_route, 
-            p_board_handling.itera_settings.is_via_snap_to_smd_center(), 
-            p_board_handling.itera_settings);
+            i_board.itera_settings.is_via_snap_to_smd_center(), 
+            i_board.itera_settings);
       
       new_instance.observers_activated = !routing_board.observers_active();
       
@@ -215,12 +211,12 @@ public class StateRoute extends StateInteractive
          routing_board.start_notify_observers();
          }
       
-      p_board_handling.repaint();
+      i_board.repaint();
 
       if (new_instance.actlog != null)
          {
          new_instance.actlog.start_scope(LogfileScope.CREATING_TRACE, p_location);
-         p_board_handling.hide_ratsnest();
+         i_board.hide_ratsnest();
          }
 
       new_instance.display_default_message();
@@ -379,7 +375,7 @@ public class StateRoute extends StateInteractive
       
       i_brd.screen_messages.set_target_layer(layer_string);
       
-      if (actlog != null) actlog.add_corner(p_location);
+      actlog_add_corner(p_location);
       
       // assume I stay in this state
       StateInteractive result = this;

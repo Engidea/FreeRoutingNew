@@ -34,8 +34,8 @@ public class Actlog
     */
    public boolean start_read(InputStream p_input_stream)
       {
-      this.scanner = new LogfileScanner(p_input_stream);
-      return (this.scanner != null);
+      scanner = new LogfileScanner(p_input_stream);
+      return (scanner != null);
       }
 
    /**
@@ -48,10 +48,10 @@ public class Actlog
       double y = 0;
       for (int i = 0; i < 2; ++i)
          {
-         Object curr_ob = this.next_token();
+         Object curr_ob = next_token();
          if (!(curr_ob instanceof Double))
             {
-            this.pending_token = curr_ob;
+            pending_token = curr_ob;
             return null;
             }
          double f = ((Double) curr_ob).doubleValue();
@@ -72,18 +72,18 @@ public class Actlog
     */
    public void close_output()
       {
-      if (this.file_writer != null)
+      if (file_writer != null)
          {
          try
             {
-            this.file_writer.close();
+            file_writer.close();
             }
          catch (IOException e)
             {
             System.out.println("unable to close logfile");
             }
          }
-      this.write_enabled = false;
+      write_enabled = false;
       }
 
    /**
@@ -93,7 +93,7 @@ public class Actlog
       {
       try
          {
-         this.file_writer = new FileWriter(p_file);
+         file_writer = new FileWriter(p_file);
          }
       catch (IOException e)
          {
@@ -113,8 +113,8 @@ public class Actlog
 
       try
          {
-         this.file_writer.write(p_logfile_scope.name);
-         this.file_writer.write("\n");
+         file_writer.write(p_logfile_scope.name);
+         file_writer.write("\n");
          }
       catch (IOException e2)
          {
@@ -164,7 +164,7 @@ public class Actlog
     */
    public LogfileScope start_read_scope()
       {
-      Object curr_ob = this.next_token();
+      Object curr_ob = next_token();
       if (curr_ob == null)
          {
          return null;
@@ -172,7 +172,7 @@ public class Actlog
       if (!(curr_ob instanceof String))
          {
          System.out.println("Logfile.start_read_scope: String expected");
-         this.pending_token = curr_ob;
+         pending_token = curr_ob;
          return null;
          }
       LogfileScope result = LogfileScope.get_scope((String) curr_ob);
@@ -188,8 +188,8 @@ public class Actlog
 
       try
          {
-         this.file_writer.write((new Integer(p_int)).toString());
-         this.file_writer.write("\n");
+         file_writer.write((new Integer(p_int)).toString());
+         file_writer.write("\n");
          }
       catch (IOException e2)
          {
@@ -207,11 +207,11 @@ public class Actlog
     */
    public int read_int()
       {
-      Object curr_ob = this.next_token();
+      Object curr_ob = next_token();
       if (!(curr_ob instanceof Integer))
          {
          System.out.println("Logfile.read_int: Integer expected");
-         this.pending_token = curr_ob;
+         pending_token = curr_ob;
          return -1;
          }
       return (((Integer) curr_ob).intValue());
@@ -222,38 +222,34 @@ public class Actlog
     */
    public void add_corner(PlaPointFloat p_corner)
       {
-      if (write_enabled)
+      if ( p_corner == null ) return;
+      
+      if ( ! write_enabled) return;
+      
+      try
          {
-         if (p_corner == null)
-            {
-            System.out.println("logfile.add_corner: p_corner is null");
-            return;
-            }
-         try
-            {
-            this.file_writer.write((new Double(p_corner.v_x)).toString());
-            this.file_writer.write(" ");
-            this.file_writer.write((new Double(p_corner.v_y)).toString());
-            this.file_writer.write("\n");
-            }
-         catch (IOException e2)
-            {
-            System.out.println("unable to write to logfile while adding corner");
-            }
+         file_writer.write((new Double(p_corner.v_x)).toString());
+         file_writer.write(" ");
+         file_writer.write((new Double(p_corner.v_y)).toString());
+         file_writer.write("\n");
+         }
+      catch (IOException e2)
+         {
+         System.out.println("unable to write to logfile while adding corner");
          }
       }
 
    private Object next_token()
       {
-      if (this.pending_token != null)
+      if (pending_token != null)
          {
-         Object result = this.pending_token;
-         this.pending_token = null;
+         Object result = pending_token;
+         pending_token = null;
          return result;
          }
       try
          {
-         Object result = this.scanner.next_token();
+         Object result = scanner.next_token();
          return result;
          }
       catch (IOException e)

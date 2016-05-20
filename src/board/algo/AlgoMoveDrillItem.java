@@ -163,13 +163,13 @@ public final class AlgoMoveDrillItem
          {
          int curr_ind = curr_layer - p_drill_item.first_layer();
          ShapeTile curr_shape = p_drill_item.get_tree_shape(search_tree, curr_ind);
-         if (curr_shape == null)
-            {
-            continue;
-            }
+
+         if (curr_shape == null) continue;
+
          ShapeConvex new_shape = (ShapeConvex) curr_shape.translate_by(p_vector);
          ShapeTile curr_tile_shape;
-         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+
+         if (r_board.brd_rules.is_trace_snap_90())
             {
             curr_tile_shape = new_shape.bounding_box();
             }
@@ -177,10 +177,12 @@ public final class AlgoMoveDrillItem
             {
             curr_tile_shape = new_shape.bounding_octagon();
             }
+         
          if (p_tidy_region != null)
             {
             p_tidy_region = p_tidy_region.union(curr_tile_shape.bounding_octagon());
             }
+         
          BrdFromSide from_side = new BrdFromSide(p_drill_item.center_get(), curr_tile_shape);
          if ( ! r_board.shove_pad_algo.forced_pad(
                curr_tile_shape, 

@@ -20,9 +20,9 @@
 
 package interactive.state;
 
-import freert.planar.PlaPointFloat;
 import interactive.Actlog;
 import interactive.IteraBoard;
+import freert.planar.PlaPointFloat;
 
 /**
  * Common base class for interactive selection of a rectangle.
@@ -31,6 +31,9 @@ import interactive.IteraBoard;
  */
 public class StateSelectRegion extends StateInteractive
    {
+   protected PlaPointFloat corner1 = null;
+   protected PlaPointFloat corner2 = null;
+
    protected StateSelectRegion(StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
@@ -47,18 +50,18 @@ public class StateSelectRegion extends StateInteractive
       if (corner1 == null)
          {
          corner1 = p_point;
-         if (actlog != null)
-            {
-            actlog.add_corner(corner1);
-            }
+
+         actlog.add_corner(corner1);
          }
+
       i_brd.repaint();
+      
       return this;
       }
 
    public void draw(java.awt.Graphics p_graphics)
       {
-      this.return_state.draw(p_graphics);
+      return_state.draw(p_graphics);
       PlaPointFloat current_mouse_position = i_brd.get_current_mouse_position();
       if (corner1 == null || current_mouse_position == null)
          {
@@ -67,7 +70,4 @@ public class StateSelectRegion extends StateInteractive
       corner2 = current_mouse_position;
       i_brd.gdi_context.draw_rectangle(corner1, corner2, 1, java.awt.Color.white, p_graphics, 1);
       }
-
-   protected PlaPointFloat corner1 = null;
-   protected PlaPointFloat corner2 = null;
    }

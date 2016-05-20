@@ -254,10 +254,9 @@ public class StateMoveItem extends StateInteractive
       {
       super.mouse_moved();
       move(i_brd.get_current_mouse_position());
-      if (actlog != null)
-         {
-         actlog.add_corner(current_position.to_float());
-         }
+
+      actlog_add_corner(current_position.to_float());
+
       return this;
       }
 

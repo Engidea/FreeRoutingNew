@@ -50,10 +50,9 @@ public class StateSelectRegionItems extends StateSelectRegion
       p_board_handling.display_layer_messsage();
       StateSelectRegionItems new_instance = new StateSelectRegionItems(p_parent_state, p_board_handling, p_logfile);
       new_instance.corner1 = p_location;
-      if (new_instance.actlog != null)
-         {
-         new_instance.actlog.add_corner(p_location);
-         }
+
+      new_instance.actlog_add_corner(p_location);
+
       new_instance.i_brd.screen_messages.set_status_message(new_instance.resources.getString("drag_left_mouse_button_to_selects_items_in_region"));
       return new_instance;
       }
@@ -75,10 +74,9 @@ public class StateSelectRegionItems extends StateSelectRegion
          {
          i_brd.screen_messages.set_status_message("");
          corner2 = i_brd.get_current_mouse_position();
-         if (actlog != null)
-            {
-            actlog.add_corner(corner2);
-            }
+
+         actlog_add_corner(corner2);
+
          select_all_in_region();
          }
       return return_state;

@@ -24,6 +24,8 @@ import interactive.Actlog;
 import interactive.IteraBoard;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 import board.items.BrdAbit;
 import board.items.BrdItem;
 import board.items.BrdTracep;
@@ -118,26 +120,24 @@ public abstract class StateDrag extends StateInteractive
 
    public abstract StateInteractive move_to(PlaPointFloat p_to_location);
 
-   public StateInteractive mouse_dragged(PlaPointFloat p_point)
+   @Override
+   public final StateInteractive mouse_dragged(PlaPointFloat p_point)
       {
       StateInteractive result = move_to(p_point);
+      
       if (result != this)
          {
          // an error occurred
-         java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
+         Set<Integer> changed_nets = new TreeSet<Integer>();
          r_brd.undo(changed_nets);
          for (Integer changed_net : changed_nets)
             {
             i_brd.update_ratsnest(changed_net);
             }
          }
-      if (something_dragged)
-         {
-         if (actlog != null)
-            {
-            actlog.add_corner(p_point);
-            }
-         }
+      
+      if (something_dragged) actlog_add_corner(p_point);
+
       return result;
       }
 

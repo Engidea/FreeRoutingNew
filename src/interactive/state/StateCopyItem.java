@@ -261,10 +261,9 @@ public class StateCopyItem extends StateInteractive
          {
          i_brd.screen_messages.set_status_message(resources.getString("some_items_not_inserted_because_of_obstacles"));
          }
-      if (actlog != null)
-         {
-         actlog.add_corner(this.current_position.to_float());
-         }
+
+      actlog_add_corner(this.current_position.to_float());
+ 
       start_position = current_position;
       layer_changed = false;
       i_brd.repaint();

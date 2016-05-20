@@ -25,9 +25,9 @@ import interactive.IteraBoard;
 import interactive.LogfileScope;
 import board.varie.ItemFixState;
 import board.varie.TraceAngleRestriction;
-import freert.planar.ShapeCircle;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.ShapeCircle;
 import freert.planar.ShapeConvex;
 import freert.rules.BoardRules;
 import freert.varie.NetNosList;
@@ -59,10 +59,7 @@ public class StateCircleConstrut extends StateInteractive
 
    public StateInteractive left_button_clicked(PlaPointFloat p_location)
       {
-      if (actlog != null)
-         {
-         actlog.add_corner(p_location);
-         }
+      actlog_add_corner(p_location);
       return complete();
       }
 
