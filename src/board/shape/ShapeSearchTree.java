@@ -68,22 +68,20 @@ import freert.varie.UnitMeasure;
  *
  * @author Alfons Wirtz
  */
-public class ShapeSearchTree
+public final class ShapeSearchTree
    {
-   protected final RoutingBoard r_board;
+   private final RoutingBoard r_board;
 
-   protected ShapeTreeNodeStack node_stack = new ShapeTreeNodeStack();
-   
+   private final ShapeTreeNodeStack node_stack = new ShapeTreeNodeStack();
    // the fixed directions for calculating bounding RegularTileShapes of shapes to store in this tree.
-   protected final ShapeBounding bounding_directions;
-   // Root node - initially null 
-   protected ShapeTreeNode root_node = null;
-   // The number of entries stored in the tree
-   protected int leaf_count = 0;
-   
-   // The clearance class number for which the shapes of this tree is compensated. 
-   // If compensated_clearance_class_no = 0, the shapes are not compensated.
+   private final ShapeBounding bounding_directions;
+   // The clearance class number for which the shapes of this tree is compensated, if 0 shapes are not compensated 
    public final int compensated_clearance_class_no;
+
+   // Root node - initially null 
+   private ShapeTreeNode root_node = null;
+   // The number of entries stored in the tree
+   private int leaf_count = 0;
 
    /**
     * Creates a new ShapeSearchTree. 
@@ -93,9 +91,8 @@ public class ShapeSearchTree
     */
    public ShapeSearchTree(ShapeBounding p_directions, RoutingBoard p_board, int p_compensated_clearance_class_no)
       {
-      bounding_directions = p_directions;
-
       r_board = p_board;
+      bounding_directions = p_directions;
       compensated_clearance_class_no = p_compensated_clearance_class_no;
       }
 

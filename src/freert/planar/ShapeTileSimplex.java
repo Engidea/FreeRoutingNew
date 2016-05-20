@@ -23,6 +23,8 @@ import java.util.LinkedList;
 /**
  * Convex shape defined as intersection of half-planes. 
  * A half-plane is defined as the positive side of a directed line.
+ * This is actually used for the search tree, so, rational points are just squashed here....
+ * They are not used for parts, pin locations or other stuff, just traces....
  *
  * @author Alfons Wirtz
  */

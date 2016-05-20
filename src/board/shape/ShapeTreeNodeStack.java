@@ -24,9 +24,8 @@ package board.shape;
 import java.util.LinkedList;
 
 /**
- * Implementation of a stack as an array
+ * Implementation of a stack as a LinkedList
  * Since this is used only for ShapeTreeNode I am making a specific class
- * Also, I wonder, if a normal list would be more appropriate....
  *
  * @author Alfons Wirtz
  */
