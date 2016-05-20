@@ -37,17 +37,45 @@ public final class OctagonMutable implements PlaObject
       urx = Integer.MIN_VALUE;
       }
 
+   
+   /**
+    * enlarges the octagon so that it contains p_point
+    */
+   public void join(PlaPointFloat p_point)
+      {
+      lx = Math.min(p_point.v_x, lx);
+      ly = Math.min(p_point.v_y, ly);
+      rx = Math.max(rx, p_point.v_x);
+      uy = Math.max(uy, p_point.v_y);
+
+      double tmp = p_point.v_x - p_point.v_y;
+      ulx = Math.min(ulx, tmp);
+      lrx = Math.max(lrx, tmp);
+
+      tmp = p_point.v_x + p_point.v_y;
+      llx = Math.min(llx, tmp);
+      urx = Math.max(urx, tmp);
+      }
+   
+   
    /**
     * calculates the smallest IntOctagon containing this octagon.
     */
-   public ShapeTileOctagon to_int()
+   public ShapeTileOctagon to_octagon()
       {
       if (rx < lx || uy < ly || lrx < ulx || urx < llx)
          {
          return ShapeTileOctagon.EMPTY;
          }
       
-      return new ShapeTileOctagon((int) Math.floor(lx), (int) Math.floor(ly), (int) Math.ceil(rx), (int) Math.ceil(uy), (int) Math.floor(ulx), (int) Math.ceil(lrx), (int) Math.floor(llx),
-            (int) Math.ceil(urx));
+      return new ShapeTileOctagon(
+            Math.floor(lx), 
+            Math.floor(ly), 
+            Math.ceil(rx), 
+            Math.ceil(uy), 
+            Math.floor(ulx), 
+            Math.ceil(lrx), 
+            Math.floor(llx),
+            Math.ceil(urx));
       }
    }

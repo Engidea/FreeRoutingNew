@@ -18,6 +18,7 @@ package board.varie;
 
 import freert.planar.OctagonMutable;
 import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 
@@ -29,18 +30,15 @@ import freert.planar.ShapeTileOctagon;
 public final class BrdChangedArea
    {
    private final int layer_count;
-   private OctagonMutable[] arr;
+   private OctagonMutable[] octa_arr;
    
    public BrdChangedArea(int p_layer_count)
       {
       layer_count = p_layer_count;
-      arr = new OctagonMutable[layer_count];
+      octa_arr = new OctagonMutable[layer_count];
 
-      for (int i = 0; i < layer_count; ++i)
-         {
-         // Initialize all octagons to empty
-         arr[i] = new OctagonMutable();
-         }
+      // Initialize all octagons to empty
+      for (int index = 0; index < layer_count; ++index) octa_arr[index] = new OctagonMutable();
       }
 
    /**
@@ -48,32 +46,23 @@ public final class BrdChangedArea
     */
    public void join(PlaPointFloat p_point, int p_layer)
       {
-      OctagonMutable curr = arr[p_layer];
-      curr.lx = Math.min(p_point.v_x, curr.lx);
-      curr.ly = Math.min(p_point.v_y, curr.ly);
-      curr.rx = Math.max(curr.rx, p_point.v_x);
-      curr.uy = Math.max(curr.uy, p_point.v_y);
-
-      double tmp = p_point.v_x - p_point.v_y;
-      curr.ulx = Math.min(curr.ulx, tmp);
-      curr.lrx = Math.max(curr.lrx, tmp);
-
-      tmp = p_point.v_x + p_point.v_y;
-      curr.llx = Math.min(curr.llx, tmp);
-      curr.urx = Math.max(curr.urx, tmp);
+      OctagonMutable curr = octa_arr[p_layer];
+      
+      curr.join(p_point);
       }
 
    /**
     * enlarges the octagon on p_layer, so that it contains p_shape
     */
-   public void join(freert.planar.ShapeTile p_shape, int p_layer)
+   public void join( ShapeTile p_shape, int p_layer)
       {
       if (p_shape == null) return;
 
       int corner_count = p_shape.border_line_count();
-      for (int i = 0; i < corner_count; ++i)
+      
+      for (int index = 0; index < corner_count; ++index)
          {
-         join(p_shape.corner_approx(i), p_layer);
+         join(p_shape.corner_approx(index), p_layer);
          }
       }
 
@@ -82,7 +71,7 @@ public final class BrdChangedArea
     */
    public ShapeTileOctagon get_area(int p_layer)
       {
-      return arr[p_layer].to_int();
+      return octa_arr[p_layer].to_octagon();
       }
 
    public ShapeTileBox surrounding_box()
@@ -92,18 +81,21 @@ public final class BrdChangedArea
       int urx = Integer.MIN_VALUE;
       int ury = Integer.MIN_VALUE;
 
-      for (int i = 0; i < layer_count; ++i)
+      for (int layer_idx = 0; layer_idx < layer_count; ++layer_idx)
          {
-         OctagonMutable curr = arr[i];
+         OctagonMutable curr = octa_arr[layer_idx];
+         
          llx = Math.min(llx, (int) Math.floor(curr.lx));
          lly = Math.min(lly, (int) Math.floor(curr.ly));
          urx = Math.max(urx, (int) Math.ceil(curr.rx));
          ury = Math.max(ury, (int) Math.ceil(curr.uy));
          }
+      
       if (llx > urx || lly > ury)
          {
          return ShapeTileBox.EMPTY;
          }
+      
       return new ShapeTileBox(llx, lly, urx, ury);
       }
 
@@ -112,6 +104,6 @@ public final class BrdChangedArea
     */
    public void set_empty(int p_layer)
       {
-      arr[p_layer].set_empty();
+      octa_arr[p_layer].set_empty();
       }
    }
