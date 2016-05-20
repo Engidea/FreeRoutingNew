@@ -33,7 +33,6 @@ import board.infos.PrintableInfo;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeEntry;
 import board.shape.ShapeTreeLeaf;
-import board.shape.ShapeTreeMinArea;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
@@ -206,29 +205,27 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       return get_tree_shape(r_board.search_tree_manager.get_default_tree(), p_index);
       }
 
-   @Override
-   public final int tree_shape_count(ShapeTreeMinArea p_tree)
+   public final int tree_shape_count(ShapeSearchTree p_tree)
       {
       ShapeTile[] precalculated_tree_shapes = get_precalculated_tree_shapes(p_tree);
       
       return precalculated_tree_shapes.length;
       }
 
-   @Override
-   public final ShapeTile get_tree_shape(ShapeTreeMinArea p_tree, int p_index)
+   public final ShapeTile get_tree_shape(ShapeSearchTree p_tree, int p_index)
       {
       ShapeTile[] precalculated_tree_shapes = get_precalculated_tree_shapes(p_tree);
       
       return precalculated_tree_shapes[p_index];
       }
 
-   private ShapeTile[] get_precalculated_tree_shapes(ShapeTreeMinArea p_tree)
+   private ShapeTile[] get_precalculated_tree_shapes(ShapeSearchTree p_tree)
       {
       ShapeTile[] precalculated_tree_shapes = search_trees_info.get_precalculated_tree_shapes(p_tree);
 
       if (precalculated_tree_shapes == null)
          {
-         precalculated_tree_shapes = calculate_tree_shapes((ShapeSearchTree) p_tree);
+         precalculated_tree_shapes = calculate_tree_shapes( p_tree);
          search_trees_info.set_precalculated_tree_shapes(precalculated_tree_shapes, p_tree);
          }
       
@@ -1156,7 +1153,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Sets the item tree entries for the tree with identification number p_tree_no.
     */
-   public final void set_search_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeTreeMinArea p_tree)
+   public final void set_search_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeSearchTree p_tree)
       {
       search_trees_info.set_tree_entries(p_tree_entries, p_tree);
       }
