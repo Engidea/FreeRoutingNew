@@ -23,9 +23,9 @@ package board.varie;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import freert.planar.ShapeTile;
-import board.shape.ShapeTree;
 import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeMinArea;
+import freert.planar.ShapeTile;
 
 /**
  * Stores information about the search trees of the board items, which is pre calculated for performance reasons.
@@ -39,7 +39,7 @@ public final class SearchTreesInfo
     * Returns the tree entries for the given tree  or null, if for this tree no entries of this item
     * are inserted.
     */
-   public ShapeTreeLeaf[] get_tree_entries(ShapeTree p_tree)
+   public ShapeTreeLeaf[] get_tree_entries(ShapeTreeMinArea p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {
@@ -60,7 +60,7 @@ public final class SearchTreesInfo
     * Sets the item tree entries for the given tree
     * If the tree does not exist it is created
     */
-   public void set_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeTree p_tree)
+   public void set_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeTreeMinArea p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {
@@ -80,7 +80,7 @@ public final class SearchTreesInfo
     * Returns the precalculated tiles hapes for the tree with identification number p_tree_no, or null, if the tile shapes of this
     * tree are nnot yet precalculated.
     */
-   public ShapeTile[] get_precalculated_tree_shapes(ShapeTree p_tree)
+   public ShapeTile[] get_precalculated_tree_shapes(ShapeTreeMinArea p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {
@@ -95,7 +95,7 @@ public final class SearchTreesInfo
    /**
     * Sets the item tree entries for the tree with identification number p_tree_no.
     */
-   public void set_precalculated_tree_shapes(ShapeTile[] p_tile_shapes, ShapeTree p_tree)
+   public void set_precalculated_tree_shapes(ShapeTile[] p_tile_shapes, ShapeTreeMinArea p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {

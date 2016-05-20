@@ -27,9 +27,9 @@ import autoroute.ArtEngine;
 import board.BrdConnectable;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeTree;
 import board.shape.ShapeTreeEntry;
 import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeMinArea;
 import board.shape.ShapeTreeObject;
 import freert.planar.ShapeTile;
 import freert.varie.NetNosList;
@@ -58,7 +58,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       }
 
    @Override
-   public void set_search_tree_entries(ShapeTreeLeaf[] p_entries, ShapeTree p_tree)
+   public void set_search_tree_entries(ShapeTreeLeaf[] p_entries, ShapeTreeMinArea p_tree)
       {
       tree_entries = p_entries;
       }
@@ -75,7 +75,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    /**
     * Removes the tree entries of this roomm from p_shape_tree.
     */
-   public final void remove_from_tree(ShapeTree p_shape_tree)
+   public final void remove_from_tree(ShapeTreeMinArea p_shape_tree)
       {
       if ( p_shape_tree == null ) return;
       
@@ -83,13 +83,13 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       }
 
    @Override
-   public int tree_shape_count(ShapeTree p_shape_tree)
+   public int tree_shape_count(ShapeTreeMinArea p_shape_tree)
       {
       return 1;
       }
 
    @Override
-   public ShapeTile get_tree_shape(ShapeTree p_shape_tree, int p_index)
+   public ShapeTile get_tree_shape(ShapeTreeMinArea p_shape_tree, int p_index)
       {
       return get_shape();
       }

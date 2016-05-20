@@ -31,9 +31,9 @@ import board.RoutingBoard;
 import board.infos.BrdItemViolation;
 import board.infos.PrintableInfo;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeTree;
 import board.shape.ShapeTreeEntry;
 import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeMinArea;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
@@ -207,7 +207,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    @Override
-   public final int tree_shape_count(ShapeTree p_tree)
+   public final int tree_shape_count(ShapeTreeMinArea p_tree)
       {
       ShapeTile[] precalculated_tree_shapes = get_precalculated_tree_shapes(p_tree);
       
@@ -215,14 +215,14 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       }
 
    @Override
-   public final ShapeTile get_tree_shape(ShapeTree p_tree, int p_index)
+   public final ShapeTile get_tree_shape(ShapeTreeMinArea p_tree, int p_index)
       {
       ShapeTile[] precalculated_tree_shapes = get_precalculated_tree_shapes(p_tree);
       
       return precalculated_tree_shapes[p_index];
       }
 
-   private ShapeTile[] get_precalculated_tree_shapes(ShapeTree p_tree)
+   private ShapeTile[] get_precalculated_tree_shapes(ShapeTreeMinArea p_tree)
       {
       ShapeTile[] precalculated_tree_shapes = search_trees_info.get_precalculated_tree_shapes(p_tree);
 
@@ -1156,7 +1156,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Sets the item tree entries for the tree with identification number p_tree_no.
     */
-   public final void set_search_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeTree p_tree)
+   public final void set_search_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeTreeMinArea p_tree)
       {
       search_trees_info.set_tree_entries(p_tree_entries, p_tree);
       }

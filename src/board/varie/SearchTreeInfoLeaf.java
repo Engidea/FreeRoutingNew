@@ -1,16 +1,16 @@
 package board.varie;
 
-import freert.planar.ShapeTile;
-import board.shape.ShapeTree;
 import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeMinArea;
+import freert.planar.ShapeTile;
 
 public final class SearchTreeInfoLeaf
    {
-   public final ShapeTree tree;
+   public final ShapeTreeMinArea tree;
    public ShapeTreeLeaf[] entry_arr;
    public ShapeTile[] precalculated_tree_shapes;
 
-   public SearchTreeInfoLeaf(ShapeTree p_tree)
+   public SearchTreeInfoLeaf(ShapeTreeMinArea p_tree)
       {
       tree = p_tree;
       entry_arr = null;

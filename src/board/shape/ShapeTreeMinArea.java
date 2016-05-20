@@ -22,6 +22,7 @@ package board.shape;
 
 import java.util.Set;
 import java.util.TreeSet;
+import freert.planar.PlaShape;
 import freert.planar.ShapeBounding;
 import freert.planar.ShapeTileRegular;
 
@@ -30,24 +31,186 @@ import freert.planar.ShapeTileRegular;
  * The algorithm for storing a new shape is as following. 
  * Starting from the root go to the child, so that the increase of the bounding shape of that child is minimal
  * after adding the new shape, until you reach a leaf. 
- * The use of ShapeDirections to calculate the bounding shape is for historicalreasons (coming from a Kd-Tree). 
+ * The use of ShapeDirections to calculate the bounding shape is for historical reasons (coming from a Kd-Tree). 
  * Instead any algorithm to calculate a bounding shape of two input shapes can be used. 
  * The algorithm would of course also work for higher dimensions.
  *
  * @author Alfons Wirtz
  */
-public class ShapeTreeMinArea extends ShapeTree
+public abstract class ShapeTreeMinArea
    {
    protected ShapeTreeNodeStack node_stack = new ShapeTreeNodeStack();
+   
+   // the fixed directions for calculating bounding RegularTileShapes of shapes to store in this tree.
+   protected final ShapeBounding bounding_directions;
+   // Root node - initially null 
+   protected ShapeTreeNode root_node = null;
+   // The number of entries stored in the tree
+   protected int leaf_count = 0;
 
    /**
     * Constructor with a fixed set of directions defining the keys and and the surrounding shapes
     */
    public ShapeTreeMinArea(ShapeBounding p_directions)
       {
-      super(p_directions);
+      bounding_directions = p_directions;
       }
 
+   /**
+    * Inserts all shapes of p_obj into the tree
+    */
+   public final void insert(ShapeTreeStorable p_obj)
+      {
+      int shape_count = p_obj.tree_shape_count(this);
+      
+      if (shape_count <= 0)  return;
+
+      ShapeTreeLeaf[] leaf_arr = new ShapeTreeLeaf[shape_count];
+
+      for (int index = 0; index < shape_count; ++index)
+         {
+         leaf_arr[index] = insert(p_obj, index);
+         }
+      
+      p_obj.set_search_tree_entries(leaf_arr, this);
+      }
+
+   /**
+    * Insert a shape - creates a new node with a bounding shape
+    * This is possibly the entry point to understand the whole search tree mechanism
+    */
+   protected final ShapeTreeLeaf insert(ShapeTreeStorable p_object, int p_index)
+      {
+      PlaShape object_shape = p_object.get_tree_shape(this, p_index);
+      
+      if (object_shape == null) return null;
+
+      ShapeTileRegular bounding_shape = object_shape.bounding_shape(bounding_directions);
+
+      if (bounding_shape == null)
+         {
+         System.err.println("ShapeTree.insert: bounding shape of TreeObject is null");
+         return null;
+         }
+      
+      // Construct a new KdLeaf and set it up
+      ShapeTreeLeaf new_leaf = new ShapeTreeLeaf(p_object, p_index, null, bounding_shape);
+      
+      insert_leaf(new_leaf);
+      
+      return new_leaf;
+      }
+
+   /** 
+    * Inserts the leaves of this tree into an array
+    */
+   public final ShapeTreeLeaf[] to_array()
+      {
+      ShapeTreeLeaf[] result = new ShapeTreeLeaf[leaf_count];
+
+      if (result.length == 0) return result;
+      
+      ShapeTreeNode curr_node = root_node;
+
+      int curr_index = 0;
+      
+      for (;;)
+         {
+         // go down from curr_node to the left most leaf
+         while (curr_node instanceof ShapeTreeNodeInner)
+            {
+            curr_node = ((ShapeTreeNodeInner) curr_node).first_child;
+            }
+         result[curr_index] = (ShapeTreeLeaf) curr_node;
+
+         ++curr_index;
+         // go up until parent.second_child != curr_node, which means we came from first_child
+         ShapeTreeNodeInner curr_parent = curr_node.parent;
+         while (curr_parent != null && curr_parent.second_child == curr_node)
+            {
+            curr_node = curr_parent;
+            curr_parent = curr_node.parent;
+            }
+         if (curr_parent == null)
+            {
+            break;
+            }
+         curr_node = curr_parent.second_child;
+         }
+      return result;
+      }
+
+   /**
+    * removes all entries of p_obj in the tree.
+    */
+   public final void remove(ShapeTreeLeaf[] p_entries)
+      {
+      if (p_entries == null) return;
+
+      for (int index = 0; index < p_entries.length; ++index)
+         {
+         remove_leaf(p_entries[index]);
+         }
+      }
+
+   /** 
+    * Returns the number of entries stored in the tree
+    */
+   public final int size()
+      {
+      return leaf_count;
+      }
+
+   /** 
+    * Outputs some statistic information about the tree
+    */
+   public final void statistics(String p_message)
+      {
+      ShapeTreeLeaf[] leaf_arr = this.to_array();
+      double cumulative_depth = 0;
+      int maximum_depth = 0;
+      for (int i = 0; i < leaf_arr.length; ++i)
+         {
+         if (leaf_arr[i] != null)
+            {
+            int distance_to_root = leaf_arr[i].distance_to_root();
+            cumulative_depth += distance_to_root;
+            maximum_depth = Math.max(maximum_depth, distance_to_root);
+            }
+         }
+      double everage_depth = cumulative_depth / leaf_arr.length;
+      System.out.print("MinAreaTree: Entry count: ");
+      System.out.print(leaf_arr.length);
+      System.out.print(" log: ");
+      System.out.print(Math.round(Math.log(leaf_arr.length)));
+      System.out.print(" Everage depth: ");
+      System.out.print(Math.round(everage_depth));
+      System.out.print(" ");
+      System.out.print(" Maximum depth: ");
+      System.out.print(maximum_depth);
+      System.out.print(" ");
+      System.out.println(p_message);
+      }
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    /**
     * Calculates the objects in this tree, which overlap with p_shape
     */
@@ -83,7 +246,6 @@ public class ShapeTreeMinArea extends ShapeTree
       return found_overlaps;
       }
 
-   @Override
    public final void insert_leaf(ShapeTreeLeaf p_leaf)
       {
       leaf_count++;
@@ -162,7 +324,6 @@ public class ShapeTreeMinArea extends ShapeTree
       }
 
 
-   @Override
    public final void remove_leaf(ShapeTreeLeaf p_leaf)
       {
       if (p_leaf == null) return;
