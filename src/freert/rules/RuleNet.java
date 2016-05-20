@@ -110,7 +110,7 @@ public final class RuleNet implements Comparable<RuleNet>, PrintableInfo, java.i
       {
       LinkedList<BrdItem> result = new LinkedList<BrdItem>();
 
-      UndoableObjects item_list = parent.get_board().item_list;
+      UndoableObjects item_list = parent.get_board().undo_items;
       
       Iterator<UndoableObjectNode> it = item_list.start_read_object();
       
@@ -137,7 +137,7 @@ public final class RuleNet implements Comparable<RuleNet>, PrintableInfo, java.i
       {
       LinkedList<BrdAbitPin> result = new LinkedList<board.items.BrdAbitPin>();
 
-      UndoableObjects item_list = parent.get_board().item_list;
+      UndoableObjects item_list = parent.get_board().undo_items;
       
       Iterator<UndoableObjectNode> it = item_list.start_read_object();
 
@@ -164,7 +164,7 @@ public final class RuleNet implements Comparable<RuleNet>, PrintableInfo, java.i
       {
       LinkedList<BrdItem> result = new LinkedList<BrdItem>();
       
-      UndoableObjects item_list = parent.get_board().item_list;
+      UndoableObjects item_list = parent.get_board().undo_items;
       
       Iterator<UndoableObjectNode> iter = item_list.start_read_object();
       

@@ -133,10 +133,10 @@ final class DsnKeywordWiring extends DsnKeywordScope
          write_via_scope(p_par, curr_via);
          }
       // write the conduction areas
-      Iterator<UndoableObjectNode> it2 = p_par.board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it2 = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         Object curr_ob = p_par.board.item_list.read_object(it2);
+         Object curr_ob = p_par.board.undo_items.read_object(it2);
          if (curr_ob == null) break;
 
          if (!(curr_ob instanceof BrdAreaConduction)) continue;

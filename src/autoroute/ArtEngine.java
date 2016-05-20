@@ -183,11 +183,11 @@ public final class ArtEngine
 
    private void autoroute_clear_items()
       {
-      Iterator<UndoableObjectNode> iter = r_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> iter = r_board.undo_items.start_read_object();
 
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.item_list.read_object(iter);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(iter);
 
          if (curr_item == null) break;
 

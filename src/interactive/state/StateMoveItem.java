@@ -311,14 +311,14 @@ public class StateMoveItem extends StateInteractive
    public StateInteractive cancel()
       {
       r_brd.undo(null);
+      
       for (IteraNetItems curr_net_items : net_items_list)
          {
          i_brd.update_ratsnest(curr_net_items.net_no);
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.CANCEL_SCOPE);
-         }
+      
+      actlog_start_scope(LogfileScope.CANCEL_SCOPE);
+
       return return_state;
       }
 

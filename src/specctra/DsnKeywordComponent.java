@@ -213,11 +213,11 @@ public final class DsnKeywordComponent extends DsnKeywordScope
 
    private static BrdArea get_keepout(RoutingBoard p_board, int p_component_no, String p_name)
       {
-      Iterator<UndoableObjectNode> it = p_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = p_board.undo_items.start_read_object();
       
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) p_board.item_list.read_object(it);
+         BrdItem curr_item = (BrdItem) p_board.undo_items.read_object(it);
 
          if (curr_item == null) break;
 

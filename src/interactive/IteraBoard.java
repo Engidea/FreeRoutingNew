@@ -51,6 +51,7 @@ import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Set;
+import java.util.TreeSet;
 import main.Ldbg;
 import main.Mdbg;
 import main.Stat;
@@ -827,29 +828,30 @@ public final class IteraBoard
     */
    public void undo()
       {
-      if (board_is_read_only || !(interactive_state instanceof StateMenu))
-         {
-         return;
-         }
-      java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
+      if (board_is_read_only || !(interactive_state instanceof StateMenu)) return;
+
+      TreeSet<Integer> changed_nets = new TreeSet<Integer>();
+      
       if (r_board.undo(changed_nets))
          {
          for (Integer changed_net : changed_nets)
             {
             update_ratsnest(changed_net);
             }
+         
          if (changed_nets.size() > 0)
             {
-            // reset the start pass number in the autorouter in case
-            // a batch autorouter is undone.
+            // reset the start pass number in the autorouter in case a batch autorouter is undone.
             itera_settings.autoroute_settings.pass_no_set(1);
             }
+         
          screen_messages.set_status_message(resources.getString("undo"));
          }
       else
          {
          screen_messages.set_status_message(resources.getString("no_more_undo_possible"));
          }
+      
       actlog.start_scope(LogfileScope.UNDO);
       repaint();
       }

@@ -270,11 +270,11 @@ public class BatchOptimize
       {
       double result = 0;
       
-      Iterator<UndoableObjectNode> iter = p_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> iter = p_board.undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_item = p_board.item_list.read_object(iter);
+         UndoableObjectStorable curr_item = p_board.undo_items.read_object(iter);
          
          if (curr_item == null)  break;
 

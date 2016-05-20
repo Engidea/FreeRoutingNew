@@ -56,7 +56,8 @@ public final class UndoableObjects implements java.io.Serializable
       }
 
    /**
-    * Returns an iterator for sequential reading of the object list. Use it together with this.read_object().
+    * Returns an iterator for sequential reading of the object list. 
+    * Use it together with this.read_object().
     */
    public Iterator<UndoableObjectNode> start_read_object()
       {
@@ -77,11 +78,9 @@ public final class UndoableObjects implements java.io.Serializable
     
          // skip objects getting alive only by redo
          
-         if ( curr_node.undo_level <= stack_level)
-            {
-            return (curr_node.object);
-            }
+         if ( curr_node.undo_level <= stack_level) return (curr_node.object);
          }
+
       return null;
       }
 
@@ -108,6 +107,7 @@ public final class UndoableObjects implements java.io.Serializable
       {
       disable_redo();
       Collection<UndoableObjectNode> curr_delete_list;
+      
       if (deleted_objects_stack.isEmpty())
          {
          // stack_level 0
@@ -117,12 +117,12 @@ public final class UndoableObjects implements java.io.Serializable
          {
          curr_delete_list = deleted_objects_stack.lastElement();
          }
+      
       // search p_object in the list
       UndoableObjectNode object_node = objects_map.get(p_object);
-      if (object_node == null)
-         {
-         return false;
-         }
+      
+      if (object_node == null) return false;
+
       if (object_node.object != p_object)
          {
          System.out.println("UndoableObjectList.delete: Object inconsistent");
@@ -181,16 +181,11 @@ public final class UndoableObjects implements java.io.Serializable
             // replace the current object by its previous state.
             curr_node.undo_object.redo_object = curr_node;
             objects_map.put(curr_node.object, curr_node.undo_object);
-            if (p_restored_objects != null)
-               {
-               p_restored_objects.add(curr_node.undo_object.object);
-               }
+            
+            if (p_restored_objects != null)  p_restored_objects.add(curr_node.undo_object.object);
             }
 
-         if (p_cancelled_objects != null)
-            {
-            p_cancelled_objects.add(curr_node.object);
-            }
+         if (p_cancelled_objects != null)  p_cancelled_objects.add(curr_node.object);
          }
  
      
@@ -205,10 +200,7 @@ public final class UndoableObjects implements java.io.Serializable
          
          objects_map.put(curr_deleted_node.object, curr_deleted_node);
          
-         if (p_restored_objects != null)
-            {
-            p_restored_objects.add(curr_deleted_node.object);
-            }
+         if (p_restored_objects != null) p_restored_objects.add(curr_deleted_node.object);
          }
       
       stack_level--;
@@ -345,8 +337,10 @@ public final class UndoableObjects implements java.io.Serializable
    public void save_for_undo(UndoableObjectStorable p_object)
       {
       disable_redo();
+      
       // search p_object in the map
       UndoableObjectNode curr_node = objects_map.get(p_object);
+      
       if (curr_node == null)
          {
          System.out.println("UndoableObjects.save_for_undo: object node not found");

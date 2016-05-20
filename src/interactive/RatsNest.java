@@ -62,10 +62,10 @@ public final class RatsNest
          net_item_lists.add(new LinkedList<BrdItem>());
          }
       
-      Iterator<UndoableObjectNode> it = p_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = p_board.undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) p_board.item_list.read_object(it);
+         BrdItem curr_item = (BrdItem) p_board.undo_items.read_object(it);
          
          if (curr_item == null) break;
 

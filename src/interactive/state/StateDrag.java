@@ -129,7 +129,9 @@ public abstract class StateDrag extends StateInteractive
          {
          // an error occurred
          Set<Integer> changed_nets = new TreeSet<Integer>();
+         
          r_brd.undo(changed_nets);
+         
          for (Integer changed_net : changed_nets)
             {
             i_brd.update_ratsnest(changed_net);

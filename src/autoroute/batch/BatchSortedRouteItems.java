@@ -45,10 +45,10 @@ public class BatchSortedRouteItems
       BrdItem result = null;
       PlaPointFloat curr_min_coor = new PlaPointFloat(Integer.MAX_VALUE, Integer.MAX_VALUE);
       int curr_min_layer = Integer.MAX_VALUE;
-      Iterator<UndoableObjectNode> it = r_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = r_board.item_list.read_object(it);
+         UndoableObjectStorable curr_item = r_board.undo_items.read_object(it);
          if (curr_item == null)
             {
             break;
@@ -75,10 +75,10 @@ public class BatchSortedRouteItems
             }
          }
       // Read traces last to prefer vias to traces at the same location
-      it = r_board.item_list.start_read_object();
+      it = r_board.undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = r_board.item_list.read_object(it);
+         UndoableObjectStorable curr_item = r_board.undo_items.read_object(it);
          if (curr_item == null)
             {
             break;

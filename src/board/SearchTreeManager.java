@@ -222,11 +222,11 @@ public final class SearchTreeManager
       
       compensated_search_trees.add(curr_autoroute_tree);
       
-      Iterator<UndoableObjectNode> iter = r_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> iter = r_board.undo_items.start_read_object();
 
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.item_list.read_object(iter);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(iter);
       
          if (curr_item == null) break;
 
@@ -263,10 +263,10 @@ public final class SearchTreeManager
 
    private void remove_all_board_items()
       {
-      Iterator<UndoableObjectNode> it = r_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.item_list.read_object(it);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(it);
          if (curr_item == null)
             {
             break;
@@ -277,10 +277,10 @@ public final class SearchTreeManager
 
    private void insert_all_board_items()
       {
-      Iterator<UndoableObjectNode> it = r_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.item_list.read_object(it);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(it);
          if (curr_item == null)
             {
             break;

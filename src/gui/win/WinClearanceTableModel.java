@@ -92,7 +92,7 @@ public class WinClearanceTableModel extends AbstractTableModel implements java.i
       int curr_column = p_col - 1;
 
       // check, if there are items on the board assigned to clearance class i or j.
-      UndoableObjects item_list = itera_board.get_routing_board().item_list;
+      UndoableObjects item_list = itera_board.get_routing_board().undo_items;
       boolean items_already_assigned_row = false;
       boolean items_already_assigned_column = false;
       java.util.Iterator<UndoableObjectNode> it = item_list.start_read_object();

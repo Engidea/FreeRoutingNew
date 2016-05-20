@@ -155,11 +155,11 @@ public final class BrdLibrary implements java.io.Serializable
     */
    public boolean is_used(LibPadstack p_padstack, RoutingBoard p_board)
       {
-      Iterator<UndoableObjectNode> it = p_board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = p_board.undo_items.start_read_object();
 
       for (;;)
          {
-         UndoableObjectStorable curr_item = p_board.item_list.read_object(it);
+         UndoableObjectStorable curr_item = p_board.undo_items.read_object(it);
       
          if (curr_item == null) break;
 

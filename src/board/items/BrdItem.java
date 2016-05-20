@@ -313,7 +313,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     */
    public void move_by(PlaVectorInt p_vector)
       {
-      r_board.item_list.save_for_undo(this);
+      r_board.undo_items.save_for_undo(this);
       r_board.search_tree_manager.remove(this);
       translate_by(p_vector);
       r_board.search_tree_manager.insert(this);
@@ -1123,7 +1123,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          return;
          }
       
-      r_board.item_list.save_for_undo(this);
+      r_board.undo_items.save_for_undo(this);
 
       if (p_net_no <= 0)
          {

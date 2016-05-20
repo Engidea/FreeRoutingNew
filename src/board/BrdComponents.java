@@ -130,7 +130,8 @@ public final class BrdComponents implements java.io.Serializable
       }
 
    /**
-    * Restores the sitiation at the previous snapshot. Returns false, if no more undo is possible.
+    * Restores the sitiation at the previous snapshot. 
+    * @returns false, if no more undo is possible.
     */
    public boolean undo(BrdObservers p_observers)
       {

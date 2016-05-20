@@ -713,7 +713,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if (other.other_trace == null ) return false;
 
-      r_board.item_list.save_for_undo(this);
+      r_board.undo_items.save_for_undo(this);
 
       // create the lines of the joined polyline
       Polyline other_poly = other.other_trace.polyline;
@@ -838,7 +838,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if (other.other_trace == null ) return false;
 
-      r_board.item_list.save_for_undo(this);
+      r_board.undo_items.save_for_undo(this);
       
       // create the lines of the joined polyline
 
@@ -1481,7 +1481,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // The precalculated tile shapes must not be cleared here here because they are used and modified
       // in ShapeSearchTree.change_entries.
 
-      r_board.item_list.save_for_undo(this);
+      r_board.undo_items.save_for_undo(this);
 
       // for performance reasons there is some effort to reuse ShapeTree entries of the old trace in the changed trace
 

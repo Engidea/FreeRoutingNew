@@ -333,7 +333,7 @@ public final class ShapeTraceEntries
       // clear up autoroute info of this item
       p_trace.art_item_clear();
       
-      board.item_list.save_for_undo(p_trace);
+      board.undo_items.save_for_undo(p_trace);
       BrdTracep start_piece = new BrdTracep(
             p_start_piece, 
             p_trace.get_layer(), 
@@ -342,7 +342,7 @@ public final class ShapeTraceEntries
             p_trace.clearance_idx(), 0, 0, ItemFixState.UNFIXED,
             board);
 
-      board.item_list.insert(start_piece);
+      board.undo_items.insert(start_piece);
       start_piece.set_on_the_board(true);
 
       BrdTracep end_piece = new BrdTracep(
@@ -352,7 +352,7 @@ public final class ShapeTraceEntries
             p_trace.net_nos, 
             p_trace.clearance_idx(), 0, 0, ItemFixState.UNFIXED, board);
 
-      board.item_list.insert(end_piece);
+      board.undo_items.insert(end_piece);
       end_piece.set_on_the_board(true);
 
       board.search_tree_manager.reuse_entries_after_cutout(p_trace, start_piece, end_piece);

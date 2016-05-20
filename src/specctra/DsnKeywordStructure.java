@@ -304,10 +304,10 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       p_par.file.end_scope();
       // lookup the outline in the board
       UndoableObjectStorable curr_ob = null;
-      Iterator<UndoableObjectNode> it = p_par.board.item_list.start_read_object();
+      Iterator<UndoableObjectNode> it = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         curr_ob = p_par.board.item_list.read_object(it);
+         curr_ob = p_par.board.undo_items.read_object(it);
          if (curr_ob == null)
             {
             break;
@@ -348,10 +348,10 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       DsnKeywordAutoroute.write_scope(p_par.file, p_par.autoroute_settings, p_par.board.layer_structure, p_par.identifier_type);
 
       // write the keepouts
-      it = p_par.board.item_list.start_read_object();
+      it = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         curr_ob = p_par.board.item_list.read_object(it);
+         curr_ob = p_par.board.undo_items.read_object(it);
          if (curr_ob == null)
             {
             break;
@@ -375,10 +375,10 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          }
 
       // write the conduction areas
-      it = p_par.board.item_list.start_read_object();
+      it = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         curr_ob = p_par.board.item_list.read_object(it);
+         curr_ob = p_par.board.undo_items.read_object(it);
          if (curr_ob == null)  break;
 
          if (!(curr_ob instanceof board.items.BrdAreaConduction)) continue;

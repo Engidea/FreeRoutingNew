@@ -79,11 +79,11 @@ public class WindowPadstacks extends WindowObjectListWithFilter
          }
       board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
       java.util.Set<board.items.BrdItem> board_instances = new java.util.TreeSet<board.items.BrdItem>();
-      java.util.Iterator<UndoableObjectNode> it = routing_board.item_list.start_read_object();
+      java.util.Iterator<UndoableObjectNode> it = routing_board.undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_object = routing_board.item_list.read_object(it);
+         UndoableObjectStorable curr_object = routing_board.undo_items.read_object(it);
       
          if (curr_object == null)  break;
 
