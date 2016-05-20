@@ -290,6 +290,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    /** 
+    * Override in subclasses
     * @return the center point of this DrillItem
     */
    public PlaPointInt center_get()

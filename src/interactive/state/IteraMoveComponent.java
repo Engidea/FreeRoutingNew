@@ -78,13 +78,13 @@ public final class IteraMoveComponent
       
       for (BrdItem curr_item : item_group_list)
          {
-         boolean curr_item_movable = !curr_item.is_user_fixed() && ((curr_item instanceof BrdAbit) || (curr_item instanceof BrdArea) || (curr_item instanceof BrdComponentOutline));
-         if (!curr_item_movable)
+         if ( ! is_movable(curr_item) )
             {
             // MoveItemGroup currently only implemented for DrillItems
             all_items_movable = false;
             return;
             }
+         
          if (curr_item instanceof BrdAbit)
             {
             item_centers.add(((BrdAbit) curr_item).center_get().to_float());
@@ -125,6 +125,24 @@ public final class IteraMoveComponent
          // sort the items, in the direction of p_translate_vector, so that the items in front come first.
          item_group_arr.add( new SortedItemDouble(curr_item, curr_projection) );
          }
+      }
+
+   
+   private boolean is_movable (BrdItem curr_item )
+      {
+      // not movable if user fixed
+      if ( curr_item.is_user_fixed() ) return false;
+      
+      // I can move pins and vias
+      if ( curr_item instanceof BrdAbit ) return true;
+      
+      // Also areas
+      if ( curr_item instanceof BrdArea ) return true;
+      
+      // and component aoutline...
+      if ( curr_item instanceof BrdComponentOutline ) return true;
+      
+      return false;      
       }
 
    /**
