@@ -156,15 +156,16 @@ public class DsnKeywordLibrary extends DsnKeywordScope
                }
             pin_arr[i] = new LibPackagePin(pin_info.pin_name, board_padstack.pads_no, rel_coor, pin_info.rotation);
             }
+         
          PlaShape[] outline_arr = new PlaShape[curr_package.outline.size()];
 
          Iterator<DsnShape> it3 = curr_package.outline.iterator();
-         for (int i = 0; i < outline_arr.length; ++i)
+         for (int index = 0; index < outline_arr.length; ++index)
             {
             DsnShape curr_shape = it3.next();
             if (curr_shape != null)
                {
-               outline_arr[i] = curr_shape.transform_to_board_rel(p_par.coordinate_transform);
+               outline_arr[index] = curr_shape.transform_to_board_rel(p_par.coordinate_transform);
                }
             else
                {

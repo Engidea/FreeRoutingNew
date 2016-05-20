@@ -38,33 +38,33 @@ public final class HostCom implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
+   private final IdGenerator id_no_generator;
+   
    // For coordinate transforms to a Specctra dsn file for example
    public final DsnCoordinateTransform coordinate_transform;
 
-   public final UnitMeasure unit;
+   // the original host unit measure, whatever that is
+   public final UnitMeasure host_unit;
 
    // The resolution (1 / unit_factor) of the coordinate system, which is imported from the host system.
-   public final int resolution;
+   public final int host_resolution;
 
    public final DsnParserInfo specctra_parser_info;
 
-   public final IdGenerator id_no_generator;
    
    public HostCom(UnitMeasure p_unit, int p_resolution, DsnParserInfo p_specctra_parser_info, DsnCoordinateTransform p_coordinate_transform, IdGenerator p_id_no_generator)
       {
       coordinate_transform = p_coordinate_transform;
-      unit = p_unit;
-      resolution = p_resolution;
+      host_unit = p_unit;
+      host_resolution = p_resolution;
       specctra_parser_info = p_specctra_parser_info;
       id_no_generator = p_id_no_generator;
       }
 
-/*
-   private boolean host_cad_is_eagle()
+   public int new_id_no ()
       {
-      return specctra_parser_info != null && specctra_parser_info.host_cad != null && specctra_parser_info.host_cad.equalsIgnoreCase("CadSoft");
+      return id_no_generator.new_no();
       }
-*/
    
    public boolean host_cad_exists()
       {
@@ -76,7 +76,7 @@ public final class HostCom implements java.io.Serializable
     */
    public double get_resolution(UnitMeasure p_unit)
       {
-      return UnitMeasure.scale(resolution, p_unit, unit);
+      return UnitMeasure.scale(host_resolution, p_unit, host_unit);
       }
 
    private void readObject( ObjectInputStream p_stream) throws IOException, ClassNotFoundException

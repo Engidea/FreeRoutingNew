@@ -854,10 +854,12 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    public ShapeTile mirror_vertical(PlaPointInt p_pole)
       {
       PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
-      for (int i = 0; i < new_lines.length; ++i)
+      
+      for (int index = 0; index < new_lines.length; ++index)
          {
-         new_lines[i] = border_line(i).mirror_vertical(p_pole);
+         new_lines[index] = border_line(index).mirror_vertical(p_pole);
          }
+      
       return get_instance(new_lines);
       }
 

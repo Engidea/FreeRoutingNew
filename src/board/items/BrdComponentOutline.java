@@ -21,6 +21,10 @@
 package board.items;
 
 import java.awt.Color;
+import java.awt.Graphics;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.util.Locale;
 import board.RoutingBoard;
 import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
@@ -29,6 +33,7 @@ import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -44,27 +49,32 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    {
    private static final long serialVersionUID = 1L;
 
-   private PlaArea relative_area;
+   private final PlaShape original_shape;
+   private final double draw_width;
+   
+   
    private PlaVectorInt translation;
    private double rotation_in_degree;
    private boolean is_front;
 
    private transient PlaArea precalculated_absolute_area = null;
-   
 
-   public BrdComponentOutline(PlaArea p_area, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdComponentOutline(PlaShape p_shape, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(NetNosList.EMPTY, 0, 0, p_component_no, p_fixed_state, p_board);
-      relative_area = p_area;
+      
+      original_shape = p_shape;
       is_front = p_is_front;
       translation = p_translation;
       rotation_in_degree = p_rotation_in_degree;
+      
+      draw_width = Math.min(r_board.host_com.get_resolution(UnitMeasure.INCH), 100); // problem with low resolution on Kicad
       }
 
    @Override
    public BrdComponentOutline copy(int p_id_no)
       {
-      return new BrdComponentOutline(relative_area, is_front, translation, rotation_in_degree, get_component_no(), get_fixed_state(), r_board);
+      return new BrdComponentOutline(original_shape, is_front, translation, rotation_in_degree, get_component_no(), get_fixed_state(), r_board);
       }
 
    @Override
@@ -134,14 +144,14 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       {
       Color[] color_arr = new Color[r_board.layer_structure.size()];
       Color front_draw_color = p_graphics_context.get_component_color(true);
-      for (int i = 0; i < color_arr.length - 1; ++i)
-         {
-         color_arr[i] = front_draw_color;
-         }
+      
+      for (int index = 0; index < color_arr.length - 1; ++index)  color_arr[index] = front_draw_color;
+      
       if (color_arr.length > 1)
          {
          color_arr[color_arr.length - 1] = p_graphics_context.get_component_color(false);
          }
+      
       return color_arr;
       }
 
@@ -152,14 +162,14 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       }
 
    @Override
-   public void draw(java.awt.Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)
+   public void draw(Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)
       {
       if (p_graphics_context == null || p_intensity <= 0)  return;
 
       Color color = p_color_arr[get_layer()];
+      
       double intensity = p_graphics_context.get_layer_visibility(get_layer()) * p_intensity;
-
-      double draw_width = Math.min(r_board.host_com.get_resolution(UnitMeasure.MIL), 100); // problem with low resolution on Kicad
+      
       p_graphics_context.draw_boundary(get_area(), draw_width, color, p_g, intensity);
       }
 
@@ -179,46 +189,41 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
-      is_front = !is_front;
+      is_front = ! is_front;
       PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
       translation = rel_location.mirror_vertical(p_pole).difference_by(PlaPointInt.ZERO);
       clear_derived_data();
       }
 
+   private void set_rotation ( double p_rotation )
+      {
+      rotation_in_degree += p_rotation;
+      
+      while (rotation_in_degree >= 360) rotation_in_degree -= 360;
+
+      while (rotation_in_degree < 0) rotation_in_degree += 360;
+      }
+   
    @Override
    public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
       {
-      double turn_angle = p_angle_in_degree;
       if (!is_front && r_board.brd_components.get_flip_style_rotate_first())
          {
-         turn_angle = 360 - p_angle_in_degree;
+         p_angle_in_degree = 360 - p_angle_in_degree;
          }
-      rotation_in_degree += turn_angle;
-      while (rotation_in_degree >= 360)
-         {
-         rotation_in_degree -= 360;
-         }
-      while (rotation_in_degree < 0)
-         {
-         rotation_in_degree += 360;
-         }
-      PlaPointFloat new_translation = translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+      
+      set_rotation ( p_angle_in_degree );
+
+      PlaPointFloat new_translation = translation.to_float().rotate(Math.toRadians(rotation_in_degree), p_pole);
       translation = new_translation.round().difference_by(PlaPointInt.ZERO);
+      
       clear_derived_data();
       }
 
    @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      rotation_in_degree += p_factor * 90;
-      while (rotation_in_degree >= 360)
-         {
-         rotation_in_degree -= 360;
-         }
-      while (rotation_in_degree < 0)
-         {
-         rotation_in_degree += 360;
-         }
+      set_rotation ( rotation_in_degree += p_factor * 90);
       
       PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
       
@@ -227,33 +232,34 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       clear_derived_data();
       }
 
-   public PlaArea get_area()
+   private PlaArea get_area()
       {
       if ( precalculated_absolute_area != null) return precalculated_absolute_area;
 
-      PlaArea turned_area = relative_area;
-
+      PlaArea turned_area = original_shape;
+      
       if (!is_front && !r_board.brd_components.get_flip_style_rotate_first())
          {
-         turned_area = turned_area.mirror_vertical(PlaPointInt.ZERO);
+         turned_area = original_shape.mirror_vertical(PlaPointInt.ZERO);
          }
+      
       if (rotation_in_degree != 0)
          {
-         double rotation = rotation_in_degree;
-         if (rotation % 90 == 0)
+         if (rotation_in_degree % 90 == 0)
             {
-            turned_area = turned_area.turn_90_degree(((int) rotation) / 90, PlaPointInt.ZERO);
+            turned_area = original_shape.turn_90_degree(((int) rotation_in_degree) / 90, PlaPointInt.ZERO);
             }
          else
             {
-            turned_area = turned_area.rotate_approx(Math.toRadians(rotation), PlaPointFloat.ZERO);
+            turned_area = original_shape.rotate_approx(Math.toRadians(rotation_in_degree), PlaPointFloat.ZERO);
             }
-
          }
+
       if (!is_front && r_board.brd_components.get_flip_style_rotate_first())
          {
-         turned_area = turned_area.mirror_vertical(PlaPointInt.ZERO);
+         turned_area = original_shape.mirror_vertical(PlaPointInt.ZERO);
          }
+      
       precalculated_absolute_area = turned_area.translate_by(translation);
 
       return precalculated_absolute_area;
@@ -268,18 +274,18 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       }
 
    @Override
-   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+   public void print_info(ObjectInfoPanel p_window, Locale p_locale)
       {
       }
 
    @Override
-   public boolean write(java.io.ObjectOutputStream p_stream)
+   public boolean write(ObjectOutputStream p_stream)
       {
       try
          {
          p_stream.writeObject(this);
          }
-      catch (java.io.IOException e)
+      catch (IOException e)
          {
          return false;
          }

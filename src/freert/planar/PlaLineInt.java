@@ -660,7 +660,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       return new PlaLineInt(new_a, new_b);
       }
 
-   /** Mirrors this line at the vertical line through p_pole */
+   /** 
+    * Mirrors this line at the vertical line through p_pole 
+    */
    public PlaLineInt mirror_vertical(PlaPointInt p_pole)
       {
       PlaPointInt new_a = point_b.mirror_vertical(p_pole);
@@ -668,7 +670,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       return new PlaLineInt(new_a, new_b);
       }
 
-   /** Mirrors this line at the horizontal line through p_pole */
+   /** 
+    * Mirrors this line at the horizontal line through p_pole 
+    */
    public PlaLineInt mirror_horizontal(PlaPointInt p_pole)
       {
       PlaPointInt new_a = point_b.mirror_horizontal(p_pole);

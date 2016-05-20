@@ -266,6 +266,7 @@ public final class ShapeCircle implements ShapeConvex , Serializable
    public ShapeCircle mirror_vertical(PlaPointInt p_pole)
       {
       PlaPointInt new_center = center.mirror_vertical(p_pole);
+      
       return new ShapeCircle(new_center, radius);
       }
 

@@ -686,7 +686,7 @@ public final class IteraBoard
 
       // create the interactive settings with default
       double unit_factor = p_communication.coordinate_transform.board_to_dsn(1);
-      coordinate_transform = new PlaCoordTransform(1, p_communication.unit, unit_factor, p_communication.unit);
+      coordinate_transform = new PlaCoordTransform(1, p_communication.host_unit, unit_factor, p_communication.host_unit);
       itera_settings = new IteraSettings(r_board, actlog);
 
       // create a graphics context for the board

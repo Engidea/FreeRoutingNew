@@ -78,9 +78,9 @@ public class DsnKeywordResolution extends DsnKeywordScope
       {
       p_file.new_line();
       p_file.write("(resolution ");
-      p_file.write(p_board_communication.unit.toString());
+      p_file.write(p_board_communication.host_unit.toString());
       p_file.write(" ");
-      p_file.write((new Integer(p_board_communication.resolution)).toString());
+      p_file.write((new Integer(p_board_communication.host_resolution)).toString());
       p_file.write(")");
       }
 

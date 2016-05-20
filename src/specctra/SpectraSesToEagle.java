@@ -63,7 +63,8 @@ public class SpectraSesToEagle extends javax.swing.JFrame
       boolean result = true;
 
       double board_scale_factor = p_board.host_com.coordinate_transform.board_to_dsn(1);
-      SpectraSesToEagle new_instance = new SpectraSesToEagle(scanner, file_writer, p_board, p_board.host_com.unit, p_board.host_com.resolution, board_scale_factor);
+      
+      SpectraSesToEagle new_instance = new SpectraSesToEagle(scanner, file_writer, p_board, p_board.host_com.host_unit, p_board.host_com.host_resolution, board_scale_factor);
 
       try
          {

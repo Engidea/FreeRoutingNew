@@ -73,6 +73,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaPointIntAlist;
 import freert.planar.PlaSegmentInt;
+import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
@@ -392,19 +393,20 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts a component ouline into the board.
     */
-   public void insert_component_outline(PlaArea p_area, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state)
+   public void insert_component_outline(PlaShape p_shape, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state)
       {
-      if (p_area == null)
+      if (p_shape == null)
          {
-         System.out.println("BasicBoard.insert_component_outline: p_area is null");
+         System.out.println("BasicBoard.insert_component_outline: p_shape is null");
          return;
          }
-      if (!p_area.is_bounded())
+      if (!p_shape.is_bounded())
          {
-         System.out.println("BasicBoard.insert_component_outline: p_area is not bounded");
+         System.out.println("BasicBoard.insert_component_outline: p_shape is not bounded");
          return;
          }
-      BrdComponentOutline outline = new BrdComponentOutline(p_area, p_is_front, p_translation, p_rotation_in_degree, p_component_no, p_fixed_state, this);
+      
+      BrdComponentOutline outline = new BrdComponentOutline(p_shape, p_is_front, p_translation, p_rotation_in_degree, p_component_no, p_fixed_state, this);
       insert_item(outline);
       }
 

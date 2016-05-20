@@ -85,7 +85,7 @@ public final class SpectraWriteSesFile
 
    private void write_session_scope(DsnIdentifier p_identifier_type, String p_session_name, String p_design_name) throws IOException
       {
-      double scale_factor = r_board.host_com.coordinate_transform.dsn_to_board(1) / r_board.host_com.resolution;
+      double scale_factor = r_board.host_com.coordinate_transform.dsn_to_board(1) / r_board.host_com.host_resolution;
       DsnCoordinateTransform coordinate_transform = new DsnCoordinateTransform(scale_factor, 0, 0);
       output_file.start_scope();
       output_file.write("session ");

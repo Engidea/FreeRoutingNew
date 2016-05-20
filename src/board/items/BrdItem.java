@@ -94,7 +94,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    
       net_nos = p_net_no_arr == null  ?  NetNosList.EMPTY : p_net_no_arr.copy();
       
-      id_no   = p_id_no > 0  ?  p_id_no : r_board.host_com.id_no_generator.new_no();
+      id_no   = p_id_no > 0  ?  p_id_no : r_board.host_com.new_id_no();
       }
    
    /**
