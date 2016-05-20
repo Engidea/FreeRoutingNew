@@ -13,8 +13,6 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * Pin.java
- *
  * Created on 6. Juni 2003, 08:04
  */
 
@@ -44,6 +42,7 @@ import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import freert.varie.NetNosList;
 import gui.varie.ObjectInfoPanel;
 
@@ -58,7 +57,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    // The number of this pin in its component (starting with 0)
    public final int pin_no;
    //  The pin, this pin was changed to by swapping or this pin, if no pin swap accured.
-   private BrdAbitPin changed_to = this;
+   private BrdAbitPin changed_to;
 
    private transient PlaShape[] precalculated_shapes = null;
    
@@ -71,6 +70,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       super(null, p_net_no_arr, p_clearance_type, p_id_no, p_component_no, p_fixed_state, p_board);
 
       pin_no = p_pin_no;
+      changed_to = this;
       }
 
    /**
@@ -574,7 +574,8 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    /**
-    * Swaps the nets of this pin and p_other. Returns false on error.
+    * Swaps the nets of this pin and p_other.
+    * @returns false on error.
     */
    public boolean swap(BrdAbitPin p_other)
       {
@@ -583,29 +584,21 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          System.out.println("Pin.swap not yet implemented for pins belonging to more than 1 net ");
          return false;
          }
-      int this_net_no;
-      if (net_count() > 0)
-         {
-         this_net_no = get_net_no(0);
-         }
-      else
-         {
-         this_net_no = 0;
-         }
-      int other_net_no;
-      if (p_other.net_count() > 0)
-         {
-         other_net_no = p_other.get_net_no(0);
-         }
-      else
-         {
-         other_net_no = 0;
-         }
+      
+      int this_net_no = net_count() > 0 ? get_net_no(0) : 0; 
+      
+      int other_net_no = p_other.net_count() > 0 ? p_other.get_net_no(0) : 0; 
+
       set_net_no(other_net_no);
+
       p_other.set_net_no(this_net_no);
+      
       BrdAbitPin tmp = changed_to;
+      
       changed_to = p_other.changed_to;
+      
       p_other.changed_to = tmp;
+      
       return true;
       }
 
@@ -665,17 +658,18 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    /**
-    * Returns the neckdown half width for traces on p_layer. The neckdown width is used, when the pin width is smmaller than the
-    * trace width to enter or leave the pin with a trace.
+    * The neckdown width is used, when the pin width is smmaller than the trace width to enter or leave the pin with a trace.
+    * @return the neckdown half width for traces on p_layer. 
     */
    public int get_trace_neckdown_halfwidth(int p_layer)
       {
       double result = Math.max(0.5 * get_min_width(p_layer) - 1, 1);
+      
       return (int) result;
       }
 
    /**
-    * Returns the largest width of the pin shape on layer p_layer.
+    * @return the largest width of the pin shape on layer p_layer.
     */
    public double get_max_width(int p_layer)
       {
@@ -686,7 +680,8 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          System.out.println("Pin.get_max_width: padstack_shape is null");
          return 0;
          }
-      freert.planar.ShapeTileBox padstack_bounding_box = padstack_shape.bounding_box();
+      
+      ShapeTileBox padstack_bounding_box = padstack_shape.bounding_box();
       if (padstack_bounding_box == null)
          {
          System.out.println("Pin.get_max_width: padstack_bounding_box is null");
