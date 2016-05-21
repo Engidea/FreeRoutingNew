@@ -69,28 +69,17 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
       is_obstacle = p_is_obstacle;
       }
 
+   private BrdAreaConduction ( BrdAreaConduction p_other, int p_id_no )
+      {
+      super(p_other, p_id_no);
+      
+      is_obstacle = p_other.is_obstacle;
+      }
+
    @Override
    public BrdAreaConduction copy(int p_id_no)
       {
-      if ( net_count() != 1)
-         {
-         System.err.println("ConductionArea.copy not yet implemented for areas with more than 1 net");
-         return null;
-         }
-      
-      return new BrdAreaConduction(
-            get_relative_area(), 
-            get_layer(), 
-            get_translation(), 
-            get_rotation_in_degree(), 
-            get_side_changed(), 
-            net_nos, 
-            clearance_idx(), 
-            p_id_no, 
-            get_component_no(),
-            area_name, 
-            is_obstacle, 
-            get_fixed_state(), r_board);
+      return new BrdAreaConduction(this, p_id_no);
       }
 
    @Override

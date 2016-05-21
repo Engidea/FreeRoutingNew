@@ -40,7 +40,7 @@ import gui.varie.ObjectInfoPanel;
  * @author Alfons Wirtz
  */
 
-public class BrdArea extends BrdItem implements java.io.Serializable
+public  class BrdArea extends BrdItem implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    // For debugging the division into tree shapes 
@@ -85,7 +85,8 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       }
 
    /**
-    * Creates a new relative_area item without net. p_name is null, if the ObstacleArea does not belong to a component.
+    * Creates a new relative_area item without net. 
+    * p_name is null, if the ObstacleArea does not belong to a component.
     */
    public BrdArea(
          PlaArea p_area, 
@@ -102,13 +103,23 @@ public class BrdArea extends BrdItem implements java.io.Serializable
       {
       this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, NetNosList.EMPTY, p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }
+   
+   protected BrdArea ( BrdArea p_other, int p_id_no )
+      {
+      super(p_other, p_id_no);
+      
+      area_name = p_other.area_name;
+      layer_no = p_other.layer_no;
+      relative_area = p_other.relative_area;
+      translation = p_other.translation;
+      rotation_in_degree = p_other.rotation_in_degree;
+      side_changed = p_other.side_changed;
+      }
 
    @Override
    public BrdArea copy(int p_id_no)
       {
-      NetNosList copied_net_nos = net_nos.copy();
-
-      return new BrdArea(relative_area, layer_no, translation, rotation_in_degree, side_changed, copied_net_nos, clearance_idx(), p_id_no, get_component_no(), area_name, get_fixed_state(), r_board);
+      return new BrdArea(this, p_id_no);
       }
 
    public PlaArea get_area()

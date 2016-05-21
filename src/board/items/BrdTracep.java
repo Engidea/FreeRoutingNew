@@ -104,7 +104,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       polyline = p_polyline;
       }
 
+   private BrdTracep(BrdTracep p_other, int p_id_no)
+      {
+      super(p_other,p_id_no);
+      
+      trace_half_width = p_other.trace_half_width;
+      layer_no = p_other.layer_no;
+      polyline = p_other.polyline.copy();
+      }
 
+   @Override
+   public BrdTracep copy(int p_id_no)
+      {
+      return new BrdTracep(this, p_id_no);
+      }
 
    public int first_layer()
       {
@@ -524,14 +537,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
    
    
-
-   @Override
-   public BrdItem copy(int p_id_no)
-      {
-      NetNosList curr_net_no_arr = net_nos.copy();
-      
-      return new BrdTracep(polyline, get_layer(), get_half_width(), curr_net_no_arr, clearance_idx(), p_id_no, get_component_no(), get_fixed_state(), r_board);
-      }
 
    /**
     * checks, if this trace is on layer p_layer

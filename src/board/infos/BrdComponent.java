@@ -99,7 +99,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       }
    
    /**
-    * this is not like the normal copy in the BrdItem
+    * this is not like the normal copy in the BrdItem, it is used for the ObectStorable
     */
    @Override
    public BrdComponent copy()

@@ -63,19 +63,18 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       attach_allowed = p_attach_allowed;
       }
 
+   private BrdAbitVia (BrdAbitVia p_other, int p_id_no)
+      {
+      super(p_other, p_id_no);
+
+      padstack = p_other.padstack;
+      attach_allowed = p_other.attach_allowed;
+      }
+   
    @Override
    public BrdAbitVia copy(int p_id_no)
       {
-      return new BrdAbitVia(
-            padstack, 
-            center_get(), 
-            net_nos, 
-            clearance_idx(), 
-            p_id_no, 
-            get_component_no(), 
-            get_fixed_state(), 
-            attach_allowed, 
-            r_board);
+      return new BrdAbitVia(this, p_id_no);
       }
 
    @Override

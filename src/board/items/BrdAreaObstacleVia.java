@@ -37,9 +37,6 @@ public final class BrdAreaObstacleVia extends BrdArea
    {
    private static final long serialVersionUID = 1L;
 
-   /**
-    * Creates a new area item which may belong to several nets
-    */
    public BrdAreaObstacleVia(
          PlaArea p_area, 
          int p_layer, 
@@ -57,9 +54,6 @@ public final class BrdAreaObstacleVia extends BrdArea
       super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }
 
-   /**
-    * Creates a new area item without net
-    */
    public BrdAreaObstacleVia(
          PlaArea p_area, 
          int p_layer, 
@@ -75,23 +69,16 @@ public final class BrdAreaObstacleVia extends BrdArea
       {
       this(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, NetNosList.EMPTY, p_clearance_type, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
       }
+   
+   private BrdAreaObstacleVia ( BrdAreaObstacleVia p_other, int p_id_no )
+      {
+      super(p_other, p_id_no);
+      }
 
    @Override
    public BrdAreaObstacleVia copy(int p_id_no)
       {
-      NetNosList copied_net_nos =  net_nos.copy();
-
-      return new BrdAreaObstacleVia(
-            get_relative_area(), 
-            get_layer(), 
-            get_translation(), 
-            get_rotation_in_degree(), 
-            get_side_changed(), 
-            copied_net_nos, 
-            clearance_idx(), 
-            p_id_no,
-            get_component_no(), 
-            area_name, get_fixed_state(), r_board);
+      return new BrdAreaObstacleVia(this,p_id_no);
       }
 
    @Override

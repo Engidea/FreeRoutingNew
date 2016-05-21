@@ -71,10 +71,21 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       draw_width = Math.min(r_board.host_com.get_resolution(UnitMeasure.INCH), 100); // problem with low resolution on Kicad
       }
 
+   private BrdComponentOutline ( BrdComponentOutline p_other, int p_id_no )
+      {
+      super(p_other, p_id_no);
+      
+      original_shape = p_other.original_shape;
+      is_front       = p_other.is_front;
+      translation    = p_other.translation;
+      rotation_in_degree = p_other.rotation_in_degree;
+      draw_width     = p_other.draw_width;
+      }
+   
    @Override
    public BrdComponentOutline copy(int p_id_no)
       {
-      return new BrdComponentOutline(original_shape, is_front, translation, rotation_in_degree, get_component_no(), get_fixed_state(), r_board);
+      return new BrdComponentOutline(this, p_id_no);
       }
 
    @Override

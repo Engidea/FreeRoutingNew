@@ -56,21 +56,15 @@ public final class BrdAreaObstacleComp extends BrdArea
       super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, NetNosList.EMPTY, p_clearance_type, p_id_no, p_component_no, p_name, p_fixed_state, p_board);
       }
 
+   private BrdAreaObstacleComp ( BrdAreaObstacleComp p_other, int p_id_no )
+      {
+      super(p_other, p_id_no);
+      }
+   
    @Override
    public BrdAreaObstacleComp copy(int p_id_no)
       {
-      return new BrdAreaObstacleComp(
-            get_relative_area(), 
-            get_layer(), 
-            get_translation(), 
-            get_rotation_in_degree(), 
-            get_side_changed(), 
-            clearance_idx(), 
-            p_id_no, 
-            get_component_no(),
-            area_name,
-            get_fixed_state(), 
-            r_board);
+      return new BrdAreaObstacleComp(this, p_id_no);
       }
 
    @Override

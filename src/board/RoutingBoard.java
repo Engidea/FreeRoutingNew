@@ -288,8 +288,8 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Inserts an obstacle belonging to a component into the board p_name is to identify the corresponding ObstacstacleArea in the
-    * component package.
+    * Inserts an obstacle belonging to a component into the board 
+    * p_name is to identify the corresponding ObstacstacleArea in the component package.
     */
    public void insert_obstacle(
          PlaArea p_area, 

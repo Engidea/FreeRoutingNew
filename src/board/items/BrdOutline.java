@@ -27,10 +27,10 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.graphics.GdiContext;
 import freert.planar.PlaArea;
+import freert.planar.PlaAreaLinear;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
-import freert.planar.PlaAreaLinear;
 import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -58,9 +58,23 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
    public BrdOutline(ShapeSegments[] p_shapes, int p_clearance_class_no, int p_id_no, RoutingBoard p_board)
       {
       super(NetNosList.EMPTY, p_clearance_class_no, p_id_no, 0, ItemFixState.SYSTEM_FIXED, p_board);
+      
       shapes = p_shapes;
       }
 
+   private BrdOutline(BrdOutline p_other, int p_id_no)
+      {
+      super(p_other,p_id_no);
+      
+      shapes = p_other.shapes;
+      }
+
+   @Override
+   public BrdOutline copy(int p_id_no)
+      {
+      return new BrdOutline(this, p_id_no);
+      }
+   
    @Override
    public int tile_shape_count()
       {
@@ -290,11 +304,6 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
          }
       }
 
-   @Override
-   public BrdOutline copy(int p_id_no)
-      {
-      return new BrdOutline(shapes, clearance_idx(), p_id_no, r_board);
-      }
 
    @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)

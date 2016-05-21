@@ -115,6 +115,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
       this(new PlaPointIntAlist(p_points));
       }
 
+   
+   public Polyline copy()
+      {
+      return new Polyline(plaline_copy());
+      }
+   
+   
    private boolean has_point (ArrayList<PlaPointInt> corners_list, PlaPointInt a_point)
       {
       for (PlaPointInt b_point : corners_list )

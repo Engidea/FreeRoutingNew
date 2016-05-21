@@ -72,7 +72,23 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       pin_no = p_pin_no;
       changed_to = this;
       }
+   
+   private BrdAbitPin ( BrdAbitPin p_other, int p_id_no )
+      {
+      super(p_other, p_id_no);
 
+      pin_no = p_other.pin_no;
+      changed_to = p_other.changed_to;
+      }
+
+   @Override
+   public BrdAbitPin copy(int p_id_no)
+      {
+      return new BrdAbitPin(this,p_id_no);
+      }
+   
+   
+   
    /**
     * Calculates the relative location of this pin to its component.
     */
@@ -176,13 +192,6 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       return r_board.library.padstacks.get(padstack_no);
       }
 
-   @Override
-   public BrdAbitPin copy(int p_id_no)
-      {
-      NetNosList curr_net_no_arr = net_nos.copy();
-      
-      return new BrdAbitPin(get_component_no(), pin_no, curr_net_no_arr, clearance_idx(), p_id_no, get_fixed_state(), r_board);
-      }
 
    /**
     * Return the name of this pin in the package of this component.

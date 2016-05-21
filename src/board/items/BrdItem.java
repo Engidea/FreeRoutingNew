@@ -96,6 +96,34 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       
       id_no   = p_id_no > 0  ?  p_id_no : r_board.host_com.new_id_no();
       }
+
+   /**
+    * Copy constructor to be used with the ObjectsStorabel
+    * @param p_other
+    * @param p_id_no
+    */
+   protected BrdItem ( BrdItem p_other, int p_id_no )
+      {
+      id_no         = p_id_no;
+      r_board       = p_other.r_board;
+      clearance_idx = p_other.clearance_idx;
+      component_no  = p_other.component_no;
+      fixed_state   = p_other.fixed_state;
+      net_nos       = p_other.net_nos.copy();  // note that it is a copy
+      }
+
+   /**
+    * Creates a copy of this item with id number p_id_no. 
+    * If p_id_no <= 0, the id_no of the new item is generated internally
+    */
+   public abstract BrdItem copy(int p_id_no);
+
+   @Override
+   public final Object copy()
+      {
+      return copy(get_id_no());
+      }
+   
    
    /**
     * When you read back from object strem you MUST recreate the transient objects
@@ -250,16 +278,6 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       on_the_board = p_value;
       }
 
-   /**
-    * Creates a copy of this item with id number p_id_no. If p_id_no <= 0, the id_no of the new item is generated internally
-    */
-   public abstract BrdItem copy(int p_id_no);
-
-   @Override
-   public final Object copy()
-      {
-      return copy(get_id_no());
-      }
 
    /**
     * returns true, if the layer range of this item contains p_layer
