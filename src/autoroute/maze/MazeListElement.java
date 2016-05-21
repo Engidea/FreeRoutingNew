@@ -20,9 +20,9 @@
 
 package autoroute.maze;
 
-import freert.planar.PlaSegmentFloat;
 import autoroute.expand.ExpandObject;
 import autoroute.expand.ExpandRoomComplete;
+import freert.planar.PlaSegmentFloat;
 
 /**
  * Information for the maze expand Algorithm contained in expansion doors and drills while the maze expanding algorithm is in
@@ -55,8 +55,18 @@ public final class MazeListElement implements Comparable<MazeListElement>
 
    public final boolean already_checked;
 
-   public MazeListElement(ExpandObject p_door, int p_section_no_of_door, ExpandObject p_backtrack_door, int p_section_no_of_backtrack_door, double p_expansion_value, double p_sorting_value,
-         ExpandRoomComplete p_next_room, PlaSegmentFloat p_shape_entry, boolean p_room_ripped, MazeAdjustment p_adjustment, boolean p_already_checked)
+   public MazeListElement(
+         ExpandObject p_door, 
+         int p_section_no_of_door, 
+         ExpandObject p_backtrack_door, 
+         int p_section_no_of_backtrack_door, 
+         double p_expansion_value, 
+         double p_sorting_value,
+         ExpandRoomComplete p_next_room, 
+         PlaSegmentFloat p_shape_entry, 
+         boolean p_room_ripped, 
+         MazeAdjustment p_adjustment, 
+         boolean p_already_checked)
       {
       door = p_door;
       section_no_of_door = p_section_no_of_door;

@@ -209,7 +209,7 @@ public class StateCopyItem extends StateInteractive
                   for (int i = 0; i < new_pin_arr.length; ++i)
                      {
                      LibPackagePin old_pin = old_component.get_package().get_pin(i);
-                     LibPadstack old_padstack = r_brd.library.padstacks.get(old_pin.padstack_no);
+                     LibPadstack old_padstack = r_brd.brd_library.padstacks.get(old_pin.padstack_no);
                      if (old_padstack == null)
                         {
                         System.out.println("CopyItemState.insert: package padstack not found");
@@ -218,7 +218,7 @@ public class StateCopyItem extends StateInteractive
                      LibPadstack new_padstack = change_padstack_layers(old_padstack, current_layer, r_brd, padstack_pairs);
                      new_pin_arr[i] = new LibPackagePin(old_pin.name, new_padstack.pads_no, old_pin.relative_location, old_pin.rotation_in_degree);
                      }
-                  new_package = r_brd.library.packages.add(new_pin_arr);
+                  new_package = r_brd.brd_library.packages.add(new_pin_arr);
                   }
                else
                   {
@@ -330,7 +330,7 @@ public class StateCopyItem extends StateInteractive
                new_shapes[i] = p_old_padstack.get_shape(i + layer_diff);
                }
             }
-         new_padstack = p_board.library.padstacks.add(new_shapes);
+         new_padstack = p_board.brd_library.padstacks.add(new_shapes);
          p_padstack_pairs.put(p_old_padstack, new_padstack);
          }
       return new_padstack;

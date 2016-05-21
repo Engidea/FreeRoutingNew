@@ -319,7 +319,7 @@ public final class StateSelectedItem extends StateInteractive
          pin_arr[index] = new LibPackagePin(pin_name, curr_via.get_padstack().pads_no, rel_coor, 0);
          }
       
-      LibPackage new_package = r_brd.library.packages.add(pin_arr);
+      LibPackage new_package = r_brd.brd_library.packages.add(pin_arr);
       BrdComponent new_component = r_brd.brd_components.add(gravity_point, 0, true, new_package);
       
       it = items_list.iterator();

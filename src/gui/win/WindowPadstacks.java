@@ -49,7 +49,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
     */
    protected void fill_list()
       {
-      LibPadstacks padstacks = board_frame.board_panel.board_handling.get_routing_board().library.padstacks;
+      LibPadstacks padstacks = board_frame.board_panel.board_handling.get_routing_board().brd_library.padstacks;
       
       LibPadstack[] sorted_arr = new LibPadstack[padstacks.count()];
       for (int i = 0; i < sorted_arr.length; ++i)

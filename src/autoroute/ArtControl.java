@@ -19,14 +19,16 @@
  */
 package autoroute;
 
-import freert.planar.ShapeConvex;
-import freert.rules.RuleViaInfoList;
 import interactive.IteraSettings;
 import autoroute.expand.ExpandCostFactor;
 import autoroute.varie.ArtViaCost;
 import autoroute.varie.ArtViaMask;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;
+import freert.planar.ShapeConvex;
+import freert.rules.NetClass;
+import freert.rules.RuleNet;
+import freert.rules.RuleViaInfoList;
 
 /**
  * Structure for controlling the autoroute algorithm.
@@ -164,8 +166,8 @@ public final class ArtControl
     */
    private void net_init( RoutingBoard p_board, int p_via_costs)
       {
-      freert.rules.RuleNet curr_net = p_board.brd_rules.nets.get(net_no);
-      freert.rules.NetClass curr_net_class;
+      RuleNet curr_net = p_board.brd_rules.nets.get(net_no);
+      NetClass curr_net_class;
       
       if (curr_net != null)
          {
@@ -208,9 +210,9 @@ public final class ArtControl
          }
       
       via_info_arr = new ArtViaMask[via_rule.via_count()];
-      for (int i = 0; i < via_rule.via_count(); ++i)
+      for (int index = 0; index < via_rule.via_count(); ++index)
          {
-         BrdViaInfo curr_via = via_rule.get_via(i);
+         BrdViaInfo curr_via = via_rule.get_via(index);
          if (curr_via.attach_smd_allowed())
             {
             attach_smd_allowed = true;
@@ -218,9 +220,9 @@ public final class ArtControl
          freert.library.LibPadstack curr_via_padstack = curr_via.get_padstack();
          int from_layer = curr_via_padstack.from_layer();
          int to_layer = curr_via_padstack.to_layer();
-         for (int j = from_layer; j <= to_layer; ++j)
+         for (int jndex = from_layer; jndex <= to_layer; ++jndex)
             {
-            ShapeConvex curr_shape = curr_via_padstack.get_shape(j);
+            ShapeConvex curr_shape = curr_via_padstack.get_shape(jndex);
             double curr_radius;
             if (curr_shape != null)
                {
@@ -230,15 +232,17 @@ public final class ArtControl
                {
                curr_radius = 0;
                }
-            via_radius_arr[j] = Math.max(via_radius_arr[j], curr_radius);
+            via_radius_arr[jndex] = Math.max(via_radius_arr[jndex], curr_radius);
             }
-         via_info_arr[i] = new ArtViaMask(from_layer, to_layer, curr_via.attach_smd_allowed());
+         via_info_arr[index] = new ArtViaMask(from_layer, to_layer, curr_via.attach_smd_allowed());
          }
-      for (int j = 0; j < layer_count; ++j)
+      
+      for (int jndex = 0; jndex < layer_count; ++jndex)
          {
-         via_radius_arr[j] = Math.max(via_radius_arr[j], trace_half_width[j]);
-         via_radius_max = Math.max(via_radius_max, via_radius_arr[j]);
+         via_radius_arr[jndex] = Math.max(via_radius_arr[jndex], trace_half_width[jndex]);
+         via_radius_max = Math.max(via_radius_max, via_radius_arr[jndex]);
          }
+      
       double via_cost_factor = via_radius_max;
       via_cost_factor = Math.max(via_cost_factor, 1);
       min_normal_via_cost = p_via_costs * via_cost_factor;

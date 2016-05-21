@@ -26,10 +26,10 @@ import board.items.BrdItem;
 
 /**
  * Empty adaptor implementing the BoardObservers interface.
- * It basically does nothing
+ * It basically does nothing and it is used to avoid testing for null around the code
  * @author Alfons Wirtz
  */
-public final class BrdObserverVoid implements BrdObservers
+public final class ObserverItemVoid implements ObserverItem
    {
    private boolean active = false;
 

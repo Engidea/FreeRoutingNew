@@ -148,7 +148,7 @@ public class RulesFile
                }
             else if (next_token == DsnKeyword.PADSTACK)
                {
-               DsnKeywordLibrary.read_padstack_scope(scanner, layer_structure, coordinate_transform, routing_board.library.padstacks);
+               DsnKeywordLibrary.read_padstack_scope(scanner, layer_structure, coordinate_transform, routing_board.brd_library.padstacks);
                }
             else if (next_token == DsnKeyword.VIA)
                {
@@ -201,10 +201,10 @@ public class RulesFile
       // write the default rule using 0 as default layer.
       DsnRule.write_default_rule(p_par, 0);
       // write the via padstacks
-      for (int i = 1; i <= p_par.board.library.padstacks.count(); ++i)
+      for (int i = 1; i <= p_par.board.brd_library.padstacks.count(); ++i)
          {
-         freert.library.LibPadstack curr_padstack = p_par.board.library.padstacks.get(i);
-         if (p_par.board.library.get_via_padstack(curr_padstack.pads_name) != null)
+         freert.library.LibPadstack curr_padstack = p_par.board.brd_library.padstacks.get(i);
+         if (p_par.board.brd_library.get_via_padstack(curr_padstack.pads_name) != null)
             {
             DsnKeywordLibrary.write_padstack_scope(p_par, curr_padstack);
             }

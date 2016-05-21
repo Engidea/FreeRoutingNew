@@ -189,7 +189,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          }
       
       int padstack_no = component.get_package().get_pin(pin_no).padstack_no;
-      return r_board.library.padstacks.get(padstack_no);
+      return r_board.brd_library.padstacks.get(padstack_no);
       }
 
 

@@ -62,8 +62,8 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
-import freert.host.BrdObserverVoid;
-import freert.host.BrdObservers;
+import freert.host.ObserverItemVoid;
+import freert.host.ObserverItem;
 import freert.host.HostCom;
 import freert.library.BrdLibrary;
 import freert.library.LibPadstack;
@@ -108,7 +108,7 @@ public final class RoutingBoard implements java.io.Serializable
    // Class defining the rules for items to be inserted into this board. Contains for example the clearance matrix.
    public final BoardRules brd_rules;
    // The library containing pastack masks, packagages and other templates used on the board.
-   public final BrdLibrary library;
+   public final BrdLibrary brd_library;
    // The layer structure of this board.
    public final BrdLayerStructure layer_structure;
    // bounding orthogonal rectangle of this board
@@ -126,7 +126,7 @@ public final class RoutingBoard implements java.io.Serializable
    // it is transient just because it is useless to save it
    public transient Stat stat;
    // observers are not implemented anyway
-   public transient BrdObservers observers = new BrdObserverVoid();
+   public transient ObserverItem observers = new ObserverItemVoid();
    // Handles the search trees pointing into the items of this board, initialized on constructor
    public transient SearchTreeManager search_tree_manager;
    // the rectangle, where the graphics may be not updated
@@ -157,7 +157,7 @@ public final class RoutingBoard implements java.io.Serializable
       stat = p_stat;
       layer_structure = p_layer_structure;
       brd_rules = p_rules;
-      library = new BrdLibrary();
+      brd_library = new BrdLibrary();
       undo_items = new UndoableObjects();
       brd_components = new BrdComponents();
       host_com = p_host_com;
@@ -1642,7 +1642,7 @@ public final class RoutingBoard implements java.io.Serializable
       move_drill_algo     = new AlgoMoveDrillItem(this);
       shove_obstacle      = new BrdShoveObstacle();
       shove_pad_algo      = new AlgoShovePad(this);
-      observers           = new BrdObserverVoid();
+      observers           = new ObserverItemVoid();
       
       for ( BrdItem curr_item : get_items() )
          {

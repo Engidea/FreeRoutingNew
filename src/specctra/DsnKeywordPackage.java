@@ -178,7 +178,7 @@ public class DsnKeywordPackage
          freert.library.LibPackagePin curr_pin = p_package.get_pin(i);
          p_par.file.new_line();
          p_par.file.write("(pin ");
-         freert.library.LibPadstack curr_padstack = p_par.board.library.padstacks.get(curr_pin.padstack_no);
+         freert.library.LibPadstack curr_padstack = p_par.board.brd_library.padstacks.get(curr_pin.padstack_no);
          p_par.identifier_type.write(curr_padstack.pads_name, p_par.file);
          p_par.file.write(" ");
          p_par.identifier_type.write(curr_pin.name, p_par.file);

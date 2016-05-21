@@ -337,7 +337,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       write_snap_angle(p_par.file, p_par.board.brd_rules.get_trace_snap_angle());
 
       // write the routing vias
-      write_via_padstacks(p_par.board.library, p_par.file, p_par.identifier_type);
+      write_via_padstacks(p_par.board.brd_library, p_par.file, p_par.identifier_type);
 
       // write the control scope
       write_control_scope(p_par.board.brd_rules, p_par.file);

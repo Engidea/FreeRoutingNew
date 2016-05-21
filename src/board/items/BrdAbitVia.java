@@ -195,7 +195,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
 
    public void change_placement_side(PlaPointInt p_pole)
       {
-      LibPadstack new_padstack = r_board.library.get_mirrored_via_padstack(padstack);
+      LibPadstack new_padstack = r_board.brd_library.get_mirrored_via_padstack(padstack);
 
       if (new_padstack == null) return;
 

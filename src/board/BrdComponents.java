@@ -24,7 +24,7 @@ package board;
 import java.util.Iterator;
 import java.util.Vector;
 import board.infos.BrdComponent;
-import freert.host.BrdObservers;
+import freert.host.ObserverItem;
 import freert.library.LibPackage;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -133,7 +133,7 @@ public final class BrdComponents implements java.io.Serializable
     * Restores the sitiation at the previous snapshot. 
     * @returns false, if no more undo is possible.
     */
-   public boolean undo(BrdObservers p_observers)
+   public boolean undo(ObserverItem p_observers)
       {
       if ( ! undo_list.undo(null, null)) return false;
 
@@ -145,7 +145,7 @@ public final class BrdComponents implements java.io.Serializable
    /**
     * Restores the sitiation before the last undo. Returns false, if no more redo is possible.
     */
-   public boolean redo(BrdObservers p_observers)
+   public boolean redo(ObserverItem p_observers)
       {
       if ( !  undo_list.redo(null, null)) return false;
 
@@ -157,7 +157,7 @@ public final class BrdComponents implements java.io.Serializable
    /*
     * Restore the components in component_arr from the undo list.
     */
-   private void restore_component_arr_from_undo_list(BrdObservers p_observers)
+   private void restore_component_arr_from_undo_list(ObserverItem p_observers)
       {
       Iterator<UndoableObjectNode> iter = undo_list.start_read_object();
       

@@ -29,26 +29,25 @@ public class ColorIntensityTable implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
-
-   private final double[] arr;
+   private final double[] inte_arr;
    
    /**
     * Creates a new instance of ColorIntensityTable. The elements of p_intensities are expected between 0 and 1.
     */
    public ColorIntensityTable()
       {
-      arr = new double[ColorIntensityName.values().length];
-      arr[ColorIntensityName.TRACES.ordinal()] = 0.4;
-      arr[ColorIntensityName.VIAS.ordinal()] = 0.6;
-      arr[ColorIntensityName.PINS.ordinal()] = 0.6;
-      arr[ColorIntensityName.CONDUCTION_AREAS.ordinal()] = 0.2;
-      arr[ColorIntensityName.KEEPOUTS.ordinal()] = 0.2;
-      arr[ColorIntensityName.VIA_KEEPOUTS.ordinal()] = 0.2;
-      arr[ColorIntensityName.PLACE_KEEPOUTS.ordinal()] = 0.2;
-      arr[ColorIntensityName.COMPONENT_OUTLINES.ordinal()] = 1;
-      arr[ColorIntensityName.HILIGHT.ordinal()] = 0.8;
-      arr[ColorIntensityName.INCOMPLETES.ordinal()] = 1;
-      arr[ColorIntensityName.LENGTH_MATCHING_AREAS.ordinal()] = 0.1;
+      inte_arr = new double[ColorIntensityName.values().length];
+      inte_arr[ColorIntensityName.TRACES.ordinal()] = 0.4;
+      inte_arr[ColorIntensityName.VIAS.ordinal()] = 0.6;
+      inte_arr[ColorIntensityName.PINS.ordinal()] = 0.6;
+      inte_arr[ColorIntensityName.CONDUCTION_AREAS.ordinal()] = 0.2;
+      inte_arr[ColorIntensityName.KEEPOUTS.ordinal()] = 0.2;
+      inte_arr[ColorIntensityName.VIA_KEEPOUTS.ordinal()] = 0.2;
+      inte_arr[ColorIntensityName.PLACE_KEEPOUTS.ordinal()] = 0.2;
+      inte_arr[ColorIntensityName.COMPONENT_OUTLINES.ordinal()] = 1;
+      inte_arr[ColorIntensityName.HILIGHT.ordinal()] = 0.8;
+      inte_arr[ColorIntensityName.INCOMPLETES.ordinal()] = 1;
+      inte_arr[ColorIntensityName.LENGTH_MATCHING_AREAS.ordinal()] = 0.1;
       }
 
    /**
@@ -56,10 +55,10 @@ public class ColorIntensityTable implements java.io.Serializable
     */
    public ColorIntensityTable(ColorIntensityTable p_color_intesity_table)
       {
-      this.arr = new double[p_color_intesity_table.arr.length];
-      for (int i = 0; i < this.arr.length; ++i)
+      this.inte_arr = new double[p_color_intesity_table.inte_arr.length];
+      for (int i = 0; i < this.inte_arr.length; ++i)
          {
-         this.arr[i] = p_color_intesity_table.arr[i];
+         this.inte_arr[i] = p_color_intesity_table.inte_arr[i];
          }
       }
 
@@ -70,7 +69,7 @@ public class ColorIntensityTable implements java.io.Serializable
          System.out.println("ColorIntensityTable.get_value: p_no out of range");
          return 0;
          }
-      return arr[p_no];
+      return inte_arr[p_no];
       }
 
    public void set_value(int p_no, double p_value)
@@ -80,7 +79,7 @@ public class ColorIntensityTable implements java.io.Serializable
          System.out.println("ColorIntensityTable.set_value: p_no out of range");
          return;
          }
-      arr[p_no] = p_value;
+      inte_arr[p_no] = p_value;
       }
 
    }

@@ -134,9 +134,9 @@ public class WindowEditVias extends GuiSubWindowSavable
          {
          cl_class_combo_box.addItem(routing_board.brd_rules.clearance_matrix.get_name(i));
          }
-      for (int i = 0; i < routing_board.library.via_padstack_count(); ++i)
+      for (int i = 0; i < routing_board.brd_library.via_padstack_count(); ++i)
          {
-         padstack_combo_box.addItem(routing_board.library.get_via_padstack(i).pads_name);
+         padstack_combo_box.addItem(routing_board.brd_library.get_via_padstack(i).pads_name);
          }
       }
 
@@ -172,7 +172,7 @@ public class WindowEditVias extends GuiSubWindowSavable
             ++no;
             }
          freert.rules.NetClass default_net_class = routing_board.brd_rules.get_default_net_class();
-         BrdViaInfo new_via = new BrdViaInfo(new_name, routing_board.library.get_via_padstack(0), default_net_class.default_item_clearance_classes.get(ItemClass.VIA),
+         BrdViaInfo new_via = new BrdViaInfo(new_name, routing_board.brd_library.get_via_padstack(0), default_net_class.default_item_clearance_classes.get(ItemClass.VIA),
                false, routing_board.brd_rules);
          via_infos.add(new_via);
          adjust_table();

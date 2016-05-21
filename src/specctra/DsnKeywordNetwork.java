@@ -575,17 +575,17 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             return null;
             }
          String padstack_name = (String) next_token;
-         LibPadstack via_padstack = p_board.library.get_via_padstack(padstack_name);
+         LibPadstack via_padstack = p_board.brd_library.get_via_padstack(padstack_name);
          if (via_padstack == null)
             {
             // The padstack may not yet be inserted into the list of via padstacks
-            via_padstack = p_board.library.padstacks.get(padstack_name);
+            via_padstack = p_board.brd_library.padstacks.get(padstack_name);
             if (via_padstack == null)
                {
                System.out.println("Network.read_via_info: padstack not found");
                return null;
                }
-            p_board.library.add_via_padstack(via_padstack);
+            p_board.brd_library.add_via_padstack(via_padstack);
             }
          p_scanner.yybegin(DsnFileScanner.NAME);
          next_token = p_scanner.next_token();
@@ -675,9 +675,9 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       {
       int cl_class = p_net_class.default_item_clearance_classes.get(ItemClass.VIA);
       boolean is_default_class = (p_net_class == p_board.brd_rules.get_default_net_class());
-      for (int i = 0; i < p_board.library.via_padstack_count(); ++i)
+      for (int i = 0; i < p_board.brd_library.via_padstack_count(); ++i)
          {
-         LibPadstack curr_padstack = p_board.library.get_via_padstack(i);
+         LibPadstack curr_padstack = p_board.brd_library.get_via_padstack(i);
          boolean attach_allowed = p_attach_allowed && curr_padstack.attach_allowed;
          String via_name;
          if (is_default_class)
@@ -1246,12 +1246,12 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                   curr_part_pin.gate_pin_swap_code);
             ++curr_index;
             }
-         routing_board.library.logical_parts.add(next_part.name, board_part_pins);
+         routing_board.brd_library.logical_parts.add(next_part.name, board_part_pins);
          }
 
       for (DsnLogicalPartMapping next_mapping : p_par.logical_part_mappings)
          {
-         LibLogicalPart curr_logical_part = routing_board.library.logical_parts.get(next_mapping.name);
+         LibLogicalPart curr_logical_part = routing_board.brd_library.logical_parts.get(next_mapping.name);
             {
             if (curr_logical_part == null)
                {
@@ -1316,8 +1316,8 @@ public class DsnKeywordNetwork extends DsnKeywordScope
    private static void insert_component(DsnComponentLocation p_location, String p_lib_key, DsnReadScopeParameters p_par)
       {
       RoutingBoard routing_board = p_par.i_board.get_routing_board();
-      LibPackage curr_front_package = routing_board.library.packages.pkg_get(p_lib_key, true);
-      LibPackage curr_back_package = routing_board.library.packages.pkg_get(p_lib_key, false);
+      LibPackage curr_front_package = routing_board.brd_library.packages.pkg_get(p_lib_key, true);
+      LibPackage curr_back_package = routing_board.brd_library.packages.pkg_get(p_lib_key, false);
       
       if (curr_front_package == null || curr_back_package == null)
          {
@@ -1366,7 +1366,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
       for (int i = 0; i < curr_package.pin_count(); ++i)
          {
          LibPackagePin curr_pin = curr_package.get_pin(i);
-         LibPadstack curr_padstack = routing_board.library.padstacks.get(curr_pin.padstack_no);
+         LibPadstack curr_padstack = routing_board.brd_library.padstacks.get(curr_pin.padstack_no);
          if (curr_padstack == null)
             {
             System.out.println("Network.insert_component: pin padstack not found");

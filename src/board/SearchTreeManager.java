@@ -79,13 +79,12 @@ public final class SearchTreeManager
       for (ShapeSearchTree curr_tree : compensated_search_trees)
          {
          ShapeTreeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
-            {
-            if (curr_tree_entries != null)
-               {
-               curr_tree.remove(curr_tree_entries);
-               }
-            }
+
+         if (curr_tree_entries == null) continue;
+
+         curr_tree.remove(curr_tree_entries);
          }
+
       p_item.clear_search_tree_entries();
       
       p_item.set_on_the_board(false);
@@ -241,14 +240,13 @@ public final class SearchTreeManager
     */
    public void reset_compensated_trees()
       {
-      Iterator<ShapeSearchTree> it = this.compensated_search_trees.iterator();
-      while (it.hasNext())
+      Iterator<ShapeSearchTree> iter = compensated_search_trees.iterator();
+
+      while (iter.hasNext())
          {
-         ShapeSearchTree curr_tree = it.next();
-         if (curr_tree != default_tree)
-            {
-            it.remove();
-            }
+         ShapeSearchTree curr_tree = iter.next();
+      
+         if (curr_tree != default_tree) iter.remove();
          }
       }
 
@@ -264,13 +262,13 @@ public final class SearchTreeManager
    private void remove_all_board_items()
       {
       Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
+
       for (;;)
          {
          BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(it);
-         if (curr_item == null)
-            {
-            break;
-            }
+        
+         if (curr_item == null)  break;
+
          remove(curr_item);
          }
       }
@@ -278,14 +276,15 @@ public final class SearchTreeManager
    private void insert_all_board_items()
       {
       Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
+      
       for (;;)
          {
          BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(it);
-         if (curr_item == null)
-            {
-            break;
-            }
+      
+         if (curr_item == null) break;
+
          curr_item.clear_derived_data();
+
          insert(curr_item);
          }
       }

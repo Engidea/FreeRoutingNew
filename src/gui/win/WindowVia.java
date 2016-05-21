@@ -230,7 +230,7 @@ public class WindowVia extends GuiSubWindowSavable
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
          java.util.Collection<PrintableInfo> object_list = new java.util.LinkedList<PrintableInfo>();
-         freert.library.BrdLibrary board_library = board_frame.board_panel.board_handling.get_routing_board().library;
+         freert.library.BrdLibrary board_library = board_frame.board_panel.board_handling.get_routing_board().brd_library;
          for (int i = 0; i < board_library.via_padstack_count(); ++i)
             {
             object_list.add(board_library.get_via_padstack(i));
@@ -258,7 +258,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             return;
             }
-         while (pcb.library.padstacks.get(padstack_name) != null)
+         while (pcb.brd_library.padstacks.get(padstack_name) != null)
             {
             padstack_name = javax.swing.JOptionPane.showInputDialog(resources.getString("message_2"), padstack_name);
             if (padstack_name == null)
@@ -360,8 +360,8 @@ public class WindowVia extends GuiSubWindowSavable
             {
             return;
             }
-         freert.library.LibPadstack new_padstack = pcb.library.padstacks.add(padstack_name, padstack_shapes, true, true);
-         pcb.library.add_via_padstack(new_padstack);
+         freert.library.LibPadstack new_padstack = pcb.brd_library.padstacks.add(padstack_name, padstack_shapes, true, true);
+         pcb.brd_library.add_via_padstack(new_padstack);
          }
       }
 
@@ -411,7 +411,7 @@ public class WindowVia extends GuiSubWindowSavable
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
          RoutingBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
-         freert.library.LibPadstack[] via_padstacks = pcb.library.get_via_padstacks();
+         freert.library.LibPadstack[] via_padstacks = pcb.brd_library.get_via_padstacks();
          Object selected_value = javax.swing.JOptionPane.showInputDialog(null, resources.getString("choose_padstack_to_remove"), resources.getString("remove_via_padstack"),
                javax.swing.JOptionPane.INFORMATION_MESSAGE, null, via_padstacks, via_padstacks[0]);
          if (selected_value == null)
@@ -434,7 +434,7 @@ public class WindowVia extends GuiSubWindowSavable
             board_frame.screen_messages.set_status_message(message);
             return;
             }
-         pcb.library.remove_via_padstack(selected_padstack);
+         pcb.brd_library.remove_via_padstack(selected_padstack);
          }
       }
 

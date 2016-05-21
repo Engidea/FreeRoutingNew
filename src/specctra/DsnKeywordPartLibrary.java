@@ -91,7 +91,7 @@ public class DsnKeywordPartLibrary extends DsnKeywordScope
 
    public static void write_scope(DsnWriteScopeParameter p_par) throws java.io.IOException
       {
-      freert.library.LibLogicalParts logical_parts = p_par.board.library.logical_parts;
+      freert.library.LibLogicalParts logical_parts = p_par.board.brd_library.logical_parts;
       if (logical_parts.count() <= 0)
          {
          return;

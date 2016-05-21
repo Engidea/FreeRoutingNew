@@ -25,7 +25,7 @@ import board.items.BrdItem;
  * Is this thing actually used ?
  * @author alfons
  */
-public interface BrdObservers extends Observers<BrdItem>
+public interface ObserverItem extends Observer<BrdItem>
    {
    /**
     * Enable the observers to synchronize the moved component.

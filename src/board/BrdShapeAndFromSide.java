@@ -39,8 +39,8 @@ public final class BrdShapeAndFromSide
    
    /**
     * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the trace shape. In the check
-    * shove functions, p_in_shove_check is expected to be true. In the actual shove functions p_in_shove_check is expected to be
-    * false.
+    * shove functions, p_in_shove_check is expected to be true. 
+    * In the actual shove functions p_in_shove_check is expected to be false.
     */
    public BrdShapeAndFromSide(BrdTracep p_trace, int p_index, boolean p_orthogonal, boolean p_in_shove_check)
       {

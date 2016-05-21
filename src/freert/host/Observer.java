@@ -25,7 +25,7 @@ package freert.host;
  *
  * @author Alfons Wirtz
  */
-public interface Observers<ObjectType>
+public interface Observer<ObjectType>
    {
    /**
     * Tell the observers the deletion p_object.

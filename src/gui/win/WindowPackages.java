@@ -46,7 +46,7 @@ public class WindowPackages extends WindowObjectListWithFilter
     */
    protected void fill_list()
       {
-      LibPackages packages = this.board_frame.board_panel.board_handling.get_routing_board().library.packages;
+      LibPackages packages = this.board_frame.board_panel.board_handling.get_routing_board().brd_library.packages;
       LibPackage[] sorted_arr = new LibPackage[packages.pkg_count()];
       for (int i = 0; i < sorted_arr.length; ++i)
          {

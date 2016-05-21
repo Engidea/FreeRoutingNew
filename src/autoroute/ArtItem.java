@@ -20,12 +20,12 @@
 
 package autoroute;
 
-import freert.graphics.GdiContext;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import autoroute.expand.ExpandRoomObstacle;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
+import freert.graphics.GdiContext;
 
 /**
  * Temporary data stored in board Items used in the autoroute algorithm
@@ -50,8 +50,8 @@ public final class ArtItem
       }
 
    /**
-    * Looks, if the corresponding item belongs to the start or destination set of the autoroute algorithm. Only used, if the item
-    * belongs to the net, which will be currently routed.
+    * Looks, if the corresponding item belongs to the start or destination set of the autoroute algorithm. 
+    * Only used, if the item belongs to the net, which will be currently routed.
     */
    public boolean is_start_info()
       {
@@ -59,8 +59,8 @@ public final class ArtItem
       }
 
    /**
-    * Sets, if the corresponding item belongs to the start or destination set of the autoroute algorithm. Only used, if the item
-    * belongs to the net, which will be currently routed.
+    * Sets, if the corresponding item belongs to the start or destination set of the autoroute algorithm.
+    *  Only used, if the item belongs to the net, which will be currently routed.
     */
    public void set_start_info(boolean p_value)
       {

@@ -461,7 +461,7 @@ public class StateMoveItem extends StateInteractive
       {
       // Check, that all items can be mirrored
       BrdLayerStructure layer_structure = r_brd.layer_structure;
-      BrdLibrary board_library = r_brd.library;
+      BrdLibrary board_library = r_brd.brd_library;
       boolean placement_side_changable = true;
       for (BrdItem curr_item : item_list)
          {

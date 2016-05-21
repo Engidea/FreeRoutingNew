@@ -21,18 +21,18 @@
 
 package autoroute;
 
-import freert.graphics.GdiContext;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
 import java.awt.Graphics;
 import java.util.Collection;
 import java.util.LinkedList;
 import autoroute.expand.ExpandDrillPage;
 import board.RoutingBoard;
+import freert.graphics.GdiContext;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 
 /**
  * Describes the 2 dimensional array of pages of ExpansionDrill`s used in the maze search algorithm. 
- * The pages are rectangles of about equal width and height covering covering the bounding box of the board area.
+ * The pages are rectangles of about equal width and height covering the bounding box of the board area.
  *
  * @author Alfons Wirtz
  */

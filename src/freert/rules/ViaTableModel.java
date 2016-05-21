@@ -108,7 +108,7 @@ public class ViaTableModel extends javax.swing.table.AbstractTableModel
             return;
             }
          String new_name = (String) p_value;
-         freert.library.LibPadstack new_padstack = routing_board.library.get_via_padstack(new_name);
+         freert.library.LibPadstack new_padstack = routing_board.brd_library.get_via_padstack(new_name);
          if (new_padstack == null)
             {
             System.out.println("ViaVindow.setValueAt: via padstack not found");

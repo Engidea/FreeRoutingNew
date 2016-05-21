@@ -27,6 +27,10 @@ import java.awt.Graphics;
 
 public interface GdiDrawable
    {
+   int MIN_DRAW_PRIORITY = 1;
+   int MIDDLE_DRAW_PRIORITY = 3;
+   int MAX_DRAW_PRIORITY = 3;
+
    /**
     * Draws this item to the device provided in p_graphics_context. p_color_arr is an array of dimenssion layer_count. p_intensity
     * is a number between between 0 and 1.
@@ -53,8 +57,4 @@ public interface GdiDrawable
     * gets the draw colors for this object from p_graphics_context
     */
    Color[] get_draw_colors(GdiContext p_graphics_context);
-
-   static final int MIN_DRAW_PRIORITY = 1;
-   static final int MIDDLE_DRAW_PRIORITY = 3;
-   static final int MAX_DRAW_PRIORITY = 3;
    }

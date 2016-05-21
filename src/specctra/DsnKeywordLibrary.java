@@ -52,7 +52,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
    public boolean read_scope(DsnReadScopeParameters p_par)
       {
       board.RoutingBoard board = p_par.i_board.get_routing_board();
-      board.library.padstacks = new LibPadstacks(p_par.i_board.get_routing_board().layer_structure);
+      board.brd_library.padstacks = new LibPadstacks(p_par.i_board.get_routing_board().layer_structure);
       Collection<DsnKeywordPackage> package_list = new LinkedList<DsnKeywordPackage>();
       Object next_token = null;
       for (;;)
@@ -82,7 +82,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
             {
             if (next_token == DsnKeyword.PADSTACK)
                {
-               if (!read_padstack_scope(p_par.scanner, p_par.layer_structure, p_par.coordinate_transform, board.library.padstacks))
+               if (!read_padstack_scope(p_par.scanner, p_par.layer_structure, p_par.coordinate_transform, board.brd_library.padstacks))
                   {
                   return false;
                   }
@@ -112,7 +112,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
          for (int i = 0; i < via_padstacks.length; ++i)
             {
             String curr_padstack_name = it.next();
-            LibPadstack curr_padstack = board.library.padstacks.get(curr_padstack_name);
+            LibPadstack curr_padstack = board.brd_library.padstacks.get(curr_padstack_name);
             if (curr_padstack != null)
                {
                via_padstacks[found_padstack_count] = curr_padstack;
@@ -132,11 +132,11 @@ public class DsnKeywordLibrary extends DsnKeywordScope
             System.arraycopy(via_padstacks, 0, corrected_padstacks, 0, found_padstack_count);
             via_padstacks = corrected_padstacks;
             }
-         board.library.set_via_padstacks(via_padstacks);
+         board.brd_library.set_via_padstacks(via_padstacks);
          }
 
       // Create the library packages on the board
-      board.library.packages = new LibPackages(board.library.padstacks);
+      board.brd_library.packages = new LibPackages(board.brd_library.padstacks);
       Iterator<DsnKeywordPackage> it = package_list.iterator();
       while (it.hasNext())
          {
@@ -148,7 +148,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
             int rel_x = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[0]));
             int rel_y = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[1]));
             PlaVectorInt rel_coor = new PlaVectorInt(rel_x, rel_y);
-            LibPadstack board_padstack = board.library.padstacks.get(pin_info.padstack_name);
+            LibPadstack board_padstack = board.brd_library.padstacks.get(pin_info.padstack_name);
             if (board_padstack == null)
                {
                System.out.println("Library.read_scope: board padstack not found");
@@ -202,7 +202,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
             PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
             place_keepout_arr[i] = new specctra.varie.DsnPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
             }
-         board.library.packages.add(curr_package.name, pin_arr, outline_arr, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
+         board.brd_library.packages.add(curr_package.name, pin_arr, outline_arr, keepout_arr, via_keepout_arr, place_keepout_arr, curr_package.is_front);
          }
       return true;
       }
@@ -211,13 +211,13 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       {
       p_par.file.start_scope();
       p_par.file.write("library");
-      for (int i = 1; i <= p_par.board.library.packages.pkg_count(); ++i)
+      for (int i = 1; i <= p_par.board.brd_library.packages.pkg_count(); ++i)
          {
-         DsnKeywordPackage.write_scope(p_par, p_par.board.library.packages.pkg_get(i));
+         DsnKeywordPackage.write_scope(p_par, p_par.board.brd_library.packages.pkg_get(i));
          }
-      for (int i = 1; i <= p_par.board.library.padstacks.count(); ++i)
+      for (int i = 1; i <= p_par.board.brd_library.padstacks.count(); ++i)
          {
-         write_padstack_scope(p_par, p_par.board.library.padstacks.get(i));
+         write_padstack_scope(p_par, p_par.board.brd_library.padstacks.get(i));
          }
       p_par.file.end_scope();
       }

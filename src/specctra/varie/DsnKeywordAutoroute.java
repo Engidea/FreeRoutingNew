@@ -31,7 +31,8 @@ import autoroute.ArtSettings;
 
 /**
  * Hey, this has nothing to do with Dsn (spectra) it is bound to the rules parsing only !!
- * TODO Move it away from here, in a separate package
+ * Well, not really, it happens to be also used in Dsn.... apparently both the Dsn or the 
+ * saving/loading mechanism share a common trail
  * @author Alfons Wirtz
  */
 public class DsnKeywordAutoroute

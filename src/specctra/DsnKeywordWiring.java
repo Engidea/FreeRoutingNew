@@ -661,7 +661,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
                }
             }
          RoutingBoard board = p_par.i_board.get_routing_board();
-         freert.library.LibPadstack curr_padstack = board.library.padstacks.get(padstack_name);
+         freert.library.LibPadstack curr_padstack = board.brd_library.padstacks.get(padstack_name);
          if (curr_padstack == null)
             {
             System.out.println("Wiring.read_via_scope: via padstack not found");

@@ -129,7 +129,7 @@ public class PopupMenuMain extends PopupMenuDisplay
 
       // Insert the pin swap item.
 
-      if (board_panel.board_handling.get_routing_board().library.logical_parts.count() > 0)
+      if (board_panel.board_handling.get_routing_board().brd_library.logical_parts.count() > 0)
          {
          // the board contains swappable gates or pins
          javax.swing.JMenuItem swap_pin_item = new javax.swing.JMenuItem();
