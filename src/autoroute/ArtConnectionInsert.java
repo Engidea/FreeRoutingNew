@@ -80,7 +80,7 @@ public final class ArtConnectionInsert
       for ( ArtLocateResult curr_new_item : p_connection.connection_items )
          {
          
-         if (! insert_via_done(curr_new_item.first(), curr_layer, curr_new_item.layer))
+         if (! insert_via_done(curr_new_item.corner_first(), curr_layer, curr_new_item.layer))
             {
             r_board.userPrintln(classname+"insert_via FAIL");
             return false;
@@ -143,7 +143,7 @@ public final class ArtConnectionInsert
       if (ctrl.with_neckdown)
          {
          ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
-         PlaPointInt curr_end_corner = p_locate.first();
+         PlaPointInt curr_end_corner = p_locate.corner_first();
          for (int index = 0; index < 2; ++index)
             {
             Set<BrdItem> picked_items = r_board.pick_items(curr_end_corner, p_locate.layer, item_filter);
@@ -252,9 +252,9 @@ public final class ArtConnectionInsert
       
       r_board.brd_rules.set_pin_edge_to_turn_dist(saved_edge_to_turn_dist);
       
-      if ( first_corner == null) first_corner = p_locate.first();
+      if ( first_corner == null) first_corner = p_locate.corner_first();
       
-      last_corner = p_locate.last();
+      last_corner = p_locate.corner_last();
       
       return result;
       }

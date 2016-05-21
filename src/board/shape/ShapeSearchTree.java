@@ -34,7 +34,6 @@ import board.items.BrdArea;
 import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTracep;
-import board.varie.TraceAngleRestriction;
 import freert.planar.PlaDimension;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
@@ -1311,11 +1310,11 @@ public final class ShapeSearchTree
          else
             {
             ShapeTile curr_tile_shape;
-            if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+            if (r_board.brd_rules.is_trace_snap_90() )
                {
                curr_tile_shape = curr_shape.bounding_box();
                }
-            else if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
+            else if (r_board.brd_rules.is_trace_snap_45())
                {
                curr_tile_shape = curr_shape.bounding_octagon();
                }

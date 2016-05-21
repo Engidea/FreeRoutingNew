@@ -170,9 +170,8 @@ public final class IteraRoute
          }
       
       shove_failing_obstacle = null;
-      TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
       
-      if (angle_restriction != TraceAngleRestriction.NONE && !(prev_corner instanceof PlaPointInt))
+      if ( !r_board.brd_rules.is_trace_snap_none()  && !(prev_corner instanceof PlaPointInt))
          {
          // when you are routing in 45 ot 90 angles previous point con only be a point Int
          // But really, even whan you are routing in free angle, no ?

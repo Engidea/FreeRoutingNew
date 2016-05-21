@@ -30,7 +30,6 @@ import interactive.IteraBoard;
 import interactive.IteraRoute;
 import interactive.LogfileScope;
 import java.awt.Graphics;
-import board.varie.TraceAngleRestriction;
 
 /**
  * Class for shoving items out of a region to make space to insert something else. 
@@ -98,7 +97,7 @@ public final class StateDragMakeSpace extends StateDrag
 
       PlaPointInt route_end = itera_route.get_last_corner();
       
-      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE && ! route_end.equals(p_to_location.round()))
+      if (r_brd.brd_rules.is_trace_snap_none() && ! route_end.equals(p_to_location.round()))
          {
          i_brd.move_mouse(route_end.to_float());
          }

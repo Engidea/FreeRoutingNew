@@ -340,11 +340,11 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       board.varie.TraceAngleRestriction snap_angle = board_handling.get_routing_board().brd_rules.get_trace_snap_angle();
 
-      if (snap_angle == TraceAngleRestriction.NINETY_DEGREE)
+      if (snap_angle.is_limit_90())
          {
          snap_angle_90_button.setSelected(true);
          }
-      else if (snap_angle == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (snap_angle.is_limit_45())
          {
          snap_angle_45_button.setSelected(true);
          }
@@ -457,7 +457,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    
    private void snap_angle_90_button_fun()
       {
-      if (board_handling.get_routing_board().brd_rules.get_trace_snap_angle() == board.varie.TraceAngleRestriction.NINETY_DEGREE)
+      if (board_handling.get_routing_board().brd_rules.get_trace_snap_angle() == board.varie.TraceAngleRestriction.NINETY)
          {
          return;
          }
@@ -473,12 +473,12 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          }
       
       stat.userPrintln(classname+" req TraceAngleRestriction.NINETY_DEGREE");
-      board_handling.set_trace_snap_angle(TraceAngleRestriction.NINETY_DEGREE);
+      board_handling.set_trace_snap_angle(TraceAngleRestriction.NINETY);
       }
 
    public void snap_angle_45_button_fun()
       {
-      if (board_handling.get_routing_board().brd_rules.get_trace_snap_angle() == board.varie.TraceAngleRestriction.FORTYFIVE_DEGREE)
+      if (board_handling.get_routing_board().brd_rules.is_trace_snap_45())
          {
          // this just means that current value is the same as what I want
          return;
@@ -495,13 +495,13 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          }
 
       stat.userPrintln(classname+" req TraceAngleRestriction.FORTYFIVE_DEGREE");
-      board_handling.set_trace_snap_angle(board.varie.TraceAngleRestriction.FORTYFIVE_DEGREE);
+      board_handling.set_trace_snap_angle(TraceAngleRestriction.FORTYFIVE);
       }
 
    public void snap_angle_none_button_fun()
       {
       stat.userPrintln(classname+" req AngleRestriction.NONE");
-      board_handling.set_trace_snap_angle(board.varie.TraceAngleRestriction.NONE);
+      board_handling.set_trace_snap_angle(TraceAngleRestriction.NONE);
       }
 
    public void dynamic_button_fun()

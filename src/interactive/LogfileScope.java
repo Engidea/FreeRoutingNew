@@ -20,6 +20,8 @@
 
 package interactive;
 
+import freert.planar.PlaPointFloat;
+import freert.varie.TimeLimitStoppable;
 import interactive.state.StateCircleConstrut;
 import interactive.state.StateConstructHole;
 import interactive.state.StateConstructPolygon;
@@ -35,8 +37,7 @@ import interactive.state.StateSelecRegionCutout;
 import interactive.state.StateSelectRegionItems;
 import interactive.state.StateSelectedItem;
 import board.varie.ItemSelectionChoice;
-import freert.planar.PlaPointFloat;
-import freert.varie.TimeLimitStoppable;
+import board.varie.TraceAngleRestriction;
 
 /**
  * Enumeration class defining scopes in a logfile, Each Object of the class must implement the read_scope method.
@@ -1134,7 +1135,8 @@ public abstract class LogfileScope
       public StateInteractive read_scope(Actlog p_logfile, StateInteractive p_return_state, IteraBoard p_board_handling)
          {
          int new_snap_angle_no = p_logfile.read_int();
-         p_board_handling.get_routing_board().brd_rules.set_trace_snap_angle(board.varie.TraceAngleRestriction.arr[new_snap_angle_no]);
+         TraceAngleRestriction restrict = TraceAngleRestriction.get_instance(new_snap_angle_no);
+         p_board_handling.get_routing_board().brd_rules.set_trace_snap_angle(restrict);
          return p_return_state;
          }
       }

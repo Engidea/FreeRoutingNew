@@ -522,7 +522,7 @@ public final class BoardRules implements Serializable
       {
       p_stream.defaultReadObject();
       int snap_angle_no = p_stream.readInt();
-      trace_angle_restriction = TraceAngleRestriction.arr[snap_angle_no];
+      trace_angle_restriction = TraceAngleRestriction.get_instance(snap_angle_no);
       }
 
    }

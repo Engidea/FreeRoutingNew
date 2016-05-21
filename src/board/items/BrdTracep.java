@@ -1351,7 +1351,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
       
-      if (angle_restriction != TraceAngleRestriction.NINETY_DEGREE && r_board.brd_rules.get_pin_edge_to_turn_dist() > 0)
+      if (angle_restriction != TraceAngleRestriction.NINETY && r_board.brd_rules.get_pin_edge_to_turn_dist() > 0)
          {
          if (swap_connection_to_pin(true))
             {
@@ -1676,11 +1676,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       ShapeTile offset_pin_shape = (ShapeTile)a_pin_tile.offset(get_half_width() + add_width);
       
-      if (p_angle_restriction == TraceAngleRestriction.NINETY_DEGREE || offset_pin_shape.is_IntBox())
+      if (p_angle_restriction.is_limit_90() || offset_pin_shape.is_IntBox())
          {
          offset_pin_shape = offset_pin_shape.bounding_box();
          }
-      else if (p_angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (p_angle_restriction.is_limit_45() )
          {
          offset_pin_shape = offset_pin_shape.bounding_octagon();
          }

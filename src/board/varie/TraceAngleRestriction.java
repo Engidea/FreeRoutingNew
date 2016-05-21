@@ -32,16 +32,27 @@ public final class TraceAngleRestriction
    private static final int ANGLE_45D=1;
    private static final int ANGLE_90D=2;
    
-   public static final TraceAngleRestriction NONE = new TraceAngleRestriction("none", ANGLE_NONE);
-   public static final TraceAngleRestriction FORTYFIVE_DEGREE = new TraceAngleRestriction("45 degree", ANGLE_45D);
-   public static final TraceAngleRestriction NINETY_DEGREE = new TraceAngleRestriction("90 degree", ANGLE_90D);
-
-   public static final TraceAngleRestriction[] arr = { NONE, FORTYFIVE_DEGREE, NINETY_DEGREE };
+   public static final TraceAngleRestriction NONE      = new TraceAngleRestriction(ANGLE_NONE, "None");
+   public static final TraceAngleRestriction FORTYFIVE = new TraceAngleRestriction(ANGLE_45D, "45 degree");
+   public static final TraceAngleRestriction NINETY    = new TraceAngleRestriction(ANGLE_90D, "90 degree");
 
    private final String name;
    private final int index;
 
-   private TraceAngleRestriction(String p_name, int p_no)
+   public static final TraceAngleRestriction get_instance ( int index )
+      {
+      switch (index ) 
+         {
+         case ANGLE_NONE: return NONE;
+         case ANGLE_45D: return FORTYFIVE;
+         case ANGLE_90D: return NINETY;
+         default:
+            System.err.println("TraceAngleRestriction: ERROR bad index="+index);
+            return NONE;
+         }
+      }
+   
+   private TraceAngleRestriction(int p_no, String p_name)
       {
       name = p_name;
       index = p_no;

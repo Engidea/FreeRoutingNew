@@ -20,6 +20,7 @@
  */
 package autoroute;
 
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -37,8 +38,10 @@ import board.BrdConnectable;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
 import board.varie.TraceAngleRestriction;
+import freert.graphics.GdiContext;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 
@@ -244,17 +247,14 @@ public abstract class ArtConnectionLocate
          // TODO check why it is not terminating anymore
          if (next_corners.isEmpty()) break;
 
-         Iterator<PlaPointFloat> it = next_corners.iterator();
-         while (it.hasNext())
+         for ( PlaPointFloat curr_next_corner : next_corners )
             {
-            PlaPointFloat curr_next_corner = it.next();
-            if (curr_next_corner != prev_corner)
-               {
-               corner_list.add(curr_next_corner);
-               previous_from_point = current_from_point;
-               current_from_point = curr_next_corner;
-               prev_corner = curr_next_corner;
-               }
+            if (curr_next_corner == prev_corner) continue;
+
+            corner_list.add(curr_next_corner);
+            previous_from_point = current_from_point;
+            current_from_point = curr_next_corner;
+            prev_corner = curr_next_corner;
             }
          }
 
@@ -270,28 +270,21 @@ public abstract class ArtConnectionLocate
          }
 
       // Round the new trace corners to Integer.
-      Collection<PlaPointInt> rounded_corner_list = new LinkedList<PlaPointInt>();
-      Iterator<PlaPointFloat> it = corner_list.iterator();
-      PlaPointInt prev_point = null;
-      while (it.hasNext())
-         {
-         PlaPointInt curr_point = (it.next()).round();
-         if (!curr_point.equals(prev_point))
-            {
-            rounded_corner_list.add(curr_point);
-            prev_point = curr_point;
-            }
-         }
+      PlaPointIntAlist rounded_corner_list = new PlaPointIntAlist(corner_list.size());
 
-      // Construct the result item
-      PlaPointInt[] corner_arr = new PlaPointInt[rounded_corner_list.size()];
-      Iterator<PlaPointInt> it2 = rounded_corner_list.iterator();
-      for (int i = 0; i < corner_arr.length; ++i)
+      PlaPointInt prev_point = null;
+
+      for ( PlaPointFloat a_float : corner_list )
          {
-         corner_arr[i] = it2.next();
+         PlaPointInt curr_point = a_float.round();
+
+         if ( curr_point.equals(prev_point) ) continue;
+
+         rounded_corner_list.add(curr_point);
+         prev_point = curr_point;
          }
       
-      ArtLocateResult result = new ArtLocateResult(corner_arr, current_trace_layer);
+      ArtLocateResult result = new ArtLocateResult(rounded_corner_list, current_trace_layer);
       
       current_trace_layer = next_layer;
       
@@ -307,16 +300,17 @@ public abstract class ArtConnectionLocate
    /** 
     * Test display of the baktrack rooms
     */
-   public void draw(java.awt.Graphics p_graphics, freert.graphics.GdiContext p_graphics_context)
+   public void draw(Graphics p_graphics, GdiContext p_graphics_context)
       {
-      for (int i = 0; i < backtrack_array.length; ++i)
+      for (int index = 0; index < backtrack_array.length; ++index)
          {
-         ExpandRoomComplete next_room = backtrack_array[i].next_room;
+         ExpandRoomComplete next_room = backtrack_array[index].next_room;
          if (next_room != null)
             {
             next_room.draw(p_graphics, p_graphics_context, 0.2);
             }
-         ExpandObject next_door = backtrack_array[i].door;
+         
+         ExpandObject next_door = backtrack_array[index].door;
          if (next_door instanceof ExpandDrill)
             {
             ((ExpandDrill) next_door).draw(p_graphics, p_graphics_context, 0.2);
@@ -368,14 +362,14 @@ public abstract class ArtConnectionLocate
             }
          }
       ArtBacktrackElement curr_backtrack_element = new ArtBacktrackElement(curr_backtrack_door, p_maze_search_result.section_no_of_door, curr_next_room);
+
       for (;;)
          {
          result.add(curr_backtrack_element);
          curr_backtrack_door = curr_maze_search_element.backtrack_door;
-         if (curr_backtrack_door == null)
-            {
-            break;
-            }
+
+         if (curr_backtrack_door == null) break;
+
          int curr_section_no = curr_maze_search_element.section_no_of_backtrack_door;
          if (curr_section_no >= curr_backtrack_door.maze_search_element_count())
             {
@@ -409,17 +403,11 @@ public abstract class ArtConnectionLocate
     */
    private final PlaPointFloat adjust_start_corner()
       {
-      if (current_from_door_index < 0)
-         {
-         return current_from_point;
-         }
+      if (current_from_door_index < 0)  return current_from_point;
       
       ArtBacktrackElement curr_from_info = backtrack_array[current_from_door_index];
       
-      if (curr_from_info.next_room == null)
-         {
-         return current_from_point;
-         }
+      if (curr_from_info.next_room == null) return current_from_point;
       
       double trace_half_width = art_ctrl.compensated_trace_half_width[current_trace_layer];
       ShapeTile shrinked_room_shape = (ShapeTile) curr_from_info.next_room.get_shape().offset(-trace_half_width);
@@ -515,14 +503,14 @@ public abstract class ArtConnectionLocate
       }
 
    /**
-    * Calculates an additional corner, so that for the lines from p_from_point to the result corner and from the result corner to
-    * p_to_point p_angle_restriction is fulfilled.
+    * Calculates an additional corner, so that for the lines from p_from_point to the result corner 
+    * and from the result corner to p_to_point p_angle_restriction is fulfilled.
     */
    static PlaPointFloat calculate_additional_corner(PlaPointFloat p_from_point, PlaPointFloat p_to_point, boolean p_horizontal_first, TraceAngleRestriction p_angle_restriction)
       {
-      if (p_angle_restriction == TraceAngleRestriction.NINETY_DEGREE)
+      if (p_angle_restriction.is_limit_90() )
          return  ninety_degree_corner(p_from_point, p_to_point, p_horizontal_first);
-      else if (p_angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (p_angle_restriction.is_limit_45() )
          return fortyfive_degree_corner(p_from_point, p_to_point, p_horizontal_first);
       else
          return p_to_point;

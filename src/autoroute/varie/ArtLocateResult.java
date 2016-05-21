@@ -1,16 +1,18 @@
 package autoroute.varie;
 
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 
 /**
  * Type of a single item in the result list connection_items. Used to create a new PolylineTrace.
  */
 public final class ArtLocateResult
    {
-   public final int layer;
-   private final PlaPointInt[] corners;
+   private final PlaPointIntAlist corners;
 
-   public ArtLocateResult(PlaPointInt[] p_corners, int p_layer)
+   public final int layer;
+
+   public ArtLocateResult(PlaPointIntAlist p_corners, int p_layer)
       {
       corners = p_corners;
       layer = p_layer;
@@ -18,27 +20,27 @@ public final class ArtLocateResult
    
    public PlaPointInt corner (int index )
       {
-      return corners[index];
+      return corners.get(index);
       }
    
-   public PlaPointInt first()
+   public PlaPointInt corner_first()
       {
       return corner(0);
       }
    
-   public PlaPointInt last()
+   public PlaPointInt corner_last()
       {
       return corner(size(-1));
       }
    
    public int size ()
       {
-      return corners.length;
+      return corners.size();
       }
    
    public int size (int offset )
       {
-      return corners.length + offset;
+      return size() + offset;
       }
    
    }

@@ -100,7 +100,7 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       return v_x == 0 || v_y == 0;
       }
 
-   public final boolean is_diagonal()
+   private final boolean is_diagonal()
       {
       return  Math.abs(v_x) == Math.abs(v_y);
       }

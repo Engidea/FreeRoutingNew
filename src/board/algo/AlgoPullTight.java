@@ -101,11 +101,11 @@ public abstract class AlgoPullTight
       
       AlgoPullTight result;
       
-      if (angle_restriction == TraceAngleRestriction.NINETY_DEGREE)
+      if (angle_restriction.is_limit_90() )
          {
          result = new AlgoPullTight90(p_board, p_only_net_no_arr, p_stoppable, p_keep_point );
          }
-      else if (angle_restriction == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (angle_restriction.is_limit_45())
          {
          result = new AlgoPullTight45(p_board, p_only_net_no_arr, p_stoppable, p_keep_point );
          }

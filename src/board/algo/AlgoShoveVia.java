@@ -88,7 +88,7 @@ public final class AlgoShoveVia
 
       ShapeTile tile_shape;
       boolean is_90_degree;
-      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY)
          {
          tile_shape = via_shape.bounding_box();
          is_90_degree = true;
@@ -215,7 +215,7 @@ public final class AlgoShoveVia
             }
          
          ShapeTile start_trace_shape = null;
-         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY)
             {
             tile_shape = curr_pad_shape.bounding_box();
             if (start_trace_circle != null)

@@ -24,8 +24,8 @@ import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Iterator;
+import java.util.LinkedList;
 import board.varie.ItemFixState;
-import board.varie.TraceAngleRestriction;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -151,21 +151,22 @@ public class StateConstuctTile extends StateConstructCorner
          {
          PlaPointInt prev_corner = corner_arr[new_length - 3];
          PlaSide last_corner_side = last_corner.side_of(prev_corner, curr_corner);
-         if (last_corner_side == PlaSide.ON_THE_LEFT)
-            {
-            // side is ok, nothing to skip
-            break;
-            }
-         if (r_brd.brd_rules.get_trace_snap_angle() != TraceAngleRestriction.FORTYFIVE_DEGREE)
+
+         // side is ok, nothing to skip
+         if (last_corner_side == PlaSide.ON_THE_LEFT)  break;
+
+         if ( ! r_brd.brd_rules.is_trace_snap_45())
             {
             // skip concave corner
             corner_arr[new_length - 2] = last_corner;
             }
+         
          --new_length;
+         
          // In 45 degree case just skip last corner as nothing like the following
-         // calculation for the 90 degree case to keep
-         // the angle restrictions is implemented.
-         if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+         // calculation for the 90 degree case to keep the angle restrictions is implemented.
+         
+         if (r_brd.brd_rules.is_trace_snap_90() )
             {
             // prevent generating a non orthogonal line by changing the previous corner
             PlaPointInt prev_prev_corner = null;
@@ -184,13 +185,14 @@ public class StateConstuctTile extends StateConstructCorner
             }
          curr_corner = prev_corner;
          }
+      
       if (new_length < corner_arr.length)
          {
          // somthing skipped, update corner_list
-         corner_list = new java.util.LinkedList<PlaPointInt>();
-         for (int i = 0; i < new_length; ++i)
+         corner_list = new LinkedList<PlaPointInt>();
+         for (int index = 0; index < new_length; ++index)
             {
-            corner_list.add(corner_arr[i]);
+            corner_list.add(corner_arr[index]);
             }
          }
       }

@@ -31,6 +31,7 @@ import board.BrdLayerStructure;
 import board.RoutingBoard;
 import board.items.BrdAreaConduction;
 import board.varie.ItemFixState;
+import board.varie.TraceAngleRestriction;
 import freert.host.HostCom;
 import freert.planar.ShapeSegments;
 import freert.planar.ShapeTileBox;
@@ -736,29 +737,32 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       return true;
       }
 
-   public static board.varie.TraceAngleRestriction read_snap_angle(JflexScanner p_scanner)
+   public static TraceAngleRestriction read_snap_angle(JflexScanner p_scanner)
       {
       try
          {
          Object next_token = p_scanner.next_token();
-         board.varie.TraceAngleRestriction snap_angle;
+         
+         TraceAngleRestriction snap_angle;
+         
          if (next_token == DsnKeyword.NINETY_DEGREE)
             {
-            snap_angle = board.varie.TraceAngleRestriction.NINETY_DEGREE;
+            snap_angle = TraceAngleRestriction.NINETY;
             }
          else if (next_token == DsnKeyword.FORTYFIVE_DEGREE)
             {
-            snap_angle = board.varie.TraceAngleRestriction.FORTYFIVE_DEGREE;
+            snap_angle = TraceAngleRestriction.FORTYFIVE;
             }
          else if (next_token == DsnKeyword.NONE)
             {
-            snap_angle = board.varie.TraceAngleRestriction.NONE;
+            snap_angle = TraceAngleRestriction.NONE;
             }
          else
             {
             System.out.println("Structure.read_snap_angle_scope: unexpected token");
             return null;
             }
+         
          next_token = p_scanner.next_token();
          if (next_token != DsnKeyword.CLOSED_BRACKET)
             {
@@ -780,11 +784,11 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       p_file.write("snap_angle ");
       p_file.new_line();
 
-      if (p_angle_restriction == board.varie.TraceAngleRestriction.NINETY_DEGREE)
+      if (p_angle_restriction.is_limit_90() )
          {
          p_file.write("ninety_degree");
          }
-      else if (p_angle_restriction == board.varie.TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (p_angle_restriction.is_limit_45())
          {
          p_file.write("fortyfive_degree");
          }

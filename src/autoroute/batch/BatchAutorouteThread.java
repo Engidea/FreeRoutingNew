@@ -31,7 +31,6 @@ import main.Ldbg;
 import main.Mdbg;
 import autoroute.ArtSettings;
 import board.varie.BrdValidate;
-import board.varie.TraceAngleRestriction;
 
 /**
  * Thread for the batch autoroute.
@@ -102,7 +101,7 @@ public final class BatchAutorouteThread extends BrdActionThread
       // the idea is to sip the test on release version
       if ( hdlg.debug(Mdbg.AUTORT, Ldbg.RELEASE) ) return;
 
-      if ( hdlg.get_routing_board().brd_rules.get_trace_snap_angle() != TraceAngleRestriction.FORTYFIVE_DEGREE ) return;
+      if ( ! hdlg.get_routing_board().brd_rules.is_trace_snap_45() ) return;
    
       BrdValidate.multiple_of_45_degree("after autoroute: ", hdlg.get_routing_board());
       }

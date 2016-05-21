@@ -23,7 +23,6 @@ package interactive.state;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import java.util.LinkedList;
-import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 
@@ -121,18 +120,17 @@ public class StateConstructCorner extends StateInteractive
     */
    protected void add_corner_for_snap_angle()
       {
-      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NONE)
-         {
-         return;
-         }
+      if (r_brd.brd_rules.is_trace_snap_none() ) return;
+
       PlaPointInt first_corner = corner_list.getFirst();
       PlaPointInt last_corner = corner_list.getLast();
       PlaPointInt add_corner = null;
-      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+
+      if (r_brd.brd_rules.is_trace_snap_90())
          {
          add_corner = last_corner.ninety_degree_corner(first_corner, true);
          }
-      else if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (r_brd.brd_rules.is_trace_snap_45() )
          {
          add_corner = last_corner.fortyfive_degree_corner(first_corner, true);
          }
@@ -149,12 +147,13 @@ public class StateConstructCorner extends StateInteractive
       {
       PlaPointInt result;
       boolean list_empty = (corner_list.size() == 0);
-      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE && !list_empty)
+      
+      if (r_brd.brd_rules.is_trace_snap_90() && !list_empty)
          {
          PlaPointInt last_corner = corner_list.getLast();
          result = p_point.orthogonal_projection(last_corner);
          }
-      else if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE && !list_empty)
+      else if (r_brd.brd_rules.is_trace_snap_45() && !list_empty)
          {
          PlaPointInt last_corner = corner_list.getLast();
          result = p_point.fortyfive_degree_projection(last_corner);

@@ -112,7 +112,7 @@ public final class AlgoMoveDrillItem
          ShapeConvex new_shape = (ShapeConvex) curr_shape.translate_by(p_vector);
          ShapeTile curr_tile_shape;
 
-         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY)
             {
             curr_tile_shape = new_shape.bounding_box();
             }
@@ -302,7 +302,7 @@ public final class AlgoMoveDrillItem
       boolean is_int_octagon = p_obstacle_shape.is_IntOctagon();
       double clearance_value = r_board.get_clearance(p_cl_class_no, p_via.clearance_idx(), p_layer);
       double shove_distance;
-      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE || is_int_octagon)
+      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY || is_int_octagon)
          {
          shove_distance = 0.5 * curr_via_shape.bounding_box().max_width();
          if (!search_tree.is_clearance_compensation_used())
@@ -331,7 +331,7 @@ public final class AlgoMoveDrillItem
 
       int try_count = 1;
       
-      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY)
          {
          ShapeTileBox curr_offset_box = p_obstacle_shape.bounding_box().offset(shove_distance);
          

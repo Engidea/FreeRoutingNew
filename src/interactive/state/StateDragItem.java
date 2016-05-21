@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import board.items.BrdItem;
-import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -63,11 +62,11 @@ public class StateDragItem extends StateDrag
       
       PlaPointInt from_location = previous_location.round();
       
-      if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+      if (r_brd.brd_rules.is_trace_snap_90())
          {
          to_location = to_location.orthogonal_projection(from_location);
          }
-      else if (r_brd.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (r_brd.brd_rules.is_trace_snap_45())
          {
          to_location = to_location.fortyfive_degree_projection(from_location);
          }

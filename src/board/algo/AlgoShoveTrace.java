@@ -39,7 +39,6 @@ import board.shape.ShapeSearchTree;
 import board.shape.ShapeTraceEntries;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
-import board.varie.TraceAngleRestriction;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
@@ -795,12 +794,12 @@ public final class AlgoShoveTrace
          offset_shape = (ShapeTile) offset_shape.enlarge(half_cl_offset);
          }
       
-      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY_DEGREE)
+      if (r_board.brd_rules.is_trace_snap_90())
          {
          offset_shape = offset_shape.bounding_box();
          }
       
-      else if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.FORTYFIVE_DEGREE)
+      else if (r_board.brd_rules.is_trace_snap_45())
          {
          offset_shape = offset_shape.bounding_octagon();
          }
