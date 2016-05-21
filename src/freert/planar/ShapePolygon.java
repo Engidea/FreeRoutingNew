@@ -50,19 +50,19 @@ public final class ShapePolygon extends ShapeSegments
    
    public ShapePolygon(PlaPointIntAlist p_corner_arr)
       {
-      this(new PlaPolygon(p_corner_arr));
+      this(new Polypoint(p_corner_arr));
       }
    
    
-   public ShapePolygon(PlaPolygon p_polygon)
+   public ShapePolygon(Polypoint p_polypoint)
       {
-      if (p_polygon.winding_number_after_closing() < 0)
+      if (p_polypoint.winding_number_after_closing() < 0)
          {
          // the the corners of the polygon are in clockwise sense
-         p_polygon = p_polygon.revert_corners();
+         p_polypoint = p_polypoint.revert_corners();
          }
       
-      ArrayList<PlaPointInt> curr_corners = p_polygon.corners();
+      ArrayList<PlaPointInt> curr_corners = p_polypoint.corners();
 
       int last_corner_no = curr_corners.size() - 1;
 

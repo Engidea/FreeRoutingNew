@@ -19,20 +19,21 @@ package freert.planar;
 import java.util.ArrayList;
 
 /**
- * A Polygon is a list of points in the plane, where no 2 consecutive points may be equal and no 3 consecutive points collinear.
- * That is kind of a polyline, but they do different things... still really, I wish we could use polyline or polygons, not both
+ * A Polypoint is a list of points in the plane, 
+ * where no 2 consecutive points may be equal and no 3 consecutive points collinear
+ * That is kind of a polyline, it is just that a Polypoint is an "intermediate" datastructure in freert
  * @author Alfons Wirtz#
  */
 
-public final class PlaPolygon implements java.io.Serializable, PlaObject
+public final class Polypoint implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
-   private final ArrayList<PlaPointInt> corners; 
+   private final ArrayList<PlaPointInt> point_alist; 
 
-   public PlaPolygon(PlaPointIntAlist p_point_list)
+   public Polypoint(PlaPointIntAlist p_point_list)
       {
-      corners = new ArrayList<PlaPointInt>(p_point_list.size());
+      point_alist = new ArrayList<PlaPointInt>(p_point_list.size());
 
       for (PlaPointInt a_point : p_point_list )
          {
@@ -42,7 +43,7 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
          // if this point is "colinear" with some points in the list
          if ( has_colinear(a_point)) continue;
          
-         corners.add(a_point);
+         point_alist.add(a_point);
          }
       }
 
@@ -50,15 +51,9 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
     * Use when you know corners are already good
     * @param p_corners
     */
-   private PlaPolygon ( ArrayList<PlaPointInt> p_corners )
+   private Polypoint ( ArrayList<PlaPointInt> p_corners )
       {
-      corners = p_corners;
-      }
-   
-   @Override
-   public final boolean is_NaN ()
-      {
-      return false;
+      point_alist = p_corners;
       }
 
    /**
@@ -70,15 +65,15 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
     */
    private boolean has_colinear (PlaPointInt a_point)
       {
-      int count = corners.size();
+      int count = point_alist.size();
       
       // I need at least two points in the corners for algorithm to work
       if ( count < 2 ) return false;
       
       for (int index=0; index<count-1; index++)
          {
-         PlaPointInt start = corners.get(index);
-         PlaPointInt end   = corners.get(index+1);
+         PlaPointInt start = point_alist.get(index);
+         PlaPointInt end   = point_alist.get(index+1);
          
          // the given point is not on the same line as start end
          if (a_point.side_of(start, end) != PlaSide.COLLINEAR) continue;
@@ -98,7 +93,7 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
             else
                {
                // new point is on the left of start point, close to it
-               corners.set(index, a_point);
+               point_alist.set(index, a_point);
                return true;
                }
             }
@@ -107,13 +102,13 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
             if ( d_start_end >= d_p_end )
                {
                // new point is on the right of end, close to it
-               corners.set(index+1, a_point);
+               point_alist.set(index+1, a_point);
                return true;
                }
             else
                {
                // new point is on the left, far away
-               corners.set(index, a_point);
+               point_alist.set(index, a_point);
                return true;
                }
             }
@@ -127,12 +122,8 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
     */
    private boolean has_point (PlaPointInt a_point)
       {
-      int count = corners.size();
-      
-      for (int index=0; index<count; index++)
+      for (PlaPointInt b_point : point_alist )
          {
-         PlaPointInt b_point = corners.get(index);
-         
          if ( b_point.equals(a_point)) return true;
          }
       
@@ -144,34 +135,34 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
     */
    public ArrayList<PlaPointInt> corners()
       {
-      return corners;
+      return point_alist;
       }
 
-   public PlaPointInt corner ( int index )
+   private PlaPointInt corner ( int index )
       {
-      return corners.get(index);
+      return point_alist.get(index);
       }
 
-   public int corner_size ()
+   private int corner_size ()
       {
-      return corners.size();
+      return point_alist.size();
       }
    
    /**
     * Reverts the order of the corners of this polygon.
     */
-   public PlaPolygon revert_corners()
+   public Polypoint revert_corners()
       {
-      int corner_count = corners.size();
+      int corner_count = point_alist.size();
       
       int from_idx = corner_count-1;
       
       ArrayList<PlaPointInt> reverse_corner_arr = new ArrayList<PlaPointInt>(corner_count);
 
       for (int index = 0; index < corner_count; ++index)
-         reverse_corner_arr.add( corners.get(from_idx--) );
+         reverse_corner_arr.add( point_alist.get(from_idx--) );
       
-      return new PlaPolygon(reverse_corner_arr);
+      return new Polypoint(reverse_corner_arr);
       }
 
    /**
@@ -221,7 +212,7 @@ public final class PlaPolygon implements java.io.Serializable, PlaObject
       
       if (Math.abs(angle_sum) < 0.5)
          {
-         System.err.println("Polygon.winding_number_after_closing: winding number != 0 expected");
+         System.err.println("Polypoint.winding_number_after_closing: winding number != 0 expected");
          }
       
       return (int) Math.round(angle_sum);
