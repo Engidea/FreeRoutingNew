@@ -86,7 +86,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
       corner_first = corners_list.get(0);
       
       // construct perpendicular lines at the start and at the end to represent
-      PlaDirection dir = PlaDirection.get_instance(corner_first, corners_list.get(1));
+      PlaDirection dir = new PlaDirection(corner_first, corners_list.get(1));
+
       lines_list.add(new PlaLineInt(corner_first, dir.turn_45_degree(2)) );
 
       for (int index = 1; index < input_len; ++index)
@@ -95,7 +96,8 @@ public final class Polyline implements java.io.Serializable, PlaObject
       corner_last = corners_list.get(input_len - 1);
       
       // the first and the last point of point_arr as intersection of lines.
-      dir = PlaDirection.get_instance(corner_last, corners_list.get(input_len - 2));
+      dir = new PlaDirection(corner_last, corners_list.get(input_len - 2));
+
       lines_list.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
       
       corners_allocate(corner_count());
@@ -208,10 +210,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
       corner_first = p_from_corner;
       
       lines_list = new ArrayList<PlaLineInt>(3);
-      PlaDirection dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
+      
+      PlaDirection dir = new PlaDirection(p_from_corner, p_to_corner);
+      
       lines_list.add( new PlaLineInt(p_from_corner, dir.turn_45_degree(2)) );
       lines_list.add( new PlaLineInt(p_from_corner, p_to_corner) );
-      dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
       lines_list.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
       
       corners_allocate(corner_count());

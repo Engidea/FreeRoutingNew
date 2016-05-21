@@ -38,17 +38,6 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    private final PlaDirection line_dir; 
    
    boolean is_nan;
-   
-   /**
-    * creates a kind of null line
-    */
-   public PlaLineInt()
-      {
-      is_nan   = true;
-      point_a  = new PlaPointInt ();
-      point_b  = new PlaPointInt ();
-      line_dir = new PlaDirection();
-      }
 
    public PlaLineInt(PlaPointInt p_a, PlaPointInt p_b)
       {

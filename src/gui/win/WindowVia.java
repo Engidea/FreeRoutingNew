@@ -21,6 +21,7 @@
 package gui.win;
 
 import freert.planar.PlaCoordTransform;
+import freert.planar.PlaPointInt;
 import freert.planar.ShapeCircle;
 import freert.planar.ShapeConvex;
 import freert.rules.BoardRules;
@@ -352,7 +353,7 @@ public class WindowVia extends GuiSubWindowSavable
             int circle_radius = (int) Math.round(coordinate_transform.user_to_board(radius));
             if (circle_radius > 0)
                {
-               padstack_shapes[i] = new ShapeCircle(freert.planar.PlaPointInt.ZERO, circle_radius);
+               padstack_shapes[i] = new ShapeCircle(PlaPointInt.ZERO, circle_radius);
                shape_exists = true;
                }
             }

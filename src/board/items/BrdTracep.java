@@ -1590,9 +1590,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          prev_end_corner = polyline.corner_last_prev().round();
          }
       
-      PlaDirection trace_end_direction = PlaDirection.get_instance(prev_end_corner, end_corner);
+      PlaDirection trace_end_direction = new PlaDirection(prev_end_corner, end_corner);
       
-      if (trace_end_direction == null) return true;
+      if ( trace_end_direction.is_NaN() ) return true;
       
       BrdTraceExitRestriction matching_exit_restriction = null;
       for (BrdTraceExitRestriction curr_exit_restriction : trace_exit_restrictions)

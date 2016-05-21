@@ -57,14 +57,14 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       if (p_from_corner.equals(p_to_corner))
          throw new IllegalArgumentException(classname+"C must contain at least 2 different points");
 
-      PlaDirection dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      start = new PlaLineInt(p_from_corner, dir.turn_45_degree(2));
+      PlaDirection dir = new PlaDirection(p_from_corner, p_to_corner);
+      
+      start  = new PlaLineInt(p_from_corner, dir.turn_45_degree(2));
       middle = new PlaLineInt(p_from_corner, p_to_corner);
-      dir = PlaDirection.get_instance(p_from_corner, p_to_corner);
-      end = new PlaLineInt(p_to_corner, dir.turn_45_degree(2));
+      end    = new PlaLineInt(p_to_corner, dir.turn_45_degree(2));
       
       start_point = p_from_corner;
-      end_point = p_to_corner;
+      end_point   = p_to_corner;
       }
    
    

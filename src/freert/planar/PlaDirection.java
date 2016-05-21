@@ -39,60 +39,72 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    {
    private static final long serialVersionUID = 1L;
 
-   public static final PlaDirection NULL = new PlaDirection(0, 0);
+   public static final PlaDirection NULL = new PlaDirection(0, 0, true);
    // the direction to the east
-   public static final PlaDirection RIGHT = new PlaDirection(1, 0);
+   public static final PlaDirection RIGHT = new PlaDirection(1, 0, false);
    // the direction to the northeast
-   public static final PlaDirection RIGHT45 = new PlaDirection(1, 1);
+   public static final PlaDirection RIGHT45 = new PlaDirection(1, 1, false);
    // the direction to the north
-   public static final PlaDirection UP = new PlaDirection(0, 1);
+   public static final PlaDirection UP = new PlaDirection(0, 1, false);
    // the direction to the northwest
-   public static final PlaDirection UP45 = new PlaDirection(-1, 1);
+   public static final PlaDirection UP45 = new PlaDirection(-1, 1, false);
    // the direction to the west
-   public static final PlaDirection LEFT = new PlaDirection(-1, 0);
+   public static final PlaDirection LEFT = new PlaDirection(-1, 0, false);
    // the direction to the southwest
-   public static final PlaDirection LEFT45 = new PlaDirection(-1, -1);
+   public static final PlaDirection LEFT45 = new PlaDirection(-1, -1, false);
    // the direction to the south
-   public static final PlaDirection DOWN = new PlaDirection(0, -1);
+   public static final PlaDirection DOWN = new PlaDirection(0, -1, false);
    // the direction to the southeast
-   public static final PlaDirection DOWN45 = new PlaDirection(1, -1);
+   public static final PlaDirection DOWN45 = new PlaDirection(1, -1, false);
 
-   public final long dir_y;   // this is normally the top part of the m coefficient
-   public final long dir_x;   // this is the bottom part
+   private final long dir_y;   // this is normally the top part of the m coefficient
+   private final long dir_x;   // this is the bottom part
    
    public final boolean is_vertical;
    public final boolean is_horizontal;
    
    private boolean is_NaN;
    
-   public PlaDirection()
-      {
-      is_NaN = true;
-      dir_x = 0;
-      dir_y = 0;
-      is_vertical = true;
-      is_horizontal = true;
-      }
-   
-   
    /**
     * Use this one only if you know that the values are already gcd
+    * This is the reason for private
+    * Note that NaN should be preserved, since It may be an operation with a NaN
     */
-   private PlaDirection(long p_x, long p_y)
+   private PlaDirection(long p_x, long p_y, boolean p_NaN)
       {
       dir_x = p_x;
       dir_y = p_y;
       is_vertical   = dir_x == 0;
       is_horizontal = dir_y == 0;
+      is_NaN = p_NaN;
       }
 
    /**
-    * Used whan you ahve a rational vector
+    * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
+    * This can never be a NaN
+    */
+   public PlaDirection (double p_angle_rad)
+      {
+      this ((long)(Math.cos(p_angle_rad) * 10000), (long)(Math.sin(p_angle_rad) * 10000), false );
+      }
+   
+   /**
+    * Used when you want to attempt to reduce the value of the dx and dy
     * @param dx
     * @param dy
     */
-   PlaDirection (BigInteger dx, BigInteger dy )
+   private PlaDirection (BigInteger dx, BigInteger dy )
       {
+      if ( dx.signum() == 0  && dy.signum() == 0 )
+         {
+         dir_x         = 0;
+         dir_y         = 0;
+         is_vertical   = true;
+         is_horizontal = true;
+         is_NaN = true;
+         return;
+         }
+      
       BigInteger gcd = dx.gcd(dy);
       
       if ( gcd.signum() != 0 )
@@ -122,15 +134,15 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
     * The two points define a "line" and I want a direction of that
     * To get it, you simply "move p_b so it is actually centered at zero with reference p_a
     * The resulting value should be "reduced"
+    * Note that the result may be a NaN if the point are the same
 \   */
    public PlaDirection(PlaPointInt p_a, PlaPointInt p_b)
       {
       this ( BigInteger.valueOf(p_b.v_x - p_a.v_x),BigInteger.valueOf(p_b.v_y - p_a.v_y));
       }
    
-   
    /**
-    * Construct a Direction from an IntVector
+    * Construct a Direction from an IntVector, an int vector is already centered at zero
     * One key point is to "reduce" the points using the gcd
     * @param p_vector
     */
@@ -139,38 +151,8 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       this ( BigInteger.valueOf(p_vector.v_x),BigInteger.valueOf(p_vector.v_y));
       }
    
-   /**
-    * Creates a Direction whose angle with the x-axis is nearly equal to p_angle
-    */
-   public PlaDirection (double p_angle)
-      {
-      this(vector_from_angle(p_angle));
-      }
    
-   private static PlaVectorInt vector_from_angle (double p_angle )
-      {
-      double scale_factor = 10000;
-      
-      double x = Math.cos(p_angle) * scale_factor;
-      double y = Math.sin(p_angle) * scale_factor;
-      
-      return new PlaVectorInt(x, y);
-      }
 
-   /**
-    * Calculates the direction from p_from to p_to. 
-    * If p_from and p_to are equal, null is returned.
-    */
-   public static final PlaDirection get_instance(PlaPointInt p_a, PlaPointInt p_b)
-      {
-      if (p_a.equals(p_b)) return null;
-
-      // basically change the origin of p_b to be p_a, so p_b becomes a "direction"
-      int vd_x = p_b.v_x - p_a.v_x;
-      int vd_y = p_b.v_y - p_a.v_y;
-      
-      return new PlaDirection(BigInteger.valueOf(vd_x), BigInteger.valueOf(vd_y));
-      }
 
    
    @Override
@@ -233,34 +215,6 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      return new PlaDirection(BigInteger.valueOf(new_x),BigInteger.valueOf(new_y));
      }
   
-  /**
-   * Used while trying to calculate intersection of thwo lines
-   * @param p_other
-   * @return
-   */
-  public PlaDirection subtract ( PlaDirection p_other )
-     {
-     if ( dir_x == p_other.dir_x )
-        {
-        // if the denominator is the same, then it is just a difference
-        return new PlaDirection(dir_y - p_other.dir_y, dir_x);
-        }
-     
-     
-     long denom = dir_x * p_other.dir_x;
-     
-     long my_y    = dir_y * p_other.dir_x;
-     long other_y = p_other.dir_y * dir_x;
-
-     long numerator = my_y - other_y;
-     
-     return new PlaDirection(BigInteger.valueOf(denom),BigInteger.valueOf(numerator) );
-     }
-
-  
-  
-  
-  
   @Override
   public int compareTo(PlaDirection p_other)
      {
@@ -321,7 +275,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    */
   public PlaDirection opposite()
      {
-     return new PlaDirection(-dir_x, -dir_y);
+     return new PlaDirection(-dir_x, -dir_y, is_NaN);
      }
 
    /**
@@ -367,11 +321,10 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
            new_y = dir_y - dir_x;
            break;
         default:
-           new_x = 0;
-           new_y = 0;
+           return new PlaDirection(0, 0, true);
         }
      
-     return new PlaDirection(new_x, new_y);
+     return new PlaDirection(new_x, new_y, is_NaN);
      }
 
 
@@ -486,6 +439,12 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
       {
       return new PlaPointFloat(dir_x, dir_y);
       }
+   
+   public final PlaVectorInt to_vector ()
+      {
+      return new PlaVectorInt(dir_x, dir_y);
+      }
+   
    
    /**
     * Returns 1, if the angle between p_1 and this direction is bigger the angle between p_2 and this direction, 

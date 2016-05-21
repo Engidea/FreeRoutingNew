@@ -26,7 +26,7 @@ import freert.varie.MathAux;
  * @author Alfons Wirtz
  */
 
-public final class PlaPointInt extends PlaPoint implements java.io.Serializable
+public class PlaPointInt extends PlaPoint implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 //   private static final String classname="PlaPointInt.";
@@ -174,7 +174,9 @@ public final class PlaPointInt extends PlaPoint implements java.io.Serializable
 
    public final PlaPointInt translate_by(PlaDirection p_dir)
       {
-      return new PlaPointInt(v_x + p_dir.dir_x, v_y + p_dir.dir_y);
+      PlaVectorInt move = p_dir.to_vector();
+      
+      return new PlaPointInt(v_x + move.v_x, v_y + move.v_y);
       }
 
    /**
