@@ -36,6 +36,7 @@ import gui.varie.IndentFileWriter;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 import java.util.Set;
 import specctra.varie.DsnPackageKeepout;
 import specctra.varie.DsnReadUtils;
@@ -1430,16 +1431,18 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          }
 
       // insert the keepouts belonging to the package (k = 1 for via keepouts)
-      for (int k = 0; k <= 2; ++k)
+      for (int keepout = 0; keepout <= 2; ++keepout)
          {
          DsnPackageKeepout[] keepout_arr;
-         java.util.Map<String, DsnClearanceInfo> curr_keepout_infos;
-         if (k == 0)
+         
+         Map<String, DsnClearanceInfo> curr_keepout_infos;
+         
+         if (keepout == 0)
             {
             keepout_arr = curr_package.keepout_arr;
             curr_keepout_infos = p_location.keepout_infos;
             }
-         else if (k == 1)
+         else if (keepout == 1)
             {
             keepout_arr = curr_package.via_keepout_arr;
             curr_keepout_infos = p_location.via_keepout_infos;
@@ -1449,21 +1452,26 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             keepout_arr = curr_package.place_keepout_arr;
             curr_keepout_infos = p_location.place_keepout_infos;
             }
-         for (int i = 0; i < keepout_arr.length; ++i)
+         
+         for (int index = 0; index < keepout_arr.length; ++index)
             {
-            DsnPackageKeepout curr_keepout = keepout_arr[i];
+            DsnPackageKeepout curr_keepout = keepout_arr[index];
             int layer = curr_keepout.layer;
             if (layer >= routing_board.get_layer_count())
                {
                System.out.println("Network.insert_component: keepout layer is to big");
                continue;
                }
+            
             if (layer >= 0 && !p_location.is_front)
                {
                layer = routing_board.get_layer_count() - curr_keepout.layer - 1;
                }
+            
             int clearance_class = routing_board.brd_rules.get_default_net_class().default_item_clearance_classes.get(ItemClass.AREA);
+            
             DsnClearanceInfo keepout_info = curr_keepout_infos.get(curr_keepout.name);
+            
             if (keepout_info != null)
                {
                int curr_clearance_class = routing_board.brd_rules.clearance_matrix.get_no(keepout_info.clearance_class);
@@ -1475,7 +1483,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
             
             if (layer >= 0)
                {
-               if (k == 0)
+               if (keepout == 0)
                   {
                   routing_board.insert_obstacle(
                         curr_keepout.area, 
@@ -1488,7 +1496,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                         curr_keepout.name,
                         fixed_state);
                   }
-               else if (k == 1)
+               else if (keepout == 1)
                   {
                   routing_board.insert_via_obstacle(
                         curr_keepout.area, 
@@ -1522,7 +1530,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                   {
                   if (routing_board.layer_structure.is_signal(jndex))
                      {
-                     if (k == 0)
+                     if (keepout == 0)
                         {
                         routing_board.insert_obstacle(
                               curr_keepout.area, 
@@ -1535,7 +1543,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                               curr_keepout.name,
                               fixed_state);
                         }
-                     else if (k == 1)
+                     else if (keepout == 1)
                         {
                         routing_board.insert_via_obstacle(
                               curr_keepout.area, 

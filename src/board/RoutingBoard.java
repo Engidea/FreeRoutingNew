@@ -273,8 +273,8 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Inserts an obstacle into the board , whose geometry is described by a polygonyal shape, which may have holes. If
-    * p_component_no != 0, the obstacle belongs to a component.
+    * Inserts an obstacle into the board , whose geometry is described by a polygonyal shape, which may have holes.
+    * This is most likely experimental stuff that has beun but not yet functional
     */
    public void insert_obstacle(PlaArea p_area, int p_layer, int p_clearance_class, ItemFixState p_fixed_state)
       {

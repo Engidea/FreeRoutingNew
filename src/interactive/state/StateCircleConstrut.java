@@ -121,10 +121,9 @@ public class StateCircleConstrut extends StateInteractive
          {
          i_brd.screen_messages.set_status_message(resources.getString("keepout_cancelled_because_of_overlaps"));
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
-         }
+
+      actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
+
       i_brd.repaint();
       return return_state;
       }
