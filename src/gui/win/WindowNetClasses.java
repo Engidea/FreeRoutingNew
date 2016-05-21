@@ -210,10 +210,9 @@ public class WindowNetClasses extends GuiSubWindowSavable
 
    private class AddNetClassListener implements java.awt.event.ActionListener
       {
-
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board_frame.board_panel.board_handling.get_routing_board().brd_rules.append_net_class(board_frame.get_locale());
+         board_frame.board_panel.board_handling.get_routing_board().brd_rules.append_net_class();
          adjust_table();
          }
       }

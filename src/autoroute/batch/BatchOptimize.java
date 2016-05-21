@@ -18,7 +18,7 @@ package autoroute.batch;
 import freert.planar.PlaPointFloat;
 import freert.rules.BoardRules;
 import freert.varie.UndoableObjectNode;
-import gui.varie.UndoableObjectStorable;
+import freert.varie.UndoableObjectStorable;
 import interactive.BrdActionThread;
 import java.util.Collection;
 import java.util.Iterator;

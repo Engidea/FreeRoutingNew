@@ -20,6 +20,8 @@
 
 package gui.win;
 
+import freert.rules.NetClass;
+import freert.rules.NetClasses;
 import freert.rules.RuleNet;
 import freert.rules.RuleNets;
 import gui.BoardFrame;
@@ -120,19 +122,20 @@ public class WindowNets extends WindowObjectListWithFilter
             {
             return;
             }
-         freert.rules.NetClasses net_classes = board_frame.board_panel.board_handling.get_routing_board().brd_rules.net_classes;
-         freert.rules.NetClass[] class_arr = new freert.rules.NetClass[net_classes.count()];
+         NetClasses net_classes = board_frame.board_panel.board_handling.get_routing_board().brd_rules.net_classes;
+         NetClass[] class_arr = new NetClass[net_classes.count()];
          for (int i = 0; i < class_arr.length; ++i)
             {
             class_arr[i] = net_classes.get(i);
             }
+         
          Object selected_value = javax.swing.JOptionPane.showInputDialog(null, resources.getString("message_1"), resources.getString("message_2"), javax.swing.JOptionPane.INFORMATION_MESSAGE, null,
                class_arr, class_arr[0]);
-         if (!(selected_value instanceof freert.rules.NetClass))
+         if (!(selected_value instanceof NetClass))
             {
             return;
             }
-         freert.rules.NetClass selected_class = (freert.rules.NetClass) selected_value;
+         NetClass selected_class = (NetClass) selected_value;
          for (int i = 0; i < selected_nets.length; ++i)
             {
             ((RuleNet) selected_nets[i]).set_class(selected_class);

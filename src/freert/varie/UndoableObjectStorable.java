@@ -1,4 +1,4 @@
-package gui.varie;
+package freert.varie;
 
 /**
  * Condition for an Object to be stored in an UndoableObjects database.

@@ -20,6 +20,7 @@
 
 package board.infos;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  *
  * @author Alfons Wirtz
  */
-public final class BrdViaInfoList implements java.io.Serializable, PrintableInfo
+public final class BrdViaInfoList implements java.io.Serializable, PrintableInfo, Iterable<BrdViaInfo>
    {
    private static final long serialVersionUID = 1L;
 
@@ -48,6 +49,11 @@ public final class BrdViaInfoList implements java.io.Serializable, PrintableInfo
       return true;
       }
 
+   public Iterator<BrdViaInfo> iterator()
+      {
+      return vinfo_list.iterator();
+      }
+   
    /**
     * Returns the number of different vias, which can be used for routing.
     */

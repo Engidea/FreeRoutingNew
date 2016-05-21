@@ -1,6 +1,5 @@
 package freert.varie;
 
-import gui.varie.UndoableObjectStorable;
 
 /**
  * Stores informations for correct restoring or canceling an object in an undo or redo operation.

@@ -24,8 +24,8 @@ import freert.library.LibLogicalPart;
 import freert.library.LibPackage;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
+import freert.varie.UndoableObjectStorable;
 import gui.varie.ObjectInfoPanel;
-import gui.varie.UndoableObjectStorable;
 
 /**
  * Describes board components consisting of an array of pins and other stuff like component keepouts.

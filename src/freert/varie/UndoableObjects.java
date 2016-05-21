@@ -19,7 +19,6 @@
  */
 package freert.varie;
 
-import gui.varie.UndoableObjectStorable;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;

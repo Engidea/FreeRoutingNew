@@ -41,9 +41,9 @@ public final class GuiConfigFile
    {
    private final BoardFrame board_frame;
    private final interactive.IteraBoard board_handling;
-   /** Used, when reading a defaults file, null otherwise. */
+   // Used, when reading a defaults file, null otherwise. 
    private final GuiConfigScanner scanner;
-   /** Used, when writing a defaults file; null otherwise. */
+   // Used, when writing a defaults file; null otherwise
    private final IndentFileWriter out_file;
 
    /**
@@ -74,7 +74,7 @@ public final class GuiConfigFile
       config_file.read_defaults_scope();
       }
 
-   private GuiConfigFile(gui.BoardFrame p_board_frame, interactive.IteraBoard p_board_handling, GuiConfigScanner p_scanner, IndentFileWriter p_output_file)
+   private GuiConfigFile(BoardFrame p_board_frame, interactive.IteraBoard p_board_handling, GuiConfigScanner p_scanner, IndentFileWriter p_output_file)
       {
       board_frame = p_board_frame;
       board_handling = p_board_handling;

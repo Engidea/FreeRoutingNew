@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Vector;
 import board.RoutingBoard;
 import freert.varie.UndoableObjectNode;
-import gui.varie.UndoableObjectStorable;
+import freert.varie.UndoableObjectStorable;
 
 /**
  * Describes a board library of packages and padstacks.

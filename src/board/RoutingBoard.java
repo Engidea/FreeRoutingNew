@@ -88,8 +88,8 @@ import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimit;
 import freert.varie.TimeLimitStoppable;
 import freert.varie.UndoableObjectNode;
+import freert.varie.UndoableObjectStorable;
 import freert.varie.UndoableObjects;
-import gui.varie.UndoableObjectStorable;
 
 /**
  * Contains higher level functions of a board

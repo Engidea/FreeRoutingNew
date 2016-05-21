@@ -8,7 +8,7 @@ import board.items.BrdItem;
 import board.items.BrdTracep;
 import freert.planar.PlaPointFloat;
 import freert.varie.UndoableObjectNode;
-import gui.varie.UndoableObjectStorable;
+import freert.varie.UndoableObjectStorable;
 
 /**
  * Reads the vias and traces on the board in ascending x order. 

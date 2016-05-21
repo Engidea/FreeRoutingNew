@@ -50,8 +50,8 @@ import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.rules.RuleNets;
 import freert.varie.NetNosList;
+import freert.varie.UndoableObjectStorable;
 import gui.varie.ObjectInfoPanel;
-import gui.varie.UndoableObjectStorable;
 
 /**
  * Basic class of the items on a board.

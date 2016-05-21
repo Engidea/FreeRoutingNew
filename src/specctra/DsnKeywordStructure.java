@@ -39,8 +39,8 @@ import freert.rules.ClearanceMatrix;
 import freert.varie.ItemClass;
 import freert.varie.NetNosList;
 import freert.varie.UndoableObjectNode;
+import freert.varie.UndoableObjectStorable;
 import gui.varie.IndentFileWriter;
-import gui.varie.UndoableObjectStorable;
 
 /**
  * Class for reading and writing structure scopes from dsn-files.

@@ -23,8 +23,8 @@ package gui.win;
 import freert.library.LibPadstack;
 import freert.library.LibPadstacks;
 import freert.varie.UndoableObjectNode;
+import freert.varie.UndoableObjectStorable;
 import gui.BoardFrame;
-import gui.varie.UndoableObjectStorable;
 import board.items.BrdAbit;
 
 /**

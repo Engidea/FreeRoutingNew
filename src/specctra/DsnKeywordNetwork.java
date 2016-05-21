@@ -199,9 +199,9 @@ public class DsnKeywordNetwork extends DsnKeywordScope
 
    public static void write_net_classes(DsnWriteScopeParameter p_par) throws java.io.IOException
       {
-      for (int i = 0; i < p_par.board.brd_rules.net_classes.count(); ++i)
+      for (NetClass a_class : p_par.board.brd_rules.net_classes )
          {
-         write_net_class(p_par.board.brd_rules.net_classes.get(i), p_par);
+         write_net_class(a_class, p_par);
          }
       }
 
@@ -711,9 +711,9 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          {
          p_board.brd_rules.create_default_via_rule(p_board.brd_rules.get_default_net_class(), "default");
          }
-      for (int i = 0; i < p_board.brd_rules.net_classes.count(); ++i)
+      for (NetClass a_class : p_board.brd_rules.net_classes )
          {
-         p_board.brd_rules.net_classes.get(i).set_via_rule(p_board.brd_rules.get_default_via_rule());
+         a_class.set_via_rule(p_board.brd_rules.get_default_via_rule());
          }
       }
 

@@ -22,6 +22,7 @@ package freert.rules;
 
 import gui.varie.GuiResources;
 import interactive.IteraBoard;
+import java.util.Iterator;
 import java.util.Vector;
 import board.BrdLayerStructure;
 
@@ -30,7 +31,7 @@ import board.BrdLayerStructure;
  *
  * @author Alfons Wirtz
  */
-public class NetClasses implements java.io.Serializable
+public class NetClasses implements java.io.Serializable, Iterable<NetClass>
    {
    private static final long serialVersionUID = 1L;
 
@@ -44,12 +45,17 @@ public class NetClasses implements java.io.Serializable
       return class_list.size();
       }
 
+   public Iterator<NetClass> iterator ()
+      {
+      return class_list.iterator();
+      }
    /**
     * Returns the net class with index p_index.
     */
    public NetClass get(int p_index)
       {
       assert p_index >= 0 && p_index <= class_list.size() - 1;
+      
       return class_list.get(p_index);
       }
 
@@ -60,11 +66,9 @@ public class NetClasses implements java.io.Serializable
       {
       for (NetClass curr_class : class_list)
          {
-         if (curr_class.get_name().equals(p_name))
-            {
-            return curr_class;
-            }
+         if (curr_class.get_name().equals(p_name)) return curr_class;
          }
+
       return null;
       }
 

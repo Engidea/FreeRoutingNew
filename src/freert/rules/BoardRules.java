@@ -31,6 +31,7 @@ import java.util.Vector;
 import board.BrdLayerStructure;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
+import board.items.BrdItem;
 import board.varie.TraceAngleRestriction;
 
 /**
@@ -164,6 +165,7 @@ public final class BoardRules implements Serializable
          // net rules not yet initialized
          create_default_net_class();
          }
+      
       return net_classes.get(0);
       }
 
@@ -234,7 +236,7 @@ public final class BoardRules implements Serializable
       p_net_class.set_via_rule(default_rule);
       }
 
-   public void create_default_net_class()
+   private void create_default_net_class()
       {
       // add the default net rule
       NetClass default_net_class = net_classes.append("default", layer_structure, clearance_matrix);
@@ -246,7 +248,7 @@ public final class BoardRules implements Serializable
    /**
     * Appends a new net class initialized with default data and a default name.
     */
-   public NetClass append_net_class(java.util.Locale p_locale)
+   public NetClass append_net_class()
       {
       NetClass new_class = net_classes.append(layer_structure, clearance_matrix, itera_board);
       NetClass default_class = net_classes.get(0);
@@ -263,16 +265,18 @@ public final class BoardRules implements Serializable
    public NetClass append_net_class(String p_name)
       {
       NetClass found_class = net_classes.get(p_name);
-      if (found_class != null)
-         {
-         return found_class;
-         }
+      
+      if (found_class != null) return found_class;
+      
       NetClass new_class = net_classes.append(p_name, layer_structure, clearance_matrix);
+      
       NetClass default_class = net_classes.get(0);
+      
       new_class.default_item_clearance_classes = new DefaultItemClearanceClasses(default_class.default_item_clearance_classes);
       new_class.set_via_rule(default_class.get_via_rule());
       new_class.set_trace_half_width(default_class.get_trace_half_width(0));
       new_class.set_trace_clearance_class(default_class.get_trace_clearance_class());
+
       return new_class;
       }
 
@@ -316,13 +320,13 @@ public final class BoardRules implements Serializable
             }
          }
 
-      for (int i = 0; i < net_classes.count(); ++i)
+      for (NetClass curr_net_class : net_classes )
          {
-         freert.rules.NetClass curr_net_class = net_classes.get(i);
          if (curr_net_class.get_trace_clearance_class() == p_from_no)
             {
             curr_net_class.set_trace_clearance_class(p_to_no);
             }
+         
          for (ItemClass curr_item_class : ItemClass.values())
             {
             if (curr_net_class.default_item_clearance_classes.get(curr_item_class) == p_from_no)
@@ -332,9 +336,9 @@ public final class BoardRules implements Serializable
             }
          }
 
-      for (int i = 0; i < via_infos.count(); ++i)
+      for (int index = 0; index < via_infos.count(); ++index)
          {
-         board.infos.BrdViaInfo curr_via = via_infos.get(i);
+         BrdViaInfo curr_via = via_infos.get(index);
          if (curr_via.get_clearance_class() == p_from_no)
             {
             curr_via.set_clearance_class(p_to_no);
@@ -348,20 +352,16 @@ public final class BoardRules implements Serializable
     */
    public boolean remove_clearance_class(int p_index, java.util.Collection<board.items.BrdItem> p_board_items)
       {
-      for (board.items.BrdItem curr_item : p_board_items)
+      for (BrdItem curr_item : p_board_items)
          {
-         if (curr_item.clearance_idx() == p_index)
-            {
-            return false;
-            }
+         if (curr_item.clearance_idx() == p_index) return false;
          }
-      for (int i = 0; i < net_classes.count(); ++i)
+      
+      
+      for (NetClass curr_net_class : net_classes )
          {
-         freert.rules.NetClass curr_net_class = net_classes.get(i);
-         if (curr_net_class.get_trace_clearance_class() == p_index)
-            {
-            return false;
-            }
+         if (curr_net_class.get_trace_clearance_class() == p_index) return false;
+
          for (ItemClass curr_item_class : ItemClass.values())
             {
             if (curr_net_class.default_item_clearance_classes.get(curr_item_class) == p_index)
@@ -371,16 +371,12 @@ public final class BoardRules implements Serializable
             }
          }
 
-      for (int i = 0; i < via_infos.count(); ++i)
+      for (BrdViaInfo curr_via : via_infos )
          {
-         board.infos.BrdViaInfo curr_via = via_infos.get(i);
-         if (curr_via.get_clearance_class() == p_index)
-            {
-            return false;
-            }
+         if (curr_via.get_clearance_class() == p_index) return false;
          }
 
-      for (board.items.BrdItem curr_item : p_board_items)
+      for ( BrdItem curr_item : p_board_items)
          {
          if (curr_item.clearance_idx() > p_index)
             {
@@ -407,7 +403,7 @@ public final class BoardRules implements Serializable
 
       for (int i = 0; i < via_infos.count(); ++i)
          {
-         board.infos.BrdViaInfo curr_via = via_infos.get(i);
+         BrdViaInfo curr_via = via_infos.get(i);
          if (curr_via.get_clearance_class() > p_index)
             {
             curr_via.set_clearance_class(curr_via.get_clearance_class() - 1);

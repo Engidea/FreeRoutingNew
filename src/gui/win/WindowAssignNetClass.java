@@ -25,7 +25,13 @@ import freert.rules.RuleNet;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.table.JTableHeader;
 import board.RoutingBoard;
 
 /**
@@ -36,13 +42,13 @@ public class WindowAssignNetClass extends GuiSubWindowSavable
    {
    private static final long serialVersionUID = 1L;
 
-   private final javax.swing.JPanel main_panel;
+   private final JPanel main_panel;
 
-   private javax.swing.JScrollPane scroll_pane;
+   private JScrollPane scroll_pane;
    private AssignRuleTable table;
    private AssignRuleTableModel table_model;
 
-   private javax.swing.JComboBox<NetClass> net_rule_combo_box;
+   private JComboBox<NetClass> net_rule_combo_box;
 
    private final GuiResources resources;
 
@@ -57,13 +63,13 @@ public class WindowAssignNetClass extends GuiSubWindowSavable
       
       this.setTitle(resources.getString("title"));
 
-      this.main_panel = new javax.swing.JPanel();
+      this.main_panel = new JPanel();
       this.main_panel.setLayout(new java.awt.BorderLayout());
 
       this.table_model = new AssignRuleTableModel();
       this.table = new AssignRuleTable(this.table_model);
-      this.table.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-      this.scroll_pane = new javax.swing.JScrollPane(this.table);
+      this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      this.scroll_pane = new JScrollPane(this.table);
       int table_height = TEXTFIELD_HEIGHT * Math.min(this.table_model.getRowCount(), 20);
       int table_width = TEXTFIELD_WIDTH * this.table_model.getColumnCount();
       this.table.setPreferredScrollableViewportSize(new java.awt.Dimension(table_width, table_height));
@@ -80,11 +86,13 @@ public class WindowAssignNetClass extends GuiSubWindowSavable
       {
       this.net_rule_combo_box = new JComboBox<NetClass>();
       RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
-      for (int i = 0; i < routing_board.brd_rules.net_classes.count(); ++i)
+      
+      for (NetClass a_class : routing_board.brd_rules.net_classes )
          {
-         net_rule_combo_box.addItem(routing_board.brd_rules.net_classes.get(i));
+         net_rule_combo_box.addItem(a_class);
          }
-      this.table.getColumnModel().getColumn(1).setCellEditor(new javax.swing.DefaultCellEditor(net_rule_combo_box));
+      
+      this.table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(net_rule_combo_box));
       }
 
    public void refresh()
@@ -99,7 +107,7 @@ public class WindowAssignNetClass extends GuiSubWindowSavable
       add_net_class_combo_box();
       }
 
-   private class AssignRuleTable extends javax.swing.JTable
+   private class AssignRuleTable extends JTable
       {
       private static final long serialVersionUID = 1L;
 
@@ -109,9 +117,9 @@ public class WindowAssignNetClass extends GuiSubWindowSavable
          }
 
       // Implement table header tool tips.
-      protected javax.swing.table.JTableHeader createDefaultTableHeader()
+      protected JTableHeader createDefaultTableHeader()
          {
-         return new javax.swing.table.JTableHeader(columnModel)
+         return new JTableHeader(columnModel)
             {
             private static final long serialVersionUID = 1L;
 

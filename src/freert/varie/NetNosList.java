@@ -27,7 +27,6 @@ import board.shape.ShapeTreeObject;
 /**
  * QUite a few of the functions require a list of net numbers to check on It is for various use, not necessarly for deny access
  * Using the raw type makes parameter checking quite cumbersome, so, let's wrap it up
- * Note that inner object visibility is temporary, untils the whole mess is fixed.
  * 
  * @author damiano
  *
