@@ -53,57 +53,55 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * intersection of the i-th and the i+1-th lines of the new created p_polyline for 0 <= i < p_point_arr.length.
     * There is quite some checks done to ensure the result is meaningfult 
     */
-   public Polyline(PlaPointIntAlist point_arr)
+   public Polyline(PlaPointIntAlist points_alist)
       {
-      int initial_len = point_arr.size(); 
+      int initial_len = points_alist.size(); 
       
       if ( initial_len < 2)
          throw new IllegalArgumentException(classname+"A must contain at least 2 different points");
 
-      ArrayList<PlaPointInt> corners_list = new ArrayList<PlaPointInt>(initial_len);
+      ArrayList<PlaPointInt> corners_alist = new ArrayList<PlaPointInt>(initial_len);
       
-      for ( int index=0; index< initial_len; index++ )
+      for ( PlaPointInt a_point : points_alist )
          {
-         PlaPointInt a_point = point_arr.get(index);
-         
          if ( a_point == null ) continue;
          
          // if this point is already in the list
-         if ( has_point(corners_list, a_point) ) continue;
+         if ( has_point(corners_alist, a_point) ) continue;
          
          // if this point is "colinear" with some points in the list
-         if ( has_colinear(corners_list, a_point)) continue;
+         if ( has_colinear(corners_alist, a_point)) continue;
          
-         corners_list.add(a_point);
+         corners_alist.add(a_point);
          }
       
       // Now that the list of points is cleaned up we go again
-      int input_len = corners_list.size(); 
+      int input_len = corners_alist.size(); 
 
       // this is the actual result
       lines_list = new ArrayList<PlaLineInt>(input_len + 1);
 
-      corner_first = corners_list.get(0);
+      corner_first = corners_alist.get(0);
       
       // construct perpendicular lines at the start and at the end to represent
-      PlaDirection dir = new PlaDirection(corner_first, corners_list.get(1));
+      PlaDirection dir = new PlaDirection(corner_first, corners_alist.get(1));
 
       lines_list.add(new PlaLineInt(corner_first, dir.turn_45_degree(2)) );
 
       for (int index = 1; index < input_len; ++index)
-         lines_list.add( new PlaLineInt(corners_list.get(index - 1), corners_list.get(index) ) );
+         lines_list.add( new PlaLineInt(corners_alist.get(index - 1), corners_alist.get(index) ) );
       
-      corner_last = corners_list.get(input_len - 1);
+      corner_last = corners_alist.get(input_len - 1);
       
       // the first and the last point of point_arr as intersection of lines.
-      dir = new PlaDirection(corner_last, corners_list.get(input_len - 2));
+      dir = new PlaDirection(corner_last, corners_alist.get(input_len - 2));
 
       lines_list.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
       
       corners_allocate(corner_count());
       
       for ( int index=0; index < input_len; index ++ ) 
-         precalculated_corners[index] = corners_list.get(index);
+         precalculated_corners[index] = corners_alist.get(index);
       }
 
    private void corners_allocate ( int count )
@@ -282,7 +280,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       adjust_direction();
       
-      
 //      adjust_corners();
       }
    
@@ -298,25 +295,28 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       int check_len = plalinelen(-2);
       
-      adjust_corner (0, plaline(0), plaline(1));
-      
-      for (int index = 1; index < check_len; index++)
+      for (int index = 0; index < check_len; index++)
          {
-         adjust_corner (index, plaline(index), plaline(index+1));
+         adjust_corner (index);
          }
       }
 
-   private void adjust_corner (int c_index, PlaLineInt l_cur, PlaLineInt l_next )
+   private void adjust_corner (int c_index )
       {
       PlaPoint x_point = corner(c_index);
       
-      if ( ! x_point.is_rational() ) return;
+      if ( x_point.is_rational() ) return;
 
       System.err.println("adjust_corner_first index="+c_index);
       
       PlaPointInt i_point = x_point.round();
       
+      PlaLineInt l_cur  = plaline(c_index);
+      
       lines_list.set(c_index  ,adjust_line(l_cur ,i_point) );
+      
+      PlaLineInt l_next = plaline(c_index+1);
+      
       lines_list.set(c_index+1,adjust_line(l_next,i_point) );
       
       precalculated_corners[c_index] = i_point;
@@ -327,25 +327,20 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    private PlaLineInt adjust_line ( PlaLineInt x_line, PlaPointInt i_point )
       {
-      double dist_a_b = x_line.point_a.distance_square(x_line.point_b);
+//      double dist_a_b = x_line.point_a.distance_square(x_line.point_b);
       
       double dist_ia = i_point.distance_square(x_line.point_a);
       double dist_ib = i_point.distance_square(x_line.point_b);
       
-      if ( dist_ib >= dist_a_b )
+      if ( dist_ia < dist_ib )
          {
          System.err.println("Change a");
          return new PlaLineInt (i_point, x_line.point_b );
          }
-      else if ( dist_ia >= dist_a_b )
-         {
-         System.err.println("Chnage b");
-         return new PlaLineInt (i_point, x_line.point_a );
-         }
       else 
          {
-         System.err.println("Chnage nochange");
-         return x_line;
+         System.err.println("Chnage b");
+         return new PlaLineInt (x_line.point_a, i_point );
          }
       }
 
