@@ -1325,6 +1325,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    public Polyline shorten(int p_new_line_count, double p_last_segment_length)
       {
       PlaPointFloat last_corner = corner_approx(p_new_line_count - 2);
+      
       PlaPointFloat prev_last_corner = corner_approx(p_new_line_count - 3);
       
       PlaPointInt new_last_corner = prev_last_corner.change_length(last_corner, p_last_segment_length).round();

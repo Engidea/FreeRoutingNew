@@ -214,7 +214,7 @@ public final class IteraRoute
             max_shove_via_recursion_depth, 
             max_spring_over_recursion_depth, 
             itera_settings.trace_pull_tight_region_width, 
-            itera_settings.trace_pull_tight_accuracy, 
+            itera_settings.trace_pullt_min_move, 
             ! is_stitch_mode, 
             t_limit);
       
@@ -298,7 +298,7 @@ public final class IteraRoute
       r_board.optimize_changed_area(
             opt_net_no_arr, 
             tidy_clip_shape, 
-            itera_settings.trace_pull_tight_accuracy, 
+            itera_settings.trace_pullt_min_move, 
             null, 
             t_limit, 
             new BrdKeepPoint(ok_point, layer_active_no) );
@@ -365,7 +365,7 @@ public final class IteraRoute
                max_shove_trace_recursion_depth, 
                0, 
                itera_settings.trace_pull_tight_region_width,
-               itera_settings.trace_pull_tight_accuracy, 
+               itera_settings.trace_pullt_min_move, 
                s_PULL_TIGHT_TIME_MAX);
          
          if (result)
@@ -494,7 +494,7 @@ public final class IteraRoute
                   max_shove_via_recursion_depth, 
                   max_spring_over_recursion_depth, 
                   itera_settings.trace_pull_tight_region_width, 
-                  itera_settings.trace_pull_tight_accuracy, 
+                  itera_settings.trace_pullt_min_move, 
                   ! is_stitch_mode, 
                   time_limit);
             
@@ -912,7 +912,7 @@ public final class IteraRoute
             max_shove_via_recursion_depth, 
             max_spring_over_recursion_depth, 
             itera_settings.trace_pull_tight_region_width, 
-            itera_settings.trace_pull_tight_accuracy, 
+            itera_settings.trace_pullt_min_move, 
             ! is_stitch_mode, 
             time_limit);
       
@@ -960,7 +960,7 @@ public final class IteraRoute
             max_shove_via_recursion_depth, 
             max_spring_over_recursion_depth, 
             itera_settings.trace_pull_tight_region_width, 
-            itera_settings.trace_pull_tight_accuracy, 
+            itera_settings.trace_pullt_min_move, 
             !is_stitch_mode, time_limit);
       
       return ok_point;

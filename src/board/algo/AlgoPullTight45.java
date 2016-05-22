@@ -511,7 +511,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaSide side_of_nearest_corner = translate_line.side_of(nearest_corner);
       int sign = Signum.as_int(max_translate_dist);
       PlaLineInt result = null;
-      while (Math.abs(delta_dist) > min_translate_dist)
+      while (Math.abs(delta_dist) > min_move_dist)
          {
          boolean check_ok = false;
          PlaLineInt new_line = translate_line.translate(translate_dist);

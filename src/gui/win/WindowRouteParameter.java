@@ -58,8 +58,8 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private final Stat stat;
    private final interactive.IteraBoard board_handling;
    private final GuiResources resources;
-   private final JSlider region_slider,accuracy_slider;
-   private final JFormattedTextField region_field,accuracy_field;
+   private final JSlider region_slider,pullt_min_move_slider;
+   private final JFormattedTextField region_field,pullt_min_move_field;
    private final JFormattedTextField edge_to_turn_dist_field;
 
    private final JRadioButton snap_angle_90_button;  
@@ -151,11 +151,11 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       region_slider.setMaximum(c_region_max_slider_value);
       region_slider.addChangeListener(new PullTightRegionChangeListener());
 
-      accuracy_field = newJNumber(number_format,5,false);
+      pullt_min_move_field = newJNumber(number_format,5,false);
       
-      accuracy_slider = new JSlider();
-      accuracy_slider.setMaximum(c_accuracy_max_slider_value);
-      accuracy_slider.addChangeListener(new PullTightAccuracyChangeListener());
+      pullt_min_move_slider = new JSlider();
+      pullt_min_move_slider.setMaximum(c_accuracy_max_slider_value);
+      pullt_min_move_slider.addChangeListener(new PullTightAccuracyChangeListener());
       
       main_panel.add(newPullTightPanel());
 
@@ -193,11 +193,11 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       // ------------------------ second part
       
       inner = new JPanel();
-      inner.add(resources.newJLabel("region_accuracy_field","region_accuracy_field_tooltip"));
-      inner.add(accuracy_field);
+      inner.add(resources.newJLabel("pull_tight_min_move","pull_tight_min_move_tooltip"));
+      inner.add(pullt_min_move_field);
       
       risul.add(inner);
-      risul.add(accuracy_slider);
+      risul.add(pullt_min_move_slider);
       
       return risul.getJPanel();
       }
@@ -392,9 +392,9 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       region_slider_value = Math.min(region_slider_value, c_region_max_slider_value);
       region_slider.setValue(region_slider_value);
 
-      int accuracy_slider_value = board_handling.itera_settings.trace_pull_tight_accuracy / c_accuracy_scale_factor;
-      accuracy_slider_value = Math.min(accuracy_slider_value, c_accuracy_max_slider_value);
-      accuracy_slider.setValue(accuracy_slider_value);
+      int min_move_slider_value = board_handling.itera_settings.trace_pullt_min_move / c_accuracy_scale_factor;
+      min_move_slider_value = Math.min(min_move_slider_value, c_accuracy_max_slider_value);
+      pullt_min_move_slider.setValue(min_move_slider_value);
   
       manual_rule_window.refresh();
       }
@@ -700,9 +700,9 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       
       int new_accurracy = slider_value + 1 * c_accuracy_scale_factor;
 
-      accuracy_field.setValue(new_accurracy);
+      pullt_min_move_field.setValue(new_accurracy);
 
-      accuracy_slider.setValue(slider_value);
+      pullt_min_move_slider.setValue(slider_value);
       
       board_handling.itera_settings.pull_tight_accuracy_set(new_accurracy);
       }
@@ -712,7 +712,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       public void stateChanged(ChangeEvent evt)
          {
-         set_pull_tight_accuracy(accuracy_slider.getValue());
+         set_pull_tight_accuracy(pullt_min_move_slider.getValue());
          }
       }
 

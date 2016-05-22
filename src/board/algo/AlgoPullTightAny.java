@@ -475,6 +475,12 @@ public final class AlgoPullTightAny extends AlgoPullTight
       return p_polyline;
       }
 
+   /**
+    * 
+    * @param p_line_arr
+    * @param p_start_no
+    * @return
+    */
    private PlaLineInt smoothen_corner(PlaLineInt[] p_line_arr, int p_start_no)
       {
       if (p_line_arr.length - p_start_no < 4) return null;
@@ -531,7 +537,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaSide side_of_nearest_point = translate_line.side_of(nearest_point);
       int sign = Signum.as_int(max_translate_dist);
       PlaLineInt result = null;
-      while (Math.abs(delta_dist) > min_translate_dist)
+      
+      while (Math.abs(delta_dist) > min_move_dist)
          {
          boolean check_ok = false;
          PlaLineInt new_line = translate_line.translate(-translate_dist);
@@ -693,7 +700,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       
       boolean first_time = true;
       
-      while (first_time || Math.abs(delta_dist) > min_translate_dist)
+      while (first_time || Math.abs(delta_dist) > min_move_dist)
          {
          boolean check_ok = false;
          

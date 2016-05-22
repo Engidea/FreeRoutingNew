@@ -105,7 +105,7 @@ public class BatchAutorouter
       
       TimeLimitStoppable time_limit = new TimeLimitStoppable(10, s_thread);
       
-      routing_board.optimize_changed_area(NetNosList.EMPTY, null, itera_settings.trace_pull_tight_accuracy, trace_cost_arr, time_limit, null);
+      routing_board.optimize_changed_area(NetNosList.EMPTY, null, itera_settings.trace_pullt_min_move, trace_cost_arr, time_limit, null);
       }
    
    

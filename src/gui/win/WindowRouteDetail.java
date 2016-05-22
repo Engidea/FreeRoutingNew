@@ -42,7 +42,7 @@ public class WindowRouteDetail extends GuiSubWindowSavable
    private static final long serialVersionUID = 1L;
 
    private final interactive.IteraBoard board_handling;
-   private final JSlider accuracy_slider;
+   private final JSlider pullt_min_move_slider;
    private final JRadioButton on_button;
    private final JRadioButton off_button;
    private final JCheckBox outline_keepout_check_box;
@@ -108,11 +108,11 @@ public class WindowRouteDetail extends GuiSubWindowSavable
       gridbag.setConstraints(pull_tight_accuracy_label, gridbag_constraints);
       main_panel.add(pull_tight_accuracy_label);
 
-      this.accuracy_slider = new JSlider();
-      accuracy_slider.setMaximum(c_max_slider_value);
-      accuracy_slider.addChangeListener(new SliderChangeListener());
-      gridbag.setConstraints(accuracy_slider, gridbag_constraints);
-      main_panel.add(accuracy_slider);
+      this.pullt_min_move_slider = new JSlider();
+      pullt_min_move_slider.setMaximum(c_max_slider_value);
+      pullt_min_move_slider.addChangeListener(new SliderChangeListener());
+      gridbag.setConstraints(pullt_min_move_slider, gridbag_constraints);
+      main_panel.add(pullt_min_move_slider);
 
       separator = new JLabel("  ----------------------------------------  ");
       gridbag.setConstraints(separator, gridbag_constraints);
@@ -155,8 +155,8 @@ public class WindowRouteDetail extends GuiSubWindowSavable
          outline_keepout_check_box.setSelected(outline.keepout_outside_outline_generated());
          }
       
-      int accuracy_slider_value = c_max_slider_value - board_handling.itera_settings.trace_pull_tight_accuracy / c_accuracy_scale_factor + 1;
-      accuracy_slider.setValue(accuracy_slider_value);
+      int accuracy_slider_value = c_max_slider_value - board_handling.itera_settings.trace_pullt_min_move / c_accuracy_scale_factor + 1;
+      pullt_min_move_slider.setValue(accuracy_slider_value);
       }
 
 
@@ -183,7 +183,7 @@ public class WindowRouteDetail extends GuiSubWindowSavable
 
       public void stateChanged(ChangeEvent evt)
          {
-         int new_accurracy = (c_max_slider_value - accuracy_slider.getValue() + 1) * c_accuracy_scale_factor;
+         int new_accurracy = (c_max_slider_value - pullt_min_move_slider.getValue() + 1) * c_accuracy_scale_factor;
          board_handling.itera_settings.pull_tight_accuracy_set(new_accurracy);
          }
       }

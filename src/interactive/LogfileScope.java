@@ -1015,7 +1015,7 @@ public abstract class LogfileScope
       public StateInteractive read_scope(Actlog p_logfile, StateInteractive p_return_state, IteraBoard p_board_handling)
          {
          int new_accuracy = p_logfile.read_int();
-         p_board_handling.itera_settings.trace_pull_tight_accuracy = new_accuracy;
+         p_board_handling.itera_settings.trace_pullt_min_move = new_accuracy;
          return p_return_state;
          }
       }

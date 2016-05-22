@@ -1406,8 +1406,8 @@ public final class GuiConfigFile
       out_file.start_scope();
       out_file.write("pull_tight_accuracy ");
       out_file.new_line();
-      Integer pull_tight_accuracy = board_handling.itera_settings.trace_pull_tight_accuracy;
-      out_file.write(pull_tight_accuracy.toString());
+      Integer pullt_min_move = board_handling.itera_settings.trace_pullt_min_move;
+      out_file.write(pullt_min_move.toString());
       out_file.end_scope();
       }
 

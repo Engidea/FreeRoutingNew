@@ -126,7 +126,7 @@ public class StateDragItem extends StateDrag
             something_dragged = true;
             }
          
-         if (!move_component.insert(i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pull_tight_accuracy))
+         if (!move_component.insert(i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pullt_min_move))
             {
             // an insert error occurred, end the drag state
             return return_state;

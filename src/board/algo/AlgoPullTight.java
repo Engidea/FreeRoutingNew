@@ -77,14 +77,14 @@ public abstract class AlgoPullTight
    protected int curr_cl_type;
    protected ShapeTileOctagon curr_clip_shape;
    protected Set<BrdAbitPin> contact_pins;
-   protected int min_translate_dist;
+   protected int min_move_dist;
 
 
 
    /**
     * If p_only_net_no > 0, only traces with net number p_not_no are optimized. 
     */
-   public static AlgoPullTight get_instance(RoutingBoard p_board, NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_min_translate_dist, ThreadStoppable p_stoppable, BrdKeepPoint p_keep_point)
+   public static AlgoPullTight get_instance(RoutingBoard p_board, NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_min_move_dist, ThreadStoppable p_stoppable, BrdKeepPoint p_keep_point)
       {
       TraceAngleRestriction angle_restriction = p_board.brd_rules.get_trace_snap_angle();
 
@@ -110,7 +110,8 @@ public abstract class AlgoPullTight
          }
       
       result.curr_clip_shape = p_clip_shape;
-      result.min_translate_dist = Math.max(p_min_translate_dist, 100);
+      // why is there a limit that is quite hight ?
+      result.min_move_dist = Math.max(p_min_move_dist, 10);
       
       return result;
       }
@@ -183,7 +184,7 @@ public abstract class AlgoPullTight
             }
          else if (curr_ob instanceof BrdAbitVia && p_trace_cost_arr != null)
             {
-            if (optimize_via.optimize_via_location( (BrdAbitVia) curr_ob, p_trace_cost_arr, min_translate_dist, 10))
+            if (optimize_via.optimize_via_location( (BrdAbitVia) curr_ob, p_trace_cost_arr, min_move_dist, 10))
                {
                something_changed = true;
                }
@@ -360,7 +361,7 @@ public abstract class AlgoPullTight
       check_lines[2] = p_line_arr[p_no + 1];
       boolean first_time = true;
       
-      while (first_time || Math.abs(delta_dist) > min_translate_dist)
+      while (first_time || Math.abs(delta_dist) > min_move_dist)
          {
          boolean check_ok = false;
 

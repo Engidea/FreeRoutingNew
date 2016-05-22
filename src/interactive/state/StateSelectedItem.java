@@ -378,7 +378,7 @@ public final class StateSelectedItem extends StateInteractive
       
       if (i_brd.itera_settings.push_enabled)
          {
-         all_items_removed = r_brd.remove_items_and_pull_tight(items_list, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pull_tight_accuracy, with_delete_fixed);
+         all_items_removed = r_brd.remove_items_and_pull_tight(items_list, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pullt_min_move, with_delete_fixed);
          }
       else
          {
@@ -644,15 +644,15 @@ public final class StateSelectedItem extends StateInteractive
          if (curr_item instanceof BrdTracep)
             {
             BrdTracep curr_trace = (BrdTracep) curr_item;
-            boolean something_changed = curr_trace.pull_tight(!i_brd.itera_settings.push_enabled, i_brd.itera_settings.trace_pull_tight_accuracy, p_thread);
+            boolean something_changed = curr_trace.pull_tight(!i_brd.itera_settings.push_enabled, i_brd.itera_settings.trace_pullt_min_move, p_thread);
             if (!something_changed)
                {
-               curr_trace.smoothen_end_corners_fork(!i_brd.itera_settings.push_enabled, i_brd.itera_settings.trace_pull_tight_accuracy, p_thread);
+               curr_trace.smoothen_end_corners_fork(!i_brd.itera_settings.push_enabled, i_brd.itera_settings.trace_pullt_min_move, p_thread);
                }
             }
          else if (curr_item instanceof BrdAbitVia)
             {
-            optimize_via.optimize_via_location((BrdAbitVia) curr_item, null, i_brd.itera_settings.trace_pull_tight_accuracy, 10);
+            optimize_via.optimize_via_location((BrdAbitVia) curr_item, null, i_brd.itera_settings.trace_pullt_min_move, 10);
             }
          }
       
@@ -664,7 +664,7 @@ public final class StateSelectedItem extends StateInteractive
 
          TimeLimitStoppable t_limit = new TimeLimitStoppable(10, p_thread);
 
-         r_brd.optimize_changed_area(NetNosList.EMPTY, null, i_brd.itera_settings.trace_pull_tight_accuracy, null, t_limit, null);
+         r_brd.optimize_changed_area(NetNosList.EMPTY, null, i_brd.itera_settings.trace_pullt_min_move, null, t_limit, null);
          }
 
       if (is_stop_requested(p_thread))

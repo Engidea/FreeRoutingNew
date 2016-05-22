@@ -52,8 +52,8 @@ public final class IteraSettings implements java.io.Serializable
    public boolean is_stitch_route;
    // The width of the pull tight region of traces around the cursor 
    public int trace_pull_tight_region_width;
-   /// The accuracy of the pull tight algorithm. 
-   public int trace_pull_tight_accuracy;
+   /// The accuracy of the pull tight algorithm, the minimum move that will be done 
+   public int trace_pullt_min_move;
    // Via snaps to smd center, if attach smd is allowed.
    private boolean via_snap_to_smd_center;
 
@@ -104,7 +104,7 @@ public final class IteraSettings implements java.io.Serializable
       select_on_all_visible_layers = true; // else selection is only on the current layer
       is_stitch_route = false; // else interactive routing is dynamic
       trace_pull_tight_region_width = Integer.MAX_VALUE;
-      trace_pull_tight_accuracy = 500;
+      trace_pullt_min_move = 500;
       via_snap_to_smd_center = true;
       horizontal_component_grid = 0;   // pippo
       vertical_component_grid = 0;
@@ -138,7 +138,7 @@ public final class IteraSettings implements java.io.Serializable
       select_on_all_visible_layers = p_settings.select_on_all_visible_layers;
       is_stitch_route = p_settings.is_stitch_route;
       trace_pull_tight_region_width = p_settings.trace_pull_tight_region_width;
-      trace_pull_tight_accuracy = p_settings.trace_pull_tight_accuracy;
+      trace_pullt_min_move = p_settings.trace_pullt_min_move;
       via_snap_to_smd_center = p_settings.via_snap_to_smd_center;
       horizontal_component_grid = p_settings.horizontal_component_grid;
       vertical_component_grid = p_settings.vertical_component_grid;
@@ -425,7 +425,7 @@ public final class IteraSettings implements java.io.Serializable
       {
       if (settings_read_only) return;
 
-      trace_pull_tight_accuracy = p_value;
+      trace_pullt_min_move = p_value;
       act_log.start_scope(LogfileScope.SET_PULL_TIGHT_ACCURACY, p_value);
       }
 
