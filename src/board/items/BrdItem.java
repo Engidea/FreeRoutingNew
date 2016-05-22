@@ -769,10 +769,16 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       return get_connection_items(BrdStopConnection.NONE);
       }
 
+   
+   private final void get_connection_items ( BrdStopConnection p_stop_option, PlaPointInt prev_contact_point, BrdItem curr_item, TreeSet<BrdItem> result )
+      {
+      
+      }
+
    /**
-    * Returns all traces and vias from this item until the next fork or terminal item. If p_stop_option ==
-    * StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout via, If p_stop_option == StopConnectionOption.VIA,
-    * the algorithm will stop at any via.
+    * Returns all traces and vias from this item until the next fork or terminal item. 
+    * If p_stop_option == StopConnectionOption.FANOUT_VIA, the algorithm will stop at the next fanout via, 
+    * If p_stop_option == StopConnectionOption.VIA the algorithm will stop at any via.
     */
    public final Set<BrdItem> get_connection_items(BrdStopConnection p_stop_option)
       {
@@ -781,11 +787,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
 
       if (is_route()) result.add(this);
 
-      Iterator<BrdItem> it = contacts.iterator();
-      while (it.hasNext())
+      for ( BrdItem curr_item : contacts )
          {
-         BrdItem curr_item = it.next();
-         
          PlaPointInt prev_contact_point = normal_contact_point(curr_item);
 
          // no unique contact point
@@ -807,7 +810,6 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          // Search from curr_item along the contacts until the next fork or nonroute item.
          for (;;)
             {
-            
             // connection ends
             if ( ! curr_item.is_route()) break;
             
@@ -820,6 +822,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
                   if (curr_item.is_fanout_via(result)) break;
                   }
                }
+            
             result.add(curr_item);
             
             Collection<BrdItem> curr_ob_contacts = curr_item.get_normal_contacts();
@@ -830,11 +833,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
             BrdItem next_contact = null;
             boolean fork_found = false;
             
-            Iterator<BrdItem> curr_it = curr_ob_contacts.iterator();
-            
-            while (curr_it.hasNext())
+            for ( BrdItem tmp_contact : curr_ob_contacts )
                {
-               BrdItem tmp_contact = curr_it.next();
                int tmp_contact_layer = curr_item.first_common_layer(tmp_contact);
                if (tmp_contact_layer >= 0)
                   {
