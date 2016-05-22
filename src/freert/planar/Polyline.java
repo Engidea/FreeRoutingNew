@@ -1437,15 +1437,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
    /**
     * create a new Polyline by skipping the lines of this Polyline from p_from_no to p_to_no
     * The numebr are indices, so if you say 2,2 the elements 0,1,3,4... will be copyed
+    * @return may return an empty result if index is invalid
     */
    public PlaLineIntAlist plaline_skip(int p_from_no, int p_to_no)
       {
-      if (p_from_no < 0 || p_to_no > plalinelen(-1) || p_from_no > p_to_no)
-         {
-         return null;
-         }
-      
       PlaLineIntAlist new_lines = new PlaLineIntAlist(plalinelen());
+
+      if ( p_from_no < 0 || p_to_no > plalinelen(-1) || p_from_no > p_to_no)
+         {
+         return new_lines;
+         }
       
       plaline_append(new_lines, 0, p_from_no);
       

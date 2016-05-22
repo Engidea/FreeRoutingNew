@@ -831,17 +831,15 @@ public final class AlgoPullTightAny extends AlgoPullTight
                corner2 = p_polyline.corner_approx(index + 2);
                }
             boolean in_clip_shape = curr_clip_shape == null || curr_clip_shape.contains(corner1) && curr_clip_shape.contains(corner2);
-            if (!in_clip_shape)
-               {
-               continue;
-               }
+            
+            if (!in_clip_shape) continue;
 
             PlaSide side1 = curr_line.side_of(corner1);
             PlaSide side2 = curr_line.side_of(corner2);
             
             if (side1 != side2)
-            // the two corners are on different sides of the line
                {
+               // the two corners are on different sides of the line
                Polyline reduced_polyline = new Polyline(p_polyline.plaline_skip(index + 1, index + 1));
                
                if ( reduced_polyline.plalinelen() == p_polyline.plalinelen(-1) )
@@ -865,10 +863,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             
             // now try skipping 2 lines
-            if (index >= p_polyline.plalinelen(-4))
-               {
-               break;
-               }
+            if (index >= p_polyline.plalinelen(-4))  break;
             
             PlaPointFloat corner3;
             if (jndex == 1)
@@ -879,14 +874,15 @@ public final class AlgoPullTightAny extends AlgoPullTight
                {
                corner3 = p_polyline.corner_approx(index + 1);
                }
+            
             if (curr_clip_shape != null && !curr_clip_shape.contains(corner3))
                {
                continue;
                }
+            
             if (jndex == 0)
-            // curr_line is 1 line later than in the case skipping 1 line
-            // when coming from behind
                {
+               // curr_line is 1 line later than in the case skipping 1 line when coming from behind
                curr_line = p_polyline.plaline(index + 3);
                side1 = curr_line.side_of(corner1);
                side2 = curr_line.side_of(corner2);
@@ -895,18 +891,18 @@ public final class AlgoPullTightAny extends AlgoPullTight
                {
                side1 = curr_line.side_of(corner3);
                }
+            
             if (side1 != side2)
-            // the two corners are on different sides of the line
                {
+               // the two corners are on different sides of the line
                Polyline reduced_polyline = new Polyline(p_polyline.plaline_skip(index + 1, index + 2));
                
                if (reduced_polyline.plalinelen() == p_polyline.plalinelen(-2) )
                   {
                   int shape_no = index - 1;
-                  if (jndex == 0)
-                     {
-                     ++shape_no;
-                     }
+
+                  if (jndex == 0) ++shape_no;
+
                   ShapeTile shape_to_check = reduced_polyline.offset_shape(curr_half_width, shape_no);
                   if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
@@ -920,7 +916,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
                      }
                   }
                }
-
             }
          }
       return p_polyline;

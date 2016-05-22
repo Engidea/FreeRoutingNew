@@ -111,11 +111,12 @@ public final class BrdShapeAndFromSide
       from_side = curr_from_side;
       }
 
-   private static PlaLineInt calc_cutline_at_end(int p_index, BrdTracep p_trace)
+   private PlaLineInt calc_cutline_at_end(int p_index, BrdTracep p_trace)
       {
       Polyline polyline = p_trace.polyline();
       ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
-      if (p_index == polyline.plalinelen() - 3
+      
+      if (p_index == polyline.plalinelen(-3) 
             || polyline.corner_approx(polyline.plalinelen(-2)).distance(polyline.corner_approx(p_index + 1)) < p_trace.get_compensated_half_width(search_tree))
          {
 
@@ -130,15 +131,18 @@ public final class BrdShapeAndFromSide
             {
             cut_line = curr_line;
             }
+         
          return cut_line;
          }
+      
       return null;
       }
 
-   private static PlaLineInt calc_cutline_at_start(int p_index, BrdTracep p_trace)
+   private PlaLineInt calc_cutline_at_start(int p_index, BrdTracep p_trace)
       {
       Polyline trace_lines = p_trace.polyline();
       ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
+      
       if (p_index == 0 || trace_lines.corner_approx(0).distance(trace_lines.corner_approx(p_index)) < p_trace.get_compensated_half_width(search_tree))
          {
          PlaLineInt curr_line = trace_lines.plaline(0);

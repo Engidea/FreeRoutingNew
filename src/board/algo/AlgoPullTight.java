@@ -80,11 +80,6 @@ public abstract class AlgoPullTight
    protected int min_translate_dist;
 
 
-   protected abstract Polyline pull_tight(Polyline p_polyline);
-
-   protected abstract Polyline smoothen_start_corner_at_trace(BrdTracep p_trace);
-
-   protected abstract Polyline smoothen_end_corner_at_trace(BrdTracep p_trace);
 
    /**
     * If p_only_net_no > 0, only traces with net number p_not_no are optimized. 
@@ -131,6 +126,13 @@ public abstract class AlgoPullTight
       keep_point = p_keep_point;
       }
 
+
+   protected abstract Polyline pull_tight(Polyline p_polyline);
+
+   protected abstract Polyline smoothen_start_corner_at_trace(BrdTracep p_trace);
+
+   protected abstract Polyline smoothen_end_corner_at_trace(BrdTracep p_trace);
+
    /**
     * Now, if there is a stop I should cleanup properly, ok ?
     * @param p_trace_cost_arr
@@ -138,7 +140,7 @@ public abstract class AlgoPullTight
     * @param layer_idx
     * @return true if something has changed
     */
-   private boolean optimize_changed_area(ExpandCostFactor[] p_trace_cost_arr, BrdChangedArea changed_area, int layer_idx )
+   private final boolean optimize_changed_area(ExpandCostFactor[] p_trace_cost_arr, BrdChangedArea changed_area, int layer_idx )
       {
       ShapeTileOctagon changed_region = changed_area.get_area(layer_idx);
 
@@ -197,7 +199,7 @@ public abstract class AlgoPullTight
     * @param changed_ares
     * @return
     */
-   private boolean optimize_changed_area_changed(ExpandCostFactor[] p_trace_cost_arr, BrdChangedArea changed_area)
+   private final boolean optimize_changed_area_changed(ExpandCostFactor[] p_trace_cost_arr, BrdChangedArea changed_area)
       {
       boolean something_changed = false;
 
@@ -219,7 +221,7 @@ public abstract class AlgoPullTight
     * If p_clip_shape != null, the optimizing area is restricted to p_clip_shape. 
     * p_trace_cost_arr is used for optimizing vias and may be null.
     */
-   public void optimize_changed_area(ExpandCostFactor[] p_trace_cost_arr)
+   public final void optimize_changed_area(ExpandCostFactor[] p_trace_cost_arr)
       {
       int counter=0;
       
@@ -244,7 +246,7 @@ public abstract class AlgoPullTight
     * Function for optimizing a single trace polygon p_contact_pins are the pins at the end corners of p_polyline. 
     * Other pins are regarded as obstacles, even if they are of the own net.
     */
-   public Polyline pull_tight(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_cl_type, Set<BrdAbitPin> p_contact_pins)
+   public final Polyline pull_tight(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_cl_type, Set<BrdAbitPin> p_contact_pins)
       {
       curr_layer = p_layer;
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
@@ -438,7 +440,7 @@ public abstract class AlgoPullTight
    /**
     * tries to skip line segments of length 0. A check is necessary before skipping because new dog ears may occur.
     */
-   protected Polyline skip_segments_of_length_0(Polyline p_polyline)
+   protected final Polyline skip_segments_of_length_0(Polyline p_polyline)
       {
       for (int index = 1; index < p_polyline.corner_count(); index++)
          {
@@ -465,6 +467,9 @@ public abstract class AlgoPullTight
          // Now, what happens is that the resulting polyline is invalid since it ends up with parallel lines
          
          PlaLineIntAlist curr_lines = p_polyline.plaline_skip(index,index);
+         
+         // if the skipping produces a short polyline
+         if ( curr_lines.size() < 3 ) continue;
          
          Polyline tmp = new Polyline(curr_lines);
          
@@ -497,7 +502,7 @@ public abstract class AlgoPullTight
     * Smoothen acute angles with contact traces. Returns true, if something was changed
     * @return true if something was changed
     */
-   public boolean smoothen_end_corners_at_trace(BrdTracep p_trace)
+   public final boolean smoothen_end_corners_at_trace(BrdTracep p_trace)
       {
       curr_layer = p_trace.get_layer();
       curr_half_width = p_trace.get_half_width();
@@ -511,7 +516,7 @@ public abstract class AlgoPullTight
     * Smoothen acute angles with contact traces. 
     * @return true, if something was changed.
     */
-   private boolean smoothen_end_corners_at_trace_one(BrdTracep p_trace)
+   private final boolean smoothen_end_corners_at_trace_one(BrdTracep p_trace)
       {
       // try to improve the connection to other traces
       if (p_trace.is_shove_fixed()) return false;
@@ -568,7 +573,7 @@ public abstract class AlgoPullTight
     * This actually splits the trace since lower down pieces are inserted in the board, if successful
     * @return true, if something was split.
     */
-   public boolean split_traces_at_keep_point()
+   public final boolean split_traces_at_keep_point()
       {
       // if no keep point defined
       if ( keep_point == null) return false;
@@ -592,7 +597,7 @@ public abstract class AlgoPullTight
     * Smoothen acute angles with contact traces. 
     * @return null if nothing was changed.
     */
-   private Polyline smoothen_end_corners_at_trace_two(BrdTracep p_trace)
+   private final Polyline smoothen_end_corners_at_trace_two(BrdTracep p_trace)
       {
       if (p_trace == null ) return null;
       
@@ -629,7 +634,7 @@ public abstract class AlgoPullTight
    /**
     * Wraps around pins of the own net to avoid acid traps.
     */
-   protected Polyline acid_traps_wrap_around(Polyline p_polyline)
+   protected final Polyline acid_traps_wrap_around(Polyline p_polyline)
       {
       if (acid_trap_skip) return p_polyline;
       
