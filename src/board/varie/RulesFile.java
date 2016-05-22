@@ -21,23 +21,23 @@
 
 package board.varie;
 
+import freert.spectra.DsnCoordinateTransform;
+import freert.spectra.DsnFileScanner;
+import freert.spectra.DsnKeyword;
+import freert.spectra.DsnKeywordLibrary;
+import freert.spectra.DsnKeywordNetwork;
+import freert.spectra.DsnKeywordScope;
+import freert.spectra.DsnKeywordStructure;
+import freert.spectra.DsnLayerStructure;
+import freert.spectra.DsnNetClass;
+import freert.spectra.DsnRule;
+import freert.spectra.DsnRuleClearance;
+import freert.spectra.DsnRuleWidth;
+import freert.spectra.DsnWriteScopeParameter;
+import freert.spectra.JflexScanner;
+import freert.spectra.varie.DsnKeywordAutoroute;
 import gui.varie.IndentFileWriter;
 import java.io.InputStreamReader;
-import specctra.DsnCoordinateTransform;
-import specctra.DsnFileScanner;
-import specctra.DsnKeyword;
-import specctra.DsnKeywordLibrary;
-import specctra.DsnKeywordNetwork;
-import specctra.DsnKeywordScope;
-import specctra.DsnKeywordStructure;
-import specctra.DsnLayerStructure;
-import specctra.DsnNetClass;
-import specctra.DsnRule;
-import specctra.DsnRuleClearance;
-import specctra.DsnRuleWidth;
-import specctra.DsnWriteScopeParameter;
-import specctra.JflexScanner;
-import specctra.varie.DsnKeywordAutoroute;
 import board.RoutingBoard;
 
 /**

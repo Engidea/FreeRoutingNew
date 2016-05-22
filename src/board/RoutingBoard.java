@@ -62,9 +62,9 @@ import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
-import freert.host.ObserverItemVoid;
-import freert.host.ObserverItem;
 import freert.host.HostCom;
+import freert.host.ObserverItem;
+import freert.host.ObserverItemVoid;
 import freert.library.BrdLibrary;
 import freert.library.LibPadstack;
 import freert.planar.PlaArea;
@@ -2029,8 +2029,9 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Checks, if there is an item near by sharing a net with p_net_no_arr, from where a routing can start, or where the routing can
-    * connect to. If p_from_item != null, items, which are connected to p_from_item, are ignored. 
+    * Checks, if there is an item near by sharing a net with p_net_no_arr, from where a routing can start
+    * or where the routing can connect to. 
+    * If p_from_item != null, items, which are connected to p_from_item, are ignored. 
     * Returns null, if no item is found, If p_layer < 0, the layer is ignored
     */
    public BrdItem pick_nearest_routing_item(PlaPoint p_location, int p_layer, BrdItem p_from_item)
@@ -2099,10 +2100,8 @@ public final class RoutingBoard implements java.io.Serializable
                // calculated here to avoid unnessery calculations for performance reasons.
                ignore_set = p_from_item.get_connected_set(-1);
                }
-            if (ignore_set.contains(curr_item))
-               {
-               continue;
-               }
+            
+            if (ignore_set.contains(curr_item)) continue;
             }
 
          min_dist = curr_dist;

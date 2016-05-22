@@ -23,9 +23,9 @@ package freert.host;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import specctra.DsnCoordinateTransform;
-import specctra.DsnParserInfo;
 import board.varie.IdGenerator;
+import freert.spectra.DsnCoordinateTransform;
+import freert.spectra.DsnParserInfo;
 import freert.varie.UnitMeasure;
 
 /**

@@ -21,9 +21,9 @@
 package freert.library;
 
 import java.util.ArrayList;
-import specctra.varie.DsnPackageKeepout;
 import board.infos.PrintableInfo;
 import freert.planar.PlaShape;
+import freert.spectra.varie.DsnPackageKeepout;
 
 /**
  * Component package templates describing the padstacks and relative locations of the packege pins, 

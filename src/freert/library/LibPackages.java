@@ -21,8 +21,8 @@
 package freert.library;
 
 import java.util.Vector;
-import specctra.varie.DsnPackageKeepout;
 import freert.planar.PlaShape;
+import freert.spectra.varie.DsnPackageKeepout;
 
 /**
  * Describes a library of component packages.
