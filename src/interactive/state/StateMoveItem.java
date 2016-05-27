@@ -28,16 +28,19 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
+import board.BrdComponents;
 import board.BrdLayerStructure;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.infos.BrdItemViolation;
 import board.items.BrdAbitVia;
+import board.items.BrdAreaConduction;
 import board.items.BrdItem;
 import freert.library.BrdLibrary;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
+import gui.varie.GuiResources;
 import gui.varie.IteraNetItems;
 
 /**
@@ -64,21 +67,22 @@ public class StateMoveItem extends StateInteractive
    /**
     * Returns a new instance or null, if the items of p_itemlist do not belong to a single component.
     */
-   public static StateMoveItem get_instance(PlaPointFloat p_location, Collection<BrdItem> p_item_list, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
+   public static StateMoveItem get_instance(PlaPointFloat p_location, Collection<BrdItem> p_item_list, StateInteractive p_parent_state, IteraBoard i_board, Actlog p_logfile)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("interactive.resources.InteractiveState", p_board_handling.get_locale());
+      GuiResources resources = i_board.newGuiResources("interactive.resources.InteractiveState");
       
       if (p_item_list.isEmpty())
          {
-         p_board_handling.screen_messages.set_status_message(resources.getString("move_component_failed_because_no_item_selected"));
+         i_board.screen_messages.set_status_message(resources.getString("move_component_failed_because_no_item_selected"));
          return null;
          }
       
       // extend p_item_list to full components
       Set<BrdItem> item_list = new TreeSet<BrdItem>();
       Set<BrdComponent> component_list = new TreeSet<BrdComponent>();
-      RoutingBoard routing_board = p_board_handling.get_routing_board();
+      RoutingBoard routing_board = i_board.get_routing_board();
       BrdComponent grid_snap_component = null;
+      
       for (BrdItem curr_item : p_item_list)
          {
          if (curr_item.get_component_no() > 0)
@@ -89,13 +93,15 @@ public class StateMoveItem extends StateInteractive
                System.out.println("MoveComponentState.get_instance inconsistant component number");
                return null;
                }
-            if (grid_snap_component == null && (p_board_handling.itera_settings.horizontal_component_grid > 0 || p_board_handling.itera_settings.horizontal_component_grid > 0))
+            
+            if (grid_snap_component == null && (i_board.itera_settings.horizontal_component_grid > 0 || i_board.itera_settings.horizontal_component_grid > 0))
                {
                grid_snap_component = curr_component;
                }
+            
             if (!component_list.contains(curr_component))
                {
-               java.util.Collection<BrdItem> component_items = routing_board.get_component_items(curr_component.id_no);
+               Collection<BrdItem> component_items = routing_board.get_component_items(curr_component.id_no);
                for (BrdItem curr_component_item : component_items)
                   {
                   component_list.add(curr_component);
@@ -108,15 +114,17 @@ public class StateMoveItem extends StateInteractive
             item_list.add(curr_item);
             }
          }
+      
       Set<BrdItem> fixed_items = new TreeSet<BrdItem>();
       Set<BrdItem> obstacle_items = new TreeSet<BrdItem>();
       Set<BrdItem> add_items = new TreeSet<BrdItem>();
       boolean move_ok = true;
+      
       for (BrdItem curr_item : item_list)
          {
          if (curr_item.is_user_fixed())
             {
-            p_board_handling.screen_messages.set_status_message(resources.getString("some_items_cannot_be_moved_because_they_are_fixed"));
+            i_board.screen_messages.set_status_message(resources.getString("some_items_cannot_be_moved_because_they_are_fixed"));
             move_ok = false;
             obstacle_items.add(curr_item);
             fixed_items.add(curr_item);
@@ -132,11 +140,8 @@ public class StateMoveItem extends StateInteractive
                {
                for (BrdItem curr_contact : contacts)
                   {
-                  if (curr_contact instanceof board.items.BrdAreaConduction)
-                     {
+                  if (curr_contact instanceof BrdAreaConduction) continue;
 
-                     continue;
-                     }
                   if (curr_contact.is_user_fixed())
                      {
                      item_movable = false;
@@ -150,23 +155,18 @@ public class StateMoveItem extends StateInteractive
                         item_movable = false;
                         }
                      }
+                  
                   if (item_movable)
-                     {
                      add_items.add(curr_contact);
-                     }
                   else
-                     {
                      obstacle_items.add(curr_contact);
-                     }
                   }
                }
-            if (!item_movable)
-               {
-               move_ok = false;
-               }
 
+            if (!item_movable) move_ok = false;
             }
          }
+      
       if (!move_ok)
          {
          if (p_parent_state instanceof StateSelectedItem)
@@ -174,21 +174,29 @@ public class StateMoveItem extends StateInteractive
             if (fixed_items.size() > 0)
                {
                ((StateSelectedItem) p_parent_state).get_item_list().addAll(fixed_items);
-               p_board_handling.screen_messages.set_status_message(resources.getString("please_unfix_selected_items_before_moving"));
+               i_board.screen_messages.set_status_message(resources.getString("please_unfix_selected_items_before_moving"));
                }
             else
                {
                ((StateSelectedItem) p_parent_state).get_item_list().addAll(obstacle_items);
-               p_board_handling.screen_messages.set_status_message(resources.getString("please_unroute_or_extend_selection_before_moving"));
+               i_board.screen_messages.set_status_message(resources.getString("please_unroute_or_extend_selection_before_moving"));
                }
             }
          return null;
          }
+      
       item_list.addAll(add_items);
-      return new StateMoveItem(p_location, item_list, component_list, grid_snap_component, p_parent_state.return_state, p_board_handling, p_logfile);
+      
+      return new StateMoveItem(p_location, item_list, component_list, grid_snap_component, p_parent_state.return_state, i_board, p_logfile);
       }
 
-   private StateMoveItem(PlaPointFloat p_location, Set<BrdItem> p_item_list, Set<BrdComponent> p_component_list, BrdComponent p_first_component, StateInteractive p_parent_state, IteraBoard p_board_handling,
+   private StateMoveItem(
+         PlaPointFloat p_location, 
+         Set<BrdItem> p_item_list, 
+         Set<BrdComponent> p_component_list, 
+         BrdComponent p_first_component, 
+         StateInteractive p_parent_state, 
+         IteraBoard p_board_handling,
          Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
@@ -203,12 +211,7 @@ public class StateMoveItem extends StateInteractive
       
       RoutingBoard routing_board = r_brd;
 
-      observers_activated = !r_brd.observers_active();
-      
-      if (observers_activated)
-         {
-         r_brd.start_notify_observers();
-         }
+      r_brd.start_notify_observers();
       
       // make the situation restorable by undo
       routing_board.generate_snapshot();
@@ -225,9 +228,10 @@ public class StateMoveItem extends StateInteractive
          {
          // Copy the items in p_item_list, because otherwise the undo algorithm will not work.
          BrdItem copied_item = curr_item.copy(0);
-         for (int i = 0; i < curr_item.net_count(); ++i)
+
+         for (int index = 0; index < curr_item.net_count(); ++index)
             {
-            add_to_net_items_list(copied_item, curr_item.get_net_no(i));
+            add_to_net_items_list(copied_item, curr_item.get_net_no(index));
             }
          item_list.add(copied_item);
          }
@@ -253,6 +257,7 @@ public class StateMoveItem extends StateInteractive
    public StateInteractive mouse_moved()
       {
       super.mouse_moved();
+      
       move(i_brd.get_current_mouse_position());
 
       actlog_add_corner(current_position.to_float());
@@ -282,16 +287,16 @@ public class StateMoveItem extends StateInteractive
             return this;
             }
          }
-      RoutingBoard routing_board = r_brd;
+      
       for (BrdItem curr_item : item_list)
          {
-         routing_board.insert_item(curr_item);
+         r_brd.insert_item(curr_item);
          }
 
       // let the observers syncronize the moving
       for (BrdComponent curr_component : component_list)
          {
-         routing_board.observers.notify_moved(curr_component);
+         r_brd.observers.notify_moved(curr_component);
          }
 
       for (IteraNetItems curr_net_items : net_items_list)
@@ -299,10 +304,8 @@ public class StateMoveItem extends StateInteractive
          i_brd.update_ratsnest(curr_net_items.net_no);
          }
 
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
-         }
+      actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
+
       i_brd.screen_messages.set_status_message(resources.getString("move_completed"));
       i_brd.repaint();
       return return_state;
@@ -349,7 +352,8 @@ public class StateMoveItem extends StateInteractive
             {
             translate_vector = adjust_to_placement_grid(translate_vector);
             }
-         board.BrdComponents components = r_brd.brd_components;
+         
+         BrdComponents components = r_brd.brd_components;
          for (BrdComponent curr_component : component_list)
             {
             components.move(curr_component.id_no, translate_vector);
@@ -384,16 +388,15 @@ public class StateMoveItem extends StateInteractive
     */
    public void turn_90_degree(int p_factor)
       {
-      if (p_factor == 0)
-         {
-         return;
-         }
-      board.BrdComponents components = r_brd.brd_components;
+      if (p_factor == 0) return;
+
+      BrdComponents components = r_brd.brd_components;
       for (BrdComponent curr_component : component_list)
          {
          components.turn_90_degree(curr_component.id_no, p_factor, current_position);
          }
-      clearance_violations = new java.util.LinkedList<BrdItemViolation>();
+      
+      clearance_violations = new LinkedList<BrdItemViolation>();
       for (BrdItem curr_item : item_list)
          {
          curr_item.turn_90_degree(p_factor, current_position);
@@ -403,25 +406,21 @@ public class StateMoveItem extends StateInteractive
          {
          i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.TURN_90_DEGREE, p_factor);
-         }
+
+      actlog_start_scope(LogfileScope.TURN_90_DEGREE, p_factor);
       i_brd.repaint();
       }
 
    public void rotate(double p_angle_in_degree)
       {
-      if (p_angle_in_degree == 0)
-         {
-         return;
-         }
-      board.BrdComponents components = r_brd.brd_components;
+      if (p_angle_in_degree == 0) return;
+
+      BrdComponents components = r_brd.brd_components;
       for (BrdComponent curr_component : component_list)
          {
          components.rotate(curr_component.id_no, p_angle_in_degree, current_position);
          }
-      clearance_violations = new java.util.LinkedList<BrdItemViolation>();
+      clearance_violations = new LinkedList<BrdItemViolation>();
       PlaPointFloat float_position = current_position.to_float();
       for (BrdItem curr_item : item_list)
          {
@@ -432,10 +431,8 @@ public class StateMoveItem extends StateInteractive
          {
          i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.ROTATE, (int) p_angle_in_degree);
-         }
+
+      actlog_start_scope(LogfileScope.ROTATE, (int) p_angle_in_degree);
       i_brd.repaint();
       }
 
@@ -496,7 +493,7 @@ public class StateMoveItem extends StateInteractive
          {
          components.change_side(curr_component.id_no, current_position);
          }
-      clearance_violations = new java.util.LinkedList<BrdItemViolation>();
+      clearance_violations = new LinkedList<BrdItemViolation>();
       for (BrdItem curr_item : item_list)
          {
          curr_item.change_placement_side(current_position);
@@ -506,10 +503,8 @@ public class StateMoveItem extends StateInteractive
          {
          i_brd.update_ratsnest(curr_net_items.net_no, curr_net_items.items);
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.CHANGE_PLACEMENT_SIDE);
-         }
+
+      actlog_start_scope(LogfileScope.CHANGE_PLACEMENT_SIDE);
       i_brd.repaint();
       }
 

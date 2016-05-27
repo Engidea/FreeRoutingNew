@@ -21,6 +21,9 @@
 package gui.menu;
 
 import gui.BoardFrame;
+import gui.varie.GuiResources;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import main.Ldbg;
 import main.Mdbg;
@@ -34,20 +37,17 @@ import main.Stat;
 public class PopupMenuSelectedItems extends PopupMenuDisplay
    {
    private static final long serialVersionUID = 1L;
-
+   private final MenuAction menuAction = new MenuAction();
+   
+   private final JMenuItem copy_item,move_item;
+   
    public PopupMenuSelectedItems(Stat stat, BoardFrame p_board_frame)
       {
       super(stat, p_board_frame);
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("gui.resources.Default", p_board_frame.get_locale());
-      JMenuItem copy_item = new JMenuItem();
-      copy_item.setText(resources.getString("copy"));
-      copy_item.addActionListener(new java.awt.event.ActionListener()
-         {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-               {
-               board_panel.board_handling.copy_selected_items(board_panel.right_button_click_location);
-               }
-         });
+
+      GuiResources resources = p_board_frame.newGuiResources("gui.resources.Default");
+      
+      copy_item = resources.newJMenuItem("copy",null,menuAction);
 
       if ( ! board_panel.debug(Mdbg.GUI_MENU, Ldbg.RELEASE))
          {
@@ -55,16 +55,23 @@ public class PopupMenuSelectedItems extends PopupMenuDisplay
          add(copy_item);
          }
 
-      JMenuItem move_item = new JMenuItem();
-      move_item.setText(resources.getString("move"));
-      move_item.addActionListener(new java.awt.event.ActionListener()
-         {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-               {
-               board_panel.board_handling.move_selected_items(board_panel.right_button_click_location);
-               }
-         });
+      move_item = resources.newJMenuItem("move",null,menuAction);
 
-      this.add(move_item, 0);
+      add(move_item);
       }
+   
+private class MenuAction implements ActionListener
+   {
+   @Override
+   public void actionPerformed(ActionEvent event)
+      {
+      Object a_menu = event.getSource();
+      
+      if ( a_menu == copy_item )
+         board_panel.board_handling.copy_selected_items(board_panel.right_button_click_location);
+      else if ( a_menu == move_item )
+         board_panel.board_handling.move_selected_items(board_panel.right_button_click_location);
+      }
+   }
+   
    }

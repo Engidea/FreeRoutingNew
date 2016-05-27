@@ -49,7 +49,7 @@ public class StateConstructPolygon extends StateConstructCorner
       {
       super(p_parent_state, p_board_handling, p_logfile);
 
-      if (actlog != null) actlog.start_scope(LogfileScope.CREATING_POLYGONSHAPE);
+      actlog_start_scope(LogfileScope.CREATING_POLYGONSHAPE);
 
       add_corner(p_location);
       }
@@ -83,21 +83,17 @@ public class StateConstructPolygon extends StateConstructCorner
             }
          if (construction_succeeded)
             {
-            observers_activated = !r_brd.observers_active();
-            if (observers_activated)
-               {
-               r_brd.start_notify_observers();
-               }
+
+            r_brd.start_notify_observers();
+
             r_brd.generate_snapshot();
             r_brd.insert_obstacle(obstacle_shape, i_brd.itera_settings.layer_no, cl_class, board.varie.ItemFixState.UNFIXED);
             r_brd.end_notify_observers();
-            if (observers_activated)
-               {
-               r_brd.end_notify_observers();
-               observers_activated = false;
-               }
+
+            r_brd.end_notify_observers();
             }
          }
+
       if (construction_succeeded)
          {
          i_brd.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
@@ -106,10 +102,9 @@ public class StateConstructPolygon extends StateConstructCorner
          {
          i_brd.screen_messages.set_status_message(resources.getString("keepout_cancelled_because_of_overlaps"));
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
-         }
+
+      actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
+
       return return_state;
       }
 

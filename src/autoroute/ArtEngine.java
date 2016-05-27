@@ -143,9 +143,7 @@ public final class ArtEngine
          }
       
       // let the observers know the changes in the board database.
-      boolean observers_activated = !r_board.observers_active();
-
-      if (observers_activated) r_board.start_notify_observers();
+      r_board.start_notify_observers();
 
       r_board.remove_items_unfixed(ripped_connections);
 
@@ -158,7 +156,7 @@ public final class ArtEngine
       
       boolean inserted = insert_algo.insert(locate_connection);
       
-      if (observers_activated) r_board.end_notify_observers();
+      r_board.end_notify_observers();
       
       return inserted ? ArtResult.ROUTED : ArtResult.INSERT_ERROR;
       }

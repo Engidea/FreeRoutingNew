@@ -71,10 +71,9 @@ public class StateSelecRegionCutout extends StateSelectRegion
    private StateSelecRegionCutout(Collection<BrdTracep> p_item_list, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.CUTOUT_ROUTE);
-         }
+
+      actlog_start_scope(LogfileScope.CUTOUT_ROUTE);
+
       trace_list = p_item_list;
       }
    @Override

@@ -112,16 +112,13 @@ public class StateDragItem extends StateDrag
          if (!something_dragged)
             {
             // Initializations for the first time dragging
-            observers_activated = !r_brd.observers_active();
-            if (observers_activated)
-               {
-               r_brd.start_notify_observers();
-               }
+            r_brd.start_notify_observers();
+
             // make the situation restorable by undo
             r_brd.generate_snapshot();
       
             // Delayed till here because otherwise the mouse might have been only clicked for selecting and not pressed for moving.
-            if (actlog != null)  actlog.start_scope(LogfileScope.DRAGGING_ITEMS, previous_location);
+            actlog_start_scope(LogfileScope.DRAGGING_ITEMS, previous_location);
             
             something_dragged = true;
             }
@@ -141,11 +138,8 @@ public class StateDragItem extends StateDrag
 
    public StateInteractive button_released()
       {
-      if (observers_activated)
-         {
-         r_brd.end_notify_observers();
-         observers_activated = false;
-         }
+
+      r_brd.end_notify_observers();
       
       if (something_dragged)
          {

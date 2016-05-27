@@ -90,10 +90,8 @@ public class StateConstructHole extends StateConstructCorner
          i_brd.screen_messages.set_status_message(resources.getString("adding_hole_to_circle_not_yet_implemented"));
          return false;
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.ADDING_HOLE);
-         }
+
+      actlog_start_scope(LogfileScope.ADDING_HOLE);
       add_corner(p_location);
       return true;
       }
@@ -171,19 +169,13 @@ public class StateConstructHole extends StateConstructCorner
             }
          else
             {
-            observers_activated = !r_brd.observers_active();
-            if (observers_activated)
-               {
-               r_brd.start_notify_observers();
-               }
+            r_brd.start_notify_observers();
+
             r_brd.generate_snapshot();
             r_brd.remove_item(item_to_modify);
             r_brd.insert_obstacle(new_obs_area, item_to_modify.get_layer(), item_to_modify.clearance_idx(), board.varie.ItemFixState.UNFIXED);
-            if (observers_activated)
-               {
-               r_brd.end_notify_observers();
-               observers_activated = false;
-               }
+
+            r_brd.end_notify_observers();
             }
          }
       if (construction_succeeded)
@@ -194,10 +186,9 @@ public class StateConstructHole extends StateConstructCorner
          {
          i_brd.screen_messages.set_status_message(resources.getString("adding_hole_failed"));
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
-         }
+
+      actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
+
       return return_state;
       }
 

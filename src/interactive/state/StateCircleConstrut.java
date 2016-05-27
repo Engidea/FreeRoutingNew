@@ -38,6 +38,9 @@ import freert.varie.NetNosList;
  */
 public class StateCircleConstrut extends StateInteractive
    {
+   private final PlaPointFloat circle_center;
+   private double circle_radius = 0;
+   
    /**
     * Returns a new instance of this class. If p_logfile != null; the creation of this item is stored in a logfile
     */
@@ -103,18 +106,12 @@ public class StateCircleConstrut extends StateInteractive
          i_brd.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
 
          // insert the new shape as keepout
-         observers_activated = r_brd.observers_active();
-         if (observers_activated)
-            {
-            r_brd.start_notify_observers();
-            }
+         r_brd.start_notify_observers();
+
          r_brd.generate_snapshot();
          r_brd.insert_obstacle(obstacle_shape, layer, cl_class, ItemFixState.UNFIXED);
-         if (observers_activated)
-            {
-            r_brd.end_notify_observers();
-            observers_activated = false;
-            }
+
+         r_brd.end_notify_observers();
          }
       else
          {
@@ -159,9 +156,4 @@ public class StateCircleConstrut extends StateInteractive
       {
       i_brd.screen_messages.set_status_message(resources.getString("creating_circle"));
       }
-
-   private final PlaPointFloat circle_center;
-   private double circle_radius = 0;
-
-   private boolean observers_activated = false;
    }

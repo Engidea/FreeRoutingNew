@@ -51,16 +51,9 @@ public final class StateRouteDynamic extends StateRoute
    @Override
    public StateInteractive left_button_clicked(PlaPointFloat p_location)
       {
-      if (observers_activated)
-         {
-         r_brd.end_notify_observers();
-         observers_activated = false;
-         }
+      r_brd.end_notify_observers();
       
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
-         }
+      actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
       
       for (int curr_net_no : route.net_nos )
          {

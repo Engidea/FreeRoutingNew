@@ -34,7 +34,7 @@ public final class StateSelectRegionZoom extends StateSelectRegion
       {
       super(p_parent_state, p_board_handling, p_logfile);
 
-      if (actlog != null) actlog.start_scope(interactive.LogfileScope.ZOOM_FRAME);
+      actlog_start_scope(interactive.LogfileScope.ZOOM_FRAME);
 
       corner1 = p_location;
       
@@ -50,7 +50,7 @@ public final class StateSelectRegionZoom extends StateSelectRegion
 
       actlog.add_corner(corner2);
 
-      return this.return_state;
+      return return_state;
       }
 
    private void zoom_region()

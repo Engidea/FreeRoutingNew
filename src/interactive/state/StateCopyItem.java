@@ -90,11 +90,8 @@ public class StateCopyItem extends StateInteractive
             }
          }
       
-      
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.COPYING_ITEMS, p_location);
-         }
+
+      actlog_start_scope(LogfileScope.COPYING_ITEMS, p_location);
       }
 
    public StateInteractive mouse_moved()

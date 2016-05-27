@@ -40,7 +40,6 @@ public abstract class StateDrag extends StateInteractive
    {
    protected PlaPointFloat previous_location;
    protected boolean something_dragged = false;
-   protected boolean observers_activated = false;
    
    /**
     * Returns a new instance of this state, if a item to drag was found at the input location 

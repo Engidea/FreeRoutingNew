@@ -92,7 +92,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       component_no = p_component_no;
       fixed_state = p_fixed_state;
    
-      net_nos = p_net_no_arr == null  ?  NetNosList.EMPTY : p_net_no_arr.copy();
+      net_nos = p_net_no_arr == null ? NetNosList.EMPTY : p_net_no_arr.copy();
       
       id_no   = p_id_no > 0  ?  p_id_no : r_board.host_com.new_id_no();
       }
@@ -100,16 +100,17 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Copy constructor to be used with the ObjectsStorabel
     * @param p_other
-    * @param p_id_no
+    * @param p_id_no if id_no is <= 0 then create a new one
     */
    protected BrdItem ( BrdItem p_other, int p_id_no )
       {
-      id_no         = p_id_no;
       r_board       = p_other.r_board;
       clearance_idx = p_other.clearance_idx;
       component_no  = p_other.component_no;
       fixed_state   = p_other.fixed_state;
       net_nos       = p_other.net_nos.copy();  // note that it is a copy
+
+      id_no         = p_id_no > 0 ? p_id_no : r_board.host_com.new_id_no();
       }
 
    /**

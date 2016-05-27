@@ -80,9 +80,7 @@ public final class StateDragMakeSpace extends StateDrag
       if (! something_dragged)
          {
          // initialisitions for the first time dragging
-         observers_activated = !r_brd.observers_active();
-
-         if (observers_activated) r_brd.start_notify_observers();
+         r_brd.start_notify_observers();
          
          // make the situation restorable by undo
          r_brd.generate_snapshot();
@@ -114,11 +112,7 @@ public final class StateDragMakeSpace extends StateDrag
       {
       r_brd.remove_items_unfixed(r_brd.get_connectable_items(RuleNets.HIDDEN_NET_NO));
       
-      if (observers_activated)
-         {
-         r_brd.end_notify_observers();
-         observers_activated = false;
-         }
+      r_brd.end_notify_observers();
       
       if (something_dragged)
          {

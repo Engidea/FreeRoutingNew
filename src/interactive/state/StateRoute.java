@@ -52,7 +52,6 @@ public abstract class StateRoute extends StateInteractive
    {
    protected IteraRoute route = null;
    private Set<BrdItem> routing_target_set = null;
-   protected boolean observers_activated = false;
    
    /**
     * Creates a new instance of RouteState If p_logfile != null, the creation of the route is stored in the logfile.
@@ -204,18 +203,14 @@ public abstract class StateRoute extends StateInteractive
             i_board.itera_settings.is_via_snap_to_smd_center(), 
             i_board.itera_settings);
       
-      new_instance.observers_activated = !routing_board.observers_active();
-      
-      if (new_instance.observers_activated)
-         {
-         routing_board.start_notify_observers();
-         }
+
+      routing_board.start_notify_observers();
       
       i_board.repaint();
 
       if (new_instance.actlog != null)
          {
-         new_instance.actlog.start_scope(LogfileScope.CREATING_TRACE, p_location);
+         new_instance.actlog_start_scope(LogfileScope.CREATING_TRACE, p_location);
          i_board.hide_ratsnest();
          }
 
@@ -384,11 +379,7 @@ public abstract class StateRoute extends StateInteractive
          {
          result = return_state;
 
-         if (observers_activated)
-            {
-            r_brd.end_notify_observers();
-            observers_activated = false;
-            }
+         r_brd.end_notify_observers();
 
          i_brd.screen_messages.clear();
 
@@ -420,12 +411,8 @@ public abstract class StateRoute extends StateInteractive
             r_brd.remove_items_unfixed(remove_items);
             }
          }
-      if (observers_activated)
-         {
-         r_brd.end_notify_observers();
-         observers_activated = false;
-         }
 
+      r_brd.end_notify_observers();
       actlog_start_scope(LogfileScope.CANCEL_SCOPE);
 
       i_brd.screen_messages.clear();
@@ -509,10 +496,8 @@ public abstract class StateRoute extends StateInteractive
                // make the current situation restorable by undo
                r_brd.generate_snapshot();
                }
-            if (actlog != null)
-               {
-               actlog.start_scope(LogfileScope.CHANGE_LAYER, p_new_layer);
-               }
+
+            actlog_start_scope(LogfileScope.CHANGE_LAYER, p_new_layer);
             }
          else
             {

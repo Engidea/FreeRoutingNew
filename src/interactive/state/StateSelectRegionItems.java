@@ -61,10 +61,8 @@ public class StateSelectRegionItems extends StateSelectRegion
    private StateSelectRegionItems(StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.SELECT_REGION);
-         }
+
+      actlog_start_scope(LogfileScope.SELECT_REGION);
       }
 
    @Override

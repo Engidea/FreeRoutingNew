@@ -47,10 +47,9 @@ public class StateConstuctTile extends StateConstructCorner
    public StateConstuctTile(PlaPointFloat p_location, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
       super(p_parent_state, p_board_handling, p_logfile);
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.CREATING_TILE);
-         }
+
+      actlog_start_scope(LogfileScope.CREATING_TILE);
+
       add_corner(p_location);
       }
 
@@ -98,19 +97,13 @@ public class StateConstuctTile extends StateConstructCorner
          construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
          if (construction_succeeded)
             {
-            // insert the new shape as keepout
-            observers_activated = !r_brd.observers_active();
-            if (observers_activated)
-               {
-               r_brd.start_notify_observers();
-               }
+
+            r_brd.start_notify_observers();
+
             r_brd.generate_snapshot();
             r_brd.insert_obstacle(obstacle_shape, layer, cl_class, ItemFixState.UNFIXED);
-            if (observers_activated)
-               {
-               r_brd.end_notify_observers();
-               observers_activated = false;
-               }
+
+            r_brd.end_notify_observers();
             }
          }
       if (construction_succeeded)
@@ -121,10 +114,9 @@ public class StateConstuctTile extends StateConstructCorner
          {
          i_brd.screen_messages.set_status_message(resources.getString("keepout_cancelled_because_of_overlaps"));
          }
-      if (actlog != null)
-         {
-         actlog.start_scope(LogfileScope.COMPLETE_SCOPE);
-         }
+
+      actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
+
       return return_state;
       }
 

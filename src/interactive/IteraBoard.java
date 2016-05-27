@@ -98,21 +98,21 @@ public final class IteraBoard
    private final Stat stat;
    // The board database used in this interactive handling
    private RoutingBoard r_board = null;
-   // The graphical context for drawing the board. */
+   // The graphical context for drawing the board. 
    public GdiContext gdi_context = null;
    // For transforming coordinates between the user and the board coordinate space */
    public PlaCoordTransform coordinate_transform = null;
-   // The text message fields displayed on the screen */
+   // The text message fields displayed on the screen 
    public final ScreenMessages screen_messages;
-   // The current settings for interactive actions on the board */
+   // The current settings for interactive actions on the board 
    public IteraSettings itera_settings = null;
    // The currently active interactive state
    public StateInteractive interactive_state = null;
    // Used for running an interactive action in a separate thread.
    private BrdActionThread interactive_action_thread = null;
-   // To display all incomplete connections on the screen. */
+   // To display all incomplete connections on the screen. 
    private RatsNest ratsnest = null;
-   // To display all clearance violations between items on the screen. */
+   // To display all clearance violations between items on the screen.
    private IteraClearanceViolations clearance_violations = null;
    // The graphical panel used for displaying the board
    private final BoardPanel board_panel;
@@ -323,10 +323,8 @@ public final class IteraBoard
     */
    public void set_default_trace_halfwidth(int p_layer, int p_value)
       {
-      if (board_is_read_only)
-         {
-         return;
-         }
+      if (board_is_read_only) return;
+
       if (p_layer >= 0 && p_layer <= r_board.get_layer_count())
          {
          r_board.brd_rules.set_default_trace_half_width(p_layer, p_value);
@@ -815,11 +813,10 @@ public final class IteraBoard
 
    public void generate_snapshot()
       {
-      if (board_is_read_only)
-         {
-         return;
-         }
+      if (board_is_read_only) return;
+
       r_board.generate_snapshot();
+
       actlog.start_scope(LogfileScope.GENERATE_SNAPSHOT);
       }
 
@@ -861,11 +858,9 @@ public final class IteraBoard
     */
    public void redo()
       {
-      if (board_is_read_only || !(interactive_state instanceof StateMenu))
-         {
-         return;
-         }
-      java.util.Set<Integer> changed_nets = new java.util.TreeSet<Integer>();
+      if (board_is_read_only || !(interactive_state instanceof StateMenu))  return;
+
+      TreeSet<Integer> changed_nets = new TreeSet<Integer>();
       if (r_board.redo(changed_nets))
          {
          for (Integer changed_net : changed_nets)
@@ -878,6 +873,7 @@ public final class IteraBoard
          {
          screen_messages.set_status_message(resources.getString("no_more_redo_possible"));
          }
+      
       actlog.start_scope(LogfileScope.REDO);
       repaint();
       }
