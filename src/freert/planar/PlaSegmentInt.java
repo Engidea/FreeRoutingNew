@@ -150,7 +150,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       }
 
    /**
-    * Returns the line segment with tje opposite direction.
+    * Returns the line segment with the opposite direction.
     */
    public PlaSegmentInt opposite()
       {
@@ -163,10 +163,10 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public final Polyline to_polyline()
       {
-      PlaLineInt[] lines = new PlaLineInt[3];
-      lines[0] = start;
-      lines[1] = middle;
-      lines[2] = end;
+      PlaLineIntAlist lines = new PlaLineIntAlist(3);
+      lines.add( start );
+      lines.add( middle );
+      lines.add( end );
       return new Polyline(lines);
       }
 
@@ -371,28 +371,6 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
 
       return risul;
       }
-
-   /**
-    * Checks if this LineSegment and p_other contain a commen point
-    */
-   public boolean intersects(PlaSegmentInt p_other)
-      {
-      ArrayList<PlaLineInt> intersections = intersection(p_other);
-      
-      return intersections.size() > 0;
-      }
-
-   /**
-    * Checks if this LineSegment and p_other contain a common LineSegment, which is not reduced to a point.
-    */
-   public boolean overlaps(PlaSegmentInt p_other)
-      {
-      ArrayList<PlaLineInt> intersections = intersection(p_other);
-      
-      return intersections.size() > 1;
-      }
-
-
 
    /**
     * Returns an array with the borderline numbers of p_shape, which are intersected by this line segment. 

@@ -294,6 +294,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             {
             PlaDirection d1 = line_arr[index].direction();
             PlaDirection d2 = line_arr[index + 1].direction();
+            
             if (d1.is_multiple_of_45_degree() && d2.is_multiple_of_45_degree() && d1.projection(d2) != Signum.POSITIVE)
                {
                // there is a 90 degree or sharper angle

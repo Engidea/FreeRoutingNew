@@ -227,6 +227,7 @@ public final class MazeShoveTraceAlgo
 
       PlaPointFloat from_corner = shove_line_segment.start_point_approx();
       PlaPointFloat to_corner = shove_line_segment.end_point_approx();
+      
       boolean segment_ist_point = from_corner.dustance_square(to_corner) < 0.1;
 
       if ( ! segment_ist_point)
