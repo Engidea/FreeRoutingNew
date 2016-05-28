@@ -1164,8 +1164,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the pad of a pin. 
     * In this case the trace will be split only, if the intersection is at the center of the pin. 
     * Extending the function to vias leaded to broken connection problems wenn the autorouter connected to a trace.
+    * @return true if a split is allowed
     */
-   private boolean split_inside_drill_pad_prohibited(int p_line_no, PlaLineInt p_line)
+   private boolean split_inside_drill_pad_allowed(int p_line_no, PlaLineInt p_line)
       {
       PlaPoint intersection = polyline.plaline(p_line_no).intersection(p_line, null);
 
@@ -1184,13 +1185,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             {
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
             
+            pad_found = true;  // remember that I have found a pad here
+            
             if (curr_drill_item.center_get().equals(intersection))
                {
-               // split always at the center of a drill item.
-               return false; 
+               // split always allowed at the center of a drill item.
+               return true; 
                }
-            
-            pad_found = true;
             }
          else if (curr_item instanceof BrdTracep)
             {
@@ -1198,12 +1199,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             
             if (curr_trace != this && curr_trace.corner_first().equals(intersection) || curr_trace.corner_last().equals(intersection))
                {
-               return false;
+               return true;
                }
             }
          }
       
-      return pad_found;
+      // a split is allowed if we are not inside a pad
+      return pad_found == false;
       }
 
    
@@ -1248,7 +1250,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if (!is_on_the_board()) return null;
 
       // if split prohibited do nothing
-      if (split_inside_drill_pad_prohibited(p_line_no, p_new_end_line)) return null;
+      if ( ! split_inside_drill_pad_allowed(p_line_no, p_new_end_line)) return null;
 
       Polyline[] split_polylines = polyline.split(p_line_no, p_new_end_line);
 
