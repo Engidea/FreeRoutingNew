@@ -300,17 +300,11 @@ public final class AlgoShoveTrace
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
-      if (!obstacles_shovable || shape_entries.trace_tails_in_shape())
-         {
-         return 0;
-         }
+      if (!obstacles_shovable || shape_entries.trace_tails_in_shape()) return 0;
       
       int trace_piece_count = shape_entries.substitute_trace_count();
 
-      if (shape_entries.stack_depth() > 1)
-         {
-         return 0;
-         }
+      if (shape_entries.stack_depth() > 1) return 0;
 
       PlaPointFloat start_corner_appprox = p_line_segment.start_point_approx();
       PlaPointFloat end_corner_appprox = p_line_segment.end_point_approx();
@@ -324,20 +318,15 @@ public final class AlgoShoveTrace
 
       for (BrdAbitVia curr_shove_via : shape_entries.shove_via_list)
          {
-         if (curr_shove_via.shares_net_no(p_net_no_arr))
-            {
-            continue;
-            }
+         if (curr_shove_via.shares_net_no(p_net_no_arr)) continue;
+
          boolean shove_via_ok = false;
          if (p_max_via_recursion_depth > 0)
             {
-
             PlaPointInt[] new_via_center = r_board.move_drill_algo.try_shove_via_points(trace_shape, p_layer, curr_shove_via, p_cl_type, false);
 
-            if (new_via_center.length <= 0)
-               {
-               return 0;
-               }
+            if (new_via_center.length <= 0) return 0;
+            
             PlaVectorInt delta = new_via_center[0].difference_by(curr_shove_via.center_get());
             Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
             shove_via_ok = r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items, null);
@@ -355,30 +344,25 @@ public final class AlgoShoveTrace
                {
                curr_ok_lenght -= cl_matrix.value_at(p_cl_type, curr_shove_via.clearance_idx(), p_layer);
                }
-            if (curr_ok_lenght <= 0)
-               {
-               return 0;
-               }
+            
+            if (curr_ok_lenght <= 0) return 0;
+
             result = Math.min(result, curr_ok_lenght);
             }
          }
-      if (trace_piece_count == 0)
-         {
-         return result;
-         }
-      if (p_max_recursion_depth <= 0)
-         {
-         return 0;
-         }
+      
+      if (trace_piece_count == 0) return result;
+
+      if (p_max_recursion_depth <= 0) return 0;
 
       PlaDirection line_direction = p_line_segment.get_line().direction();
+
       for (;;)
          {
          BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
-         if (curr_substitute_trace == null)
-            {
-            break;
-            }
+      
+         if (curr_substitute_trace == null) break;
+
          for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
             Polyline a_poly = curr_substitute_trace.polyline();
@@ -404,12 +388,11 @@ public final class AlgoShoveTrace
                      curr_substitute_trace.clearance_idx(), 
                      p_max_recursion_depth - 1,
                      p_max_via_recursion_depth);
+
                if (shove_ok_length < Integer.MAX_VALUE)
                   {
-                  if (shove_ok_length <= 0)
-                     {
-                     return 0;
-                     }
+                  if (shove_ok_length <= 0)  return 0;
+
                   double projection = Math.min(start_corner_appprox.scalar_product(end_corner_appprox, curr_line_segment.start_point_approx()),
                         start_corner_appprox.scalar_product(end_corner_appprox, curr_line_segment.end_point_approx()));
                   projection /= segment_length;
@@ -422,10 +405,9 @@ public final class AlgoShoveTrace
                      {
                      curr_ok_length -= cl_matrix.value_at(p_cl_type, curr_substitute_trace.clearance_idx(), p_layer);
                      }
-                  if (curr_ok_length <= 0)
-                     {
-                     return 0;
-                     }
+
+                  if (curr_ok_length <= 0) return 0;
+
                   result = Math.min(curr_ok_length, result);
                   }
                break;

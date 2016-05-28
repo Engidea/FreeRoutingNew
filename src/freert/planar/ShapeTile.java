@@ -1122,9 +1122,9 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
       PlaSide[] border_line_side_of_start_point_arr = new PlaSide[border_line_count()];
       PlaSide[] border_line_side_of_end_point_arr = new PlaSide[border_line_side_of_start_point_arr.length];
-      for (int i = 0; i < border_line_side_of_start_point_arr.length; ++i)
+      for (int index = 0; index < border_line_side_of_start_point_arr.length; ++index)
          {
-         PlaLineInt curr_border_line = border_line(i);
+         PlaLineInt curr_border_line = border_line(index);
          PlaSide border_line_side_of_start_point = curr_border_line.side_of(float_start_point, 1);
          if (border_line_side_of_start_point == PlaSide.COLLINEAR)
             {
@@ -1141,8 +1141,8 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
             // no intersection possible
             return false;
             }
-         border_line_side_of_start_point_arr[i] = border_line_side_of_start_point;
-         border_line_side_of_end_point_arr[i] = border_line_side_of_end_point;
+         border_line_side_of_start_point_arr[index] = border_line_side_of_start_point;
+         border_line_side_of_end_point_arr[index] = border_line_side_of_end_point;
          }
       boolean start_point_is_inside = true;
       for (int i = 0; i < border_line_side_of_start_point_arr.length; ++i)
@@ -1172,10 +1172,10 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          }
       PlaLineInt segment_line = p_line_segment.get_line();
       // Check, if this line segments intersect a border line of p_shape.
-      for (int i = 0; i < border_line_side_of_start_point_arr.length; ++i)
+      for (int index = 0; index < border_line_side_of_start_point_arr.length; ++index)
          {
-         PlaSide border_line_side_of_start_point = border_line_side_of_start_point_arr[i];
-         PlaSide border_line_side_of_end_point = border_line_side_of_end_point_arr[i];
+         PlaSide border_line_side_of_start_point = border_line_side_of_start_point_arr[index];
+         PlaSide border_line_side_of_end_point = border_line_side_of_end_point_arr[index];
          if (border_line_side_of_start_point != border_line_side_of_end_point)
             {
             if (border_line_side_of_start_point == PlaSide.COLLINEAR && border_line_side_of_end_point == PlaSide.ON_THE_LEFT || border_line_side_of_end_point == PlaSide.COLLINEAR
@@ -1184,19 +1184,19 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
                // the interiour of p_shape is not intersected.
                continue;
                }
-            PlaSide prev_corner_side = segment_line.side_of(corner_approx(i), 1);
+            PlaSide prev_corner_side = segment_line.side_of(corner_approx(index), 1);
             if (prev_corner_side == PlaSide.COLLINEAR)
                {
-               prev_corner_side = segment_line.side_of(corner(i));
+               prev_corner_side = segment_line.side_of(corner(index));
                }
             int next_corner_index;
-            if (i == border_line_side_of_start_point_arr.length - 1)
+            if (index == border_line_side_of_start_point_arr.length - 1)
                {
                next_corner_index = 0;
                }
             else
                {
-               next_corner_index = i + 1;
+               next_corner_index = index + 1;
                }
             PlaSide next_corner_side = segment_line.side_of(corner_approx(next_corner_index), 1);
             if (next_corner_side == PlaSide.COLLINEAR)

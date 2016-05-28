@@ -524,6 +524,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
                      }
 
                   }
+               
                if (!intersection_already_handeled)
                   {
                   if (intersection_count < result.length)
