@@ -1099,28 +1099,27 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
    private boolean split_tracep_own (int index, LinkedList<BrdTracep> result, ArrayList<PlaLineInt> intersecting_lines, ShapeTileOctagon p_clip_shape )
       {
-      boolean own_trace_split = false;
+      boolean have_trace_split = false;
       
       for ( PlaLineInt inter_line : intersecting_lines )
          {
-         BrdTracep[] curr_split_pieces = split_with_end_line(index + 1, inter_line);
+         if ( have_trace_split ) break;
+         
+         ArrayList<BrdTracep> curr_split_pieces = split_with_end_line(index + 1, inter_line);
 
-         if (curr_split_pieces == null) continue;
+         if (curr_split_pieces.size() < 1 ) continue;
 
-         own_trace_split = true;
-         // this trace was split itself into 2.
-         if (curr_split_pieces[0] != null)
-            {
-            result.addAll(curr_split_pieces[0].split(p_clip_shape));
-            }
-         if (curr_split_pieces[1] != null)
-            {
-            result.addAll(curr_split_pieces[1].split(p_clip_shape));
-            }
-         break;
+         // yes, we have a trace split
+         have_trace_split = true;
+         
+         result.addAll(curr_split_pieces.get(0).split(p_clip_shape));
+
+         if (curr_split_pieces.size() < 2 ) continue;
+
+         result.addAll(curr_split_pieces.get(1).split(p_clip_shape));
          }
       
-      return own_trace_split;
+      return have_trace_split;
       }
    
    /**
@@ -1130,31 +1129,30 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       {
       if ( found_trace == this ) return false;
       
-      boolean found_trace_split = false;
+      boolean have_trace_split = false;
       
       for (PlaLineInt inter_line : intersecting_lines )
          {
+         if ( have_trace_split ) break;
+         
          int line_no = found_entry.shape_index_in_object + 1;
          
-         BrdTracep[] curr_split_pieces = found_trace.split_with_end_line(line_no, inter_line);
+         ArrayList<BrdTracep> curr_split_pieces = found_trace.split_with_end_line(line_no, inter_line);
 
-         if (curr_split_pieces != null)
-            {
-            for (int kndex = 0; kndex < 2; ++kndex)
-               {
-               if (curr_split_pieces[kndex] == null) continue;
+         if (curr_split_pieces.size() < 1 ) continue;
+         
+         split_pieces.add(curr_split_pieces.get(0));
 
-               found_trace_split = true;
-               split_pieces.add(curr_split_pieces[kndex]);
-               }
-            
-            if ( found_trace_split ) break;
-            }
+         have_trace_split = true;
+
+         if (curr_split_pieces.size() < 2 ) continue;
+
+         split_pieces.add(curr_split_pieces.get(1));
          }
    
-      if ( ! found_trace_split) split_pieces.add(found_trace);
+      if ( ! have_trace_split) split_pieces.add(found_trace);
 
-      return found_trace_split;
+      return have_trace_split;
       }
    
    
@@ -1205,11 +1203,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // a split is allowed if we are not inside a pad
       return pad_found == false;
       }
-
-   
-   
-   
-   
    
    /**
     * Splits this trace into two at p_point. 
@@ -1229,9 +1222,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
          PlaLineInt split_line = new PlaLineInt(p_point, split_direction);
          
-         BrdTracep[] result = split_with_end_line(index, split_line);
+         ArrayList<BrdTracep> result = split_with_end_line(index, split_line);
          
-         if (result != null)  return true;
+         if (result.size() > 0 )  return true;
          }
 
       return false;
@@ -1240,25 +1233,33 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Splits this trace at the line with number p_line_no into two 
     * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece
-    * Note that this actually changes the items on the board...
-    * @return the 2 pieces of the splitted trace, or null, if nothing was splitted.
+    * NOTE that this actually changes the items on the board !!!
+    * @return the splitted traces or nothing if no split
     */
-   private BrdTracep[] split_with_end_line(int p_line_no, PlaLineInt p_new_end_line)
+   private ArrayList<BrdTracep> split_with_end_line(int p_line_no, PlaLineInt p_new_end_line)
       {
-      if (!is_on_the_board()) return null;
+      ArrayList<BrdTracep> risul = new  ArrayList<BrdTracep>(2);
+      
+      if (!is_on_the_board()) return risul;
 
       // if split prohibited do nothing
-      if ( ! split_inside_drill_pad_allowed(p_line_no, p_new_end_line)) return null;
+      if ( ! split_inside_drill_pad_allowed(p_line_no, p_new_end_line)) return risul;
 
       Polyline[] split_polylines = polyline.split(p_line_no, p_new_end_line);
 
-      if (split_polylines == null) return null;
+      if (split_polylines == null) return risul;
       
       r_board.remove_item(this);
-      BrdTracep[] result = new BrdTracep[2];
-      result[0] = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
-      result[1] = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
-      return result;
+
+      BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      
+      if ( a_trace != null ) risul.add( a_trace );
+      
+      a_trace = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      
+      if ( a_trace != null ) risul.add( a_trace );
+
+      return risul;
       }
 
    
