@@ -1062,8 +1062,8 @@ public final class RoutingBoard implements java.io.Serializable
 
    /**
     * Checks, if the a trace line with shape p_shape and net numbers p_net_no_arr and clearance class p_cl_class can be inserted on
-    * layer p_layer without clearance violation. If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as
-    * obstacles, even if they are of the own net.
+    * layer p_layer without clearance violation. 
+    * If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as obstacles, even if they are of the own net.
     */
    public boolean check_trace_shape(ShapeTile p_shape, int p_layer, NetNosList p_net_no_arr, int p_cl_class, Set<BrdAbitPin> p_contact_pins)
       {
@@ -1092,10 +1092,8 @@ public final class RoutingBoard implements java.io.Serializable
 
          if (p_contact_pins != null)
             {
-            if (p_contact_pins.contains(curr_item))
-               {
-               continue;
-               }
+            if (p_contact_pins.contains(curr_item)) continue;
+
             if (curr_item instanceof BrdAbitPin)
                {
                // The contact pins of the trace should be contained in p_ignore_items.
@@ -1110,17 +1108,17 @@ public final class RoutingBoard implements java.io.Serializable
             {
             // check for traces of foreign nets at tie pins, which will be ignored inside the pin shape
             ShapeTile intersection = null;
+
             for (BrdAbitPin curr_contact_pin : p_contact_pins)
                {
-               if (curr_contact_pin.net_count() <= 1 || !curr_contact_pin.shares_net(curr_item))
-                  {
-                  continue;
-                  }
+               if (curr_contact_pin.net_count() <= 1 || !curr_contact_pin.shares_net(curr_item)) continue;
+
                if (intersection == null)
                   {
                   ShapeTile obstacle_trace_shape = curr_item.get_tile_shape(curr_tree_entry.shape_index_in_object);
                   intersection = p_shape.intersection(obstacle_trace_shape);
                   }
+               
                ShapeTile pin_shape = curr_contact_pin.get_tile_shape_on_layer(p_layer);
                if (pin_shape.contains_approx(intersection))
                   {

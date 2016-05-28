@@ -87,7 +87,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       }
 
    /**
-    *  tries to reduce the corner count of p_polyline by replacing two consecutive
+    * tries to reduce the corner count of p_polyline by replacing two consecutive
     * lines by a line through IntPoints near the previous corner and the next
     * corner, if that is possible without clearance violation.
     */
@@ -123,6 +123,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             PlaPointFloat skip_corner = new_lines[new_line_index].intersection_approx(p_polyline.plaline(index + 2));
             curr_lines[1] = new PlaLineInt(new_a.round(), new_b.round());
             boolean ok = true;
+
             if (new_line_index == 1)
                {
                PlaPoint corner_first = p_polyline.corner_first();
@@ -130,6 +131,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                if (corner_first.is_rational())
                   {
                   // first corner must not be changed
+                  // in a way it is true, the point is that rationals at first corner should not be generated in any case 
                   ok = false;
                   }
                else
@@ -149,7 +151,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
                if (corner_last.is_rational())
                   {
-                  // last corner must not be changed
+                  // last corner must not be changed, again as the other one...
+                  // in a way it is true, the point is that rationals at first corner should not be generated in any case 
                   ok = false;
                   }
                else
@@ -163,42 +166,47 @@ public final class AlgoPullTightAny extends AlgoPullTight
                curr_lines[2] = p_polyline.plaline(index + 3);
                }
 
-            // check, if the intersection of curr_lines[0] and curr_lines[1] is near new_a and the intersection of curr_lines[0] and
-            // curr_lines[1] and curr_lines[2] is near new_b.
+            // check, if the intersection of curr_lines[0] and curr_lines[1] is near new_a and 
+            // the intersection of curr_lines[0] and curr_lines[1] and curr_lines[2] is near new_b.
             // There may be numerical stability proplems with near parallel lines.
 
             final double check_dist = 100;
+            
             if (ok)
                {
                PlaPointFloat check_is = curr_lines[0].intersection_approx(curr_lines[1]);
                double dist = check_is.dustance_square(new_a);
 
-               if (dist > check_dist)
-                  {
-                  ok = false;
-                  }
+               if (dist > check_dist) ok = false;
                }
+            
             if (ok)
                {
                PlaPointFloat check_is = curr_lines[1].intersection_approx(curr_lines[2]);
                double dist = check_is.dustance_square(new_b);
-               if (dist > check_dist)
-                  {
-                  ok = false;
-                  }
+               
+               if (dist > check_dist) ok = false;
                }
+            
+/*            
+ Hmmm... does it really matter ? after all the trace will be checked for clearance violations and it is a connected trace
+ if it is not in the same side of previously, why check for this ? maybe while push and shove ?
+ Looking and testing... well, it happens, however, there is no noticeable difference in enabling it or not
+ Even when it happens, so , lets try to get rid of it
+ 
             if (ok && index == 1 && !(p_polyline.corner_first() instanceof PlaPointInt))
                {
                // There may be a connection to a trace.
                // make shure that the second corner of the new polyline
-               // is on the same side of the trace as the third corner. (There
-               // may be splitting problems)
+               // is on the same side of the trace as the third corner. (There may be splitting problems)
                PlaPoint new_corner = curr_lines[0].intersection(curr_lines[1], "does this heppne");
                if (new_corner.side_of(new_lines[0]) != p_polyline.corner_first_next().side_of(new_lines[0]))
                   {
-                  ok = false;
+//                  ok = false;
+                  System.err.println("YES, HAPPENSA");
                   }
                }
+            
             if (ok && index == last_index - 1 && !(p_polyline.corner_last() instanceof PlaPointInt))
                {
                // There may be a connection to a trace. Make shure that the second last corner of the new polyline
@@ -207,9 +215,12 @@ public final class AlgoPullTightAny extends AlgoPullTight
                
                if (new_corner.side_of(new_lines[0]) != p_polyline.corner_last_prev().side_of(new_lines[0]))
                   {
-                  ok = false;
+//                  ok = false;
+                  System.err.println("YES, HAPPENSB");
                   }
                }
+*/ 
+
             
             Polyline curr_polyline = null;
             
@@ -217,10 +228,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                {
                curr_polyline = new Polyline(curr_lines);
             
-               if (curr_polyline.plalinelen() != 3)
-                  {
-                  ok = false;
-                  }
+               if (curr_polyline.plalinelen() != 3) ok = false;
                
                double length_before = skip_corner.distance(new_a) + skip_corner.distance(new_b);
                double length_after = curr_polyline.length_approx() + 1.5;
@@ -240,6 +248,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                skip_line = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             }
+         
          if (skip_line)
             {
             polyline_changed = true;
@@ -255,6 +264,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                ++new_line_index;
                new_lines[new_line_index] = curr_lines[2];
                }
+            
             if (r_board.changed_area != null)
                {
                r_board.changed_area.join(new_a, curr_layer);
@@ -271,6 +281,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                new_lines[new_line_index] = p_polyline.plaline(index + 3);
                }
             }
+         
          if (new_lines[new_line_index].is_parallel(new_lines[new_line_index - 1]))
             {
             // skip line, if it is parallel to the previous one
