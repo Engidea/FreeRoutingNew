@@ -927,16 +927,14 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       for (int index = 0; index < polyline.plalinelen(-2); ++index)
          {
+         PlaSegmentInt curr_segment = polyline.segment_get(index + 1);
+
          if (p_clip_shape != null)
             {
-            PlaSegmentInt curr_segment = polyline.segment_get(index + 1);
-            
             if ( ! p_clip_shape.intersects(curr_segment.bounding_box())) continue;
             }
 
          ShapeTile curr_shape = get_tree_shape(default_tree, index);
-         
-         PlaSegmentInt curr_line_segment = polyline.segment_get(index + 1);
          
          LinkedList<ShapeTreeEntry> over_tree_entries = new LinkedList<ShapeTreeEntry>();
 
@@ -967,7 +965,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                
                PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
                
-               PlaLineInt[] intersecting_lines = found_line_segment.intersection(curr_line_segment);
+               ArrayList<PlaLineInt> intersecting_lines = found_line_segment.intersection(curr_segment);
                
                LinkedList<BrdTracep> split_pieces = new LinkedList<BrdTracep>();
 
@@ -982,7 +980,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                   }
                
                // now try splitting the own trace
-               intersecting_lines = curr_line_segment.intersection(found_line_segment);
+               intersecting_lines = curr_segment.intersection(found_line_segment);
                
                // no need to readjust the iterator since we are actually exiting
                own_trace_split = split_tracep_own (index,result,intersecting_lines, p_clip_shape);
@@ -996,7 +994,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                }
             else if (overlap_item instanceof BrdAbit)
                {
-               split_abit (index,  (BrdAbit)overlap_item, curr_line_segment);
+               split_abit (index,  (BrdAbit)overlap_item, curr_segment);
                }
             else if ( overlap_item instanceof BrdAreaConduction )
                {
@@ -1099,27 +1097,27 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       for ( BrdTracep curr_piece : a_collection ) r_board.remove_if_cycle(curr_piece);
       }
 
-   private boolean split_tracep_own (int index, LinkedList<BrdTracep> result, PlaLineInt[] intersecting_lines, ShapeTileOctagon p_clip_shape )
+   private boolean split_tracep_own (int index, LinkedList<BrdTracep> result, ArrayList<PlaLineInt> intersecting_lines, ShapeTileOctagon p_clip_shape )
       {
       boolean own_trace_split = false;
       
-      for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
+      for ( PlaLineInt inter_line : intersecting_lines )
          {
-         BrdTracep[] curr_split_pieces = split_with_end_line(index + 1, intersecting_lines[jndex]);
-         if (curr_split_pieces != null)
+         BrdTracep[] curr_split_pieces = split_with_end_line(index + 1, inter_line);
+
+         if (curr_split_pieces == null) continue;
+
+         own_trace_split = true;
+         // this trace was split itself into 2.
+         if (curr_split_pieces[0] != null)
             {
-            own_trace_split = true;
-            // this trace was split itself into 2.
-            if (curr_split_pieces[0] != null)
-               {
-               result.addAll(curr_split_pieces[0].split(p_clip_shape));
-               }
-            if (curr_split_pieces[1] != null)
-               {
-               result.addAll(curr_split_pieces[1].split(p_clip_shape));
-               }
-            break;
+            result.addAll(curr_split_pieces[0].split(p_clip_shape));
             }
+         if (curr_split_pieces[1] != null)
+            {
+            result.addAll(curr_split_pieces[1].split(p_clip_shape));
+            }
+         break;
          }
       
       return own_trace_split;
@@ -1128,17 +1126,17 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * return true if some other trace was split
     */
-   private boolean split_tracep_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, PlaLineInt[] intersecting_lines, ShapeTreeEntry found_entry )
+   private boolean split_tracep_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaLineInt> intersecting_lines, ShapeTreeEntry found_entry )
       {
       if ( found_trace == this ) return false;
       
       boolean found_trace_split = false;
       
-      for (int jndex = 0; jndex < intersecting_lines.length; ++jndex)
+      for (PlaLineInt inter_line : intersecting_lines )
          {
          int line_no = found_entry.shape_index_in_object + 1;
          
-         BrdTracep[] curr_split_pieces = found_trace.split_with_end_line(line_no, intersecting_lines[jndex]);
+         BrdTracep[] curr_split_pieces = found_trace.split_with_end_line(line_no, inter_line);
 
          if (curr_split_pieces != null)
             {

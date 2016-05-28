@@ -15,6 +15,8 @@
  */
 package freert.planar;
 
+import java.util.ArrayList;
+
 
 
 /**
@@ -302,11 +304,14 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     * Otherwise the result array has length 1 and the intersection point is the the unique intersection or touching point. 
     * The result is not symmetric in this and p_other, because intersecting lines and not the intersection points are returned.
     */
-   public PlaLineInt[] intersection(PlaSegmentInt p_other)
+   public ArrayList<PlaLineInt> intersection(PlaSegmentInt p_other)
       {
+      ArrayList<PlaLineInt> risul = new ArrayList<PlaLineInt> (3);
+      
       if ( ! bounding_box().intersects(p_other.bounding_box()))
          {
-         return new PlaLineInt[0];
+         // this is actually an empty risul
+         return risul;
          }
       
       PlaSide start_point_side = start_point().side_of(p_other.middle);
@@ -333,42 +338,38 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          int cmp = left_line.end_point().compare_x_y(right_line.start_point());
          if (cmp < 0)
             {
-            // end point of the left line is to the lsft of the start point of the right line
-            return new PlaLineInt[0];
+            // end point of the left line is to the lsft of the start point of the right line. Empty
+            return risul;
             }
          
          if (cmp == 0)
             {
             // end point of the left line is equal to the start point of the right line
-            PlaLineInt[] result = new PlaLineInt[1];
-            result[0] = left_line.end;
-            return result;
+            risul.add(left_line.end);
+            return risul;
             }
          
          // now there is a real overlap
-         PlaLineInt[] result = new PlaLineInt[2];
-         result[0] = right_line.start;
+         risul.add ( right_line.start );
+
          if (right_line.end_point().compare_x_y(left_line.end_point()) >= 0)
-            {
-            result[1] = left_line.end;
-            }
+            risul.add ( left_line.end );
          else
-            {
-            result[1] = right_line.end;
-            }
-         return result;
+            risul.add ( right_line.end );
+
+         return risul;
          }
       
       if (start_point_side == end_point_side || p_other.start_point().side_of(middle) == p_other.end_point().side_of(middle))
          {
-         return new PlaLineInt[0]; // no intersection possible
+         // no intersection possible
+         return risul; 
          }
 
       // now both start points and both end points are on different sides of the middle line of the other segment.
-      
-      PlaLineInt[] result = new PlaLineInt[1];
-      result[0] = p_other.middle;
-      return result;
+      risul.add ( p_other.middle );
+
+      return risul;
       }
 
    /**
@@ -376,9 +377,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public boolean intersects(PlaSegmentInt p_other)
       {
-      PlaLineInt[] intersections = intersection(p_other);
+      ArrayList<PlaLineInt> intersections = intersection(p_other);
       
-      return intersections.length > 0;
+      return intersections.size() > 0;
       }
 
    /**
@@ -386,9 +387,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public boolean overlaps(PlaSegmentInt p_other)
       {
-      PlaLineInt[] intersections = intersection(p_other);
+      ArrayList<PlaLineInt> intersections = intersection(p_other);
       
-      return intersections.length > 1;
+      return intersections.size() > 1;
       }
 
 
