@@ -1191,7 +1191,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * p_endline and the line with number p_line_no must not be parallel. 
     * The order of the lines ins the two result pieces is preserved. 
     * p_line_no must be bigger than 0 and less then arr.length - 1.
-    * Damiano ok, let me try to split ending into an int point, since the "old" trace will be deleted...
+    * Damiano no good to try to round intersection points to integers by brute force probably the rest of the system sees overlaps
     * @return an empty result if nothing wqs split
     */
    public ArrayList<Polyline> split(int p_line_no, PlaLineInt p_end_line)

@@ -255,6 +255,7 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       BigInteger vyvy = BigInteger.valueOf((long) v.v_y * v.v_y);
       BigInteger vxvy = BigInteger.valueOf((long) v.v_x * v.v_y);
       BigInteger denominator = vxvx.add(vyvy);
+      
       BigInteger det = BigInteger.valueOf(p_line.point_a.determinant(p_line.point_b));
       BigInteger point_x = BigInteger.valueOf(v_x);
       BigInteger point_y = BigInteger.valueOf(v_y);

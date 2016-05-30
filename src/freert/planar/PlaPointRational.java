@@ -280,6 +280,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
             denominator = BigInteger.ONE;
             }
          }
+      
       return new PlaPointRational(proj_x, proj_y, denominator);
       }
 

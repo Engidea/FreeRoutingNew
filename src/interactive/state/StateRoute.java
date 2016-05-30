@@ -140,11 +140,10 @@ public abstract class StateRoute extends StateInteractive
          else
             {
             PlaPointFloat nearest_point = picked_trace.polyline().nearest_point_approx(p_location);
-
             location = nearest_point.round();
-            
-            start_ok = routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_idx());
             }
+         
+         start_ok = routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_idx());
          
          if (start_ok && ! i_board.itera_settings.manual_rule_selection)
             {
