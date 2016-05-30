@@ -1192,32 +1192,35 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * The order of the lines ins the two result pieces is preserved. 
     * p_line_no must be bigger than 0 and less then arr.length - 1.
     * Damiano ok, let me try to split ending into an int point, since the "old" trace will be deleted...
-    * @return null, if nothing was split
+    * @return an empty result if nothing wqs split
     */
-   public Polyline[] split(int p_line_no, PlaLineInt p_end_line)
+   public ArrayList<Polyline> split(int p_line_no, PlaLineInt p_end_line)
       {
+      ArrayList<Polyline> result = new ArrayList<Polyline>(2);
+      
       if (p_line_no < 1 || p_line_no > plalinelen(-2) )
          {
          System.out.println("Polyline.split: p_line_no out of range");
-         return null;
+         return result;
          }
       
       PlaLineInt s_line = plaline(p_line_no); 
       
-      if (s_line.is_parallel(p_end_line)) return null;
+      if (s_line.is_parallel(p_end_line)) return result;
       
       PlaPointFloat a_corner = s_line.intersection_approx(p_end_line);
       
-      if ( a_corner.is_NaN() ) return null;
+      // should not happen, but might since lines are almost parallel
+      if ( a_corner.is_NaN() ) return result;
       
       // Yes, it happens a lot that the end corner is rational, however, test shows that it is ok to round it
       // to an int point since it actually must fall into a drawable board
       PlaPointInt new_end_corner = a_corner.round();
 
       // No split, if p_end_line does not intersect, but touches only tnis Polyline at an end point.
-      if (p_line_no == 1 && new_end_corner.equals(corner_first()) ) return null;
+      if (p_line_no == 1 && new_end_corner.equals(corner_first()) ) return result;
       
-      if ( p_line_no == plalinelen(-2) && new_end_corner.equals(corner_last()) ) return null;
+      if ( p_line_no == plalinelen(-2) && new_end_corner.equals(corner_last()) ) return result;
 
       PlaLineIntAlist first_piece = new PlaLineIntAlist(plalinelen());
       
@@ -1234,17 +1237,18 @@ public final class Polyline implements java.io.Serializable, PlaObject
 
       // and the rest of lines, up until the end
       plaline_append(second_piece, p_line_no);
-      
-      Polyline[] result = new Polyline[2];
+ 
+      Polyline first_poly = new Polyline(first_piece);
 
-      result[0] = new Polyline(first_piece);
-
-      if (result[0].has_corner_loopt() ) return null;
+      if (first_poly.has_corner_loopt() ) return result;
       
-      result[1] = new Polyline(second_piece);
+      Polyline second_poly = new Polyline(second_piece);
       
-      if ( result[1].has_corner_loopt() )  return null;
+      if ( second_poly.has_corner_loopt() )  return result;
 
+      result.add(first_poly);
+      result.add(second_poly);
+      
       return result;
       }
 

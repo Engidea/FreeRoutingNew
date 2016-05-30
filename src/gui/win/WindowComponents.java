@@ -37,7 +37,7 @@ public class WindowComponents extends WindowObjectListWithFilter
       {
       super(p_board_frame);
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("gui.resources.Default", p_board_frame.get_locale());
-      this.setTitle(resources.getString("components"));
+      setTitle(resources.getString("components"));
       p_board_frame.set_context_sensitive_help(this, "WindowObjectList_BoardComponents");
       }
 
@@ -47,7 +47,7 @@ public class WindowComponents extends WindowObjectListWithFilter
    @Override
    protected void fill_list()
       {
-      BrdComponents components = this.board_frame.board_panel.board_handling.get_routing_board().brd_components;
+      BrdComponents components = board_frame.board_panel.board_handling.get_routing_board().brd_components;
       BrdComponent[] sorted_arr = new BrdComponent[components.count()];
       for (int i = 0; i < sorted_arr.length; ++i)
          {
@@ -56,9 +56,9 @@ public class WindowComponents extends WindowObjectListWithFilter
       java.util.Arrays.sort(sorted_arr);
       for (int i = 0; i < sorted_arr.length; ++i)
          {
-         this.add_to_list(sorted_arr[i]);
+         add_to_list(sorted_arr[i]);
          }
-      this.gui_list.setVisibleRowCount(Math.min(components.count(), DEFAULT_TABLE_SIZE));
+      gui_list.setVisibleRowCount(Math.min(components.count(), DEFAULT_TABLE_SIZE));
       }
 
    protected void select_instances()

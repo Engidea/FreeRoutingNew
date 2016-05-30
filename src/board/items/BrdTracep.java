@@ -1245,17 +1245,17 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // if split prohibited do nothing
       if ( ! split_inside_drill_pad_allowed(p_line_no, p_new_end_line)) return risul;
 
-      Polyline[] split_polylines = polyline.split(p_line_no, p_new_end_line);
+      ArrayList<Polyline> split_polylines = polyline.split(p_line_no, p_new_end_line);
 
-      if (split_polylines == null) return risul;
+      if (split_polylines.size() < 2) return risul;
       
       r_board.remove_item(this);
 
-      BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines[0], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(0), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
       if ( a_trace != null ) risul.add( a_trace );
       
-      a_trace = r_board.insert_trace_without_cleaning(split_polylines[1], get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(1), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
       if ( a_trace != null ) risul.add( a_trace );
 

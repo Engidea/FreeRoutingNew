@@ -36,28 +36,30 @@ public final class ShapeTileBox extends ShapeTileRegular
    // coordinates of the upper right corner
    public final PlaPointInt box_ur;   
    
+   public ShapeTileBox (PlaPointInt a_point)
+      {
+      box_ll = a_point;
+      box_ur = a_point;
+      }
+   
    public ShapeTileBox (PlaPoint a_point)
       {
-      if ( a_point instanceof PlaPointInt )
+      if ( a_point.is_rational() )
          {
-         box_ll = (PlaPointInt)a_point;
-         box_ur = (PlaPointInt)a_point;
-         }
-      else if ( a_point instanceof PlaPointRational )
-         {
-         
          PlaPointFloat fp = a_point.to_float();
          double p_ll_x = Math.floor(fp.v_x);
          double p_ll_y = Math.floor(fp.v_y);
          double p_ur_x = Math.ceil(fp.v_x);
          double p_ur_y = Math.ceil(fp.v_y);
+         
          box_ll = new PlaPointInt(p_ll_x, p_ll_y);
          box_ur = new PlaPointInt(p_ur_x, p_ur_y);
          }
       else 
          {
-         box_ll = new PlaPointInt();
-         box_ur = new PlaPointInt();
+         PlaPointInt i_point = a_point.round();
+         box_ll = i_point;
+         box_ur = i_point;
          }
       }
 
@@ -102,7 +104,7 @@ public final class ShapeTileBox extends ShapeTileRegular
     */
    public int width()
       {
-      return (box_ur.v_x - box_ll.v_x);
+      return box_ur.v_x - box_ll.v_x;
       }
 
    /**
@@ -110,7 +112,7 @@ public final class ShapeTileBox extends ShapeTileRegular
     */
    public int height()
       {
-      return (box_ur.v_y - box_ll.v_y);
+      return box_ur.v_y - box_ll.v_y;
       }
 
    @Override
