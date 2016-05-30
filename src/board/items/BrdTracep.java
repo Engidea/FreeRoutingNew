@@ -478,29 +478,40 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return p_filter.is_selected(ItemSelectionChoice.TRACES);
       }
 
+   
+   private final void touching_pins_at_end_corners(TreeSet<BrdAbitPin>result, PlaPoint curr_end_point)
+      {
+      ShapeTileOctagon curr_oct;
+      
+      if ( curr_end_point.is_rational() )
+         curr_oct = new ShapeTileOctagon(curr_end_point.to_float());
+      else
+         curr_oct = new ShapeTileOctagon(curr_end_point.round());
+      
+      curr_oct = curr_oct.enlarge(trace_half_width);
+      
+      Set<BrdItem> curr_overlaps = r_board.overlapping_items_with_clearance(curr_oct, layer_no, NetNosList.EMPTY, clearance_idx());
+   
+      for (BrdItem curr_item : curr_overlaps)
+         {
+         if ((curr_item instanceof BrdAbitPin) && curr_item.shares_net(this))
+            {
+            result.add((BrdAbitPin) curr_item);
+            }
+         }
+      }
+   
    /**
     * Looks up touching pins at the first corner and the last corner of the trace. 
     * Used to avoid acid traps.
     */
-   public final Set<BrdAbitPin> touching_pins_at_end_corners()
+   public final TreeSet<BrdAbitPin> touching_pins_at_end_corners()
       {
-      Set<BrdAbitPin> result = new TreeSet<BrdAbitPin>();
+      TreeSet<BrdAbitPin> result = new TreeSet<BrdAbitPin>();
 
-      PlaPoint curr_end_point = corner_first();
-      for (int index = 0; index < 2; ++index)
-         {
-         ShapeTileOctagon curr_oct = new ShapeTileOctagon(curr_end_point);
-         curr_oct = curr_oct.enlarge(trace_half_width);
-         Set<BrdItem> curr_overlaps = r_board.overlapping_items_with_clearance(curr_oct, layer_no, NetNosList.EMPTY, clearance_idx());
-         for (BrdItem curr_item : curr_overlaps)
-            {
-            if ((curr_item instanceof BrdAbitPin) && curr_item.shares_net(this))
-               {
-               result.add((BrdAbitPin) curr_item);
-               }
-            }
-         curr_end_point = corner_last();
-         }
+      touching_pins_at_end_corners(result, corner_first());
+      touching_pins_at_end_corners(result, corner_last());
+      
       return result;
       }
 

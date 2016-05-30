@@ -348,8 +348,7 @@ public final class ShapeTileSimplex extends ShapeTile
          // now the 3 lines intersect in the same point
          return PlaDimension.POINT;
          }
-      // now the simplex has 4 edge lines
-      // check if opposing lines are collinear
+      // now the simplex has 4 edge lines check if opposing lines are collinear
       boolean collinear_0_2 = lines_arr[0].overlaps(lines_arr[2]);
       boolean collinear_1_3 = lines_arr[1].overlaps(lines_arr[3]);
       if (collinear_0_2 && collinear_1_3)

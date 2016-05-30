@@ -55,60 +55,49 @@ public final class ShapeTileOctagon extends ShapeTileRegular
     * Construct n octagon around the given point
     * @param a_point
     */
-   public ShapeTileOctagon ( PlaPoint a_point )
+   public ShapeTileOctagon ( PlaPointInt a_point )
       {
-      if ( a_point instanceof PlaPointInt )
-         {
-         PlaPointInt pint = (PlaPointInt) a_point;
-         int tmp_1 = pint.v_x - pint.v_y;
-         int tmp_2 = pint.v_x + pint.v_y;
+      int tmp_1 = a_point.v_x - a_point.v_y;
+      int tmp_2 = a_point.v_x + a_point.v_y;
 
-         oct_lx  = pint.v_x;
-         oct_ly  = pint.v_y;
-         oct_rx  = pint.v_x;;
-         oct_uy  = pint.v_y;
-         oct_ulx = tmp_1;
-         oct_lrx = tmp_1;
-         oct_llx = tmp_2;
-         oct_urx = tmp_2;
-         }
-      else if ( a_point instanceof PlaPointRational )
-         {
-         PlaPointFloat fp = ((PlaPointRational)a_point).to_float();
-         int lx = (int) Math.floor(fp.v_x);
-         int ly = (int) Math.floor(fp.v_y);
-         int rx = (int) Math.ceil(fp.v_x);
-         int uy = (int) Math.ceil(fp.v_y);
+      oct_lx  = a_point.v_x;
+      oct_ly  = a_point.v_y;
+      oct_rx  = a_point.v_x;;
+      oct_uy  = a_point.v_y;
+      oct_ulx = tmp_1;
+      oct_lrx = tmp_1;
+      oct_llx = tmp_2;
+      oct_urx = tmp_2;
+      }
+   
+   /**
+    * Construct n octagon around the given point
+    * @param a_point
+    */
+   public ShapeTileOctagon ( PlaPointFloat a_point )
+      {
+      PlaPointFloat fp = a_point;
+      int lx = (int) Math.floor(fp.v_x);
+      int ly = (int) Math.floor(fp.v_y);
+      int rx = (int) Math.ceil(fp.v_x);
+      int uy = (int) Math.ceil(fp.v_y);
 
-         double tmp = fp.v_x - fp.v_y;
-         int ulx = (int) Math.floor(tmp);
-         int lrx = (int) Math.ceil(tmp);
+      double tmp = fp.v_x - fp.v_y;
+      int ulx = (int) Math.floor(tmp);
+      int lrx = (int) Math.ceil(tmp);
 
-         tmp = fp.v_x + fp.v_y;
-         int llx = (int) Math.floor(tmp);
-         int urx = (int) Math.ceil(tmp);
-         
-         oct_lx  = lx;
-         oct_ly  = ly;
-         oct_rx  = rx;
-         oct_uy  = uy;
-         oct_ulx = ulx;
-         oct_lrx = lrx;
-         oct_llx = llx;
-         oct_urx = urx;
-         }
-      else
-         {
-         is_nan  = true;
-         oct_lx  = 0;
-         oct_ly  = 0;
-         oct_rx  = 0;
-         oct_uy  = 0;
-         oct_ulx = 0;
-         oct_lrx = 0;
-         oct_llx = 0;
-         oct_urx = 0;
-         }
+      tmp = fp.v_x + fp.v_y;
+      int llx = (int) Math.floor(tmp);
+      int urx = (int) Math.ceil(tmp);
+      
+      oct_lx  = lx;
+      oct_ly  = ly;
+      oct_rx  = rx;
+      oct_uy  = uy;
+      oct_ulx = ulx;
+      oct_lrx = lrx;
+      oct_llx = llx;
+      oct_urx = urx;
       }
    
    /**
