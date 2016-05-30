@@ -314,6 +314,8 @@ public final class AlgoOptimizeVia
             {
             prev_corner = trace_polyline.corner(trace_polyline.corner_count() - 3);
             }
+         
+         
          PlaPointFloat float_check_corner = check_corner.to_float();
          PlaPointFloat float_via_center = via_center.to_float();
          PlaPointFloat float_prev_corner = prev_corner.to_float();

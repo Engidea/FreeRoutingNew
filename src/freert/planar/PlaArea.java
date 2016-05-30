@@ -85,8 +85,7 @@ public interface PlaArea extends PlaObject
    boolean contains(PlaPointFloat p_point);
 
    /**
-    * Returns true, if p_point is inside or on the border of this area, but not
-    * inside a hole.
+    * @return true, if p_point is inside or on the border of this area, but not inside a hole.
     */
    boolean contains(PlaPoint p_point);
 

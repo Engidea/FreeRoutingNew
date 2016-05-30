@@ -14,11 +14,12 @@
  *   for more details.
  */
 
-package board.shape;
+package board.algo;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import board.BrdFromSide;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;
@@ -28,6 +29,7 @@ import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
+import board.shape.ShapeSearchTree;
 import board.varie.ItemFixState;
 import board.varie.ShapeTraceEntryPoint;
 import freert.planar.PlaLineInt;
@@ -45,66 +47,71 @@ import freert.varie.NetNosList;
  * @author Alfons Wirtz
  */
 
-public final class ShapeTraceEntries
+public final class AlgoShoveTraceEntries
    {
-   public final Collection<BrdAbitVia> shove_via_list;
+   private static final double c_offset_add = 1;
+
+   private final RoutingBoard r_board;
+
    private final ShapeTile shape;
    private final int layer;
    private final NetNosList own_net_nos;
    private final int cl_class;
+   
    private BrdFromSide from_side;
-   private final RoutingBoard board;
    private ShapeTraceEntryPoint list_anchor;
    private int trace_piece_count;
    private int max_stack_level;
    private boolean shape_contains_trace_tails = false;
    private BrdItem found_obstacle = null;
-   private static final double c_offset_add = 1;
    
+   public  final Collection<BrdAbitVia> shove_via_list = new LinkedList<BrdAbitVia>();
+
    /**
-    * Used for shoving traces and vias out of the input shape. p_from_side.no is the side of p_shape, from where the shove comes. if
-    * p_from_side.no < 0, it will be calculated internally.
+    * Used for shoving traces and vias out of the input shape. 
+    * p_from_side.no is the side of p_shape, from where the shove comes. 
+    * if p_from_side.no < 0, it will be calculated internally.
     */
-   public ShapeTraceEntries(ShapeTile p_shape, int p_layer, NetNosList p_own_net_nos, int p_cl_type, BrdFromSide p_from_side, RoutingBoard p_board)
+   public AlgoShoveTraceEntries(ShapeTile p_shape, int p_layer, NetNosList p_own_net_nos, int p_cl_type, BrdFromSide p_from_side, RoutingBoard p_board)
       {
       shape = p_shape;
       layer = p_layer;
       own_net_nos = p_own_net_nos;
       cl_class = p_cl_type;
       from_side = p_from_side;
-      board = p_board;
+      r_board = p_board;
       list_anchor = null;
       trace_piece_count = 0;
       max_stack_level = 0;
-      shove_via_list = new java.util.LinkedList<BrdAbitVia>();
       }
 
    /**
-    * Stores traces and vias in p_item_list. Returns false, if p_item_list contains obstacles, which cannot be shoved aside. If
-    * p_is_pad_check. the check is for vias, otherwise it is for traces. If p_copper_sharing_allowed, overlaps with traces or pads
-    * of the own net are allowed.
+    * Stores traces and vias in p_item_list. 
+    * If p_is_pad_check. the check is for vias, otherwise it is for traces. 
+    * If p_copper_sharing_allowed, overlaps with traces or pads of the own net are allowed.
+    * @return false, if p_item_list contains obstacles, which cannot be shoved aside. 
     */
    public boolean store_items(Collection<BrdItem> p_item_list, boolean p_is_pad_check, boolean p_copper_sharing_allowed)
       {
-      Iterator<BrdItem> it = p_item_list.iterator();
-      while (it.hasNext())
+      for ( BrdItem curr_item : p_item_list )
          {
-         BrdItem curr_item = it.next();
-
          if (!p_is_pad_check && curr_item instanceof BrdAreaObstacleVia || curr_item instanceof BrdAreaObstacleComp)
             {
             continue;
             }
+
          boolean contains_own_net = curr_item.shares_net_no(own_net_nos);
          if (curr_item instanceof BrdAreaConduction && (contains_own_net || !((BrdAreaConduction) curr_item).get_is_obstacle()))
             {
             continue;
             }
+         
          if (curr_item.is_shove_fixed() && !contains_own_net)
             {
             found_obstacle = curr_item;
             return false;
             }
+         
          if (curr_item instanceof BrdAbitVia)
             {
             if (p_is_pad_check || !contains_own_net)
@@ -143,12 +150,12 @@ public final class ShapeTraceEntries
                }
             }
          }
+      
       search_from_side();
       resort();
-      if (!calculate_stack_levels())
-         {
-         return false;
-         }
+      
+      if ( ! calculate_stack_levels())  return false;
+
       return true;
       }
 
@@ -164,7 +171,7 @@ public final class ShapeTraceEntries
 
       BrdTracep curr_trace = entries[0].trace;
       ShapeTile offset_shape;
-      ShapeSearchTree search_tree = board.search_tree_manager.get_default_tree();
+      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       if (search_tree.is_clearance_compensation_used())
          {
          double curr_offset = curr_trace.get_compensated_half_width(search_tree) + c_offset_add;
@@ -174,7 +181,7 @@ public final class ShapeTraceEntries
          {
          // enlarge the shape in 2 steps for symmetry reasons
          offset_shape = (ShapeTile) shape.offset(curr_trace.get_half_width());
-         double cl_offset = board.get_clearance(curr_trace.clearance_idx(), cl_class, layer) + c_offset_add;
+         double cl_offset = r_board.get_clearance(curr_trace.clearance_idx(), cl_class, layer) + c_offset_add;
          offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
          }
       int edge_count = shape.border_line_count();
@@ -213,7 +220,7 @@ public final class ShapeTraceEntries
                curr_trace.get_half_width(), 
                curr_trace.net_nos,
                curr_trace.clearance_idx(), 
-               0, 0, ItemFixState.UNFIXED, board);
+               0, 0, ItemFixState.UNFIXED, r_board);
          }
       catch ( Exception exc )
          {
@@ -368,7 +375,7 @@ public final class ShapeTraceEntries
     */
    private boolean store_trace(BrdTracep p_trace)
       {
-      ShapeSearchTree search_tree = board.search_tree_manager.get_default_tree();
+      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTile offset_shape;
       if (search_tree.is_clearance_compensation_used())
          {
@@ -378,7 +385,7 @@ public final class ShapeTraceEntries
       else
          {
          // enlarge the shape in 2 steps for symmetry reasons
-         double cl_offset = board.get_clearance(p_trace.clearance_idx(), cl_class, p_trace.get_layer()) + c_offset_add;
+         double cl_offset = r_board.get_clearance(p_trace.clearance_idx(), cl_class, p_trace.get_layer()) + c_offset_add;
          offset_shape = (ShapeTile) shape.offset(p_trace.get_half_width());
          offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
          }
@@ -454,8 +461,8 @@ public final class ShapeTraceEntries
                   double via_trace_diff = via_shape.smallest_radius() - p_trace.get_compensated_half_width(search_tree);
                   if (!search_tree.is_clearance_compensation_used())
                      {
-                     int via_clearance = board.get_clearance(contact_item.clearance_idx(), cl_class, layer);
-                     int trace_clearance = board.get_clearance(p_trace.clearance_idx(), cl_class, layer);
+                     int via_clearance = r_board.get_clearance(contact_item.clearance_idx(), cl_class, layer);
+                     int trace_clearance = r_board.get_clearance(p_trace.clearance_idx(), cl_class, layer);
                      if (trace_clearance > via_clearance)
                         {
                         via_trace_diff += via_clearance - trace_clearance;
@@ -543,8 +550,8 @@ public final class ShapeTraceEntries
          System.out.println("ShapeTraceEntries.resort: from side not calculated");
          return;
          }
-      // resort the intersection points, so that they start in the
-      // middle of from_side.
+      
+      // resort the intersection points, so that they start in the middle of from_side.
       PlaPointFloat compare_corner_1 = shape.corner_approx(from_side.side_no);
       PlaPointFloat compare_corner_2;
       if (from_side.side_no == edge_count - 1)
@@ -566,8 +573,7 @@ public final class ShapeTraceEntries
             from_side = new BrdFromSide(from_side.side_no, null);
             }
          }
-      // search the first intersection point between the side middle
-      // and compare_corner_2
+      // search the first intersection point between the side middle and compare_corner_2
       ShapeTraceEntryPoint curr = list_anchor;
       ShapeTraceEntryPoint prev = null;
 
@@ -611,8 +617,7 @@ public final class ShapeTraceEntries
          curr = list_anchor;
          while (curr != new_anchor)
             {
-            // add edge_count to curr.side to differentiate points
-            // before and after the middle of from_side
+            // add edge_count to curr.side to differentiate points before and after the middle of from_side
             curr.edge_no += edge_count;
             prev = curr;
             curr = prev.next;
@@ -692,13 +697,12 @@ public final class ShapeTraceEntries
 
    private boolean calculate_stack_levels()
       {
-      if (list_anchor == null)
-         {
-         return true;
-         }
+      if (list_anchor == null) return true;
+
       ShapeTraceEntryPoint curr_entry = list_anchor;
       NetNosList curr_net_nos = curr_entry.trace.net_nos;
       int curr_level;
+
       if ( curr_net_nos.net_nos_equal(own_net_nos))
          {
          // ignore own net when calculating the stack level

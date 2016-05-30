@@ -30,7 +30,6 @@ import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeTraceEntries;
 import board.varie.BrdStopConnection;
 import board.varie.ShoveDrillResult;
 import freert.planar.PlaDirection;
@@ -87,7 +86,7 @@ public final class AlgoShovePad
          }
       
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
+      AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
 
       if (p_ignore_items != null)
@@ -244,7 +243,7 @@ public final class AlgoShovePad
          }
       
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
+      AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       
       if (p_ignore_items != null) obstacles.removeAll(p_ignore_items);

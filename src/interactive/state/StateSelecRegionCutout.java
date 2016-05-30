@@ -109,7 +109,7 @@ public class StateSelecRegionCutout extends StateSelectRegion
 
       for (BrdTracep curr_trace : trace_list)
          {
-         board.shape.ShapeTraceEntries.cutout_trace(curr_trace, cut_box, 0);
+         board.algo.AlgoShoveTraceEntries.cutout_trace(curr_trace, cut_box, 0);
          for (int i = 0; i < curr_trace.net_count(); ++i)
             {
             changed_nets.add(curr_trace.get_net_no(i));

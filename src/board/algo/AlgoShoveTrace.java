@@ -36,7 +36,6 @@ import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeTraceEntries;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
 import freert.planar.PlaDirection;
@@ -107,7 +106,7 @@ public final class AlgoShoveTrace
          return false;
          }
       
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
+      AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
@@ -296,7 +295,7 @@ public final class AlgoShoveTrace
       if (!trace_shape.is_contained_in(r_board.get_bounding_box())) return 0;
       
       BrdFromSide from_side = new BrdFromSide(p_line_segment, trace_shape, p_shove_to_the_left);
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(trace_shape, p_layer, p_net_no_arr, p_cl_type, from_side, r_board);
+      AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(trace_shape, p_layer, p_net_no_arr, p_cl_type, from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
 
@@ -420,6 +419,7 @@ public final class AlgoShoveTrace
    /**
     * Puts in a trace segment with the input parameters and shoves obstacles out of the way. 
     * If the shove does not work, the database may be damaged. To prevent this, call check first.
+    * @return true if all is fine
     */
    public boolean shove_trace_insert(
          ShapeTile p_trace_shape, 
@@ -459,7 +459,7 @@ public final class AlgoShoveTrace
          return false;
          }
       
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
+      AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
@@ -491,6 +491,7 @@ public final class AlgoShoveTrace
       boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr);
       shape_entries.cutout_traces(obstacles);
       boolean is_orthogonal_mode = p_trace_shape instanceof ShapeTileBox;
+      
       for (;;)
          {
          BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
@@ -523,9 +524,9 @@ public final class AlgoShoveTrace
                }
             }
          NetNosList curr_net_no_arr = curr_substitute_trace.net_nos;
-         for (int i = 0; i < curr_substitute_trace.tile_shape_count(); ++i)
+         for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
-            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, i, is_orthogonal_mode, false);
+            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, false);
             if ( !  shove_trace_insert(
                   curr.shape, 
                   curr.from_side, 
@@ -540,10 +541,11 @@ public final class AlgoShoveTrace
                }
             }
          
-         for (int i = 0; i < curr_substitute_trace.corner_count(); ++i)
+         for (int index = 0; index < curr_substitute_trace.corner_count(); ++index)
             {
-            r_board.join_changed_area(curr_substitute_trace.polyline().corner_approx(i), p_layer);
+            r_board.join_changed_area(curr_substitute_trace.polyline().corner_approx(index), p_layer);
             }
+         
          PlaPoint[] end_corners = null;
          if (!tails_exist_before)
             {
@@ -558,9 +560,9 @@ public final class AlgoShoveTrace
 
          if ( ! tails_exist_before)  // TODO
             {
-            for (int i = 0; i < 2; ++i)
+            for (int index = 0; index < 2; ++index)
                {
-               BrdTracep tail = r_board.get_trace_tail(end_corners[i], p_layer, curr_net_no_arr);
+               BrdTracep tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
 
                if (tail != null)
                   {

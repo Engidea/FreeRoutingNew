@@ -31,7 +31,6 @@ import board.items.BrdAreaConduction;
 import board.items.BrdItem;
 import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeTraceEntries;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPointFloat;
@@ -222,7 +221,7 @@ public final class AlgoMoveDrillItem
          boolean p_copper_sharing_allowed)
       {
       ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      ShapeTraceEntries shape_entries = new ShapeTraceEntries(
+      AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(
             p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_obstacle_shape, p_layer, NetNosList.EMPTY, p_cl_type);
 
