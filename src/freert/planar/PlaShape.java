@@ -89,8 +89,9 @@ public interface PlaShape extends PlaArea
    double smallest_radius();
 
    /**
-    * Returns the offset shape of this shape by offseting the boundary by p_distance to the outside. The result instsnce may be of a
-    * different class than this instance. (For example an enlarged IntBox is an IntOctagon).
+    * Returns the offset shape of this shape by offseting the boundary by p_distance to the outside. 
+    * The result instsnce may be of a different class than this instance. 
+    * For example an enlarged IntBox is an IntOctagon
     */
    PlaShape enlarge(double p_offset);
 

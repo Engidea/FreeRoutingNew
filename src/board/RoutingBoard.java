@@ -996,11 +996,12 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Returns items, which overlap with p_shape on layer p_layer inclusive clearance. p_clearance_class is the index in the
-    * clearance matrix, which describes the required clearance restrictions to other items. The function may also return items,
-    * which are nearly overlapping, but do not overlap with exact calculation. If p_layer < 0, the layer is ignored.
+    * Returns items, which overlap with p_shape on layer p_layer inclusive clearance. 
+    * p_clearance_class is the index in the clearance matrix, which describes the required clearance restrictions to other items. 
+    * The function may also return items, which are nearly overlapping, but do not overlap with exact calculation. 
+    * If p_layer < 0, the layer is ignored.
     */
-   public Set<BrdItem> overlapping_items_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
+   public Set<BrdItem> overlapping_items_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
       return default_tree.find_overlap_items_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
@@ -2306,7 +2307,8 @@ public final class RoutingBoard implements java.io.Serializable
    
    /**
     * Tries to insert a trace polyline with the input parameters from while shoving aside obstacle traces and vias. 
-    * Returns the last corner on the polyline, to which the shove succeeded. 
+    * Returns the last corner on the polyline, to which the shove succeeded
+    * Now, this enforces int points, but splitting creates new ones, in theory not at end points, but not really... argh...
     * @returns null if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
     */
    public final PlaPointInt insert_trace_polyline(
@@ -2338,7 +2340,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       PlaPoint to_corner_point = p_polyline.corner_last();
 
-      if (!( to_corner_point instanceof PlaPointInt))
+      if ( to_corner_point.is_rational() )
          {
          System.err.println(classname+"insert_trace_polyline: to_corner_point NOT int");
          // really. what is the point of returning this ? I did not actually route up to this !

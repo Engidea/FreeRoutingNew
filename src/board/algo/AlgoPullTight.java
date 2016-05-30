@@ -500,15 +500,15 @@ public abstract class AlgoPullTight
       }
 
    /**
-    * Smoothen acute angles with contact traces. Returns true, if something was changed
+    * Smoothen acute angles with contact traces
     * @return true if something was changed
     */
    public final boolean smoothen_end_corners_at_trace(BrdTracep p_trace)
       {
-      curr_layer = p_trace.get_layer();
+      curr_layer      = p_trace.get_layer();
       curr_half_width = p_trace.get_half_width();
       curr_net_no_arr = p_trace.net_nos;
-      curr_cl_type = p_trace.clearance_idx();
+      curr_cl_type    = p_trace.clearance_idx();
       
       return smoothen_end_corners_at_trace_one(p_trace);
       }

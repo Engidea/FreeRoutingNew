@@ -251,7 +251,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * If p_ignore_net is false, only contacts to items sharing a net with this trace are calculated. This is the normal case.
     * @param p_skip_areas if true the skip elements of type BrdAreaConduction
     */
-   public TreeSet<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net, boolean p_skip_areas )
+   public final TreeSet<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net, boolean p_skip_areas )
       {
       TreeSet<BrdItem> result = new TreeSet<BrdItem>();
 
@@ -308,9 +308,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return result;
       }
    
-   public TreeSet<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net)
+   public final TreeSet<BrdItem> get_normal_contacts(PlaPoint p_point, boolean p_ignore_net)
       {
-      return get_normal_contacts(p_point,p_ignore_net, false);
+      return get_normal_contacts(p_point, p_ignore_net, false);
       }
 
    @Override
@@ -562,6 +562,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * returns the first corner of the trace
     * returns the first corner of this trace, which is the intersection of the first and second lines of its polyline
     * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
+    * Well, it would be nice if it was that easy. not, unfortunately.
     */
    public PlaPoint corner_first()
       {
@@ -572,6 +573,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * returns the last corner of the trace
     * returns the last corner of this trace, which is the intersection of the last two lines of its polyline
     * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
+    * Well, it would be nice if it was that easy. not, unfortunately.
     */
    public PlaPoint corner_last()
       {
@@ -842,9 +844,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
    /**
     * looks, if this trace can be combined at its last point with another trace.
-    * Returns true, if somthing was combined. The corners of the other trace
-    * will be inserted at the end of thie trace. In case of combine the other
-    * trace will be deleted and this trace will remain.
+    * @return true, if somthing was combined. 
+    * The corners of the other trace will be inserted at the end of thie trace. 
+    * In case of combine the other trace will be deleted and this trace will remain.
     */
    private boolean combine_at_end()
       {

@@ -47,7 +47,6 @@ import freert.planar.PlaSegmentInt;
 import freert.planar.PlaToupleInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
-import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.varie.NetNosList;
@@ -578,7 +577,7 @@ public final class AlgoShoveTrace
       return true;
       }
 
-   Collection<BrdItem> get_ignore_items_at_tie_pins(ShapeTile p_trace_shape, int p_layer, NetNosList p_net_no_arr)
+   private Collection<BrdItem> get_ignore_items_at_tie_pins(ShapeTile p_trace_shape, int p_layer, NetNosList p_net_no_arr)
       {
       Collection<ShapeTreeObject> overlaps = r_board.overlapping_objects(p_trace_shape, p_layer);
 
@@ -722,6 +721,7 @@ public final class AlgoShoveTrace
          }
       
       boolean try_spring_over = true;
+      
       if (!p_over_connected_pins)
          {
          // Check if the obstacle has a trace contact on p_layer
@@ -735,7 +735,9 @@ public final class AlgoShoveTrace
                }
             }
          }
-      ShapeConvex obstacle_shape = null;
+      
+      ShapeTile obstacle_shape = null;
+      
       if (try_spring_over)
          {
          if (found_obstacle instanceof BrdArea || found_obstacle instanceof BrdTracep)
@@ -883,34 +885,23 @@ public final class AlgoShoveTrace
       
       Polyline counter_clock_wise_result = spring_over(p_polyline, p_half_width, p_layer, p_net_no_arr, p_cl_type, true, c_max_spring_over_recursion_depth, p_contact_pins);
 
-      if (counter_clock_wise_result == p_polyline)
-         {
-         return p_polyline; // no obstacle
-         }
+      // if nothing changed, no obstacle
+      if (counter_clock_wise_result == p_polyline) return p_polyline; 
 
       Polyline clock_wise_result = spring_over(p_polyline.reverse(), p_half_width, p_layer, p_net_no_arr, p_cl_type, true, c_max_spring_over_recursion_depth, p_contact_pins);
-      Polyline result = null;
+      
       if (clock_wise_result != null && counter_clock_wise_result != null)
          {
          if (clock_wise_result.length_approx() <= counter_clock_wise_result.length_approx())
-            {
-            result = clock_wise_result.reverse();
-            }
+            return clock_wise_result.reverse();
          else
-            {
-            result = counter_clock_wise_result;
-            }
-
+            return counter_clock_wise_result;
          }
       else if (clock_wise_result != null)
-         {
-         result = clock_wise_result.reverse();
-         }
+         return clock_wise_result.reverse();
       else if (counter_clock_wise_result != null)
-         {
-         result = counter_clock_wise_result;
-         }
-
-      return result;
+         return counter_clock_wise_result;
+      else
+         return null;
       }
    }

@@ -832,7 +832,7 @@ public final class ShapeSearchTree
     * The elements in p_obstacle_entries are of type TreeEntry. 
     * if p_layer < 0, the layer is ignored. Used only internally, because the clearance compensation is not taken iinnto account.
     */
-   public final void find_overlap_tree_entries_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<ShapeTreeEntry> p_result)
+   public final void find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<ShapeTreeEntry> p_result)
       {
       if (p_shape == null) return;
 
@@ -879,7 +879,7 @@ public final class ShapeSearchTree
          }
       Iterator<ShapeSearchTreeEntry> it = sorted_items.iterator();
       int curr_half_clearance = 0;
-      ShapeConvex curr_offset_shape = p_shape;
+      ShapeTile curr_offset_shape = p_shape;
       while (it.hasNext())
          {
          ShapeSearchTreeEntry tmp_entry = it.next();
@@ -890,9 +890,9 @@ public final class ShapeSearchTree
             curr_offset_shape = (ShapeTile) p_shape.enlarge(curr_half_clearance);
             }
          ShapeTile tmp_shape = tmp_entry.leaf.object.get_tree_shape(this, tmp_entry.leaf.shape_index_in_object);
-         // enlarge both item shapes by the half clearance to create
-         // symmetry.
+         // enlarge both item shapes by the half clearance to create symmetry.
          ShapeConvex tmp_offset_shape = (ShapeConvex) tmp_shape.enlarge(curr_half_clearance);
+         
          if (curr_offset_shape.intersects(tmp_offset_shape))
             {
             p_result.add(new ShapeTreeEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
@@ -905,7 +905,7 @@ public final class ShapeSearchTree
     * If p_layer < 0 the layer is ignored.
     * @param p_result a non null Set
     */
-   public final void find_overlap_objects_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Set<ShapeTreeObject> p_result)
+   public final void find_overlap_objects_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Set<ShapeTreeObject> p_result)
       {
       Collection<ShapeTreeEntry> res_tree_entries = new LinkedList<ShapeTreeEntry>();
       
@@ -930,7 +930,7 @@ public final class ShapeSearchTree
     * The function may also return items which are nearly overlapping, but do not overlap with exact calculation. 
     * If p_layer < 0, the layer is ignored.
     */
-   public final Set<BrdItem> find_overlap_items_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
+   public final Set<BrdItem> find_overlap_items_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       Set<ShapeTreeObject> overlaps = new TreeSet<ShapeTreeObject>();
 
@@ -954,7 +954,7 @@ public final class ShapeSearchTree
     *  If p_layer < 0, the layer is ignored.
     *  This seems one of the main point for the logic, finding out if something overlaps, damiano
     */
-   public final Collection<ShapeTreeEntry> find_overlap_tree_entries_with_clearance(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
+   public final Collection<ShapeTreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       Collection<ShapeTreeEntry> result = new LinkedList<ShapeTreeEntry>();
       
@@ -1040,9 +1040,8 @@ public final class ShapeSearchTree
             if (intersection.dimension() == PlaDimension.AREA)
                {
                boolean ignore_expansion_room = curr_object instanceof ExpandRoomFreespaceComplete && p_ignore_shape != null && p_ignore_shape.contains(intersection);
-               // cannot happen in free angle roouting, because then expansion_rooms
-               // may not overlap. Therefore that can be removed as soon as special
-               // function for 45-degree routing is used.
+               // cannot happen in free angle roouting, because then expansion_rooms may not overlap. 
+               // Therefore that can be removed as soon as special function for 45-degree routing is used.
                if (!ignore_expansion_room)
                   {
                   something_changed = true;
