@@ -31,6 +31,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
+import freert.planar.ShapeTileOctagon;
 import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
@@ -48,10 +49,15 @@ public final class AlgoPullTightAny extends AlgoPullTight
    // with angles to close to 180 degree the algorithm becomes numerically unstable
    private static final double COS_ANGLE_MAX = 0.999;
    
-   
-   public AlgoPullTightAny(RoutingBoard p_board, NetNosList p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
+   public AlgoPullTightAny(
+         RoutingBoard p_board, 
+         NetNosList p_only_net_no_arr, 
+         ThreadStoppable p_stoppable_thread, 
+         BrdKeepPoint p_keep_point,
+         ShapeTileOctagon p_clip_shape,
+         int p_min_move_dist)
       {
-      super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point);
+      super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point, p_clip_shape, p_min_move_dist);
       }
 
    /**

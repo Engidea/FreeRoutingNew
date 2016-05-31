@@ -71,20 +71,27 @@ public abstract class AlgoPullTight
    // If stoppable_thread != null, the algorithm can be requested to be stopped.
    private final ThreadStoppable stoppable;
 
+   protected final ShapeTileOctagon curr_clip_shape;
+   protected final int min_move_dist;
+
    protected int curr_layer;
    protected int curr_half_width;
    protected NetNosList curr_net_no_arr;
    protected int curr_cl_type;
-   protected ShapeTileOctagon curr_clip_shape;
    protected Set<BrdAbitPin> contact_pins;
-   protected int min_move_dist;
 
 
 
    /**
     * If p_only_net_no > 0, only traces with net number p_not_no are optimized. 
     */
-   public static AlgoPullTight get_instance(RoutingBoard p_board, NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_min_move_dist, ThreadStoppable p_stoppable, BrdKeepPoint p_keep_point)
+   public static AlgoPullTight get_instance(
+         RoutingBoard p_board, 
+         NetNosList p_only_net_no_arr, 
+         ShapeTileOctagon p_clip_shape, 
+         int p_min_move_dist, 
+         ThreadStoppable p_stoppable, 
+         BrdKeepPoint p_keep_point)
       {
       TraceAngleRestriction angle_restriction = p_board.brd_rules.get_trace_snap_angle();
 
@@ -94,37 +101,31 @@ public abstract class AlgoPullTight
          p_board.userPrintln("null p_stoppable", new IllegalArgumentException("need to give me something"));
          }
       
-      AlgoPullTight result;
-      
       if (angle_restriction.is_limit_90() )
-         {
-         result = new AlgoPullTight90(p_board, p_only_net_no_arr, p_stoppable, p_keep_point );
-         }
+         return new AlgoPullTight90(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
       else if (angle_restriction.is_limit_45())
-         {
-         result = new AlgoPullTight45(p_board, p_only_net_no_arr, p_stoppable, p_keep_point );
-         }
+         return new AlgoPullTight45(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
       else
-         {
-         result = new AlgoPullTightAny(p_board, p_only_net_no_arr, p_stoppable, p_keep_point );
-         }
-      
-      result.curr_clip_shape = p_clip_shape;
-      // why is there a limit that is quite hight ?
-      result.min_move_dist = Math.max(p_min_move_dist, 10);
-      
-      return result;
+         return new AlgoPullTightAny(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
       }
 
    /**
     * Can only be created by subclasses
     */
-   protected AlgoPullTight(RoutingBoard p_board, NetNosList p_only_net_no_arr, ThreadStoppable p_stoppable_thread, BrdKeepPoint p_keep_point)
+   protected AlgoPullTight(
+         RoutingBoard p_board, 
+         NetNosList p_only_net_no_arr, 
+         ThreadStoppable p_stoppable_thread, 
+         BrdKeepPoint p_keep_point,
+         ShapeTileOctagon p_clip_shape,
+         int p_min_move_dist)
       {
       r_board = p_board;
       only_net_no_arr = p_only_net_no_arr;
       stoppable = p_stoppable_thread;
       keep_point = p_keep_point;
+      curr_clip_shape = p_clip_shape;
+      min_move_dist = Math.max(p_min_move_dist, 10);
       }
 
 
