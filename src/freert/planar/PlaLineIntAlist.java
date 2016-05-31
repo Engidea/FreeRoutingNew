@@ -26,7 +26,6 @@ public final class PlaLineIntAlist
    
    public PlaLineInt add(PlaLineInt avalue)
       {
-      
       if ( avalue != null ) a_list.add(avalue);
       
       return avalue;
@@ -40,5 +39,10 @@ public final class PlaLineIntAlist
    public int size ()
       {
       return a_list.size();
+      }
+   
+   public PlaLineInt[] to_array()
+      {
+      return a_list.toArray(new PlaLineInt[size()]);
       }
    }

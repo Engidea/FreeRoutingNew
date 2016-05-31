@@ -38,6 +38,7 @@ import board.shape.ShapeTreeEntry;
 import freert.planar.PlaDimension;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
+import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.ShapeTile;
@@ -281,30 +282,11 @@ public final class SortedRooms_xx_Degree
                start_edge_line = null;
                }
             
-            int new_edge_line_count = 1;
-            if (start_edge_line != null)
-               {
-               ++new_edge_line_count;
-               }
+            PlaLineIntAlist new_edge_lines = new PlaLineIntAlist(3);
+            new_edge_lines.add(start_edge_line);
+            new_edge_lines.add(middle_edge_line);
+            new_edge_lines.add( end_edge_line);
             
-            if (end_edge_line != null)
-               {
-               ++new_edge_line_count;
-               }
-            
-            PlaLineInt[] new_edge_lines = new PlaLineInt[new_edge_line_count];
-            int curr_index = 0;
-            if (start_edge_line != null)
-               {
-               new_edge_lines[curr_index] = start_edge_line;
-               ++curr_index;
-               }
-            new_edge_lines[curr_index] = middle_edge_line;
-            if (end_edge_line != null)
-               {
-               ++curr_index;
-               new_edge_lines[curr_index] = end_edge_line;
-               }
             ShapeTileSimplex new_room_shape = ShapeTileSimplex.get_instance(new_edge_lines);
             
             if (!new_room_shape.is_empty())

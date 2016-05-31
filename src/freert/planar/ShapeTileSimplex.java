@@ -74,6 +74,14 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    /**
+    * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
+    */
+   public static ShapeTileSimplex get_instance(PlaLineIntAlist p_line_alist)
+      {
+      return get_instance(p_line_alist.to_array());
+      }
+   
+   /**
     * Return true, if this simplex is empty
     */
    @Override
