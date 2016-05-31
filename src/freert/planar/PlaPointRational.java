@@ -239,7 +239,7 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
    public PlaPoint perpendicular_projection(PlaLineInt p_line)
       {
       // this function is at the moment only implemented for lines consisting of IntPoints.
-      PlaVectorInt v = (PlaVectorInt) p_line.point_b.difference_by(p_line.point_a);
+      PlaVectorInt v = p_line.point_b.difference_by(p_line.point_a);
       BigInteger vxvx = BigInteger.valueOf((long) v.v_x * v.v_x);
       BigInteger vyvy = BigInteger.valueOf((long) v.v_y * v.v_y);
       BigInteger vxvy = BigInteger.valueOf((long) v.v_x * v.v_y);
@@ -260,25 +260,30 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       tmp2 = tmp2.multiply(rp_z);
       BigInteger proj_y = tmp1.add(tmp2);
 
-      int signum = denominator.signum();
-      if (signum != 0)
+      int d_signum = denominator.signum();
+      
+      if (d_signum == 0)
          {
-         if (signum < 0)
+         new IllegalArgumentException("Should NEVER happen").printStackTrace();
+         return new PlaPointRational(proj_x, proj_y, denominator);
+         }
+      
+      if (d_signum < 0)
+         {
+         denominator = denominator.negate();
+         proj_x = proj_x.negate();
+         proj_y = proj_y.negate();
+         }
+
+      if ((proj_x.mod(denominator)).signum() == 0 && (proj_y.mod(denominator)).signum() == 0)
+         {
+         proj_x = proj_x.divide(denominator);
+         proj_y = proj_y.divide(denominator);
+         if (proj_x.abs().compareTo(PlaLimits.CRIT_INT_BIG) <= 0 && proj_y.abs().compareTo(PlaLimits.CRIT_INT_BIG) <= 0)
             {
-            denominator = denominator.negate();
-            proj_x = proj_x.negate();
-            proj_y = proj_y.negate();
+            return new PlaPointInt(proj_x.intValue(), proj_y.intValue());
             }
-         if ((proj_x.mod(denominator)).signum() == 0 && (proj_y.mod(denominator)).signum() == 0)
-            {
-            proj_x = proj_x.divide(denominator);
-            proj_y = proj_y.divide(denominator);
-            if (proj_x.abs().compareTo(PlaLimits.CRIT_INT_BIG) <= 0 && proj_y.abs().compareTo(PlaLimits.CRIT_INT_BIG) <= 0)
-               {
-               return new PlaPointInt(proj_x.intValue(), proj_y.intValue());
-               }
-            denominator = BigInteger.ONE;
-            }
+         denominator = BigInteger.ONE;
          }
       
       return new PlaPointRational(proj_x, proj_y, denominator);

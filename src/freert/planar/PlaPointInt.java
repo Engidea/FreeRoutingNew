@@ -247,10 +247,7 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
    @Override
    public PlaPoint perpendicular_projection(PlaLineInt p_line)
       {
-      // this function is at the moment only implemented for lines consisting of IntPoints.
-      // The general implementation is still missing.
-      
-      PlaVectorInt v = p_line.point_b.difference_by(p_line.point_a);
+      PlaVectorInt v  = p_line.point_b.difference_by(p_line.point_a);
       BigInteger vxvx = BigInteger.valueOf((long) v.v_x * v.v_x);
       BigInteger vyvy = BigInteger.valueOf((long) v.v_y * v.v_y);
       BigInteger vxvy = BigInteger.valueOf((long) v.v_x * v.v_y);
@@ -272,23 +269,28 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       tmp2 = det.multiply(BigInteger.valueOf(v.v_x));
       BigInteger proj_y = tmp1.subtract(tmp2);
 
-      int signum = denominator.signum();
-      if (signum != 0)
+      int d_signum = denominator.signum();
+
+      if (d_signum == 0)
          {
-         if (signum < 0)
-            {
-            denominator = denominator.negate();
-            proj_x = proj_x.negate();
-            proj_y = proj_y.negate();
-            }
-         if ((proj_x.mod(denominator)).signum() == 0 && (proj_y.mod(denominator)).signum() == 0)
-            {
-            proj_x = proj_x.divide(denominator);
-            proj_y = proj_y.divide(denominator);
-            return new PlaPointInt(proj_x.intValue(), proj_y.intValue());
-            }
+         new IllegalArgumentException("Should NEVER happen").printStackTrace();
+         return new PlaPointRational(proj_x, proj_y, denominator);
+         }
+         
+      if (d_signum < 0)
+         {
+         denominator = denominator.negate();
+         proj_x = proj_x.negate();
+         proj_y = proj_y.negate();
          }
 
+      if ((proj_x.mod(denominator)).signum() == 0 && (proj_y.mod(denominator)).signum() == 0)
+         {
+         proj_x = proj_x.divide(denominator);
+         proj_y = proj_y.divide(denominator);
+         return new PlaPointInt(proj_x.intValue(), proj_y.intValue());
+         }
+      
       return new PlaPointRational(proj_x, proj_y, denominator);
       }
 

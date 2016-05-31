@@ -386,12 +386,13 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
    /**
     * TODO this is one that needs to return int points !!! damiano
-    * Returns a nearest point to p_from_point on the edge of the shape
+    * @return a nearest point to p_from_point on the edge of the shape
     */
    public PlaPoint nearest_border_point(PlaPoint p_from_point)
       {
       int line_count = border_line_count();
       
+      // no lines in the shape, nothing to return
       if (line_count == 0) return null;
 
       PlaPointFloat from_point_f = p_from_point.to_float();
