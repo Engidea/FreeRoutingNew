@@ -113,7 +113,7 @@ public final class SortedRooms_xx_Top
          {
          PlaLineInt curr_line = room_shape.border_line(index);
          
-         if ( ! insert_door_ok(p_room, curr_line)) continue;
+         if ( ! insert_door_ok_test(p_room, curr_line)) continue;
          
          PlaLineInt[] shape_line = new PlaLineInt[1];
          shape_line[0] = curr_line.opposite();
@@ -232,6 +232,7 @@ public final class SortedRooms_xx_Top
                System.out.println("SortedRoomNeighbours.calculate: touching_sides length 2 expected");
                continue;
                }
+
             result.add_sorted_neighbour(curr_shape, touching_sides[0], touching_sides[1], false, false);
             // make shure, that there is a door to the neighbour room.
             ExpandRoom neighbour_room = null;
@@ -249,15 +250,16 @@ public final class SortedRooms_xx_Top
                   neighbour_room = item_info.get_expansion_room(curr_entry.shape_index_in_object, p_autoroute_search_tree);
                   }
                }
-            if (neighbour_room != null)
+            
+            if (neighbour_room == null) continue;
+
+            if (insert_door_ok_test(completed_room, neighbour_room, shape_intersect))
                {
-               if (insert_door_ok(completed_room, neighbour_room, shape_intersect))
-                  {
-                  ExpandDoor new_door = new ExpandDoor(completed_room, neighbour_room, PlaDimension.LINE);
-                  neighbour_room.add_door(new_door);
-                  completed_room.add_door(new_door);
-                  }
+               ExpandDoor new_door = new ExpandDoor(completed_room, neighbour_room, PlaDimension.LINE);
+               neighbour_room.add_door(new_door);
+               completed_room.add_door(new_door);
                }
+
             continue;
             }
 
@@ -310,43 +312,37 @@ public final class SortedRooms_xx_Top
       return result;
       }
    
-   
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
    /**
     * p_door_shape is expected to bave dimension 1.
+    * @return true if the door can be added successfully
     */
-   private boolean insert_door_ok(ExpandRoom p_room_1, ExpandRoom p_room_2, ShapeTile p_door_shape)
+   private boolean insert_door_ok_test(ExpandRoom p_room_1, ExpandRoom p_room_2, ShapeTile p_door_shape)
       {
-      if (p_room_1.door_exists(p_room_2))
-         {
-         return false;
-         }
+      // there is already a door to room_2
+      if (p_room_1.door_exists(p_room_2)) return false;
+
       if (p_room_1 instanceof ExpandRoomObstacle && p_room_2 instanceof ExpandRoomObstacle)
          {
          BrdItem first_item = ((ExpandRoomObstacle) p_room_1).get_item();
          BrdItem second_item = ((ExpandRoomObstacle) p_room_2).get_item();
          // insert only overlap_doors between items of the same net for performance reasons.
-         return (first_item.shares_net(second_item));
+         return first_item.shares_net(second_item);
          }
+      
+      
       if (!(p_room_1 instanceof ExpandRoomObstacle) && !(p_room_2 instanceof ExpandRoomObstacle))
          {
          return true;
          }
+      
+      
       // Insert 1 dimensional doors of trace rooms only, if they are parallel to the trace line.
       // Otherwise there may be check ripup problems with entering at the wrong side at a fork.
+      
       PlaLineInt door_line = null;
       PlaPointInt prev_corner = p_door_shape.corner(0);
       int corner_count = p_door_shape.border_line_count();
+      
       for (int index = 1; index < corner_count; ++index)
          {
          PlaPointInt curr_corner = p_door_shape.corner(index);
@@ -357,29 +353,26 @@ public final class SortedRooms_xx_Top
             }
          prev_corner = curr_corner;
          }
+      
       if (p_room_1 instanceof ExpandRoomObstacle)
          {
-         if (!insert_door_ok((ExpandRoomObstacle) p_room_1, door_line))
-            {
-            return false;
-            }
+         if (!insert_door_ok_test((ExpandRoomObstacle) p_room_1, door_line)) return false;
          }
+
       if (p_room_2 instanceof ExpandRoomObstacle)
          {
-         if (!insert_door_ok((ExpandRoomObstacle) p_room_2, door_line))
-            {
-            return false;
-            }
+         if (!insert_door_ok_test((ExpandRoomObstacle) p_room_2, door_line)) return false;
          }
+      
       return true;
       }
 
    
    /**
-    * Insert 1 dimensional doors for the first and the last room of a trace rooms only, if they are parallel to the trace line.
+    * test if Insert 1 dimensional doors for the first and the last room of a trace rooms only, if they are parallel to the trace line.
     * Otherwise there may be check ripup problems with entering at the wrong side at a fork.
     */
-   private boolean insert_door_ok(ExpandRoomObstacle p_room, PlaLineInt p_door_line)
+   private boolean insert_door_ok_test(ExpandRoomObstacle p_room, PlaLineInt p_door_line)
       {
       if (p_door_line == null)
          {
@@ -391,13 +384,12 @@ public final class SortedRooms_xx_Top
 
       if (curr_item instanceof BrdTracep)
          {
-      
          int room_index = p_room.get_index_in_item();
          BrdTracep curr_trace = (BrdTracep) curr_item;
          if (room_index == 0 || room_index == curr_trace.tile_shape_count() - 1)
             {
             PlaLineInt curr_trace_line = curr_trace.polyline().plaline(room_index + 1);
-            if (!curr_trace_line.is_parallel(p_door_line))
+            if ( ! curr_trace_line.is_parallel(p_door_line))
                {
                return false;
                }
