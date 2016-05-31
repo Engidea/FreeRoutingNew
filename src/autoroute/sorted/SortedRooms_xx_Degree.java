@@ -212,7 +212,10 @@ public final class SortedRooms_xx_Degree
          PlaLineInt start_edge_line = next_neighbour.neighbour_shape.border_line(first_bounding_line_no).opposite();
          // start_edge_line is only used for the first new incomplete room.
          PlaLineInt middle_edge_line = null;
+         
          int curr_touching_side_no = last_touching_side_no;
+         final int saved_touching_side_no = last_touching_side_no;
+         
          boolean first_time = true;
        
          // The loop goes backwards fromm the edge line of next_neigbour to the edge line of prev_neigbour.
@@ -232,12 +235,15 @@ public final class SortedRooms_xx_Degree
                   PlaLineInt cut_line = new PlaLineInt(cut_line_start, cut_line_end);
                   ShapeTile cut_half_plane = ShapeTile.get_instance(cut_line);
                   ((ExpandRoomFreespaceComplete) completed_room).set_shape(completed_room.get_shape().intersection(cut_half_plane));
+                  
                   corner_cut_off = true;
+                  
                   if (incomplete_room.get_contained_shape().side_of(cut_line) != PlaSide.ON_THE_LEFT)
                      {
                      // Otherwise p_room.contained_shape would no longer be contained in the shape after cutting of the corner.
                      corner_cut_off = false;
                      }
+                  
                   if (corner_cut_off)
                      {
                      middle_edge_line = cut_line.opposite();
@@ -310,6 +316,9 @@ public final class SortedRooms_xx_Degree
             curr_touching_side_no = next_touching_side_no;
             start_edge_line = null;
             first_time = false;
+            
+            // it means that we have tryed the whole list of sides and we should reasonably get out
+            if ( saved_touching_side_no == curr_touching_side_no ) break;
             }
          }
 
