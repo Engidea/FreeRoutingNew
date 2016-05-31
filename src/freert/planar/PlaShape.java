@@ -75,7 +75,7 @@ public interface PlaShape extends PlaArea
    /**
     * Returns the bounding RegularTileShape with the fixed directions p_dirs
     */
-   ShapeTileRegular bounding_shape(ShapeBounding p_dirs);
+   ShapeTileRegular bounding_shape(ShapeBoundingOct p_dirs);
 
    /**
     * Returns the distance between p_point and its nearest point on the border of the shape.

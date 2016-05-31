@@ -670,7 +670,7 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    @Override   
-   public ShapeTileRegular bounding_shape(ShapeBounding p_dirs)
+   public ShapeTileRegular bounding_shape(ShapeBoundingOct p_dirs)
       {
       return p_dirs.bounds(this);
       }

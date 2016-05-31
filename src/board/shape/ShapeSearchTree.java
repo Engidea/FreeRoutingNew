@@ -41,7 +41,7 @@ import freert.planar.PlaSegmentInt;
 import freert.planar.PlaShape;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
-import freert.planar.ShapeBounding;
+import freert.planar.ShapeBoundingOct;
 import freert.planar.ShapeConvex;
 import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
@@ -73,7 +73,7 @@ public final class ShapeSearchTree
 
    private final ShapeTreeNodeStack node_stack = new ShapeTreeNodeStack();
    // the fixed directions for calculating bounding RegularTileShapes of shapes to store in this tree.
-   private final ShapeBounding bounding_directions;
+   private final ShapeBoundingOct bounding_directions;
    // The clearance class number for which the shapes of this tree is compensated, if 0 shapes are not compensated 
    public final int compensated_clearance_class_no;
 
@@ -88,7 +88,7 @@ public final class ShapeSearchTree
     * If p_compensated_clearance_class_no = 0, the shapes are not compensated
     * Note that for the free angle routing this is the actual class that is created
     */
-   public ShapeSearchTree(ShapeBounding p_directions, RoutingBoard p_board, int p_compensated_clearance_class_no)
+   public ShapeSearchTree(ShapeBoundingOct p_directions, RoutingBoard p_board, int p_compensated_clearance_class_no)
       {
       r_board = p_board;
       bounding_directions = p_directions;

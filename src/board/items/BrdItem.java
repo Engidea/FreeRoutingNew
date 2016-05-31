@@ -409,46 +409,37 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
       
       if ( ! is_obstacle ) return false;
       
-      if ( ! ( this instanceof BrdTracep && curr_item instanceof BrdTracep ) ) return is_obstacle;   
+      if ( ! ( this instanceof BrdTracep && curr_item instanceof BrdTracep ) ) return true;   
 
       // Look, if both traces are connected to the same tie pin.
       // In this case they are allowed to overlap without sharing a net.
       BrdTracep this_trace = (BrdTracep) this;
-      PlaPoint contact_point = this_trace.corner_first();
       boolean contact_found = false;
+      
+      PlaPoint contact_point = this_trace.corner_first();
       Collection<BrdItem> curr_contacts = this_trace.get_normal_contacts(contact_point, true);
-
-      if (curr_contacts.contains(curr_item))
-         {
-         contact_found = true;
-         }
+      if (curr_contacts.contains(curr_item)) contact_found = true;
          
       if ( ! contact_found)
          {
          contact_point = this_trace.corner_last();
          curr_contacts = this_trace.get_normal_contacts(contact_point, true);
+         if (curr_contacts.contains(curr_item)) contact_found = true;
+         }
+      
+      // there is no contact at all, it is an obstacle
+      if ( contact_found ) return true;
 
-         if (curr_contacts.contains(curr_item))
-            {
-            contact_found = true;
-            }
-         }
-      
-      if (contact_found)
+      for (BrdItem curr_contact : curr_contacts)
          {
-         for (BrdItem curr_contact : curr_contacts)
-            {
-            if ( ! ( curr_contact instanceof BrdAbitPin) ) continue;
-            
-            if (curr_contact.shares_net(this) && curr_contact.shares_net(curr_item))
-               {
-               is_obstacle = false;
-               break;
-               }
-            }
+         if ( ! ( curr_contact instanceof BrdAbitPin) ) continue;
+         
+         // there is a pin and they share a net with this
+         if ( curr_contact.shares_net(this) && curr_contact.shares_net(curr_item)) return false;
          }
       
-      return is_obstacle;   
+      // no common points, obstacle
+      return true;   
       }
 
    
