@@ -45,21 +45,21 @@ public interface ShapeTreeObject extends Comparable<Object>
     * Stores the entries in the ShapeTrees of this object for better performance while for example deleting tree entries. 
     * Called only by insert methods of class ShapeTree.
     */
-   void set_search_tree_entries(ShapeTreeLeaf[] p_entries, ShapeSearchTree p_tree);
+   void set_search_tree_entries(ShapeSearchTree p_tree,ShapeTreeLeaf[] p_entries);
    
    
    /**
-    * Returns true if this object is an obstacle to objects containing the net number p_net_no
+    * @return true if this object is an obstacle to objects containing the net number p_net_no
     */
    boolean is_obstacle(int p_net_no);
 
    /**
-    * Returns true if this object is an obstacle to traces containing the net number p_net_no
+    * @return true if this object is an obstacle to traces containing the net number p_net_no
     */
    boolean is_trace_obstacle(int p_net_no);
 
    /**
-    * returns for this object the layer of the shape with index p_index.
+    * @return for this object the layer of the shape with index p_index.
     */
    abstract int shape_layer(int p_index);
    }

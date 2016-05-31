@@ -60,7 +60,7 @@ public final class SearchTreesInfo
     * Sets the item tree entries for the given tree
     * If the tree does not exist it is created
     */
-   public void set_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeSearchTree p_tree)
+   public void set_tree_entries( ShapeSearchTree p_tree , ShapeTreeLeaf[] p_tree_entries)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {

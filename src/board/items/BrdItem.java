@@ -1159,9 +1159,10 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
    /**
     * Sets the item tree entries for the tree with identification number p_tree_no.
     */
-   public final void set_search_tree_entries(ShapeTreeLeaf[] p_tree_entries, ShapeSearchTree p_tree)
+   @Override
+   public final void set_search_tree_entries(ShapeSearchTree p_tree, ShapeTreeLeaf[] p_tree_entries)
       {
-      search_trees_info.set_tree_entries(p_tree_entries, p_tree);
+      search_trees_info.set_tree_entries(p_tree , p_tree_entries);
       }
 
    /**

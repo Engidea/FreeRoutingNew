@@ -57,7 +57,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       }
 
    @Override
-   public void set_search_tree_entries(ShapeTreeLeaf[] p_entries, ShapeSearchTree p_tree)
+   public void set_search_tree_entries(ShapeSearchTree p_tree, ShapeTreeLeaf[] p_entries)
       {
       tree_entries = p_entries;
       }

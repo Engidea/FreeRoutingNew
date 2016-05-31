@@ -922,7 +922,7 @@ public final class RoutingBoard implements java.io.Serializable
 
    /**
     * Looks for traces of the input net on the input layer, so that p_location is on the trace polygon, and splits these traces.
-    * Returns false, if no trace was split.
+    * @return false, if no trace was split.
     */
    public boolean split_traces(PlaPoint p_location, int p_layer, int p_net_no)
       {

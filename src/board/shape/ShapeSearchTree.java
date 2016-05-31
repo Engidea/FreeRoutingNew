@@ -109,7 +109,7 @@ public final class ShapeSearchTree
          leaf_arr[index] = insert(p_obj, index);
          }
       
-      p_obj.set_search_tree_entries(leaf_arr, this);
+      p_obj.set_search_tree_entries(this, leaf_arr );
       }
 
    /**
@@ -479,8 +479,7 @@ public final class ShapeSearchTree
     */
    public final void change_entries(BrdTracep p_obj, Polyline p_new_polyline, int p_keep_at_start_count, int p_keep_at_end_count)
       {
-      // calculate the shapes of p_new_polyline from keep_at_start_count to
-      // new_shape_count - keep_at_end_count - 1;
+      // calculate the shapes of p_new_polyline from keep_at_start_count to new_shape_count - keep_at_end_count - 1;
       int compensated_half_width = p_obj.get_half_width() + get_clearance_compensation(p_obj.clearance_idx(), p_obj.get_layer());
       ArrayList<ShapeTile> changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plalinelen(-1) - p_keep_at_end_count);
       int old_shape_count = p_obj.tree_shape_count(this);
@@ -488,15 +487,18 @@ public final class ShapeSearchTree
       ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
       ShapeTreeLeaf[] old_entries = p_obj.get_search_tree_entries(this);
-      for (int i = 0; i < p_keep_at_start_count; ++i)
+      
+      for (int index = 0; index < p_keep_at_start_count; ++index)
          {
-         new_leaf_arr[i] = old_entries[i];
-         new_precalculated_tree_shapes[i] = p_obj.get_tree_shape(this, i);
+         new_leaf_arr[index] = old_entries[index];
+         new_precalculated_tree_shapes[index] = p_obj.get_tree_shape(this, index);
          }
-      for (int i = p_keep_at_start_count; i < old_shape_count - p_keep_at_end_count; ++i)
+      
+      for (int index = p_keep_at_start_count; index < old_shape_count - p_keep_at_end_count; ++index)
          {
-         remove_leaf(old_entries[i]);
+         remove_leaf(old_entries[index]);
          }
+      
       for (int i = 0; i < p_keep_at_end_count; ++i)
          {
          int new_index = new_shape_count - p_keep_at_end_count + i;
@@ -519,7 +521,7 @@ public final class ShapeSearchTree
          {
          new_leaf_arr[index] = insert(p_obj, index);
          }
-      p_obj.set_search_tree_entries(new_leaf_arr, this);
+      p_obj.set_search_tree_entries(this, new_leaf_arr );
       }
 
    /**
@@ -594,7 +596,7 @@ public final class ShapeSearchTree
          new_leaf_arr[curr_ind] = insert(p_to_trace, curr_ind);
          }
 
-      p_to_trace.set_search_tree_entries(new_leaf_arr, this);
+      p_to_trace.set_search_tree_entries(this, new_leaf_arr);
       }
 
    /**
@@ -670,7 +672,7 @@ public final class ShapeSearchTree
          int curr_ind = to_shape_count_minus_1 + index;
          new_leaf_arr[curr_ind] = insert(p_to_trace, curr_ind);
          }
-      p_to_trace.set_search_tree_entries(new_leaf_arr, this);
+      p_to_trace.set_search_tree_entries(this, new_leaf_arr);
       }
 
    /**
@@ -707,8 +709,8 @@ public final class ShapeSearchTree
          from_trace_entries[from_index] = null;
          }
 
-      p_start_piece.set_search_tree_entries(start_piece_leaf_arr, this);
-      p_end_piece.set_search_tree_entries(end_piece_leaf_arr, this);
+      p_start_piece.set_search_tree_entries(this, start_piece_leaf_arr );
+      p_end_piece.set_search_tree_entries(this, end_piece_leaf_arr );
       }
 
    /**
@@ -1261,7 +1263,7 @@ public final class ShapeSearchTree
          }
       p_item.set_precalculated_tree_shapes(new_precalculated_tree_shapes, this);
       new_leaf_arr[p_shape_no] = insert(p_item, p_shape_no);
-      p_item.set_search_tree_entries(new_leaf_arr, this);
+      p_item.set_search_tree_entries(this, new_leaf_arr );
       }
 
    /**

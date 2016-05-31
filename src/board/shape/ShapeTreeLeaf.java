@@ -31,7 +31,7 @@ public final class ShapeTreeLeaf extends ShapeTreeNode implements Comparable<Sha
       }
 
    /** 
-    * Returns the number of nodes between this leaf and the root of the tree. 
+    * @return the number of nodes between this leaf and the root of the tree. 
     */
    public int distance_to_root()
       {
