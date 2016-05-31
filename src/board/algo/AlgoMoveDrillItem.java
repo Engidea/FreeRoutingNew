@@ -348,11 +348,11 @@ public final class AlgoMoveDrillItem
          }
       else
          {
-         ShapeTile curr_offset_shape = (ShapeTile) p_obstacle_shape.enlarge(shove_distance);
+         ShapeTile curr_offset_shape = p_obstacle_shape.enlarge(shove_distance);
       
          if (!search_tree.is_clearance_compensation_used())
             {
-            curr_via_shape = (ShapeTile) curr_via_shape.enlarge(0.5 * clearance_value);
+            curr_via_shape = curr_via_shape.enlarge(0.5 * clearance_value);
             }
          if (p_extended_check)
             {

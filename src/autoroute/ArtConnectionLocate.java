@@ -196,7 +196,7 @@ public abstract class ArtConnectionLocate
                {
                // the target is a conduction area, make a save connection by shrinking the shape by the trace halfwidth.
                double trace_half_width = art_ctrl.compensated_trace_half_width[start_door.room.get_layer()];
-               ShapeTile shrinked_shape = (ShapeTile) current_target_shape.offset(-trace_half_width);
+               ShapeTile shrinked_shape = current_target_shape.offset(-trace_half_width);
                if (!shrinked_shape.is_empty())
                   {
                   current_target_shape = shrinked_shape;
@@ -410,7 +410,7 @@ public abstract class ArtConnectionLocate
       if (curr_from_info.next_room == null) return current_from_point;
       
       double trace_half_width = art_ctrl.compensated_trace_half_width[current_trace_layer];
-      ShapeTile shrinked_room_shape = (ShapeTile) curr_from_info.next_room.get_shape().offset(-trace_half_width);
+      ShapeTile shrinked_room_shape = curr_from_info.next_room.get_shape().offset(-trace_half_width);
       if (shrinked_room_shape.is_empty() || shrinked_room_shape.contains(current_from_point))
          {
          return current_from_point;

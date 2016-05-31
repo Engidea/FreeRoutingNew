@@ -879,7 +879,7 @@ public final class ShapeSearchTree
          if (tmp_half_clearance != curr_half_clearance)
             {
             curr_half_clearance = tmp_half_clearance;
-            curr_offset_shape = (ShapeTile) p_shape.enlarge(curr_half_clearance);
+            curr_offset_shape = p_shape.enlarge(curr_half_clearance);
             }
          ShapeTile tmp_shape = tmp_entry.leaf.object.get_tree_shape(this, tmp_entry.leaf.shape_index_in_object);
          // enlarge both item shapes by the half clearance to create symmetry.
@@ -1267,7 +1267,7 @@ public final class ShapeSearchTree
       }
 
    /**
-    * This is for a polyline
+    * This is for a board trace
     */
    public final ShapeTile[] calculate_tree_shapes(BrdTracep p_trace)
       {
@@ -1283,11 +1283,9 @@ public final class ShapeSearchTree
       }
 
    /**
-    * WIll be overrideen under...
-    * @param p_drill_item
-    * @return
+    * This is for Drill items
     */
-   public ShapeTile[] calculate_tree_shapes(BrdAbit p_drill_item)
+   public final ShapeTile[] calculate_tree_shapes(BrdAbit p_drill_item)
       {
       ShapeTile[] result = new ShapeTile[p_drill_item.tile_shape_count()];
 
@@ -1320,7 +1318,7 @@ public final class ShapeSearchTree
                }
             else
                {
-               curr_tile_shape = (ShapeTile) curr_tile_shape.enlarge(offset_width);
+               curr_tile_shape = curr_tile_shape.enlarge(offset_width);
                }
             result[index] = curr_tile_shape;
             }
@@ -1329,9 +1327,9 @@ public final class ShapeSearchTree
       }
 
    /**
-    * Careful, overide in subclass, this is for BoardArea
+    * this is for BoardArea
     */
-   public ShapeTile[] calculate_tree_shapes(BrdArea p_obstacle_area)
+   public final ShapeTile[] calculate_tree_shapes(BrdArea p_obstacle_area)
       {
       ShapeTile[] convex_shapes = p_obstacle_area.split_to_convex();
 
@@ -1352,7 +1350,7 @@ public final class ShapeSearchTree
          ShapeTile curr_convex_shape = convex_shapes[index];
 
          int offset_width = get_clearance_compensation(p_obstacle_area.clearance_idx(), p_obstacle_area.get_layer());
-         curr_convex_shape = (ShapeTile) curr_convex_shape.enlarge(offset_width);
+         curr_convex_shape = curr_convex_shape.enlarge(offset_width);
          ShapeTile[] curr_tree_shapes = curr_convex_shape.divide_into_sections(max_tree_shape_width);
          for (int jndex = 0; jndex < curr_tree_shapes.length; ++jndex)
             {
@@ -1388,7 +1386,7 @@ public final class ShapeSearchTree
                {
                ShapeTile curr_convex_shape = convex_shapes[index];
                int offset_width = get_clearance_compensation(p_board_outline.clearance_idx(), 0);
-               curr_convex_shape = (ShapeTile) curr_convex_shape.enlarge(offset_width);
+               curr_convex_shape = curr_convex_shape.enlarge(offset_width);
                tree_shape_list.add(curr_convex_shape);
                }
             }

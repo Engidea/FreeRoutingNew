@@ -1851,7 +1851,7 @@ public final class RoutingBoard implements java.io.Serializable
          else
             {
             int clearance_value = get_clearance(curr_obstacle.clearance_idx(), p_cl_class_no, p_layer);
-            curr_offset_shape = (ShapeTile) shape_to_check.offset(clearance_value);
+            curr_offset_shape = shape_to_check.offset(clearance_value);
             shorten_value = p_trace_half_width + clearance_value;
             }
          

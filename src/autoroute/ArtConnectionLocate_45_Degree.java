@@ -83,7 +83,7 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
          shrink_offset = trace_halfwidth_add;
          }
 
-      ShapeTile shrinked_room_shape = (ShapeTile) room_shape.offset(-shrink_offset);
+      ShapeTile shrinked_room_shape = room_shape.offset(-shrink_offset);
       if (!shrinked_room_shape.is_empty())
          {
          // enter the shrinked room shape by a 45 degree angle first
@@ -128,7 +128,7 @@ final class ArtConnectionLocate_45_Degree extends ArtConnectionLocate
          // May not happen in free angle routing mode because then corners are cut off.
          ShapeTile to_door_shape = curr_to_door.get_shape();
 
-         ShapeTile shrinked_to_door_shape = (ShapeTile) to_door_shape.shrink(shrink_offset);
+         ShapeTile shrinked_to_door_shape = to_door_shape.shrink(shrink_offset);
          nearest_to_door_point = shrinked_to_door_shape.nearest_point_approx(current_from_point);
          nearest_to_door_point = round_to_integer(nearest_to_door_point);
          }

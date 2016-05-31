@@ -1688,7 +1688,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       double add_width = Math.max(edge_to_turn_dist, curr_clearance + 1);
       
-      ShapeTile offset_pin_shape = (ShapeTile)a_pin_tile.offset(get_half_width() + add_width);
+      ShapeTile offset_pin_shape = a_pin_tile.offset(get_half_width() + add_width);
       
       if (p_angle_restriction.is_limit_90() || offset_pin_shape.is_IntBox())
          {

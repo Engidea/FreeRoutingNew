@@ -175,14 +175,14 @@ public final class AlgoShoveTraceEntries
       if (search_tree.is_clearance_compensation_used())
          {
          double curr_offset = curr_trace.get_compensated_half_width(search_tree) + c_offset_add;
-         offset_shape = (ShapeTile) shape.offset(curr_offset);
+         offset_shape = shape.offset(curr_offset);
          }
       else
          {
          // enlarge the shape in 2 steps for symmetry reasons
-         offset_shape = (ShapeTile) shape.offset(curr_trace.get_half_width());
+         offset_shape = shape.offset(curr_trace.get_half_width());
          double cl_offset = r_board.get_clearance(curr_trace.clearance_idx(), cl_class, layer) + c_offset_add;
-         offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
+         offset_shape = offset_shape.offset(cl_offset);
          }
       int edge_count = shape.border_line_count();
       int edge_diff = entries[1].edge_no - entries[0].edge_no;
@@ -370,24 +370,26 @@ public final class AlgoShoveTraceEntries
       }
 
    /**
-    * Stores all intersection points of p_trace with the border of the internal shape enlarged by the half width and the clearance
-    * of the corresponding trace pen.
+    * Stores all intersection points of p_trace with the border of the internal shape 
+    * enlarged by the half width and the clearance of the corresponding trace pen.
     */
    private boolean store_trace(BrdTracep p_trace)
       {
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTile offset_shape;
+
+      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+
       if (search_tree.is_clearance_compensation_used())
          {
          double curr_offset = p_trace.get_compensated_half_width(search_tree) + c_offset_add;
-         offset_shape = (ShapeTile) shape.offset(curr_offset);
+         offset_shape = shape.offset(curr_offset);
          }
       else
          {
          // enlarge the shape in 2 steps for symmetry reasons
          double cl_offset = r_board.get_clearance(p_trace.clearance_idx(), cl_class, p_trace.get_layer()) + c_offset_add;
-         offset_shape = (ShapeTile) shape.offset(p_trace.get_half_width());
-         offset_shape = (ShapeTile) offset_shape.offset(cl_offset);
+         offset_shape = shape.offset(p_trace.get_half_width());
+         offset_shape = offset_shape.offset(cl_offset);
          }
 
       // using enlarge here instead offset causes problems because of a comparison in the constructor of class EntryPoint

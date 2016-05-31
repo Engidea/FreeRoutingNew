@@ -769,15 +769,15 @@ public final class AlgoShoveTrace
       if (search_tree.is_clearance_compensation_used())
          {
          int offset = p_half_width + 1;
-         offset_shape = (ShapeTile) obstacle_shape.enlarge(offset);
+         offset_shape = obstacle_shape.enlarge(offset);
          }
       else
          {
          // enlarge the shape in 2 steps for symmetry reasons
          int offset = p_half_width + 1;
          double half_cl_offset = 0.5 * r_board.get_clearance(found_obstacle.clearance_idx(), p_cl_type, p_layer);
-         offset_shape = (ShapeTile) obstacle_shape.enlarge(offset + half_cl_offset);
-         offset_shape = (ShapeTile) offset_shape.enlarge(half_cl_offset);
+         offset_shape = obstacle_shape.enlarge(offset + half_cl_offset);
+         offset_shape = offset_shape.enlarge(half_cl_offset);
          }
       
       if (r_board.brd_rules.is_trace_snap_90())

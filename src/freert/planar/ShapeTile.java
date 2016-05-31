@@ -39,6 +39,10 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       
       return result.simplify();
       }
+   
+   public abstract ShapeTile offset(double p_distance);
+
+   public abstract ShapeTile enlarge(double p_offset);
 
    /**
     * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
@@ -363,8 +367,8 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * Returns the point in this shape, which has the smallest distance to p_from_point. p_from_point, if that point is contained in
-    * this shape
+    * Returns the point in this shape, which has the smallest distance to p_from_point. 
+    * if that point is contained in this shape
     */
    public PlaPoint nearest_point(PlaPointInt p_from_point)
       {
@@ -640,9 +644,10 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       return translate_coors;
       }
 
-   public ShapeConvex shrink(double p_offset)
+   @Override
+   public final ShapeTile shrink(double p_offset)
       {
-      ShapeConvex result = offset(-p_offset);
+      ShapeTile result = offset(-p_offset);
       if (result.is_empty())
          {
          ShapeTileBox centre_box = centre_of_gravity().bounding_box();

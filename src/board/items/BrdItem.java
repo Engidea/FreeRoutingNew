@@ -485,8 +485,8 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
             if (!r_board.search_tree_manager.is_clearance_compensation_used())
                {
                double cl_offset = 0.5 * r_board.brd_rules.clearance_matrix.value_at(curr_item.clearance_idx, clearance_idx, shape_layer(index));
-               shape_1 = (ShapeTile) shape_1.enlarge(cl_offset);
-               shape_2 = (ShapeTile) shape_2.enlarge(cl_offset);
+               shape_1 = shape_1.enlarge(cl_offset);
+               shape_2 = shape_2.enlarge(cl_offset);
                }
 
             ShapeTile intersection = shape_1.intersection(shape_2);

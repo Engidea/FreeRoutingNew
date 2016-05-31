@@ -350,7 +350,7 @@ public final class AlgoShovePad
       {
       NetNosList empty_arr = NetNosList.EMPTY;
       
-      ShapeTile offset_shape = (ShapeTile) p_shape.offset(p_offset);
+      ShapeTile offset_shape = p_shape.offset(p_offset);
       
       for (int index = 0; index < offset_shape.border_line_count(); ++index)
          {

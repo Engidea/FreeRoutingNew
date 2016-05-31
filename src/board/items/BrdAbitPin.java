@@ -737,7 +737,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       
       if (edge_to_turn_dist < 0) return null;
 
-      ShapeTile offset_pin_shape = (ShapeTile) ((ShapeTile) pin_shape).offset(edge_to_turn_dist + p_trace_half_width);
+      ShapeTile offset_pin_shape = ((ShapeTile) pin_shape).offset(edge_to_turn_dist + p_trace_half_width);
       ArrayList<PlaToupleInt> entries = offset_pin_shape.entrance_points(p_trace_polyline);
 
       if (entries.size() == 0) return null;
@@ -813,7 +813,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       
       if (edge_to_turn_dist < 0) return null;
 
-      ShapeTile offset_pin_shape = (ShapeTile) ((ShapeTile) pin_shape).offset(edge_to_turn_dist + p_trace_half_width);
+      ShapeTile offset_pin_shape = ((ShapeTile) pin_shape).offset(edge_to_turn_dist + p_trace_half_width);
 
       // calculate the nearest legal pin exit point to trace_entry_location_approx
       double min_exit_corner_distance = Double.MAX_VALUE;
