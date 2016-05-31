@@ -218,7 +218,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * Returns true, if p_point is contained in this shape.
+    * @return true, if p_point is contained in this shape.
     */
    public boolean contains(PlaPointFloat p_point)
       {
@@ -277,53 +277,45 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * If p_point lies on the border of this shape, the number of the edge line segment containing p_point is returned, otherwise -1
-    * is returned.
+    * If p_point lies on the border of this shape, the number of the edge line segment containing p_point is returned, 
+    * otherwise -1 is returned.
     */
-   public int contains_on_border_line_no(PlaPoint p_point)
+   public final int contains_on_border_line_no(PlaPoint p_point)
       {
       int line_count = border_line_count();
-      if (line_count == 0)
+      
+      if (line_count == 0) return -1;
+
+      for (int index = 0; index < line_count; ++index)
          {
-         return -1;
+         PlaSide side_of = border_line(index).side_of(p_point);
+
+         if (side_of == PlaSide.COLLINEAR) return index;
          }
-      int containing_line_no = -1;
-      for (int i = 0; i < line_count; ++i)
-         {
-         PlaSide side_of = border_line(i).side_of(p_point);
-         if (side_of == PlaSide.ON_THE_LEFT)
-            {
-            // p_point outside the convex shape
-            return -1;
-            }
-         if (side_of == PlaSide.COLLINEAR)
-            {
-            containing_line_no = i;
-            }
-         }
-      return containing_line_no;
+
+      // point is not on the border
+      return -1;
       }
 
    /**
-    * Returns true, if p_point lies exact on the boundary of the shape
+    * @returns true, if p_point lies exact on the boundary of the shape
     */
+   @Override
    public boolean contains_on_border(PlaPoint p_point)
       {
-      return (contains_on_border_line_no(p_point) >= 0);
+      return contains_on_border_line_no(p_point) >= 0;
       }
 
    /**
-    * Returns true, if this shape contains p_other completely. THere may be some numerical inaccurracy.
+    * @returns true, if this shape contains p_other completely. THere may be some numerical inaccurracy.
     */
    public boolean contains_approx(ShapeTile p_other)
       {
       PlaPointFloat[] corners = p_other.corner_approx_arr();
+      
       for (PlaPointFloat curr_corner : corners)
          {
-         if (!contains(curr_corner))
-            {
-            return false;
-            }
+         if ( ! contains(curr_corner)) return false;
          }
       return true;
       }

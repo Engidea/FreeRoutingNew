@@ -33,9 +33,6 @@ import autoroute.expand.ExpandRoomComplete;
 import autoroute.expand.ExpandRoomFreespace;
 import autoroute.expand.ExpandRoomFreespaceComplete;
 import autoroute.expand.ExpandRoomFreespaceIncomplete;
-import autoroute.expand.ExpandRoomObstacle;
-import board.items.BrdItem;
-import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeEntry;
 import freert.planar.PlaDimension;
@@ -69,44 +66,45 @@ public final class SortedRooms_xx_Degree
       sorted_neighbours = new TreeSet<SortedRoom_xx_Degree>();
       own_net_objects = new LinkedList<ShapeTreeEntry>();
       }
-   
 
 
-
-
-
-   void add_sorted_neighbour(ShapeTile p_neighbour_shape, int p_touching_side_no_of_room, int p_touching_side_no_of_neighbour_room, boolean p_room_touch_is_corner,
+   void add_sorted_neighbour(
+         ShapeTile p_neighbour_shape, 
+         int p_touching_side_no_of_room, 
+         int p_touching_side_no_of_neighbour_room, 
+         boolean p_room_touch_is_corner,
          boolean p_neighbour_room_touch_is_corner)
       {
-      SortedRoom_xx_Degree new_neighbour = new SortedRoom_xx_Degree(room_shape, p_neighbour_shape, p_touching_side_no_of_room, p_touching_side_no_of_neighbour_room, p_room_touch_is_corner,
-            p_neighbour_room_touch_is_corner);
-      sorted_neighbours.add(new_neighbour);
+      sorted_neighbours.add( new SortedRoom_xx_Degree(
+            room_shape, 
+            p_neighbour_shape, 
+            p_touching_side_no_of_room, 
+            p_touching_side_no_of_neighbour_room, 
+            p_room_touch_is_corner,
+            p_neighbour_room_touch_is_corner));
       }
 
    /**
-    * Check, that each side of the romm shape has at least one touching neighbour. Otherwise the room shape will be improved the by
-    * enlarging. Returns true, if the room shape was changed.
+    * Check, that each side of the romm shape has at least one touching neighbour. 
+    * Otherwise the room shape will be improved the by enlarging. 
+    * @return true, if the room shape was changed.
     */
    boolean try_remove_edge(int p_net_no, ShapeSearchTree p_autoroute_search_tree )
       {
       if (!(from_room instanceof ExpandRoomFreespaceIncomplete)) return false;
 
-      ExpandRoomFreespaceIncomplete curr_incomplete_room = (ExpandRoomFreespaceIncomplete) this.from_room;
-      Iterator<SortedRoom_xx_Degree> it = sorted_neighbours.iterator();
+      ExpandRoomFreespaceIncomplete curr_incomplete_room = (ExpandRoomFreespaceIncomplete) from_room;
       int remove_edge_no = -1;
       ShapeTileSimplex room_simplex = curr_incomplete_room.get_shape().to_Simplex();
       double room_shape_area = room_simplex.area();
 
       int prev_edge_no = -1;
       int curr_edge_no = 0;
-      while (it.hasNext())
-         {
-         SortedRoom_xx_Degree next_neighbour = it.next();
 
-         if (next_neighbour.touching_side_no_of_room == prev_edge_no)
-            {
-            continue;
-            }
+      for ( SortedRoom_xx_Degree next_neighbour : sorted_neighbours )
+         {
+         if (next_neighbour.touching_side_no_of_room == prev_edge_no) continue;
+
          if (next_neighbour.touching_side_no_of_room == curr_edge_no)
             {
             prev_edge_no = curr_edge_no;
@@ -114,8 +112,7 @@ public final class SortedRooms_xx_Degree
             }
          else
             {
-            // On the edge side with index curr_edge_no is no touching
-            // neighbour.
+            // On the edge side with index curr_edge_no is no touching neighbour.
             remove_edge_no = curr_edge_no;
             break;
             }
@@ -129,16 +126,17 @@ public final class SortedRooms_xx_Degree
 
       if (remove_edge_no >= 0)
          {
-         // Touching neighbour missing at the edge side with index remove_edge_no
-         // Remove the edge line and restart the algorithm.
+         // Touching neighbour missing at the edge side with index remove_edge_no Remove the edge line and restart the algorithm.
          ShapeTileSimplex enlarged_shape = room_simplex.remove_border_line(remove_edge_no);
          ExpandRoomFreespaceIncomplete enlarged_room = new ExpandRoomFreespaceIncomplete(enlarged_shape, curr_incomplete_room.get_layer(), curr_incomplete_room.get_contained_shape());
          Collection<ExpandRoomFreespaceIncomplete> new_rooms = p_autoroute_search_tree.complete_shape(enlarged_room, p_net_no, null, null);
+         
          if (new_rooms.size() != 1)
             {
             System.out.println("AutorouteEngine.calculate_doors: 1 completed shape expected");
             return false;
             }
+         
          boolean remove_edge = false;
          if (new_rooms.size() == 1)
             {
@@ -149,6 +147,7 @@ public final class SortedRooms_xx_Degree
                remove_edge = true;
                }
             }
+         
          if (remove_edge)
             {
             Iterator<ExpandRoomFreespaceIncomplete> it2 = new_rooms.iterator();
@@ -219,6 +218,7 @@ public final class SortedRooms_xx_Degree
             PlaLineInt middle_edge_line = null;
             int curr_touching_side_no = last_touching_side_no;
             boolean first_time = true;
+          
             // The loop goes backwards fromm the edge line of next_neigbour to the edge line of prev_neigbour.
             for (;;)
                {
@@ -236,7 +236,7 @@ public final class SortedRooms_xx_Degree
                      PlaPointInt cut_line_end = next_neighbour.first_corner().to_float().round();
                      PlaLineInt cut_line = new PlaLineInt(cut_line_start, cut_line_end);
                      ShapeTile cut_half_plane = ShapeTile.get_instance(cut_line);
-                     ((ExpandRoomFreespaceComplete) this.completed_room).set_shape(this.completed_room.get_shape().intersection(cut_half_plane));
+                     ((ExpandRoomFreespaceComplete) completed_room).set_shape(completed_room.get_shape().intersection(cut_half_plane));
                      corner_cut_off = true;
                      if (incomplete_room.get_contained_shape().side_of(cut_line) != PlaSide.ON_THE_LEFT)
                         {
@@ -259,7 +259,7 @@ public final class SortedRooms_xx_Degree
 
                PlaDirection middle_line_dir = middle_edge_line.direction();
 
-               boolean last_time = curr_touching_side_no == first_touching_side_no && !(prev_neighbour == this.sorted_neighbours.last() && first_time)
+               boolean last_time = curr_touching_side_no == first_touching_side_no && !(prev_neighbour == sorted_neighbours.last() && first_time)
                // The expression above handles the case, when all neigbours are on 1 edge line.
                      || corner_cut_off;
 
@@ -312,12 +312,12 @@ public final class SortedRooms_xx_Degree
                if (!new_room_shape.is_empty())
                   {
 
-                  ShapeTile new_contained_shape = this.completed_room.get_shape().intersection(new_room_shape);
+                  ShapeTile new_contained_shape = completed_room.get_shape().intersection(new_room_shape);
                   if (!new_contained_shape.is_empty())
                      {
-                     ExpandRoomFreespace new_room = p_autoroute_engine.add_incomplete_expansion_room(new_room_shape, this.from_room.get_layer(), new_contained_shape);
-                     ExpandDoor new_door = new ExpandDoor(this.completed_room, new_room, PlaDimension.LINE);
-                     this.completed_room.add_door(new_door);
+                     ExpandRoomFreespace new_room = p_autoroute_engine.add_incomplete_expansion_room(new_room_shape, from_room.get_layer(), new_contained_shape);
+                     ExpandDoor new_door = new ExpandDoor(completed_room, new_room, PlaDimension.LINE);
+                     completed_room.add_door(new_door);
                      new_room.add_door(new_door);
                      }
                   }
@@ -334,84 +334,4 @@ public final class SortedRooms_xx_Degree
          }
       }
 
-   /**
-    * p_door_shape is expected to bave dimension 1.
-    */
-   static boolean insert_door_ok(ExpandRoom p_room_1, ExpandRoom p_room_2, ShapeTile p_door_shape)
-      {
-      if (p_room_1.door_exists(p_room_2))
-         {
-         return false;
-         }
-      if (p_room_1 instanceof ExpandRoomObstacle && p_room_2 instanceof ExpandRoomObstacle)
-         {
-         BrdItem first_item = ((ExpandRoomObstacle) p_room_1).get_item();
-         BrdItem second_item = ((ExpandRoomObstacle) p_room_2).get_item();
-         // insert only overlap_doors between items of the same net for performance reasons.
-         return (first_item.shares_net(second_item));
-         }
-      if (!(p_room_1 instanceof ExpandRoomObstacle) && !(p_room_2 instanceof ExpandRoomObstacle))
-         {
-         return true;
-         }
-      // Insert 1 dimensional doors of trace rooms only, if they are parallel to the trace line.
-      // Otherwise there may be check ripup problems with entering at the wrong side at a fork.
-      PlaLineInt door_line = null;
-      PlaPointInt prev_corner = p_door_shape.corner(0);
-      int corner_count = p_door_shape.border_line_count();
-      for (int index = 1; index < corner_count; ++index)
-         {
-         PlaPointInt curr_corner = p_door_shape.corner(index);
-         if (!curr_corner.equals(prev_corner))
-            {
-            door_line = p_door_shape.border_line(index - 1);
-            break;
-            }
-         prev_corner = curr_corner;
-         }
-      if (p_room_1 instanceof ExpandRoomObstacle)
-         {
-         if (!insert_door_ok((ExpandRoomObstacle) p_room_1, door_line))
-            {
-            return false;
-            }
-         }
-      if (p_room_2 instanceof ExpandRoomObstacle)
-         {
-         if (!insert_door_ok((ExpandRoomObstacle) p_room_2, door_line))
-            {
-            return false;
-            }
-         }
-      return true;
-      }
-
-   /**
-    * Insert 1 dimensional doors for the first and the last room of a trace rooms only, if they are parallel to the trace line.
-    * Otherwise there may be check ripup problems with entering at the wrong side at a fork.
-    */
-   private static boolean insert_door_ok(ExpandRoomObstacle p_room, PlaLineInt p_door_line)
-      {
-      if (p_door_line == null)
-         {
-         System.err.println("SortedRoomNeighbours.insert_door_ok: p_door_line is null");
-         return false;
-         }
-      
-      BrdItem curr_item = p_room.get_item();
-      if (curr_item instanceof BrdTracep)
-         {
-         int room_index = p_room.get_index_in_item();
-         BrdTracep curr_trace = (BrdTracep) curr_item;
-         if (room_index == 0 || room_index == curr_trace.tile_shape_count() - 1)
-            {
-            PlaLineInt curr_trace_line = curr_trace.polyline().plaline(room_index + 1);
-            if (!curr_trace_line.is_parallel(p_door_line))
-               {
-               return false;
-               }
-            }
-         }
-      return true;
-      }
    }

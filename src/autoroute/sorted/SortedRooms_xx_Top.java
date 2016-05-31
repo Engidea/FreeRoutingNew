@@ -249,7 +249,7 @@ public final class SortedRooms_xx_Top
                }
             if (neighbour_room != null)
                {
-               if (SortedRooms_xx_Degree.insert_door_ok(completed_room, neighbour_room, shape_intersect))
+               if (insert_door_ok(completed_room, neighbour_room, shape_intersect))
                   {
                   ExpandDoor new_door = new ExpandDoor(completed_room, neighbour_room, PlaDimension.LINE);
                   neighbour_room.add_door(new_door);
@@ -303,6 +303,70 @@ public final class SortedRooms_xx_Top
       }
    
    
+
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   /**
+    * p_door_shape is expected to bave dimension 1.
+    */
+   private boolean insert_door_ok(ExpandRoom p_room_1, ExpandRoom p_room_2, ShapeTile p_door_shape)
+      {
+      if (p_room_1.door_exists(p_room_2))
+         {
+         return false;
+         }
+      if (p_room_1 instanceof ExpandRoomObstacle && p_room_2 instanceof ExpandRoomObstacle)
+         {
+         BrdItem first_item = ((ExpandRoomObstacle) p_room_1).get_item();
+         BrdItem second_item = ((ExpandRoomObstacle) p_room_2).get_item();
+         // insert only overlap_doors between items of the same net for performance reasons.
+         return (first_item.shares_net(second_item));
+         }
+      if (!(p_room_1 instanceof ExpandRoomObstacle) && !(p_room_2 instanceof ExpandRoomObstacle))
+         {
+         return true;
+         }
+      // Insert 1 dimensional doors of trace rooms only, if they are parallel to the trace line.
+      // Otherwise there may be check ripup problems with entering at the wrong side at a fork.
+      PlaLineInt door_line = null;
+      PlaPointInt prev_corner = p_door_shape.corner(0);
+      int corner_count = p_door_shape.border_line_count();
+      for (int index = 1; index < corner_count; ++index)
+         {
+         PlaPointInt curr_corner = p_door_shape.corner(index);
+         if (!curr_corner.equals(prev_corner))
+            {
+            door_line = p_door_shape.border_line(index - 1);
+            break;
+            }
+         prev_corner = curr_corner;
+         }
+      if (p_room_1 instanceof ExpandRoomObstacle)
+         {
+         if (!insert_door_ok((ExpandRoomObstacle) p_room_1, door_line))
+            {
+            return false;
+            }
+         }
+      if (p_room_2 instanceof ExpandRoomObstacle)
+         {
+         if (!insert_door_ok((ExpandRoomObstacle) p_room_2, door_line))
+            {
+            return false;
+            }
+         }
+      return true;
+      }
+
+   
    /**
     * Insert 1 dimensional doors for the first and the last room of a trace rooms only, if they are parallel to the trace line.
     * Otherwise there may be check ripup problems with entering at the wrong side at a fork.
@@ -336,5 +400,15 @@ public final class SortedRooms_xx_Top
       
       return true;
       }
-
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
+   
    }

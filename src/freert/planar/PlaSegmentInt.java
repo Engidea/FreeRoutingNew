@@ -409,33 +409,22 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          PlaSide end_point_side = curr_line.side_of(line_end);
          if (start_point_side == PlaSide.ON_THE_LEFT && end_point_side == PlaSide.ON_THE_LEFT)
             {
-            // both endpoints are outside the border_line,
-            // no intersection possible
+            // both endpoints are outside the border_line, no intersection possible
             return empty_result;
             }
 
          if (start_point_side == PlaSide.COLLINEAR)
             {
             // the start is on curr_line, check that the end point is inside
-            // the halfplane, because touches count only, if the interiour
-            // is entered
-            if (end_point_side != PlaSide.ON_THE_RIGHT)
-               {
-               return empty_result;
-               }
-
+            // the halfplane, because touches count only, if the interiour is entered
+            if (end_point_side != PlaSide.ON_THE_RIGHT) return empty_result;
             }
 
          if (end_point_side == PlaSide.COLLINEAR)
             {
             // the end is on curr_line, check that the start point is inside
-            // the halfplane, because touches count only, if the interiour
-            // is entered
-            if (start_point_side != PlaSide.ON_THE_RIGHT)
-               {
-               return empty_result;
-               }
-
+            // the halfplane, because touches count only, if the interiour is entered
+            if (start_point_side != PlaSide.ON_THE_RIGHT) return empty_result;
             }
 
          if (start_point_side != PlaSide.ON_THE_RIGHT || end_point_side != PlaSide.ON_THE_RIGHT)
@@ -444,16 +433,15 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
             PlaPoint is = middle.intersection(curr_line, "what does this do ?");
             PlaSide prev_line_side_of_is = prev_line.side_of(is);
             PlaSide next_line_side_of_is = next_line.side_of(is);
+
             if (prev_line_side_of_is != PlaSide.ON_THE_LEFT && next_line_side_of_is != PlaSide.ON_THE_LEFT)
                {
-               // this line segment intersects curr_line between the
-               // previous and the next corner of p_simplex
+               // this line segment intersects curr_line between the previous and the next corner of p_simplex
 
                if (prev_line_side_of_is == PlaSide.COLLINEAR)
                   {
-                  // this line segment goes through the previous
-                  // corner of p_simplex. Check, that the intersection
-                  // isn't merely a touch.
+                  // this line segment goes through the previous corner of p_simplex. 
+                  // Check, that the intersection isn't merely a touch.
                   PlaPoint prev_prev_corner;
                   if (edge_line_no == 0)
                      {
@@ -473,8 +461,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
                      {
                      next_corner = p_shape.corner(edge_line_no + 1);
                      }
-                  // check, that prev_prev_corner and next_corner
-                  // are on different sides of this line segment.
+                  
+                  // check, that prev_prev_corner and next_corner are on different sides of this line segment.
                   PlaSide prev_prev_corner_side = middle.side_of(prev_prev_corner);
                   PlaSide next_corner_side = middle.side_of(next_corner);
                   if (prev_prev_corner_side == PlaSide.COLLINEAR || next_corner_side == PlaSide.COLLINEAR || prev_prev_corner_side == next_corner_side)
@@ -483,11 +471,11 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
                      }
 
                   }
+               
                if (next_line_side_of_is == PlaSide.COLLINEAR)
                   {
-                  // this line segment goes through the next
-                  // corner of p_simplex. Check, that the intersection
-                  // isn't merely a touch.
+                  // this line segment goes through the next corner of p_simplex. 
+                  // Check, that the intersection isn't merely a touch.
                   PlaPoint prev_corner = p_shape.corner(edge_line_no);
                   PlaPoint next_next_corner;
 
@@ -503,26 +491,24 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
                      {
                      next_next_corner = p_shape.corner(edge_line_no + 2);
                      }
-                  // check, that prev_corner and next_next_corner
-                  // are on different sides of this line segment.
+                  
+                  // check, that prev_corner and next_next_corner are on different sides of this line segment.
                   PlaSide prev_corner_side = middle.side_of(prev_corner);
                   PlaSide next_next_corner_side = middle.side_of(next_next_corner);
                   if (prev_corner_side == PlaSide.COLLINEAR || next_next_corner_side == PlaSide.COLLINEAR || prev_corner_side == next_next_corner_side)
                      {
                      return empty_result;
                      }
-
                   }
+
                boolean intersection_already_handeled = false;
-               for (int i = 0; i < intersection_count; ++i)
+               for (int index = 0; index < intersection_count; ++index)
                   {
-                  if (is.equals(intersection[i]))
+                  if (is.equals(intersection[index]))
                      {
                      intersection_already_handeled = true;
                      break;
-
                      }
-
                   }
                
                if (!intersection_already_handeled)
@@ -558,8 +544,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          PlaPointFloat is1 = intersection[1].to_float();
          PlaPointFloat curr_start = line_start.to_float();
          if (curr_start.dustance_square(is1) < curr_start.dustance_square(is0))
-         // swap the result points
             {
+            // swap the result points
             int tmp = result[0];
             result[0] = result[1];
             result[1] = tmp;

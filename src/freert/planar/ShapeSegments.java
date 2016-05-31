@@ -39,7 +39,7 @@ public abstract class ShapeSegments implements PlaShape, java.io.Serializable
       }
    
    /**
-    * returns true, if the the shape has no infinite part at this corner
+    * @return true, if the the shape has no infinite part at this corner
     */
    public abstract boolean corner_is_bounded(int p_no);
 

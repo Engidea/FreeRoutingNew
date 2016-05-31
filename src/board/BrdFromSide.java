@@ -126,7 +126,7 @@ public final class BrdFromSide
       
       if ( side_no < 0)
          {
-         System.out.println("CalcFromSide: this.no >= 0 expected");
+         System.out.println("CalcFromSide: side_no >= 0 expected");
          }
       
       border_intersection = border_projection.to_float();
