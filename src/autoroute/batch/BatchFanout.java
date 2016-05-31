@@ -19,10 +19,13 @@ import freert.varie.TimeLimitStoppable;
 import interactive.BrdActionThread;
 import java.util.Collection;
 import java.util.SortedSet;
+import java.util.TreeSet;
 import autoroute.varie.ArtComponent;
 import autoroute.varie.ArtPin;
 import autoroute.varie.ArtResult;
 import board.RoutingBoard;
+import board.infos.BrdComponent;
+import board.items.BrdAbitPin;
 
 /**
  * Handles the sequencing of the fanout inside the batch autorouter.
@@ -32,42 +35,42 @@ import board.RoutingBoard;
 public final class BatchFanout
    {
    private static final String classname="BatchFanout.";
+   private static final int MAX_PASS_COUNT = 20;
    
    private final BrdActionThread thread;
    private final RoutingBoard routing_board;
 
-   private final SortedSet<ArtComponent> sorted_components;
+   private final SortedSet<ArtComponent> sorted_components = new TreeSet<ArtComponent>();
 
-   public static void fanout_board(BrdActionThread p_thread)
-      {
-      BatchFanout fanout_instance = new BatchFanout(p_thread);
-      final int MAX_PASS_COUNT = 20;
-      for (int i = 0; i < MAX_PASS_COUNT; ++i)
-         {
-         int routed_count = fanout_instance.fanout_pass(i);
-         if (routed_count == 0)
-            {
-            break;
-            }
-         }
-      }
-
-   private BatchFanout(BrdActionThread p_thread)
+   public BatchFanout(BrdActionThread p_thread)
       {
       thread = p_thread;
       routing_board = p_thread.hdlg.get_routing_board();
-      Collection<board.items.BrdAbitPin> board_smd_pin_list = routing_board.get_smd_pins();
-      sorted_components = new java.util.TreeSet<ArtComponent>();
-      for (int i = 1; i <= routing_board.brd_components.count(); ++i)
+      Collection<BrdAbitPin> board_smd_pin_list = routing_board.get_smd_pins();
+
+      for (int index = 1; index <= routing_board.brd_components.count(); ++index)
          {
-         board.infos.BrdComponent curr_board_component = routing_board.brd_components.get(i);
+         BrdComponent curr_board_component = routing_board.brd_components.get(index);
+         
          ArtComponent curr_component = new ArtComponent(curr_board_component, board_smd_pin_list);
+         
          if (curr_component.smd_pin_count > 0)
             {
             sorted_components.add(curr_component);
             }
          }
       }
+
+   
+   public void fanout_board()
+      {
+      for (int i = 0; i < MAX_PASS_COUNT; ++i)
+         {
+         int routed_count = fanout_pass(i);
+         if (routed_count == 0)  break;
+         }
+      }
+
 
    /**
     * Routes a fanout pass and returns the number of new fanouted SMD-pins in this pass.

@@ -30,8 +30,6 @@ import freert.planar.ShapeTile;
 
 /**
  * An ExpansionDoor is a common edge between two ExpansionRooms
- *
- *
  * @author Alfons Wirtz
  */
 public final class ExpandDoor implements ExpandObject

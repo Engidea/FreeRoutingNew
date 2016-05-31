@@ -354,6 +354,9 @@ public final class SortedRooms_xx_Top
          prev_corner = curr_corner;
          }
       
+      // if there is no door line
+      if ( door_line == null ) return false;
+      
       if (p_room_1 instanceof ExpandRoomObstacle)
          {
          if (!insert_door_ok_test((ExpandRoomObstacle) p_room_1, door_line)) return false;
@@ -376,7 +379,7 @@ public final class SortedRooms_xx_Top
       {
       if (p_door_line == null)
          {
-         System.err.println("SortedRoomNeighbours.insert_door_ok: p_door_line is null");
+         System.err.println("SortedRoomNeighbours.insert_door_ok_test: p_door_line is null");
          return false;
          }
       

@@ -162,6 +162,7 @@ public final class SortedRooms_xx_Degree
 
    /**
     * Called from calculate_doors(). The shape of the room p_result may change inside this function.
+    * Wow.... pippo interesting....
     */
    public void calculate_new_incomplete_rooms(ArtEngine p_autoroute_engine)
       {

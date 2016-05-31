@@ -58,7 +58,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       int initial_len = points_alist.size(); 
       
       if ( initial_len < 2)
-         throw new IllegalArgumentException(classname+"A must contain at least 2 different points");
+         throw new IllegalArgumentException(classname+"A must contain at least 2 points");
 
       ArrayList<PlaPointInt> corners_alist = new ArrayList<PlaPointInt>(initial_len);
       
@@ -66,7 +66,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          {
          if ( a_point == null ) continue;
          
-         // if this point is already in the list
+         // if this point is already in the list do not add it again
          if ( has_point(corners_alist, a_point) ) continue;
          
          // if this point is "colinear" with some points in the list
@@ -81,6 +81,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       // this is the actual result
       lines_list = new ArrayList<PlaLineInt>(input_len + 1);
 
+      if ( input_len < 2)
+         throw new IllegalArgumentException(classname+"B must contain at least 2 different points");
+      
       corner_first = corners_alist.get(0);
       
       // construct perpendicular lines at the start and at the end to represent

@@ -83,7 +83,9 @@ public final class BatchAutorouteThread extends BrdActionThread
       
       if ( hdlg.itera_settings.autoroute_settings.pass_no_get() > 1 ) return;
       
-      BatchFanout.fanout_board(this);
+      BatchFanout fanout = new BatchFanout(this);
+      
+      fanout.fanout_board();
       }
    
    private void autoroute_try ()

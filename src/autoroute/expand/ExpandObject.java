@@ -19,9 +19,9 @@
  */
 package autoroute.expand;
 
+import autoroute.maze.MazeSearchElement;
 import freert.planar.PlaDimension;
 import freert.planar.ShapeTile;
-import autoroute.maze.MazeSearchElement;
 
 /**
  * An object, which can be expanded by the maze expansion algorithm.
@@ -42,7 +42,7 @@ public interface ExpandObject
    PlaDimension get_dimension();
 
    /**
-    * Returns the other room to p_room if this is a door and the other room is a CompleteExpansionRoom. Else null is returned.
+    * @return the other room to p_room if this is a door and the other room is a CompleteExpansionRoom. Else null is returned.
     */
    ExpandRoomComplete other_room(ExpandRoomComplete p_room);
 

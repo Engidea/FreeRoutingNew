@@ -126,6 +126,19 @@ public abstract class LogfileScope
          AUTOROUTE_SELECTED, FANOUT_SELECTED, COMPLETE_SCOPE, CANCEL_SCOPE, CREATING_TILE, CREATING_CIRCLE, CREATING_POLYGONSHAPE, ADDING_HOLE, CREATING_TRACE, CHANGE_LAYER, DRAGGING_ITEMS,
          MAKING_SPACE, COPYING_ITEMS, MOVE_ITEMS, TURN_90_DEGREE, ROTATE, CHANGE_PLACEMENT_SIDE, SET_ZOOM_WITH_WHEEL, ASSIGN_CLEARANCE_CLASS, CENTER_DISPLAY, ZOOM_FRAME };
 
+
+   public final String name;
+
+   
+   /** 
+    * prevents creating more instances than what declared here 
+    */
+   private LogfileScope(String p_name)
+      {
+      name = p_name;
+      }
+
+   
    /**
     * Reads the scope from the input logfile. Returns the active interactive state after reading the scope.
     */
@@ -136,21 +149,14 @@ public abstract class LogfileScope
     */
    public static LogfileScope get_scope(String p_name)
       {
-      for (int i = 0; i < arr.length; ++i)
+      for (int index = 0; index < arr.length; ++index)
          {
-         if (arr[i].name.compareTo(p_name) == 0)
-            {
-            return arr[i];
-            }
+         if (arr[index].name.compareTo(p_name) == 0) return arr[index];
          }
+
       return null;
       }
 
-   /** prevents creating more instances */
-   private LogfileScope(String p_name)
-      {
-      name = p_name;
-      }
 
    /**
     * Scopes marking the end of a cornerlist scope.
@@ -159,8 +165,6 @@ public abstract class LogfileScope
       {
       return this == COMPLETE_SCOPE || this == CANCEL_SCOPE;
       }
-
-   public final String name;
 
    /**
     * A logfile scope containing a list of points.
@@ -339,7 +343,6 @@ public abstract class LogfileScope
             {
             System.out.println("CopyItemScope.start_scope: unexpected p_return_state");
             result = null;
-
             }
          return result;
          }
@@ -364,7 +367,6 @@ public abstract class LogfileScope
             {
             System.out.println("MoveComponent.start_scope: unexpected p_return_state");
             result = null;
-
             }
          return result;
          }

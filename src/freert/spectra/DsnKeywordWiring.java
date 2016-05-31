@@ -38,6 +38,7 @@ import freert.planar.PlaArea;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.Polyline;
 import freert.planar.ShapeTileBox;
 import freert.rules.NetClass;
@@ -333,16 +334,16 @@ final class DsnKeywordWiring extends DsnKeywordScope
             System.out.println("Wiring.read_wire_scope: IO error scanning file");
             return;
             }
+         
          if (next_token == null)
             {
             System.out.println("Wiring.read_wire_scope: unexpected end of file");
             return;
             }
-         if (next_token == CLOSED_BRACKET)
-            {
-            // end of scope
-            break;
-            }
+         
+         // end of scope
+         if (next_token == CLOSED_BRACKET)  break;
+         
          if (prev_token == OPEN_BRACKET)
             {
             if (next_token == DsnKeyword.POLYGON_PATH)
@@ -360,21 +361,19 @@ final class DsnKeywordWiring extends DsnKeywordScope
                }
             else if (next_token == DsnKeyword.POLYGON)
                {
-
                border_shape = DsnShape.read_polygon_scope(p_par.scanner, p_par.layer_structure);
                }
             else if (next_token == DsnKeyword.CIRCLE)
                {
-
                border_shape = DsnShape.read_circle_scope(p_par.scanner, p_par.layer_structure);
                }
             else if (next_token == DsnKeyword.WINDOW)
                {
                DsnShape hole_shape = DsnShape.read_scope(p_par.scanner, p_par.layer_structure);
                hole_list.add(hole_shape);
-               // overread the closing bracket
                try
                   {
+                  // overread the closing bracket
                   next_token = p_par.scanner.next_token();
                   }
                catch (java.io.IOException e)
@@ -484,19 +483,24 @@ final class DsnKeywordWiring extends DsnKeywordScope
             clearance_class_no = net_class.default_item_clearance_classes.get(ItemClass.TRACE);
             }
          
-         PlaPointInt[] corner_arr = new PlaPointInt[path.coordinate_arr.length / 2];
-         double[] curr_point = new double[2];
-         for (int index = 0; index < corner_arr.length; ++index)
+         int points_len = path.coordinate_arr.length / 2;
+         
+         PlaPointIntAlist corner_arr = new PlaPointIntAlist(points_len);
+
+         for (int index = 0; index < points_len; ++index)
             {
+            double[] curr_point = new double[2];
             curr_point[0] = path.coordinate_arr[2 * index];
             curr_point[1] = path.coordinate_arr[2 * index + 1];
             PlaPointFloat curr_corner = p_par.coordinate_transform.dsn_to_board(curr_point);
+            
             if (!bounding_box.contains(curr_corner))
                {
                System.out.println("Wiring.read_wire_scope: wire corner outside board");
                return;
                }
-            corner_arr[index] = curr_corner.round();
+            
+            corner_arr.add( curr_corner.round());
             }
          
          try
@@ -507,7 +511,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
             }
          catch ( Exception exc )
             {
-            System.out.println("Wiring.read_wire_scope: polyline too short");
+            System.out.println("Wiring.read_wire_scope: polyline insert failed, probable two equal points");
             }
          }
       else if (path instanceof DsnPolylinePath)
