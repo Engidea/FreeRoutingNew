@@ -22,6 +22,7 @@ package freert.planar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import board.shape.ShapeBoundingOct;
 
 /**
  * Describes functionality of a circle shape in the plane

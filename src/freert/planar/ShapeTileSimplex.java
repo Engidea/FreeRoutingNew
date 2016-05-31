@@ -19,6 +19,7 @@ package freert.planar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
+import board.shape.ShapeBoundingOct;
 
 /**
  * Convex shape defined as intersection of half-planes. 

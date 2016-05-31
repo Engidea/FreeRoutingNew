@@ -21,6 +21,7 @@
 package freert.planar;
 
 import java.util.ArrayList;
+import board.shape.ShapeBoundingOct;
 
 /**
  * Interface describing functionality for connected 2-dimensional shapes in the plane. 

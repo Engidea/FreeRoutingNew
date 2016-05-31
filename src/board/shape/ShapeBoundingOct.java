@@ -14,7 +14,15 @@
  *   for more details.
  */
 
-package freert.planar;
+package board.shape;
+
+import freert.planar.ShapeCircle;
+import freert.planar.ShapeConvex;
+import freert.planar.ShapePolygon;
+import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
+import freert.planar.ShapeTileRegular;
+import freert.planar.ShapeTileSimplex;
 
 /**
  * Describing the functionality for the fixed directions of a RegularTileShape.

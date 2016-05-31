@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
+import board.shape.ShapeBoundingOct;
 
 /**
  * Shape described bei a closed polygon of corner points. 

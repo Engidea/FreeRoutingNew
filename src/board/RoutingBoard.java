@@ -1013,10 +1013,13 @@ public final class RoutingBoard implements java.io.Serializable
    public Set<BrdItem> overlapping_items(PlaArea p_area, int p_layer)
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
+      
       ShapeTile[] tile_shapes = p_area.split_to_convex();
-      for (int i = 0; i < tile_shapes.length; ++i)
+      
+      for (int index = 0; index < tile_shapes.length; ++index)
          {
-         Set<ShapeTreeObject> curr_overlaps = overlapping_objects(tile_shapes[i], p_layer);
+         Set<ShapeTreeObject> curr_overlaps = overlapping_objects(tile_shapes[index], p_layer);
+         
          for (ShapeTreeObject curr_overlap : curr_overlaps)
             {
             if (curr_overlap instanceof BrdItem)
@@ -1072,7 +1075,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
       
-      Collection<ShapeTreeEntry> tree_entries = new LinkedList<ShapeTreeEntry>();
+      LinkedList<ShapeTreeEntry> tree_entries = new LinkedList<ShapeTreeEntry>();
       
       NetNosList ignore_net_nos = NetNosList.EMPTY;
       

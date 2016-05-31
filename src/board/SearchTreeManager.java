@@ -29,7 +29,6 @@ import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeLeaf;
 import freert.planar.Polyline;
-import freert.planar.ShapeBoundingOct;
 import freert.varie.UndoableObjectNode;
 
 /**
@@ -48,7 +47,7 @@ public final class SearchTreeManager
       {
       r_board = p_board;
       
-      default_tree = new ShapeSearchTree(ShapeBoundingOct.INSTANCE, p_board, 0);
+      default_tree = new ShapeSearchTree(p_board, 0);
       
       compensated_search_trees = new LinkedList<ShapeSearchTree>();
       compensated_search_trees.add(default_tree);
@@ -148,7 +147,7 @@ public final class SearchTreeManager
          compensated_clearance_class_no = 0;
          }
       
-      default_tree = new ShapeSearchTree(ShapeBoundingOct.INSTANCE, r_board, compensated_clearance_class_no);
+      default_tree = new ShapeSearchTree(r_board, compensated_clearance_class_no);
       
       compensated_search_trees.add(default_tree);
       
@@ -217,7 +216,7 @@ public final class SearchTreeManager
             }
          }
 
-      ShapeSearchTree curr_autoroute_tree = new ShapeSearchTree(ShapeBoundingOct.INSTANCE, r_board, p_clearance_class_no);
+      ShapeSearchTree curr_autoroute_tree = new ShapeSearchTree( r_board, p_clearance_class_no);
       
       compensated_search_trees.add(curr_autoroute_tree);
       

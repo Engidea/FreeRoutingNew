@@ -37,10 +37,10 @@ import java.io.ObjectOutputStream;
 import main.Stat;
 import board.BrdLayerStructure;
 import freert.planar.PlaArea;
-import freert.planar.ShapeCircle;
 import freert.planar.PlaEllipse;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaShape;
+import freert.planar.ShapeCircle;
 import freert.planar.ShapeSegments;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
@@ -246,10 +246,8 @@ public final class GdiContext implements java.io.Serializable
          {
          PlaPointFloat[] draw_corners = p_shape.corner_approx_arr();
 
-         if (draw_corners.length <= 1)
-            {
-            return;
-            }
+         if (draw_corners.length <= 1) return;
+
          PlaPointFloat[] closed_draw_corners = new PlaPointFloat[draw_corners.length + 1];
          System.arraycopy(draw_corners, 0, closed_draw_corners, 0, draw_corners.length);
          closed_draw_corners[closed_draw_corners.length - 1] = draw_corners[0];
@@ -269,9 +267,9 @@ public final class GdiContext implements java.io.Serializable
       {
       draw_boundary(p_area.get_border(), p_draw_half_width, p_color, p_g, p_translucency_factor);
       PlaShape[] holes = p_area.get_holes();
-      for (int i = 0; i < holes.length; ++i)
+      for (int index = 0; index < holes.length; ++index)
          {
-         draw_boundary(holes[i], p_draw_half_width, p_color, p_g, p_translucency_factor);
+         draw_boundary(holes[index], p_draw_half_width, p_color, p_g, p_translucency_factor);
          }
       }
 
@@ -280,16 +278,13 @@ public final class GdiContext implements java.io.Serializable
     */
    public void fill_circle(ShapeCircle p_circle, Graphics p_g, Color p_color, double p_translucency_factor)
       {
-      if (p_color == null)
-         {
-         return;
-         }
+      if (p_color == null) return;
+
       Point2D center = coordinate_transform.board_to_screen(p_circle.center.to_float());
       double radius = coordinate_transform.board_to_screen(p_circle.radius);
-      if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle) p_g.getClip(), radius))
-         {
-         return;
-         }
+
+      if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle) p_g.getClip(), radius))  return;
+
       double diameter = 2 * radius;
       Ellipse2D circle = new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter);
       Graphics2D g2 = (Graphics2D) p_g;
@@ -373,15 +368,13 @@ public final class GdiContext implements java.io.Serializable
     */
    public void fill_shape(PlaPointFloat[] p_points, Graphics p_g, Color p_color, double p_translucency_factor)
       {
-      if (p_color == null)
-         {
-         return;
-         }
+      if (p_color == null) return;
+
       Graphics2D g2 = (Graphics2D) p_g;
       Polygon draw_polygon = new Polygon();
-      for (int i = 0; i < p_points.length; i++)
+      for (int index = 0; index < p_points.length; index++)
          {
-         Point2D curr_corner = coordinate_transform.board_to_screen(p_points[i]);
+         Point2D curr_corner = coordinate_transform.board_to_screen(p_points[index]);
          draw_polygon.addPoint((int) Math.round(curr_corner.getX()), (int) Math.round(curr_corner.getY()));
          }
       g2.setColor(p_color);
@@ -395,22 +388,21 @@ public final class GdiContext implements java.io.Serializable
     */
    public void fill_area(PlaPointFloat[][] p_point_lists, Graphics p_g, Color p_color, double p_translucency_factor)
       {
-      if (p_color == null)
-         {
-         return;
-         }
+      if (p_color == null) return;
+
       GeneralPath draw_path = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
-      for (int j = 0; j < p_point_lists.length; ++j)
+      for (int jndex = 0; jndex < p_point_lists.length; ++jndex)
          {
          Polygon draw_polygon = new Polygon();
-         PlaPointFloat[] curr_point_list = p_point_lists[j];
-         for (int i = 0; i < curr_point_list.length; i++)
+         PlaPointFloat[] curr_point_list = p_point_lists[jndex];
+         for (int index = 0; index < curr_point_list.length; index++)
             {
-            Point2D curr_corner = coordinate_transform.board_to_screen(curr_point_list[i]);
+            Point2D curr_corner = coordinate_transform.board_to_screen(curr_point_list[index]);
             draw_polygon.addPoint((int) Math.round(curr_corner.getX()), (int) Math.round(curr_corner.getY()));
             }
          draw_path.append(draw_polygon, false);
          }
+      
       Graphics2D g2 = (Graphics2D) p_g;
       g2.setColor(p_color);
       set_translucency(g2, p_translucency_factor);
@@ -446,41 +438,42 @@ public final class GdiContext implements java.io.Serializable
          PlaShape[] holes = p_area.get_holes();
 
          PlaPointFloat[][] draw_polygons = new PlaPointFloat[holes.length + 1][];
-         for (int j = 0; j < draw_polygons.length; ++j)
+         for (int jndex = 0; jndex < draw_polygons.length; ++jndex)
             {
             ShapeSegments curr_draw_shape;
-            if (j == 0)
+            if (jndex == 0)
                {
                curr_draw_shape = border;
                }
             else
                {
-               curr_draw_shape = (ShapeSegments) holes[j - 1];
+               curr_draw_shape = (ShapeSegments) holes[jndex - 1];
                }
-            draw_polygons[j] = new PlaPointFloat[curr_draw_shape.border_line_count() + 1];
-            PlaPointFloat curr_draw_polygon[] = draw_polygons[j];
-            for (int i = 0; i < curr_draw_polygon.length - 1; ++i)
+            draw_polygons[jndex] = new PlaPointFloat[curr_draw_shape.border_line_count() + 1];
+            PlaPointFloat curr_draw_polygon[] = draw_polygons[jndex];
+            for (int index = 0; index < curr_draw_polygon.length - 1; ++index)
                {
-               curr_draw_polygon[i] = curr_draw_shape.corner_approx(i);
+               curr_draw_polygon[index] = curr_draw_shape.corner_approx(index);
                }
             // close the polygon
             curr_draw_polygon[curr_draw_polygon.length - 1] = curr_draw_polygon[0];
             }
          fill_area(draw_polygons, p_g, p_color, p_translucency_factor);
          }
+      
       if (show_area_division)
          {
          ShapeTile[] tiles = p_area.split_to_convex();
-         for (int i = 0; i < tiles.length; ++i)
+         for (int index = 0; index < tiles.length; ++index)
             {
-            PlaPointFloat[] corners = new PlaPointFloat[tiles[i].border_line_count() + 1];
-            ShapeTile curr_tile = tiles[i];
-            for (int j = 0; j < corners.length - 1; ++j)
+            PlaPointFloat[] corners = new PlaPointFloat[tiles[index].border_line_count() + 1];
+            ShapeTile curr_tile = tiles[index];
+            for (int jndex = 0; jndex < corners.length - 1; ++jndex)
                {
-               corners[j] = curr_tile.corner_approx(j);
+               corners[jndex] = curr_tile.corner_approx(jndex);
                }
             corners[corners.length - 1] = corners[0];
-            draw(corners, 1, java.awt.Color.white, p_g, 0.7);
+            draw(corners, 1, Color.white, p_g, 0.7);
             }
          }
       }
@@ -804,7 +797,7 @@ public final class GdiContext implements java.io.Serializable
    /**
     * initialise some values in p_graphics
     */
-   private static void init_draw_graphics(Graphics2D p_graphics, Color p_color, float p_width)
+   private void init_draw_graphics(Graphics2D p_graphics, Color p_color, float p_width)
       {
       BasicStroke bs = new BasicStroke(Math.max(p_width, 0), BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
       p_graphics.setStroke(bs);
@@ -812,7 +805,7 @@ public final class GdiContext implements java.io.Serializable
       p_graphics.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
       }
 
-   private static void set_translucency(Graphics2D p_g2, double p_factor)
+   private void set_translucency(Graphics2D p_g2, double p_factor)
       {
       AlphaComposite curr_alpha_composite;
       if (p_factor >= 0)

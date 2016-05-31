@@ -211,7 +211,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    public final boolean validate(ArtEngine p_autoroute_engine)
       {
       boolean result = true;
-      Collection<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
+      LinkedList<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
 
       NetNosList net_no_arr = new NetNosList(p_autoroute_engine.get_net_no() );
       

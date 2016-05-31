@@ -16,6 +16,8 @@
 
 package freert.planar;
 
+import board.shape.ShapeBoundingOct;
+
 /**
  *
  * Implements functionality for convex shapes, whose borderline directions are multiples of 45 degree and defined with integer

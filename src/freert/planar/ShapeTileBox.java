@@ -20,6 +20,8 @@
 
 package freert.planar;
 
+import board.shape.ShapeBoundingOct;
+
 /**
  * Implements functionality of orthogonal rectangles in the plane with integer coordinates.
  * @author Alfons Wirtz
