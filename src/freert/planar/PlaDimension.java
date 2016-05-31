@@ -43,6 +43,25 @@ public final class PlaDimension
       name = p_name;
       }
    
+   public boolean is_empty ()
+      {
+      return value == PLAD_EMPTY;
+      }
+
+   public boolean is_point ()
+      {
+      return value == PLAD_POINT;
+      }
+
+   /**
+    * Is less than equal a point is considered an empty dimension
+    */
+   public boolean is_lt_point ()
+      {
+      return value <= PLAD_POINT;
+      }
+
+   
    public boolean is_line ()
       {
       return value == PLAD_LINE;
@@ -52,16 +71,6 @@ public final class PlaDimension
       {
       return value >= PLAD_AREA;
       }
-   
-   /**
-    * A point is considered an empty dimension
-    * @return
-    */
-   public boolean is_empty ()
-      {
-      return value <= PLAD_POINT;
-      }
-   
    
    public boolean less ( PlaDimension p_other )
       {

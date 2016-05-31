@@ -910,25 +910,25 @@ public final class DsnKeywordStructure extends DsnKeywordScope
             DsnPolygonPath curr_path = (DsnPolygonPath) curr_shape;
             if (curr_path.width != 0)
                {
-               // set the width to 0, because the offset function used in transform_to_board is not implemented
-               // for shapes, which are not convex.
+               // set the width to 0, because the offset function used in transform_to_board is not implemented for shapes, which are not convex.
                curr_shape = new DsnPolygonPath(curr_path.layer, 0, curr_path.coordinate_arr);
                }
             }
          ShapeSegments curr_board_shape = (ShapeSegments) curr_shape.transform_to_board(p_par.coordinate_transform);
 
-         if ( ! curr_board_shape.dimension().is_empty() )
+         if ( ! curr_board_shape.dimension().is_lt_point() )
             {
             board_outline_shapes.add(curr_board_shape);
             }
          }
+      
       if (board_outline_shapes.isEmpty())
          {
-         // construct an outline from the bounding_shape, if the outline is
-         // missing.
+         // construct an outline from the bounding_shape, if the outline is missing.
          ShapeSegments curr_board_shape = (ShapeSegments) p_board_construction_info.bounding_shape.transform_to_board(p_par.coordinate_transform);
          board_outline_shapes.add(curr_board_shape);
          }
+      
       Collection<ShapeSegments> hole_shapes = separate_holes(board_outline_shapes);
       
       ClearanceMatrix clearance_matrix = ClearanceMatrix.get_default_instance(board_layer_structure, 0);

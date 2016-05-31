@@ -221,7 +221,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
          {
          if (curr_entry.object == this) continue;
 
-         ShapeTreeObject curr_object = (ShapeTreeObject) curr_entry.object;
+         ShapeTreeObject curr_object = curr_entry.object;
 
          if (!curr_object.is_trace_obstacle(p_autoroute_engine.get_net_no())) continue;
 

@@ -656,8 +656,8 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       {
       if ( ! is_bounded()) return Integer.MAX_VALUE;
       
-      if (dimension().is_empty()) return 0;
-      
+      if (dimension().is_lt_point()) return 0;
+
       if (dimension().is_line()) return circumference() / 2;
       
       // now the shape is 2-dimensional

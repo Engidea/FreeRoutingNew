@@ -731,7 +731,7 @@ public final class ShapeSearchTree
          {
          ShapeTreeEntry curr_entry = it.next();
 
-         risul_obstacles.add((ShapeTreeObject) curr_entry.object);
+         risul_obstacles.add(curr_entry.object);
          }
       
       return risul_obstacles;
@@ -784,7 +784,7 @@ public final class ShapeSearchTree
       while (it.hasNext())
          {
          ShapeTreeLeaf curr_leaf = it.next();
-         ShapeTreeObject curr_object = (ShapeTreeObject) curr_leaf.object;
+         ShapeTreeObject curr_object = curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
          
          // ignore object if it is on a different layer
@@ -912,7 +912,7 @@ public final class ShapeSearchTree
       
       for (ShapeTreeEntry curr_entry : res_tree_entries )
          {
-         p_result.add((ShapeTreeObject) curr_entry.object);
+         p_result.add(curr_entry.object);
          }
       }
 
@@ -1016,7 +1016,7 @@ public final class ShapeSearchTree
             }
 
          ShapeTreeLeaf curr_leaf = (ShapeTreeLeaf) curr_node;
-         ShapeTreeObject curr_object = (ShapeTreeObject) curr_leaf.object;
+         ShapeTreeObject curr_object = curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
       
          if ( ! (curr_object.is_trace_obstacle(p_net_no) && curr_object.shape_layer(shape_index) == room_layer && curr_object != p_ignore_object)) continue;
@@ -1126,7 +1126,7 @@ public final class ShapeSearchTree
          {
          // There is no cut line, so that all p_shape_to_be_contained is completely on the right side of that line. 
          // Search a cut line, so that at least part of p_shape_to_be_contained is on the right side.
-         if (shape_to_be_contained.dimension().is_empty() )
+         if (shape_to_be_contained.dimension().is_lt_point() )
             {
             // There is already a completed expansion room around p_shape_to_be_contained.
             return result;

@@ -175,7 +175,7 @@ public final class SortedRooms_xx_Top
       
       SortedRooms_xx_Degree result = new SortedRooms_xx_Degree(p_room, completed_room);
       
-      Collection<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
+      LinkedList<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
       
       p_autoroute_search_tree.calc_overlapping_tree_entries(room_shape, p_room.get_layer(), overlapping_objects);
 
@@ -183,7 +183,7 @@ public final class SortedRooms_xx_Top
       
       for (ShapeTreeEntry curr_entry : overlapping_objects)
          {
-         ShapeTreeObject curr_object = (ShapeTreeObject) curr_entry.object;
+         ShapeTreeObject curr_object = curr_entry.object;
       
          if (curr_object == p_room) continue;
 
@@ -197,6 +197,13 @@ public final class SortedRooms_xx_Top
          ShapeTile curr_shape = curr_object.get_tree_shape(p_autoroute_search_tree, curr_entry.shape_index_in_object);
          ShapeTile shape_intersect = room_shape.intersection(curr_shape);
          PlaDimension dimension = shape_intersect.dimension();
+
+         if (dimension.is_empty())
+            {
+            System.out.println("SortedRoomNeighbours.calculate: dimension >= 0 expected"); // pippone
+            continue;
+            }
+         
          if (dimension.is_area() )
             {
             if (completed_room instanceof ExpandRoomObstacle && curr_object instanceof BrdItem)
@@ -216,12 +223,7 @@ public final class SortedRooms_xx_Top
                }
             continue;
             }
-         if (dimension.is_empty())
-            {
-            System.out.println("SortedRoomNeighbours.calculate: dimension >= 0 expected");
-            continue;
-            }
-
+         
          if (dimension.is_line() )
             {
             int[] touching_sides = room_shape.touching_sides(curr_shape);
@@ -256,9 +258,14 @@ public final class SortedRooms_xx_Top
                   completed_room.add_door(new_door);
                   }
                }
+            continue;
             }
-         else
-            // dimensin = 0
+
+/*         
+ * Hmmmm, apparently handling the point case produce quite worse results...
+ * I do not have enough insignt at the moment to guess why handling a single point would be "good" or not, at the moment this code is commented out
+ * 
+         if (dimension.is_point() )
             {
             PlaPointInt touching_point = shape_intersect.corner(0);
             int room_corner_no = room_shape.equals_corner(touching_point);
@@ -298,6 +305,7 @@ public final class SortedRooms_xx_Top
                }
             result.add_sorted_neighbour(curr_shape, touching_side_no_of_room, touching_side_no_of_neighbour_room, room_touch_is_corner, neighbour_room_touch_is_corner);
             }
+  */       
          }
       return result;
       }
