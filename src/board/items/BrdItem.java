@@ -459,13 +459,9 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
          
          Collection<ShapeTreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(
                curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
-      
-         Iterator<ShapeTreeEntry> iter = curr_overlapping_items.iterator();
          
-         while (iter.hasNext())
+         for (ShapeTreeEntry curr_entry : curr_overlapping_items )
             {
-            ShapeTreeEntry curr_entry = iter.next();
-            
             // skip objects that are not board items
             if ( !(curr_entry.object instanceof BrdItem)) continue;
             

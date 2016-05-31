@@ -8,11 +8,11 @@ import freert.planar.ShapeTileRegular;
 public final class ShapeTreeLeaf extends ShapeTreeNode implements Comparable<ShapeTreeLeaf>
    {
    /// Actual object stored, may change if you keep the shape but change it... 
-   public ShapeTreeStorable object;
+   public ShapeTreeObject object;
    // index of the shape in the object, it should really be final but it is not for special performance reuse... mah 
    public int shape_index_in_object;
 
-   public ShapeTreeLeaf(ShapeTreeStorable p_object, int p_index, ShapeTreeNodeInner p_parent, ShapeTileRegular p_bounding_shape)
+   public ShapeTreeLeaf(ShapeTreeObject p_object, int p_index, ShapeTreeNodeInner p_parent, ShapeTileRegular p_bounding_shape)
       {
       bounding_shape = p_bounding_shape;
       parent = p_parent;

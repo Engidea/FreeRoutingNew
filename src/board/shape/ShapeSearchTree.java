@@ -96,7 +96,7 @@ public final class ShapeSearchTree
    /**
     * Inserts all shapes of p_obj into the tree
     */
-   public final void insert(ShapeTreeStorable p_obj)
+   public final void insert(ShapeTreeObject p_obj)
       {
       int shape_count = p_obj.tree_shape_count(this);
       
@@ -116,7 +116,7 @@ public final class ShapeSearchTree
     * Insert a shape - creates a new node with a bounding shape
     * This is possibly the entry point to understand the whole search tree mechanism
     */
-   protected final ShapeTreeLeaf insert(ShapeTreeStorable p_object, int p_index)
+   protected final ShapeTreeLeaf insert(ShapeTreeObject p_object, int p_index)
       {
       PlaShape object_shape = p_object.get_tree_shape(this, p_index);
       
@@ -188,14 +188,6 @@ public final class ShapeSearchTree
          {
          remove_leaf(p_entries[index]);
          }
-      }
-
-   /** 
-    * Returns the number of entries stored in the tree
-    */
-   public final int size()
-      {
-      return leaf_count;
       }
 
    /** 
@@ -952,9 +944,9 @@ public final class ShapeSearchTree
     *  If p_layer < 0, the layer is ignored.
     *  This seems one of the main point for the logic, finding out if something overlaps, damiano
     */
-   public final Collection<ShapeTreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
+   public final LinkedList<ShapeTreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
-      Collection<ShapeTreeEntry> result = new LinkedList<ShapeTreeEntry>();
+      LinkedList<ShapeTreeEntry> result = new LinkedList<ShapeTreeEntry>();
       
       if ( is_clearance_compensation_used())
          {
