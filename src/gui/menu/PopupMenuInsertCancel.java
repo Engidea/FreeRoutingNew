@@ -46,7 +46,7 @@ public final class PopupMenuInsertCancel extends JPopupMenu
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.return_from_state();
+               board_panel.itera_board.return_from_state();
                }
          });
 
@@ -58,7 +58,7 @@ public final class PopupMenuInsertCancel extends JPopupMenu
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.cancel_state();
+               board_panel.itera_board.cancel_state();
                }
          });
 

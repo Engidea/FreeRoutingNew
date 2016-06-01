@@ -107,7 +107,7 @@ public final class BoardMenuFile extends JMenu
       else
          {
          board_frame.screen_messages.set_status_message(resources.getString("message_9"));
-         board_frame.board_panel.board_handling.start_logfile(filename);
+         board_frame.board_panel.itera_board.start_logfile(filename);
          }
       }
 
@@ -159,7 +159,7 @@ public final class BoardMenuFile extends JMenu
       try
          {
          OutputStream output_stream = new FileOutputStream(config_file);
-         GuiConfigFile.write(board_frame, board_frame.board_panel.board_handling, output_stream);
+         GuiConfigFile.write(board_frame, board_frame.board_panel.itera_board, output_stream);
          board_frame.screen_messages.set_status_message(resources.getString("message_17"));
          }
       catch (Exception exc)
@@ -172,7 +172,7 @@ public final class BoardMenuFile extends JMenu
    private void save_item_fun()
       {
       boolean save_ok = board_frame.save();
-      board_frame.board_panel.board_handling.close_files();
+      board_frame.board_panel.itera_board.close_files();
       if (save_ok)
          {
          board_frame.screen_messages.set_status_message(resources.getString("save_message"));

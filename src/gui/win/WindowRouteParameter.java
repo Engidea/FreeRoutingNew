@@ -96,7 +96,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       super(p_board_frame);
       
       stat = p_stat;
-      board_handling = p_board_frame.board_panel.board_handling;
+      board_handling = p_board_frame.board_panel.itera_board;
       resources = new GuiResources(p_stat, "gui.resources.WindowRouteParameter");
 
       manual_rule_window = new WindowManualRules(p_board_frame);

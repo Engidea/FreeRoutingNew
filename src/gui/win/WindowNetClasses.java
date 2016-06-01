@@ -66,7 +66,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
       this.main_panel = new javax.swing.JPanel();
       this.main_panel.setLayout(new java.awt.BorderLayout());
 
-      RoutingBoard routing_board = p_board_frame.board_panel.board_handling.get_routing_board();
+      RoutingBoard routing_board = p_board_frame.board_panel.itera_board.get_routing_board();
 
       cl_class_combo_box = new JComboBox<String>();
       via_rule_combo_box = new JComboBox<String>();
@@ -183,7 +183,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
 
    private void add_combobox_items()
       {
-      board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       for (int i = 0; i < routing_board.brd_rules.clearance_matrix.get_class_count(); ++i)
          {
          cl_class_combo_box.addItem(routing_board.brd_rules.clearance_matrix.get_name(i));
@@ -212,7 +212,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board_frame.board_panel.board_handling.get_routing_board().brd_rules.append_net_class();
+         board_frame.board_panel.itera_board.get_routing_board().brd_rules.append_net_class();
          adjust_table();
          }
       }
@@ -237,7 +237,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             {
             return;
             }
-         BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
          NetClass net_rule = board_rules.net_classes.get((String) net_class_name);
          // Check, if net_rule is used in a net of the net list
          for (int i = 1; i < board_rules.nets.max_net_no(); ++i)
@@ -278,7 +278,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             {
             return;
             }
-         board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+         board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
          NetClass[] selected_class_arr = new NetClass[selected_rows.length];
          for (int i = 0; i < selected_class_arr.length; ++i)
             {
@@ -315,8 +315,8 @@ public class WindowNetClasses extends GuiSubWindowSavable
                selected_items.add(curr_item);
                }
             }
-         board_frame.board_panel.board_handling.select_items(selected_items);
-         board_frame.board_panel.board_handling.zoom_selection();
+         board_frame.board_panel.itera_board.select_items(selected_items);
+         board_frame.board_panel.itera_board.zoom_selection();
          }
       }
 
@@ -330,7 +330,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             {
             return;
             }
-         interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+         interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
          freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
          NetClass[] selected_class_arr = new NetClass[selected_rows.length];
          for (int i = 0; i < selected_class_arr.length; ++i)
@@ -366,7 +366,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
             {
             return;
             }
-         interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+         interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
          freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
          NetClass[] selected_class_arr = new NetClass[selected_rows.length];
          for (int i = 0; i < selected_class_arr.length; ++i)
@@ -388,7 +388,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
                   }
                }
             }
-         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.itera_board.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("contained_nets"), contained_nets, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -457,7 +457,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
       /** Calculates the the valus in this table */
       public void set_values()
          {
-         freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
          this.data = new Object[board_rules.net_classes.count()][];
          for (int i = 0; i < data.length; ++i)
             {
@@ -473,13 +473,13 @@ public class WindowNetClasses extends GuiSubWindowSavable
                }
             this.data[i][ColumnName.SHOVE_FIXED.ordinal()] = curr_net_class.is_shove_fixed() || !curr_net_class.can_pull_tight();
             this.data[i][ColumnName.CYCLES_WITH_AREAS.ordinal()] = curr_net_class.get_ignore_cycles_with_areas();
-            double min_trace_length = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(curr_net_class.get_minimum_trace_length());
+            double min_trace_length = board_frame.board_panel.itera_board.coordinate_transform.board_to_user(curr_net_class.get_minimum_trace_length());
             if (min_trace_length <= 0)
                {
                min_trace_length = 0;
                }
             this.data[i][ColumnName.MIN_TRACE_LENGTH.ordinal()] = (float) min_trace_length;
-            double max_trace_length = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(curr_net_class.get_maximum_trace_length());
+            double max_trace_length = board_frame.board_panel.itera_board.coordinate_transform.board_to_user(curr_net_class.get_maximum_trace_length());
             if (max_trace_length <= 0)
                {
                max_trace_length = -1;
@@ -495,7 +495,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
       void set_trace_width_field(int p_rule_no, GuiLayer p_layer)
          {
          Float trace_width;
-         interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+         interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
          freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
          NetClass curr_net_class = board_rules.net_classes.get(p_rule_no);
          if (p_layer.index == ComboBoxLayer.ALL_LAYER_INDEX)
@@ -569,7 +569,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
 
       public void setValueAt(Object p_value, int p_row, int p_col)
          {
-         board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+         board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
          BoardRules board_rules = routing_board.brd_rules;
          Object net_class_name = getValueAt(p_row, ColumnName.NAME.ordinal());
          if (!(net_class_name instanceof String))
@@ -660,9 +660,9 @@ public class WindowNetClasses extends GuiSubWindowSavable
                curr_value = (float) 0;
                p_value = curr_value;
                }
-            double min_trace_length = Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(curr_value));
+            double min_trace_length = Math.round(board_frame.board_panel.itera_board.coordinate_transform.user_to_board(curr_value));
             net_rule.set_minimum_trace_length(min_trace_length);
-            board_frame.board_panel.board_handling.recalculate_length_violations();
+            board_frame.board_panel.itera_board.recalculate_length_violations();
             }
          else if (p_col == ColumnName.MAX_TRACE_LENGTH.ordinal())
             {
@@ -692,9 +692,9 @@ public class WindowNetClasses extends GuiSubWindowSavable
                p_value = curr_value - 1;
                }
 
-            double max_trace_length = Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(curr_value));
+            double max_trace_length = Math.round(board_frame.board_panel.itera_board.coordinate_transform.user_to_board(curr_value));
             net_rule.set_maximum_trace_length(max_trace_length);
-            board_frame.board_panel.board_handling.recalculate_length_violations();
+            board_frame.board_panel.itera_board.recalculate_length_violations();
             }
          else if (p_col == ColumnName.CLEARANCE_CLASS.ordinal())
             {
@@ -747,7 +747,7 @@ public class WindowNetClasses extends GuiSubWindowSavable
                }
             else
                {
-               curr_half_width = (int) Math.round(board_frame.board_panel.board_handling.coordinate_transform.user_to_board(0.5 * curr_value));
+               curr_half_width = (int) Math.round(board_frame.board_panel.itera_board.coordinate_transform.user_to_board(0.5 * curr_value));
                if (curr_half_width <= 0)
                   {
                   return;

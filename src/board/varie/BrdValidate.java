@@ -42,9 +42,6 @@ import freert.varie.NetNosList;
  */
 public class BrdValidate
    {
-   
-   
-   
    /**
     * Does some consistancy checking on the routing board and may be some other actions. Returns false, if problems were detected.
     */

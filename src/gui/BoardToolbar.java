@@ -143,7 +143,7 @@ class BoardToolbar extends JPanel
     */
    void hilight_selected_button()
       {
-      interactive.state.StateInteractive interactive_state = board_frame.board_panel.board_handling.get_interactive_state();
+      interactive.state.StateInteractive interactive_state = board_frame.board_panel.itera_board.get_interactive_state();
       if (interactive_state instanceof interactive.state.StateMenuRoute)
          {
          route_button.setSelected(true);
@@ -165,29 +165,29 @@ class BoardToolbar extends JPanel
          Object source = evt.getSource();
    
          if (source == select_button )
-            board_frame.board_panel.board_handling.set_select_menu_state();
+            board_frame.board_panel.itera_board.set_select_menu_state();
          else if ( source == route_button )
-            board_frame.board_panel.board_handling.set_route_menu_state();
+            board_frame.board_panel.itera_board.set_route_menu_state();
          else if ( source == drag_button )
-            board_frame.board_panel.board_handling.set_drag_menu_state();
+            board_frame.board_panel.itera_board.set_drag_menu_state();
          else if ( source == autoroute_button )
-            board_frame.board_panel.board_handling.start_batch_autorouter();
+            board_frame.board_panel.itera_board.start_batch_autorouter();
          else if ( source == undo_button )
             {
-            board_frame.board_panel.board_handling.cancel_state();
-            board_frame.board_panel.board_handling.undo();
+            board_frame.board_panel.itera_board.cancel_state();
+            board_frame.board_panel.itera_board.undo();
             board_frame.refresh_windows();
             }
          else if ( source == redo_button )
-            board_frame.board_panel.board_handling.redo();
+            board_frame.board_panel.itera_board.redo();
          else if ( source == incompletes_button )
-            board_frame.board_panel.board_handling.toggle_ratsnest();
+            board_frame.board_panel.itera_board.toggle_ratsnest();
          else if ( source == violation_button )
-            board_frame.board_panel.board_handling.toggle_clearance_violations();
+            board_frame.board_panel.itera_board.toggle_clearance_violations();
          else if ( source == display_all_button )
             board_frame.board_panel.zoom_all();
          else if ( source == display_region_button )
-            board_frame.board_panel.board_handling.zoom_region();
+            board_frame.board_panel.itera_board.zoom_region();
          }
       }
    }

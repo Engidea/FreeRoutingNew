@@ -29,7 +29,7 @@ public final class BrdViolation implements Comparable<BrdViolation>, PrintableIn
 
       PlaPointFloat board_location = p_violation.shape.centre_of_gravity();
 
-      location = board_frame.board_panel.board_handling.coordinate_transform.board_to_user(board_location);
+      location = board_frame.board_panel.itera_board.coordinate_transform.board_to_user(board_location);
       }
 
    private String get_item_name(BrdItem p_item)
@@ -76,7 +76,7 @@ public final class BrdViolation implements Comparable<BrdViolation>, PrintableIn
 
    public String toString()
       {
-      board.BrdLayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+      board.BrdLayerStructure layer_structure = board_frame.board_panel.itera_board.get_routing_board().layer_structure;
       String result = get_item_name(violation.first_item) + " - " + get_item_name(violation.second_item) + " " + resources.getString("at") + " " + location.to_string(board_frame.get_locale()) + " "
             + resources.getString("on_layer") + " " + layer_structure.get_name(violation.layer_no);
       return result;

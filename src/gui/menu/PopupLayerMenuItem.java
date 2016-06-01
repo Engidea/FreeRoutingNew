@@ -25,9 +25,9 @@ public final class PopupLayerMenuItem extends JMenuItem
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
                final BoardPanel board_panel = board_frame.board_panel;
-               if (board_panel.board_handling.change_layer_action(layer_no))
+               if (board_panel.itera_board.change_layer_action(layer_no))
                   {
-                  String layer_name = board_panel.board_handling.get_routing_board().layer_structure.get_name(layer_no);
+                  String layer_name = board_panel.itera_board.get_routing_board().layer_structure.get_name(layer_no);
                   board_panel.screen_messages.set_status_message(message1 + layer_name);
                   }
                // If change_layer failed the status message is set inside

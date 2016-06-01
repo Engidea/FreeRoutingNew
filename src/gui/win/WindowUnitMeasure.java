@@ -34,7 +34,7 @@ public final class WindowUnitMeasure extends GuiSubWindowSavable
       {
       super(p_board_frame);
       
-      board_handling = p_board_frame.board_panel.board_handling;
+      board_handling = p_board_frame.board_panel.itera_board;
       resources = new GuiResources(board_frame.stat, "gui.resources.WindowUnitParameter");
       
       setTitle(resources.getString("title"));
@@ -61,7 +61,7 @@ public final class WindowUnitMeasure extends GuiSubWindowSavable
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
                freert.varie.UnitMeasure new_unit = (UnitMeasure) unit_combo_box.getSelectedItem();
-               board_frame.board_panel.board_handling.change_user_unit(new_unit);
+               board_frame.board_panel.itera_board.change_user_unit(new_unit);
                board_frame.refresh_windows();
                }
          });

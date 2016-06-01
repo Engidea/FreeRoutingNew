@@ -38,7 +38,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay
    public PopupMenuStitchRoute(Stat stat, BoardFrame p_board_frame)
       {
       super(stat, p_board_frame);
-      board.BrdLayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
+      board.BrdLayerStructure layer_structure = board_panel.itera_board.get_routing_board().layer_structure;
 
       if (layer_structure.size() > 0)
          {
@@ -57,7 +57,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
+               board_panel.itera_board.left_button_clicked(board_panel.right_button_click_location);
                }
          });
 
@@ -69,7 +69,7 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.return_from_state();
+               board_panel.itera_board.return_from_state();
                }
          });
 
@@ -81,13 +81,13 @@ public class PopupMenuStitchRoute extends PopupMenuDisplay
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.cancel_state();
+               board_panel.itera_board.cancel_state();
                }
          });
 
       add(cancel_item, 2);
 
-      BrdLayer curr_layer = layer_structure.get(board_panel.board_handling.itera_settings.get_layer_no());
+      BrdLayer curr_layer = layer_structure.get(board_panel.itera_board.itera_settings.get_layer_no());
       disable_layer_item(layer_structure.get_signal_layer_no(curr_layer));
       }
 

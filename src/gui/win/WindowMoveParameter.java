@@ -51,7 +51,7 @@ public class WindowMoveParameter extends GuiSubWindowSavable
       super(p_board_frame);
       
       this.stat = stat;
-      this.board_handling = p_board_frame.board_panel.board_handling;
+      this.board_handling = p_board_frame.board_panel.itera_board;
       
       GuiResources resources = new GuiResources(stat,"gui.resources.WindowMoveParameter");
       

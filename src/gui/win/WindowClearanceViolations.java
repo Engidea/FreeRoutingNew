@@ -59,7 +59,7 @@ public final class WindowClearanceViolations extends WindowObjectListWithFilter
       {
       if ( debug (Mdbg.CLRVIOL, Ldbg.TRACE )) userPrintln(classname+"toggle_clearance_violations: start");
       
-      IteraBoard board_handling = board_frame.board_panel.board_handling;
+      IteraBoard board_handling = board_frame.board_panel.itera_board;
 
       IteraClearanceViolations clearance_violations = new IteraClearanceViolations(board_handling.get_routing_board().get_items());
 
@@ -96,7 +96,7 @@ public final class WindowClearanceViolations extends WindowObjectListWithFilter
          selected_items.add(curr_violation.second_item);
          }
 
-      interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+      interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
       board_handling.select_items(selected_items);
       board_handling.toggle_selected_item_violations();
       board_handling.zoom_selection();

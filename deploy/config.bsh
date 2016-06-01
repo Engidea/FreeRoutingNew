@@ -1,0 +1,19 @@
+import main.*;
+import gui.*;
+import iteractive.*;
+
+
+public void validate()
+   {
+   try
+    {
+    stat.log.userPrintln("Hellp\n");
+
+	
+
+    }
+  catch ( Exception exc )
+    {
+    stat.log.exceptionShow("addExtensionConfig()",exc);
+    }
+   }

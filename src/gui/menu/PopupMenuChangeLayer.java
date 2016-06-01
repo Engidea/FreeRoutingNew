@@ -43,7 +43,7 @@ public final class PopupMenuChangeLayer extends JMenu
       board_frame = p_board_frame;
       GuiResources resources = board_frame.newGuiResources("gui.resources.Default");
 
-      BrdLayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+      BrdLayerStructure layer_structure = board_frame.board_panel.itera_board.get_routing_board().layer_structure;
       item_arr = new PopupLayerMenuItem[layer_structure.signal_layer_count()];
 
       setText(resources.getString("change_layer"));

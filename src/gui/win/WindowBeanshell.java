@@ -41,7 +41,7 @@ public class WindowBeanshell extends GuiSubWindowSavable implements JComponentPr
   {  
   private static final long serialVersionUID = 1L;
   private static final String classname="BshPanel.";
-  private static final String source_file="extensions.bsh";
+  private static final String source_file="config.bsh";
   
   private final Stat  stat;
 
@@ -172,6 +172,7 @@ private final class InitializeThread implements Runnable
     try
       {
       bshInterp.set("stat",stat);
+      bshInterp.set("board_frame",board_frame);
         
       sourceBeanshelllScript(bshInterp);
       }
@@ -199,7 +200,8 @@ private final class HelpClass implements ActionListener
   public void actionPerformed(ActionEvent e)
     {
     String msg = "oggetti disponibili\n"+
-    "stat\n";
+    "stat\n"+
+    "board_frame\n";
     
     board_frame.showMessageDialog(msg,"Help");
     }

@@ -51,8 +51,8 @@ public class WindowLengthViolations extends WindowObjectListWithFilter
 
    protected void fill_list()
       {
-      RatsNest ratsnest = this.board_frame.board_panel.board_handling.get_ratsnest();
-      RuleNets net_list = this.board_frame.board_panel.board_handling.get_routing_board().brd_rules.nets;
+      RatsNest ratsnest = this.board_frame.board_panel.itera_board.get_ratsnest();
+      RuleNets net_list = this.board_frame.board_panel.itera_board.get_routing_board().brd_rules.nets;
       java.util.SortedSet<BrdLengthViolation> length_violations = new java.util.TreeSet<BrdLengthViolation>();
       for (int net_index = 1; net_index <= net_list.max_net_no(); ++net_index)
          {
@@ -85,7 +85,7 @@ public class WindowLengthViolations extends WindowObjectListWithFilter
          BrdLengthViolation curr_violation = ((BrdLengthViolation) selected_violations[i]);
          selected_items.addAll(curr_violation.net.get_items());
          }
-      interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+      interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
       board_handling.select_items(selected_items);
       board_handling.zoom_selection();
       }

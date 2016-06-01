@@ -135,7 +135,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               board_panel.board_handling.change_placement_side();
+               board_panel.itera_board.change_placement_side();
                }
          });
 
@@ -147,7 +147,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               interactive.state.StateInteractive interactive_state = board_panel.board_handling.get_interactive_state();
+               interactive.state.StateInteractive interactive_state = board_panel.itera_board.get_interactive_state();
                if (interactive_state instanceof interactive.state.StateMoveItem)
                   {
                   ((interactive.state.StateMoveItem) interactive_state).reset_rotation();
@@ -163,7 +163,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               board_panel.board_handling.return_from_state();
+               board_panel.itera_board.return_from_state();
                }
          });
 
@@ -175,7 +175,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               board_panel.board_handling.cancel_state();
+               board_panel.itera_board.cancel_state();
                }
          });
 
@@ -184,7 +184,7 @@ public class PopupMenuMove extends PopupMenuDisplay
 
    private void turn_45_degree(int p_factor)
       {
-      board_panel.board_handling.turn_45_degree(p_factor);
+      board_panel.itera_board.turn_45_degree(p_factor);
       board_panel.move_mouse(board_panel.right_button_click_location);
       }
    }

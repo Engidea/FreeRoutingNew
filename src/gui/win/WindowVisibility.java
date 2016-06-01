@@ -99,7 +99,7 @@ public abstract class WindowVisibility extends GuiSubWindowSavable
 
    protected interactive.IteraBoard get_board_handling()
       {
-      return board_panel.board_handling;
+      return board_panel.itera_board;
       }
 
    protected void set_all_minimum()

@@ -70,8 +70,7 @@ public final class BoardPanel extends JPanel
   
    public  final BoardFrame board_frame;
    public  final ScreenMessages screen_messages;
-   public  final IteraBoard board_handling;       // initialized on constructor, not null
-   
+   public  final IteraBoard itera_board;       // initialized on constructor, not null
    
    public JPopupMenu popup_menu_insert_cancel;
    public PopupMenuCopy popup_menu_copy;
@@ -120,7 +119,7 @@ public final class BoardPanel extends JPanel
          {
          public void keyTyped(KeyEvent evt)
             {
-            board_handling.key_typed_action(evt.getKeyChar());
+            itera_board.key_typed_action(evt.getKeyChar());
             }
          });
       addMouseListener(new MouseAdapter()
@@ -137,7 +136,7 @@ public final class BoardPanel extends JPanel
 
          public void mouseReleased(MouseEvent evt)
             {
-            board_handling.button_released();
+            itera_board.button_released();
             middle_drag_position = null;
             }
          });
@@ -146,11 +145,11 @@ public final class BoardPanel extends JPanel
          {
          public void mouseWheelMoved(MouseWheelEvent evt)
             {
-            board_handling.mouse_wheel_moved(evt.getWheelRotation());
+            itera_board.mouse_wheel_moved(evt.getWheelRotation());
             }
          });
       
-      board_handling = new IteraBoard(this, stat);
+      itera_board = new IteraBoard(this, stat);
       
       setAutoscrolls(true);
 
@@ -201,7 +200,7 @@ public final class BoardPanel extends JPanel
       {
       if (evt.getButton() == 1)
          {
-         board_handling.mouse_pressed(evt.getPoint());
+         itera_board.mouse_pressed(evt.getPoint());
          }
       else if (evt.getButton() == 2 && middle_drag_position == null)
          {
@@ -217,7 +216,7 @@ public final class BoardPanel extends JPanel
          }
       else
          {
-         board_handling.mouse_dragged(evt.getPoint());
+         itera_board.mouse_dragged(evt.getPoint());
          scroll_near_border(evt);
          }
       }
@@ -226,9 +225,9 @@ public final class BoardPanel extends JPanel
       {
       requestFocusInWindow(); // to enable keyboard aliases
       
-      if (board_handling != null)
+      if (itera_board != null)
          {
-         board_handling.mouse_moved(p_evt.getPoint());
+         itera_board.mouse_moved(p_evt.getPoint());
          }
       
       if (custom_cursor != null)
@@ -242,11 +241,11 @@ public final class BoardPanel extends JPanel
       {
       if (evt.getButton() == 1)
          {
-         board_handling.left_button_clicked(evt.getPoint());
+         itera_board.left_button_clicked(evt.getPoint());
          }
       else if (evt.getButton() == 3)
          {
-         JPopupMenu curr_menu = board_handling.get_current_popup_menu();
+         JPopupMenu curr_menu = itera_board.get_current_popup_menu();
          if (curr_menu != null)
             {
             int curr_x = evt.getX();
@@ -276,7 +275,7 @@ public final class BoardPanel extends JPanel
       {
       super.paintComponent(p_g);
       
-      if (board_handling != null) board_handling.draw(p_g);
+      if (itera_board != null) itera_board.draw(p_g);
       
       if (custom_cursor != null)  custom_cursor.draw(p_g);
       }
@@ -330,9 +329,9 @@ public final class BoardPanel extends JPanel
       move_mouse(new_mouse_location);
       repaint();
       
-      board_handling.actlog.start_scope(interactive.LogfileScope.CENTER_DISPLAY);
+      itera_board.actlog.start_scope(interactive.LogfileScope.CENTER_DISPLAY);
       PlaPointFloat curr_corner = new PlaPointFloat(p_new_center.getX(), p_new_center.getY());
-      board_handling.actlog.add_corner(curr_corner);
+      itera_board.actlog.add_corner(curr_corner);
       }
 
    public Point2D get_viewport_center()
@@ -362,7 +361,7 @@ public final class BoardPanel extends JPanel
       int new_height = (int) Math.round(p_factor * old_size.getHeight());
       Dimension new_size = new Dimension(new_width, new_height);
       
-      board_handling.gdi_context.change_panel_size(new_size);
+      itera_board.gdi_context.change_panel_size(new_size);
       
       setPreferredSize(new_size);
       
@@ -390,15 +389,15 @@ public final class BoardPanel extends JPanel
     */
    public void zoom_all()
       {
-      board_handling.adjust_design_bounds();
+      itera_board.adjust_design_bounds();
       Rectangle display_rect = board_frame.getViewportBorderBounds();
-      Rectangle design_bounds = board_handling.gdi_context.get_design_bounds();
+      Rectangle design_bounds = itera_board.gdi_context.get_design_bounds();
       double width_factor = display_rect.getWidth() / design_bounds.getWidth();
       double height_factor = display_rect.getHeight() / design_bounds.getHeight();
       double zoom_factor = Math.min(width_factor, height_factor);
-      Point2D zoom_center = board_handling.gdi_context.get_design_center();
+      Point2D zoom_center = itera_board.gdi_context.get_design_center();
       zoom(zoom_factor, zoom_center);
-      Point2D new_vieport_center = board_handling.gdi_context.get_design_center();
+      Point2D new_vieport_center = itera_board.gdi_context.get_design_center();
       set_viewport_center(new_vieport_center);
 
       }
@@ -440,9 +439,9 @@ public final class BoardPanel extends JPanel
 
    void init_colors()
       {
-      board_handling.gdi_context.item_color_table.addTableModelListener(new ColorTableListener());
-      board_handling.gdi_context.other_color_table.addTableModelListener(new ColorTableListener());
-      setBackground(board_handling.gdi_context.get_background_color());
+      itera_board.gdi_context.item_color_table.addTableModelListener(new ColorTableListener());
+      itera_board.gdi_context.other_color_table.addTableModelListener(new ColorTableListener());
+      setBackground(itera_board.gdi_context.get_background_color());
       }
 
    private void scroll_near_border(MouseEvent p_evt)
@@ -524,13 +523,25 @@ public final class BoardPanel extends JPanel
       return stat.debug(mask, level);
       }
    
+   /**
+    * Used to have some meaningful info on this object
+    */
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(1000);
+      risul.append("BoardPanel ");
+      risul.append("available object: itera_board");
+      
+      return risul.toString();
+      }
+   
    
    private class ColorTableListener implements TableModelListener
       {
       public void tableChanged(TableModelEvent p_event)
          {
          // redisplay board because some colors have changed.
-         setBackground(board_handling.gdi_context.get_background_color());
+         setBackground(itera_board.gdi_context.get_background_color());
          repaint();
          }
       }

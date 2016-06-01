@@ -52,7 +52,7 @@ public class WindowColorManager extends GuiSubWindowSavable
       {
       super(p_board_frame);
       
-      GdiContext graphics_context = board_frame.board_panel.board_handling.gdi_context;
+      GdiContext graphics_context = board_frame.board_panel.itera_board.gdi_context;
       
       GuiResources resources = board_frame.newGuiResources("gui.resources.Default");
       

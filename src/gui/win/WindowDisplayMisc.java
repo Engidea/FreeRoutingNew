@@ -193,7 +193,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       
       big_cursor_checkbox.setSelected( panel.is_cross_hair_cursor());
 
-      int ninety_degree_rotation = panel.board_handling.gdi_context.coordinate_transform.get_90_degree_rotation();
+      int ninety_degree_rotation = panel.itera_board.gdi_context.coordinate_transform.get_90_degree_rotation();
 
       if (ninety_degree_rotation == 0)
          {
@@ -217,14 +217,14 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
          rotation_none_checkbox.setSelected(true);
          }
 
-      boolean is_mirror_left_right = panel.board_handling.gdi_context.coordinate_transform.is_mirror_left_right();
-      boolean is_mirror_top_button = panel.board_handling.gdi_context.coordinate_transform.is_mirror_top_bottom();
+      boolean is_mirror_left_right = panel.itera_board.gdi_context.coordinate_transform.is_mirror_left_right();
+      boolean is_mirror_top_button = panel.itera_board.gdi_context.coordinate_transform.is_mirror_top_bottom();
       mirror_none_checkbox.setSelected(!(is_mirror_left_right || is_mirror_top_button));
 
-      vertical_mirror_checkbox.setSelected(panel.board_handling.gdi_context.coordinate_transform.is_mirror_left_right());
-      horizontal_mirror_checkbox.setSelected(panel.board_handling.gdi_context.coordinate_transform.is_mirror_top_bottom());
+      vertical_mirror_checkbox.setSelected(panel.itera_board.gdi_context.coordinate_transform.is_mirror_left_right());
+      horizontal_mirror_checkbox.setSelected(panel.itera_board.gdi_context.coordinate_transform.is_mirror_top_bottom());
 
-      int curr_slider_value = (int) Math.round(MAX_SLIDER_VALUE * (1 - panel.board_handling.gdi_context.get_auto_layer_dim_factor()));
+      int curr_slider_value = (int) Math.round(MAX_SLIDER_VALUE * (1 - panel.itera_board.gdi_context.get_auto_layer_dim_factor()));
       auto_layer_dim_slider.setValue(curr_slider_value);
       }
 
@@ -262,7 +262,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.itera_board.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(0);
          panel.repaint();
          }
@@ -272,7 +272,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.itera_board.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(0.5 * Math.PI);
          panel.repaint();
          }
@@ -282,7 +282,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.itera_board.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(Math.PI);
          panel.repaint();
          }
@@ -292,7 +292,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.itera_board.gdi_context.coordinate_transform;
          coordinate_transform.set_rotation(1.5 * Math.PI);
          panel.repaint();
          }
@@ -302,7 +302,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.itera_board.gdi_context.coordinate_transform;
          if (!(coordinate_transform.is_mirror_left_right() || coordinate_transform.is_mirror_top_bottom()))
             {
             return; // mirroring already switched off
@@ -320,7 +320,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.itera_board.gdi_context.coordinate_transform;
          if (coordinate_transform.is_mirror_left_right())
             {
             return; // already mirrored
@@ -338,7 +338,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.board_handling.gdi_context.coordinate_transform;
+         freert.graphics.GdiCoordinateTransform coordinate_transform = panel.itera_board.gdi_context.coordinate_transform;
          if (coordinate_transform.is_mirror_top_bottom())
             {
             return; // already mirrored
@@ -357,7 +357,7 @@ public class WindowDisplayMisc extends GuiSubWindowSavable
       public void stateChanged(javax.swing.event.ChangeEvent evt)
          {
          double new_value = 1 - (double) auto_layer_dim_slider.getValue() / (double) MAX_SLIDER_VALUE;
-         panel.board_handling.gdi_context.set_auto_layer_dim_factor(new_value);
+         panel.itera_board.gdi_context.set_auto_layer_dim_factor(new_value);
          panel.repaint();
          }
       }

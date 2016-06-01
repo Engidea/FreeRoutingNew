@@ -173,7 +173,7 @@ public final class DesignFile
             output_stream = null;
             }
          
-         if (p_board_frame.board_panel.board_handling.export_to_dsn_file(output_stream, design_name, false))
+         if (p_board_frame.board_panel.itera_board.export_to_dsn_file(output_stream, design_name, false))
             {
             p_board_frame.screen_messages.set_status_message(resources.getString("message_4") + " " + new_file_name + " " + resources.getString("message_5"));
             }
@@ -205,7 +205,7 @@ public final class DesignFile
             output_stream = null;
             }
 
-         if (p_board_frame.board_panel.board_handling.export_specctra_session_file(design_file_name, output_stream))
+         if (p_board_frame.board_panel.itera_board.export_specctra_session_file(design_file_name, output_stream))
             {
             p_board_frame.screen_messages.set_status_message(resources.getString("message_11") + " " + output_file_name + " " + resources.getString("message_12"));
             }
@@ -217,7 +217,7 @@ public final class DesignFile
          }
       if (WindowMessage.confirm(resources.getString("confirm")))
          {
-         return write_rules_file(design_name, p_board_frame.board_panel.board_handling);
+         return write_rules_file(design_name, p_board_frame.board_panel.itera_board);
          }
       return true;
       }
@@ -292,7 +292,7 @@ public final class DesignFile
       {
       String design_file_name = get_name();
       java.io.ByteArrayOutputStream session_output_stream = new java.io.ByteArrayOutputStream();
-      if (!p_board_frame.board_panel.board_handling.export_specctra_session_file(design_file_name, session_output_stream))
+      if (!p_board_frame.board_panel.itera_board.export_specctra_session_file(design_file_name, session_output_stream))
          {
          return;
          }
@@ -313,7 +313,7 @@ public final class DesignFile
             output_stream = null;
             }
 
-         if (p_board_frame.board_panel.board_handling.export_eagle_session_file(input_stream, output_stream))
+         if (p_board_frame.board_panel.itera_board.export_eagle_session_file(input_stream, output_stream))
             {
             p_board_frame.screen_messages.set_status_message(resources.getString("message_14") + " " + output_file_name + " " + resources.getString("message_15"));
             }
@@ -324,7 +324,7 @@ public final class DesignFile
          }
       if (WindowMessage.confirm(resources.getString("confirm")))
          {
-         write_rules_file(design_name, p_board_frame.board_panel.board_handling);
+         write_rules_file(design_name, p_board_frame.board_panel.itera_board);
          }
       }
 

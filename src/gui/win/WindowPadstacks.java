@@ -49,7 +49,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
     */
    protected void fill_list()
       {
-      LibPadstacks padstacks = board_frame.board_panel.board_handling.get_routing_board().brd_library.padstacks;
+      LibPadstacks padstacks = board_frame.board_panel.itera_board.get_routing_board().brd_library.padstacks;
       
       LibPadstack[] sorted_arr = new LibPadstack[padstacks.count()];
       for (int i = 0; i < sorted_arr.length; ++i)
@@ -77,7 +77,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
          {
          padstack_list.add((LibPadstack) selected_padstacks[i]);
          }
-      board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       java.util.Set<board.items.BrdItem> board_instances = new java.util.TreeSet<board.items.BrdItem>();
       java.util.Iterator<UndoableObjectNode> it = routing_board.undo_items.start_read_object();
       
@@ -100,7 +100,7 @@ public class WindowPadstacks extends WindowObjectListWithFilter
             }
          }
 
-      board_frame.board_panel.board_handling.select_items(board_instances);
-      board_frame.board_panel.board_handling.zoom_selection();
+      board_frame.board_panel.itera_board.select_items(board_instances);
+      board_frame.board_panel.itera_board.zoom_selection();
       }
    }

@@ -224,7 +224,7 @@ public final class BoardFrame
     */
    public void read_logfile(java.io.InputStream p_input_stream)
       {
-      board_panel.board_handling.read_logfile(p_input_stream);
+      board_panel.itera_board.read_logfile(p_input_stream);
       }
    
    /**
@@ -239,7 +239,7 @@ public final class BoardFrame
       try
          {
          object_stream = new ObjectInputStream(p_input_stream);
-         board_panel.board_handling.read_design(object_stream);         
+         board_panel.itera_board.read_design(object_stream);         
          }
       catch (Exception exc)
          {
@@ -278,14 +278,14 @@ public final class BoardFrame
          return false;
          }
 
-      Dimension panel_size = board_panel.board_handling.gdi_context.get_panel_size();
+      Dimension panel_size = board_panel.itera_board.gdi_context.get_panel_size();
       
       board_panel.setSize(panel_size);
       board_panel.setPreferredSize(panel_size);
       set_viewport_position(viewport_position);
       board_panel.create_popup_menus();
       board_panel.init_colors();
-      board_panel.board_handling.create_ratsnest();
+      board_panel.itera_board.create_ratsnest();
       hilight_selected_button();
       
       work_frame.setVisible(true);
@@ -300,7 +300,7 @@ public final class BoardFrame
     */
    public boolean import_design(InputStream p_input_stream )
       {
-      if ( ! board_panel.board_handling.import_design(p_input_stream, item_id_no_generator, stat) )
+      if ( ! board_panel.itera_board.import_design(p_input_stream, item_id_no_generator, stat) )
          {
          stat.userPrintln(resources.getString("error_6"));
          return false;
@@ -318,13 +318,13 @@ public final class BoardFrame
          }
 
       Point viewport_position = new java.awt.Point(0, 0);
-      Dimension panel_size = board_panel.board_handling.gdi_context.get_panel_size();
+      Dimension panel_size = board_panel.itera_board.gdi_context.get_panel_size();
       board_panel.setSize(panel_size);
       board_panel.setPreferredSize(panel_size);
       set_viewport_position(viewport_position);
       board_panel.create_popup_menus();
       board_panel.init_colors();
-      board_panel.board_handling.create_ratsnest();
+      board_panel.itera_board.create_ratsnest();
       hilight_selected_button();
       
       work_frame.setVisible(true);
@@ -336,7 +336,7 @@ public final class BoardFrame
          // Read the default GUI settings, if GUI default file exists.
          stat.userPrintln("try open "+defaults_file);
          InputStream input_stream = new FileInputStream(defaults_file);
-         GuiConfigFile.read(this, board_panel.board_handling, input_stream);
+         GuiConfigFile.read(this, board_panel.itera_board, input_stream);
          input_stream.close();
          }
       catch (Exception exc)
@@ -381,7 +381,7 @@ public final class BoardFrame
          java.io.OutputStream  output_stream = new FileOutputStream(to_file);
          java.io.ObjectOutputStream object_stream = new java.io.ObjectOutputStream(output_stream);
          
-         board_panel.board_handling.save_design_file(object_stream);
+         board_panel.itera_board.save_design_file(object_stream);
          save_win_state(object_stream);
          
          object_stream.flush();
@@ -508,7 +508,7 @@ public final class BoardFrame
       
       temporary_subwindows.clear();
       
-      board_panel.board_handling.dispose();
+      board_panel.itera_board.dispose();
 
       work_frame.dispose();
       }
@@ -737,6 +737,18 @@ public final class BoardFrame
       {
       work_frame.repaint();
       }
+   
+   /**
+    * Used to have some meaningful info on this object
+    */
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(1000);
+      risul.append(classname);
+      risul.append("available object: board_panel");
+      
+      return risul.toString();
+      }
       
    public final void showMessageDialog (Object message, String title )
       {
@@ -749,39 +761,41 @@ public final class BoardFrame
       }
    
    
-   private class WindowStateListener extends java.awt.event.WindowAdapter
+private class WindowStateListener extends java.awt.event.WindowAdapter
+   {
+   public void windowClosing(java.awt.event.WindowEvent evt)
       {
-      public void windowClosing(java.awt.event.WindowEvent evt)
+      work_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+      
+      
+      if ( debug(Mdbg.GUI, Ldbg.RELEASE))
          {
-         work_frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-         
-         
-         if ( debug(Mdbg.GUI, Ldbg.RELEASE))
+         int option = JOptionPane.showConfirmDialog(null, resources.getString("confirm_cancel"), null, JOptionPane.YES_NO_OPTION);
+         if (option == JOptionPane.NO_OPTION)
             {
-            int option = JOptionPane.showConfirmDialog(null, resources.getString("confirm_cancel"), null, JOptionPane.YES_NO_OPTION);
-            if (option == JOptionPane.NO_OPTION)
-               {
-               work_frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-               }
+            work_frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
             }
          }
-
-      public void windowIconified(java.awt.event.WindowEvent evt)
-         {
-         for (GuiSubWindowSavable cur_subwindow : permanent_subwindows )
-            cur_subwindow.parent_iconified();
-         
-         for (GuiSubWindow curr_subwindow : temporary_subwindows)
-            curr_subwindow.parent_iconified();
-         }
-
-      public void windowDeiconified(java.awt.event.WindowEvent evt)
-         {
-         for (GuiSubWindowSavable cur_subwindow : permanent_subwindows )
-            cur_subwindow.parent_deiconified();
-
-         for (GuiSubWindow curr_subwindow : temporary_subwindows)
-            curr_subwindow.parent_deiconified();
-         }
       }
+
+   public void windowIconified(java.awt.event.WindowEvent evt)
+      {
+      for (GuiSubWindowSavable cur_subwindow : permanent_subwindows )
+         cur_subwindow.parent_iconified();
+      
+      for (GuiSubWindow curr_subwindow : temporary_subwindows)
+         curr_subwindow.parent_iconified();
+      }
+
+   public void windowDeiconified(java.awt.event.WindowEvent evt)
+      {
+      for (GuiSubWindowSavable cur_subwindow : permanent_subwindows )
+         cur_subwindow.parent_deiconified();
+
+      for (GuiSubWindow curr_subwindow : temporary_subwindows)
+         curr_subwindow.parent_deiconified();
+      }
+   }
+
+   
    }

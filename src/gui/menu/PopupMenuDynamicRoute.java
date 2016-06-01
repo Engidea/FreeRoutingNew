@@ -38,7 +38,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
       super(stat, p_board_frame);
 
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("gui.resources.Default", p_board_frame.get_locale());
-      board.BrdLayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
+      board.BrdLayerStructure layer_structure = board_panel.itera_board.get_routing_board().layer_structure;
 
       javax.swing.JMenuItem end_route_item = new javax.swing.JMenuItem();
       end_route_item.setText(resources.getString("end_route"));
@@ -46,7 +46,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.return_from_state();
+               board_panel.itera_board.return_from_state();
                }
          });
 
@@ -58,7 +58,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.cancel_state();
+               board_panel.itera_board.cancel_state();
                }
          });
 
@@ -70,7 +70,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.generate_snapshot();
+               board_panel.itera_board.generate_snapshot();
                }
          });
 
@@ -86,7 +86,7 @@ public class PopupMenuDynamicRoute extends PopupMenuDisplay
          change_layer_menu = null;
          }
 
-      int want_no = board_panel.board_handling.itera_settings.get_layer_no();
+      int want_no = board_panel.itera_board.itera_settings.get_layer_no();
       
       BrdLayer curr_layer = layer_structure.get(want_no);
       

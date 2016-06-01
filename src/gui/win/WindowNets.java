@@ -60,7 +60,7 @@ public class WindowNets extends WindowObjectListWithFilter
     */
    protected void fill_list()
       {
-      RuleNets nets = this.board_frame.board_panel.board_handling.get_routing_board().brd_rules.nets;
+      RuleNets nets = this.board_frame.board_panel.itera_board.get_routing_board().brd_rules.nets;
       RuleNet[] sorted_arr = new RuleNet[nets.max_net_no()];
       for (int i = 0; i < sorted_arr.length; ++i)
          {
@@ -87,7 +87,7 @@ public class WindowNets extends WindowObjectListWithFilter
          {
          selected_net_numbers[i] = ((RuleNet) selected_nets[i]).net_number;
          }
-      board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       java.util.Set<board.items.BrdItem> selected_items = new java.util.TreeSet<board.items.BrdItem>();
       java.util.Collection<board.items.BrdItem> board_items = routing_board.get_items();
       for (board.items.BrdItem curr_item : board_items)
@@ -106,8 +106,8 @@ public class WindowNets extends WindowObjectListWithFilter
             selected_items.add(curr_item);
             }
          }
-      board_frame.board_panel.board_handling.select_items(selected_items);
-      board_frame.board_panel.board_handling.zoom_selection();
+      board_frame.board_panel.itera_board.select_items(selected_items);
+      board_frame.board_panel.itera_board.zoom_selection();
       }
 
    private final java.util.ResourceBundle resources;
@@ -122,7 +122,7 @@ public class WindowNets extends WindowObjectListWithFilter
             {
             return;
             }
-         NetClasses net_classes = board_frame.board_panel.board_handling.get_routing_board().brd_rules.net_classes;
+         NetClasses net_classes = board_frame.board_panel.itera_board.get_routing_board().brd_rules.net_classes;
          NetClass[] class_arr = new NetClass[net_classes.count()];
          for (int i = 0; i < class_arr.length; ++i)
             {
@@ -154,7 +154,7 @@ public class WindowNets extends WindowObjectListWithFilter
             {
             return;
             }
-         interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+         interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
          int max_net_no = board_handling.get_routing_board().brd_rules.nets.max_net_no();
          for (int i = 1; i <= max_net_no; ++i)
             {

@@ -47,7 +47,7 @@ public class WindowComponents extends WindowObjectListWithFilter
    @Override
    protected void fill_list()
       {
-      BrdComponents components = board_frame.board_panel.board_handling.get_routing_board().brd_components;
+      BrdComponents components = board_frame.board_panel.itera_board.get_routing_board().brd_components;
       BrdComponent[] sorted_arr = new BrdComponent[components.count()];
       for (int i = 0; i < sorted_arr.length; ++i)
          {
@@ -69,7 +69,7 @@ public class WindowComponents extends WindowObjectListWithFilter
          {
          return;
          }
-      board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       java.util.Set<board.items.BrdItem> selected_items = new java.util.TreeSet<board.items.BrdItem>();
       java.util.Collection<board.items.BrdItem> board_items = routing_board.get_items();
       for (board.items.BrdItem curr_item : board_items)
@@ -92,7 +92,7 @@ public class WindowComponents extends WindowObjectListWithFilter
                }
             }
          }
-      board_frame.board_panel.board_handling.select_items(selected_items);
-      board_frame.board_panel.board_handling.zoom_selection();
+      board_frame.board_panel.itera_board.select_items(selected_items);
+      board_frame.board_panel.itera_board.zoom_selection();
       }
    }

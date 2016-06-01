@@ -47,7 +47,7 @@ public final class PupupMenuCornerItemConstruction extends JPopupMenu
                // Same action as if the left button is clicked with
                // the current mouse coordinates in this situation
                // because the left button is a short cut for this action.
-               board_panel.board_handling.left_button_clicked(board_panel.right_button_click_location);
+               board_panel.itera_board.left_button_clicked(board_panel.right_button_click_location);
                }
          });
 
@@ -59,7 +59,7 @@ public final class PupupMenuCornerItemConstruction extends JPopupMenu
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.return_from_state();
+               board_panel.itera_board.return_from_state();
                }
          });
 
@@ -71,7 +71,7 @@ public final class PupupMenuCornerItemConstruction extends JPopupMenu
          {
             public void actionPerformed(java.awt.event.ActionEvent evt)
                {
-               board_panel.board_handling.cancel_state();
+               board_panel.itera_board.cancel_state();
                }
          });
 

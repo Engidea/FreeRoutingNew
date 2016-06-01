@@ -53,7 +53,7 @@ public class WindowRouteDetail extends GuiSubWindowSavable
       {
       super(p_board_frame);
       
-      this.board_handling = p_board_frame.board_panel.board_handling;
+      this.board_handling = p_board_frame.board_panel.itera_board;
       GuiResources resources = board_frame.newGuiResources("gui.resources.WindowRouteDetail");
       
       this.setTitle(resources.getString("title"));

@@ -52,7 +52,7 @@ public class WindowAutorouteParameterDetail extends GuiSubWindowSavable
       {
       super(p_board_frame);
       
-      board_handling = p_board_frame.board_panel.board_handling;
+      board_handling = p_board_frame.board_panel.itera_board;
 
       GuiResources resources = new GuiResources(stat, "gui.resources.WindowAutorouteParameter");
       

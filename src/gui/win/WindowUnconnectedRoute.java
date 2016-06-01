@@ -60,7 +60,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
    @Override
    protected void fill_list()
       {
-      RoutingBoard routing_board = this.board_frame.board_panel.board_handling.get_routing_board();
+      RoutingBoard routing_board = this.board_frame.board_panel.itera_board.get_routing_board();
 
       Set<BrdItem> handled_items = new java.util.TreeSet<BrdItem>();
 
@@ -133,7 +133,7 @@ public class WindowUnconnectedRoute extends WindowObjectListWithFilter
          {
          selected_items.addAll(((BrdUnconnectedRoute) selected_list_values[i]).item_list);
          }
-      interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+      interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
       board_handling.select_items(selected_items);
       board_handling.zoom_selection();
       }

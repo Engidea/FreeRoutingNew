@@ -40,7 +40,7 @@ public final class WindowLayerVisibility extends WindowVisibility
       GuiResources resources = p_board_frame.newGuiResources("gui.resources.Default");
       String title = resources.getString("layer_visibility");
       String header_message = resources.getString("layer_visibility_header");
-      BrdLayerStructure layer_structure = board_panel.board_handling.get_routing_board().layer_structure;
+      BrdLayerStructure layer_structure = board_panel.itera_board.get_routing_board().layer_structure;
       String[] message_arr = new String[layer_structure.size()];
 
       for (int index = 0; index < message_arr.length; ++index)
@@ -51,7 +51,7 @@ public final class WindowLayerVisibility extends WindowVisibility
       WindowLayerVisibility result = new WindowLayerVisibility(p_board_frame, title, header_message, message_arr);
       for (int i = 0; i < message_arr.length; ++i)
          {
-         result.set_slider_value(i, board_panel.board_handling.gdi_context.get_raw_layer_visibility(i));
+         result.set_slider_value(i, board_panel.itera_board.gdi_context.get_raw_layer_visibility(i));
          }
       p_board_frame.set_context_sensitive_help(result, "WindowDisplay_LayerVisibility");
       return result;

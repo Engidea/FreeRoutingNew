@@ -68,9 +68,9 @@ private class MenuAction implements ActionListener
       Object a_menu = event.getSource();
       
       if ( a_menu == copy_item )
-         board_panel.board_handling.copy_selected_items(board_panel.right_button_click_location);
+         board_panel.itera_board.copy_selected_items(board_panel.right_button_click_location);
       else if ( a_menu == move_item )
-         board_panel.board_handling.move_selected_items(board_panel.right_button_click_location);
+         board_panel.itera_board.move_selected_items(board_panel.right_button_click_location);
       }
    }
    

@@ -129,7 +129,7 @@ public class WindowEditVias extends GuiSubWindowSavable
 
    private void add_combobox_items()
       {
-      board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       for (int i = 0; i < routing_board.brd_rules.clearance_matrix.get_class_count(); ++i)
          {
          cl_class_combo_box.addItem(routing_board.brd_rules.clearance_matrix.get_name(i));
@@ -157,7 +157,7 @@ public class WindowEditVias extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board.RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+         board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
          BrdViaInfoList via_infos = routing_board.brd_rules.via_infos;
          Integer no = 1;
          String new_name = null;
@@ -198,7 +198,7 @@ public class WindowEditVias extends GuiSubWindowSavable
             {
             return;
             }
-         BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
          BrdViaInfo via_info = board_rules.via_infos.get((String) via_name);
          // Check, if via_info is used in a via rule.
          for (freert.rules.RuleViaInfoList curr_rule : board_rules.via_rules)

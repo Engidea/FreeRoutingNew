@@ -43,7 +43,7 @@ public class WindowManualRules extends GuiSubWindowSavable
       {
       super(p_board_frame);
       
-      board_handling = p_board_frame.board_panel.board_handling;
+      board_handling = p_board_frame.board_panel.itera_board;
       
       GuiResources resources = board_frame.newGuiResources("gui.resources.WindowManualRule");
       

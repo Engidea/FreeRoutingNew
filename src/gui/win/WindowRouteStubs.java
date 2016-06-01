@@ -63,7 +63,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
    @Override
    protected void fill_list()
       {
-      RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
 
       SortedSet<BrdRouteStub> route_stub_info_set = new java.util.TreeSet<BrdRouteStub>();
 
@@ -136,7 +136,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
                }
             stub_layer = curr_trace.get_layer();
             }
-         BrdRouteStub curr_route_stub_info = new BrdRouteStub(stat,board_frame.board_panel.board_handling, curr_item, stub_location, stub_layer);
+         BrdRouteStub curr_route_stub_info = new BrdRouteStub(stat,board_frame.board_panel.itera_board, curr_item, stub_location, stub_layer);
          route_stub_info_set.add(curr_route_stub_info);
          }
 
@@ -160,7 +160,7 @@ public class WindowRouteStubs extends WindowObjectListWithFilter
          {
          selected_items.add(((BrdRouteStub) selected_list_values[i]).stub_item);
          }
-      interactive.IteraBoard board_handling = board_frame.board_panel.board_handling;
+      interactive.IteraBoard board_handling = board_frame.board_panel.itera_board;
       board_handling.select_items(selected_items);
       board_handling.zoom_selection();
       }

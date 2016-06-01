@@ -173,7 +173,7 @@ public class MainApplication extends JFrame
          String file_name = b_frame.design_file.get_name();
          String[] name_parts = file_name.split("\\.");
          String confirm_import_rules_message = resources.getString("confirm_import_rules");
-         b_frame.design_file.read_rules_file(name_parts[0], b_frame.design_file.get_parent(), b_frame.board_panel.board_handling, confirm_import_rules_message);
+         b_frame.design_file.read_rules_file(name_parts[0], b_frame.design_file.get_parent(), b_frame.board_panel.itera_board, confirm_import_rules_message);
          }
       
       return true;

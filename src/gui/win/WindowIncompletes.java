@@ -47,7 +47,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter
    @Override
    protected void fill_list()
       {
-      RatsNest ratsnest = board_frame.board_panel.board_handling.get_ratsnest();
+      RatsNest ratsnest = board_frame.board_panel.itera_board.get_ratsnest();
       AirLineInfo[] sorted_arr = ratsnest.get_airlines();
 
       java.util.Arrays.sort(sorted_arr);
@@ -74,7 +74,7 @@ public class WindowIncompletes extends WindowObjectListWithFilter
          selected_items.add(curr_airline.to_item);
 
          }
-      board_frame.board_panel.board_handling.select_items(selected_items);
-      board_frame.board_panel.board_handling.zoom_selection();
+      board_frame.board_panel.itera_board.select_items(selected_items);
+      board_frame.board_panel.itera_board.zoom_selection();
       }
    }

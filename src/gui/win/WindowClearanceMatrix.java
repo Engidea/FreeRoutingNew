@@ -80,7 +80,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
       layer_label.setToolTipText(resources.getString("layer_tooltip"));
       north_panel.add(layer_label);
 
-      IteraBoard board_handling = board_frame.board_panel.board_handling;
+      IteraBoard board_handling = board_frame.board_panel.itera_board;
       layer_combo_box = new ComboBoxLayer(board_handling.get_routing_board().layer_structure, p_board_frame.get_locale());
       north_panel.add(layer_combo_box);
       layer_combo_box.addActionListener(new ComboBoxListener());
@@ -121,7 +121,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
     */
    public void refresh()
       {
-      RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       if (clearance_table_model.getRowCount() != routing_board.brd_rules.clearance_matrix.get_class_count())
          {
          adjust_clearance_table();
@@ -132,7 +132,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
 
    private JPanel add_clearance_table(BoardFrame p_board_frame)
       {
-      clearance_table_model = new WinClearanceTableModel(p_board_frame.board_panel.board_handling,layer_combo_box);
+      clearance_table_model = new WinClearanceTableModel(p_board_frame.board_panel.itera_board,layer_combo_box);
       clearance_table = new JTable(clearance_table_model);
 
       // Put the clearance table into a scroll pane.
@@ -199,7 +199,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
             break;
             }
          }
-      final RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      final RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       final ClearanceMatrix clearance_matrix = routing_board.brd_rules.clearance_matrix;
 
       // Check, if the name exists already.
@@ -231,7 +231,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
     */
    private void prune_clearance_matrix()
       {
-      final RoutingBoard routing_board = board_frame.board_panel.board_handling.get_routing_board();
+      final RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       ClearanceMatrix clearance_matrix = routing_board.brd_rules.clearance_matrix;
       for (int i = clearance_matrix.get_class_count() - 1; i >= 2; --i)
          {
@@ -268,7 +268,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
     */
    private void adjust_clearance_table()
       {
-      clearance_table_model = new WinClearanceTableModel(board_frame.board_panel.board_handling,layer_combo_box);
+      clearance_table_model = new WinClearanceTableModel(board_frame.board_panel.itera_board,layer_combo_box);
       clearance_table = new JTable(clearance_table_model);
       main_panel.remove(center_panel);
       center_panel = add_clearance_table(board_frame);
@@ -297,7 +297,7 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
    private int max_name_length()
       {
       int result = 1;
-      freert.rules.ClearanceMatrix clearance_matrix = board_frame.board_panel.board_handling.get_routing_board().brd_rules.clearance_matrix;
+      freert.rules.ClearanceMatrix clearance_matrix = board_frame.board_panel.itera_board.get_routing_board().brd_rules.clearance_matrix;
       for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
          {
          result = Math.max(result, clearance_matrix.get_name(i).length());

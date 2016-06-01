@@ -148,7 +148,7 @@ public class WindowVia extends GuiSubWindowSavable
       this.main_panel.add(list_scroll_pane, java.awt.BorderLayout.CENTER);
 
       // fill the list
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+      BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
       for (RuleViaInfoList curr_rule : board_rules.via_rules)
          {
          this.rule_list_model.addElement(curr_rule);
@@ -190,7 +190,7 @@ public class WindowVia extends GuiSubWindowSavable
       {
       // reinsert the elements in the rule list
       this.rule_list_model.removeAllElements();
-      BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+      BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
       for (RuleViaInfoList curr_rule : board_rules.via_rules)
          {
          this.rule_list_model.addElement(curr_rule);
@@ -231,12 +231,12 @@ public class WindowVia extends GuiSubWindowSavable
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
          java.util.Collection<PrintableInfo> object_list = new java.util.LinkedList<PrintableInfo>();
-         freert.library.BrdLibrary board_library = board_frame.board_panel.board_handling.get_routing_board().brd_library;
+         freert.library.BrdLibrary board_library = board_frame.board_panel.itera_board.get_routing_board().brd_library;
          for (int i = 0; i < board_library.via_padstack_count(); ++i)
             {
             object_list.add(board_library.get_via_padstack(i));
             }
-         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.itera_board.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("available_via_padstacks"), object_list, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -249,7 +249,7 @@ public class WindowVia extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         RoutingBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
+         RoutingBoard pcb = board_frame.board_panel.itera_board.get_routing_board();
          if (pcb.layer_structure.size() <= 1)
             {
             return;
@@ -340,7 +340,7 @@ public class WindowVia extends GuiSubWindowSavable
          int from_layer_no = pcb.layer_structure.get_no(start_layer);
          int to_layer_no = pcb.layer_structure.get_no(end_layer);
          ShapeConvex[] padstack_shapes = new ShapeConvex[pcb.layer_structure.size()];
-         PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         PlaCoordTransform coordinate_transform = board_frame.board_panel.itera_board.coordinate_transform;
          boolean shape_exists = false;
          for (int i = from_layer_no; i <= to_layer_no; ++i)
             {
@@ -377,7 +377,7 @@ public class WindowVia extends GuiSubWindowSavable
          this.setLayout(gridbag);
          java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
 
-         board.BrdLayerStructure layer_structure = board_frame.board_panel.board_handling.get_routing_board().layer_structure;
+         board.BrdLayerStructure layer_structure = board_frame.board_panel.itera_board.get_routing_board().layer_structure;
          int from_layer_no = layer_structure.get_no(p_from_layer);
          int to_layer_no = layer_structure.get_no(p_to_layer);
          int layer_count = to_layer_no - from_layer_no + 1;
@@ -411,7 +411,7 @@ public class WindowVia extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         RoutingBoard pcb = board_frame.board_panel.board_handling.get_routing_board();
+         RoutingBoard pcb = board_frame.board_panel.itera_board.get_routing_board();
          freert.library.LibPadstack[] via_padstacks = pcb.brd_library.get_via_padstacks();
          Object selected_value = javax.swing.JOptionPane.showInputDialog(null, resources.getString("choose_padstack_to_remove"), resources.getString("remove_via_padstack"),
                javax.swing.JOptionPane.INFORMATION_MESSAGE, null, via_padstacks, via_padstacks[0]);
@@ -444,12 +444,12 @@ public class WindowVia extends GuiSubWindowSavable
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
          java.util.Collection<PrintableInfo> object_list = new java.util.LinkedList<PrintableInfo>();
-         board.infos.BrdViaInfoList via_infos = board_frame.board_panel.board_handling.get_routing_board().brd_rules.via_infos;
+         board.infos.BrdViaInfoList via_infos = board_frame.board_panel.itera_board.get_routing_board().brd_rules.via_infos;
          for (int i = 0; i < via_infos.count(); ++i)
             {
             object_list.add(via_infos.get(i));
             }
-         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.itera_board.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("available_vias"), object_list, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -481,7 +481,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             object_list.add((PrintableInfo) (selected_objects[i]));
             }
-         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.board_handling.coordinate_transform;
+         freert.planar.PlaCoordTransform coordinate_transform = board_frame.board_panel.itera_board.coordinate_transform;
          WindowObjectInfo new_window = WindowObjectInfo.display(resources.getString("selected_rule"), object_list, board_frame, coordinate_transform);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -499,7 +499,7 @@ public class WindowVia extends GuiSubWindowSavable
             {
             return;
             }
-         freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         freert.rules.BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
          WindowViaRule new_window = new WindowViaRule((RuleViaInfoList) selected_object, board_rules.via_infos, board_frame);
          java.awt.Point loc = getLocation();
          java.awt.Point new_window_location = new java.awt.Point((int) (loc.getX() + WINDOW_OFFSET), (int) (loc.getY() + WINDOW_OFFSET));
@@ -523,7 +523,7 @@ public class WindowVia extends GuiSubWindowSavable
             return;
             }
          RuleViaInfoList new_via_rule = new RuleViaInfoList(new_name);
-         BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+         BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
          board_rules.via_rules.add(new_via_rule);
          rule_list_model.addElement(new_via_rule);
          board_frame.refresh_windows();
@@ -543,7 +543,7 @@ public class WindowVia extends GuiSubWindowSavable
          String message = resources.getString("remove_via_rule") + " " + selected_rule.rule_name + "?";
          if (WindowMessage.confirm(message))
             {
-            freert.rules.BoardRules board_rules = board_frame.board_panel.board_handling.get_routing_board().brd_rules;
+            freert.rules.BoardRules board_rules = board_frame.board_panel.itera_board.get_routing_board().brd_rules;
             board_rules.via_rules.remove(selected_rule);
             rule_list_model.removeElement(selected_rule);
             }
