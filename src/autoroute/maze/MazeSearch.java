@@ -578,7 +578,7 @@ public final class MazeSearch
             
             Polyline check_polyline = new Polyline(check_points);
 
-            boolean check_ok = r_board.check_trace_polyline(
+            boolean check_ok = r_board.check_trace(
                   check_polyline, 
                   art_ctrl.trace_half_width[curr_layer], 
                   curr_layer, 

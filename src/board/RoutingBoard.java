@@ -207,8 +207,8 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Inserts a trace into the board, whose geometry is described by a Polyline. p_clearance_class is the index in the
-    * clearance_matix, which describes the required clearance restrictions to other items.
+    * Inserts a trace into the board, whose geometry is described by a Polyline. 
+    * p_clearance_class is the index in the clearance_matix, which describes the required clearance restrictions to other items.
     */
    public void insert_trace(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_clearance_class, ItemFixState p_fixed_state)
       {
@@ -1069,7 +1069,7 @@ public final class RoutingBoard implements java.io.Serializable
     * layer p_layer without clearance violation. 
     * If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as obstacles, even if they are of the own net.
     */
-   public boolean check_trace_shape(ShapeTile p_shape, int p_layer, NetNosList p_net_no_arr, int p_cl_class, Set<BrdAbitPin> p_contact_pins)
+   public boolean check_trace (ShapeTile p_shape, int p_layer, NetNosList p_net_no_arr, int p_cl_class, Set<BrdAbitPin> p_contact_pins)
       {
       if (!p_shape.is_contained_in(bounding_box)) return false;
       
@@ -1141,7 +1141,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Checks, if a polyline trace with the input parameters can be inserted without clearance violations
     */
-   public boolean check_polyline_trace(Polyline p_polyline, int p_layer, int p_pen_half_width, NetNosList p_net_no_arr, int p_clearance_class)
+   public boolean check_trace (Polyline p_polyline, int p_layer, int p_pen_half_width, NetNosList p_net_no_arr, int p_clearance_class)
       {
       BrdTracep tmp_trace = new BrdTracep(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, 0, ItemFixState.UNFIXED, this);
       
@@ -1149,7 +1149,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       for (int index = 0; index < tmp_trace.tile_shape_count(); ++index)
          {
-         if (!check_trace_shape(tmp_trace.get_tile_shape(index), p_layer, p_net_no_arr, p_clearance_class, contact_pins))
+         if (!check_trace(tmp_trace.get_tile_shape(index), p_layer, p_net_no_arr, p_clearance_class, contact_pins))
             {
             return false;
             }
@@ -1326,7 +1326,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Gets the rectangle, where a graphics update is needed on the screen.
     */
-   public ShapeTileBox get_graphics_update_box()
+   public ShapeTileBox gdi_update_get()
       {
       return update_box;
       }
@@ -1334,12 +1334,10 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * enlarges the graphics update box, so that it contains p_box
     */
-   public void join_graphics_update_box(ShapeTileBox p_box)
+   public void gdi_update_join(ShapeTileBox p_box)
       {
-      if (update_box == null)
-         {
-         reset_graphics_update_box();
-         }
+      if ( p_box == null ) return;
+      
       update_box = update_box.union(p_box);
       }
 
@@ -1357,14 +1355,6 @@ public final class RoutingBoard implements java.io.Serializable
    public void end_notify_observers()
       {
       observers.deactivate();
-      }
-
-   /**
-    * Returns, if the observer of the board items is activated.
-    */
-   public boolean observers_active()
-      {
-      return observers.is_active();
       }
 
    /**
@@ -1789,7 +1779,7 @@ public final class RoutingBoard implements java.io.Serializable
          pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
          }
       
-      join_graphics_update_box(changed_area.surrounding_box());
+      gdi_update_join(changed_area.surrounding_box());
       
       changed_area = null;
       }
@@ -1799,13 +1789,13 @@ public final class RoutingBoard implements java.io.Serializable
     * If a conflict exists, The result length is the maximal line length from p_line.a to p_line.b, which can be inserted without conflict
     * (Integer.MAX_VALUE, if no conflict exists). If p_only_not_shovable_obstacles, unfixed traces and vias are ignored.
     */
-   public final double check_trace_segment(PlaPointInt p_from_point, PlaPointInt p_to_point, int p_layer, NetNosList p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
+   public final double check_trace (PlaPointInt p_from_point, PlaPointInt p_to_point, int p_layer, NetNosList p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
       {
       if (p_from_point.equals(p_to_point)) return 0;
       
       PlaSegmentInt curr_line_segment = new PlaSegmentInt(p_from_point, p_to_point);
       
-      return check_trace_segment(curr_line_segment, p_layer, p_net_no_arr, p_trace_half_width, p_cl_class_no, p_only_not_shovable_obstacles);
+      return check_trace(curr_line_segment, p_layer, p_net_no_arr, p_trace_half_width, p_cl_class_no, p_only_not_shovable_obstacles);
       }
 
    /**
@@ -1814,7 +1804,7 @@ public final class RoutingBoard implements java.io.Serializable
     * (Integer.MAX_VALUE, if no conflict exists) 
     * If p_only_not_shovable_obstacles, unfixed traces and vias are ignored.
     */
-   public final double check_trace_segment(PlaSegmentInt p_line_segment, int p_layer, NetNosList p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
+   public final double check_trace (PlaSegmentInt p_line_segment, int p_layer, NetNosList p_net_no_arr, int p_trace_half_width, int p_cl_class_no, boolean p_only_not_shovable_obstacles)
       {
       Polyline check_polyline = p_line_segment.to_polyline();
       
@@ -1973,7 +1963,7 @@ public final class RoutingBoard implements java.io.Serializable
    public boolean move_drill_item(BrdAbit p_drill_item, PlaVectorInt p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, int p_tidy_width, int p_pull_tight_accuracy,
          int p_pull_tight_time_limit)
       {
-      clear_shove_failing_obstacle();
+      shove_fail_clear();
       
       // unfix the connected shove fixed traces.
       Collection<BrdItem> contact_list = p_drill_item.get_normal_contacts();
@@ -2131,7 +2121,7 @@ public final class RoutingBoard implements java.io.Serializable
          int p_pull_tight_accuracy, 
          int p_pull_tight_time_limit)
       {
-      clear_shove_failing_obstacle();
+      shove_fail_clear();
 
       start_marking_changed_area();
 
@@ -2181,7 +2171,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Returns null, if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
     * p_search_tree is the shape search tree used in the algorithm.
     */
-   public final PlaPointInt insert_trace_segment (
+   public final PlaPointInt insert_trace (
          PlaPointInt p_from_corner, 
          PlaPointInt p_to_corner, 
          int p_half_width, 
@@ -2201,7 +2191,7 @@ public final class RoutingBoard implements java.io.Serializable
       // Now, careful, polyline does NOT preserve corners, it creates new ones with the same value!!
       Polyline insert_polyline = new Polyline(p_from_corner, p_to_corner);
       
-      PlaPointInt ok_point = insert_trace_polyline(
+      PlaPointInt ok_point = insert_trace(
             insert_polyline, 
             p_half_width, 
             p_layer, 
@@ -2238,7 +2228,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Checks, if a trace polyline with the input parameters can be inserted while shoving aside obstacle traces and vias.
     */
-   public final boolean check_trace_polyline(
+   public final boolean check_trace (
          Polyline p_polyline, 
          int p_half_width, 
          int p_layer, 
@@ -2314,7 +2304,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Now, this enforces int points, but splitting creates new ones, in theory not at end points, but not really... argh...
     * @returns null if the check was inaccurate and an error occurred while inserting, so that the database may be damaged and an undo necessary.
     */
-   public final PlaPointInt insert_trace_polyline(
+   public final PlaPointInt insert_trace(
          Polyline p_polyline, 
          int p_half_width, 
          int p_layer, 
@@ -2328,7 +2318,7 @@ public final class RoutingBoard implements java.io.Serializable
          boolean p_with_check, 
          TimeLimit p_time_limit)
       {
-      clear_shove_failing_obstacle();
+      shove_fail_clear();
       
       PlaPoint from_corner_point = p_polyline.corner_first();
       
@@ -2744,7 +2734,7 @@ public final class RoutingBoard implements java.io.Serializable
       int trace_layer = p_to_trace.get_layer();
       
       // if the trace cannot be inserted...
-      if (!check_polyline_trace(connection_line, trace_layer, p_pen_half_width, net_no_arr, p_cl_type))  return false;
+      if (!check_trace(connection_line, trace_layer, p_pen_half_width, net_no_arr, p_cl_type))  return false;
       
       if ( changed_area != null)
          {
@@ -3011,27 +3001,27 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Returns the obstacle responsible for the last shove to fail.
     */
-   public BrdItem get_shove_failing_obstacle()
+   public BrdItem shove_fail_obstacle_get()
       {
       return shove_obstacle.brd_item;
       }
 
-   public void set_shove_failing_obstacle(BrdItem p_item)
+   public void shove_fail_obstacle_set(BrdItem p_item)
       {
       shove_obstacle.brd_item = p_item;
       }
 
-   public int get_shove_failing_layer()
+   public int shove_fail_layer_get()
       {
       return shove_obstacle.on_layer;
       }
 
-   public void set_shove_failing_layer(int p_layer)
+   public void shove_fail_layer_set(int p_layer)
       {
       shove_obstacle.on_layer = p_layer;
       }
 
-   private void clear_shove_failing_obstacle()
+   private void shove_fail_clear()
       {
       shove_obstacle.clear();
       }

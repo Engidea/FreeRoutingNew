@@ -251,7 +251,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (ok)
                {
                ShapeTile shape_to_check = curr_polyline.offset_shape(curr_half_width, 0);
-               skip_line = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+               skip_line = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             }
          
@@ -472,7 +472,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          if (try_poly.plalinelen() == curr_lines.size())
             {
             ShapeTile shape_to_check = try_poly.offset_shape(curr_half_width, keep_before_ind - 1);
-            check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+            check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
             }
          
          if ( ! check_ok) continue;
@@ -568,7 +568,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (tmp.plalinelen() == curr_lines.length)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, p_start_no + 1);
-               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+               check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             delta_dist /= 2;
             if (check_ok)
@@ -790,7 +790,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (tmp.plalinelen() == curr_lines.length)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, p_start_no + 1);
-               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+               check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             
             delta_dist /= 2;
@@ -874,7 +874,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                      ++shape_no;
                      }
                   ShapeTile shape_to_check = reduced_polyline.offset_shape(curr_half_width, shape_no);
-                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
+                  if (r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
                      if (r_board.changed_area != null)
                         {
@@ -928,7 +928,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                   if (jndex == 0) ++shape_no;
 
                   ShapeTile shape_to_check = reduced_polyline.offset_shape(curr_half_width, shape_no);
-                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
+                  if (r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
                      if (r_board.changed_area != null)
                         {

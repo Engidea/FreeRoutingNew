@@ -1788,7 +1788,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       Polyline border_polyline = new Polyline(curr_lines);
       
-      if (!r_board.check_polyline_trace(border_polyline, get_layer(), get_half_width(), net_nos, clearance_idx()))
+      if (!r_board.check_trace(border_polyline, get_layer(), get_half_width(), net_nos, clearance_idx()))
          {
          return false;
          }

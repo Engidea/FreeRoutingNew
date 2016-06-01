@@ -101,7 +101,7 @@ public final class AlgoShoveTrace
 
       if (!p_trace_shape.is_contained_in(r_board.get_bounding_box()))
          {
-         r_board.set_shove_failing_obstacle(r_board.get_outline());
+         r_board.shove_fail_obstacle_set(r_board.get_outline());
          return false;
          }
       
@@ -117,7 +117,7 @@ public final class AlgoShoveTrace
          
          if ( r_board.debug(Mdbg.PUSH_TRACE, Ldbg.SPC_A)) r_board.userPrintln(classname+"check: !obstacles_shovable "+obstacle);
          
-         r_board.set_shove_failing_obstacle(obstacle);
+         r_board.shove_fail_obstacle_set(obstacle);
          return false;
          }
       
@@ -129,7 +129,7 @@ public final class AlgoShoveTrace
 
          if ( r_board.debug(Mdbg.PUSH_TRACE, Ldbg.SPC_A)) r_board.userPrintln(classname+"check: !obstacles_shovable "+obstacle);
 
-         r_board.set_shove_failing_obstacle(obstacle);
+         r_board.shove_fail_obstacle_set(obstacle);
          
          return false;
          }
@@ -146,7 +146,7 @@ public final class AlgoShoveTrace
             {
             if ( r_board.debug(Mdbg.PUSH_TRACE, Ldbg.SPC_A)) r_board.userPrintln(classname+"check: !p_max_via_recursion_depth <= 0 "+curr_shove_via);
 
-            r_board.set_shove_failing_obstacle(curr_shove_via);
+            r_board.shove_fail_obstacle_set(curr_shove_via);
             return false;
             }
 
@@ -185,7 +185,7 @@ public final class AlgoShoveTrace
 
          if ( r_board.debug(Mdbg.PUSH_TRACE, Ldbg.SPC_A)) r_board.userPrintln(classname+"check: p_max_recursion_depth <= 0 "+obstacle);
 
-         r_board.set_shove_failing_obstacle(obstacle);
+         r_board.shove_fail_obstacle_set(obstacle);
          return false;
          }
 
@@ -440,7 +440,7 @@ public final class AlgoShoveTrace
       
       if (!p_trace_shape.is_contained_in(r_board.get_bounding_box()))
          {
-         r_board.set_shove_failing_obstacle(r_board.get_outline());
+         r_board.shove_fail_obstacle_set(r_board.get_outline());
          return false;
          }
   
@@ -467,13 +467,13 @@ public final class AlgoShoveTrace
       if (!shape_entries.shove_via_list.isEmpty())
          {
          obstacles_shovable = false;
-         r_board.set_shove_failing_obstacle(shape_entries.shove_via_list.iterator().next());
+         r_board.shove_fail_obstacle_set(shape_entries.shove_via_list.iterator().next());
          return false;
          }
       
       if (!obstacles_shovable)
          {
-         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.shove_fail_obstacle_set(shape_entries.get_found_obstacle());
          return false;
          }
       
@@ -483,7 +483,7 @@ public final class AlgoShoveTrace
 
       if (p_max_recursion_depth <= 0)
          {
-         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.shove_fail_obstacle_set(shape_entries.get_found_obstacle());
          return false;
          }
 
@@ -716,7 +716,7 @@ public final class AlgoShoveTrace
 
       if (p_recursion_depth <= 0 || found_obstacle instanceof BrdOutline || (found_obstacle instanceof BrdTracep && !found_obstacle.is_shove_fixed()))
          {
-         r_board.set_shove_failing_obstacle(found_obstacle);
+         r_board.shove_fail_obstacle_set(found_obstacle);
          return null;
          }
       
@@ -761,7 +761,7 @@ public final class AlgoShoveTrace
       
       if (!try_spring_over)
          {
-         r_board.set_shove_failing_obstacle(found_obstacle);
+         r_board.shove_fail_obstacle_set(found_obstacle);
          return null;
          }
       
@@ -793,7 +793,7 @@ public final class AlgoShoveTrace
       if (offset_shape.contains_inside(p_polyline.corner_first()) || offset_shape.contains_inside(p_polyline.corner_last()))
          {
          // can happen with clearance compensation off because of asymmetry in calculations with the offset shapes
-         r_board.set_shove_failing_obstacle(found_obstacle);
+         r_board.shove_fail_obstacle_set(found_obstacle);
          return null;
          }
       
@@ -805,7 +805,7 @@ public final class AlgoShoveTrace
 
       if (entries.size() < 2)
          {
-         r_board.set_shove_failing_obstacle(found_obstacle);
+         r_board.shove_fail_obstacle_set(found_obstacle);
          return null;
          }
       

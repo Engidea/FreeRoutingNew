@@ -150,7 +150,7 @@ public abstract class AlgoPullTight
       
       r_board.changed_area.set_empty(layer_idx);
       
-      r_board.join_graphics_update_box(changed_region.bounding_box());
+      r_board.gdi_update_join(changed_region.bounding_box());
       
       double changed_area_offset = 1.5 * (r_board.brd_rules.clearance_matrix.max_value(layer_idx) + 2 * r_board.brd_rules.get_max_trace_half_width());
       
@@ -398,7 +398,7 @@ public abstract class AlgoPullTight
          if (tmp.plalinelen() == 3)
             {
             ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
-            check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+            check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
             }
          
          delta_dist /= 2;
@@ -484,13 +484,13 @@ public abstract class AlgoPullTight
             if (index > 1)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 2);
-               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+               check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             
             if (check_ok && (index < p_polyline.plalinelen(-2)))
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 1);
-               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+               check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             }
          
@@ -651,7 +651,7 @@ public abstract class AlgoPullTight
       
       if (new_polyline != null && new_polyline != p_polyline)
          {
-         if (r_board.check_polyline_trace(new_polyline, curr_layer, curr_half_width, curr_net_no_arr, curr_cl_type))
+         if (r_board.check_trace(new_polyline, curr_layer, curr_half_width, curr_net_no_arr, curr_cl_type))
             {
             result = new_polyline;
             }

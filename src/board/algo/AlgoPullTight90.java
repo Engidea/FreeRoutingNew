@@ -88,7 +88,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
       for (int i = 0; i < 2; ++i)
          {
          ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, i);
-         if (!r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
+         if (!r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
             {
             return p_polyline;
             }
@@ -139,12 +139,12 @@ public final class AlgoPullTight90 extends AlgoPullTight
             if (skip_lines)
                {
                ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-               skip_lines = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+               skip_lines = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
                }
             if (skip_lines)
                {
                ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 1);
-               skip_lines = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
+               skip_lines = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, this.contact_pins);
                }
             }
          if (skip_lines)

@@ -1668,18 +1668,17 @@ public final class IteraBoard
     */
    public Rectangle get_graphics_update_rectangle()
       {
-      Rectangle result;
-      ShapeTileBox update_box = r_board.get_graphics_update_box();
+      ShapeTileBox update_box = r_board.gdi_update_get();
+
       if (update_box == null || update_box.is_empty())
          {
-         result = new Rectangle(0, 0, 0, 0);
+         return new Rectangle(0, 0, 0, 0);
          }
       else
          {
          ShapeTileBox offset_box = update_box.offset(r_board.get_max_trace_half_width());
-         result = gdi_context.coordinate_transform.board_to_screen(offset_box);
+         return gdi_context.coordinate_transform.board_to_screen(offset_box);
          }
-      return result;
       }
 
    /**

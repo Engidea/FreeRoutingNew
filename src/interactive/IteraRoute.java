@@ -203,7 +203,7 @@ public final class IteraRoute
 
       // tests.Validate.check("before insert", board);
       
-      PlaPointInt ok_point = r_board.insert_trace_segment (
+      PlaPointInt ok_point = r_board.insert_trace (
             prev_corner, 
             curr_corner, 
             pen_half_width_arr[layer_active_no], 
@@ -240,7 +240,7 @@ public final class IteraRoute
 
       if (ok_point == prev_corner)
          {
-         set_shove_failing_obstacle(r_board.get_shove_failing_obstacle());
+         set_shove_failing_obstacle(r_board.shove_fail_obstacle_get());
       
          return false;
          }
@@ -374,7 +374,7 @@ public final class IteraRoute
             break;
             }
          
-         set_shove_failing_obstacle(r_board.get_shove_failing_obstacle());
+         set_shove_failing_obstacle(r_board.shove_fail_obstacle_get());
       
          r_board.undo(null);
          }
@@ -483,7 +483,7 @@ public final class IteraRoute
 
          while (!from_corner.equals(to_corner))
             {
-            PlaPointInt curr_ok_point = r_board.insert_trace_segment (
+            PlaPointInt curr_ok_point = r_board.insert_trace (
                   from_corner, 
                   to_corner, 
                   pen_half_width_arr[layer_active_no], 
@@ -678,7 +678,7 @@ public final class IteraRoute
             ellipse_arr[0] = new PlaEllipse(center, rotation, bigger_radius, smaller_radius);
             ShapeTileBox bounding_box = new ShapeTileBox(prev_corner.to_float().round(), nearest_target_point.round());
             bounding_box = bounding_box.offset(curr_max_trace_length - incomplete_length);
-            r_board.join_graphics_update_box(bounding_box);
+            r_board.gdi_update_join(bounding_box);
             if (ellipse_count == 2)
                {
                bigger_radius = 0.5 * curr_min_trace_length;
@@ -843,18 +843,21 @@ public final class IteraRoute
       
       nearest_target_point = nearest_point;
       nearest_target_item = nearest_item;
-      // join the graphics update box by the nearest item, so that the incomplete
-      // is completely displayed.
-      r_board.join_graphics_update_box(nearest_item.bounding_box());
+      // join the graphics update box by the nearest item, so that the incomplete is completely displayed.
+      r_board.gdi_update_join(nearest_item.bounding_box());
       }
 
+   /**
+    * May be called with null value to "clear" a previous info
+    * @param p_item
+    */
    private void set_shove_failing_obstacle(BrdItem p_item)
       {
       shove_failing_obstacle = p_item;
       
       if (p_item != null)
          {
-         r_board.join_graphics_update_box(p_item.bounding_box());
+         r_board.gdi_update_join(p_item.bounding_box());
          }
       }
 
@@ -864,28 +867,21 @@ public final class IteraRoute
     */
    private PlaPointInt try_neckdown_at_start(PlaPointInt p_to_corner)
       {
-      if (!(start_item instanceof BrdAbitPin))
-         {
-         return prev_corner;
-         }
+      if (!(start_item instanceof BrdAbitPin)) return prev_corner;
+
       BrdAbitPin start_pin = (BrdAbitPin) start_item;
-      if (!start_pin.is_on_layer(layer_active_no))
-         {
-         return prev_corner;
-         }
+
+      if (!start_pin.is_on_layer(layer_active_no)) return prev_corner;
+
       PlaPointFloat pin_center = start_pin.center_get().to_float();
       double curr_clearance = r_board.brd_rules.clearance_matrix.value_at(clearance_class, start_pin.clearance_idx(), layer_active_no);
       double pin_neck_down_distance = 2 * (0.5 * start_pin.get_max_width(layer_active_no) + curr_clearance);
-      if (pin_center.distance(prev_corner.to_float()) >= pin_neck_down_distance)
-         {
-         return prev_corner;
-         }
+
+      if (pin_center.distance(prev_corner.to_float()) >= pin_neck_down_distance) return prev_corner;
 
       int neck_down_halfwidth = start_pin.get_trace_neckdown_halfwidth(layer_active_no);
-      if (neck_down_halfwidth >= pen_half_width_arr[layer_active_no])
-         {
-         return prev_corner;
-         }
+
+      if (neck_down_halfwidth >= pen_half_width_arr[layer_active_no]) return prev_corner;
 
       // check, that the neck_down started inside the pin shape
       if (!prev_corner.equals(start_pin.center_get()))
@@ -899,9 +895,10 @@ public final class IteraRoute
                }
             }
          }
+      
       TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
       
-      PlaPointInt ok_point = r_board.insert_trace_segment (
+      PlaPointInt ok_point = r_board.insert_trace (
             prev_corner, 
             p_to_corner, 
             neck_down_halfwidth, 
@@ -949,7 +946,7 @@ public final class IteraRoute
       
       TimeLimit time_limit = new TimeLimit(s_CHECK_FORCED_TRACE_TIME_MAX);
       
-      PlaPointInt ok_point = r_board.insert_trace_segment (
+      PlaPointInt ok_point = r_board.insert_trace (
             p_from_corner, 
             p_to_corner, 
             neck_down_halfwidth, 

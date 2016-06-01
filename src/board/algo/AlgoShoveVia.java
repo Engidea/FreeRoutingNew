@@ -167,7 +167,7 @@ public final class AlgoShoveVia
                false, 
                null) == ShoveDrillResult.NOT_DRILLABLE)
             {
-            r_board.set_shove_failing_layer(index);
+            r_board.shove_fail_layer_set(index);
             return false;
             }
          }
@@ -250,7 +250,7 @@ public final class AlgoShoveVia
                p_max_recursion_depth,
                p_max_via_recursion_depth))
             {
-            r_board.set_shove_failing_layer(index);
+            r_board.shove_fail_layer_set(index);
             return false;
             }
          if (start_trace_shape != null)
@@ -267,7 +267,7 @@ public final class AlgoShoveVia
                   p_max_recursion_depth, 
                   p_max_via_recursion_depth))
                {
-               r_board.set_shove_failing_layer(index);
+               r_board.shove_fail_layer_set(index);
                return false;
                }
             }

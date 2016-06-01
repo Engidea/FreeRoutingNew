@@ -500,10 +500,10 @@ public abstract class StateRoute extends StateInteractive
             }
          else
             {
-            int shove_failing_layer = r_brd.get_shove_failing_layer();
+            int shove_failing_layer = r_brd.shove_fail_layer_get();
             if (shove_failing_layer >= 0)
                {
-               String layer_name = r_brd.layer_structure.get_name(r_brd.get_shove_failing_layer());
+               String layer_name = r_brd.layer_structure.get_name(r_brd.shove_fail_layer_get());
                i_brd.screen_messages.set_status_message(resources.getString("layer_not_changed_because_of_obstacle_on_layer") + " " + layer_name);
                }
             else

@@ -173,7 +173,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
                if (check_polyline.plalinelen() == 3)
                   {
                   ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
+                  if (r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
                      curr_check_points[1] = curr_corner[3];
                      if (curr_check_points[0].equals(curr_check_points[1]))
@@ -186,7 +186,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
                         if (check_polyline.plalinelen() == 3)
                            {
                            shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                           corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+                           corner_removed = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                            }
                         else
                            {
@@ -220,14 +220,14 @@ public final class AlgoPullTight45 extends AlgoPullTight
                if (check_polyline.plalinelen() == 3)
                   {
                   ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                  if (r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
+                  if (r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
                      curr_check_points[1] = curr_corner[2];
                      check_polyline = new Polyline(curr_check_points);
                      if (check_polyline.plalinelen() == 3)
                         {
                         shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
-                        corner_removed = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+                        corner_removed = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                         }
                      else
                         {
@@ -532,7 +532,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             if (tmp.plalinelen() == 3)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
-               check_ok = r_board.check_trace_shape(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+               check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
 
                }
             delta_dist /= 2;

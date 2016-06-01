@@ -181,7 +181,7 @@ public final class ArtConnectionInsert
          
          Polyline insert_polyline = new Polyline(curr_corner_arr);
          
-         PlaPointInt ok_point = r_board.insert_trace_polyline(
+         PlaPointInt ok_point = r_board.insert_trace(
                insert_polyline, 
                ctrl.trace_half_width[p_locate.layer], 
                p_locate.layer, 
@@ -302,7 +302,7 @@ public final class ArtConnectionInsert
 
       NetNosList net_no_arr = new NetNosList(ctrl.net_no);
 
-      double ok_length = r_board.check_trace_segment(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_idx, true);
+      double ok_length = r_board.check_trace(p_from_corner, p_to_corner, p_layer, net_no_arr, ctrl.trace_half_width[p_layer], ctrl.trace_clearance_idx, true);
 
       if (ok_length >= Integer.MAX_VALUE) return p_from_corner;
       
@@ -320,7 +320,7 @@ public final class ArtConnectionInsert
          boolean horizontal_first = Math.abs(float_from_corner.v_x - float_neck_down_end_point.v_x) >= Math.abs(float_from_corner.v_y - float_neck_down_end_point.v_y);
          PlaPointInt add_corner = ArtConnectionLocate.calculate_additional_corner(float_from_corner, float_neck_down_end_point, horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
 
-         PlaPointInt curr_ok_point = r_board.insert_trace_segment(
+         PlaPointInt curr_ok_point = r_board.insert_trace(
                p_from_corner, 
                add_corner, 
                ctrl.trace_half_width[p_layer], 
@@ -337,7 +337,7 @@ public final class ArtConnectionInsert
 
          if (curr_ok_point != add_corner) return p_from_corner;
 
-         curr_ok_point = r_board.insert_trace_segment (
+         curr_ok_point = r_board.insert_trace (
                add_corner, 
                neck_down_end_point, 
                ctrl.trace_half_width[p_layer], 
@@ -356,7 +356,7 @@ public final class ArtConnectionInsert
          add_corner = ArtConnectionLocate.calculate_additional_corner(float_neck_down_end_point, float_to_corner, !horizontal_first, r_board.brd_rules.get_trace_snap_angle()).round();
          if (!add_corner.equals(p_to_corner))
             {
-            curr_ok_point = r_board.insert_trace_segment (
+            curr_ok_point = r_board.insert_trace (
                   neck_down_end_point, 
                   add_corner, 
                   ctrl.trace_half_width[p_layer], 
@@ -376,7 +376,7 @@ public final class ArtConnectionInsert
             }
          }
 
-      PlaPointInt ok_point = r_board.insert_trace_segment (
+      PlaPointInt ok_point = r_board.insert_trace (
             neck_down_end_point, 
             p_to_corner, 
             neck_down_halfwidth, 

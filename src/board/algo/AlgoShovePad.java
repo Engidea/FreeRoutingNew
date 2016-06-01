@@ -81,7 +81,7 @@ public final class AlgoShovePad
       {
       if (!p_pad_shape.is_contained_in(r_board.get_bounding_box()))
          {
-         r_board.set_shove_failing_obstacle(r_board.get_outline());
+         r_board.shove_fail_obstacle_set(r_board.get_outline());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
       
@@ -97,7 +97,7 @@ public final class AlgoShovePad
       boolean obstacles_shovable = shape_entries.store_items(obstacles, true, p_copper_sharing_allowed);
       if (!obstacles_shovable)
          {
-         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.shove_fail_obstacle_set(shape_entries.get_found_obstacle());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
 
@@ -107,14 +107,14 @@ public final class AlgoShovePad
          {
          if (p_max_via_recursion_depth <= 0)
             {
-            r_board.set_shove_failing_obstacle(curr_shove_via);
+            r_board.shove_fail_obstacle_set(curr_shove_via);
             return ShoveDrillResult.NOT_DRILLABLE;
             }
          PlaPointInt[] new_via_center = r_board.move_drill_algo.try_shove_via_points(p_pad_shape, p_layer, curr_shove_via, p_cl_type, false);
 
          if (new_via_center.length <= 0)
             {
-            r_board.set_shove_failing_obstacle(curr_shove_via);
+            r_board.shove_fail_obstacle_set(curr_shove_via);
             return ShoveDrillResult.NOT_DRILLABLE;
             }
       
@@ -146,13 +146,13 @@ public final class AlgoShovePad
       
       if (p_max_recursion_depth <= 0)
          {
-         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.shove_fail_obstacle_set(shape_entries.get_found_obstacle());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
       
       if (shape_entries.stack_depth() > 1)
          {
-         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.shove_fail_obstacle_set(shape_entries.get_found_obstacle());
          return ShoveDrillResult.NOT_DRILLABLE;
          }
 
@@ -225,7 +225,7 @@ public final class AlgoShovePad
       
       if (!p_pad_shape.is_contained_in(r_board.get_bounding_box()))
          {
-         r_board.set_shove_failing_obstacle(r_board.get_outline());
+         r_board.shove_fail_obstacle_set(r_board.get_outline());
          return false;
          }
       
@@ -251,7 +251,7 @@ public final class AlgoShovePad
       boolean obstacles_shovable = shape_entries.store_items(obstacles, true, p_copper_sharing_allowed) && shape_entries.shove_via_list.isEmpty();
       if (!obstacles_shovable)
          {
-         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.shove_fail_obstacle_set(shape_entries.get_found_obstacle());
          return false;
          }
 
@@ -261,7 +261,7 @@ public final class AlgoShovePad
 
       if (p_max_recursion_depth <= 0)
          {
-         r_board.set_shove_failing_obstacle(shape_entries.get_found_obstacle());
+         r_board.shove_fail_obstacle_set(shape_entries.get_found_obstacle());
          return false;
 
          }
@@ -356,7 +356,7 @@ public final class AlgoShovePad
          {
          ShapeTile check_shape = calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(index));
 
-         if (r_board.check_trace_shape(check_shape, p_layer, empty_arr, p_cl_class, null))
+         if (r_board.check_trace(check_shape, p_layer, empty_arr, p_cl_class, null))
             {
             return new BrdFromSide(index, null);
             }
@@ -366,7 +366,7 @@ public final class AlgoShovePad
       for (int index = 0; index < offset_shape.border_line_count(); ++index)
          {
          ShapeTile check_shape = calc_check_chape_for_from_side(p_shape, p_shape_center, offset_shape.border_line(index));
-         if (r_board.check_trace_shape(check_shape, p_layer, empty_arr, 0, null))
+         if (r_board.check_trace(check_shape, p_layer, empty_arr, 0, null))
             {
             return new BrdFromSide(index, null);
             }

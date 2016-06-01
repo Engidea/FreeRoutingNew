@@ -337,7 +337,7 @@ public final class AlgoOptimizeVia
                {
                if (r_board.move_drill_algo.check(p_via, diff_vector, 0, 0, null, null))
                   {
-                  double ok_length = r_board.check_trace_segment(
+                  double ok_length = r_board.check_trace(
                         via_center, projection, trace_layer, p_via.net_nos, trace_half_width, trace_cl_class_no, false);
                   if (ok_length >= Integer.MAX_VALUE)
                      {
@@ -401,7 +401,7 @@ public final class AlgoOptimizeVia
 
       if (from_location.equals(p_to_location)) return null;
 
-      double ok_length = r_board.check_trace_segment(
+      double ok_length = r_board.check_trace(
             from_location, p_to_location, p_trace_layer, p_via.net_nos, p_trace_half_width, p_trace_cl_class, false);
 
       if (ok_length <= 0) return null;
@@ -485,14 +485,14 @@ public final class AlgoOptimizeVia
 
       NetNosList net_no_arr = p_via.net_nos;
 
-      double ok_length = r_board.check_trace_segment(from_location, p_to_location, p_trace_layer_1, net_no_arr, p_trace_half_width_1, p_trace_cl_class_1, false);
+      double ok_length = r_board.check_trace(from_location, p_to_location, p_trace_layer_1, net_no_arr, p_trace_half_width_1, p_trace_cl_class_1, false);
 
       if (ok_length < Integer.MAX_VALUE)
          {
          return false;
          }
 
-      ok_length = r_board.check_trace_segment(p_to_location, p_connect_location, p_trace_layer_2, net_no_arr, p_trace_half_width_2, p_trace_cl_class_2, false);
+      ok_length = r_board.check_trace(p_to_location, p_connect_location, p_trace_layer_2, net_no_arr, p_trace_half_width_2, p_trace_cl_class_2, false);
 
       if (ok_length < Integer.MAX_VALUE) return false;
       
