@@ -29,7 +29,6 @@ import board.items.BrdItem;
 import board.items.BrdTracep;
 import board.kdtree.KdtreeObject;
 import board.kdtree.KdtreeShapeSearch;
-import board.varie.BrdChangedArea;
 import board.varie.BrdKeepPoint;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
@@ -175,9 +174,9 @@ public abstract class AlgoPullTight
     * @param layer_idx
     * @return true if something has changed
     */
-   private final boolean optimize_changed_area(ExpandCostFactor[] p_trace_cost_arr, BrdChangedArea changed_area, int layer_idx )
+   private final boolean optimize_changed_area(ExpandCostFactor[] p_trace_cost_arr, int layer_idx )
       {
-      ShapeTileOctagon changed_region = changed_area.get_area(layer_idx);
+      ShapeTileOctagon changed_region = r_board.changed_area.get_area(layer_idx);
 
       if (changed_region.is_empty()) return false;
       
@@ -234,7 +233,7 @@ public abstract class AlgoPullTight
     * @param changed_ares
     * @return
     */
-   private final boolean optimize_changed_area_changed(ExpandCostFactor[] p_trace_cost_arr, BrdChangedArea changed_area)
+   private final boolean optimize_changed_area_changed(ExpandCostFactor[] p_trace_cost_arr )
       {
       boolean something_changed = false;
 
@@ -244,7 +243,7 @@ public abstract class AlgoPullTight
          {
          if ( is_stop_requested()) break;
          
-         something_changed |= optimize_changed_area(p_trace_cost_arr, changed_area, layer_idx);
+         something_changed |= optimize_changed_area(p_trace_cost_arr, layer_idx);
          }
       
       return something_changed;
@@ -260,9 +259,9 @@ public abstract class AlgoPullTight
       {
       int counter=0;
       
-      if (r_board.changed_area == null) return;
+      if (r_board.changed_area.is_clear()) return;
       
-      while ( optimize_changed_area_changed(p_trace_cost_arr, r_board.changed_area) )
+      while ( optimize_changed_area_changed(p_trace_cost_arr) )
          {
          // The idea is that optimization goes on until there is a change
 

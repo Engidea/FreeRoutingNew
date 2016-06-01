@@ -99,7 +99,7 @@ public class BatchAutorouter
 
    public void remove_tails ( )
       {
-      routing_board.start_marking_changed_area();
+      routing_board.changed_area_clear();
       
       routing_board.remove_trace_tails(-1, BrdStopConnection.NONE);
       
@@ -241,7 +241,7 @@ public class BatchAutorouter
 
             SortedSet<BrdItem> ripped_item_list = new TreeSet<BrdItem>();
             
-            routing_board.start_marking_changed_area();
+            routing_board.changed_area_clear();
             
             if (autoroute_item(curr_item, r_net_no, ripped_item_list, ar_pass_no))
                {

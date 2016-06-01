@@ -29,11 +29,18 @@ import freert.planar.ShapeTileOctagon;
 
 public final class BrdChangedArea
    {
-   private final int layer_count;
+   private int layer_count;
    private OctagonMutable[] octa_arr;
-   
-   public BrdChangedArea(int p_layer_count)
+   private boolean area_cleared;
+
+   public BrdChangedArea()
       {
+      clear(0);
+      }
+
+   public void clear ( int p_layer_count )
+      {
+      area_cleared = true;
       layer_count = p_layer_count;
       octa_arr = new OctagonMutable[layer_count];
 
@@ -41,14 +48,21 @@ public final class BrdChangedArea
       for (int index = 0; index < layer_count; ++index) octa_arr[index] = new OctagonMutable();
       }
 
+   public boolean is_clear()
+      {
+      return area_cleared;
+      }
+   
    /**
     * enlarges the octagon on p_layer, so that it contains p_point
     */
    public void join(PlaPointFloat p_point, int p_layer)
       {
-      OctagonMutable curr = octa_arr[p_layer];
+      if ( p_layer < 0 || p_layer >= octa_arr.length ) return;
       
+      OctagonMutable curr = octa_arr[p_layer];
       curr.join(p_point);
+      area_cleared=false;
       }
 
    /**
@@ -58,12 +72,14 @@ public final class BrdChangedArea
       {
       if (p_shape == null) return;
 
+      if ( p_layer < 0 || p_layer >= octa_arr.length ) return;
+      
       int corner_count = p_shape.border_line_count();
       
       for (int index = 0; index < corner_count; ++index)
-         {
          join(p_shape.corner_approx(index), p_layer);
-         }
+
+      area_cleared=false;
       }
 
    /**
@@ -71,11 +87,21 @@ public final class BrdChangedArea
     */
    public ShapeTileOctagon get_area(int p_layer)
       {
+      if ( is_clear() ) return null;
+      
+      if ( p_layer < 0 || p_layer >= octa_arr.length ) return null;
+
       return octa_arr[p_layer].to_octagon();
       }
 
+   /**
+    * Merge all info on all layers so you can update the gdi
+    * @return null if the are has never been updated
+    */
    public ShapeTileBox surrounding_box()
       {
+      if ( is_clear() ) return null;
+      
       int llx = Integer.MAX_VALUE;
       int lly = Integer.MAX_VALUE;
       int urx = Integer.MIN_VALUE;

@@ -133,7 +133,7 @@ public final class RoutingBoard implements java.io.Serializable
    // the rectangle, where the graphics may be not updated
    private transient  ShapeTileBox update_box = ShapeTileBox.EMPTY;
    // the area marked for optimizing the route 
-   public transient BrdChangedArea changed_area;
+   public transient BrdChangedArea changed_area = new BrdChangedArea();
    // an obstacle that prevent the possibility of shove
    private transient BrdShoveObstacle shove_obstacle;
    
@@ -216,15 +216,8 @@ public final class RoutingBoard implements java.io.Serializable
       BrdTracep new_trace = insert_trace_without_cleaning(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, p_fixed_state);
 
       if (new_trace == null) return;
-      
-      ShapeTileOctagon clip_shape = null;
 
-      if (changed_area != null)
-         {
-         clip_shape = changed_area.get_area(p_layer);
-         }
-
-      new_trace.normalize(clip_shape);
+      new_trace.normalize(changed_area.get_area(p_layer));
       }
 
    /**
@@ -1636,6 +1629,7 @@ public final class RoutingBoard implements java.io.Serializable
       shove_obstacle      = new BrdShoveObstacle();
       shove_pad_algo      = new AlgoShovePad(this);
       observers           = new ObserverItemVoid();
+      changed_area        = new BrdChangedArea();
       
       for ( BrdItem curr_item : get_items() )
          {
@@ -1662,7 +1656,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       ShapeTileOctagon tidy_region = p_tidy_width < Integer.MAX_VALUE ? ShapeTileOctagon.EMPTY : null;
       
-      start_marking_changed_area();
+      changed_area_clear();
       
       Set<Integer> changed_nets = new TreeSet<Integer>();
 
@@ -1706,44 +1700,19 @@ public final class RoutingBoard implements java.io.Serializable
 
    /**
     * starts marking the changed areas for optimizing traces
+    * In other words clear it up for future use
     */
-   public void start_marking_changed_area()
+   public void changed_area_clear()
       {
-      if (changed_area == null)
-         {
-         changed_area = new BrdChangedArea(get_layer_count());
-         }
+      changed_area.clear(get_layer_count());
       }
 
    /**
     * enlarges the changed area on p_layer, so that it contains p_point
     */
-   public void join_changed_area(PlaPointFloat p_point, int p_layer)
+   public void changed_area_join(PlaPointFloat p_point, int p_layer)
       {
-      if (changed_area != null)
-         {
-         changed_area.join(p_point, p_layer);
-         }
-      }
-
-   /**
-    * marks the whole board as changed
-    */
-   public void mark_all_changed_area()
-      {
-      start_marking_changed_area();
-      PlaPointFloat[] board_corners = new PlaPointFloat[4];
-      board_corners[0] = bounding_box.box_ll.to_float();
-      board_corners[1] = new PlaPointFloat(bounding_box.box_ur.v_x, bounding_box.box_ll.v_y);
-      board_corners[2] = bounding_box.box_ur.to_float();
-      board_corners[3] = new PlaPointFloat(bounding_box.box_ll.v_x, bounding_box.box_ur.v_y);
-      for (int i = 0; i < get_layer_count(); ++i)
-         {
-         for (int j = 0; j < 4; ++j)
-            {
-            join_changed_area(board_corners[j], i);
-            }
-         }
+      changed_area.join(p_point, p_layer);
       }
 
    /**
@@ -1756,7 +1725,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public final void optimize_changed_area(NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
       {
-      if (changed_area == null) return;
+      if ( changed_area.is_clear() ) return;
       
       // a clip shape of empty would result in nothing done since all points would match
       if (p_clip_shape == ShapeTileOctagon.EMPTY) return;
@@ -1766,21 +1735,19 @@ public final class RoutingBoard implements java.io.Serializable
       pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
       
       gdi_update_join(changed_area.surrounding_box());
-      
-      changed_area = null;
+      changed_area.clear(get_layer_count());
       }
 
    public final void optimize_changed_area(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread )
       {
-      if (changed_area == null) return;
+      if (changed_area.is_clear() ) return;
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, null, p_pullt_min_move, p_thread, null);
       
       pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
       
       gdi_update_join(changed_area.surrounding_box());
-      
-      changed_area = null;
+      changed_area.clear(get_layer_count());
       }
 
    
@@ -1987,7 +1954,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       NetNosList net_no_arr = p_drill_item.net_nos;
       
-      start_marking_changed_area();
+      changed_area_clear();
       
       if (!move_drill_algo.insert(p_drill_item, p_vector, p_max_recursion_depth, p_max_via_recursion_depth, tidy_region))
          {
@@ -2108,7 +2075,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       shove_fail_clear();
 
-      start_marking_changed_area();
+      changed_area_clear();
 
       boolean r_ok = shove_via_algo.shove_via_insert(
             p_via_info, 
@@ -2312,7 +2279,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       if (from_corner.equals(to_corner)) return to_corner;
       
-      start_marking_changed_area();
+      changed_area_clear();
       
       // Check, if there ends a item of the same net at p_from_corner.
       // If so, its geometry will be used to cut off dog ears of the check shape.
@@ -2486,7 +2453,7 @@ public final class RoutingBoard implements java.io.Serializable
       // insert the new trace segment
       for (int index = 0; index < new_polyline.corner_count(); ++index)
          {
-         join_changed_area(new_polyline.corner_approx(index), p_layer);
+         changed_area_join(new_polyline.corner_approx(index), p_layer);
          }
       
       BrdTracep new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr,p_clearance_class_no, ItemFixState.UNFIXED);

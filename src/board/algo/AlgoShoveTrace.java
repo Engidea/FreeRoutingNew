@@ -542,7 +542,7 @@ public final class AlgoShoveTrace
          
          for (int index = 0; index < curr_substitute_trace.corner_count(); ++index)
             {
-            r_board.join_changed_area(curr_substitute_trace.polyline().corner_approx(index), p_layer);
+            r_board.changed_area_join(curr_substitute_trace.polyline().corner_approx(index), p_layer);
             }
          
          PlaPoint[] end_corners = null;

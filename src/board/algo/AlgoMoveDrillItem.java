@@ -199,7 +199,7 @@ public final class AlgoMoveDrillItem
          ShapeTileBox curr_bounding_box = curr_shape.bounding_box();
          for (int j = 0; j < 4; ++j)
             {
-            r_board.join_changed_area(curr_bounding_box.corner_approx(j), curr_layer);
+            r_board.changed_area_join(curr_bounding_box.corner_approx(j), curr_layer);
             }
          }
       p_drill_item.move_by(p_vector);

@@ -89,7 +89,7 @@ public final class BatchFanout
          
          for (ArtPin curr_pin : curr_component.smd_pins)
             {
-            routing_board.start_marking_changed_area();
+            routing_board.changed_area_clear();
             
             TimeLimitStoppable time_limit = new TimeLimitStoppable( 10 + p_pass_no * 10, thread);
 

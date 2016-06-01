@@ -303,7 +303,7 @@ public final class AlgoShovePad
          
          for (int index = 0; index < curr_substitute_trace.corner_count(); ++index)
             {
-            r_board.join_changed_area(curr_substitute_trace.polyline().corner_approx(index), p_layer);
+            r_board.changed_area_join(curr_substitute_trace.polyline().corner_approx(index), p_layer);
             }
 
          PlaPoint[] end_corners = null;
@@ -316,9 +316,7 @@ public final class AlgoShovePad
          
          r_board.insert_item(curr_substitute_trace);
          
-         ShapeTileOctagon opt_area = r_board.changed_area != null ? r_board.changed_area.get_area(p_layer) : null;
-         
-         curr_substitute_trace.normalize(opt_area);
+         curr_substitute_trace.normalize(r_board.changed_area.get_area(p_layer));
          
          if ( tails_exist_before ) continue;
          
@@ -334,9 +332,7 @@ public final class AlgoShovePad
                {
                r_board.combine_traces(curr_net_no);
                }
-
             }
-         
          }
 
       return true;

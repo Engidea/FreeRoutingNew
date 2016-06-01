@@ -26,10 +26,9 @@ import java.util.TreeSet;
 import board.BrdConnectable;
 import board.RoutingBoard;
 import board.algo.AlgoPullTight;
-import board.kdtree.KdtreeShapeSearch;
 import board.kdtree.KdtreeEntry;
 import board.kdtree.KdtreeObject;
-import board.varie.BrdChangedArea;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.BrdTraceExitRestriction;
 import board.varie.BrdTracepCombineFound;
 import board.varie.ItemFixState;
@@ -783,7 +782,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       r_board.remove_item(other.other_trace);
 
-      r_board.join_changed_area(end_corner.to_float(), get_layer());
+      r_board.changed_area_join(end_corner.to_float(), get_layer());
 
       return true;
       }
@@ -910,7 +909,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       r_board.remove_item(other.other_trace);
 
-      r_board.join_changed_area(end_corner.to_float(), get_layer());
+      r_board.changed_area_join(end_corner.to_float(), get_layer());
 
       return true;
       }
@@ -1544,16 +1543,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // let the observers syncronize the changes
       r_board.observers.notify_changed(this);
 
-      ShapeTileOctagon clip_shape = null;
-
-      BrdChangedArea changed_area = r_board.changed_area;
-
-      if (changed_area != null)
-         {
-         clip_shape = changed_area.get_area(get_layer());
-         }
-
-      normalize_recu(clip_shape, 11);
+      normalize_recu(r_board.changed_area.get_area(get_layer()), 11);
       }
 
    /**

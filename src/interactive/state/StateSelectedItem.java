@@ -471,7 +471,7 @@ public final class StateSelectedItem extends StateInteractive
          else
             via_costs = i_brd.itera_settings.autoroute_settings.get_via_costs();
          
-         r_brd.start_marking_changed_area();
+         r_brd.changed_area_clear();
          
          ArtResult autoroute_result;
          
@@ -565,7 +565,7 @@ public final class StateSelectedItem extends StateInteractive
             interrupted = true;
             break;
             }
-         r_brd.start_marking_changed_area();
+         r_brd.changed_area_clear();
          ArtResult autoroute_result = r_brd.fanout(curr_pin, i_brd.itera_settings, -1, p_stoppable_thread );
          if (autoroute_result == ArtResult.ROUTED)
             {
@@ -629,7 +629,7 @@ public final class StateSelectedItem extends StateInteractive
       String start_message = resources.getString("pull_tight") + " " + resources.getString("stop_message");
       i_brd.screen_messages.set_status_message(start_message);
       
-      r_brd.start_marking_changed_area();
+      r_brd.changed_area_clear();
       
       AlgoOptimizeVia optimize_via = new AlgoOptimizeVia(r_brd);
 
