@@ -338,4 +338,18 @@ public final class SearchTreeManager
          }
       }
 
+   /**
+    * Used to have some meaningful info on this object
+    * Mostly used for beanshell
+    */
+   @Override
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(1000);
+      risul.append("SearchTreeManager /n");
+      risul.append("methods: get_default_tree() \n");
+      
+      return risul.toString();
+      }
+
    }

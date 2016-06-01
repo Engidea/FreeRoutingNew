@@ -525,7 +525,9 @@ public final class BoardPanel extends JPanel
    
    /**
     * Used to have some meaningful info on this object
+    * Mostly used for beanshell
     */
+   @Override
    public String toString()
       {
       StringBuilder risul = new StringBuilder(1000);

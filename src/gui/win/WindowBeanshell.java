@@ -199,7 +199,10 @@ private final class HelpClass implements ActionListener
   {
   public void actionPerformed(ActionEvent e)
     {
-    String msg = "oggetti disponibili\n"+
+    String msg = "methods:\n"+
+    "print(...);\n"+
+    "desktop();\n"+
+    "objects: \n"+
     "stat\n"+
     "board_frame\n";
     

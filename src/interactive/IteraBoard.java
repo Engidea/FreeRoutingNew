@@ -1823,4 +1823,19 @@ public final class IteraBoard
       return new GuiResources (stat, key);
       }
 
+   /**
+    * Used to have some meaningful info on this object
+    * Mostly used for beanshell
+    */
+   @Override
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(1000);
+      risul.append("IteraBoard \n");
+      risul.append("objects: itera_settings \n");
+      risul.append("methods: get_routing_board() \n");
+      
+      return risul.toString();
+      }
+   
    }

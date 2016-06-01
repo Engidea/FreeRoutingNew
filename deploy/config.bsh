@@ -3,17 +3,17 @@ import gui.*;
 import iteractive.*;
 
 
-public void validate()
+public void tree_stats()
    {
    try
     {
-    stat.log.userPrintln("Hellp\n");
+    stat.log.userPrintln("tree_stats\n");
 
-	
-
+	aa=board_frame.board_panel.itera_board.get_routing_board().search_tree_manager.get_default_tree();
+	print(aa.statistics());
     }
   catch ( Exception exc )
     {
-    stat.log.exceptionShow("addExtensionConfig()",exc);
+    stat.log.exceptionShow("tree_stats()",exc);
     }
    }

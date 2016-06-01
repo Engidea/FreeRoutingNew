@@ -194,9 +194,9 @@ public final class ShapeSearchTree
       }
 
    /** 
-    * Outputs some statistic information about the tree
+    * @return some statistic information about the tree
     */
-   public final void statistics(String p_message)
+   public String statistics()
       {
       ArrayList<ShapeTreeNodeLeaf> leaf_arr = to_array();
       double cumulative_depth = 0;
@@ -212,18 +212,16 @@ public final class ShapeSearchTree
          }
       
       
+      StringBuilder risul = new StringBuilder(1000);
+      
       double everage_depth = cumulative_depth / leaf_arr.size();
-      System.out.print("MinAreaTree: Entry count: ");
-      System.out.print(leaf_arr.size());
-      System.out.print(" log: ");
-      System.out.print(Math.round(Math.log(leaf_arr.size())));
-      System.out.print(" Everage depth: ");
-      System.out.print(Math.round(everage_depth));
-      System.out.print(" ");
-      System.out.print(" Maximum depth: ");
-      System.out.print(maximum_depth);
-      System.out.print(" ");
-      System.out.println(p_message);
+
+      risul.append("MinAreaTree: Entry count: "+leaf_arr.size()+"\n");
+      risul.append("log: "+Math.round(Math.log(leaf_arr.size()))+"\n");
+      risul.append("Everage depth: "+Math.round(everage_depth)+"\n");
+      risul.append("Maximum depth: "+maximum_depth+"\n");
+      
+      return risul.toString();
       }
    
    
@@ -1505,4 +1503,19 @@ public final class ShapeSearchTree
       return true;
       }
 
+   /**
+    * Used to have some meaningful info on this object
+    * Mostly used for beanshell
+    */
+   @Override
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(1000);
+      risul.append("ShapeSearchTree \n");
+      risul.append("objects: ... \n");
+      risul.append("methods: statistics() \n");
+      
+      return risul.toString();
+      }
+   
    }

@@ -3041,5 +3041,18 @@ public final class RoutingBoard implements java.io.Serializable
       stat.userPrintln(message, exc);
       }
    
+   /**
+    * Used to have some meaningful info on this object
+    * Mostly used for beanshell
+    */
+   @Override
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(1000);
+      risul.append("RoutingBoard \n");
+      risul.append("object: search_tree_manager \n");
+      
+      return risul.toString();
+      }
 
    }

@@ -741,11 +741,12 @@ public final class BoardFrame
    /**
     * Used to have some meaningful info on this object
     */
+   @Override
    public String toString()
       {
       StringBuilder risul = new StringBuilder(1000);
       risul.append(classname);
-      risul.append("available object: board_panel");
+      risul.append(" available object: board_panel");
       
       return risul.toString();
       }
