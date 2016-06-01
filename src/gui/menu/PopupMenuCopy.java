@@ -20,8 +20,8 @@
 
 package gui.menu;
 
+import freert.main.Stat;
 import gui.BoardFrame;
-import main.Stat;
 
 /**
  * Popup menu used in the interactive copy item state.

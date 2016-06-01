@@ -20,13 +20,13 @@
 
 package gui;
 
+import freert.main.Stat;
 import gui.varie.GuiResources;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
-import main.Stat;
 
 /**
  * Describes the toolbar of the board frame, when it is in the selected item state.

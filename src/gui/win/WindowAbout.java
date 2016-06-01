@@ -21,12 +21,12 @@
 
 package gui.win;
 
+import freert.main.MainApplication;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import main.MainApplication;
 
 /**
  * Displays general information about the freeroute software.

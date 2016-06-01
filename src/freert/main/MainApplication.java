@@ -18,7 +18,7 @@
  * Created on 19. Oktober 2002, 17:58
  *
  */
-package main;
+package freert.main;
 
 import gui.BoardFrame;
 import gui.varie.FileFilter;

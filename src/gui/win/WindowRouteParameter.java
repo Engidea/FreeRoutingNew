@@ -20,6 +20,7 @@
 
 package gui.win;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiPanelVertical;
@@ -38,7 +39,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import main.Stat;
 import board.items.BrdOutline;
 import board.items.BrdTracep;
 import board.varie.TraceAngleRestriction;

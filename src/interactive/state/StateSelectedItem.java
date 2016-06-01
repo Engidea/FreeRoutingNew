@@ -21,6 +21,8 @@ package interactive.state;
 
 import freert.library.LibPackage;
 import freert.library.LibPackagePin;
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
@@ -41,8 +43,6 @@ import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.JPopupMenu;
-import main.Ldbg;
-import main.Mdbg;
 import autoroute.varie.ArtResult;
 import board.BrdConnectable;
 import board.algo.AlgoOptimizeVia;

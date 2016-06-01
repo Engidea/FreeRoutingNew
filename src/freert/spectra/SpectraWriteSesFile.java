@@ -20,6 +20,7 @@
 
 package freert.spectra;
 
+import freert.main.Stat;
 import freert.planar.PlaPointFloat;
 import freert.planar.Polyline;
 import gui.varie.IndentFileWriter;
@@ -27,7 +28,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collection;
 import java.util.Iterator;
-import main.Stat;
 import board.BrdLayer;
 import board.RoutingBoard;
 import board.infos.BrdComponent;

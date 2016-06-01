@@ -21,12 +21,12 @@
 
 package gui.win;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
 import java.util.Collection;
 import java.util.Set;
 import java.util.SortedSet;
-import main.Stat;
 import board.RoutingBoard;
 import board.infos.BrdUnconnectedRoute;
 import board.items.BrdAbitVia;

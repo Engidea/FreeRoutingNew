@@ -20,10 +20,10 @@
 
 package gui.menu;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import main.Stat;
 
 /**
  * Creates the menu bar of a board frame together with its menu items.

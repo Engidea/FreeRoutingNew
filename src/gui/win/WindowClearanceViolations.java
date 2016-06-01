@@ -20,6 +20,8 @@
 
 package gui.win;
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
 import interactive.IteraBoard;
@@ -27,8 +29,6 @@ import interactive.IteraClearanceViolations;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import main.Ldbg;
-import main.Mdbg;
 import board.infos.BrdItemViolation;
 import board.infos.BrdViolation;
 

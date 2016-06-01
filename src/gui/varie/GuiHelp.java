@@ -29,7 +29,7 @@ import javax.help.HelpSetException;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import main.Stat;
+import freert.main.Stat;
 
 /**
  *

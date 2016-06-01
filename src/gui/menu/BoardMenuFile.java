@@ -19,6 +19,7 @@
  */
 package gui.menu;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.config.GuiConfigFile;
 import gui.varie.GuiResources;
@@ -29,7 +30,6 @@ import java.io.OutputStream;
 import javax.swing.JFileChooser;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
-import main.Stat;
 
 /**
  * Creates the file menu of a board frame.

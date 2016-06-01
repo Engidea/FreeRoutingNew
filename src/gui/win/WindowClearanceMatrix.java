@@ -20,6 +20,8 @@
 
 package gui.win;
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.rules.ClearanceMatrix;
 import gui.BoardFrame;
 import gui.ComboBoxLayer;
@@ -37,8 +39,6 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
-import main.Ldbg;
-import main.Mdbg;
 import board.RoutingBoard;
 
 /**

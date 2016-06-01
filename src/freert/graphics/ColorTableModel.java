@@ -19,11 +19,11 @@
  */
 package freert.graphics;
 
+import freert.main.Stat;
 import gui.varie.GuiResources;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import javax.swing.table.AbstractTableModel;
-import main.Stat;
 
 /**
  * Abstract class to store colors used for drawing the board.

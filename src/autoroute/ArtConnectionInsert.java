@@ -18,8 +18,6 @@
 package autoroute;
 
 import java.util.Set;
-import main.Ldbg;
-import main.Mdbg;
 import autoroute.varie.ArtLocateResult;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;
@@ -29,6 +27,8 @@ import board.items.BrdTracep;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaPointIntAlist;

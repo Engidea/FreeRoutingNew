@@ -21,8 +21,8 @@
 
 package gui.menu;
 
+import freert.main.Stat;
 import gui.BoardFrame;
-import main.Stat;
 import board.BrdLayer;
 
 /**

@@ -16,6 +16,8 @@ package interactive.state;
  *
  */
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.rules.RuleNets;
@@ -28,8 +30,6 @@ import interactive.IteraRoute;
 import interactive.LogfileScope;
 import java.util.Iterator;
 import java.util.Set;
-import main.Ldbg;
-import main.Mdbg;
 import board.infos.BrdItemViolation;
 import board.items.BrdItem;
 

@@ -1,5 +1,6 @@
 package gui.win;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.JComponentProvider;
@@ -11,7 +12,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import main.Stat;
 import bsh.Interpreter;
 import bsh.util.JConsole;
 

@@ -22,7 +22,7 @@ package freert.graphics;
 
 import java.awt.Color;
 import java.io.IOException;
-import main.Stat;
+import freert.main.Stat;
 
 /**
  * Stores the layer dependent colors used for drawing for the items on the board.

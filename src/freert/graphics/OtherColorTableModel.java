@@ -23,7 +23,7 @@ package freert.graphics;
 import java.awt.Color;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import main.Stat;
+import freert.main.Stat;
 
 /**
  * Stores the colors used for the background and highlighting.

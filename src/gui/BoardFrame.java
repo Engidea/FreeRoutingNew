@@ -16,6 +16,9 @@
 
 package gui;
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
+import freert.main.Stat;
 import gui.config.GuiConfigFile;
 import gui.menu.BoardMenuBar;
 import gui.varie.FileFilter;
@@ -68,9 +71,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
-import main.Ldbg;
-import main.Mdbg;
-import main.Stat;
 import board.varie.DesignFile;
 import board.varie.IdGenerator;
 

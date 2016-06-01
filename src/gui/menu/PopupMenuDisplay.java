@@ -24,13 +24,13 @@
 
 package gui.menu;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.BoardPanel;
 import gui.varie.GuiResources;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-import main.Stat;
 
 /**
  *

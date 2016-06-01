@@ -20,11 +20,11 @@
 
 package interactive;
 
+import freert.main.Stat;
 import freert.planar.PlaPointFloat;
 import gui.BoardPanelStatus;
 import gui.varie.GuiResources;
 import javax.swing.JLabel;
-import main.Stat;
 import board.BrdLayer;
 
 /**

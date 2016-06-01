@@ -20,6 +20,8 @@
  */
 package autoroute.batch;
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
 import freert.varie.UnitMeasure;
@@ -27,8 +29,6 @@ import gui.varie.GuiResources;
 import interactive.BrdActionThread;
 import interactive.IteraBoard;
 import java.awt.Color;
-import main.Ldbg;
-import main.Mdbg;
 import autoroute.ArtSettings;
 import board.varie.BrdValidate;
 

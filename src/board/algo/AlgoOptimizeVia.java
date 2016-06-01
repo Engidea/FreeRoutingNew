@@ -23,8 +23,6 @@ package board.algo;
 
 import java.util.Collection;
 import java.util.Iterator;
-import main.Ldbg;
-import main.Mdbg;
 import autoroute.expand.ExpandCostFactor;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
@@ -34,6 +32,8 @@ import board.items.BrdTracep;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;

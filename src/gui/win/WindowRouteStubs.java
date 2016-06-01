@@ -21,6 +21,7 @@
 
 package gui.win;
 
+import freert.main.Stat;
 import freert.planar.PlaPointFloat;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
@@ -28,7 +29,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
-import main.Stat;
 import board.RoutingBoard;
 import board.infos.BrdRouteStub;
 import board.items.BrdAbitVia;

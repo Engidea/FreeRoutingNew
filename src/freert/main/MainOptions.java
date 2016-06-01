@@ -1,4 +1,4 @@
-package main;
+package freert.main;
 
 import java.util.Locale;
 

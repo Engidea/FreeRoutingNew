@@ -20,6 +20,7 @@
 
 package gui;
 
+import freert.main.Stat;
 import freert.planar.PlaPointFloat;
 import gui.menu.PopupMenuCopy;
 import gui.menu.PopupMenuDynamicRoute;
@@ -53,7 +54,6 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
-import main.Stat;
 
 /**
  * Panel containing the graphical representation of a routing board.

@@ -20,11 +20,11 @@
 
 package gui;
 
+import freert.main.Stat;
 import gui.varie.GuiResources;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
-import main.Stat;
 
 /**
  * Panel at the lower border of the board frame containing amongst others the message line and the current layer and cursor

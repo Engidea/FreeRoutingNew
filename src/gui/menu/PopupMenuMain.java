@@ -20,10 +20,10 @@
 
 package gui.menu;
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
+import freert.main.Stat;
 import gui.BoardFrame;
-import main.Ldbg;
-import main.Mdbg;
-import main.Stat;
 
 /**
  * Popup Menu used in the interactive select state.

@@ -1,9 +1,9 @@
 package board.infos;
 
 import interactive.IteraBoard;
-import main.Stat;
 import board.items.BrdItem;
 import board.items.BrdTracep;
+import freert.main.Stat;
 import freert.planar.PlaPointFloat;
 import freert.rules.RuleNet;
 import freert.varie.Signum;

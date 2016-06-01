@@ -20,8 +20,6 @@
 package autoroute.maze;
 
 import java.util.Collection;
-import main.Ldbg;
-import main.Mdbg;
 import autoroute.ArtControl;
 import autoroute.expand.ExpandDoor;
 import autoroute.expand.ExpandRoomComplete;
@@ -30,6 +28,8 @@ import board.RoutingBoard;
 import board.items.BrdAbit;
 import board.items.BrdItem;
 import board.items.BrdTracep;
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;

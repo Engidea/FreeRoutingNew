@@ -20,6 +20,7 @@
 
 package gui;
 
+import freert.main.Stat;
 import gui.varie.GuiResources;
 import java.awt.event.ActionListener;
 import javax.swing.ButtonGroup;
@@ -28,7 +29,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.JToolBar;
-import main.Stat;
 
 /**
  * Implements the toolbar panel of the board frame.

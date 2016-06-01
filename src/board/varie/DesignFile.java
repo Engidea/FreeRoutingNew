@@ -20,6 +20,7 @@
  */
 package board.varie;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.varie.FileFilter;
 import gui.varie.GuiResources;
@@ -31,7 +32,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import javax.swing.JFileChooser;
-import main.Stat;
 
 /**
  * File functionality

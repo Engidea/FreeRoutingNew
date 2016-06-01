@@ -20,14 +20,14 @@
 
 package gui.menu;
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.varie.GuiResources;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
-import main.Ldbg;
-import main.Mdbg;
-import main.Stat;
 
 /**
  * Popup menu used in the interactive selected item state..

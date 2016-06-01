@@ -52,7 +52,7 @@
   	
     <jar compress="yes" destfile="${app.jar}" >
       <manifest>
-          <attribute name="Main-Class" value="main.MainApplication"/>
+          <attribute name="Main-Class" value="freert.main.MainApplication"/>
           <attribute name="Copyright" value="Damiano Bolla"/>     
           <attribute name="SplashScreen-Image" value="logo.gif" /> 
       </manifest>

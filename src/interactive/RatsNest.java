@@ -21,6 +21,7 @@
 package interactive;
 
 import freert.graphics.GdiContext;
+import freert.main.Stat;
 import freert.varie.UndoableObjectNode;
 import gui.varie.GuiResources;
 import java.awt.Graphics;
@@ -28,7 +29,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Vector;
-import main.Stat;
 import board.BrdConnectable;
 import board.RoutingBoard;
 import board.infos.AirLineInfo;

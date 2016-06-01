@@ -12,7 +12,7 @@ import javax.swing.JRadioButton;
 import javax.swing.JToggleButton;
 import javax.swing.border.LineBorder;
 import javax.swing.border.TitledBorder;
-import main.Stat;
+import freert.main.Stat;
 
 /**
  * Alternative to ResourceBundle.getBundle

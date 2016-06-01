@@ -1,4 +1,4 @@
-package main;
+package freert.main;
 /*
  *  Copyright (C) 2014  Damiano Bolla  website www.engidea.com
  *

@@ -20,6 +20,7 @@
 
 package gui.win;
 
+import freert.main.Stat;
 import freert.rules.BoardRules;
 import freert.rules.ViaTableColumnName;
 import freert.rules.ViaTableModel;
@@ -34,7 +35,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import main.Stat;
 import board.infos.BrdViaInfo;
 import board.infos.BrdViaInfoList;
 

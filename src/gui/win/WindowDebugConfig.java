@@ -16,6 +16,9 @@ package gui.win;
  *
  */
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiPanelVertical;
@@ -25,9 +28,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import main.Ldbg;
-import main.Mdbg;
-import main.Stat;
 
 public final class WindowDebugConfig extends GuiSubWindowSavable
    {

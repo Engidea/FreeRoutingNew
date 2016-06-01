@@ -21,12 +21,12 @@
 
 package gui.win;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.GuiResources;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
-import main.Stat;
 
 /**
  * Window with the parameters for moving components.

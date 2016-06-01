@@ -20,6 +20,7 @@
  */
 package gui.win;
 
+import freert.main.Stat;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.AutorouteParameterRow;
@@ -33,7 +34,6 @@ import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import main.Stat;
 import autoroute.ArtSettings;
 import board.BrdLayerStructure;
 
