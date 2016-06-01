@@ -12,6 +12,10 @@ I am currently trying to reach the following goal
 
 - Automatic fix of clearance violations by push and shove tracks and vias (still looking)
 
+- Should be possible to autoroute the "short" connections and the one going to groundplane automatically
+
+There is an example video at http://www.freerouting.eu/videos/example-31-may-2016.ogv
+
 Please excuse me if I am simplifying the code by "extracting" quite a few of the static inner classes and assign unique
 name to them, I find the code much simpler to read if I do not have to follow the prefix
 
