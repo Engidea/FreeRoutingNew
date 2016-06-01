@@ -122,7 +122,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          PlaPointFloat new_b = p_polyline.corner_approx(index + 2);
 
-         boolean in_clip_shape = curr_clip_shape == null || curr_clip_shape.contains(new_a) && curr_clip_shape.contains(new_b) && curr_clip_shape.contains(p_polyline.corner_approx(new_line_index));
+         boolean in_clip_shape = in_clip_shape(new_a,new_b,p_polyline.corner_approx(new_line_index));
 
          if (in_clip_shape)
             {
@@ -384,9 +384,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
          if ( next_corner.is_NaN() ) continue;
          
-         boolean in_clip_shape = curr_clip_shape == null || curr_clip_shape.contains(prev_corner) && curr_clip_shape.contains(next_corner);
-         
-         if (!in_clip_shape)  continue;
+         if (! in_clip_shape(prev_corner,next_corner))  continue;
 
          PlaLineInt translate_line = p_polyline.plaline(index);
          
@@ -507,7 +505,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       // cannot smoothen if is not a number
       if ( curr_corner.is_NaN() ) return null;
       
-      if (curr_clip_shape != null && !curr_clip_shape.contains(curr_corner)) return null;
+      if ( ! in_clip_shape(curr_corner, null)) return null;
 
       double cosinus_angle = p_line_arr[p_start_no + 1].cos_angle(p_line_arr[p_start_no + 2]);
 
@@ -854,9 +852,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
                corner1 = p_polyline.corner_approx(index + 1);
                corner2 = p_polyline.corner_approx(index + 2);
                }
-            boolean in_clip_shape = curr_clip_shape == null || curr_clip_shape.contains(corner1) && curr_clip_shape.contains(corner2);
             
-            if (!in_clip_shape) continue;
+            if (! in_clip_shape(corner1,corner2) ) continue;
 
             PlaSide side1 = curr_line.side_of(corner1);
             PlaSide side2 = curr_line.side_of(corner2);
@@ -899,10 +896,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                corner3 = p_polyline.corner_approx(index + 1);
                }
             
-            if (curr_clip_shape != null && !curr_clip_shape.contains(corner3))
-               {
-               continue;
-               }
+            if ( ! in_clip_shape(corner3, null)) continue;
             
             if (jndex == 0)
                {
@@ -956,7 +950,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       Polyline trace_polyline = p_trace.polyline();
       PlaPoint curr_end_corner = trace_polyline.corner_first();
 
-      if (curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner)) return null;
+      if ( ! in_clip_shape(curr_end_corner) ) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_first_next();
 
@@ -1113,9 +1107,10 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaLineInt other_trace_line = null;
       PlaLineInt other_prev_trace_line = null;
       Polyline trace_polyline = p_trace.polyline();
+      
       PlaPoint curr_end_corner = trace_polyline.corner_last();
 
-      if ( curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner)) return null;
+      if ( ! in_clip_shape(curr_end_corner)) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
 

@@ -256,6 +256,7 @@ public final class IteraRoute
          }
 
       ShapeTileOctagon tidy_clip_shape;
+      
       if (itera_settings.trace_pull_tight_region_width == Integer.MAX_VALUE)
          {
          tidy_clip_shape = null;

@@ -79,7 +79,7 @@ public class StateDragItem extends StateDrag
          return this;
          }
 
-      IteraMoveComponent move_component = null;
+      StateDragMoveComponent move_component = null;
       PlaVectorInt rel_coor = to_location.difference_by(from_location);
       
       double length = rel_coor.distance();
@@ -88,7 +88,7 @@ public class StateDragItem extends StateDrag
       
       for (int index = 0; index < 2; ++index)
          {
-         move_component = new IteraMoveComponent(item_to_move, rel_coor, 99, 5);
+         move_component = new StateDragMoveComponent(item_to_move, rel_coor, 99, 5);
          
          if (move_component.check_move())
             {
@@ -123,7 +123,7 @@ public class StateDragItem extends StateDrag
             something_dragged = true;
             }
          
-         if (!move_component.insert(i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pullt_min_move))
+         if (!move_component.drag_move(i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pullt_min_move))
             {
             // an insert error occurred, end the drag state
             return return_state;

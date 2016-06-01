@@ -1659,18 +1659,8 @@ public final class RoutingBoard implements java.io.Serializable
    public boolean remove_items_and_pull_tight(Collection<BrdItem> p_item_list, int p_tidy_width, int p_pull_tight_accuracy, boolean p_with_delete_fixed)
       {
       boolean all_deleted = true;
-      ShapeTileOctagon tidy_region;
-      boolean calculate_tidy_region;
-      if (p_tidy_width < Integer.MAX_VALUE)
-         {
-         tidy_region = ShapeTileOctagon.EMPTY;
-         calculate_tidy_region = (p_tidy_width > 0);
-         }
-      else
-         {
-         tidy_region = null;
-         calculate_tidy_region = false;
-         }
+
+      ShapeTileOctagon tidy_region = p_tidy_width < Integer.MAX_VALUE ? ShapeTileOctagon.EMPTY : null;
       
       start_marking_changed_area();
       
@@ -1688,10 +1678,8 @@ public final class RoutingBoard implements java.io.Serializable
             {
             ShapeTile curr_shape = curr_item.get_tile_shape(index);
             changed_area.join(curr_shape, curr_item.shape_layer(index));
-            if (calculate_tidy_region)
-               {
-               tidy_region = tidy_region.union(curr_shape.bounding_octagon());
-               }
+
+            if (tidy_region != null ) tidy_region = tidy_region.union(curr_shape.bounding_octagon());
             }
          
          remove_item(curr_item);
@@ -1707,10 +1695,7 @@ public final class RoutingBoard implements java.io.Serializable
          combine_traces(curr_net_no);
          }
       
-      if (calculate_tidy_region)
-         {
-         tidy_region = tidy_region.enlarge(p_tidy_width);
-         }
+      if (tidy_region != null ) tidy_region = tidy_region.enlarge(p_tidy_width);
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
       
@@ -1773,18 +1758,32 @@ public final class RoutingBoard implements java.io.Serializable
       {
       if (changed_area == null) return;
       
-      if (p_clip_shape != ShapeTileOctagon.EMPTY)
-         {
-         AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_clip_shape, p_pullt_min_move, p_thread, p_keep_point );
-         
-         pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
-         }
+      // a clip shape of empty would result in nothing done since all points would match
+      if (p_clip_shape == ShapeTileOctagon.EMPTY) return;
+      
+      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_clip_shape, p_pullt_min_move, p_thread, p_keep_point );
+      
+      pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
       
       gdi_update_join(changed_area.surrounding_box());
       
       changed_area = null;
       }
 
+   public final void optimize_changed_area(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread )
+      {
+      if (changed_area == null) return;
+      
+      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, null, p_pullt_min_move, p_thread, null);
+      
+      pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
+      
+      gdi_update_join(changed_area.surrounding_box());
+      
+      changed_area = null;
+      }
+
+   
    /** 
     * Checks if a rectangular boxed trace line segment with the input parameters can be inserted without conflict. 
     * If a conflict exists, The result length is the maximal line length from p_line.a to p_line.b, which can be inserted without conflict
@@ -1961,7 +1960,13 @@ public final class RoutingBoard implements java.io.Serializable
     * Returns false, if that was not possible without creating clearance violations. 
     * In this case the database may be damaged, so that an undo becomes necessary.
     */
-   public boolean move_drill_item(BrdAbit p_drill_item, PlaVectorInt p_vector, int p_max_recursion_depth, int p_max_via_recursion_depth, int p_tidy_width, int p_pull_tight_accuracy,
+   public boolean move_drill_item(
+         BrdAbit p_drill_item, 
+         PlaVectorInt p_vector, 
+         int p_max_recursion_depth, 
+         int p_max_via_recursion_depth, 
+         int p_tidy_width, 
+         int p_pull_tight_accuracy,
          int p_pull_tight_time_limit)
       {
       shove_fail_clear();
@@ -1978,18 +1983,8 @@ public final class RoutingBoard implements java.io.Serializable
             }
          }
 
-      ShapeTileOctagon tidy_region;
-      boolean calculate_tidy_region;
-      if (p_tidy_width < Integer.MAX_VALUE)
-         {
-         tidy_region = ShapeTileOctagon.EMPTY;
-         calculate_tidy_region = (p_tidy_width > 0);
-         }
-      else
-         {
-         tidy_region = null;
-         calculate_tidy_region = false;
-         }
+      ShapeTileOctagon tidy_region = p_tidy_width < Integer.MAX_VALUE ? ShapeTileOctagon.EMPTY : null;
+      
       NetNosList net_no_arr = p_drill_item.net_nos;
       
       start_marking_changed_area();
@@ -1999,25 +1994,14 @@ public final class RoutingBoard implements java.io.Serializable
          return false;
          }
       
-      if (calculate_tidy_region)
-         {
-         tidy_region = tidy_region.enlarge(p_tidy_width);
-         }
+      if (tidy_region != null) tidy_region = tidy_region.enlarge(p_tidy_width);
       
-      NetNosList opt_net_no_arr;
-      
-      if (p_max_recursion_depth <= 0)
-         {
-         opt_net_no_arr = net_no_arr;
-         }
-      else
-         {
-         opt_net_no_arr = NetNosList.EMPTY;
-         }
+      NetNosList opt_net_no_arr = p_max_recursion_depth <= 0 ? net_no_arr : NetNosList.EMPTY;
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(p_pull_tight_time_limit);
 
       optimize_changed_area(opt_net_no_arr, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
+      
       return true;
       }
 
@@ -2137,26 +2121,9 @@ public final class RoutingBoard implements java.io.Serializable
       
       if ( ! r_ok ) return false;
       
-      ShapeTileOctagon tidy_clip_shape;
-      if (p_tidy_width < Integer.MAX_VALUE)
-         {
-         tidy_clip_shape = new ShapeTileOctagon (p_location).enlarge(p_tidy_width);
-         }
-      else
-         {
-         tidy_clip_shape = null;
-         }
+      ShapeTileOctagon tidy_clip_shape = p_tidy_width < Integer.MAX_VALUE ? new ShapeTileOctagon (p_location).enlarge(p_tidy_width) : null;
       
-      NetNosList opt_net_no_arr;
-      
-      if (p_max_recursion_depth <= 0)
-         {
-         opt_net_no_arr = p_net_no_arr;
-         }
-      else
-         {
-         opt_net_no_arr = NetNosList.EMPTY;
-         }
+      NetNosList opt_net_no_arr = p_max_recursion_depth <= 0 ? p_net_no_arr : NetNosList.EMPTY;
 
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
 
@@ -2652,7 +2619,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       if (result == ArtResult.ROUTED)
          {
-         optimize_changed_area(NetNosList.EMPTY, null, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit, null);
+         optimize_changed_area(NetNosList.EMPTY, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit);
          }
       
       return result;
@@ -2702,7 +2669,7 @@ public final class RoutingBoard implements java.io.Serializable
       if (result == ArtResult.ROUTED)
          {
          TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP, p_stoppable);
-         optimize_changed_area(NetNosList.EMPTY, null, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit, null);
+         optimize_changed_area(NetNosList.EMPTY, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit);
          }
       return result;
       }

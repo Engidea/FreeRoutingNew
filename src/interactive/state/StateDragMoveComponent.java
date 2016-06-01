@@ -35,12 +35,11 @@ import freert.planar.PlaVectorInt;
 import freert.varie.TimeLimit;
 
 /**
- * Class for moving a group of items on the board
- * Used by StateDrag only
+ * Class for moving a group of items on the board Used by StateDrag only
  * 
  * @author Alfons Wirtz
  */
-public final class IteraMoveComponent
+public final class StateDragMoveComponent
    {
    private static final int s_TIGHT_TIME_ms = 2;
 
@@ -53,7 +52,7 @@ public final class IteraMoveComponent
    private BrdComponent component = null;
    private boolean all_items_movable = true;
 
-   public IteraMoveComponent(BrdItem p_item, PlaVectorInt p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
+   public StateDragMoveComponent(BrdItem p_item, PlaVectorInt p_translate_vector, int p_max_recursion_depth, int p_max_via_recursion_depth)
       {
       r_board = p_item.r_board;
       translate_vector = p_translate_vector;
@@ -189,7 +188,7 @@ public final class IteraMoveComponent
     * Moves all items in the group by translate_vector and shoves aside obstacle traces.
     * @return false, if that was not possible without creating clearance violations. In this case an undo may be necessary.
     */
-   public boolean insert(int p_tidy_width, int p_pull_tight_accuracy)
+   public boolean drag_move(int p_tidy_width, int p_pull_tight_accuracy)
       {
       if ( ! all_items_movable) return false;
       

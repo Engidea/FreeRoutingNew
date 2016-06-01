@@ -199,7 +199,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * Returns true, if p_point is contained in this shape, but not on an edge line
+    * @return true, if p_point is contained in this shape, but not on an edge line
     */
    public boolean contains_inside(PlaPoint p_point)
       {
@@ -207,13 +207,11 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
       if (line_count == 0) return false;
 
-      for (int i = 0; i < line_count; ++i)
+      for (int index = 0; index < line_count; ++index)
          {
-         if (border_line(i).side_of(p_point) != PlaSide.ON_THE_RIGHT)
-            {
-            return false;
-            }
+         if (border_line(index).side_of(p_point) != PlaSide.ON_THE_RIGHT) return false;
          }
+
       return true;
       }
 

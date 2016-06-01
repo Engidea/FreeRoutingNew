@@ -439,12 +439,13 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    public ShapeTileOctagon offset(double p_distance)
       {
       int width = (int) Math.round(p_distance);
-      if (width == 0)
-         {
-         return this;
-         }
+      
+      if (width == 0) return this;
+
       int dia_width = (int) Math.round(PlaLimits.sqrt2 * p_distance);
+      
       ShapeTileOctagon result = new ShapeTileOctagon(oct_lx - width, oct_ly - width, oct_rx + width, oct_uy + width, oct_ulx - dia_width, oct_lrx + dia_width, oct_llx - dia_width, oct_urx + dia_width);
+      
       return result.normalize();
       }
 
@@ -478,6 +479,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
          {
          return EMPTY;
          }
+      
       int new_lx = oct_lx;
       int new_rx = oct_rx;
       int new_ly = oct_ly;
@@ -488,39 +490,30 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       int new_urx = oct_urx;
 
       if (new_lx < new_llx - new_uy)
-      // the point new_lx, new_uy is the the lower left border line of
-      // this octagon
-      // change new_lx , that the the lower left border line runs through
-      // this point
          {
+         // the point new_lx, new_uy is the the lower left border line of this octagon
+         // change new_lx , that the the lower left border line runs through this point
          new_lx = new_llx - new_uy;
          }
 
       if (new_lx < new_ulx + new_ly)
-      // the point new_lx, new_ly is above the the upper left border line of
-      // this octagon
-      // change new_lx , that the the upper left border line runs through
-      // this point
          {
+         // the point new_lx, new_ly is above the the upper left border line of this octagon
+         // change new_lx , that the the upper left border line runs through this point
          new_lx = new_ulx + new_ly;
          }
 
       if (new_rx > new_urx - new_ly)
-      // the point new_rx, new_ly is above the the upper right border line of
-      // this octagon
-      // change new_rx , that the the upper right border line runs through
-      // this point
          {
+         // the point new_rx, new_ly is above the the upper right border line of this octagon
+         // change new_rx , that the the upper right border line runs through this point
          new_rx = new_urx - new_ly;
          }
 
       if (new_rx > new_lrx + new_uy)
-      // the point new_rx, new_uy is below the the lower right border line of
-      // this octagon
-      // change rx , that the the lower right border line runs through
-      // this point
-
          {
+         // the point new_rx, new_uy is below the the lower right border line of this octagon
+         // change rx , that the the lower right border line runs through this point
          new_rx = new_lrx + new_uy;
          }
 
@@ -626,10 +619,12 @@ public final class ShapeTileOctagon extends ShapeTileRegular
          {
          new_lx = diag_left_x;
          }
+
       if (new_lx > new_rx || new_ly > new_uy || new_llx > new_urx || new_ulx > new_lrx)
          {
          return EMPTY;
          }
+      
       return new ShapeTileOctagon(new_lx, new_ly, new_rx, new_uy, new_ulx, new_lrx, new_llx, new_urx);
       }
 
@@ -676,22 +671,28 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       }
 
    /**
-    * Returns true, if p_point is contained in this octagon. Because of the parameter type FloatPoint, the function may not be exact
-    * close to the border.
+    * @return true, if p_point is contained in this octagon. 
+    * Because of the parameter type FloatPoint, the function may not be exact close to the border.
+    * If p_point is null it is assumed that it is within the clip shape
     */
    @Override   
    public boolean contains(PlaPointFloat p_point)
       {
+      if ( p_point == null ) return true;
+      
       if (oct_lx > p_point.v_x || oct_ly > p_point.v_y || oct_rx < p_point.v_x || oct_uy < p_point.v_y)
          {
          return false;
          }
+      
       double tmp_1 = p_point.v_x - p_point.v_y;
       double tmp_2 = p_point.v_x + p_point.v_y;
+      
       if (oct_ulx > tmp_1 || oct_lrx < tmp_1 || oct_llx > tmp_2 || oct_urx < tmp_2)
          {
          return false;
          }
+      
       return true;
       }
 

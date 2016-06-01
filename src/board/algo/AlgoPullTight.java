@@ -27,8 +27,8 @@ import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeShapeSearch;
 import board.kdtree.KdtreeObject;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.BrdChangedArea;
 import board.varie.BrdKeepPoint;
 import board.varie.ItemFixState;
@@ -70,8 +70,9 @@ public abstract class AlgoPullTight
    private final BrdKeepPoint keep_point;
    // If stoppable_thread != null, the algorithm can be requested to be stopped.
    private final ThreadStoppable stoppable;
-
+   // the clip shape may be null if the pull ticht region is MAX INT
    protected final ShapeTileOctagon curr_clip_shape;
+   
    protected final int min_move_dist;
 
    protected int curr_layer;
@@ -135,6 +136,38 @@ public abstract class AlgoPullTight
 
    protected abstract Polyline smoothen_end_corner_at_trace(BrdTracep p_trace);
 
+   
+   /**
+    * Return true if points fll within the lip shape or clip_shape is null
+    */
+   protected final boolean in_clip_shape ( PlaPointFloat c_1, PlaPointFloat c_2, PlaPointFloat c_3 )
+      {
+      if ( curr_clip_shape == null ) return true;
+      
+      if ( ! curr_clip_shape.contains(c_1) ) return false;
+      
+      if ( ! curr_clip_shape.contains(c_2) ) return false;
+      
+      return curr_clip_shape.contains(c_3);
+      }
+   
+   protected final boolean in_clip_shape ( PlaPointFloat c_1, PlaPointFloat c_2 )
+      {
+      if ( curr_clip_shape == null ) return true;
+      
+      if ( ! curr_clip_shape.contains(c_1) ) return false;
+      
+      return curr_clip_shape.contains(c_2);
+      }
+
+   protected final boolean in_clip_shape ( PlaPoint c_1 )
+      {
+      if ( curr_clip_shape == null ) return true;
+      
+      return curr_clip_shape.contains_inside(c_1);
+      }
+   
+   
    /**
     * Now, if there is a stop I should cleanup properly, ok ?
     * @param p_trace_cost_arr

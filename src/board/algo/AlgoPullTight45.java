@@ -103,14 +103,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
 
       for (int index = 0; index < 4; ++index)
          {
-         if (curr_clip_shape == null)
-            {
-            curr_corner_in_clip_shape[index] = true;
-            }
-         else
-            {
-            curr_corner_in_clip_shape[index] = !curr_clip_shape.is_outside(curr_corner[index]);
-            }
+         curr_corner_in_clip_shape[index] = in_clip_shape(curr_corner[index]);
          }
 
       boolean polyline_changed = false;
@@ -154,7 +147,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
             polyline_changed = true;
             }
          
-         curr_corner_in_clip_shape[3] = curr_clip_shape == null || !curr_clip_shape.is_outside(curr_corner[3]);
+         curr_corner_in_clip_shape[3] = in_clip_shape(curr_corner[3]);
+         
          if (curr_corner_in_clip_shape[1] && curr_corner_in_clip_shape[2] && curr_corner_in_clip_shape[3])
             {
             // translate the line from curr_corner[2] to curr_corner[1] to curr_corner[3]
@@ -584,10 +578,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       
       PlaPoint curr_end_corner = trace_polyline.corner_first();
 
-      if (curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner))
-         {
-         return null;
-         }
+      if (! in_clip_shape(curr_end_corner)) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_first_next();
       PlaSide prev_corner_side = null;
@@ -722,7 +713,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       Polyline trace_polyline = p_trace.polyline();
       PlaPoint curr_end_corner = trace_polyline.corner_last();
 
-      if (curr_clip_shape != null && curr_clip_shape.is_outside(curr_end_corner)) return null;
+      if ( ! in_clip_shape(curr_end_corner)) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
       PlaSide prev_corner_side = null;
