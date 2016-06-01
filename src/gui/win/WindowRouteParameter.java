@@ -58,8 +58,8 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private final Stat stat;
    private final interactive.IteraBoard board_handling;
    private final GuiResources resources;
-   private final JSlider region_slider,pullt_min_move_slider;
-   private final JFormattedTextField region_field,pullt_min_move_field;
+   private final JSlider pullt_region_slider,pullt_min_move_slider;
+   private final JFormattedTextField pullt_region_field,pullt_min_move_field;
    private final JFormattedTextField edge_to_turn_dist_field;
 
    private final JRadioButton snap_angle_90_button;  
@@ -145,11 +145,11 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       main_panel.add(newPinExitPanel());
 
-      region_field = newJNumber(number_format,5,false);
+      pullt_region_field = newJNumber(number_format,5,false);
       
-      region_slider = new JSlider();
-      region_slider.setMaximum(c_region_max_slider_value);
-      region_slider.addChangeListener(new PullTightRegionChangeListener());
+      pullt_region_slider = new JSlider();
+      pullt_region_slider.setMaximum(c_region_max_slider_value);
+      pullt_region_slider.addChangeListener(new PullTightRegionChangeListener());
 
       pullt_min_move_field = newJNumber(number_format,5,false);
       
@@ -185,10 +185,10 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       JPanel inner = new JPanel();
       inner.add(resources.newJLabel("region_width_field","region_width_field_tooltip"));
-      inner.add(region_field);
+      inner.add(pullt_region_field);
       
       risul.add(inner);
-      risul.add(region_slider);
+      risul.add(pullt_region_slider);
       
       // ------------------------ second part
       
@@ -390,7 +390,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       int region_slider_value = board_handling.itera_settings.pull_tight_region_get() / c_region_scale_factor;
       region_slider_value = Math.min(region_slider_value, c_region_max_slider_value);
-      region_slider.setValue(region_slider_value);
+      pullt_region_slider.setValue(region_slider_value);
 
       int min_move_slider_value = board_handling.itera_settings.trace_pullt_min_move / c_accuracy_scale_factor;
       min_move_slider_value = Math.min(min_move_slider_value, c_accuracy_max_slider_value);
@@ -428,11 +428,11 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          new_tidy_width = Integer.MAX_VALUE;
          }
       
-      region_slider.setValue(slider_value);
+      pullt_region_slider.setValue(slider_value);
       
-      region_field.setValue(new_tidy_width);
+      pullt_region_field.setValue(new_tidy_width);
       
-      board_handling.itera_settings.set_current_pull_tight_region_width(new_tidy_width);
+      board_handling.itera_settings.pull_tight_region_set(new_tidy_width);
       }
 
    
@@ -688,7 +688,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       public void stateChanged(ChangeEvent evt)
          {
-         set_pull_tight_region(region_slider.getValue());
+         set_pull_tight_region(pullt_region_slider.getValue());
          }
       }
    

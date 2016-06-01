@@ -50,10 +50,10 @@ import board.items.BrdComponentOutline;
 import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeManager;
-import board.kdtree.KdtreeShapeSearch;
 import board.kdtree.KdtreeEntry;
+import board.kdtree.KdtreeManager;
 import board.kdtree.KdtreeObject;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.BrdChangedArea;
 import board.varie.BrdKeepPoint;
 import board.varie.BrdShoveObstacle;
@@ -1535,8 +1535,8 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Removes the top snapshot from the undo stack, so that its situation cannot be restored any more. Returns false, if no more
-    * snapshot could be popped.
+    * Removes the top snapshot from the undo stack, so that its situation cannot be restored any more. 
+    * @return false, if no more snapshot could be popped.
     */
    public boolean pop_snapshot()
       {

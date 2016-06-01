@@ -20,7 +20,6 @@
 
 package interactive;
 
-import gui.varie.SnapshotAttributes;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import autoroute.ArtSettings;
@@ -83,8 +82,6 @@ public final class IteraSettings implements java.io.Serializable
    // The filter used in interactive selection of board items I am now sure it is never null
    public final ItemSelectionFilter item_selection_filter = new ItemSelectionFilter();
 
-   // Defines the data of the snapshot selected for restoring. 
-   private final SnapshotAttributes snapshot_attributes = new SnapshotAttributes();
 
    // true if the data of this class are not allowed to be changed in interactive board editing. 
    private transient boolean settings_read_only = false;
@@ -123,36 +120,6 @@ public final class IteraSettings implements java.io.Serializable
          }
       
       autoroute_settings = new ArtSettings(p_board);
-      }
-
-   /**
-    * Copy constructor, needed for SnapsShot
-    */
-   public IteraSettings(IteraSettings p_settings)
-      {
-      act_log = p_settings.act_log;
-      settings_read_only = p_settings.settings_read_only;
-      layer_no = p_settings.layer_no;
-      push_enabled = p_settings.push_enabled;
-      drag_components_enabled = p_settings.drag_components_enabled;
-      select_on_all_visible_layers = p_settings.select_on_all_visible_layers;
-      is_stitch_route = p_settings.is_stitch_route;
-      trace_pull_tight_region_width = p_settings.trace_pull_tight_region_width;
-      trace_pullt_min_move = p_settings.trace_pullt_min_move;
-      via_snap_to_smd_center = p_settings.via_snap_to_smd_center;
-      horizontal_component_grid = p_settings.horizontal_component_grid;
-      vertical_component_grid = p_settings.vertical_component_grid;
-      automatic_neckdown = p_settings.automatic_neckdown;
-      manual_rule_selection = p_settings.manual_rule_selection;
-      hilight_routing_obstacle = p_settings.hilight_routing_obstacle;
-      zoom_with_wheel = p_settings.zoom_with_wheel;
-      manual_trace_clearance_class = p_settings.manual_trace_clearance_class;
-      manual_via_rule_index = p_settings.manual_via_rule_index;
-      manual_trace_half_width_arr = new int[p_settings.manual_trace_half_width_arr.length];
-      System.arraycopy(p_settings.manual_trace_half_width_arr, 0, manual_trace_half_width_arr, 0, manual_trace_half_width_arr.length);
-      autoroute_settings = new ArtSettings(p_settings.autoroute_settings);
-      item_selection_filter.set_filter(p_settings.item_selection_filter);
-      snapshot_attributes.copy(p_settings.snapshot_attributes);
       }
 
    public int get_layer_no()
@@ -287,15 +254,6 @@ public final class IteraSettings implements java.io.Serializable
       return manual_via_rule_index;
       }
 
-
-   /** 
-    * Defines the data of the snapshot selected for restoring
-    */
-   public SnapshotAttributes get_snapshot_attributes()
-      {
-      return snapshot_attributes;
-      }
-
    /** 
     * Get the trace half width in manual routing mode on layer p_layer_no 
     */
@@ -410,7 +368,7 @@ public final class IteraSettings implements java.io.Serializable
    /**
     * Changes the current width of the tidy region for traces.
     */
-   public void set_current_pull_tight_region_width(int p_value)
+   public void pull_tight_region_set(int p_value)
       {
       if (settings_read_only) return;
 

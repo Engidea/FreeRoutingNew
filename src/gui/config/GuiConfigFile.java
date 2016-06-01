@@ -23,7 +23,6 @@ package gui.config;
 import gui.BoardFrame;
 import gui.GuiSubWindow;
 import gui.varie.IndentFileWriter;
-import gui.varie.SnapshotAttributes;
 import interactive.IteraBoard;
 import java.io.IOException;
 import java.io.InputStream;
@@ -1101,13 +1100,6 @@ public final class GuiConfigFile
                   return false;
                   }
                }
-            else if (next_token == GuiConfigKeyword.DESELECTED_SNAPSHOT_ATTRIBUTES)
-               {
-               if (!read_deselected_snapshot_attributes())
-                  {
-                  return false;
-                  }
-               }
             else
                {
                // skip unknown scope
@@ -1134,7 +1126,6 @@ public final class GuiConfigFile
       write_clearance_compensation_scope();
       write_ignore_conduction_scope();
       write_automatic_layer_dimming_scope();
-      write_deselected_snapshot_attributes();
       out_file.end_scope();
       }
 
@@ -1368,7 +1359,7 @@ public final class GuiConfigFile
          System.out.println("GuiConfigFile.read_pull_tight_region_scope: closing bracket expected");
          return false;
          }
-      board_handling.itera_settings.set_current_pull_tight_region_width(pull_tight_region);
+      board_handling.itera_settings.pull_tight_region_set(pull_tight_region);
       return true;
       }
 
@@ -1651,158 +1642,7 @@ public final class GuiConfigFile
       out_file.end_scope();
       }
 
-   private void write_deselected_snapshot_attributes() throws java.io.IOException
-      {
-      SnapshotAttributes attributes = board_handling.itera_settings.get_snapshot_attributes();
-      out_file.start_scope();
-      out_file.write("deselected_snapshot_attributes ");
-      if (!attributes.object_colors)
-         {
-         out_file.new_line();
-         out_file.write("object_colors ");
-         }
-      if (!attributes.object_visibility)
-         {
-         out_file.new_line();
-         out_file.write("object_visibility ");
-         }
-      if (!attributes.layer_visibility)
-         {
-         out_file.new_line();
-         out_file.write("layer_visibility ");
-         }
-      if (!attributes.display_region)
-         {
-         out_file.new_line();
-         out_file.write("display_region ");
-         }
-      if (!attributes.interactive_state)
-         {
-         out_file.new_line();
-         out_file.write("interactive_state ");
-         }
-      if (!attributes.selection_layers)
-         {
-         out_file.new_line();
-         out_file.write("selection_layers ");
-         }
-      if (!attributes.selectable_items)
-         {
-         out_file.new_line();
-         out_file.write("selectable_items ");
-         }
-      if (!attributes.current_layer)
-         {
-         out_file.new_line();
-         out_file.write("current_layer ");
-         }
-      if (!attributes.rule_selection)
-         {
-         out_file.new_line();
-         out_file.write("rule_selection ");
-         }
-      if (!attributes.manual_rule_settings)
-         {
-         out_file.new_line();
-         out_file.write("manual_rule_settings ");
-         }
-      if (!attributes.push_and_shove_enabled)
-         {
-         out_file.new_line();
-         out_file.write("push_and_shove_enabled ");
-         }
-      if (!attributes.drag_components_enabled)
-         {
-         out_file.new_line();
-         out_file.write("drag_components_enabled ");
-         }
-      if (!attributes.pull_tight_region)
-         {
-         out_file.new_line();
-         out_file.write("pull_tight_region ");
-         }
-      if (!attributes.component_grid)
-         {
-         out_file.new_line();
-         out_file.write("component_grid ");
-         }
-      out_file.end_scope();
-      }
 
-   private boolean read_deselected_snapshot_attributes() throws java.io.IOException
-      {
-      SnapshotAttributes attributes = board_handling.itera_settings.get_snapshot_attributes();
-      for (;;)
-         {
-         Object next_token = scanner.next_token();
-         if (next_token == GuiConfigKeyword.CLOSED_BRACKET)
-            {
-            break;
-            }
-         if (next_token == GuiConfigKeyword.OBJECT_COLORS)
-            {
-            attributes.object_colors = false;
-            }
-         else if (next_token == GuiConfigKeyword.OBJECT_VISIBILITY)
-            {
-            attributes.object_visibility = false;
-            }
-         else if (next_token == GuiConfigKeyword.LAYER_VISIBILITY)
-            {
-            attributes.layer_visibility = false;
-            }
-         else if (next_token == GuiConfigKeyword.DISPLAY_REGION)
-            {
-            attributes.display_region = false;
-            }
-         else if (next_token == GuiConfigKeyword.INTERACTIVE_STATE)
-            {
-            attributes.interactive_state = false;
-            }
-         else if (next_token == GuiConfigKeyword.SELECTION_LAYERS)
-            {
-            attributes.selection_layers = false;
-            }
-         else if (next_token == GuiConfigKeyword.SELECTABLE_ITEMS)
-            {
-            attributes.selectable_items = false;
-            }
-         else if (next_token == GuiConfigKeyword.CURRENT_LAYER)
-            {
-            attributes.current_layer = false;
-            }
-         else if (next_token == GuiConfigKeyword.RULE_SELECTION)
-            {
-            attributes.rule_selection = false;
-            }
-         else if (next_token == GuiConfigKeyword.MANUAL_RULE_SETTINGS)
-            {
-            attributes.manual_rule_settings = false;
-            }
-         else if (next_token == GuiConfigKeyword.PUSH_AND_SHOVE_ENABLED)
-            {
-            attributes.push_and_shove_enabled = false;
-            }
-         else if (next_token == GuiConfigKeyword.DRAG_COMPONENTS_ENABLED)
-            {
-            attributes.drag_components_enabled = false;
-            }
-         else if (next_token == GuiConfigKeyword.PULL_TIGHT_REGION)
-            {
-            attributes.pull_tight_region = false;
-            }
-         else if (next_token == GuiConfigKeyword.COMPONENT_GRID)
-            {
-            attributes.component_grid = false;
-            }
-         else
-            {
-            System.out.println("GuiConfigFile.read_deselected_snapshot_attributes: unexpected token");
-            return false;
-            }
-         }
-      return true;
-      }
 
    /**
     * Skips the current scope. Returns false, if no legal scope was found.

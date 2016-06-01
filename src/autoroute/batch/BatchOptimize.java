@@ -239,7 +239,9 @@ public class BatchOptimize
             // Catch unexpected increase of cumulative trace length somewhere for examole by removing acid trapsw.
             min_cumulative_trace_length_before = Math.min(min_cumulative_trace_length_before, trace_length_after);
             }
+         
          r_board.pop_snapshot();
+         
          double new_trace_length = batch_thread.hdlg.coordinate_transform.board_to_user(r_board.cumulative_trace_length());
          batch_thread.hdlg.screen_messages.set_post_route_info(via_count_after, new_trace_length);
          }
