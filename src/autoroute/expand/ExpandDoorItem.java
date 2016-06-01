@@ -25,7 +25,7 @@ import freert.planar.ShapeTileSimplex;
 import autoroute.ArtItem;
 import autoroute.maze.MazeSearchElement;
 import board.items.BrdItem;
-import board.shape.ShapeSearchTree;
+import board.kdtree.KdtreeShapeSearch;
 
 /**
  * An expansion door leading to a start or destination item of the autoroute algorithm.
@@ -41,7 +41,7 @@ public final class ExpandDoorItem implements ExpandObject
    private final MazeSearchElement maze_search_info;
    
 
-   public ExpandDoorItem(BrdItem p_item, int p_tree_entry_no, ExpandRoomComplete p_room, ShapeSearchTree p_search_tree)
+   public ExpandDoorItem(BrdItem p_item, int p_tree_entry_no, ExpandRoomComplete p_room, KdtreeShapeSearch p_search_tree)
       {
       item = p_item;
       tree_entry_no = p_tree_entry_no;

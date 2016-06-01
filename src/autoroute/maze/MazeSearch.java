@@ -49,8 +49,8 @@ import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeObject;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -88,7 +88,7 @@ public final class MazeSearch
    // Control parameters for the engine
    private final ArtControl art_ctrl;
    // The search tree for expanding. It is the tree compensated for the current net.
-   private final ShapeSearchTree search_tree;
+   private final KdtreeShapeSearch search_tree;
    // The queue of of expanded elements used in this search algorithm.
    private final SortedSet<MazeListElement> maze_expansion_list = new TreeSet<MazeListElement>();
    // Used for calculating of a good lower bound for the distance between a new MazeExpansionElement and the destination set of the expansion.
@@ -1008,7 +1008,7 @@ public final class MazeSearch
     * Looks for pins with more than 1 nets and reduces shapes of traces of foreign nets, which are already connected to such a pin,
     * so that the pin center is not blocked for connection.
     */
-   private void reduce_trace_shapes_at_tie_pins(Collection<BrdItem> p_item_list, int p_own_net_no, ShapeSearchTree p_autoroute_tree)
+   private void reduce_trace_shapes_at_tie_pins(Collection<BrdItem> p_item_list, int p_own_net_no, KdtreeShapeSearch p_autoroute_tree)
       {
       for (BrdItem curr_item : p_item_list)
          {
@@ -1399,9 +1399,9 @@ public final class MazeSearch
 
       NetNosList ignore_net_nos = new NetNosList(art_ctrl.net_no);
 
-      Set<ShapeTreeObject> overlapping_objects = art_engine.autoroute_search_tree.find_overlap_objects(check_shape, curr_layer, ignore_net_nos );
+      Set<KdtreeObject> overlapping_objects = art_engine.autoroute_search_tree.find_overlap_objects(check_shape, curr_layer, ignore_net_nos );
 
-      for (ShapeTreeObject curr_object : overlapping_objects)
+      for (KdtreeObject curr_object : overlapping_objects)
          {
          if (!(curr_object instanceof BrdItem) || curr_object == p_ignore_item)
             {

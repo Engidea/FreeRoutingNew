@@ -6,7 +6,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import board.items.BrdItem;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeObject;
 
 /*
  *  Copyright (C) 2014  Damiano Bolla  website www.engidea.com
@@ -110,7 +110,7 @@ public final class NetNosList implements Iterable<Integer> , Serializable
     * @param p_obj
     * @return
     */
-   public boolean is_obstacle(ShapeTreeObject p_obj)
+   public boolean is_obstacle(KdtreeObject p_obj)
       {
       for (int index = 0; index < net_nos_arr.length; ++index)
          {
@@ -147,7 +147,7 @@ public final class NetNosList implements Iterable<Integer> , Serializable
     * @param p_obj
     * @return
     */
-   public boolean is_connectable(ShapeTreeObject p_obj)
+   public boolean is_connectable(KdtreeObject p_obj)
       {
       for (int index = 0; index < net_nos_arr.length; ++index)
          {

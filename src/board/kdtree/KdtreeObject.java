@@ -18,7 +18,7 @@
  * Created on 10. Januar 2004, 10:08
  */
 
-package board.shape;
+package board.kdtree;
 
 import freert.planar.ShapeTile;
 
@@ -29,23 +29,23 @@ import freert.planar.ShapeTile;
  * An object must provide means to be stored in the tree
  * @author Alfons Wirtz
  */
-public interface ShapeTreeObject extends Comparable<Object>
+public interface KdtreeObject extends Comparable<Object>
    {
    /**
     * @return the number of shapes of an object to store in p_shape_tree
     */
-   int tree_shape_count(ShapeSearchTree p_shape_tree);
+   int tree_shape_count(KdtreeShapeSearch p_shape_tree);
 
    /**
     * @return the Shape of this object with index p_index stored in the ShapeTree with index identification number p_tree_id_no
     */
-   ShapeTile get_tree_shape(ShapeSearchTree p_tree, int p_index);
+   ShapeTile get_tree_shape(KdtreeShapeSearch p_tree, int p_index);
 
    /**
     * Stores the entries in the ShapeTrees of this object for better performance while for example deleting tree entries. 
     * Called only by insert methods of class ShapeTree.
     */
-   void set_search_tree_entries(ShapeSearchTree p_tree,ShapeTreeNodeLeaf[] p_entries);
+   void set_search_tree_entries(KdtreeShapeSearch p_tree,KdtreeNodeLeaf[] p_entries);
    
    
    /**

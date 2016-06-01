@@ -50,9 +50,10 @@ import board.items.BrdComponentOutline;
 import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTracep;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeEntry;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeManager;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeEntry;
+import board.kdtree.KdtreeObject;
 import board.varie.BrdChangedArea;
 import board.varie.BrdKeepPoint;
 import board.varie.BrdShoveObstacle;
@@ -128,7 +129,7 @@ public final class RoutingBoard implements java.io.Serializable
    // observers are not implemented anyway
    public transient ObserverItem observers = new ObserverItemVoid();
    // Handles the search trees pointing into the items of this board, initialized on constructor
-   public transient SearchTreeManager search_tree_manager;
+   public transient KdtreeManager search_tree_manager;
    // the rectangle, where the graphics may be not updated
    private transient  ShapeTileBox update_box = ShapeTileBox.EMPTY;
    // the area marked for optimizing the route 
@@ -162,7 +163,7 @@ public final class RoutingBoard implements java.io.Serializable
       brd_components = new BrdComponents();
       host_com = p_host_com;
       bounding_box = p_bounding_box;
-      search_tree_manager = new SearchTreeManager(this);
+      search_tree_manager = new KdtreeManager(this);
       
       p_rules.nets.set_board(this);
       insert_outline(p_outline_shapes, p_outline_cl_class_no);
@@ -990,7 +991,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Returns all SearchTreeObjects on layer p_layer, which overlap with p_shape. If p_layer < 0, the layer is ignored
     */
-   public final Set<ShapeTreeObject> overlapping_objects(ShapeConvex p_shape, int p_layer)
+   public final Set<KdtreeObject> overlapping_objects(ShapeConvex p_shape, int p_layer)
       {
       return search_tree_manager.get_default_tree().find_overlap_objects(p_shape, p_layer);
       }
@@ -1003,7 +1004,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public Set<BrdItem> overlapping_items_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
-      ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
+      KdtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
       return default_tree.find_overlap_items_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
       }
 
@@ -1018,9 +1019,9 @@ public final class RoutingBoard implements java.io.Serializable
       
       for (int index = 0; index < tile_shapes.length; ++index)
          {
-         Set<ShapeTreeObject> curr_overlaps = overlapping_objects(tile_shapes[index], p_layer);
+         Set<KdtreeObject> curr_overlaps = overlapping_objects(tile_shapes[index], p_layer);
          
-         for (ShapeTreeObject curr_overlap : curr_overlaps)
+         for (KdtreeObject curr_overlap : curr_overlaps)
             {
             if (curr_overlap instanceof BrdItem)
                {
@@ -1041,7 +1042,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       ShapeTile[] tiles = p_shape.split_to_convex();
       
-      ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
+      KdtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
       
       for (int index = 0; index < tiles.length; ++index)
          {
@@ -1049,11 +1050,11 @@ public final class RoutingBoard implements java.io.Serializable
          
          if ( ! curr_shape.is_contained_in(bounding_box)) return false;
          
-         Set<ShapeTreeObject> found_obstacles = new TreeSet<ShapeTreeObject>();
+         Set<KdtreeObject> found_obstacles = new TreeSet<KdtreeObject>();
          
          default_tree.find_overlap_objects_with_clearance(curr_shape, p_layer, p_net_no_arr, p_cl_class, found_obstacles);
          
-         for (ShapeTreeObject curr_ob : found_obstacles)
+         for (KdtreeObject curr_ob : found_obstacles)
             {
             boolean is_obstacle = p_net_no_arr.is_obstacle(curr_ob);
              
@@ -1073,9 +1074,9 @@ public final class RoutingBoard implements java.io.Serializable
       {
       if (!p_shape.is_contained_in(bounding_box)) return false;
       
-      ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
+      KdtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
       
-      LinkedList<ShapeTreeEntry> tree_entries = new LinkedList<ShapeTreeEntry>();
+      LinkedList<KdtreeEntry> tree_entries = new LinkedList<KdtreeEntry>();
       
       NetNosList ignore_net_nos = NetNosList.EMPTY;
       
@@ -1088,7 +1089,7 @@ public final class RoutingBoard implements java.io.Serializable
          default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos, p_cl_class, tree_entries);
          }
       
-      for (ShapeTreeEntry curr_tree_entry : tree_entries)
+      for (KdtreeEntry curr_tree_entry : tree_entries)
          {
          if (!(curr_tree_entry.object instanceof BrdItem))  continue;
       
@@ -1213,9 +1214,9 @@ public final class RoutingBoard implements java.io.Serializable
 
       ShapeTile point_shape = new ShapeTileBox(p_location);
       
-      Collection<ShapeTreeObject> overlaps = overlapping_objects(point_shape, p_layer);
+      Collection<KdtreeObject> overlaps = overlapping_objects(point_shape, p_layer);
 
-      for (ShapeTreeObject curr_object : overlaps)
+      for (KdtreeObject curr_object : overlaps)
          {
          if ( !(curr_object instanceof BrdItem)) continue;
 
@@ -1235,9 +1236,9 @@ public final class RoutingBoard implements java.io.Serializable
    
       ShapeTile point_shape = new ShapeTileBox(p_location);
       
-      Collection<ShapeTreeObject> overlaps = overlapping_objects(point_shape, p_layer);
+      Collection<KdtreeObject> overlaps = overlapping_objects(point_shape, p_layer);
    
-      for (ShapeTreeObject curr_object : overlaps)
+      for (KdtreeObject curr_object : overlaps)
          {
          if ( !(curr_object instanceof BrdItem)) continue;
    
@@ -1550,9 +1551,9 @@ public final class RoutingBoard implements java.io.Serializable
       {
       ShapeTile point_shape = new ShapeTileBox(p_location);
       
-      Collection<ShapeTreeObject> found_items = overlapping_objects(point_shape, p_layer);
+      Collection<KdtreeObject> found_items = overlapping_objects(point_shape, p_layer);
 
-      for (ShapeTreeObject curr_ob : found_items )
+      for (KdtreeObject curr_ob : found_items )
          {
          if ( ! (curr_ob instanceof BrdTracep) ) continue;
          
@@ -1628,7 +1629,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       // restore all transient fields to a correct value
       update_box          = ShapeTileBox.EMPTY;
-      search_tree_manager = new SearchTreeManager(this);
+      search_tree_manager = new KdtreeManager(this);
       shove_trace_algo    = new AlgoShoveTrace(this);  
       shove_via_algo      = new AlgoShoveVia(this);
       move_drill_algo     = new AlgoMoveDrillItem(this);
@@ -1815,12 +1816,12 @@ public final class RoutingBoard implements java.io.Serializable
       double line_length = to_point.distance(from_point);
       double ok_length = Integer.MAX_VALUE;
 
-      ShapeSearchTree default_tree = search_tree_manager.get_default_tree();
+      KdtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
 
-      Collection<ShapeTreeEntry> obstacle_entries = default_tree.find_overlap_tree_entries_with_clearance(
+      Collection<KdtreeEntry> obstacle_entries = default_tree.find_overlap_tree_entries_with_clearance(
             shape_to_check, p_layer, p_net_no_arr, p_cl_class_no);
 
-      for (ShapeTreeEntry curr_obstacle_entry : obstacle_entries)
+      for (KdtreeEntry curr_obstacle_entry : obstacle_entries)
          {
          if ( ! (curr_obstacle_entry.object instanceof BrdItem)) continue;
 
@@ -1937,7 +1938,7 @@ public final class RoutingBoard implements java.io.Serializable
          
          Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(index), net_no_arr, p_item.clearance_idx());
 
-         for (ShapeTreeObject curr_ob : obstacles)
+         for (KdtreeObject curr_ob : obstacles)
             {
             if ( curr_ob != p_item ) continue;
             
@@ -2238,7 +2239,7 @@ public final class RoutingBoard implements java.io.Serializable
          int p_max_via_recursion_depth, 
          int p_max_spring_over_recursion_depth)
       {
-      ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
       ArrayList<ShapeTile> trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.corner_count());
       boolean orthogonal_mode = brd_rules.is_trace_snap_90();
@@ -2351,7 +2352,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       BrdTracep picked_trace = pick_one_trace(from_corner, p_layer, p_net_no_arr, p_half_width, p_clearance_class_no);
       
-      ShapeSearchTree search_tree = search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
 
       Polyline new_polyline = shove_trace_algo.spring_over_obstacles(p_polyline, compensated_half_width, p_layer, p_net_no_arr, p_clearance_class_no, null);

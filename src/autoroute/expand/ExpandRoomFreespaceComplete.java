@@ -26,10 +26,10 @@ import java.util.LinkedList;
 import autoroute.ArtEngine;
 import board.BrdConnectable;
 import board.items.BrdItem;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeEntry;
-import board.shape.ShapeTreeNodeLeaf;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeEntry;
+import board.kdtree.KdtreeNodeLeaf;
+import board.kdtree.KdtreeObject;
 import freert.planar.ShapeTile;
 import freert.varie.NetNosList;
 
@@ -38,12 +38,12 @@ import freert.varie.NetNosList;
  *
  * @author Alfons Wirtz
  */
-public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace implements ExpandRoomComplete, ShapeTreeObject
+public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace implements ExpandRoomComplete, KdtreeObject
    {
    // The list of doors to items of the own net
    private final Collection<ExpandDoorItem> target_doors = new LinkedList<ExpandDoorItem>();
    // The array of entries in the SearchTree. Consists of just one element
-   private ShapeTreeNodeLeaf[] tree_entries = null;
+   private KdtreeNodeLeaf[] tree_entries = null;
    // identification number for implementing the Comparable interface
    private final int id_no;
 
@@ -57,7 +57,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       }
 
    @Override
-   public void set_search_tree_entries(ShapeSearchTree p_tree, ShapeTreeNodeLeaf[] p_entries)
+   public void set_search_tree_entries(KdtreeShapeSearch p_tree, KdtreeNodeLeaf[] p_entries)
       {
       tree_entries = p_entries;
       }
@@ -74,7 +74,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    /**
     * Removes the tree entries of this roomm from p_shape_tree.
     */
-   public final void remove_from_tree(ShapeSearchTree p_shape_tree)
+   public final void remove_from_tree(KdtreeShapeSearch p_shape_tree)
       {
       if ( p_shape_tree == null ) return;
       
@@ -82,13 +82,13 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       }
 
    @Override
-   public int tree_shape_count(ShapeSearchTree p_shape_tree)
+   public int tree_shape_count(KdtreeShapeSearch p_shape_tree)
       {
       return 1;
       }
 
    @Override
-   public ShapeTile get_tree_shape(ShapeSearchTree p_shape_tree, int p_index)
+   public ShapeTile get_tree_shape(KdtreeShapeSearch p_shape_tree, int p_index)
       {
       return get_shape();
       }
@@ -159,7 +159,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       }
 
    @Override
-   public ShapeTreeObject get_object()
+   public KdtreeObject get_object()
       {
       return this;
       }
@@ -167,7 +167,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    /**
     * Calculates the doors to the start and destination items of the autoroute algorithm.
     */
-   public final void calculate_target_doors(ShapeTreeEntry p_own_net_object, int p_net_no, ShapeSearchTree p_autoroute_search_tree)
+   public final void calculate_target_doors(KdtreeEntry p_own_net_object, int p_net_no, KdtreeShapeSearch p_autoroute_search_tree)
       {
       set_net_dependent();
 
@@ -211,17 +211,17 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    public final boolean validate(ArtEngine p_autoroute_engine)
       {
       boolean result = true;
-      LinkedList<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
+      LinkedList<KdtreeEntry> overlapping_objects = new LinkedList<KdtreeEntry>();
 
       NetNosList net_no_arr = new NetNosList(p_autoroute_engine.get_net_no() );
       
       p_autoroute_engine.autoroute_search_tree.calc_overlapping_tree_entries(get_shape(), get_layer(), net_no_arr, overlapping_objects);
 
-      for (ShapeTreeEntry curr_entry : overlapping_objects )
+      for (KdtreeEntry curr_entry : overlapping_objects )
          {
          if (curr_entry.object == this) continue;
 
-         ShapeTreeObject curr_object = curr_entry.object;
+         KdtreeObject curr_object = curr_entry.object;
 
          if (!curr_object.is_trace_obstacle(p_autoroute_engine.get_net_no())) continue;
 

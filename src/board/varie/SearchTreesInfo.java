@@ -23,8 +23,8 @@ package board.varie;
 
 import java.util.Collection;
 import java.util.LinkedList;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeNodeLeaf;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeNodeLeaf;
 import freert.planar.ShapeTile;
 
 /**
@@ -39,7 +39,7 @@ public final class SearchTreesInfo
     * Returns the tree entries for the given tree  or null, if for this tree no entries of this item
     * are inserted.
     */
-   public ShapeTreeNodeLeaf[] get_tree_entries(ShapeSearchTree p_tree)
+   public KdtreeNodeLeaf[] get_tree_entries(KdtreeShapeSearch p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {
@@ -60,7 +60,7 @@ public final class SearchTreesInfo
     * Sets the item tree entries for the given tree
     * If the tree does not exist it is created
     */
-   public void set_tree_entries( ShapeSearchTree p_tree , ShapeTreeNodeLeaf[] p_tree_entries)
+   public void set_tree_entries( KdtreeShapeSearch p_tree , KdtreeNodeLeaf[] p_tree_entries)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {
@@ -80,7 +80,7 @@ public final class SearchTreesInfo
     * Returns the precalculated tiles hapes for the tree with identification number p_tree_no, or null, if the tile shapes of this
     * tree are nnot yet precalculated.
     */
-   public ShapeTile[] get_precalculated_tree_shapes(ShapeSearchTree p_tree)
+   public ShapeTile[] get_precalculated_tree_shapes(KdtreeShapeSearch p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {
@@ -95,7 +95,7 @@ public final class SearchTreesInfo
    /**
     * Sets the item tree entries for the tree with identification number p_tree_no.
     */
-   public void set_precalculated_tree_shapes(ShapeTile[] p_tile_shapes, ShapeSearchTree p_tree)
+   public void set_precalculated_tree_shapes(ShapeTile[] p_tile_shapes, KdtreeShapeSearch p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {

@@ -39,8 +39,8 @@ import autoroute.sorted.SortedRooms_xx_Top;
 import autoroute.varie.ArtResult;
 import board.RoutingBoard;
 import board.items.BrdItem;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.IdGenerator;
 import freert.planar.PlaDimension;
@@ -62,7 +62,7 @@ public final class ArtEngine
    // The PCB-board of this autoroute algorithm
    public final RoutingBoard r_board;
    // The current search tree used in autoroute. It depends on the trace clearance class used in the autoroute algorithm.
-   public final ShapeSearchTree autoroute_search_tree;
+   public final KdtreeShapeSearch autoroute_search_tree;
    // The net number used for routing in this autoroute algorithm.
    private final int route_net_no;
    // The 2-dimensional array of rectangular pages of ExpansionDrills
@@ -329,7 +329,7 @@ public final class ArtEngine
          {
          Collection<ExpandRoomFreespaceComplete> result = new LinkedList<ExpandRoomFreespaceComplete>();
          ShapeTile from_door_shape = null;
-         ShapeTreeObject ignore_object = null;
+         KdtreeObject ignore_object = null;
          Collection<ExpandDoor> room_doors = p_room.get_doors();
          for (ExpandDoor curr_door : room_doors)
             {

@@ -19,19 +19,19 @@
  *
  */
 
-package board.shape;
+package board.kdtree;
 
 import java.util.LinkedList;
 
 /**
  * Implementation of a stack as a LinkedList
- * Since this is used only for ShapeTreeNode I am making a specific class
+ * Since this is used only for KdtreeNode I am making a specific class
  *
  * @author Alfons Wirtz
  */
-public final class ShapeTreeNodeStack
+public final class KdtreeNodeStack
    {
-   private final LinkedList<ShapeTreeNode> node_list = new LinkedList<ShapeTreeNode>();
+   private final LinkedList<KdtreeNode> node_list = new LinkedList<KdtreeNode>();
 
    /**
     * Sets the stack to empty.
@@ -44,7 +44,7 @@ public final class ShapeTreeNodeStack
    /**
     * Pushed p_element onto the stack.
     */
-   public void push(ShapeTreeNode p_element)
+   public void push(KdtreeNode p_element)
       {
       if ( p_element == null ) return;
       
@@ -55,7 +55,7 @@ public final class ShapeTreeNodeStack
     * Pops the next element from the top of the stack
     * @return null, if the stack is exhausted.
     */
-   public ShapeTreeNode pop()
+   public KdtreeNode pop()
       {
       if (node_list.isEmpty() )
          return null;

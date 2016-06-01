@@ -22,7 +22,7 @@ package freert.planar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import board.shape.ShapeBoundingOct;
+import board.kdtree.KdtreeBoundingOct;
 
 /**
  * Describes functionality of a circle shape in the plane
@@ -291,7 +291,7 @@ public final class ShapeCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public ShapeTileRegular bounding_shape(ShapeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape(KdtreeBoundingOct p_dirs)
       {
       return p_dirs.bounds(this);
       }

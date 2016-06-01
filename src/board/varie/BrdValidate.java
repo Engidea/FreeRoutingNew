@@ -28,7 +28,7 @@ import main.Mdbg;
 import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeObject;
 import freert.planar.PlaPointInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
@@ -64,8 +64,8 @@ public class BrdValidate
             System.out.println(" validate board is on ");
             first_time = false;
             }
-         Collection<ShapeTreeObject> l = p_board.overlapping_objects(surr_oct, layer);
-         Iterator<ShapeTreeObject> i = l.iterator();
+         Collection<KdtreeObject> l = p_board.overlapping_objects(surr_oct, layer);
+         Iterator<KdtreeObject> i = l.iterator();
          int clearance_violation_count = 0;
          int conflict_ob_count = 0;
          @SuppressWarnings("unused")

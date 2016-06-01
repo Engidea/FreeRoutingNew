@@ -16,7 +16,7 @@
 
 package freert.planar;
 
-import board.shape.ShapeBoundingOct;
+import board.kdtree.KdtreeBoundingOct;
 
 /**
  *
@@ -664,7 +664,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       }
 
    @Override   
-   public ShapeTileRegular bounding_shape(ShapeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape(KdtreeBoundingOct p_dirs)
       {
       return p_dirs.bounds(this);
       }

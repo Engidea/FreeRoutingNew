@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.Locale;
 import board.RoutingBoard;
-import board.shape.ShapeSearchTree;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionFilter;
 import freert.graphics.GdiContext;
@@ -139,7 +139,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
     * A component outline does not have any shape to be stored in the search tree
     */
    @Override
-   protected final ShapeTile[] calculate_tree_shapes(ShapeSearchTree p_search_tree)
+   protected final ShapeTile[] calculate_tree_shapes(KdtreeShapeSearch p_search_tree)
       {
       return new ShapeTile[0];
       }

@@ -19,7 +19,7 @@
 package board;
 
 import board.items.BrdTracep;
-import board.shape.ShapeSearchTree;
+import board.kdtree.KdtreeShapeSearch;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSide;
@@ -44,7 +44,7 @@ public final class BrdShapeAndFromSide
     */
    public BrdShapeAndFromSide(BrdTracep p_trace, int p_index, boolean p_orthogonal, boolean p_in_shove_check)
       {
-      ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
       ShapeTile curr_shape = p_trace.get_tree_shape(search_tree, p_index);
       BrdFromSide curr_from_side = null;
       boolean cut_off_at_start = false;
@@ -114,7 +114,7 @@ public final class BrdShapeAndFromSide
    private PlaLineInt calc_cutline_at_end(int p_index, BrdTracep p_trace)
       {
       Polyline polyline = p_trace.polyline();
-      ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
       
       if (p_index == polyline.plalinelen(-3) 
             || polyline.corner_approx(polyline.plalinelen(-2)).distance(polyline.corner_approx(p_index + 1)) < p_trace.get_compensated_half_width(search_tree))
@@ -141,7 +141,7 @@ public final class BrdShapeAndFromSide
    private PlaLineInt calc_cutline_at_start(int p_index, BrdTracep p_trace)
       {
       Polyline trace_lines = p_trace.polyline();
-      ShapeSearchTree search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
       
       if (p_index == 0 || trace_lines.corner_approx(0).distance(trace_lines.corner_approx(p_index)) < p_trace.get_compensated_half_width(search_tree))
          {

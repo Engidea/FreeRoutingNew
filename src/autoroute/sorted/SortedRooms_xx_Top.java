@@ -34,9 +34,9 @@ import autoroute.expand.ExpandRoomObstacle;
 import board.BrdConnectable;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeEntry;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeEntry;
+import board.kdtree.KdtreeObject;
 import freert.planar.PlaDimension;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPointInt;
@@ -128,14 +128,14 @@ public final class SortedRooms_xx_Top
       }
 
    
-   private static void calculate_target_doors(ExpandRoomFreespaceComplete p_room, Collection<ShapeTreeEntry> p_own_net_objects, ArtEngine p_autoroute_engine)
+   private static void calculate_target_doors(ExpandRoomFreespaceComplete p_room, Collection<KdtreeEntry> p_own_net_objects, ArtEngine p_autoroute_engine)
       {
       if (!p_own_net_objects.isEmpty())
          {
          p_room.set_net_dependent();
          }
       
-      for (ShapeTreeEntry curr_entry : p_own_net_objects)
+      for (KdtreeEntry curr_entry : p_own_net_objects)
          {
          if ( ! (curr_entry.object instanceof BrdConnectable)) continue;
 
@@ -154,7 +154,7 @@ public final class SortedRooms_xx_Top
       }
 
    
-   private SortedRooms_xx_Degree calculate_neighbours(ExpandRoom p_room, int p_net_no, ShapeSearchTree p_autoroute_search_tree, int p_room_id_no )
+   private SortedRooms_xx_Degree calculate_neighbours(ExpandRoom p_room, int p_net_no, KdtreeShapeSearch p_autoroute_search_tree, int p_room_id_no )
       {
       ShapeTile room_shape = p_room.get_shape();
       ExpandRoomComplete completed_room;
@@ -175,15 +175,15 @@ public final class SortedRooms_xx_Top
       
       SortedRooms_xx_Degree result = new SortedRooms_xx_Degree(p_room, completed_room);
       
-      LinkedList<ShapeTreeEntry> overlapping_objects = new LinkedList<ShapeTreeEntry>();
+      LinkedList<KdtreeEntry> overlapping_objects = new LinkedList<KdtreeEntry>();
       
       p_autoroute_search_tree.calc_overlapping_tree_entries(room_shape, p_room.get_layer(), overlapping_objects);
 
       // Calculate the touching neigbour objects and sort them in counterclock sence around the border of the room shape.
       
-      for (ShapeTreeEntry curr_entry : overlapping_objects)
+      for (KdtreeEntry curr_entry : overlapping_objects)
          {
-         ShapeTreeObject curr_object = curr_entry.object;
+         KdtreeObject curr_object = curr_entry.object;
       
          if (curr_object == p_room) continue;
 

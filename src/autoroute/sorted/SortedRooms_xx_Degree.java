@@ -33,8 +33,8 @@ import autoroute.expand.ExpandRoomComplete;
 import autoroute.expand.ExpandRoomFreespace;
 import autoroute.expand.ExpandRoomFreespaceComplete;
 import autoroute.expand.ExpandRoomFreespaceIncomplete;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeEntry;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeEntry;
 import freert.planar.PlaDimension;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
@@ -57,7 +57,7 @@ public final class SortedRooms_xx_Degree
    final ExpandRoomComplete completed_room;
    private final ShapeTile room_shape;
    final SortedSet<SortedRoom_xx_Degree> sorted_neighbours;
-   final Collection<ShapeTreeEntry> own_net_objects;
+   final Collection<KdtreeEntry> own_net_objects;
 
    SortedRooms_xx_Degree(ExpandRoom p_from_room, ExpandRoomComplete p_completed_room)
       {
@@ -65,7 +65,7 @@ public final class SortedRooms_xx_Degree
       completed_room = p_completed_room;
       room_shape = p_completed_room.get_shape();
       sorted_neighbours = new TreeSet<SortedRoom_xx_Degree>();
-      own_net_objects = new LinkedList<ShapeTreeEntry>();
+      own_net_objects = new LinkedList<KdtreeEntry>();
       }
 
 
@@ -90,7 +90,7 @@ public final class SortedRooms_xx_Degree
     * Otherwise the room shape will be improved the by enlarging. 
     * @return true, if the room shape was changed.
     */
-   boolean try_remove_edge(int p_net_no, ShapeSearchTree p_autoroute_search_tree )
+   boolean try_remove_edge(int p_net_no, KdtreeShapeSearch p_autoroute_search_tree )
       {
       if (!(from_room instanceof ExpandRoomFreespaceIncomplete)) return false;
 

@@ -1,20 +1,20 @@
-package board.shape;
+package board.kdtree;
 
 
 /**
  * created for sorting Items according to their clearance to p_cl_type on layer p_layer
  */
-public final class ShapeSearchTreeEntry implements Comparable<ShapeSearchTreeEntry>
+public final class KdtreeNodeLeafSorted implements Comparable<KdtreeNodeLeafSorted>
    {
    static private int last_generated_id_no = 1;
 
    private final int entry_id_no;
 
-   public final ShapeTreeNodeLeaf leaf;
+   public final KdtreeNodeLeaf leaf;
    public final int clearance;
    
    
-   public ShapeSearchTreeEntry(ShapeTreeNodeLeaf p_leaf, int p_clearance)
+   public KdtreeNodeLeafSorted(KdtreeNodeLeaf p_leaf, int p_clearance)
       {
       leaf = p_leaf;
       clearance = p_clearance;
@@ -24,7 +24,7 @@ public final class ShapeSearchTreeEntry implements Comparable<ShapeSearchTreeEnt
       if (last_generated_id_no >= Integer.MAX_VALUE) last_generated_id_no = 1;
       }
 
-   public int compareTo(ShapeSearchTreeEntry p_other)
+   public int compareTo(KdtreeNodeLeafSorted p_other)
       {
       if (clearance != p_other.clearance) return clearance - p_other.clearance;
 

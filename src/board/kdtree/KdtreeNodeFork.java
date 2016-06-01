@@ -1,16 +1,16 @@
-package board.shape;
+package board.kdtree;
 
 import freert.planar.ShapeTileRegular;
 
 /**
  * Description of an inner node of the tree, which implements a fork to its two children.
  */
-public final class ShapeTreeNodeFork extends ShapeTreeNode
+public final class KdtreeNodeFork extends KdtreeNode
    {
-   public ShapeTreeNode first_child;
-   public ShapeTreeNode second_child;
+   public KdtreeNode first_child;
+   public KdtreeNode second_child;
 
-   public ShapeTreeNodeFork(ShapeTileRegular p_bounding_shape, ShapeTreeNodeFork p_parent)
+   public KdtreeNodeFork(ShapeTileRegular p_bounding_shape, KdtreeNodeFork p_parent)
       {
       bounding_shape = p_bounding_shape;
       parent = p_parent;

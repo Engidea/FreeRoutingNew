@@ -36,7 +36,7 @@ import autoroute.varie.ArtBacktrackElement;
 import autoroute.varie.ArtLocateResult;
 import board.BrdConnectable;
 import board.items.BrdItem;
-import board.shape.ShapeSearchTree;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.TraceAngleRestriction;
 import freert.graphics.GdiContext;
 import freert.planar.PlaPointFloat;
@@ -81,7 +81,7 @@ public abstract class ArtConnectionLocate
    /**
     * Returns a new Instance or exception
     */
-   public static ArtConnectionLocate get_instance(MazeSearchResult p_maze_search, ArtControl p_ctrl, ShapeSearchTree p_search_tree, TraceAngleRestriction p_angle_restriction, SortedSet<BrdItem> p_ripped_list )
+   public static ArtConnectionLocate get_instance(MazeSearchResult p_maze_search, ArtControl p_ctrl, KdtreeShapeSearch p_search_tree, TraceAngleRestriction p_angle_restriction, SortedSet<BrdItem> p_ripped_list )
       {
       if (p_angle_restriction.is_limit_none() )
          return new ArtConnectionLocate_xx_Degree(p_maze_search, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_list );
@@ -89,7 +89,7 @@ public abstract class ArtConnectionLocate
          return new ArtConnectionLocate_45_Degree(p_maze_search, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_list );
       }
 
-   protected ArtConnectionLocate(MazeSearchResult p_maze_search_result, ArtControl p_ctrl, ShapeSearchTree p_search_tree, TraceAngleRestriction p_angle_restriction, SortedSet<BrdItem> p_ripped_list )
+   protected ArtConnectionLocate(MazeSearchResult p_maze_search_result, ArtControl p_ctrl, KdtreeShapeSearch p_search_tree, TraceAngleRestriction p_angle_restriction, SortedSet<BrdItem> p_ripped_list )
       {
       art_ctrl = p_ctrl;
       angle_restriction = p_angle_restriction;
@@ -322,7 +322,7 @@ public abstract class ArtConnectionLocate
     * Calculates the starting point of the next trace on p_from_door.item. 
     * The implementation is not yet optimal for starting points on traces or areas.
     */
-   private PlaPointFloat calculate_starting_point(ExpandDoorItem p_from_door, ShapeSearchTree p_search_tree)
+   private PlaPointFloat calculate_starting_point(ExpandDoorItem p_from_door, KdtreeShapeSearch p_search_tree)
       {
       ShapeTile connection_shape = ((BrdConnectable) p_from_door.item).get_trace_connection_shape(p_search_tree, p_from_door.tree_entry_no);
       connection_shape = connection_shape.intersection(p_from_door.room.get_shape());

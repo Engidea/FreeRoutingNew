@@ -18,7 +18,7 @@ package board;
 
 import java.util.Set;
 import board.items.BrdItem;
-import board.shape.ShapeSearchTree;
+import board.kdtree.KdtreeShapeSearch;
 import freert.planar.ShapeTile;
 import freert.varie.NetNosList;
 
@@ -65,5 +65,5 @@ public interface BrdConnectable
    /**
     * Returns for each convex shape of a connectable item the subshape of points, where traces can be connected to that item.
     */
-   ShapeTile get_trace_connection_shape(ShapeSearchTree p_tree, int p_index);
+   ShapeTile get_trace_connection_shape(KdtreeShapeSearch p_tree, int p_index);
    }

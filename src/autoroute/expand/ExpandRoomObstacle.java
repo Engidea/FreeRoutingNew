@@ -29,8 +29,8 @@ import freert.planar.PlaDimension;
 import freert.planar.ShapeTile;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeObject;
 
 /**
  * Expansion Room used for pushing and ripping obstacles in the autoroute algorithm.
@@ -48,7 +48,7 @@ public final class ExpandRoomObstacle implements ExpandRoomComplete
 
    private boolean doors_calculated = false;
    
-   public ExpandRoomObstacle(BrdItem p_item, int p_index_in_item, ShapeSearchTree p_shape_tree)
+   public ExpandRoomObstacle(BrdItem p_item, int p_index_in_item, KdtreeShapeSearch p_shape_tree)
       {
       item = p_item;
       index_in_item = p_index_in_item;
@@ -160,7 +160,7 @@ public final class ExpandRoomObstacle implements ExpandRoomComplete
       }
 
    @Override
-   public ShapeTreeObject get_object()
+   public KdtreeObject get_object()
       {
       return item;
       }

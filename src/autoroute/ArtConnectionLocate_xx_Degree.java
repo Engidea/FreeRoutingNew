@@ -27,7 +27,7 @@ import autoroute.expand.ExpandRoomComplete;
 import autoroute.maze.MazeSearchResult;
 import autoroute.varie.ArtBacktrackElement;
 import board.items.BrdItem;
-import board.shape.ShapeSearchTree;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaSegmentFloat;
@@ -44,7 +44,7 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
    {
    static private final double c_tolerance = 1.0;
    
-   protected ArtConnectionLocate_xx_Degree(MazeSearchResult p_maze_search_result, ArtControl p_ctrl, ShapeSearchTree p_search_tree, TraceAngleRestriction p_angle_restriction, SortedSet<BrdItem> p_ripped_item_list )
+   protected ArtConnectionLocate_xx_Degree(MazeSearchResult p_maze_search_result, ArtControl p_ctrl, KdtreeShapeSearch p_search_tree, TraceAngleRestriction p_angle_restriction, SortedSet<BrdItem> p_ripped_item_list )
       {
       super(p_maze_search_result, p_ctrl, p_search_tree, p_angle_restriction, p_ripped_item_list );
       }

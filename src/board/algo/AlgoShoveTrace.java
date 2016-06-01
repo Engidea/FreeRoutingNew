@@ -35,8 +35,8 @@ import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTracep;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeObject;
 import board.varie.BrdStopConnection;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
@@ -106,7 +106,7 @@ public final class AlgoShoveTrace
          }
       
       AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
@@ -268,7 +268,7 @@ public final class AlgoShoveTrace
          int p_max_recursion_depth, 
          int p_max_via_recursion_depth)
       {
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       
       if (search_tree.is_clearance_compensation_used())
          {
@@ -459,7 +459,7 @@ public final class AlgoShoveTrace
          }
       
       AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_trace_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_trace_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       obstacles.removeAll(get_ignore_items_at_tie_pins(p_trace_shape, p_layer, p_net_no_arr));
       boolean obstacles_shovable = shape_entries.store_items(obstacles, false, true);
@@ -579,11 +579,11 @@ public final class AlgoShoveTrace
 
    private Collection<BrdItem> get_ignore_items_at_tie_pins(ShapeTile p_trace_shape, int p_layer, NetNosList p_net_no_arr)
       {
-      Collection<ShapeTreeObject> overlaps = r_board.overlapping_objects(p_trace_shape, p_layer);
+      Collection<KdtreeObject> overlaps = r_board.overlapping_objects(p_trace_shape, p_layer);
 
       Set<BrdItem> result = new TreeSet<BrdItem>();
 
-      for (ShapeTreeObject curr_object : overlaps)
+      for (KdtreeObject curr_object : overlaps)
          {
          if ( ! (curr_object instanceof BrdAbitPin) ) continue;
          
@@ -615,7 +615,7 @@ public final class AlgoShoveTrace
       {
       BrdItem found_obstacle = null;
       ShapeTileBox found_obstacle_bounding_box = null;
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       NetNosList check_net_no_arr;
       
       if (p_contact_pins == null)

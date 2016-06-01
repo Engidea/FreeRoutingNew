@@ -30,8 +30,8 @@ import autoroute.maze.MazeSearchElement;
 import board.RoutingBoard;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
-import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeEntry;
+import board.kdtree.KdtreeShapeSearch;
+import board.kdtree.KdtreeEntry;
 import freert.graphics.GdiContext;
 import freert.planar.PlaDimension;
 import freert.planar.PlaPointInt;
@@ -82,15 +82,15 @@ public final class ExpandDrillPage implements ExpandObject
       net_no = p_autoroute_engine.get_net_no();
       drill_list.clear();
       
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
-      Collection<ShapeTreeEntry> overlaps = new LinkedList<ShapeTreeEntry>();
+      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      Collection<KdtreeEntry> overlaps = new LinkedList<KdtreeEntry>();
       search_tree.calc_overlapping_tree_entries(page_shape, -1, overlaps);
       Collection<ShapeTile> cutout_shapes = new LinkedList<ShapeTile>();
 
       // drills on top of existing vias are used in the ripup algorithm
       ShapeTile prev_obstacle_shape = ShapeTileBox.EMPTY;
       
-      for (ShapeTreeEntry curr_entry : overlaps)
+      for (KdtreeEntry curr_entry : overlaps)
          {
          if (!(curr_entry.object instanceof BrdItem)) continue;
       

@@ -24,7 +24,7 @@ package autoroute.expand;
 import freert.graphics.GdiContext;
 import java.awt.Graphics;
 import java.util.Collection;
-import board.shape.ShapeTreeObject;
+import board.kdtree.KdtreeObject;
 
 /**
  *
@@ -41,7 +41,7 @@ public interface ExpandRoomComplete extends ExpandRoom
    /**
     * Returns the object of tthis complete_expansion_rooom.
     */
-   ShapeTreeObject get_object();
+   KdtreeObject get_object();
 
    /**
     * Draws the shape of this room for test purposes

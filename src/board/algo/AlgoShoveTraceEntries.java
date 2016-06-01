@@ -29,7 +29,7 @@ import board.items.BrdAreaObstacleComp;
 import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.shape.ShapeSearchTree;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.ItemFixState;
 import board.varie.ShapeTraceEntryPoint;
 import freert.planar.PlaLineInt;
@@ -171,7 +171,7 @@ public final class AlgoShoveTraceEntries
 
       BrdTracep curr_trace = entries[0].trace;
       ShapeTile offset_shape;
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       if (search_tree.is_clearance_compensation_used())
          {
          double curr_offset = curr_trace.get_compensated_half_width(search_tree) + c_offset_add;
@@ -289,7 +289,7 @@ public final class AlgoShoveTraceEntries
       
       ShapeConvex offset_shape;
       RoutingBoard board = p_trace.r_board;
-      ShapeSearchTree search_tree = board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = board.search_tree_manager.get_default_tree();
       if (search_tree.is_clearance_compensation_used())
          {
          double curr_offset = p_trace.get_compensated_half_width(search_tree) + c_offset_add;
@@ -377,7 +377,7 @@ public final class AlgoShoveTraceEntries
       {
       ShapeTile offset_shape;
 
-      ShapeSearchTree search_tree = r_board.search_tree_manager.get_default_tree();
+      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
 
       if (search_tree.is_clearance_compensation_used())
          {

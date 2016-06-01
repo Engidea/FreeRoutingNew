@@ -19,7 +19,7 @@ package freert.planar;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import board.shape.ShapeBoundingOct;
+import board.kdtree.KdtreeBoundingOct;
 
 /**
  * Convex shape defined as intersection of half-planes. 
@@ -679,7 +679,7 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    @Override   
-   public ShapeTileRegular bounding_shape(ShapeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape(KdtreeBoundingOct p_dirs)
       {
       return p_dirs.bounds(this);
       }
