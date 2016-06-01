@@ -34,26 +34,23 @@ public final class BoardMenuBar extends JMenuBar
    {
    private static final long serialVersionUID = 1L;
 
-   private final BoardMenuFile file_menu;
-
    public BoardMenuBar (Stat stat, BoardFrame p_board_frame)
       {
-      file_menu = new BoardMenuFile(stat, p_board_frame);
-      add(file_menu);
+      add(new BoardMenuFile(stat, p_board_frame));
       
-      JMenu display_menu = new BoardMenuDisplay(stat, p_board_frame);
-      add(display_menu);
+      add(new BoardMenuDisplay(stat, p_board_frame));
       
-      JMenu parameter_menu = new BoardMenuParameter(p_board_frame);
-      add(parameter_menu);
+      add(new BoardMenuParameter(p_board_frame));
+      
       JMenu rules_menu = BoardMenuRules.get_instance(p_board_frame);
       add(rules_menu);
       JMenu info_menu = BoardMenuInfo.get_instance(p_board_frame);
       add(info_menu);
-      JMenu other_menu = BoardMenuOther.get_instance(p_board_frame);
-      add(other_menu);
+
+      add(new BoardMenuOther(p_board_frame));
       
       JMenu help_menu = new BoardMenuHelp(p_board_frame);
+
       p_board_frame.gui_help.add_menu_items(help_menu);
 
       add(help_menu);

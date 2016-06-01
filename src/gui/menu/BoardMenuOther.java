@@ -22,6 +22,9 @@
 package gui.menu;
 
 import gui.BoardFrame;
+import gui.varie.GuiResources;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
@@ -34,35 +37,26 @@ public final class BoardMenuOther extends JMenu
    private static final long serialVersionUID = 1L;
 
    private final BoardFrame board_frame;
-   private final java.util.ResourceBundle resources;
 
-
-   public static BoardMenuOther get_instance(BoardFrame p_board_frame)
-      {
-      final BoardMenuOther other_menu = new BoardMenuOther(p_board_frame);
-
-      other_menu.setText(other_menu.resources.getString("other"));
-
-      JMenuItem snapshots = new JMenuItem();
-      snapshots.setText(other_menu.resources.getString("snapshots"));
-      snapshots.setToolTipText(other_menu.resources.getString("snapshots_tooltip"));
-      snapshots.addActionListener(new java.awt.event.ActionListener()
-         {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-               {
-               other_menu.board_frame.snapshot_window.setVisible(true);
-               }
-         });
-
-      other_menu.add(snapshots);
-
-      return other_menu;
-      }
-
-   /** Creates a new instance of BoardMenuOther */
-   private BoardMenuOther(BoardFrame p_board_frame)
+   public BoardMenuOther(BoardFrame p_board_frame)
       {
       board_frame = p_board_frame;
-      resources = java.util.ResourceBundle.getBundle("gui.resources.BoardMenuOther", p_board_frame.get_locale());
+
+      GuiResources resources = board_frame.newGuiResources("gui.resources.BoardMenuOther");
+
+      ActionListener listener = new ActionListener()
+         {
+         public void actionPerformed(ActionEvent evt)
+            {
+            board_frame.window_beanshell.setVisible(true);
+            }
+         };
+
+      setText(resources.getString("other"));
+
+      JMenuItem snbeanshell = resources.newJMenuItem("beanshell","beanshell_tooltip",listener);
+
+      add(snbeanshell);
       }
+
    }

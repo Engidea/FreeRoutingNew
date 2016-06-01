@@ -25,6 +25,7 @@ import gui.varie.SubwindowSelections;
 import gui.win.WindowAbout;
 import gui.win.WindowAssignNetClass;
 import gui.win.WindowAutorouteParameter;
+import gui.win.WindowBeanshell;
 import gui.win.WindowClearanceMatrix;
 import gui.win.WindowClearanceViolations;
 import gui.win.WindowColorManager;
@@ -44,7 +45,6 @@ import gui.win.WindowPadstacks;
 import gui.win.WindowRouteParameter;
 import gui.win.WindowRouteStubs;
 import gui.win.WindowSelectParameter;
-import gui.win.WindowSnapshot;
 import gui.win.WindowUnconnectedRoute;
 import gui.win.WindowUnitMeasure;
 import gui.win.WindowVia;
@@ -136,7 +136,7 @@ public final class BoardFrame
    public WindowLayerVisibility layer_visibility_window = null;
    public WindowObjectVisibility object_visibility_window = null;
    public WindowDisplayMisc display_misc_window = null;
-   public WindowSnapshot snapshot_window = null;
+   public WindowBeanshell window_beanshell = null;
    public WindowColorManager color_manager = null;
    public WindowDebugConfig debug_config;
 
@@ -527,8 +527,9 @@ public final class BoardFrame
       display_misc_window = new WindowDisplayMisc(this);
       permanent_subwindows.add(display_misc_window);
       
-      snapshot_window = new WindowSnapshot(this);
-      permanent_subwindows.add(snapshot_window);
+      window_beanshell = new WindowBeanshell(this);
+      permanent_subwindows.add(window_beanshell);
+      window_beanshell.initialize();
       
       route_parameter_window = new WindowRouteParameter(stat, this);
       permanent_subwindows.add(route_parameter_window);
@@ -624,7 +625,7 @@ public final class BoardFrame
       net_info_window.setLocation(350, 30);
       unconnected_route_window.setLocation(650, 30);
       route_stubs_window.setLocation(600, 30);
-      snapshot_window.setLocation(0, 250);
+      window_beanshell.setLocation(0, 250);
       layer_visibility_window.setLocation(0, 450);
       object_visibility_window.setLocation(0, 550);
       display_misc_window.setLocation(0, 350);
@@ -663,41 +664,6 @@ public final class BoardFrame
    public void hilight_selected_button()
       {
       toolbar_panel.hilight_selected_button();
-      }
-
-   /**
-    * Restore the selected snapshot in the snapshot window.
-    */
-   public void goto_selected_snapshot()
-      {
-      if (snapshot_window != null)
-         {
-         snapshot_window.goto_selected();
-         }
-      }
-
-   /**
-    * Selects the snapshot, which is previous to the current selected snapshot.
-    * The curent selected snapshot will be no more selected.
-    */
-   public void select_previous_snapshot()
-      {
-      if (snapshot_window != null)
-         {
-         snapshot_window.select_previous_item();
-         }
-      }
-
-   /**
-    * Selects the snapshot, which is next to the current selected snapshot.
-    * The curent selected snapshot will be no more selected.
-    */
-   public void select_next_snapshot()
-      {
-      if (snapshot_window != null)
-         {
-         snapshot_window.select_next_item();
-         }
       }
 
    /**

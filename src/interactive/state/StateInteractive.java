@@ -173,18 +173,6 @@ public class StateInteractive
          {
          result = new StateSelectRegionZoom(this, i_brd, actlog, i_brd.get_current_mouse_position());
          }
-      else if (p_key_char == 'h')
-         {
-         i_brd.get_panel().board_frame.select_previous_snapshot();
-         }
-      if (p_key_char == 'j')
-         {
-         i_brd.get_panel().board_frame.goto_selected_snapshot();
-         }
-      else if (p_key_char == 'k')
-         {
-         i_brd.get_panel().board_frame.select_next_snapshot();
-         }
       else if (p_key_char == 'Z')
          {
          i_brd.get_panel().zoom_out(screen_mouse_pos);

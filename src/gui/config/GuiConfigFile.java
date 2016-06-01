@@ -94,13 +94,13 @@ public final class GuiConfigFile
 
    private boolean read_defaults_scope() throws java.io.IOException
       {
-      Object next_token = this.scanner.next_token();
+      Object next_token = scanner.next_token();
 
       if (next_token != GuiConfigKeyword.OPEN_BRACKET)
          {
          return false;
          }
-      next_token = this.scanner.next_token();
+      next_token = scanner.next_token();
       if (next_token != GuiConfigKeyword.GUI_DEFAULTS)
          {
          return false;
@@ -110,7 +110,7 @@ public final class GuiConfigFile
       for (;;)
          {
          Object prev_token = next_token;
-         next_token = this.scanner.next_token();
+         next_token = scanner.next_token();
          if (next_token == null)
             {
             // end of file
@@ -148,7 +148,7 @@ public final class GuiConfigFile
             else
                {
                // overread all scopes except the routes scope for the time being
-               skip_scope(this.scanner);
+               skip_scope(scanner);
                }
             }
          }
@@ -165,7 +165,7 @@ public final class GuiConfigFile
       for (;;)
          {
          Object prev_token = next_token;
-         next_token = this.scanner.next_token();
+         next_token = scanner.next_token();
          if (next_token == null)
             {
             // unexpected end of file
@@ -202,7 +202,7 @@ public final class GuiConfigFile
       write_frame_scope(board_frame.layer_visibility_window, "layer_visibility");
       write_frame_scope(board_frame.object_visibility_window, "object_visibility");
       write_frame_scope(board_frame.display_misc_window, "display_miscellanious");
-      write_frame_scope(board_frame.snapshot_window, "snapshots");
+      write_frame_scope(board_frame.window_beanshell, "snapshots");
       write_frame_scope(board_frame.select_parameter_window, "select_parameter");
       write_frame_scope(board_frame.route_parameter_window, "route_parameter");
       write_frame_scope(board_frame.route_parameter_window.manual_rule_window, "manual_rules");
@@ -225,7 +225,7 @@ public final class GuiConfigFile
    private boolean read_frame_scope(GuiConfigKeyword p_frame) throws java.io.IOException
       {
       boolean is_visible;
-      Object next_token = this.scanner.next_token();
+      Object next_token = scanner.next_token();
       if (next_token == GuiConfigKeyword.VISIBLE)
          {
          is_visible = true;
@@ -239,13 +239,13 @@ public final class GuiConfigFile
          System.out.println("GuiConfigFile.read_frame_scope: visible or not_visible expected");
          return false;
          }
-      next_token = this.scanner.next_token();
+      next_token = scanner.next_token();
       if (next_token != GuiConfigKeyword.OPEN_BRACKET)
          {
          System.out.println("GuiConfigFile.read_frame_scope: open_bracket expected");
          return false;
          }
-      next_token = this.scanner.next_token();
+      next_token = scanner.next_token();
       if (next_token != GuiConfigKeyword.BOUNDS)
          {
          System.out.println("GuiConfigFile.read_frame_scope: bounds expected");
@@ -258,7 +258,7 @@ public final class GuiConfigFile
          }
       for (int i = 0; i < 2; ++i)
          {
-         next_token = this.scanner.next_token();
+         next_token = scanner.next_token();
          if (next_token != GuiConfigKeyword.CLOSED_BRACKET)
             {
             System.out.println("GuiConfigFile.read_frame_scope: closing bracket expected");
@@ -275,35 +275,35 @@ public final class GuiConfigFile
          }
       else if (p_frame == GuiConfigKeyword.COLOR_MANAGER)
          {
-         sub_window = this.board_frame.color_manager;
+         sub_window = board_frame.color_manager;
          }
       else if (p_frame == GuiConfigKeyword.OBJECT_VISIBILITY)
          {
-         sub_window = this.board_frame.object_visibility_window;
+         sub_window = board_frame.object_visibility_window;
          }
       else if (p_frame == GuiConfigKeyword.LAYER_VISIBILITY)
          {
-         sub_window = this.board_frame.layer_visibility_window;
+         sub_window = board_frame.layer_visibility_window;
          }
       else if (p_frame == GuiConfigKeyword.DISPLAY_MISCELLANIOUS)
          {
-         sub_window = this.board_frame.display_misc_window;
+         sub_window = board_frame.display_misc_window;
          }
       else if (p_frame == GuiConfigKeyword.SNAPSHOTS)
          {
-         sub_window = this.board_frame.snapshot_window;
+         sub_window = board_frame.window_beanshell;
          }
       else if (p_frame == GuiConfigKeyword.SELECT_PARAMETER)
          {
-         sub_window = this.board_frame.select_parameter_window;
+         sub_window = board_frame.select_parameter_window;
          }
       else if (p_frame == GuiConfigKeyword.ROUTE_PARAMETER)
          {
-         sub_window = this.board_frame.route_parameter_window;
+         sub_window = board_frame.route_parameter_window;
          }
       else if (p_frame == GuiConfigKeyword.MANUAL_RULES)
          {
-         sub_window = this.board_frame.route_parameter_window.manual_rule_window;
+         sub_window = board_frame.route_parameter_window.manual_rule_window;
          }
       else if (p_frame == GuiConfigKeyword.AUTOROUTE_PARAMETER)
          {
@@ -311,51 +311,51 @@ public final class GuiConfigFile
          }
       else if (p_frame == GuiConfigKeyword.MOVE_PARAMETER)
          {
-         sub_window = this.board_frame.move_parameter_window;
+         sub_window = board_frame.move_parameter_window;
          }
       else if (p_frame == GuiConfigKeyword.CLEARANCE_MATRIX)
          {
-         sub_window = this.board_frame.clearance_matrix_window;
+         sub_window = board_frame.clearance_matrix_window;
          }
       else if (p_frame == GuiConfigKeyword.VIA_RULES)
          {
-         sub_window = this.board_frame.via_window;
+         sub_window = board_frame.via_window;
          }
       else if (p_frame == GuiConfigKeyword.EDIT_VIAS)
          {
-         sub_window = this.board_frame.edit_vias_window;
+         sub_window = board_frame.edit_vias_window;
          }
       else if (p_frame == GuiConfigKeyword.EDIT_NET_RULES)
          {
-         sub_window = this.board_frame.edit_net_rules_window;
+         sub_window = board_frame.edit_net_rules_window;
          }
       else if (p_frame == GuiConfigKeyword.ASSIGN_NET_RULES)
          {
-         sub_window = this.board_frame.assign_net_classes_window;
+         sub_window = board_frame.assign_net_classes_window;
          }
       else if (p_frame == GuiConfigKeyword.PADSTACK_INFO)
          {
-         sub_window = this.board_frame.padstacks_window;
+         sub_window = board_frame.padstacks_window;
          }
       else if (p_frame == GuiConfigKeyword.PACKAGE_INFO)
          {
-         sub_window = this.board_frame.packages_window;
+         sub_window = board_frame.packages_window;
          }
       else if (p_frame == GuiConfigKeyword.COMPONENT_INFO)
          {
-         sub_window = this.board_frame.components_window;
+         sub_window = board_frame.components_window;
          }
       else if (p_frame == GuiConfigKeyword.NET_INFO)
          {
-         sub_window = this.board_frame.net_info_window;
+         sub_window = board_frame.net_info_window;
          }
       else if (p_frame == GuiConfigKeyword.INCOMPLETES_INFO)
          {
-         sub_window = this.board_frame.incompletes_window;
+         sub_window = board_frame.incompletes_window;
          }
       else if (p_frame == GuiConfigKeyword.VIOLATIONS_INFO)
          {
-         sub_window = this.board_frame.clearance_violations_window;
+         sub_window = board_frame.clearance_violations_window;
          }
       else
          {
