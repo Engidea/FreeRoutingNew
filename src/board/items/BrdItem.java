@@ -32,7 +32,7 @@ import board.infos.BrdItemViolation;
 import board.infos.PrintableInfo;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeEntry;
-import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeNodeLeaf;
 import board.shape.ShapeTreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
@@ -1160,7 +1160,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Sets the item tree entries for the tree with identification number p_tree_no.
     */
    @Override
-   public final void set_search_tree_entries(ShapeSearchTree p_tree, ShapeTreeLeaf[] p_tree_entries)
+   public final void set_search_tree_entries(ShapeSearchTree p_tree, ShapeTreeNodeLeaf[] p_tree_entries)
       {
       search_trees_info.set_tree_entries(p_tree , p_tree_entries);
       }
@@ -1169,7 +1169,7 @@ public abstract class BrdItem implements GdiDrawable, ShapeTreeObject, Printable
     * Returns the tree entries for the tree with identification number p_tree_no, or null, if for this tree no entries of this item
     * are inserted.
     */
-   public final ShapeTreeLeaf[] get_search_tree_entries(ShapeSearchTree p_tree)
+   public final ShapeTreeNodeLeaf[] get_search_tree_entries(ShapeSearchTree p_tree)
       {
       return search_trees_info.get_tree_entries(p_tree);
       }

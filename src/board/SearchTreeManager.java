@@ -27,7 +27,7 @@ import java.util.LinkedList;
 import board.items.BrdItem;
 import board.items.BrdTracep;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeNodeLeaf;
 import freert.planar.Polyline;
 import freert.varie.UndoableObjectNode;
 
@@ -77,7 +77,7 @@ public final class SearchTreeManager
       
       for (ShapeSearchTree curr_tree : compensated_search_trees)
          {
-         ShapeTreeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
+         ShapeTreeNodeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
 
          if (curr_tree_entries == null) continue;
 

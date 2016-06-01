@@ -27,7 +27,6 @@ import freert.planar.ShapeTileSimplex;
 /**
  * Describing the functionality for the fixed directions of a RegularTileShape.
  * Basically how to constrain a shape to have lines that have a certain "fixed" direction relative to each other 
- * @author Alfons Wirtz
  * Implements the abstract class ShapeBoundingDirections as the 8 directions, which are multiples of 45 degree. 
  * The class is a singleton with the only instantiation INSTANCE.
  * It is called Oct since the bounding end up into an octagon, or at 45 degrees angle, if you wish

@@ -102,7 +102,7 @@ public final class ShapeSearchTree
       
       if (shape_count <= 0)  return;
 
-      ShapeTreeLeaf[] leaf_arr = new ShapeTreeLeaf[shape_count];
+      ShapeTreeNodeLeaf[] leaf_arr = new ShapeTreeNodeLeaf[shape_count];
 
       for (int index = 0; index < shape_count; ++index)
          {
@@ -116,22 +116,26 @@ public final class ShapeSearchTree
     * Insert a shape - creates a new node with a bounding shape
     * This is possibly the entry point to understand the whole search tree mechanism
     */
-   protected final ShapeTreeLeaf insert(ShapeTreeObject p_object, int p_index)
+   protected final ShapeTreeNodeLeaf insert(ShapeTreeObject p_object, int p_index)
       {
       PlaShape object_shape = p_object.get_tree_shape(this, p_index);
       
-      if (object_shape == null) return null;
+      if (object_shape == null) 
+         {
+         System.err.println("ShapeTree.insert: object_shape is null");
+         return null;
+         }
 
       ShapeTileRegular bounding_shape = object_shape.bounding_shape(bounding_directions);
 
       if (bounding_shape == null)
          {
-         System.err.println("ShapeTree.insert: bounding shape of TreeObject is null");
+         System.err.println("ShapeTree.insert: bounding_shape is null");
          return null;
          }
       
       // Construct a new KdLeaf and set it up
-      ShapeTreeLeaf new_leaf = new ShapeTreeLeaf(p_object, p_index, null, bounding_shape);
+      ShapeTreeNodeLeaf new_leaf = new ShapeTreeNodeLeaf(p_object, p_index, null, bounding_shape);
       
       insert_leaf(new_leaf);
       
@@ -139,48 +143,47 @@ public final class ShapeSearchTree
       }
 
    /** 
-    * Inserts the leaves of this tree into an array
+    * Inserts the leaves of this tree into an array list
     */
-   public final ShapeTreeLeaf[] to_array()
+   private final ArrayList<ShapeTreeNodeLeaf> to_array()
       {
-      ShapeTreeLeaf[] result = new ShapeTreeLeaf[leaf_count];
-
-      if (result.length == 0) return result;
+      ArrayList<ShapeTreeNodeLeaf> result = new ArrayList<ShapeTreeNodeLeaf>(leaf_count);
       
       ShapeTreeNode curr_node = root_node;
-
-      int curr_index = 0;
+      
+      if ( curr_node == null ) return result;
       
       for (;;)
          {
          // go down from curr_node to the left most leaf
-         while (curr_node instanceof ShapeTreeNodeInner)
+         while (curr_node instanceof ShapeTreeNodeFork)
             {
-            curr_node = ((ShapeTreeNodeInner) curr_node).first_child;
+            curr_node = ((ShapeTreeNodeFork) curr_node).first_child;
             }
-         result[curr_index] = (ShapeTreeLeaf) curr_node;
+         
+         result.add( (ShapeTreeNodeLeaf) curr_node );
 
-         ++curr_index;
          // go up until parent.second_child != curr_node, which means we came from first_child
-         ShapeTreeNodeInner curr_parent = curr_node.parent;
+         ShapeTreeNodeFork curr_parent = curr_node.parent;
+
          while (curr_parent != null && curr_parent.second_child == curr_node)
             {
             curr_node = curr_parent;
             curr_parent = curr_node.parent;
             }
-         if (curr_parent == null)
-            {
-            break;
-            }
+         
+         if (curr_parent == null) break;
+
          curr_node = curr_parent.second_child;
          }
+      
       return result;
       }
 
    /**
     * removes all entries of p_obj in the tree.
     */
-   public final void remove(ShapeTreeLeaf[] p_entries)
+   public final void remove(ShapeTreeNodeLeaf[] p_entries)
       {
       if (p_entries == null) return;
 
@@ -195,23 +198,25 @@ public final class ShapeSearchTree
     */
    public final void statistics(String p_message)
       {
-      ShapeTreeLeaf[] leaf_arr = this.to_array();
+      ArrayList<ShapeTreeNodeLeaf> leaf_arr = to_array();
       double cumulative_depth = 0;
       int maximum_depth = 0;
-      for (int i = 0; i < leaf_arr.length; ++i)
+      
+      for (ShapeTreeNodeLeaf a_leaf : leaf_arr )
          {
-         if (leaf_arr[i] != null)
-            {
-            int distance_to_root = leaf_arr[i].distance_to_root();
-            cumulative_depth += distance_to_root;
-            maximum_depth = Math.max(maximum_depth, distance_to_root);
-            }
+         if (a_leaf == null ) continue;
+
+         int distance_to_root = a_leaf.distance_to_root();
+         cumulative_depth += distance_to_root;
+         maximum_depth = Math.max(maximum_depth, distance_to_root);
          }
-      double everage_depth = cumulative_depth / leaf_arr.length;
+      
+      
+      double everage_depth = cumulative_depth / leaf_arr.size();
       System.out.print("MinAreaTree: Entry count: ");
-      System.out.print(leaf_arr.length);
+      System.out.print(leaf_arr.size());
       System.out.print(" log: ");
-      System.out.print(Math.round(Math.log(leaf_arr.length)));
+      System.out.print(Math.round(Math.log(leaf_arr.size())));
       System.out.print(" Everage depth: ");
       System.out.print(Math.round(everage_depth));
       System.out.print(" ");
@@ -243,9 +248,9 @@ public final class ShapeSearchTree
    /**
     * Calculates the objects in this tree, which overlap with p_shape
     */
-   public final Set<ShapeTreeLeaf> get_overlaps(ShapeTileRegular p_shape)
+   public final Set<ShapeTreeNodeLeaf> get_overlaps(ShapeTile p_shape)
       {
-      Set<ShapeTreeLeaf> found_overlaps = new TreeSet<ShapeTreeLeaf>();
+      Set<ShapeTreeNodeLeaf> found_overlaps = new TreeSet<ShapeTreeNodeLeaf>();
 
       if (root_node == null) return found_overlaps;
 
@@ -262,20 +267,21 @@ public final class ShapeSearchTree
 
          if ( ! curr_node.bounding_shape.intersects(p_shape)) continue;
          
-         if (curr_node instanceof ShapeTreeLeaf)
+         if (curr_node instanceof ShapeTreeNodeLeaf)
             {
-            found_overlaps.add((ShapeTreeLeaf) curr_node);
+            found_overlaps.add((ShapeTreeNodeLeaf) curr_node);
             }
          else
             {
-            node_stack.push(((ShapeTreeNodeInner) curr_node).first_child);
-            node_stack.push(((ShapeTreeNodeInner) curr_node).second_child);
+            node_stack.push(((ShapeTreeNodeFork) curr_node).first_child);
+            node_stack.push(((ShapeTreeNodeFork) curr_node).second_child);
             }
          }
+      
       return found_overlaps;
       }
 
-   public final void insert_leaf(ShapeTreeLeaf p_leaf)
+   private final void insert_leaf(ShapeTreeNodeLeaf p_leaf)
       {
       leaf_count++;
 
@@ -287,25 +293,22 @@ public final class ShapeSearchTree
          }
 
       // Non-empty tree - do a recursive location for leaf replacement
-      ShapeTreeLeaf leaf_to_replace = position_locate(root_node, p_leaf);
+      ShapeTreeNodeLeaf leaf_to_replace = position_locate(root_node, p_leaf);
 
       // Construct a new node - whenever a leaf is added so is a new node
       ShapeTileRegular new_bounds = p_leaf.bounding_shape.union(leaf_to_replace.bounding_shape);
-      ShapeTreeNodeInner curr_parent = leaf_to_replace.parent;
-      ShapeTreeNodeInner new_node = new ShapeTreeNodeInner(new_bounds, curr_parent);
+      ShapeTreeNodeFork curr_parent = leaf_to_replace.parent;
+      ShapeTreeNodeFork new_node = new ShapeTreeNodeFork(new_bounds, curr_parent);
 
       if (leaf_to_replace.parent != null)
          {
          // Replace the pointer from the parent to the leaf with our new node
          if (leaf_to_replace == curr_parent.first_child)
-            {
             curr_parent.first_child = new_node;
-            }
          else
-            {
             curr_parent.second_child = new_node;
-            }
          }
+      
       // Update the parent pointers of the old leaf and new leaf to point to new node
       leaf_to_replace.parent = new_node;
       p_leaf.parent = new_node;
@@ -320,13 +323,13 @@ public final class ShapeSearchTree
          }
       }
 
-   private final ShapeTreeLeaf position_locate(ShapeTreeNode p_curr_node, ShapeTreeLeaf p_leaf_to_insert)
+   private final ShapeTreeNodeLeaf position_locate(ShapeTreeNode p_curr_node, ShapeTreeNodeLeaf p_leaf_to_insert)
       {
       ShapeTreeNode curr_node = p_curr_node;
 
-      while (!(curr_node instanceof ShapeTreeLeaf))
+      while (!(curr_node instanceof ShapeTreeNodeLeaf))
          {
-         ShapeTreeNodeInner curr_inner_node = (ShapeTreeNodeInner) curr_node;
+         ShapeTreeNodeFork curr_inner_node = (ShapeTreeNodeFork) curr_node;
          curr_inner_node.bounding_shape = p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape);
 
          // Choose the the child, so that the area increase of that child after taking the union
@@ -349,16 +352,16 @@ public final class ShapeSearchTree
             curr_node = curr_inner_node.second_child;
             }
          }
-      return (ShapeTreeLeaf) curr_node;
+      return (ShapeTreeNodeLeaf) curr_node;
       }
 
 
-   public final void remove_leaf(ShapeTreeLeaf p_leaf)
+   public final void remove_leaf(ShapeTreeNodeLeaf p_leaf)
       {
       if (p_leaf == null) return;
 
       // remove the leaf node
-      ShapeTreeNodeInner parent = p_leaf.parent;
+      ShapeTreeNodeFork parent = p_leaf.parent;
       p_leaf.bounding_shape = null;
       p_leaf.parent = null;
       p_leaf.object = null;
@@ -388,7 +391,7 @@ public final class ShapeSearchTree
          other_leaf = null;
          }
       // link the other leaf to the grand_parent and remove the parent node
-      ShapeTreeNodeInner grand_parent = parent.parent;
+      ShapeTreeNodeFork grand_parent = parent.parent;
       other_leaf.parent = grand_parent;
       if (grand_parent == null)
          {
@@ -417,7 +420,7 @@ public final class ShapeSearchTree
 
       // recalculate the bounding shapes of the ancestors
       // as long as it gets smaller after removing p_leaf
-      ShapeTreeNodeInner node_to_recalculate = grand_parent;
+      ShapeTreeNodeFork node_to_recalculate = grand_parent;
       while (node_to_recalculate != null)
          {
          ShapeTileRegular new_bounds = node_to_recalculate.second_child.bounding_shape.union(node_to_recalculate.first_child.bounding_shape);
@@ -484,9 +487,9 @@ public final class ShapeSearchTree
       ArrayList<ShapeTile> changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plalinelen(-1) - p_keep_at_end_count);
       int old_shape_count = p_obj.tree_shape_count(this);
       int new_shape_count = changed_shapes.size() + p_keep_at_start_count + p_keep_at_end_count;
-      ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
+      ShapeTreeNodeLeaf[] new_leaf_arr = new ShapeTreeNodeLeaf[new_shape_count];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
-      ShapeTreeLeaf[] old_entries = p_obj.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] old_entries = p_obj.get_search_tree_entries(this);
       
       for (int index = 0; index < p_keep_at_start_count; ++index)
          {
@@ -544,15 +547,15 @@ public final class ShapeSearchTree
          {
          remove_no = from_shape_count_minus_1;
          }
-      ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
-      ShapeTreeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
       remove_leaf(from_trace_entries[remove_no]);
       remove_leaf(to_trace_entries[0]);
       
       final int link_shapes_count = link_shapes.size();
       
       int new_shape_count = from_trace_entries.length + link_shapes_count + to_trace_entries.length - 2;
-      ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
+      ShapeTreeNodeLeaf[] new_leaf_arr = new ShapeTreeNodeLeaf[new_shape_count];
       int old_to_shape_count = to_trace_entries.length;
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
       // transfer the tree entries except the last or first from p_from_trace to p_to_trace
@@ -608,8 +611,8 @@ public final class ShapeSearchTree
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_idx(), p_to_trace.get_layer());
       ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
       boolean change_order = p_from_trace.corner_last().equals(p_to_trace.corner_last());
-      ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
-      ShapeTreeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
       // remove the last or first tree entry from p_from_trace and the
       // last tree entry from p_to_trace, because they will be replaced by
       // the new link entries.
@@ -629,7 +632,7 @@ public final class ShapeSearchTree
       final int link_shapes_count = link_shapes.size();
       
       int new_shape_count = from_trace_entries.length + link_shapes_count + to_trace_entries.length - 2;
-      ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[new_shape_count];
+      ShapeTreeNodeLeaf[] new_leaf_arr = new ShapeTreeNodeLeaf[new_shape_count];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
       // transfer the tree entries except the last from the old shapes
       // of p_to_trace to the new shapes of p_to_trace
@@ -681,8 +684,8 @@ public final class ShapeSearchTree
     */
    public final void reuse_entries_after_cutout(BrdTracep p_from_trace, BrdTracep p_start_piece, BrdTracep p_end_piece)
       {
-      ShapeTreeLeaf[] start_piece_leaf_arr = new ShapeTreeLeaf[p_start_piece.polyline().plalinelen(-2)];
-      ShapeTreeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] start_piece_leaf_arr = new ShapeTreeNodeLeaf[p_start_piece.polyline().plalinelen(-2)];
+      ShapeTreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
       // transfer the entries at the start of p_from_trace to p_start_piece.
       for (int i = 0; i < start_piece_leaf_arr.length - 1; ++i)
          {
@@ -695,7 +698,7 @@ public final class ShapeSearchTree
 
       // create the last tree entry of the start piece.
 
-      ShapeTreeLeaf[] end_piece_leaf_arr = new ShapeTreeLeaf[p_end_piece.polyline().plalinelen(-2)];
+      ShapeTreeNodeLeaf[] end_piece_leaf_arr = new ShapeTreeNodeLeaf[p_end_piece.polyline().plalinelen(-2)];
 
       // create the first tree entry of the end piece.
       end_piece_leaf_arr[0] = insert(p_end_piece, 0);
@@ -776,14 +779,14 @@ public final class ShapeSearchTree
          return;
          }
       
-      Collection<ShapeTreeLeaf> tmp_list = get_overlaps(bounds);
-      Iterator<ShapeTreeLeaf> it = tmp_list.iterator();
+      Collection<ShapeTreeNodeLeaf> tmp_list = get_overlaps(bounds);
+      Iterator<ShapeTreeNodeLeaf> it = tmp_list.iterator();
 
       boolean is_45_degree = p_shape instanceof ShapeTileOctagon;
 
       while (it.hasNext())
          {
-         ShapeTreeLeaf curr_leaf = it.next();
+         ShapeTreeNodeLeaf curr_leaf = it.next();
          ShapeTreeObject curr_object = curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
          
@@ -819,10 +822,12 @@ public final class ShapeSearchTree
       }
 
    /**
-    * Looks up all entries in the search tree, so that inserting an item with shape p_shape, net number p_net_no, clearance type
-    * p_cl_type and layer p_layer whould produce a clearance violation, and puts them into the set p_obstacle_entries. 
+    * Looks up all entries in the search tree, so that inserting an item with shape p_shape, net number p_net_no, 
+    * clearance type p_cl_type and layer p_layer whould produce a clearance violation
+    * puts them into the set p_obstacle_entries. 
     * The elements in p_obstacle_entries are of type TreeEntry. 
-    * if p_layer < 0, the layer is ignored. Used only internally, because the clearance compensation is not taken iinnto account.
+    * if p_layer < 0, the layer is ignored. 
+    * Used only internally, because the clearance compensation is not taken innto account.
     */
    public final void find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<ShapeTreeEntry> p_result)
       {
@@ -841,21 +846,21 @@ public final class ShapeSearchTree
          }
       
       int max_clearance = (int) (1.2 * cl_matrix.max_value(p_cl_type, p_layer));
-      // search with the bounds enlarged by the maximum clearance to
-      // get all candidates for overlap
-      // a factor less than sqr2 has evtl. be added because
-      // enlarging is not symmetric.
-      ShapeTileRegular offset_bounds = (ShapeTileRegular) bounds.offset(max_clearance);
-      Collection<ShapeTreeLeaf> tmp_list = get_overlaps(offset_bounds);
-      Iterator<ShapeTreeLeaf> it1 = tmp_list.iterator();
+      // search with the bounds enlarged by the maximum clearance to get all candidates for overlap
+      // a factor less than sqr2 has evtl. be added because enlarging is not symmetric.
+      ShapeTile offset_bounds = bounds.offset(max_clearance);
+
+      Collection<ShapeTreeNodeLeaf> tmp_list = get_overlaps(offset_bounds);
+      
       // sort the found items by its clearances tp p_cl_type on layer p_layer
       Set<ShapeSearchTreeEntry> sorted_items = new TreeSet<ShapeSearchTreeEntry>();
 
-      while (it1.hasNext())
+      for ( ShapeTreeNodeLeaf curr_leaf : tmp_list )
          {
-         ShapeTreeLeaf curr_leaf = it1.next();
          BrdItem curr_item = (BrdItem) curr_leaf.object;
+         
          int shape_index = curr_leaf.shape_index_in_object;
+         
          boolean ignore_item = p_layer >= 0 && curr_item.shape_layer(shape_index) != p_layer;
          
          if ( ignore_item ) continue;
@@ -869,18 +874,21 @@ public final class ShapeSearchTree
             sorted_items.add(sorted_ob);
             }
          }
-      Iterator<ShapeSearchTreeEntry> it = sorted_items.iterator();
+      
       int curr_half_clearance = 0;
+      
       ShapeTile curr_offset_shape = p_shape;
-      while (it.hasNext())
+      
+      for ( ShapeSearchTreeEntry tmp_entry : sorted_items )
          {
-         ShapeSearchTreeEntry tmp_entry = it.next();
          int tmp_half_clearance = tmp_entry.clearance / 2;
+
          if (tmp_half_clearance != curr_half_clearance)
             {
             curr_half_clearance = tmp_half_clearance;
             curr_offset_shape = p_shape.enlarge(curr_half_clearance);
             }
+         
          ShapeTile tmp_shape = tmp_entry.leaf.object.get_tree_shape(this, tmp_entry.leaf.shape_index_in_object);
          // enlarge both item shapes by the half clearance to create symmetry.
          ShapeConvex tmp_offset_shape = (ShapeConvex) tmp_shape.enlarge(curr_half_clearance);
@@ -1008,14 +1016,14 @@ public final class ShapeSearchTree
          
          if ( ! curr_node.bounding_shape.intersects(bounding_shape)) continue;
          
-         if ( ! (curr_node instanceof ShapeTreeLeaf) )
+         if ( ! (curr_node instanceof ShapeTreeNodeLeaf) )
             {
-            node_stack.push(((ShapeTreeNodeInner) curr_node).first_child);
-            node_stack.push(((ShapeTreeNodeInner) curr_node).second_child);
+            node_stack.push(((ShapeTreeNodeFork) curr_node).first_child);
+            node_stack.push(((ShapeTreeNodeFork) curr_node).second_child);
             continue;
             }
 
-         ShapeTreeLeaf curr_leaf = (ShapeTreeLeaf) curr_node;
+         ShapeTreeNodeLeaf curr_leaf = (ShapeTreeNodeLeaf) curr_node;
          ShapeTreeObject curr_object = curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
       
@@ -1244,8 +1252,8 @@ public final class ShapeSearchTree
     */
    void change_item_shape(BrdItem p_item, int p_shape_no, ShapeTile p_new_shape)
       {
-      ShapeTreeLeaf[] old_entries = p_item.get_search_tree_entries(this);
-      ShapeTreeLeaf[] new_leaf_arr = new ShapeTreeLeaf[old_entries.length];
+      ShapeTreeNodeLeaf[] old_entries = p_item.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] new_leaf_arr = new ShapeTreeNodeLeaf[old_entries.length];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[old_entries.length];
       remove_leaf(old_entries[p_shape_no]);
       for (int i = 0; i < new_precalculated_tree_shapes.length; ++i)
@@ -1481,11 +1489,11 @@ public final class ShapeSearchTree
     */
    public final boolean validate_ok (BrdItem p_item)
       {
-      ShapeTreeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(this);
+      ShapeTreeNodeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(this);
 
       for (int index = 0; index < curr_tree_entries.length; ++index)
          {
-         ShapeTreeLeaf curr_leaf = curr_tree_entries[index];
+         ShapeTreeNodeLeaf curr_leaf = curr_tree_entries[index];
 
          if (curr_leaf.shape_index_in_object != index)
             {

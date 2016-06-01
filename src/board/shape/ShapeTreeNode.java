@@ -3,10 +3,11 @@ package board.shape;
 import freert.planar.ShapeTileRegular;
 
 /**
- * Common functionality of inner nodes and leaf nodes.
+ * Common functionality of inner nodes and leaf nodes
+ * Should not be used by itself
  */
-public class ShapeTreeNode
+public abstract class ShapeTreeNode
    {
-   public ShapeTreeNodeInner parent;
+   public ShapeTreeNodeFork parent;
    public ShapeTileRegular bounding_shape;
    }

@@ -45,7 +45,7 @@ public interface ShapeTreeObject extends Comparable<Object>
     * Stores the entries in the ShapeTrees of this object for better performance while for example deleting tree entries. 
     * Called only by insert methods of class ShapeTree.
     */
-   void set_search_tree_entries(ShapeSearchTree p_tree,ShapeTreeLeaf[] p_entries);
+   void set_search_tree_entries(ShapeSearchTree p_tree,ShapeTreeNodeLeaf[] p_entries);
    
    
    /**

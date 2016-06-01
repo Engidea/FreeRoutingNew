@@ -74,7 +74,7 @@ public interface PlaShape extends PlaArea
    ShapeTile bounding_tile();
 
    /**
-    * Returns the bounding RegularTileShape with the fixed directions p_dirs
+    * @returns the bounding RegularTileShape with the fixed directions p_dirs
     */
    ShapeTileRegular bounding_shape(ShapeBoundingOct p_dirs);
 

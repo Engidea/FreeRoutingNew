@@ -24,7 +24,7 @@ package board.varie;
 import java.util.Collection;
 import java.util.LinkedList;
 import board.shape.ShapeSearchTree;
-import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeNodeLeaf;
 import freert.planar.ShapeTile;
 
 /**
@@ -39,7 +39,7 @@ public final class SearchTreesInfo
     * Returns the tree entries for the given tree  or null, if for this tree no entries of this item
     * are inserted.
     */
-   public ShapeTreeLeaf[] get_tree_entries(ShapeSearchTree p_tree)
+   public ShapeTreeNodeLeaf[] get_tree_entries(ShapeSearchTree p_tree)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {
@@ -60,7 +60,7 @@ public final class SearchTreesInfo
     * Sets the item tree entries for the given tree
     * If the tree does not exist it is created
     */
-   public void set_tree_entries( ShapeSearchTree p_tree , ShapeTreeLeaf[] p_tree_entries)
+   public void set_tree_entries( ShapeSearchTree p_tree , ShapeTreeNodeLeaf[] p_tree_entries)
       {
       for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
          {

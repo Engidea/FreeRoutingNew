@@ -28,7 +28,7 @@ import board.BrdConnectable;
 import board.items.BrdItem;
 import board.shape.ShapeSearchTree;
 import board.shape.ShapeTreeEntry;
-import board.shape.ShapeTreeLeaf;
+import board.shape.ShapeTreeNodeLeaf;
 import board.shape.ShapeTreeObject;
 import freert.planar.ShapeTile;
 import freert.varie.NetNosList;
@@ -43,7 +43,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    // The list of doors to items of the own net
    private final Collection<ExpandDoorItem> target_doors = new LinkedList<ExpandDoorItem>();
    // The array of entries in the SearchTree. Consists of just one element
-   private ShapeTreeLeaf[] tree_entries = null;
+   private ShapeTreeNodeLeaf[] tree_entries = null;
    // identification number for implementing the Comparable interface
    private final int id_no;
 
@@ -57,7 +57,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       }
 
    @Override
-   public void set_search_tree_entries(ShapeSearchTree p_tree, ShapeTreeLeaf[] p_entries)
+   public void set_search_tree_entries(ShapeSearchTree p_tree, ShapeTreeNodeLeaf[] p_entries)
       {
       tree_entries = p_entries;
       }
