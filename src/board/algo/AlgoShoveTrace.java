@@ -33,8 +33,8 @@ import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdOutline;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeShapeSearch;
 import board.kdtree.KdtreeObject;
+import board.kdtree.KdtreeShapeSearch;
 import board.varie.BrdStopConnection;
 import freert.main.Ldbg;
 import freert.main.Mdbg;
@@ -171,10 +171,7 @@ public final class AlgoShoveTrace
                }
             }
          
-         if (!shove_via_ok)
-            {
-            return false;
-            }
+         if ( ! shove_via_ok) return false;
          }
 
       if (trace_piece_count == 0) return true;
@@ -373,6 +370,7 @@ public final class AlgoShoveTrace
                // in case it is smmaller than the length of the whole line segmment.
                curr_line_segment = curr_line_segment.opposite();
                }
+            
             boolean is_in_front = curr_line_segment.get_line().direction().equals(line_direction);
             
             if (is_in_front)

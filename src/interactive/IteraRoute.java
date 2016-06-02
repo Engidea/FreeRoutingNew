@@ -53,8 +53,8 @@ import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
 
 /**
- * Functionality for interactive routing.
- *
+ * Functionality for interactive routing
+ * This is used by StateRoute and StateDragMakeSpace for additional routing suport
  * @author Alfons Wirtz
  */
 public final class IteraRoute
@@ -170,14 +170,6 @@ public final class IteraRoute
          }
       
       shove_failing_obstacle = null;
-      
-      if ( !r_board.brd_rules.is_trace_snap_none()  && !(prev_corner instanceof PlaPointInt))
-         {
-         // when you are routing in 45 ot 90 angles previous point con only be a point Int
-         // But really, even whan you are routing in free angle, no ?
-         return false;
-         }
-      
       
 /*  why does it have to be an ortho projection or 45 degrees at start ?
  *  really, the rest of the system should take care of optimizing or something    

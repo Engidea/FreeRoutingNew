@@ -68,16 +68,16 @@ public final class StateRouteDynamic extends StateRoute
     */
    public StateInteractive key_typed(char p_key_char)
       {
-      StateInteractive curr_return_state = this;
       if (p_key_char == 's')
          {
          i_brd.generate_snapshot();
          }
       else
          {
-         curr_return_state = super.key_typed(p_key_char);
+         return super.key_typed(p_key_char);
          }
-      return curr_return_state;
+
+      return this;
       }
 
    public JPopupMenu get_popup_menu()
