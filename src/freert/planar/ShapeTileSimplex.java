@@ -16,7 +16,9 @@
 
 package freert.planar;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import board.kdtree.KdtreeBoundingOct;
@@ -36,7 +38,7 @@ public final class ShapeTileSimplex extends ShapeTile
    // Standard implementation for an empty Simplex.
    public static final ShapeTileSimplex EMPTY = new ShapeTileSimplex(new PlaLineInt[0]);
    
-   private final PlaLineInt[] lines_arr;
+   private final ArrayList<PlaLineInt> lines_arr;
 
    // the following fields are for storing pre calculated data
    transient private PlaPointInt[]    precalc_corners_int = null;
@@ -51,8 +53,26 @@ public final class ShapeTileSimplex extends ShapeTile
     */
    public ShapeTileSimplex(PlaLineInt[] p_line_arr)
       {
-      lines_arr = p_line_arr;
+      int arr_len = p_line_arr.length;
+      
+      lines_arr = new ArrayList<PlaLineInt>(arr_len);
+      
+      for (int index=0; index<arr_len; index++) lines_arr.add(p_line_arr[index]);
+      
+      Collections.sort(lines_arr);
       }
+   
+   /**
+    * Careful, the arraylist is not copyed, yet
+    * @param p_line_arr
+    */
+   public ShapeTileSimplex(ArrayList<PlaLineInt> p_line_arr)
+      {
+      lines_arr = p_line_arr;
+
+      Collections.sort(lines_arr);
+      }
+   
 
    /**
     * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
@@ -92,7 +112,7 @@ public final class ShapeTileSimplex extends ShapeTile
 
    public int tlines_size()
       {
-      return lines_arr.length;
+      return lines_arr.size();
       }
    
    /**
@@ -107,7 +127,7 @@ public final class ShapeTileSimplex extends ShapeTile
    
    public PlaLineInt tline_get (int index)
       {
-      return lines_arr[index];
+      return lines_arr.get(index);
       }
    
    /**
@@ -759,11 +779,12 @@ public final class ShapeTileSimplex extends ShapeTile
          return EMPTY;
          }
       
-      PlaLineInt[] new_arr = new PlaLineInt[tlines_size() + p_other.tlines_size()];
-      System.arraycopy(lines_arr, 0, new_arr, 0, tlines_size());
-      System.arraycopy(p_other.lines_arr, 0, new_arr, tlines_size(), p_other.tlines_size());
-      java.util.Arrays.sort(new_arr);
+      ArrayList<PlaLineInt>  new_arr = new ArrayList<PlaLineInt>(tlines_size() + p_other.tlines_size());
+      new_arr.addAll(lines_arr);
+      new_arr.addAll(p_other.lines_arr);
+      
       ShapeTileSimplex result = new ShapeTileSimplex(new_arr);
+      
       return result.remove_redundant_lines();
       }
 
@@ -815,9 +836,12 @@ public final class ShapeTileSimplex extends ShapeTile
          {
          return this;
          }
-      PlaLineInt[] new_arr = new PlaLineInt[tlines_size() - 1];
-      System.arraycopy(lines_arr, 0, new_arr, 0, p_no);
-      System.arraycopy(lines_arr, p_no + 1, new_arr, p_no, new_arr.length - p_no);
+      
+      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(tlines_size());
+      new_arr.addAll(lines_arr);
+      
+      new_arr.remove(p_no);
+      
       return new ShapeTileSimplex(new_arr);
       }
 
