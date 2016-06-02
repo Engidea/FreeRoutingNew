@@ -1066,23 +1066,24 @@ public final class ShapeTileSimplex extends ShapeTile
     */
    ShapeTileSimplex remove_redundant_lines()
       {
-      PlaLineInt[] work_arr = new PlaLineInt[tlines_size()];
-      // copy the sorted lines of arr into line_arr while skipping
-      // multiple lines
-      int new_length = 1;
-      work_arr[0] = tline_get(0);
-      PlaLineInt prev = work_arr[0];
+      ArrayList<PlaLineInt> work_arr = new ArrayList<PlaLineInt>(tlines_size());
 
+      // copy the sorted lines of arr into line_arr while skipping multiple lines
+      PlaLineInt prev = tline_get(0);
+      work_arr.add(prev);
+      
       for (int index = 1; index < tlines_size(); ++index)
          {
-         if (!tline_get(index).equals(prev))
-            {
-            work_arr[new_length] = tline_get(index);
-            prev = work_arr[new_length];
-            ++new_length;
-            }
+         PlaLineInt a_line = tline_get(index);
+         
+         if (a_line.equals(prev)) continue;
+         
+         work_arr.add(a_line);
+         prev = a_line;
          }
 
+      int new_length = work_arr.size();
+      
       PlaSide[] intersection_sides = new PlaSide[new_length];
       // precalculated array , on which side of this line the previous and the next line do intersect
 
@@ -1093,8 +1094,8 @@ public final class ShapeTileSimplex extends ShapeTile
          try_again = false;
          int prev_ind = new_length - 1;
          int next_ind;
-         PlaLineInt prev_line = work_arr[prev_ind];
-         PlaLineInt curr_line = work_arr[0];
+         PlaLineInt prev_line = work_arr.get(prev_ind);
+         PlaLineInt curr_line = work_arr.get(0);
          PlaLineInt next_line;
          for (int ind = 0; ind < new_length; ++ind)
             {
@@ -1106,7 +1107,7 @@ public final class ShapeTileSimplex extends ShapeTile
                {
                next_ind = ind + 1;
                }
-            next_line = work_arr[next_ind];
+            next_line = work_arr.get(next_ind);
 
             boolean remove_line = false;
             PlaDirection prev_dir = prev_line.direction();
@@ -1158,13 +1159,17 @@ public final class ShapeTileSimplex extends ShapeTile
                   break;
                   }
                }
+            
             if (remove_line)
                {
                try_again = true;
                --new_length;
+               
+               work_arr.remove(ind);
+               
                for (int index = ind; index < new_length; ++index)
                   {
-                  work_arr[index] = work_arr[index + 1];
+//                  work_arr[index] = work_arr[index + 1];
                   intersection_sides[index] = intersection_sides[index + 1];
                   }
 
@@ -1209,14 +1214,15 @@ public final class ShapeTileSimplex extends ShapeTile
 
       if (new_length == 2)
          {
-         if (work_arr[0].is_parallel(work_arr[1]))
+         if (work_arr.get(0).is_parallel(work_arr.get(1)))
             {
-            if (work_arr[0].direction().equals(work_arr[1].direction()))
+            if (work_arr.get(0).direction().equals(work_arr.get(1).direction()))
                {
                // one of the two remaining lines is redundant
-               if (work_arr[1].side_of(work_arr[0].point_a) == PlaSide.ON_THE_LEFT)
+               if (work_arr.get(1).side_of(work_arr.get(0).point_a) == PlaSide.ON_THE_LEFT)
                   {
-                  work_arr[0] = work_arr[1];
+//                  work_arr[0] = work_arr[1];
+                  work_arr.remove(0);
                   }
                --new_length;
                }
@@ -1224,7 +1230,7 @@ public final class ShapeTileSimplex extends ShapeTile
                // the two remaining lines have opposite direction
                // the simplex may be empty
                {
-               if (work_arr[1].side_of(work_arr[0].point_a) == PlaSide.ON_THE_LEFT)
+               if (work_arr.get(1).side_of(work_arr.get(0).point_a) == PlaSide.ON_THE_LEFT)
                   {
                   new_length = 0;
                   }
@@ -1242,10 +1248,7 @@ public final class ShapeTileSimplex extends ShapeTile
          return ShapeTileSimplex.EMPTY;
          }
       
-      PlaLineInt[] result = new PlaLineInt[new_length];
-      System.arraycopy(work_arr, 0, result, 0, new_length);
-      
-      return new ShapeTileSimplex(result);
+      return new ShapeTileSimplex(work_arr);
       }
 
    @Override   
