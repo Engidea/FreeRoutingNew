@@ -127,6 +127,21 @@ public final class ShapeTileOctagon extends ShapeTileRegular
 
    public ShapeTileOctagon(double p_lx, double p_ly, double p_rx, double p_uy, double p_ulx, double p_lrx, double p_llx, double p_urx)
       {
+      is_nan |= PlaLimits.is_critical_neg(p_lx);
+      is_nan |= PlaLimits.is_critical_neg(p_ly);
+      
+      is_nan |= PlaLimits.is_critical_pos(p_rx);
+      is_nan |= PlaLimits.is_critical_pos(p_uy);
+
+      is_nan |= PlaLimits.is_critical_neg(p_ulx);
+      is_nan |= PlaLimits.is_critical_neg(p_llx);
+      
+      is_nan |= PlaLimits.is_critical_pos(p_lrx);
+      is_nan |= PlaLimits.is_critical_pos(p_urx);
+      
+      if ( is_nan ) 
+         System.err.println("ShapeTileOctagon: is_NaN");
+      
       oct_lx  = (int)p_lx;
       oct_ly  = (int)p_ly;
       oct_rx  = (int)p_rx;
@@ -137,10 +152,15 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       oct_urx = (int)p_urx;
       }
 
-   // WARNING thisimplementation is not strictly always correct
+   /**
+    * This implementation is correct if whenever an "EMPTY" octagon is needed the EMPTY instance is used
+    * That may not be the case, always
+    */
    @Override   
    public boolean is_empty()
       {
+      if ( is_nan ) return true;
+      
       return this == EMPTY;
       }
 
@@ -532,87 +552,80 @@ public final class ShapeTileOctagon extends ShapeTileRegular
          }
 
       if (new_uy > new_urx - new_lx)
-      // the point lx, uy is above the upper right border line of
-      // this octagon.
-      // Change the uy, so that the upper right border line runs through
-      // this point.
          {
+         // the point lx, uy is above the upper right border line of this octagon.
+         // Change the uy, so that the upper right border line runs through this point.
          new_uy = new_urx - new_lx;
          }
 
       if (new_uy > new_rx - new_ulx)
-      // the point rx, uy is above the upper left border line of
-      // this octagon.
-      // Change the uy, so that the upper left border line runs through
-      // this point.
          {
+         // the point rx, uy is above the upper left border line of this octagon.
+         // Change the uy, so that the upper left border line runs through this point.
          new_uy = new_rx - new_ulx;
          }
 
       if (new_llx - new_lx < new_ly)
-      // The point lx, ly is above the lower left border line of
-      // this octagon.
-      // Change the lower left line, so that it runs through this point.
          {
+         // The point lx, ly is above the lower left border line of this octagon.
+         // Change the lower left line, so that it runs through this point.
          new_llx = new_lx + new_ly;
          }
 
       if (new_rx - new_lrx < new_ly)
-      // the point rx, ly is above the lower right border line of
-      // this octagon.
-      // Change the lower right line, so that it runs through this point.
          {
+         // the point rx, ly is above the lower right border line of this octagon.
+         // Change the lower right line, so that it runs through this point.
          new_lrx = new_rx - new_ly;
          }
 
       if (new_urx - new_rx > new_uy)
-      // the point rx, uy is below the upper right border line of p_oct.
-      // Change the upper right line, so that it runs through this point.
          {
+         // the point rx, uy is below the upper right border line of p_oct.
+         // Change the upper right line, so that it runs through this point.
          new_urx = new_uy + new_rx;
          }
 
       if (new_lx - new_ulx > new_uy)
-      // the point lx, uy is below the upper left border line of
-      // this octagon.
-      // Change the upper left line, so that it runs through this point.
          {
+         // the point lx, uy is below the upper left border line of this octagon.
+         // Change the upper left line, so that it runs through this point.
          new_ulx = new_lx - new_uy;
          }
 
       int diag_upper_y = (int) Math.ceil((new_urx - new_ulx) / 2.0);
 
       if (new_uy > diag_upper_y)
-      // the intersection of the upper right and the upper left border
-      // line is below new_uy. Adjust new_uy to diag_upper_y.
          {
+         // the intersection of the upper right and the upper left border
+         // line is below new_uy. Adjust new_uy to diag_upper_y.
          new_uy = diag_upper_y;
          }
 
       int diag_lower_y = (int) Math.floor((new_llx - new_lrx) / 2.0);
 
       if (new_ly < diag_lower_y)
-      // the intersection of the lower right and the lower left border
-      // line is above new_ly. Adjust new_ly to diag_lower_y.
          {
+         // the intersection of the lower right and the lower left border
+         // line is above new_ly. Adjust new_ly to diag_lower_y.
          new_ly = diag_lower_y;
          }
 
       int diag_right_x = (int) Math.ceil((new_urx + new_lrx) / 2.0);
 
       if (new_rx > diag_right_x)
-      // the intersection of the upper right and the lower right border
-      // line is to the left of right x. Adjust new_rx to diag_right_x.
          {
+         // the intersection of the upper right and the lower right border
+         // line is to the left of right x. Adjust new_rx to diag_right_x.
          new_rx = diag_right_x;
          }
 
       int diag_left_x = (int) Math.floor((new_llx + new_ulx) / 2.0);
 
       if (new_lx < diag_left_x)
-      // the intersection of the lower left and the upper left border
-      // line is to the right of left x. Ajust new_lx to diag_left_x.
          {
+         // the intersection of the lower left and the upper left border
+         // line is to the right of left x. Ajust new_lx to diag_left_x.
          new_lx = diag_left_x;
          }
 

@@ -63,6 +63,16 @@ public final class PlaLimits
       return value > CRIT_INT || value < -CRIT_INT;
       }
    
+   public static boolean is_critical_neg ( double value )
+      {
+      return value < -CRIT_INT;
+      }
+
+   public static boolean is_critical_pos ( double value )
+      {
+      return value > CRIT_INT;
+      }
+
    public static boolean is_critical ( BigInteger value )
       {
       return value.compareTo(CRIT_LONG_MAX) >= 0 || value.compareTo(CRIT_LONG_MIN) <= 0;

@@ -638,12 +638,6 @@ public final class ShapeTileSimplex extends ShapeTile
          urx = Math.max(urx, tmp);
          }
       
-      if (Math.min(lx, ly) < -PlaLimits.CRIT_INT || Math.max(rx, uy) > PlaLimits.CRIT_INT || Math.min(ulx, llx) < -PlaLimits.CRIT_INT || Math.max(lrx, urx) > PlaLimits.CRIT_INT)
-         {
-         // result is not bounded, this should really be into the octagon constructor... TODO
-         return null;
-         }
-      
       precalc_bounding_octagon = new ShapeTileOctagon(
             Math.floor(lx), 
             Math.floor(ly), 
@@ -700,12 +694,10 @@ public final class ShapeTileSimplex extends ShapeTile
       if (p_offset == 0) return this;
 
       ShapeTileSimplex offset_simplex = offset(p_offset);
+      
       ShapeTileOctagon bounding_oct = bounding_octagon();
 
-      if (bounding_oct == null)
-         {
-         return ShapeTileSimplex.EMPTY;
-         }
+      if (bounding_oct.is_NaN() ) return ShapeTileSimplex.EMPTY;
       
       ShapeTileOctagon offset_oct = bounding_oct.offset(p_offset);
       

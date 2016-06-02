@@ -555,21 +555,17 @@ public final class AlgoShoveTrace
          
          curr_substitute_trace.normalize(r_board.changed_area.get_area(p_layer));
 
-         if ( ! tails_exist_before)  // TODO
-            {
-            for (int index = 0; index < 2; ++index)
-               {
-               BrdTracep tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
+         if ( tails_exist_before ) continue;
 
-               if (tail != null)
-                  {
-                  r_board.remove_items_unfixed(tail.get_connection_items(BrdStopConnection.VIA));
-                  for (int curr_net_no : curr_net_no_arr)
-                     {
-                     r_board.combine_traces(curr_net_no);
-                     }
-                  }
-               }
+         for (int index = 0; index < 2; ++index)
+            {
+            BrdTracep tail = r_board.get_trace_tail(end_corners[index], p_layer, curr_net_no_arr);
+
+            if (tail == null) continue;
+
+            r_board.remove_items_unfixed(tail.get_connection_items(BrdStopConnection.VIA));
+
+            for (int curr_net_no : curr_net_no_arr) r_board.combine_traces(curr_net_no);
             }
          }
       return true;
