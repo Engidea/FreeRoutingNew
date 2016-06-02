@@ -92,7 +92,7 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    public boolean is_empty()
       {
-      return (box_ll.v_x > box_ur.v_x || box_ll.v_y > box_ur.v_y);
+      return box_ll.v_x > box_ur.v_x || box_ll.v_y > box_ur.v_y;
       }
 
    @Override

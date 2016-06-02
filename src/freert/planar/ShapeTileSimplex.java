@@ -109,7 +109,7 @@ public final class ShapeTileSimplex extends ShapeTile
       }
    
    /**
-    * Return true, if this simplex is empty
+    * @return true, if this simplex is empty
     */
    @Override
    public boolean is_empty()
@@ -671,16 +671,16 @@ public final class ShapeTileSimplex extends ShapeTile
       {
       if (p_width == 0) return this;
 
-      PlaLineInt[] new_arr = new PlaLineInt[tlines_size()];
+      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(tlines_size());
       for (int index = 0; index < tlines_size(); ++index)
          {
-         new_arr[index] = tline_get(index).translate(-p_width);
+         new_arr.add(tline_get(index).translate(-p_width));
          }
+      
       ShapeTileSimplex offset_simplex = new ShapeTileSimplex(new_arr);
-      if (p_width < 0)
-         {
-         offset_simplex = offset_simplex.remove_redundant_lines();
-         }
+      
+      if (p_width < 0) offset_simplex = offset_simplex.remove_redundant_lines();
+      
       return offset_simplex;
       }
 
@@ -720,10 +720,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public ShapeTileSimplex intersection(ShapeTileSimplex p_other)
       {
-      if (is_empty() || p_other.is_empty())
-         {
-         return EMPTY;
-         }
+      if (is_empty() || p_other.is_empty()) return EMPTY;
       
       ArrayList<PlaLineInt>  new_arr = new ArrayList<PlaLineInt>(tlines_size() + p_other.tlines_size());
       new_arr.addAll(lines_arr);
@@ -740,8 +737,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public ShapeTile intersection(ShapeTile p_other)
       {
-      ShapeTile result = p_other.intersection(this);
-      return result;
+      return p_other.intersection(this);
       }
 
    @Override   
@@ -754,7 +750,8 @@ public final class ShapeTileSimplex extends ShapeTile
    public boolean intersects(ShapeTileSimplex p_other)
       {
       ShapeConvex is = intersection(p_other);
-      return !is.is_empty();
+      
+      return ! is.is_empty();
       }
 
    /**
@@ -818,7 +815,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public ShapeTileSimplex[] cutout_from(ShapeTileSimplex p_outer_simplex)
       {
-      if (  ! dimension().is_area() )
+      if ( ! dimension().is_area() )
          {
          System.out.println("Simplex.cutout_from only implemented for 2-dim simplex");
          return null;
@@ -839,6 +836,7 @@ public final class ShapeTileSimplex extends ShapeTile
       for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no)
          {
          division_line_arr[inner_corner_no] = inner_simplex.calc_division_lines(inner_corner_no, p_outer_simplex);
+         
          if (division_line_arr[inner_corner_no] == null)
             {
             System.out.println("Simplex.cutout_from: division line is null");
@@ -847,6 +845,7 @@ public final class ShapeTileSimplex extends ShapeTile
             return result;
             }
          }
+      
       boolean check_cross_first_line = false;
       PlaLineInt prev_division_line = null;
       PlaLineInt first_division_line = division_line_arr[0][0];
@@ -895,10 +894,13 @@ public final class ShapeTileSimplex extends ShapeTile
                   }
                }
             int piece_line_count = 2;
+      
             if (merge_prev_division_line)
                ++piece_line_count;
+            
             if (merge_first_division_line)
                ++piece_line_count;
+            
             PlaLineInt[] piece_lines = new PlaLineInt[piece_line_count];
             piece_lines[0] = new PlaLineInt(curr_division_lines[1].point_b, curr_division_lines[1].point_a);
             piece_lines[1] = curr_division_lines[0];
@@ -1230,40 +1232,40 @@ public final class ShapeTileSimplex extends ShapeTile
    private PlaLineInt[] calc_division_lines(int p_inner_corner_no, ShapeTileSimplex p_outer_simplex)
       {
       PlaLineInt curr_inner_line = tline_get(p_inner_corner_no);
-      PlaLineInt prev_inner_line;
-      if (p_inner_corner_no != 0)
-         prev_inner_line = tline_get(p_inner_corner_no - 1);
-      else
-         prev_inner_line = tline_get(tlines_size() - 1);
+      
+      PlaLineInt prev_inner_line = tline_get(get_prev_index(p_inner_corner_no));
+      
       PlaPointFloat intersection = curr_inner_line.intersection_approx(prev_inner_line);
-      if (intersection.v_x >= Integer.MAX_VALUE)
+
+      if ( intersection.is_NaN() )
          {
          System.out.println("Simplex.calc_division_lines: intersection expexted");
          return null;
          }
+      
       PlaPointInt inner_corner = intersection.round();
+      
       double c_tolerance = 0.0001;
+      
       boolean is_exact = Math.abs(inner_corner.v_x - intersection.v_x) < c_tolerance && Math.abs(inner_corner.v_y - intersection.v_y) < c_tolerance;
 
       if (!is_exact)
          {
          // it is assumed, that the corners of the original inner simplex are
-         // exact and the not exact corners come from the intersection of
-         // the inner simplex with the outer simplex.
-         // Because these corners lie on the border of the outer simplex,
-         // no division is nessesary
+         // exact and the not exact corners come from the intersection of the inner simplex with the outer simplex.
+         // Because these corners lie on the border of the outer simplex, no division is nessesary
          PlaLineInt[] result = new PlaLineInt[1];
          result[0] = prev_inner_line;
          return result;
          }
+      
       PlaDirection first_projection_dir = PlaDirection.NULL;
       PlaDirection second_projection_dir = PlaDirection.NULL;
       PlaDirection prev_inner_dir = prev_inner_line.direction().opposite();
       PlaDirection next_inner_dir = curr_inner_line.direction();
       int outer_line_no = 0;
 
-      // search the first outer line, so that
-      // the perpendicular projection of the inner corner onto this
+      // search the first outer line, so that the perpendicular projection of the inner corner onto this
       // line is visible from inner_corner to the left of prev_inner_line.
 
       double min_distance = Integer.MAX_VALUE;
@@ -1278,7 +1280,9 @@ public final class ShapeTileSimplex extends ShapeTile
             result[0] = new PlaLineInt(inner_corner, inner_corner);
             return result;
             }
+         
          boolean projection_visible = prev_inner_dir.determinant(curr_projection_dir) >= 0;
+         
          if (projection_visible)
             {
             double curr_distance = Math.abs(outer_line.distance_signed(inner_corner.to_float()));
@@ -1305,18 +1309,16 @@ public final class ShapeTileSimplex extends ShapeTile
                   curr_second_projection_dir = inner_corner.perpendicular_direction(p_outer_simplex.tline_get(tmp_outer_line_no));
 
                   if (curr_second_projection_dir == PlaDirection.NULL)
-                  // inner corner is on outer_line
                      {
+                     // inner corner is on outer_line
                      PlaLineInt[] result = new PlaLineInt[1];
                      result[0] = new PlaLineInt(inner_corner, inner_corner);
                      return result;
                      }
                   if (curr_projection_dir.determinant(curr_second_projection_dir) < 0)
                      {
-                     // curr_second_projection_dir not found;
-                     // the angle between curr_projection_dir and
-                     // curr_second_projection_dir would be already bigger
-                     // than 180 degree
+                     // curr_second_projection_dir not found; the angle between curr_projection_dir and
+                     // curr_second_projection_dir would be already bigger than 180 degree
                      curr_distance = Integer.MAX_VALUE;
                      break;
                      }
@@ -1339,7 +1341,6 @@ public final class ShapeTileSimplex extends ShapeTile
          else
             {
             ++outer_line_no;
-
             }
          }
       if (min_distance == Integer.MAX_VALUE)
@@ -1347,6 +1348,7 @@ public final class ShapeTileSimplex extends ShapeTile
          System.out.println("Simplex.calc_division_lines: division not found");
          return null;
          }
+
       PlaLineInt[] result;
       if (first_projection_dir.equals(second_projection_dir))
          {
@@ -1359,6 +1361,7 @@ public final class ShapeTileSimplex extends ShapeTile
          result[0] = new PlaLineInt(inner_corner, first_projection_dir);
          result[1] = new PlaLineInt(inner_corner, second_projection_dir);
          }
+      
       return result;
       }
 

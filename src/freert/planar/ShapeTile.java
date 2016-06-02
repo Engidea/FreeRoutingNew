@@ -32,6 +32,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
    /**
     * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
+    * Then simplify it to return the simplest geometry that fits it
     */
    public static ShapeTile get_instance(PlaLineInt[] p_line_arr)
       {
@@ -39,70 +40,43 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       
       return result.simplify();
       }
-   
-   public abstract ShapeTile offset(double p_distance);
-
-   public abstract ShapeTile enlarge(double p_offset);
 
    /**
-    * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. May work only for IntPoints.
+    * Creates a TileShape from a Point array, who forms the corners of the shape of a convex polygon. 
     */
-   public static ShapeTile get_instance(ArrayList<PlaPointInt> p_convex_polygon)
+   public static ShapeTile get_instance(ArrayList<PlaPointInt> p_points_list)
       {
-      PlaLineInt[] line_arr = new PlaLineInt[p_convex_polygon.size()];
+      PlaLineInt[] line_arr = new PlaLineInt[p_points_list.size()];
       
       for (int jndex = 0; jndex < line_arr.length - 1; ++jndex)
          {
-         line_arr[jndex] = new PlaLineInt(p_convex_polygon.get(jndex), p_convex_polygon.get(jndex + 1));
+         line_arr[jndex] = new PlaLineInt(p_points_list.get(jndex), p_points_list.get(jndex + 1));
          }
       
-      line_arr[line_arr.length - 1] = new PlaLineInt(p_convex_polygon.get(line_arr.length - 1), p_convex_polygon.get(0));
+      line_arr[line_arr.length - 1] = new PlaLineInt(p_points_list.get(line_arr.length - 1), p_points_list.get(0));
       
       return get_instance(line_arr);
       }
-
    
    /**
     * creates a half_plane from a directed line
     */
    public static ShapeTile get_instance(PlaLineInt p_line)
       {
-      PlaLineInt[] lines = new PlaLineInt[1];
-      lines[0] = p_line;
+      PlaLineIntAlist lines = new PlaLineIntAlist(1);
+      lines.add( p_line);
       return ShapeTileSimplex.get_instance(lines);
       }
 
-   /**
-    * Creates a normalized IntOctagon from the input values. For the meaning of the parameter shortcuts see class IntOctagon.
-    */
-   public static ShapeTileOctagon get_instance(int p_lx, int p_ly, int p_rx, int p_uy, int p_ulx, int p_lrx, int p_llx, int p_urx)
-      {
-      ShapeTileOctagon oct = new ShapeTileOctagon(p_lx, p_ly, p_rx, p_uy, p_ulx, p_lrx, p_llx, p_urx);
-      return oct.normalize();
-      }
+   public abstract ShapeTile offset(double p_distance);
+
+   public abstract ShapeTile enlarge(double p_offset);
 
    /**
-    * creates a boxlike convex shape
+    * Tries to simplify the result shape to a simpler shape. 
+    * Simplifying always in the intersection function may cause performance problems.
     */
-   public static ShapeTileOctagon get_instance(int p_lower_left_x, int p_lower_left_y, int p_upper_right_x, int p_upper_right_y)
-      {
-      ShapeTileBox box = new ShapeTileBox(p_lower_left_x, p_lower_left_y, p_upper_right_x, p_upper_right_y);
-      return box.to_IntOctagon();
-      }
-
-   /**
-    * creates the smallest IntOctagon containing p_point
-   public static ShapeTileBox get_instance(PlaPoint p_point)
-      {
-      return p_point.surrounding_box();
-      }
-    */
-
-   /**
-    * Tries to simplify the result shape to a simpler shape. Simplifying always in the intersection function may cause performance
-    * problems.
-    */
-   public ShapeTile intersection_with_simplify(ShapeTile p_other)
+   public final ShapeTile intersection_with_simplify(ShapeTile p_other)
       {
       ShapeTile result = intersection(p_other);
       return result.simplify();
@@ -145,11 +119,12 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    public abstract ShapeTileSimplex to_Simplex();
 
    /**
-    * Returns the content of the area of the shape. If the shape is unbounded, Double.MAX_VALUE is returned.
+    * @returns the content of the area of the shape. 
+    * If the shape is unbounded, Double.MAX_VALUE is returned.
     */
    public double area()
       {
-      if (!is_bounded()) return Double.MAX_VALUE;
+      if ( ! is_bounded()) return Double.MAX_VALUE;
 
       if ( ! dimension().is_area() ) return 0;
 
@@ -216,27 +191,19 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * @return true, if p_point is contained in this shape.
+    * @returns true, if p_point is contained in this shape with tolerance p_tolerance. 
+    * p_tolerance is used when determing, if a point is on the left side of a border line. 
+    * It is used there in calculating a determinant and is not the distance of p_point to the border.
     */
    public boolean contains(PlaPointFloat p_point)
-      {
-      return contains(p_point, 0);
-      }
-
-   /**
-    * Returns true, if p_point is contained in this shape with tolerance p_tolerance. p_tolerance is used when determing, if a point
-    * is on the left side of a border line. It is used there in calculating a determinant and is not the distance of p_point to the
-    * border.
-    */
-   public boolean contains(PlaPointFloat p_point, double p_tolerance)
       {
       int line_count = border_line_count();
 
       if (line_count == 0) return false;
 
-      for (int i = 0; i < line_count; ++i)
+      for (int index = 0; index < line_count; ++index)
          {
-         if (border_line(i).side_of(p_point, p_tolerance) != PlaSide.ON_THE_RIGHT)
+         if (border_line(index).side_of(p_point) != PlaSide.ON_THE_RIGHT)
             {
             return false;
             }
@@ -253,24 +220,24 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    public PlaSide side_of_border(PlaPointFloat p_point, double p_tolerance)
       {
       int line_count = border_line_count();
-      if (line_count == 0)
+      
+      if (line_count == 0) return PlaSide.COLLINEAR;
+      
+      PlaSide result = PlaSide.ON_THE_RIGHT; // assume point is inside
+
+      for (int index = 0; index < line_count; ++index)
          {
-         return PlaSide.COLLINEAR;
-         }
-      PlaSide result = PlaSide.ON_THE_RIGHT; // point is inside
-      for (int i = 0; i < line_count; ++i)
-         {
-         PlaSide curr_side = border_line(i).side_of(p_point, p_tolerance);
+         PlaSide curr_side = border_line(index).side_of(p_point, p_tolerance);
+
          if (curr_side == PlaSide.ON_THE_LEFT)
             {
             return PlaSide.ON_THE_LEFT; // point is outside
             }
-         else if (curr_side == PlaSide.COLLINEAR)
-            {
-            result = curr_side;
-            }
-
+         
+         // if it is colinear once, remember it
+         if (curr_side == PlaSide.COLLINEAR) result = curr_side;
          }
+
       return result;
       }
 
@@ -323,22 +290,21 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
     */
    public boolean contains(ShapeTile p_other)
       {
-      for (int i = 0; i < p_other.border_line_count(); ++i)
+      for (int index = 0; index < p_other.border_line_count(); ++index)
          {
-         if (!contains(p_other.corner(i)))
-            {
-            return false;
-            }
+         if ( ! contains(p_other.corner(index))) return false;
          }
+
       return true;
       }
 
    /**
-    * Returns the distance between p_point and its nearest point on the shape. 0, if p_point is contained in this shape
+    * @returns the distance between p_point and its nearest point on the shape. 0, if p_point is contained in this shape
     */
    public double distance(PlaPointFloat p_point)
       {
       PlaPointFloat nearest_point = nearest_point_approx(p_point);
+      
       return nearest_point.distance(p_point);
       }
 
@@ -348,6 +314,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    public double border_distance(PlaPointFloat p_point)
       {
       PlaPointFloat nearest_point = nearest_border_point_approx(p_point);
+      
       return nearest_point.distance(p_point);
       }
 
@@ -440,10 +407,9 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    public PlaPointFloat nearest_border_point_approx(PlaPointFloat p_from_point)
       {
       PlaPointFloat[] nearest_points = nearest_border_points_approx(p_from_point, 1);
-      if (nearest_points.length <= 0)
-         {
-         return null;
-         }
+      
+      if (nearest_points.length <= 0) return null;
+
       return nearest_points[0];
       }
 
@@ -563,10 +529,8 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
     */
    public PlaSegmentFloat diagonal_corner_segment()
       {
-      if (is_empty())
-         {
-         return null;
-         }
+      if (is_empty()) return null;
+
       PlaPointFloat first_corner = corner_approx(0);
       PlaPointFloat last_corner = corner_approx(border_line_count() / 2);
       return new PlaSegmentFloat(first_corner, last_corner);
@@ -639,6 +603,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    public final ShapeTile shrink(double p_offset)
       {
       ShapeTile result = offset(-p_offset);
+      
       if (result.is_empty())
          {
          ShapeTileBox centre_box = centre_of_gravity().bounding_box();
