@@ -1,12 +1,13 @@
 package freert.planar;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  * Needed simply because erasure makes impossible to differentiate a constructor with ArrayList <xxx> and ArrayList <yyy>
  * @author damiano
  */
-public final class PlaLineIntAlist
+public final class PlaLineIntAlist implements Iterable<PlaLineInt>
    {
    private final ArrayList<PlaLineInt>a_list;
    
@@ -45,4 +46,11 @@ public final class PlaLineIntAlist
       {
       return a_list.toArray(new PlaLineInt[size()]);
       }
+   
+   @Override
+   public Iterator<PlaLineInt> iterator()
+      {
+      return a_list.iterator();
+      }
+   
    }

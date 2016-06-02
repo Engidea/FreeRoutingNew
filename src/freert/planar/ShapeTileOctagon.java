@@ -26,7 +26,7 @@ import board.kdtree.KdtreeBoundingOct;
  * @author Alfons Wirtz
  */
 
-public final class ShapeTileOctagon extends ShapeTileRegular 
+public final class ShapeTileOctagon extends ShapeTileRegular
    {
    private static final long serialVersionUID = 1L;
 
@@ -518,20 +518,16 @@ public final class ShapeTileOctagon extends ShapeTileRegular
          }
 
       if (new_ly < new_lx - new_lrx)
-      // the point lx, ly is below the lower right border line of this
-      // octagon
-      // change ly, so that the lower right border line runs through
-      // this point
          {
+         // the point lx, ly is below the lower right border line of this octagon
+         // change ly, so that the lower right border line runs through this point
          new_ly = new_lx - new_lrx;
          }
 
       if (new_ly < new_llx - new_rx)
-      // the point rx, ly is below the lower left border line of
-      // this octagon.
-      // change ly, so that the lower left border line runs through
-      // this point
          {
+         // the point rx, ly is below the lower left border line of this octagon.
+         // change ly, so that the lower left border line runs through this point
          new_ly = new_llx - new_rx;
          }
 

@@ -28,6 +28,7 @@ import board.kdtree.KdtreeBoundingOct;
  * A half-plane is defined as the positive side of a directed line.
  * This is actually used for the search tree, so, rational points are just squashed here....
  * They are not used for parts, pin locations or other stuff, just traces....
+ * Note that it is quite possible to have one line as simplex or two lines, meaning that the simplex may not be closed
  *
  * @author Alfons Wirtz
  */
@@ -36,7 +37,7 @@ public final class ShapeTileSimplex extends ShapeTile
    {
    private static final long serialVersionUID = 1L;
    // Standard implementation for an empty Simplex.
-   public static final ShapeTileSimplex EMPTY = new ShapeTileSimplex(new PlaLineInt[0]);
+   public static final ShapeTileSimplex EMPTY = new ShapeTileSimplex(new ArrayList<PlaLineInt>());
    
    private final ArrayList<PlaLineInt> lines_arr;
 
@@ -66,27 +67,33 @@ public final class ShapeTileSimplex extends ShapeTile
     * Careful, the arraylist is not copyed, yet
     * @param p_line_arr
     */
-   public ShapeTileSimplex(ArrayList<PlaLineInt> p_line_arr)
+   private ShapeTileSimplex(ArrayList<PlaLineInt> p_line_arr)
       {
       lines_arr = p_line_arr;
 
       Collections.sort(lines_arr);
       }
    
+   private ShapeTileSimplex(PlaLineIntAlist p_line_alist)
+      {
+      lines_arr = new ArrayList<PlaLineInt>(p_line_alist.size());
+      
+      for ( PlaLineInt a_line : p_line_alist ) lines_arr.add(a_line);
 
+      Collections.sort(lines_arr);
+      }
+
+   
    /**
     * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
     */
    public static ShapeTileSimplex get_instance(PlaLineInt[] p_line_arr)
       {
-      if (p_line_arr.length <= 0)
-         {
-         return ShapeTileSimplex.EMPTY;
-         }
+      if (p_line_arr.length <= 0) return ShapeTileSimplex.EMPTY;
       
       ShapeTileSimplex curr_simplex = new ShapeTileSimplex(p_line_arr);
-      ShapeTileSimplex result = curr_simplex.remove_redundant_lines();
-      return result;
+
+      return curr_simplex.remove_redundant_lines();
       }
 
    /**
@@ -94,7 +101,11 @@ public final class ShapeTileSimplex extends ShapeTile
     */
    public static ShapeTileSimplex get_instance(PlaLineIntAlist p_line_alist)
       {
-      return get_instance(p_line_alist.to_array());
+      if (p_line_alist.size() <= 0) return ShapeTileSimplex.EMPTY;
+      
+      ShapeTileSimplex curr_simplex = new ShapeTileSimplex(p_line_alist);
+      
+      return curr_simplex.remove_redundant_lines();
       }
    
    /**
@@ -133,24 +144,29 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public ShapeTile simplify()
       {
-      ShapeTile result = this;
       if ( is_empty())
-         {
-         result = ShapeTileSimplex.EMPTY;
-         }
+         return ShapeTileSimplex.EMPTY;
       else if (is_IntBox())
-         {
-         result = bounding_box();
-         }
+         return bounding_box();
       else if (is_IntOctagon())
-         {
-         result = to_IntOctagon();
-         }
-      return result;
+         return to_IntOctagon();
+      else
+         return this;
       }
 
    /**
-    * Returns true, if the determinant of the direction of index p_no -1 and the direction of index p_no is > 0
+    * Quite often there is the need to get the index of the "previous" line
+    * @param cur_index
+    * @return
+    */
+   private int get_prev_index ( int cur_index )
+      {
+      return cur_index == 0 ? tlines_size() - 1 : cur_index - 1;
+      }
+
+   
+   /**
+    * @returns true, if the determinant of the direction of index p_no -1 and the direction of index p_no is > 0
     */
    @Override
    public boolean corner_is_bounded(int p_no)
@@ -169,16 +185,7 @@ public final class ShapeTileSimplex extends ShapeTile
          }
 
       
-      int prev_no;
-      
-      if (p_no == 0)
-         {
-         prev_no = tlines_size() - 1;
-         }
-      else
-         {
-         prev_no = p_no - 1;
-         }
+      int prev_no = get_prev_index(p_no);
       
       PlaDirection prev_dir = tline_get(prev_no).direction();
       PlaDirection curr_dir = tline_get(p_no).direction();
@@ -187,7 +194,7 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    /**
-    * Returns true, if the shape of this simplex is contained in a sufficiently large box
+    * @return true, if the shape of this simplex is contained in a sufficiently large box
     */
    @Override
    public boolean is_bounded()
@@ -198,7 +205,7 @@ public final class ShapeTileSimplex extends ShapeTile
  
       for (int index = 0; index < tlines_size(); ++index)
          {
-         if (!corner_is_bounded(index)) return false;
+         if (! corner_is_bounded(index)) return false;
          }
 
       return true;
@@ -224,15 +231,7 @@ public final class ShapeTileSimplex extends ShapeTile
       if (precalc_corners_int[p_no] != null) return precalc_corners_int[p_no];
 
       // corner is not yet calculated
-      PlaLineInt prev;
-      if (p_no == 0)
-         {
-         prev = tline_get(tlines_size() - 1);
-         }
-      else
-         {
-         prev = tline_get(p_no - 1);
-         }
+      PlaLineInt prev = tline_get(get_prev_index(p_no));
       
       precalc_corners_int[p_no] = tline_get(p_no).intersection(prev,"should not heppen").round();
 
@@ -261,18 +260,11 @@ public final class ShapeTileSimplex extends ShapeTile
       
       if (precalc_corners_float == null) precalc_corners_float = new PlaPointFloat[tlines_size()];
       
-      if (precalc_corners_float[p_no] != null)       return precalc_corners_float[p_no];
+      if (precalc_corners_float[p_no] != null) return precalc_corners_float[p_no];
 
       // corner is not yet calculated
-      PlaLineInt prev;
-      if (p_no == 0)
-         {
-         prev = tline_get(tlines_size() - 1);
-         }
-      else
-         {
-         prev = tline_get(p_no - 1);
-         }
+      PlaLineInt prev = tline_get(get_prev_index(p_no));
+      
       precalc_corners_float[p_no] = tline_get(p_no).intersection_approx(prev);
 
       return precalc_corners_float[p_no];
@@ -281,33 +273,23 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public PlaPointFloat[] corner_approx_arr()
       {
-      if (precalc_corners_float == null)
-      // corner array is not yet allocated
-         {
-         precalc_corners_float = new PlaPointFloat[tlines_size()];
-         }
+      if (precalc_corners_float == null) precalc_corners_float = new PlaPointFloat[tlines_size()];
+
       for (int index = 0; index < precalc_corners_float.length; ++index)
          {
-         if (precalc_corners_float[index] == null)
-         // corner is not yet calculated
-            {
-            PlaLineInt prev;
-            if (index == 0)
-               {
-               prev = tline_get(tlines_size() - 1);
-               }
-            else
-               {
-               prev = tline_get(index - 1);
-               }
-            precalc_corners_float[index] = tline_get(index).intersection_approx(prev);
-            }
+         if (precalc_corners_float[index] != null) continue;
+
+         PlaLineInt prev = tline_get(get_prev_index(index));
+
+         precalc_corners_float[index] = tline_get(index).intersection_approx(prev);
          }
+
       return precalc_corners_float;
       }
 
    /**
-    * returns the p_no-th edge line of this simplex. The edge lines are sorted in ascending direction.
+    * @returns the p_no-th edge line of this simplex. 
+    * The edge lines are sorted in ascending direction.
     */
    @Override   
    public PlaLineInt border_line(int p_no)
@@ -317,22 +299,19 @@ public final class ShapeTileSimplex extends ShapeTile
          System.out.println("Simplex.edge_line : simplex is empty");
          return null;
          }
-      int no;
+      
       if (p_no < 0)
          {
          System.out.println("Simplex.edge_line : p_no is < 0");
-         no = 0;
+         p_no = 0;
          }
       else if (p_no >= tlines_size())
          {
          System.out.println("Simplex.edge_line: p_no must be less than arr.length - 1");
-         no = tlines_size() - 1;
+         p_no = tlines_size() - 1;
          }
-      else
-         {
-         no = p_no;
-         }
-      return tline_get(no);
+
+      return tline_get(p_no);
       }
 
    /**
@@ -385,6 +364,7 @@ public final class ShapeTileSimplex extends ShapeTile
          // now the 3 lines intersect in the same point
          return PlaDimension.POINT;
          }
+      
       // now the simplex has 4 edge lines check if opposing lines are collinear
       boolean collinear_0_2 = tline_get(0).overlaps(tline_get(2));
       boolean collinear_1_3 = tline_get(1).overlaps(tline_get(3));
@@ -406,8 +386,10 @@ public final class ShapeTileSimplex extends ShapeTile
          {
          return Integer.MAX_VALUE;
          }
+      
       double max_distance = Integer.MIN_VALUE;
       double max_distance_2 = Integer.MIN_VALUE;
+      
       PlaPointFloat gravity_point = centre_of_gravity();
 
       for (int index = 0; index < border_line_count(); ++index)
@@ -430,10 +412,8 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public double min_width()
       {
-      if (!is_bounded())
-         {
-         return Integer.MAX_VALUE;
-         }
+      if (!is_bounded()) return Integer.MAX_VALUE;
+
       double min_distance = Integer.MAX_VALUE;
       double min_distance_2 = Integer.MAX_VALUE;
       PlaPointFloat gravity_point = centre_of_gravity();
@@ -464,19 +444,12 @@ public final class ShapeTileSimplex extends ShapeTile
       for (int index = 0; index < tlines_size(); ++index)
          {
          PlaLineInt curr_line = tline_get(index);
-         if (!(curr_line.point_a instanceof PlaPointInt && curr_line.point_b instanceof PlaPointInt))
-            {
-            return false;
-            }
-         if (!curr_line.is_orthogonal())
-            {
-            return false;
-            }
-         if (!corner_is_bounded(index))
-            {
-            return false;
-            }
+
+         if ( ! curr_line.is_orthogonal()) return false;
+
+         if ( ! corner_is_bounded(index)) return false;
          }
+
       return true;
       }
 
@@ -489,39 +462,24 @@ public final class ShapeTileSimplex extends ShapeTile
       for (int index = 0; index < tlines_size(); ++index)
          {
          PlaLineInt curr_line = tline_get(index);
-         if (!(curr_line.point_a instanceof PlaPointInt && curr_line.point_b instanceof PlaPointInt))
-            {
-            return false;
-            }
-         if (!curr_line.is_multiple_of_45_degree())
-            {
-            return false;
-            }
-         if (!corner_is_bounded(index))
-            {
-            return false;
-            }
+
+         if ( ! curr_line.is_multiple_of_45_degree()) return false;
+
+         if ( ! corner_is_bounded(index)) return false;
          }
+
       return true;
       }
 
    /**
-    * Converts this IntSimplex to an IntOctagon. Returns null, if that is not possible, because not all lines of this IntSimplex are
-    * 45 degree
+    * Converts this IntSimplex to an IntOctagon. 
+    * @returns null, if that is not possible, because not all lines of this IntSimplex are 45 degree
     */
    public ShapeTileOctagon to_IntOctagon()
       {
-      // this function is at the moment only implemented for lines
-      // consisting of IntPoints.
-      // The general implementation is still missing.
-      if (!is_IntOctagon())
-         {
-         return null;
-         }
-      if (is_empty())
-         {
-         return ShapeTileOctagon.EMPTY;
-         }
+      if ( ! is_IntOctagon()) return null;
+
+      if (is_empty()) return ShapeTileOctagon.EMPTY;
 
       // initialise to biggest octagon values
 
@@ -533,11 +491,12 @@ public final class ShapeTileSimplex extends ShapeTile
       int ly = -PlaLimits.CRIT_INT;
       int llx = -PlaLimits.CRIT_INT;
       int ulx = -PlaLimits.CRIT_INT;
+
       for (int index = 0; index < tlines_size(); ++index)
          {
          PlaLineInt curr_line = tline_get(index);
-         PlaPointInt a = (PlaPointInt) curr_line.point_a;
-         PlaPointInt b = (PlaPointInt) curr_line.point_b;
+         PlaPointInt a = curr_line.point_a;
+         PlaPointInt b = curr_line.point_b;
          if (a.v_y == b.v_y)
             {
             if (b.v_x >= a.v_x)
@@ -603,28 +562,24 @@ public final class ShapeTileSimplex extends ShapeTile
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
 
-      PlaLineInt[] new_arr = new PlaLineInt[tlines_size()];
+      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(tlines_size());
       
       for (int index = 0; index < tlines_size(); ++index)
-         new_arr[index] = tline_get(index).translate_by(p_vector);
+         new_arr.add( tline_get(index).translate_by(p_vector) );
       
       return new ShapeTileSimplex(new_arr);
       }
 
    /**
-    * Returns the smallest box with int coordinates containing all corners of this simplex. 
+    * @returns the smallest box with int coordinates containing all corners of this simplex. 
     * The coordinates of the result will be Integer.MAX_VALUE, if the simplex is not bounded
     */
    @Override
    public ShapeTileBox bounding_box()
       {
-      if (tlines_size() == 0)
-         {
-         return ShapeTileBox.EMPTY;
-         }
+      if (tlines_size() == 0) return ShapeTileBox.EMPTY;
 
-      if (precalc_bounding_box != null)
-         return precalc_bounding_box;
+      if (precalc_bounding_box != null) return precalc_bounding_box;
 
       double llx = Integer.MAX_VALUE;
       double lly = Integer.MAX_VALUE;
@@ -642,13 +597,15 @@ public final class ShapeTileSimplex extends ShapeTile
       
       PlaPointInt lower_left = new PlaPointInt(Math.floor(llx), Math.floor(lly));
       PlaPointInt upper_right = new PlaPointInt(Math.ceil(urx), Math.ceil(ury));
+      
       precalc_bounding_box = new ShapeTileBox(lower_left, upper_right);
 
       return precalc_bounding_box;
       }
 
    /**
-    * Calculates a bounding octagon of the Simplex. Returns null, if the Simplex is not bounded.
+    * Calculates a bounding octagon of the Simplex. 
+    * @returns null, if the Simplex is not bounded.
     */
    @Override   
    public ShapeTileOctagon bounding_octagon()
@@ -734,8 +691,8 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    /**
-    * Returns this simplex enlarged by p_offset. The result simplex is intersected with the by p_offset enlarged bounding octagon of
-    * this simplex
+    * Returns this simplex enlarged by p_offset. 
+    * The result simplex is intersected with the by p_offset enlarged bounding octagon of this simplex
     */
    @Override   
    public ShapeTileSimplex enlarge(double p_offset)
@@ -751,6 +708,7 @@ public final class ShapeTileSimplex extends ShapeTile
          }
       
       ShapeTileOctagon offset_oct = bounding_oct.offset(p_offset);
+      
       return offset_simplex.intersection(offset_oct.to_Simplex());
       }
 
@@ -1097,16 +1055,18 @@ public final class ShapeTileSimplex extends ShapeTile
          PlaLineInt prev_line = work_arr.get(prev_ind);
          PlaLineInt curr_line = work_arr.get(0);
          PlaLineInt next_line;
-         for (int ind = 0; ind < new_length; ++ind)
+         
+         for (int cur_ind = 0; cur_ind < new_length; ++cur_ind)
             {
-            if (ind == new_length - 1)
+            if (cur_ind == new_length - 1)
                {
                next_ind = 0;
                }
             else
                {
-               next_ind = ind + 1;
+               next_ind = cur_ind + 1;
                }
+            
             next_line = work_arr.get(next_ind);
 
             boolean remove_line = false;
@@ -1115,31 +1075,30 @@ public final class ShapeTileSimplex extends ShapeTile
             long det = prev_dir.determinant(next_dir);
             if (det != 0) // prev_line and next_line are not parallel
                {
-               if (intersection_sides[ind] == null)
+               if (intersection_sides[cur_ind] == null)
                   {
                   // intersection_sides [ind] not precalculated
-                  intersection_sides[ind] = curr_line.side_of_intersection(prev_line, next_line);
+                  intersection_sides[cur_ind] = curr_line.side_of_intersection(prev_line, next_line);
                   }
                if (det > 0)
-               // direction of next_line is bigger than direction of prev_line
                   {
+                  // direction of next_line is bigger than direction of prev_line
                   // if the intersection of prev_line and next_line is on the left of curr_line, curr_line does not
                   // contribute to the shape of the simplex
-                  remove_line = (intersection_sides[ind] != PlaSide.ON_THE_LEFT);
+                  remove_line = (intersection_sides[cur_ind] != PlaSide.ON_THE_LEFT);
                   }
                else
                   {
                   // direction of next_line is smaller than direction of prev_line
 
-                  if (intersection_sides[ind] == PlaSide.ON_THE_LEFT)
+                  if (intersection_sides[cur_ind] == PlaSide.ON_THE_LEFT)
                      {
                      PlaDirection curr_dir = curr_line.direction();
                      if (prev_dir.determinant(curr_dir) > 0)
                      // direction of curr_line is bigger than direction of prev_line
                         {
                         // the halfplane defined by curr_line does not intersect
-                        // with the simplex defined by prev_line and nex_line,
-                        // hence this simplex must be empty
+                        // with the simplex defined by prev_line and nex_line, hence this simplex must be empty
                         new_length = 0;
                         try_again = false;
                         break;
@@ -1160,16 +1119,16 @@ public final class ShapeTileSimplex extends ShapeTile
                   }
                }
             
+            
             if (remove_line)
                {
                try_again = true;
                --new_length;
                
-               work_arr.remove(ind);
+               work_arr.remove(cur_ind);
                
-               for (int index = ind; index < new_length; ++index)
+               for (int index = cur_ind; index < new_length; ++index)
                   {
-//                  work_arr[index] = work_arr[index + 1];
                   intersection_sides[index] = intersection_sides[index + 1];
                   }
 
@@ -1180,31 +1139,33 @@ public final class ShapeTileSimplex extends ShapeTile
                   }
                
                // reset 3 precalculated intersection_sides
-               if (ind == 0)
+               if (cur_ind == 0)
                   {
                   prev_ind = new_length - 1;
                   }
                
                intersection_sides[prev_ind] = null;
-               if (ind >= new_length)
+               if (cur_ind >= new_length)
                   {
                   next_ind = 0;
                   }
                else
                   {
-                  next_ind = ind;
+                  next_ind = cur_ind;
                   }
                intersection_sides[next_ind] = null;
-               --ind;
-               index_of_last_removed_line = ind;
+               --cur_ind;
+               index_of_last_removed_line = cur_ind;
                }
             else
                {
                prev_line = curr_line;
-               prev_ind = ind;
+               prev_ind = cur_ind;
                }
+            
             curr_line = next_line;
-            if (!try_again && ind >= index_of_last_removed_line)
+
+            if (!try_again && cur_ind >= index_of_last_removed_line)
                {
                // tried all lines without removing one
                break;
@@ -1214,6 +1175,7 @@ public final class ShapeTileSimplex extends ShapeTile
 
       if (new_length == 2)
          {
+         // this is weird, two lines, it measn it is not closed !!!
          if (work_arr.get(0).is_parallel(work_arr.get(1)))
             {
             if (work_arr.get(0).direction().equals(work_arr.get(1).direction()))
@@ -1227,9 +1189,8 @@ public final class ShapeTileSimplex extends ShapeTile
                --new_length;
                }
             else
-               // the two remaining lines have opposite direction
-               // the simplex may be empty
                {
+               // the two remaining lines have opposite direction the simplex may be empty
                if (work_arr.get(1).side_of(work_arr.get(0).point_a) == PlaSide.ON_THE_LEFT)
                   {
                   new_length = 0;
