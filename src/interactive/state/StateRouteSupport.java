@@ -13,7 +13,7 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  */
-package interactive;
+package interactive.state;
 
 import freert.graphics.GdiContext;
 import freert.library.LibPadstack;
@@ -31,6 +31,8 @@ import freert.varie.NetNosList;
 import freert.varie.TimeLimit;
 import freert.varie.TimeLimitStoppable;
 import freert.varie.UnitMeasure;
+import interactive.IteraSettings;
+import interactive.NetIncompletes;
 import interactive.varie.IteraTargetPoint;
 import interactive.varie.PinSwappable;
 import java.awt.Color;
@@ -40,6 +42,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import java.util.TreeSet;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;
 import board.items.BrdAbit;
@@ -57,7 +60,7 @@ import board.varie.TraceAngleRestriction;
  * This is used by StateRoute and StateDragMakeSpace for additional routing suport
  * @author Alfons Wirtz
  */
-public final class IteraRoute
+public final class StateRouteSupport
    {
    private static final int s_CHECK_FORCED_TRACE_TIME_MAX = 3;
    private static final int s_PULL_TIGHT_TIME_MAX = 2;
@@ -95,7 +98,7 @@ public final class IteraRoute
     * Starts routing a connection. 
     * p_pen_half_width_arr is provided because it may be different from the half width array in p_board.rules.
     */
-   public IteraRoute(
+   public StateRouteSupport(
          PlaPointInt p_start_corner, 
          int p_layer, 
          int[] p_pen_half_width_arr, 
@@ -146,7 +149,7 @@ public final class IteraRoute
     * Append a line to the trace routed so far. 
     * @return true, if the route is completed by connecting to a target.
     */
-   public boolean next_corner(PlaPointFloat p_corner)
+   public boolean route_to(PlaPointFloat p_corner)
       {
       if (! layer_active_arr[layer_active_no]) return false;
       
@@ -184,7 +187,6 @@ public final class IteraRoute
          curr_corner = curr_corner.fortyfive_degree_projection((PlaPointInt) prev_corner);
          }
 */      
-      
       
       BrdItem end_routing_item = r_board.pick_nearest_routing_item(prev_corner, layer_active_no, null);
 
@@ -259,31 +261,21 @@ public final class IteraRoute
          }
       else
          {
+         // this is probably the idea of it, however, is it really useful ?
          tidy_clip_shape = new ShapeTileOctagon(ok_point).enlarge(itera_settings.trace_pull_tight_region_width);
          }
       
-      NetNosList opt_net_no_arr;
-      
-      if (max_shove_trace_recursion_depth <= 0)
-         {
-         opt_net_no_arr = net_nos;
-         }
-      else
-         {
-         opt_net_no_arr = NetNosList.EMPTY;
-         }
+      NetNosList opt_net_no_arr = max_shove_trace_recursion_depth <= 0 ? net_nos : NetNosList.EMPTY;
       
       if (route_completed)
          {
          r_board.reduce_nets_of_route_items();
-         for ( int curr_net_no : net_nos )
-            {
-            r_board.combine_traces(curr_net_no);
-            }
+
+         for ( int curr_net_no : net_nos ) r_board.combine_traces(curr_net_no);
          }
       else
          {
-         calc_nearest_target_point(prev_corner.to_float());
+         update_nearest_target_point(prev_corner.to_float());
          }
       
       t_limit = new TimeLimitStoppable(s_PULL_TIGHT_TIME_MAX);
@@ -522,26 +514,23 @@ public final class IteraRoute
     */
    public int nearest_target_layer()
       {
-      if (nearest_target_item == null)
-         {
-         return layer_active_no;
-         }
-      int result;
+      if (nearest_target_item == null) return layer_active_no;
+
       int first_layer = nearest_target_item.first_layer();
       int last_layer = nearest_target_item.last_layer();
+
       if (layer_active_no < first_layer)
          {
-         result = first_layer;
+         return first_layer;
          }
       else if (layer_active_no > last_layer)
          {
-         result = last_layer;
+         return last_layer;
          }
       else
          {
-         result = layer_active_no;
+         return layer_active_no;
          }
-      return result;
       }
 
    /**
@@ -549,36 +538,38 @@ public final class IteraRoute
     */
    private Set<PinSwappable> calculate_swap_pin_infos()
       {
-      Set<PinSwappable> result = new java.util.TreeSet<PinSwappable>();
-      if (target_set == null)
-         {
-         return result;
-         }
+      TreeSet<PinSwappable> result = new TreeSet<PinSwappable>();
+
+      if (target_set == null) return result;
+
       for (BrdItem curr_item : target_set)
          {
-         if (curr_item instanceof board.items.BrdAbitPin)
+         if ( ! ( curr_item instanceof BrdAbitPin) ) continue;
+
+         BrdAbitPin a_pin = (BrdAbitPin)curr_item;
+         Collection<BrdAbitPin> curr_swapppable_pins = a_pin.get_swappable_pins();
+         for (BrdAbitPin curr_swappable_pin : curr_swapppable_pins)
             {
-            Collection<board.items.BrdAbitPin> curr_swapppable_pins = ((board.items.BrdAbitPin) curr_item).get_swappable_pins();
-            for (board.items.BrdAbitPin curr_swappable_pin : curr_swapppable_pins)
-               {
-               result.add(new PinSwappable(r_board, curr_swappable_pin));
-               }
+            result.add(new PinSwappable(r_board, curr_swappable_pin));
             }
          }
+      
       // add the from item, if it is a pin
       ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionChoice.PINS);
       Collection<BrdItem> picked_items = r_board.pick_items(prev_corner, layer_active_no, selection_filter);
+
       for (BrdItem curr_item : picked_items)
          {
-         if (curr_item instanceof board.items.BrdAbitPin)
+         if ( ! (curr_item instanceof BrdAbitPin) ) continue;
+
+         BrdAbitPin a_pin = (BrdAbitPin)curr_item;
+         Collection<BrdAbitPin> curr_swapppable_pins = a_pin.get_swappable_pins();
+         for (BrdAbitPin curr_swappable_pin : curr_swapppable_pins)
             {
-            Collection<board.items.BrdAbitPin> curr_swapppable_pins = ((board.items.BrdAbitPin) curr_item).get_swappable_pins();
-            for (board.items.BrdAbitPin curr_swappable_pin : curr_swapppable_pins)
-               {
-               result.add(new PinSwappable(r_board,curr_swappable_pin));
-               }
+            result.add(new PinSwappable(r_board,curr_swappable_pin));
             }
          }
+      
       return result;
       }
 
@@ -774,8 +765,9 @@ public final class IteraRoute
 
    /**
     * The nearest point is used for drawing the incomplete
+    * This functionupdates the info on this class given the input value
     */
-   public void calc_nearest_target_point(PlaPointFloat p_from_point)
+   public void update_nearest_target_point(PlaPointFloat p_from_point)
       {
       double min_dist = Double.MAX_VALUE;
       PlaPointFloat nearest_point = null;
@@ -791,14 +783,13 @@ public final class IteraRoute
             }
          }
       
-      Iterator<BrdItem> it = target_traces_and_areas.iterator();
-      while (it.hasNext())
+      for ( BrdItem curr_item : target_traces_and_areas )
          {
-         BrdItem curr_item = it.next();
          if (curr_item instanceof BrdTracep)
             {
             BrdTracep curr_trace = (BrdTracep) curr_item;
             Polyline curr_polyline = curr_trace.polyline();
+            
             if (curr_polyline.bounding_box().distance(p_from_point) < min_dist)
                {
                PlaPointFloat curr_nearest_point = curr_polyline.nearest_point_approx(p_from_point);
@@ -829,13 +820,12 @@ public final class IteraRoute
             }
          }
       
-      if (nearest_point == null)
-         {
-         return; // target set is empty
-         }
+      // target set is empty, no target point
+      if (nearest_point == null) return; 
       
       nearest_target_point = nearest_point;
       nearest_target_item = nearest_item;
+      
       // join the graphics update box by the nearest item, so that the incomplete is completely displayed.
       r_board.gdi_update_join(nearest_item.bounding_box());
       }

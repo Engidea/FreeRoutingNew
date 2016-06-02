@@ -52,7 +52,7 @@ public class StateRouteStitch extends StateRoute
    public StateInteractive mouse_moved()
       {
       super.mouse_moved();
-      route.calc_nearest_target_point(i_brd.get_current_mouse_position());
+      route_support.update_nearest_target_point(i_brd.get_current_mouse_position());
       i_brd.repaint();
       return this;
       }
@@ -70,16 +70,16 @@ public class StateRouteStitch extends StateRoute
    public void draw(java.awt.Graphics p_graphics)
       {
       super.draw(p_graphics);
-      if (route == null)
+      if (route_support == null)
          {
          return;
          }
       // draw a line from the routing end point to the cursor
       PlaPointFloat[] draw_points = new PlaPointFloat[2];
-      draw_points[0] = route.get_last_corner().to_float();
+      draw_points[0] = route_support.get_last_corner().to_float();
       draw_points[1] = i_brd.get_current_mouse_position();
       java.awt.Color draw_color = i_brd.gdi_context.get_hilight_color();
-      double display_width = i_brd.get_trace_halfwidth(route.net_nos.first(), i_brd.itera_settings.layer_no);
+      double display_width = i_brd.get_trace_halfwidth(route_support.net_nos.first(), i_brd.itera_settings.layer_no);
       int clearance_draw_width = 50;
       double radius_with_clearance = display_width;
       freert.rules.NetClass default_net_class = r_brd.brd_rules.get_default_net_class();

@@ -26,7 +26,6 @@ import freert.rules.RuleNet;
 import freert.varie.NetNosList;
 import interactive.Actlog;
 import interactive.IteraBoard;
-import interactive.IteraRoute;
 import interactive.LogfileScope;
 import java.util.Collection;
 import java.util.Set;
@@ -50,7 +49,7 @@ import board.varie.ItemSelectionFilter;
  */
 public abstract class StateRoute extends StateInteractive
    {
-   protected IteraRoute route = null;
+   protected StateRouteSupport route_support = null;
    private Set<BrdItem> routing_target_set = null;
    
    /**
@@ -186,7 +185,7 @@ public abstract class StateRoute extends StateInteractive
       
       new_instance.routing_target_set = picked_item.get_unconnected_set(-1);
 
-      new_instance.route = new IteraRoute(location, 
+      new_instance.route_support = new StateRouteSupport(location, 
             i_board.itera_settings.layer_no, 
             trace_half_widths, 
             layer_active_arr, 
@@ -363,9 +362,9 @@ public abstract class StateRoute extends StateInteractive
     */
    public StateInteractive add_corner(PlaPointFloat p_location)
       {
-      boolean route_completed = route.next_corner(p_location);
+      boolean route_completed = route_support.route_to(p_location);
       
-      String layer_string = r_brd.layer_structure.get_name(route.nearest_target_layer());
+      String layer_string = r_brd.layer_structure.get_name(route_support.nearest_target_layer());
       
       i_brd.screen_messages.set_target_layer(layer_string);
       
@@ -382,7 +381,7 @@ public abstract class StateRoute extends StateInteractive
 
          i_brd.screen_messages.clear();
 
-         for (int curr_net_no : route.net_nos )
+         for (int curr_net_no : route_support.net_nos )
             {
             i_brd.update_ratsnest(curr_net_no);
             }
@@ -396,7 +395,7 @@ public abstract class StateRoute extends StateInteractive
 
    public StateInteractive cancel()
       {
-      BrdTracep tail = r_brd.get_trace_tail(route.get_last_corner(), i_brd.itera_settings.layer_no, route.net_nos);
+      BrdTracep tail = r_brd.get_trace_tail(route_support.get_last_corner(), i_brd.itera_settings.layer_no, route_support.net_nos);
       
       if (tail != null)
          {
@@ -416,7 +415,7 @@ public abstract class StateRoute extends StateInteractive
 
       i_brd.screen_messages.clear();
       
-      for (int curr_net_no : route.net_nos )
+      for (int curr_net_no : route_support.net_nos )
          {
          i_brd.update_ratsnest(curr_net_no);
          }
@@ -429,24 +428,24 @@ public abstract class StateRoute extends StateInteractive
       boolean result = true;
       if (p_new_layer >= 0 && p_new_layer < r_brd.get_layer_count())
          {
-         if (route != null && !route.is_layer_active(p_new_layer))
+         if (route_support != null && !route_support.is_layer_active(p_new_layer))
             {
             String layer_name = r_brd.layer_structure.get_name(p_new_layer);
             i_brd.screen_messages.set_status_message(resources.getString("layer_not_changed_because_layer") + " " + layer_name + " " + resources.getString("is_not_active_for_the_current_net"));
             }
          
-         boolean change_layer_succeeded = route.change_layer(p_new_layer);
+         boolean change_layer_succeeded = route_support.change_layer(p_new_layer);
          if (change_layer_succeeded)
             {
             boolean connected_to_plane = false;
             // check, if the layer change resulted in a connection to a power plane.
             int old_layer = i_brd.itera_settings.get_layer_no();
             ItemSelectionFilter selection_filter = new ItemSelectionFilter(ItemSelectionChoice.VIAS);
-            Collection<BrdItem> picked_items = r_brd.pick_items(route.get_last_corner(), old_layer, selection_filter);
+            Collection<BrdItem> picked_items = r_brd.pick_items(route_support.get_last_corner(), old_layer, selection_filter);
             BrdAbitVia new_via = null;
             for (BrdItem curr_via : picked_items)
                {
-               if (curr_via.shares_net_no(route.net_nos))
+               if (curr_via.shares_net_no(route_support.net_nos))
                   {
                   new_via = (BrdAbitVia) curr_via;
                   break;
@@ -485,7 +484,7 @@ public abstract class StateRoute extends StateInteractive
                {
                i_brd.set_interactive_state(return_state);
                
-               for (int curr_net_no : route.net_nos ) i_brd.update_ratsnest(curr_net_no);
+               for (int curr_net_no : route_support.net_nos ) i_brd.update_ratsnest(curr_net_no);
                }
             else
                {
@@ -552,16 +551,16 @@ public abstract class StateRoute extends StateInteractive
 
    public void draw(java.awt.Graphics p_graphics)
       {
-      if (route == null) return;
+      if (route_support == null) return;
 
-      route.draw(p_graphics, i_brd.gdi_context);
+      route_support.draw(p_graphics, i_brd.gdi_context);
       }
 
    public void display_default_message()
       {
-      if (route == null) return;
+      if (route_support == null) return;
       
-      RuleNet curr_net = r_brd.brd_rules.nets.get(route.net_nos.first());
+      RuleNet curr_net = r_brd.brd_rules.nets.get(route_support.net_nos.first());
       
       i_brd.screen_messages.set_status_message(resources.getString("routing_net") + " " + curr_net.name);
       }

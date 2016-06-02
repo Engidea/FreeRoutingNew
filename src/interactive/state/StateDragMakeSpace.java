@@ -27,7 +27,6 @@ import freert.rules.RuleViaInfoList;
 import freert.varie.NetNosList;
 import interactive.Actlog;
 import interactive.IteraBoard;
-import interactive.IteraRoute;
 import interactive.LogfileScope;
 import java.awt.Graphics;
 
@@ -41,7 +40,7 @@ public final class StateDragMakeSpace extends StateDrag
    {
    private static final int SHOVE_TRACE_WIDTH=200;
 
-   private final IteraRoute itera_route;
+   private final StateRouteSupport itera_route;
    
    public StateDragMakeSpace(PlaPointFloat p_location, StateInteractive p_parent_state, IteraBoard p_board_handling, Actlog p_logfile)
       {
@@ -58,7 +57,7 @@ public final class StateDragMakeSpace extends StateDrag
       
       NetNosList route_net_no_arr = new NetNosList(RuleNets.HIDDEN_NET_NO);
 
-      itera_route = new IteraRoute(p_location.round(), 
+      itera_route = new StateRouteSupport(p_location.round(), 
             i_brd.itera_settings.layer_no, 
             shove_trace_width_arr, 
             layer_active_arr, 
@@ -91,7 +90,7 @@ public final class StateDragMakeSpace extends StateDrag
          something_dragged = true;
          }
       
-      itera_route.next_corner(p_to_location);
+      itera_route.route_to(p_to_location);
 
       PlaPointInt route_end = itera_route.get_last_corner();
       

@@ -20,13 +20,6 @@
 
 package interactive;
 
-import freert.graphics.GdiContext;
-import freert.planar.PlaPointFloat;
-import freert.rules.RuleNet;
-import freert.varie.PlaDelTri;
-import freert.varie.PlaDelTriResultEdge;
-import freert.varie.PlaDelTriStorable;
-import gui.varie.GuiResources;
 import interactive.varie.IteraEdge;
 import interactive.varie.IteraNetItem;
 import java.awt.Color;
@@ -40,6 +33,13 @@ import board.RoutingBoard;
 import board.infos.AirLineInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
+import freert.graphics.GdiContext;
+import freert.planar.PlaPointFloat;
+import freert.rules.RuleNet;
+import freert.varie.PlaDelTri;
+import freert.varie.PlaDelTriResultEdge;
+import freert.varie.PlaDelTriStorable;
+import gui.varie.GuiResources;
 
 /**
  * Creates the Incompletes (Ratsnest) of one net to display them on the screen.
@@ -196,7 +196,7 @@ public final class NetIncompletes
          }
       }
 
-   static void draw_layer_change_marker(PlaPointFloat p_location, double p_radius, Graphics p_graphics, GdiContext p_graphics_context)
+   public static void draw_layer_change_marker(PlaPointFloat p_location, double p_radius, Graphics p_graphics, GdiContext p_graphics_context)
       {
       final int draw_width = 1;
       Color draw_color = p_graphics_context.get_incomplete_color();

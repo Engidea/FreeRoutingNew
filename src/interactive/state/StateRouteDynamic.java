@@ -55,7 +55,7 @@ public final class StateRouteDynamic extends StateRoute
       
       actlog_start_scope(LogfileScope.COMPLETE_SCOPE);
       
-      for (int curr_net_no : route.net_nos )
+      for (int curr_net_no : route_support.net_nos )
          {
          i_brd.update_ratsnest(curr_net_no);
          }

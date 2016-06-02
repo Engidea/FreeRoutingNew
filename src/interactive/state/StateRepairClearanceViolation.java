@@ -26,7 +26,6 @@ import freert.varie.NetNosList;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.IteraClearanceViolations;
-import interactive.IteraRoute;
 import interactive.LogfileScope;
 import java.util.Iterator;
 import java.util.Set;
@@ -51,7 +50,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
       }
    
    
-   private IteraRoute newIteraRoute (PlaPointInt start_point, int layer_no)
+   private StateRouteSupport newIteraRoute (PlaPointInt start_point, int layer_no)
       {
       int[] shove_trace_width_arr = new int[r_brd.get_layer_count()];
       boolean[] layer_active_arr = new boolean[shove_trace_width_arr.length];
@@ -64,7 +63,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
       
       NetNosList route_net_no_arr = new NetNosList( RuleNets.HIDDEN_NET_NO );
 
-      return new IteraRoute(start_point, 
+      return new StateRouteSupport(start_point, 
             layer_no, 
             shove_trace_width_arr, 
             layer_active_arr, 
@@ -86,7 +85,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
       PlaPointFloat start_float = a_viol.shape.centre_of_gravity();
       int layer_no = a_viol.layer_no;
       
-      IteraRoute router = newIteraRoute(start_float.round(), layer_no);
+      StateRouteSupport router = newIteraRoute(start_float.round(), layer_no);
       
       // make the situation restorable by undo
 //      r_board.generate_snapshot();
@@ -96,7 +95,7 @@ public final class StateRepairClearanceViolation extends StateInteractive
       
       PlaPointFloat end_float = start_float.add(new PlaPointFloat(10,10));
       
-      router.next_corner(end_float);
+      router.route_to(end_float);
 
       PlaPointInt route_end = router.get_last_corner();
       
