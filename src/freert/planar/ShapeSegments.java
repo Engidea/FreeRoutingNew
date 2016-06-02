@@ -138,9 +138,9 @@ public abstract class ShapeSegments implements PlaShape, java.io.Serializable
       int corner_count = border_line_count();
       double result = 0;
       PlaPointFloat prev_corner = corner_approx(corner_count - 1);
-      for (int i = 0; i < corner_count; ++i)
+      for (int index = 0; index < corner_count; ++index)
          {
-         PlaPointFloat curr_corner = corner_approx(i);
+         PlaPointFloat curr_corner = corner_approx(index);
          result += curr_corner.distance(prev_corner);
          prev_corner = curr_corner;
          }
