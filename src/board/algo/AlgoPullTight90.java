@@ -154,14 +154,12 @@ public final class AlgoPullTight90 extends AlgoPullTight
                second_last_corner_skipped = true;
                }
             
-            if (r_board.changed_area != null)
-               {
-               PlaPointFloat new_corner = check_lines[1].intersection_approx(check_lines[2]);
-               if ( ! new_corner.is_NaN() ) r_board.changed_area.join(new_corner, curr_layer);
-               
-               PlaPointFloat skipped_corner = p_polyline.plaline(index - 2).intersection_approx(p_polyline.plaline(index - 3));
-               if ( ! skipped_corner.is_NaN() ) r_board.changed_area.join(skipped_corner, curr_layer);
-               }
+            PlaPointFloat new_corner = check_lines[1].intersection_approx(check_lines[2]);
+            if ( ! new_corner.is_NaN() ) r_board.changed_area.join(new_corner, curr_layer);
+            
+            PlaPointFloat skipped_corner = p_polyline.plaline(index - 2).intersection_approx(p_polyline.plaline(index - 3));
+            if ( ! skipped_corner.is_NaN() ) r_board.changed_area.join(skipped_corner, curr_layer);
+
             polyline_changed = true;
             ++index;
             }

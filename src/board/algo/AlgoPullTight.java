@@ -170,7 +170,6 @@ public abstract class AlgoPullTight
    /**
     * Now, if there is a stop I should cleanup properly, ok ?
     * @param p_trace_cost_arr
-    * @param changed_area
     * @param layer_idx
     * @return true if something has changed
     */
@@ -452,7 +451,7 @@ public abstract class AlgoPullTight
          first_time = false;
          }
       
-      if (new_line != null && r_board.changed_area != null)
+      if (new_line != null )
          {
          // mark the changed area
          PlaPointFloat afloat = check_lines[0].intersection_approx(new_line);
@@ -642,13 +641,13 @@ public abstract class AlgoPullTight
       if (result == null)
          {
          result = smoothen_end_corner_at_trace(p_trace);
-         if (result != null && r_board.changed_area != null)
+         if (result != null )
             {
             // mark the changed area
-            r_board.changed_area.join(result.corner_approx(result.corner_count() - 1), curr_layer);
+            r_board.changed_area.join(result.corner_approx_last(), curr_layer);
             }
          }
-      else if (r_board.changed_area != null)
+      else 
          {
          // mark the changed area
          r_board.changed_area.join(result.corner_approx(0), curr_layer);

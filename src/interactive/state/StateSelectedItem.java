@@ -664,7 +664,7 @@ public final class StateSelectedItem extends StateInteractive
 
          TimeLimitStoppable t_limit = new TimeLimitStoppable(10, p_thread);
 
-         r_brd.optimize_changed_area(NetNosList.EMPTY, i_brd.itera_settings.trace_pullt_min_move, null, t_limit);
+         r_brd.changed_area_optimize(NetNosList.EMPTY, i_brd.itera_settings.trace_pullt_min_move, null, t_limit);
          }
 
       if (is_stop_requested(p_thread))

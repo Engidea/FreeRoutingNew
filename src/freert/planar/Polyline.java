@@ -566,6 +566,11 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return precalculated_float_corners[p_no];
       }
 
+   public PlaPointFloat corner_approx_last()
+      {
+      return corner_approx(corner_count()-1);
+      }
+   
    /**
     * Returns the intersection of the p_no-th with the (p_no - 1)-th edge line.
     */

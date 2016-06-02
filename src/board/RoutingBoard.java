@@ -1693,7 +1693,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
       
-      optimize_changed_area(NetNosList.EMPTY, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
+      changed_area_optimize(NetNosList.EMPTY, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
       
       return all_deleted;
       }
@@ -1723,7 +1723,7 @@ public final class RoutingBoard implements java.io.Serializable
     * If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds. 
     * If p_keep_point != null, traces on layer p_keep_point_layer containing p_keep_point will also contain this point after optimizing.
     */
-   public final void optimize_changed_area(NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
+   public final void changed_area_optimize(NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
       {
       if ( changed_area.is_clear() ) return;
       
@@ -1738,7 +1738,7 @@ public final class RoutingBoard implements java.io.Serializable
       changed_area.clear(get_layer_count());
       }
 
-   public final void optimize_changed_area(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread )
+   public final void changed_area_optimize(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread )
       {
       if (changed_area.is_clear() ) return;
       
@@ -1967,7 +1967,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(p_pull_tight_time_limit);
 
-      optimize_changed_area(opt_net_no_arr, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
+      changed_area_optimize(opt_net_no_arr, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
       
       return true;
       }
@@ -2094,7 +2094,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
 
-      optimize_changed_area(opt_net_no_arr, tidy_clip_shape, p_pull_tight_accuracy, null, t_limit, null);
+      changed_area_optimize(opt_net_no_arr, tidy_clip_shape, p_pull_tight_accuracy, null, t_limit, null);
 
       return true;
       }
@@ -2586,7 +2586,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       if (result == ArtResult.ROUTED)
          {
-         optimize_changed_area(NetNosList.EMPTY, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit);
+         changed_area_optimize(NetNosList.EMPTY, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit);
          }
       
       return result;
@@ -2636,7 +2636,7 @@ public final class RoutingBoard implements java.io.Serializable
       if (result == ArtResult.ROUTED)
          {
          TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP, p_stoppable);
-         optimize_changed_area(NetNosList.EMPTY, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit);
+         changed_area_optimize(NetNosList.EMPTY, p_settings.trace_pullt_min_move, ctrl_settings.trace_costs, t_limit);
          }
       return result;
       }

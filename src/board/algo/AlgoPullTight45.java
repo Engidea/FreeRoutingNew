@@ -240,12 +240,10 @@ public final class AlgoPullTight45 extends AlgoPullTight
             polyline_changed = true;
             curr_corner[1] = new_corner;
             curr_corner_in_clip_shape[1] = curr_clip_shape == null || !curr_clip_shape.is_outside(curr_corner[1]);
-            if (r_board.changed_area != null)
-               {
-               r_board.changed_area.join(new_corner.to_float(), curr_layer);
-               r_board.changed_area.join(curr_corner[1].to_float(), curr_layer);
-               r_board.changed_area.join(curr_corner[2].to_float(), curr_layer);
-               }
+
+            r_board.changed_area.join(new_corner.to_float(), curr_layer);
+            r_board.changed_area.join(curr_corner[1].to_float(), curr_layer);
+            r_board.changed_area.join(curr_corner[2].to_float(), curr_layer);
             }
          else
             {
@@ -370,10 +368,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
          translate_dist = -translate_dist;
          }
       PlaLineInt result = translate_line.translate(translate_dist);
-      if (r_board.changed_area != null)
-         {
-         r_board.changed_area.join(curr_corner, curr_layer);
-         }
+
+      r_board.changed_area.join(curr_corner, curr_layer);
+
       return result;
       }
 
@@ -555,7 +552,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             delta_dist -= shorten_value;
             }
          }
-      if (result != null && r_board.changed_area != null)
+      if ( result != null )
          {
          PlaPointFloat new_prev_corner = check_lines[0].intersection_approx(result);
          PlaPointFloat new_next_corner = check_lines[2].intersection_approx(result);

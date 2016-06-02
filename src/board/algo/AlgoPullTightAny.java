@@ -271,11 +271,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
                new_lines[new_line_index] = curr_lines[2];
                }
             
-            if (r_board.changed_area != null)
-               {
-               r_board.changed_area.join(new_a, curr_layer);
-               r_board.changed_area.join(new_b, curr_layer);
-               }
+            r_board.changed_area.join(new_a, curr_layer);
+            r_board.changed_area.join(new_b, curr_layer);
             }
          else
             {
@@ -475,11 +472,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          if ( ! check_ok) continue;
          
-         if (r_board.changed_area != null)
-            {
-            r_board.changed_area.join(prev_corner, curr_layer);
-            r_board.changed_area.join(next_corner, curr_layer);
-            }
+         r_board.changed_area.join(prev_corner, curr_layer);
+         r_board.changed_area.join(next_corner, curr_layer);
 
          p_polyline = try_poly;
 
@@ -599,13 +593,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
          return null;
          }
 
-      if (r_board.changed_area != null)
-         {
-         PlaPointFloat new_prev_corner = curr_lines[p_start_no].intersection_approx(curr_lines[p_start_no + 1]);
-         PlaPointFloat new_next_corner = curr_lines[p_start_no + 3].intersection_approx(curr_lines[p_start_no + 4]);
-         r_board.changed_area.join(new_prev_corner, curr_layer);
-         r_board.changed_area.join(new_next_corner, curr_layer);
-         }
+      PlaPointFloat new_prev_corner = curr_lines[p_start_no].intersection_approx(curr_lines[p_start_no + 1]);
+      PlaPointFloat new_next_corner = curr_lines[p_start_no + 3].intersection_approx(curr_lines[p_start_no + 4]);
+      r_board.changed_area.join(new_prev_corner, curr_layer);
+      r_board.changed_area.join(new_next_corner, curr_layer);
+
       return result;
       }
    
@@ -819,13 +811,10 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       if (result == null) return null;
 
-      if (r_board.changed_area != null)
-         {
-         PlaPointFloat new_prev_corner = curr_lines[p_start_no].intersection_approx(curr_lines[p_start_no + 1]);
-         PlaPointFloat new_next_corner = curr_lines[p_start_no + 3].intersection_approx(curr_lines[p_start_no + 4]);
-         r_board.changed_area.join(new_prev_corner, curr_layer);
-         r_board.changed_area.join(new_next_corner, curr_layer);
-         }
+      PlaPointFloat new_prev_corner = curr_lines[p_start_no].intersection_approx(curr_lines[p_start_no + 1]);
+      PlaPointFloat new_next_corner = curr_lines[p_start_no + 3].intersection_approx(curr_lines[p_start_no + 4]);
+      r_board.changed_area.join(new_prev_corner, curr_layer);
+      r_board.changed_area.join(new_next_corner, curr_layer);
 
       return result;
       }
@@ -873,11 +862,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
                   ShapeTile shape_to_check = reduced_polyline.offset_shape(curr_half_width, shape_no);
                   if (r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
-                     if (r_board.changed_area != null)
-                        {
-                        r_board.changed_area.join(corner1, curr_layer);
-                        r_board.changed_area.join(corner2, curr_layer);
-                        }
+                     r_board.changed_area.join(corner1, curr_layer);
+                     r_board.changed_area.join(corner2, curr_layer);
                      return reduced_polyline;
                      }
                   }
@@ -924,12 +910,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
                   ShapeTile shape_to_check = reduced_polyline.offset_shape(curr_half_width, shape_no);
                   if (r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
-                     if (r_board.changed_area != null)
-                        {
-                        r_board.changed_area.join(corner1, curr_layer);
-                        r_board.changed_area.join(corner2, curr_layer);
-                        r_board.changed_area.join(corner3, curr_layer);
-                        }
+                     r_board.changed_area.join(corner1, curr_layer);
+                     r_board.changed_area.join(corner2, curr_layer);
+                     r_board.changed_area.join(corner3, curr_layer);
                      return reduced_polyline;
                      }
                   }
