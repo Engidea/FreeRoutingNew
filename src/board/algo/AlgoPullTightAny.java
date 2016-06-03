@@ -85,7 +85,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          // 1 grid point reduce_corners may loop with smoothen_corners because of changing directions heavily.
          // Unlike reduce_corners, the above 2 functions do not introduce new directions
 
-         new_result = reduce_corners(new_result);
+//         new_result = reduce_corners(new_result);
 //         new_result = reduce_rationals(new_result);
          new_result = reposition_lines(new_result);
          new_result = smoothen_corners(new_result);
@@ -186,9 +186,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
    
    /**
     * tries to reduce the corner count of p_polyline by replacing two consecutive
-    * lines by a line through IntPoints near the previous corner and the next
-    * corner, if that is possible without clearance violation
+    * lines by a line through IntPoints near the previous corner and the next corner, if that is possible without clearance violation
     * This method does not check for clip_shape since the end result of having a "mixed" behaviour makes testing basically impossible
+    * Actually, this is a duplicate of skip_lines ... as written by Alfons, and it really is, there is no noticeable difference when not using it
     */
    private Polyline reduce_corners(Polyline p_polyline)
       {
@@ -884,6 +884,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
       return result;
       }
 
+   /**
+    * Try to skip some lines in the trace and see if it is still good....
+    * @param p_polyline
+    * @return
+    */
    private Polyline skip_lines(Polyline p_polyline)
       {
       for (int index = 1; index < p_polyline.plalinelen(-3); ++index)
@@ -893,6 +898,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             PlaPointFloat corner1;
             PlaPointFloat corner2;
             PlaLineInt curr_line;
+            
             if (jndex == 0) // try to skip the line before the i+2-th line
                {
                curr_line = p_polyline.plaline(index + 2);
@@ -925,6 +931,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                      ++shape_no;
                      }
                   ShapeTile shape_to_check = reduced_polyline.offset_shape(curr_half_width, shape_no);
+                  
                   if (r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins))
                      {
                      r_board.changed_area.join(corner1, curr_layer);

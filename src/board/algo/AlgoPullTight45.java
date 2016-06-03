@@ -67,9 +67,10 @@ public final class AlgoPullTight45 extends AlgoPullTight
          if ( is_stop_requested())  break;
 
          prev_result = new_result;
-         Polyline tmp1 = reduce_corners(prev_result);
-         Polyline tmp2 = smoothen_corners(tmp1);
-         new_result = reposition_lines(tmp2);
+
+         new_result = reduce_corners(prev_result);
+         new_result = smoothen_corners(new_result);
+         new_result = reposition_lines(new_result);
          }
       return new_result;
       }
@@ -78,6 +79,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
     * Tries to reduce the amount of corners of p_polyline. 
     * @return p_polyline, if nothing was changed.
     * Ack this one will kind of fails if the result is not an int....
+    * @deprecated use the same logic of pullTightAny, that is tested...
     */
    private Polyline reduce_corners(Polyline p_polyline)
       {

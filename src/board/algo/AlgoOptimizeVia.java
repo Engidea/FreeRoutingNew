@@ -451,6 +451,10 @@ public final class AlgoOptimizeVia
       return result;
       }
 
+   /**
+    * Tries to reposition the via
+    * @return true if it was successful
+    */
    private boolean reposition_via( 
          BrdAbitVia p_via, 
          PlaPointInt p_to_location, 
@@ -477,8 +481,7 @@ public final class AlgoOptimizeVia
 
       if (r_board.brd_rules.is_trace_snap_none() && delta.distance() <= 1.5)
          {
-         // PullTightAlgoAnyAngle.reduce_corners mmay not be able to remove the new generated overlap
-         // because of numerical stability problems
+         // PullTightAlgoAnyAngle.reduce_corners mmay not be able to remove the new generated overlap because of numerical stability problems
          // That would result in an endless loop with removing the generated acute angle in reposition_via.
          return false;
          }
@@ -487,16 +490,13 @@ public final class AlgoOptimizeVia
 
       double ok_length = r_board.check_trace(from_location, p_to_location, p_trace_layer_1, net_no_arr, p_trace_half_width_1, p_trace_cl_class_1, false);
 
-      if (ok_length < Integer.MAX_VALUE)
-         {
-         return false;
-         }
+      if (ok_length < Integer.MAX_VALUE) return false;
 
       ok_length = r_board.check_trace(p_to_location, p_connect_location, p_trace_layer_2, net_no_arr, p_trace_half_width_2, p_trace_cl_class_2, false);
 
       if (ok_length < Integer.MAX_VALUE) return false;
       
-      if (!r_board.move_drill_algo.check(p_via, delta, 0, 0, null,  null)) return false;
+      if ( ! r_board.move_drill_algo.check(p_via, delta, 0, 0, null,  null)) return false;
 
       return true;
       }
