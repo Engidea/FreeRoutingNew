@@ -229,7 +229,7 @@ public final class StateRouteSupport
          // database may be damaged, restore previous situation
          r_board.undo(null);
          // end routing in case it is dynamic
-         return (!is_stitch_mode);
+         return  ! is_stitch_mode ;
          }
 
       if (ok_point == prev_corner)

@@ -1328,12 +1328,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Tries to shorten this trace without creating clearance violations
     * It may as well check and fix any possible current clearance violations, no ? damiano 
+    * Note that this ends up being recursive since it call itself eventually
     * @returns true if the trace was changed.
     */
    public boolean pull_tight(AlgoPullTight p_pull_tight_algo)
       {
-      if ( p_pull_tight_algo.is_stop_requested() ) return false;
-      
       // This trace may have been deleted in a trace split for example
       if (! is_on_the_board())  return false;
       
@@ -1341,7 +1340,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       if ( ! is_nets_normal()) return false;
       
-      if (p_pull_tight_algo.only_net_no_arr.size() > 0 && ! nets_equal(p_pull_tight_algo.only_net_no_arr))
+      if ( p_pull_tight_algo.only_net_no_arr.size() > 0 && ! nets_equal(p_pull_tight_algo.only_net_no_arr))
          {
          return false;
          }
@@ -1358,22 +1357,24 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       Polyline new_lines = p_pull_tight_algo.pull_tight(polyline, get_layer(), get_half_width(), net_nos, clearance_idx(), touching_pins_at_end_corners());
       if (new_lines != polyline)
          {
-         change(new_lines);
+         change_polyline(new_lines);
          return true;
          }
       
       TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
       
-      if (angle_restriction != TraceAngleRestriction.NINETY && r_board.brd_rules.get_pin_edge_to_turn_dist() > 0)
+      if ( ! angle_restriction.is_limit_90() && r_board.brd_rules.get_pin_edge_to_turn_dist() > 0)
          {
          if (swap_connection_to_pin(true))
             {
+            // recursive call to itself
             pull_tight(p_pull_tight_algo);
             return true;
             }
          
          if (swap_connection_to_pin(false))
             {
+            // recursive call to itself
             pull_tight(p_pull_tight_algo);
             return true;
             }
@@ -1382,16 +1383,17 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          
          if (correct_connection_to_pin(true, angle_restriction))
             {
+            // recursive call to itself
             pull_tight(p_pull_tight_algo);
             return true;
             }
          
          if (correct_connection_to_pin(false, angle_restriction))
             {
+            // recursive call to itself
             pull_tight(p_pull_tight_algo);
             return true;
             }
-         
          }
       
       return false;
@@ -1483,7 +1485,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * changes the geometry of this trace to p_new_polyline
     */
-   public void change(Polyline p_new_polyline)
+   public void change_polyline(Polyline p_new_polyline)
       {
       if ( p_new_polyline == null ) return;
 
@@ -1496,8 +1498,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          return;
          }
 
-      // The precalculated tile shapes must not be cleared here here because they are used and modified
-      // in ShapeSearchTree.change_entries.
+      // The precalculated tile shapes must not be cleared here here because they are used and modified in ShapeSearchTree.change_entries.
 
       r_board.undo_items.save_for_undo(this);
 
@@ -1806,7 +1807,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          changed_polyline = changed_polyline.reverse();
          }
       
-      change(changed_polyline);
+      change_polyline(changed_polyline);
 
       // create an shove_fixed exit line. Interesting...
       

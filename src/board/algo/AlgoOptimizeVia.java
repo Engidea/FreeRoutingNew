@@ -62,13 +62,13 @@ public final class AlgoOptimizeVia
     * If p_trace_cost_arr == null, the horizontal and vertical trace costs will be set to 1. 
     * @returns false, if the via was not changed.
     */
-   public boolean optimize_via_location( BrdAbitVia p_via, ExpandCostFactor[] p_trace_cost_arr, int p_trace_pull_tight_accuracy, int p_max_recursion_depth)
+   public boolean optimize_location( BrdAbitVia p_via, ExpandCostFactor[] p_trace_cost_arr, int p_trace_pull_tight_accuracy, int p_max_recursion_depth)
       {
       if (p_via.is_shove_fixed())return false;
       
       if (p_max_recursion_depth <= 0)
          {
-         System.err.println("OptViaAlgo.opt_via_location: probably endless loop");
+         System.err.println("OptViaAlgo.optimize_location: probably endless loop");
          return false;
          }
       
@@ -217,7 +217,7 @@ public final class AlgoOptimizeVia
       picked_items = r_board.pick_items(new_location, first_trace.get_layer(), filter);
       for (BrdItem curr_item : picked_items)
          {
-         optimize_via_location( (BrdAbitVia) curr_item, p_trace_cost_arr, p_trace_pull_tight_accuracy, p_max_recursion_depth - 1);
+         optimize_location( (BrdAbitVia) curr_item, p_trace_cost_arr, p_trace_pull_tight_accuracy, p_max_recursion_depth - 1);
          break;
          }
       

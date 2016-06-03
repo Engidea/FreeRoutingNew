@@ -211,7 +211,7 @@ public final class AlgoShoveTrace
                {
                // spring_over changed something
                --p_max_spring_over_recursion_depth;
-               curr_substitute_trace.change(new_polyline);
+               curr_substitute_trace.change_polyline(new_polyline);
                }
             }
          
@@ -517,7 +517,7 @@ public final class AlgoShoveTrace
                {
                // spring_over changed something
                --p_max_spring_over_recursion_depth;
-               curr_substitute_trace.change(new_polyline);
+               curr_substitute_trace.change_polyline(new_polyline);
                }
             }
          NetNosList curr_net_no_arr = curr_substitute_trace.net_nos;

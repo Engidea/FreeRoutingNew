@@ -188,11 +188,9 @@ public abstract class AlgoPullTight
       changed_region = changed_region.enlarge(changed_area_offset);
 
       // search in the ShapeSearchTree for all overlapping traces with clip_shape on layer_idx
-      Collection<KdtreeObject> items = r_board.overlapping_objects(changed_region, layer_idx);
+      Set<KdtreeObject> items = r_board.overlapping_objects(changed_region, layer_idx);
    
       boolean something_changed = false;
-      
-      AlgoOptimizeVia optimize_via = new AlgoOptimizeVia(r_board);
       
       for ( KdtreeObject curr_ob : items )
          {
@@ -216,7 +214,9 @@ public abstract class AlgoPullTight
             }
          else if (curr_ob instanceof BrdAbitVia && p_trace_cost_arr != null)
             {
-            if (optimize_via.optimize_via_location( (BrdAbitVia) curr_ob, p_trace_cost_arr, min_move_dist, 10))
+            BrdAbitVia a_via = (BrdAbitVia)curr_ob;
+            
+            if (r_board.optimize_via.optimize_location( a_via, p_trace_cost_arr, min_move_dist, 10))
                {
                something_changed = true;
                }
@@ -293,7 +293,7 @@ public abstract class AlgoPullTight
    /**
     * Terminates the pull tight algorithm as requested by stoppable
     */
-   public final boolean is_stop_requested()
+   protected final boolean is_stop_requested()
       {
       if (stoppable != null && stoppable.is_stop_requested())
          {

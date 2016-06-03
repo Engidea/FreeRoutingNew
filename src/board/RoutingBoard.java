@@ -33,6 +33,7 @@ import autoroute.ArtEngine;
 import autoroute.expand.ExpandCostFactor;
 import autoroute.varie.ArtResult;
 import board.algo.AlgoMoveDrillItem;
+import board.algo.AlgoOptimizeVia;
 import board.algo.AlgoPullTight;
 import board.algo.AlgoShovePad;
 import board.algo.AlgoShoveTrace;
@@ -141,6 +142,8 @@ public final class RoutingBoard implements java.io.Serializable
    public transient AlgoShoveVia shove_via_algo;
    public transient AlgoMoveDrillItem move_drill_algo;
    public transient AlgoShovePad shove_pad_algo;
+   public transient AlgoOptimizeVia optimize_via;
+
 
    /**
     * Creates a new instance of a routing Board with surrounding box p_bounding_box Rules contains the restrictions to obey when
@@ -174,6 +177,7 @@ public final class RoutingBoard implements java.io.Serializable
       shove_via_algo   = new AlgoShoveVia(this);
       move_drill_algo  = new AlgoMoveDrillItem(this);
       shove_pad_algo   = new AlgoShovePad(this);
+      optimize_via     = new AlgoOptimizeVia(this);
       }
 
    
@@ -806,26 +810,6 @@ public final class RoutingBoard implements java.io.Serializable
       
       return result;
       }
-
-   
-   /**
-    * Combine traces of the given item if it belongs to net with wildcarding
-    * @param p_net_no
-    * @param p_item
-    * @return
-    */
-   private boolean combine_traces (int p_net_no, BrdItem p_item )
-      {
-      if ( ! p_item.contains_net_wildcard(p_net_no)) return false;
-      
-      if ( ! p_item.is_on_the_board() ) return false;
-      
-      if ( ! (p_item  instanceof BrdTracep) ) return false;
-
-      BrdTracep a_trace = (BrdTracep)p_item;
-      
-      return a_trace.combine(20);
-      }
    
    /**
     * Combines the connected traces of this net, which have only 1 contact at the connection point. 
@@ -833,12 +817,10 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public void combine_traces(int p_net_no)
       {
-      int counter=0;
-
-     for(;;)
+      for (int counter=0; counter<3; counter++)
          {
          boolean something_changed = false;
-         
+
          Iterator<UndoableObjectNode> iter = undo_items.start_read_object();
          
          for (;;)
@@ -847,18 +829,20 @@ public final class RoutingBoard implements java.io.Serializable
       
             if (curr_item == null) break;
             
-            something_changed |= combine_traces (p_net_no, curr_item);
+            if ( ! (curr_item  instanceof BrdTracep) ) continue;
+
+            BrdTracep a_trace = (BrdTracep)curr_item;
+            
+            if ( ! a_trace.contains_net_wildcard(p_net_no)) continue;
+            
+            if ( ! a_trace.is_on_the_board() ) continue;
+            
+            something_changed |= a_trace.combine(20);
             }
          
          // if after combine nothing has changed then just get out
          if ( ! something_changed ) break;
-         
-         if ( counter++ > 5 )
-            {
-            userPrintln(classname+"combine_traces: WARNING counter="+counter);
-            break;
-            }
-         }
+         } 
       }
 
    /**
@@ -1626,8 +1610,10 @@ public final class RoutingBoard implements java.io.Serializable
       shove_trace_algo    = new AlgoShoveTrace(this);  
       shove_via_algo      = new AlgoShoveVia(this);
       move_drill_algo     = new AlgoMoveDrillItem(this);
-      shove_obstacle      = new BrdShoveObstacle();
       shove_pad_algo      = new AlgoShovePad(this);
+      optimize_via        = new AlgoOptimizeVia(this);
+
+      shove_obstacle      = new BrdShoveObstacle();
       observers           = new ObserverItemVoid();
       changed_area        = new BrdChangedArea();
       

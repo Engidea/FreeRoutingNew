@@ -45,7 +45,6 @@ import java.util.TreeSet;
 import javax.swing.JPopupMenu;
 import autoroute.varie.ArtResult;
 import board.BrdConnectable;
-import board.algo.AlgoOptimizeVia;
 import board.infos.BrdComponent;
 import board.items.BrdAbit;
 import board.items.BrdAbitPin;
@@ -621,6 +620,7 @@ public final class StateSelectedItem extends StateInteractive
    /**
     * Optimizes the selected items. If p_thread != null, the algorithm can be requested to terminate.
     * Always show messages, even if thread is null
+    * This is kind of a duplicate of something that is in routing board, really, I wish to have just one...
     */
    public StateInteractive pull_tight(ThreadStoppable p_thread)
       {
@@ -630,8 +630,6 @@ public final class StateSelectedItem extends StateInteractive
       i_brd.screen_messages.set_status_message(start_message);
       
       r_brd.changed_area_clear();
-      
-      AlgoOptimizeVia optimize_via = new AlgoOptimizeVia(r_brd);
 
       for (BrdItem curr_item : items_list)
          {
@@ -652,7 +650,9 @@ public final class StateSelectedItem extends StateInteractive
             }
          else if (curr_item instanceof BrdAbitVia)
             {
-            optimize_via.optimize_via_location((BrdAbitVia) curr_item, null, i_brd.itera_settings.trace_pullt_min_move, 10);
+            BrdAbitVia a_via = (BrdAbitVia)curr_item;
+            
+            r_brd.optimize_via.optimize_location(a_via, null, i_brd.itera_settings.trace_pullt_min_move, 10);
             }
          }
       
