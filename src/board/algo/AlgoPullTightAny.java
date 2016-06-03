@@ -116,6 +116,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       for (int index = 0; index <= last_index; ++index)
          {
          boolean skip_line = false;
+         
          PlaPointFloat new_a = new_lines[new_line_index - 1].intersection_approx(new_lines[new_line_index]);
          
          if ( new_a.is_NaN() ) System.err.println("reduce_corners is_NaN , fix it !");
@@ -486,18 +487,18 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
    /**
     * Try to smothen the corner by adding an extra line and check if it is ok
-    * @param k_line_arr
+    * @param p_line_arr
     * @param p_start_no
     * @return
     */
-   private PlaLineInt smoothen_corner(PlaLineIntAlist k_line_arr, int p_start_no)
+   private PlaLineInt smoothen_corner(PlaLineIntAlist p_line_arr, int p_start_no)
       {
-      if (k_line_arr.size() - p_start_no < 4) return null;
+      if (p_line_arr.size() - p_start_no < 4) return null;
 
-      PlaLineInt cur_line = k_line_arr.get(p_start_no);
-      PlaLineInt a_line   = k_line_arr.get(p_start_no + 1);
-      PlaLineInt b_line   = k_line_arr.get(p_start_no + 2);
-      PlaLineInt d_line   = k_line_arr.get(p_start_no + 3);
+      PlaLineInt cur_line = p_line_arr.get(p_start_no);
+      PlaLineInt a_line   = p_line_arr.get(p_start_no + 1);
+      PlaLineInt b_line   = p_line_arr.get(p_start_no + 2);
+      PlaLineInt d_line   = p_line_arr.get(p_start_no + 3);
       
       PlaPointFloat curr_corner = a_line.intersection_approx(b_line);
 
@@ -524,11 +525,16 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaDirection prev_dir = a_line.direction();
       PlaDirection next_dir = b_line.direction();
       PlaDirection middle_dir = prev_dir.middle_approx(next_dir);
+      
+      // this is the line that will be "translated
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), middle_dir);
+      
       double prev_dist = translate_line.distance_signed(prev_corner);
       double next_dist = translate_line.distance_signed(next_corner);
+      
       PlaPointFloat nearest_point;
       double max_translate_dist;
+      
       if (Math.abs(prev_dist) < Math.abs(next_dist))
          {
          nearest_point = prev_corner;
@@ -540,21 +546,14 @@ public final class AlgoPullTightAny extends AlgoPullTight
          max_translate_dist = next_dist;
          }
       
-      if (Math.abs(max_translate_dist) < 1)
-         {
-         return null;
-         }
+      if (Math.abs(max_translate_dist) < 1) return null;
       
-      PlaLineIntAlist curr_lines = new PlaLineIntAlist(k_line_arr.size(1));
+      PlaLineIntAlist curr_lines = new PlaLineIntAlist(p_line_arr.size(1));
       // copy the whole list
-      k_line_arr.append_to(curr_lines, 0);
+      p_line_arr.append_to(curr_lines, 0);
 
       // then reserve a slot to put the new line
       curr_lines.add_null(p_start_no + 2);
-      
-//      System.arraycopy(k_line_arr, 0, curr_lines, 0, p_start_no + 2);
-      
-//      System.arraycopy(k_line_arr, p_start_no + 2, curr_lines, p_start_no + 3, curr_lines.length - p_start_no - 3);
 
       double translate_dist = max_translate_dist;
       double delta_dist = max_translate_dist;
@@ -581,11 +580,13 @@ public final class AlgoPullTightAny extends AlgoPullTight
             if (check_ok)
                {
                result = new_line;
+
                if (translate_dist == max_translate_dist)
                   {
                   // biggest possible change
                   break;
                   }
+               
                translate_dist += delta_dist;
                }
             else
@@ -594,8 +595,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             }
          else
-            // moved a little bit to far at the first time
-            // because of numerical inaccuracy
+            // moved a little bit to far at the first time because of numerical inaccuracy
             {
             double shorten_value = sign * 0.5;
             max_translate_dist -= shorten_value;
@@ -603,20 +603,12 @@ public final class AlgoPullTightAny extends AlgoPullTight
             delta_dist -= shorten_value;
             }
          }
-      if (result == null)
-         {
-         return null;
-         }
+      
+      if (result == null) return null;
 
       curr_lines.changed_area_join_corner(r_board.changed_area, p_start_no, curr_layer);
       curr_lines.changed_area_join_corner(r_board.changed_area, p_start_no+3, curr_layer);
-/*
-      PlaPointFloat new_prev_corner = curr_lines[p_start_no].intersection_approx(curr_lines[p_start_no + 1]);
-      PlaPointFloat new_next_corner = curr_lines[p_start_no + 3].intersection_approx(curr_lines[p_start_no + 4]);
-      
-      r_board.changed_area.join(new_prev_corner, curr_layer);
-      r_board.changed_area.join(new_next_corner, curr_layer);
-*/
+
       return result;
       }
    
@@ -624,7 +616,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
    
    /**
     * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter
-    * Note that PullTightAny defines its own and does not use this one
     * @return null if it fails to shorten
     */
    @Override
