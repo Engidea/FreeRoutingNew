@@ -28,6 +28,7 @@ import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
+import freert.planar.PlaPointIntAlist;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
@@ -76,26 +77,118 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          prev_result = new_result;
          
-         Polyline tmp  = skip_segments_of_length_0(prev_result);
-         Polyline tmp0 = reduce_lines(tmp);
-         Polyline tmp1 = skip_lines(tmp0);
+         new_result = skip_segments_of_length_0(prev_result);
+         new_result = reduce_lines(new_result);
+         new_result = skip_lines(new_result);
 
          // I intended to replace reduce_corners by the previous 2 functions, because with consecutive corners closer than
          // 1 grid point reduce_corners may loop with smoothen_corners because of changing directions heavily.
          // Unlike reduce_corners, the above 2 functions do not introduce new directions
 
-         Polyline tmp2 = reduce_corners(tmp1);
-         Polyline tmp3 = reposition_lines(tmp2);
-         new_result = smoothen_corners(tmp3);
+         new_result = reduce_corners(new_result);
+//         new_result = reduce_rationals(new_result);
+         new_result = reposition_lines(new_result);
+         new_result = smoothen_corners(new_result);
          }
       
       return new_result;
       }
 
    /**
+    * Let me go corner by corner and make them integers....
+    * Cannot do it, because start points may end on a trace, at a rational point.
+    * The real solution is not to generate them when splitting... but that is also quite complicated...
+    * @param p_polyline
+    * @return
+    */
+   private Polyline reduce_rationals (Polyline p_polyline)
+      {
+      int o_corners = p_polyline.corner_count();
+      
+      PlaPointIntAlist points = new PlaPointIntAlist(o_corners);
+      
+      boolean corner_changed = false;
+      
+      for (int c_index = 0; c_index<o_corners; c_index++)
+         {
+         PlaPoint c_corner = p_polyline.corner(c_index);
+         
+         if ( c_corner instanceof PlaPointInt )
+            {
+            points.add((PlaPointInt)c_corner);
+            continue;
+            }
+         
+         PlaPointInt n_corner = reduce_corners_one ( p_polyline, c_index, c_corner );
+         
+         // corner substitution failed miserably...
+         if ( n_corner == null ) return p_polyline;
+
+         corner_changed = true;
+         
+         // do not insert this point, it is the same as the last one
+         if ( points.is_equal_last(n_corner)) continue;
+         
+         points.add(n_corner);
+         }
+      
+      if ( ! corner_changed ) return p_polyline;
+      
+      if ( points.size() < 2 )
+         {
+         System.err.println("REALLY");
+         return p_polyline;
+         }
+      
+      return new Polyline(points);
+      }
+
+   /**
+    * Tries to make thenew corner an int one, if needed
+    * @param p_polyline
+    * @param c_index
+    * @return an int point if it makes it, or null if it cannot make it
+    */
+   private PlaPointInt reduce_corners_one (Polyline p_polyline, int c_index, PlaPoint c_point )
+      {
+      PlaPointFloat f_point = c_point.to_float();
+      PlaPointInt   i_point = f_point.round();
+      PlaPointInt   i_other;
+      
+      if ( c_index < p_polyline.corner_count()-1 )
+         {
+         PlaPoint f_other = p_polyline.corner(c_index+1);
+         i_other = f_other.round();
+         }
+      else
+         {
+         PlaPoint f_other = p_polyline.corner(c_index-1);
+         i_other = f_other.round();
+         }
+      
+      if ( i_point.equals(i_other)) return i_point;
+      
+      Polyline a_line = new Polyline(i_point,i_other);
+      
+      ShapeTile shape_to_check = a_line.offset_shape(curr_half_width, 0);
+      boolean skip_line = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+      
+      if ( skip_line ) 
+         return i_point;
+      else
+         {
+         System.out.println("GROK");
+         return null;
+         }
+      }
+   
+   
+   
+   /**
     * tries to reduce the corner count of p_polyline by replacing two consecutive
     * lines by a line through IntPoints near the previous corner and the next
-    * corner, if that is possible without clearance violation.
+    * corner, if that is possible without clearance violation
+    * This method does not check for clip_shape since the end result of having a "mixed" behaviour makes testing basically impossible
     */
    private Polyline reduce_corners(Polyline p_polyline)
       {
@@ -123,104 +216,101 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          PlaPointFloat new_b = p_polyline.corner_approx(index + 2);
 
-         boolean in_clip_shape = in_clip_shape(new_a,new_b,p_polyline.corner_approx(new_line_index));
+         // Uff, this takes some lines from new_lines and some from polyline
+         PlaPointFloat skip_corner = new_lines.get(new_line_index).intersection_approx(p_polyline.plaline(index + 2));
+         
+         curr_lines[1] = new PlaLineInt(new_a.round(), new_b.round());
+         
+         boolean try_skip = true;
 
-         if (in_clip_shape)
+         if (new_line_index == 1)
             {
-            PlaPointFloat skip_corner = new_lines.get(new_line_index).intersection_approx(p_polyline.plaline(index + 2));
+            PlaPoint corner_first = p_polyline.corner_first();
             
-            curr_lines[1] = new PlaLineInt(new_a.round(), new_b.round());
-            boolean ok = true;
-
-            if (new_line_index == 1)
+            if (corner_first.is_rational())
                {
-               PlaPoint corner_first = p_polyline.corner_first();
-               
-               if (corner_first.is_rational())
-                  {
-                  // first corner must not be changed
-                  // in a way it is true, the point is that rationals at first corner should not be generated in any case 
-                  ok = false;
-                  }
-               else
-                  {
-                  PlaDirection dir = curr_lines[1].direction();
-                  curr_lines[0] = new PlaLineInt((PlaPointInt)corner_first, dir.turn_45_degree(2));
-                  }
+               // first corner must not be changed
+               // in a way it is true, the point is that rationals at first corner should not be generated in any case 
+               try_skip = false;
                }
             else
                {
-               curr_lines[0] = new_lines.get(new_line_index - 1);
+               PlaDirection dir = curr_lines[1].direction();
+               curr_lines[0] = new PlaLineInt((PlaPointInt)corner_first, dir.turn_45_degree(2));
                }
-            
-            if (index == last_index)
-               {
-               PlaPoint corner_last = p_polyline.corner_last();
+            }
+         else
+            {
+            curr_lines[0] = new_lines.get(new_line_index - 1);
+            }
+         
+         if (index == last_index)
+            {
+            PlaPoint corner_last = p_polyline.corner_last();
 
-               if (corner_last.is_rational())
-                  {
-                  // last corner must not be changed, again as the other one...
-                  // in a way it is true, the point is that rationals at first corner should not be generated in any case 
-                  ok = false;
-                  }
-               else
-                  {
-                  PlaDirection dir = curr_lines[1].direction();
-                  curr_lines[2] = new PlaLineInt((PlaPointInt)corner_last, dir.turn_45_degree(2));
-                  }
+            if (corner_last.is_rational())
+               {
+               // last corner must not be changed, again as the other one...
+               // in a way it is true, the point is that rationals at first corner should not be generated in any case 
+               try_skip = false;
                }
             else
                {
-               curr_lines[2] = p_polyline.plaline(index + 3);
+               PlaDirection dir = curr_lines[1].direction();
+               curr_lines[2] = new PlaLineInt((PlaPointInt)corner_last, dir.turn_45_degree(2));
                }
+            }
+         else
+            {
+            curr_lines[2] = p_polyline.plaline(index + 3);
+            }
 
-            // check, if the intersection of curr_lines[0] and curr_lines[1] is near new_a and 
-            // the intersection of curr_lines[0] and curr_lines[1] and curr_lines[2] is near new_b.
-            // There may be numerical stability proplems with near parallel lines.
+         // check, if the intersection of curr_lines[0] and curr_lines[1] is near new_a and 
+         // the intersection of curr_lines[0] and curr_lines[1] and curr_lines[2] is near new_b.
+         // There may be numerical stability proplems with near parallel lines.
 
-            final double check_dist = 100;
+         final double check_dist = 100;
+         
+         if (try_skip)
+            {
+            PlaPointFloat check_is = curr_lines[0].intersection_approx(curr_lines[1]);
+            double dist = check_is.dustance_square(new_a);
+
+            if (dist > check_dist) try_skip = false;
+            }
+         
+         if (try_skip)
+            {
+            PlaPointFloat check_is = curr_lines[1].intersection_approx(curr_lines[2]);
+            double dist = check_is.dustance_square(new_b);
             
-            if (ok)
+            if (dist > check_dist) try_skip = false;
+            }
+         
+         Polyline curr_polyline = null;
+         
+         if (try_skip)
+            {
+            curr_polyline = new Polyline(curr_lines);
+         
+            if (curr_polyline.plalinelen() != 3) try_skip = false;
+            
+            double length_before = skip_corner.distance(new_a) + skip_corner.distance(new_b);
+            double length_after = curr_polyline.length_approx() + 1.5;
+
+            // 1.5 added because of possible inacurracy SQRT_2 by twice rounding.
+
+            if (length_after >= length_before)
                {
-               PlaPointFloat check_is = curr_lines[0].intersection_approx(curr_lines[1]);
-               double dist = check_is.dustance_square(new_a);
-
-               if (dist > check_dist) ok = false;
+               // May happen from rounding to integer. Prevent infinite loop.
+               try_skip = false;
                }
-            
-            if (ok)
-               {
-               PlaPointFloat check_is = curr_lines[1].intersection_approx(curr_lines[2]);
-               double dist = check_is.dustance_square(new_b);
-               
-               if (dist > check_dist) ok = false;
-               }
-            
-            Polyline curr_polyline = null;
-            
-            if (ok)
-               {
-               curr_polyline = new Polyline(curr_lines);
-            
-               if (curr_polyline.plalinelen() != 3) ok = false;
-               
-               double length_before = skip_corner.distance(new_a) + skip_corner.distance(new_b);
-               double length_after = curr_polyline.length_approx() + 1.5;
+            }
 
-               // 1.5 added because of possible inacurracy SQRT_2 by twice rounding.
-
-               if (length_after >= length_before)
-                  {
-                  // May happen from rounding to integer. Prevent infinite loop.
-                  ok = false;
-                  }
-               }
-
-            if (ok)
-               {
-               ShapeTile shape_to_check = curr_polyline.offset_shape(curr_half_width, 0);
-               skip_line = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
-               }
+         if (try_skip)
+            {
+            ShapeTile shape_to_check = curr_polyline.offset_shape(curr_half_width, 0);
+            skip_line = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
             }
          
          if (skip_line)
@@ -260,13 +350,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          }
       
       if (!polyline_changed) return p_polyline;
-      
-/*      
-      PlaLineInt[] cleaned_new_lines = new PlaLineInt[new_line_index + 1];
-      System.arraycopy(new_lines, 0, cleaned_new_lines, 0, cleaned_new_lines.length);
-      Polyline result = new Polyline(cleaned_new_lines);
-      return result;
-*/
+
       return new Polyline(new_lines);
       }
 

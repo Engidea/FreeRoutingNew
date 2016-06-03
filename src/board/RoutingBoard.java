@@ -1046,6 +1046,7 @@ public final class RoutingBoard implements java.io.Serializable
     * Checks, if the a trace line with shape p_shape and net numbers p_net_no_arr and clearance class p_cl_class can be inserted on
     * layer p_layer without clearance violation. 
     * If p_contact_pins != null, all pins not contained in p_contact_pins are regarded as obstacles, even if they are of the own net.
+    * @return true if it can be inserted without problems
     */
    public boolean check_trace (ShapeTile p_shape, int p_layer, NetNosList p_net_no_arr, int p_cl_class, Set<BrdAbitPin> p_contact_pins)
       {
