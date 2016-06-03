@@ -485,39 +485,45 @@ public final class AlgoPullTightAny extends AlgoPullTight
       }
 
    /**
-    * 
-    * @param p_line_arr
+    * Try to smothen the corner by adding an extra line and check if it is ok
+    * @param k_line_arr
     * @param p_start_no
     * @return
     */
-   private PlaLineInt smoothen_corner(PlaLineInt[] p_line_arr, int p_start_no)
+   private PlaLineInt smoothen_corner(PlaLineInt[] k_line_arr, int p_start_no)
       {
-      if (p_line_arr.length - p_start_no < 4) return null;
+      if (k_line_arr.length - p_start_no < 4) return null;
 
-      PlaPointFloat curr_corner = p_line_arr[p_start_no + 1].intersection_approx(p_line_arr[p_start_no + 2]);
+      PlaLineInt cur_line = k_line_arr[p_start_no];
+      PlaLineInt a_line   = k_line_arr[p_start_no + 1];
+      PlaLineInt b_line   = k_line_arr[p_start_no + 2];
+      PlaLineInt d_line   = k_line_arr[p_start_no + 3];
+      
+      
+      PlaPointFloat curr_corner = a_line.intersection_approx(b_line);
 
       // cannot smoothen if is not a number
       if ( curr_corner.is_NaN() ) return null;
       
       if ( ! in_clip_shape(curr_corner, null)) return null;
 
-      double cosinus_angle = p_line_arr[p_start_no + 1].cos_angle(p_line_arr[p_start_no + 2]);
+      double cosinus_angle = a_line.cos_angle(b_line);
 
       // lines are already nearly parallel, don't divide angle any further because of problems with numerical stability
       if (cosinus_angle > COS_ANGLE_MAX) return null;
 
-      PlaPointFloat prev_corner = p_line_arr[p_start_no].intersection_approx(p_line_arr[p_start_no + 1]);
+      PlaPointFloat prev_corner = cur_line.intersection_approx(a_line);
       
       if ( prev_corner.is_NaN() ) return null;
       
-      PlaPointFloat next_corner = p_line_arr[p_start_no + 2].intersection_approx(p_line_arr[p_start_no + 3]);
+      PlaPointFloat next_corner = b_line.intersection_approx(d_line);
 
       if ( next_corner.is_NaN() ) return null;
       
       // create a line approximately through curr_corner, whose direction is about the middle of the directions of the
       // previous and the next line. Translations of this line are used to cut off the corner.
-      PlaDirection prev_dir = p_line_arr[p_start_no + 1].direction();
-      PlaDirection next_dir = p_line_arr[p_start_no + 2].direction();
+      PlaDirection prev_dir = a_line.direction();
+      PlaDirection next_dir = b_line.direction();
       PlaDirection middle_dir = prev_dir.middle_approx(next_dir);
       PlaLineInt translate_line = new PlaLineInt(curr_corner.round(), middle_dir);
       double prev_dist = translate_line.distance_signed(prev_corner);
@@ -538,9 +544,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
          {
          return null;
          }
-      PlaLineInt[] curr_lines = new PlaLineInt[p_line_arr.length + 1];
-      System.arraycopy(p_line_arr, 0, curr_lines, 0, p_start_no + 2);
-      System.arraycopy(p_line_arr, p_start_no + 2, curr_lines, p_start_no + 3, curr_lines.length - p_start_no - 3);
+      PlaLineInt[] curr_lines = new PlaLineInt[k_line_arr.length + 1];
+      System.arraycopy(k_line_arr, 0, curr_lines, 0, p_start_no + 2);
+      System.arraycopy(k_line_arr, p_start_no + 2, curr_lines, p_start_no + 3, curr_lines.length - p_start_no - 3);
       double translate_dist = max_translate_dist;
       double delta_dist = max_translate_dist;
       PlaSide side_of_nearest_point = translate_line.side_of(nearest_point);
