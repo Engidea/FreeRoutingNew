@@ -316,7 +316,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       
       for (int index = 0; index < line_arr.size(-3); ++index)
          {
-         PlaLineInt new_line = smoothen_corner(line_arr.to_array(), index);
+         PlaLineInt new_line = smoothen_corner(line_arr, index);
          
          if (new_line == null) continue;
 
@@ -490,15 +490,14 @@ public final class AlgoPullTightAny extends AlgoPullTight
     * @param p_start_no
     * @return
     */
-   private PlaLineInt smoothen_corner(PlaLineInt[] k_line_arr, int p_start_no)
+   private PlaLineInt smoothen_corner(PlaLineIntAlist k_line_arr, int p_start_no)
       {
-      if (k_line_arr.length - p_start_no < 4) return null;
+      if (k_line_arr.size() - p_start_no < 4) return null;
 
-      PlaLineInt cur_line = k_line_arr[p_start_no];
-      PlaLineInt a_line   = k_line_arr[p_start_no + 1];
-      PlaLineInt b_line   = k_line_arr[p_start_no + 2];
-      PlaLineInt d_line   = k_line_arr[p_start_no + 3];
-      
+      PlaLineInt cur_line = k_line_arr.get(p_start_no);
+      PlaLineInt a_line   = k_line_arr.get(p_start_no + 1);
+      PlaLineInt b_line   = k_line_arr.get(p_start_no + 2);
+      PlaLineInt d_line   = k_line_arr.get(p_start_no + 3);
       
       PlaPointFloat curr_corner = a_line.intersection_approx(b_line);
 
@@ -540,13 +539,23 @@ public final class AlgoPullTightAny extends AlgoPullTight
          nearest_point = next_corner;
          max_translate_dist = next_dist;
          }
+      
       if (Math.abs(max_translate_dist) < 1)
          {
          return null;
          }
-      PlaLineInt[] curr_lines = new PlaLineInt[k_line_arr.length + 1];
-      System.arraycopy(k_line_arr, 0, curr_lines, 0, p_start_no + 2);
-      System.arraycopy(k_line_arr, p_start_no + 2, curr_lines, p_start_no + 3, curr_lines.length - p_start_no - 3);
+      
+      PlaLineIntAlist curr_lines = new PlaLineIntAlist(k_line_arr.size(1));
+      // copy the whole list
+      k_line_arr.append_to(curr_lines, 0);
+
+      // then reserve a slot to put the new line
+      curr_lines.add_null(p_start_no + 2);
+      
+//      System.arraycopy(k_line_arr, 0, curr_lines, 0, p_start_no + 2);
+      
+//      System.arraycopy(k_line_arr, p_start_no + 2, curr_lines, p_start_no + 3, curr_lines.length - p_start_no - 3);
+
       double translate_dist = max_translate_dist;
       double delta_dist = max_translate_dist;
       PlaSide side_of_nearest_point = translate_line.side_of(nearest_point);
@@ -560,10 +569,10 @@ public final class AlgoPullTightAny extends AlgoPullTight
          PlaSide new_line_side_of_nearest_point = new_line.side_of(nearest_point);
          if (new_line_side_of_nearest_point == side_of_nearest_point || new_line_side_of_nearest_point == PlaSide.COLLINEAR)
             {
-            curr_lines[p_start_no + 2] = new_line;
+            curr_lines.set(p_start_no + 2, new_line);
             Polyline tmp = new Polyline(curr_lines);
 
-            if (tmp.plalinelen() == curr_lines.length)
+            if (tmp.plalinelen() == curr_lines.size())
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, p_start_no + 1);
                check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
@@ -571,7 +580,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             delta_dist /= 2;
             if (check_ok)
                {
-               result = curr_lines[p_start_no + 2];
+               result = new_line;
                if (translate_dist == max_translate_dist)
                   {
                   // biggest possible change
@@ -599,13 +608,19 @@ public final class AlgoPullTightAny extends AlgoPullTight
          return null;
          }
 
+      curr_lines.changed_area_join_corner(r_board.changed_area, p_start_no, curr_layer);
+      curr_lines.changed_area_join_corner(r_board.changed_area, p_start_no+3, curr_layer);
+/*
       PlaPointFloat new_prev_corner = curr_lines[p_start_no].intersection_approx(curr_lines[p_start_no + 1]);
       PlaPointFloat new_next_corner = curr_lines[p_start_no + 3].intersection_approx(curr_lines[p_start_no + 4]);
+      
       r_board.changed_area.join(new_prev_corner, curr_layer);
       r_board.changed_area.join(new_next_corner, curr_layer);
-
+*/
       return result;
       }
+   
+   
    
    /**
     * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter

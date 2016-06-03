@@ -1479,7 +1479,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * Append to dest the remaining lines starting from pos
     * @param dest
     * @param src_pos
-    * @param length
     */
    public void plaline_append(PlaLineIntAlist dest, int src_pos )
       {
