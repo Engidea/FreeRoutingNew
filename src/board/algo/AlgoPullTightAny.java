@@ -103,9 +103,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       int last_index = p_polyline.plalinelen(-4);
 
-      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.plalinelen()];
-      new_lines[0] = p_polyline.plaline(0);
-      new_lines[1] = p_polyline.plaline(1);
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(p_polyline.plalinelen());
+      new_lines.add( p_polyline.plaline(0));
+      new_lines.add( p_polyline.plaline(1));
 
       int new_line_index = 1;
 
@@ -117,7 +117,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          {
          boolean skip_line = false;
          
-         PlaPointFloat new_a = new_lines[new_line_index - 1].intersection_approx(new_lines[new_line_index]);
+         PlaPointFloat new_a = new_lines.get(new_line_index - 1).intersection_approx(new_lines.get(new_line_index));
          
          if ( new_a.is_NaN() ) System.err.println("reduce_corners is_NaN , fix it !");
          
@@ -127,7 +127,8 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
          if (in_clip_shape)
             {
-            PlaPointFloat skip_corner = new_lines[new_line_index].intersection_approx(p_polyline.plaline(index + 2));
+            PlaPointFloat skip_corner = new_lines.get(new_line_index).intersection_approx(p_polyline.plaline(index + 2));
+            
             curr_lines[1] = new PlaLineInt(new_a.round(), new_b.round());
             boolean ok = true;
 
@@ -149,7 +150,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             else
                {
-               curr_lines[0] = new_lines[new_line_index - 1];
+               curr_lines[0] = new_lines.get(new_line_index - 1);
                }
             
             if (index == last_index)
@@ -195,40 +196,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
                if (dist > check_dist) ok = false;
                }
             
-/*            
- Hmmm... does it really matter ? after all the trace will be checked for clearance violations and it is a connected trace
- if it is not in the same side of previously, why check for this ? maybe while push and shove ?
- Looking and testing... well, it happens, however, there is no noticeable difference in enabling it or not
- Even when it happens, so , lets try to get rid of it
- 
-            if (ok && index == 1 && !(p_polyline.corner_first() instanceof PlaPointInt))
-               {
-               // There may be a connection to a trace.
-               // make shure that the second corner of the new polyline
-               // is on the same side of the trace as the third corner. (There may be splitting problems)
-               PlaPoint new_corner = curr_lines[0].intersection(curr_lines[1], "does this heppne");
-               if (new_corner.side_of(new_lines[0]) != p_polyline.corner_first_next().side_of(new_lines[0]))
-                  {
-//                  ok = false;
-                  System.err.println("YES, HAPPENSA");
-                  }
-               }
-            
-            if (ok && index == last_index - 1 && !(p_polyline.corner_last() instanceof PlaPointInt))
-               {
-               // There may be a connection to a trace. Make shure that the second last corner of the new polyline
-               // is on the same side of the trace as the third last corner (There may be splitting problems)
-               PlaPoint new_corner = curr_lines[1].intersection(curr_lines[2], "does this heppne");
-               
-               if (new_corner.side_of(new_lines[0]) != p_polyline.corner_last_prev().side_of(new_lines[0]))
-                  {
-//                  ok = false;
-                  System.err.println("YES, HAPPENSB");
-                  }
-               }
-*/ 
-
-            
             Polyline curr_polyline = null;
             
             if (ok)
@@ -258,18 +225,22 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          if (skip_line)
             {
+            // here I should "overwrite" something
             polyline_changed = true;
-            new_lines[new_line_index] = curr_lines[1];
+
+            new_lines.set(new_line_index,curr_lines[1]);
+            
             if (new_line_index == 1)
                {
                // make the first line perpendicular to the current line
-               new_lines[0] = curr_lines[0];
+               new_lines.set(0,curr_lines[0]);
                }
+            
             if (index == last_index)
                {
                // make the last line perpendicular to the current line
+               new_lines.add(curr_lines[2]);
                ++new_line_index;
-               new_lines[new_line_index] = curr_lines[2];
                }
             
             r_board.changed_area.join(new_a, curr_layer);
@@ -277,28 +248,26 @@ public final class AlgoPullTightAny extends AlgoPullTight
             }
          else
             {
+            new_lines.add( p_polyline.plaline(index + 2));
             ++new_line_index;
-            new_lines[new_line_index] = p_polyline.plaline(index + 2);
+
             if (index == last_index)
                {
+               new_lines.add( p_polyline.plaline(index + 3));
                ++new_line_index;
-               new_lines[new_line_index] = p_polyline.plaline(index + 3);
                }
-            }
-         
-         if (new_lines[new_line_index].is_parallel(new_lines[new_line_index - 1]))
-            {
-            // skip line, if it is parallel to the previous one
-            --new_line_index;
             }
          }
       
       if (!polyline_changed) return p_polyline;
       
+/*      
       PlaLineInt[] cleaned_new_lines = new PlaLineInt[new_line_index + 1];
       System.arraycopy(new_lines, 0, cleaned_new_lines, 0, cleaned_new_lines.length);
       Polyline result = new Polyline(cleaned_new_lines);
       return result;
+*/
+      return new Polyline(new_lines);
       }
 
    /**
