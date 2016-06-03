@@ -309,21 +309,21 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       boolean polyline_changed = false;
 
-      PlaLineInt[] line_arr = p_polyline.plaline_copy();
+      // create a storage with extra capacity
+      PlaLineIntAlist line_arr = new PlaLineIntAlist(p_polyline.plalinelen(10));
+
+      p_polyline.plaline_append(line_arr, 0);
       
-      for (int index = 0; index < line_arr.length - 3; ++index)
+      for (int index = 0; index < line_arr.size(-3); ++index)
          {
-         PlaLineInt new_line = smoothen_corner(line_arr, index);
+         PlaLineInt new_line = smoothen_corner(line_arr.to_array(), index);
          
          if (new_line == null) continue;
 
          polyline_changed = true;
-         // add the new line into the line array
-         PlaLineInt[] tmp_lines = new PlaLineInt[line_arr.length + 1];
-         System.arraycopy(line_arr, 0, tmp_lines, 0, index + 2);
-         tmp_lines[index + 2] = new_line;
-         System.arraycopy(line_arr, index + 2, tmp_lines, index + 3, tmp_lines.length - (index + 3));
-         line_arr = tmp_lines;
+         
+         line_arr.add(index + 2,new_line);
+         
          ++index;
          }
 

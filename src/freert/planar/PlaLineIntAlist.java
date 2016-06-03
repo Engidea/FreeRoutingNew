@@ -27,10 +27,24 @@ public final class PlaLineIntAlist implements Iterable<PlaLineInt>
    
    public PlaLineInt add(PlaLineInt avalue)
       {
-      if ( avalue != null ) a_list.add(avalue);
+      if ( avalue == null ) return null;
+      
+      a_list.add(avalue);
       
       return avalue;
       }
+   
+   public PlaLineInt add(int index, PlaLineInt avalue)
+      {
+      if ( avalue == null ) return null;
+      
+      a_list.add(index, avalue);
+      
+      return avalue;
+      }
+
+   
+   
    
    public PlaLineInt get(int index)
       {
@@ -42,6 +56,11 @@ public final class PlaLineIntAlist implements Iterable<PlaLineInt>
       return a_list.size();
       }
    
+   public int size (int offset)
+      {
+      return size()+offset;
+      }
+
    public PlaLineInt[] to_array()
       {
       return a_list.toArray(new PlaLineInt[size()]);
