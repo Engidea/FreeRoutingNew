@@ -1043,17 +1043,16 @@ public final class IteraBoard
       }
 
    /**
-    * Actions to be taken in the current interactive state when the current board layer is changed. Returns false, if the layer
-    * change failed.
+    * Actions to be taken in the current interactive state when the current board layer is changed. 
+    * @returns false, if the layer change failed or did not happen
     */
    public boolean change_layer_action(int p_new_layer)
       {
-      boolean result = true;
-      if (interactive_state != null && !board_is_read_only)
-         {
-         result = interactive_state.change_layer_action(p_new_layer);
-         }
-      return result;
+      if (interactive_state == null ) return false;
+      
+      if ( board_is_read_only ) return false;
+
+      return interactive_state.change_layer_action(p_new_layer);
       }
 
    /**

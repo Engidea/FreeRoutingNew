@@ -479,11 +479,11 @@ public abstract class LogfileScope
          super(p_name);
          }
 
-      public StateInteractive read_scope(Actlog p_logfile, StateInteractive p_return_state, IteraBoard p_board_handling)
+      public StateInteractive read_scope(Actlog p_logfile, StateInteractive p_state, IteraBoard p_board_handling)
          {
          int new_layer = p_logfile.read_int();
-         p_return_state.change_layer_action(new_layer);
-         return p_return_state;
+         p_state.change_layer_action(new_layer);
+         return p_state;
          }
       }
 

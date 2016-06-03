@@ -3,11 +3,15 @@ package gui.menu;
 import gui.BoardFrame;
 import gui.BoardPanel;
 import gui.varie.GuiResources;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 public final class PopupLayerMenuItem extends JMenuItem
    {
    private static final long serialVersionUID = 1L;
+   
+   private final LocalActionListener listener = new LocalActionListener();
    
    private final BoardFrame board_frame;
    private final int layer_no;
@@ -20,23 +24,25 @@ public final class PopupLayerMenuItem extends JMenuItem
       GuiResources resources = board_frame.newGuiResources("gui.resources.Default");
       message1 = resources.getString("layer_changed_to") + " ";
       layer_no = p_layer_no;
-      addActionListener(new java.awt.event.ActionListener()
-         {
-            public void actionPerformed(java.awt.event.ActionEvent evt)
-               {
-               final BoardPanel board_panel = board_frame.board_panel;
-               if (board_panel.itera_board.change_layer_action(layer_no))
-                  {
-                  String layer_name = board_panel.itera_board.get_routing_board().layer_structure.get_name(layer_no);
-                  board_panel.screen_messages.set_status_message(message1 + layer_name);
-                  }
-               // If change_layer failed the status message is set inside
-               // change_layer_action
-               // because the information of the cause of the failing is
-               // missing here.
-               board_panel.move_mouse(board_panel.right_button_click_location);
-               }
-         });
+      
+      addActionListener(listener);
       }
 
+private final class LocalActionListener implements ActionListener
+   {
+   public void actionPerformed(ActionEvent evt)
+      {
+      BoardPanel board_panel = board_frame.board_panel;
+      
+      if (board_panel.itera_board.change_layer_action(layer_no))
+         {
+         String layer_name = board_panel.itera_board.get_routing_board().layer_structure.get_name(layer_no);
+         board_panel.screen_messages.set_status_message(message1 + layer_name);
+         }
+      // If change_layer failed the status message is set inside change_layer_action
+      // because the information of the cause of the failing is missing here.
+      board_panel.move_mouse(board_panel.right_button_click_location);
+      }
+   } 
+   
    }

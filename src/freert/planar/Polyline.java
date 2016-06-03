@@ -244,7 +244,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       if ( have_len < 3)
          {
-         System.err.println(classname+"IntLine<> A < 3");
+         System.err.println(classname+"IntLine A < 3");
          return;
          }
       
@@ -273,7 +273,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (plalinelen() < 3)
          {
          // it is not as terrible as it seems...
-         System.err.println(classname+"IntLine<> B < 3");
+         System.err.println(classname+"IntLine B < 3");
 //         new IllegalArgumentException(classname+"lines < 3").printStackTrace();
          return;
          }

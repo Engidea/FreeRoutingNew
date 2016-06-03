@@ -236,12 +236,13 @@ public class StateInteractive
 
    /**
     * Action to be taken, when the current layer is changed. 
-    * returns false, if the layer could not be changed, Default function to be overwritten in derived classes.
+    * @return false, if the layer could not be changed, Default function to be overwritten in derived classes.
     */
    public boolean change_layer_action(int p_new_layer)
       {
-      i_brd.set_layer(p_new_layer);
-      return true;
+      int r_layer = i_brd.set_layer(p_new_layer);
+
+      return r_layer == p_new_layer;
       }
 
    /**

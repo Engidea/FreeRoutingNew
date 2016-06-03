@@ -124,16 +124,17 @@ public class StateCopyItem extends StateInteractive
    /**
     * Changes the first layer of the items in the copy list to p_new_layer.
     */
+   @Override
    public boolean change_layer_action(int p_new_layer)
       {
-      p_new_layer = i_brd.set_layer(p_new_layer);
+      int r_layer = i_brd.set_layer(p_new_layer);
 
       // save what actually has been set by ths system
-      actlog_start_scope(LogfileScope.CHANGE_LAYER, p_new_layer);
+      actlog_start_scope(LogfileScope.CHANGE_LAYER, r_layer);
 
-      layer_changed = true;
+      layer_changed = r_layer == p_new_layer;
       
-      return true;
+      return layer_changed;
       }
 
    /**
