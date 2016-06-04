@@ -24,16 +24,20 @@ import freert.main.Stat;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
 import gui.varie.AutorouteParameterRow;
+import gui.varie.GuiPanelVertical;
 import gui.varie.GuiResources;
 import interactive.IteraBoard;
+import java.awt.BorderLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 import autoroute.ArtSettings;
 import board.BrdLayerStructure;
 
@@ -47,161 +51,60 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
    private static final String classname="WindowAutorouteParameter.";
    
    private final AutoParamsListener actionListener = new AutoParamsListener();
-   private final ArrayList<AutorouteParameterRow> param_list = new ArrayList<AutorouteParameterRow>();
 
-   private final IteraBoard board_handling;
+   private final IteraBoard i_board;
    private final JCheckBox vias_allowed,no_ripup,vias_remove_uconn;
    private final JCheckBox fanout_pass_button;
    private final JCheckBox autoroute_pass_button;
    private final JCheckBox postroute_pass_button;
    private final JButton detail_button;
    private final WindowAutorouteParameterDetail detail_window;
-   private final String horizontal;
-   private final String vertical;
+
+   private final WinLayerTableModel layer_table_model;
+   private final JTable layer_table;
+   
+   private final GuiResources resources;
+   
    
    public WindowAutorouteParameter(Stat stat, BoardFrame p_board_frame)
       {
       super(p_board_frame);
       
-      board_handling = p_board_frame.board_panel.itera_board;
+      i_board = p_board_frame.board_panel.itera_board;
       
-      GuiResources resources = board_frame.newGuiResources("gui.resources.WindowAutorouteParameter");
+      resources = board_frame.newGuiResources("gui.resources.WindowAutorouteParameter");
 
       setTitle(resources.getString("title"));
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
       
       // create main panel
-
-      final JPanel main_panel = new JPanel();
-      add(main_panel);
-      java.awt.GridBagLayout gridbag = new java.awt.GridBagLayout();
-      main_panel.setLayout(gridbag);
-      java.awt.GridBagConstraints gridbag_constraints = new java.awt.GridBagConstraints();
-      gridbag_constraints.anchor = java.awt.GridBagConstraints.WEST;
-      gridbag_constraints.insets = new java.awt.Insets(1, 10, 1, 10);
-
-      gridbag_constraints.gridwidth = 3;
-      JLabel layer_label = resources.newJLabel("layer");
-      gridbag.setConstraints(layer_label, gridbag_constraints);
-      main_panel.add(layer_label);
-
-      JLabel active_label = resources.newJLabel("active");
-      gridbag.setConstraints(active_label, gridbag_constraints);
-      main_panel.add(active_label);
-
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-      JLabel preferred_direction_label = resources.newJLabel("preferred_direction");
-      gridbag.setConstraints(preferred_direction_label, gridbag_constraints);
-      main_panel.add(preferred_direction_label);
-
-      horizontal = resources.getString("horizontal");
-      vertical = resources.getString("vertical");
-
-      board.BrdLayerStructure layer_structure = board_handling.get_routing_board().layer_structure;
-      int signal_layer_count = layer_structure.signal_layer_count();
-
-      for (int layer_no = 0; layer_no < signal_layer_count; ++layer_no)
-         {
-         AutorouteParameterRow arow = new AutorouteParameterRow(layer_no);
-         board.BrdLayer curr_signal_layer = layer_structure.get_signal_layer(layer_no);
-         arow.setName(curr_signal_layer.name);
-         
-         gridbag_constraints.gridwidth = 3;
-         gridbag.setConstraints(arow.signal_layer_name,gridbag_constraints);
-         main_panel.add(arow.signal_layer_name);
-
-         arow.signal_layer_active.addActionListener(new LayerActiveListener(arow));
-         gridbag.setConstraints(arow.signal_layer_active,gridbag_constraints);
-         main_panel.add(arow.signal_layer_active);
-         arow.signal_layer_combo.addItem(horizontal);
-         arow.signal_layer_combo.addItem(vertical);
-         arow.signal_layer_combo.addActionListener(new PreferredDirectionListener(arow));
-         
-         gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-         gridbag.setConstraints(arow.signal_layer_combo, gridbag_constraints);
-         main_panel.add(arow.signal_layer_combo);
-         
-         param_list.add(arow);
-         }
-
-      JLabel separator = new JLabel("----------------------------------------  ");
-
-      gridbag.setConstraints(separator, gridbag_constraints);
-      main_panel.add(separator, gridbag_constraints);
-
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
-      JLabel alabel = resources.newJLabel("vias_allowed");
-      gridbag.setConstraints(alabel, gridbag_constraints);
-      main_panel.add(alabel);
-
-      vias_allowed = new JCheckBox();
-      vias_allowed.addActionListener(actionListener);
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(vias_allowed, gridbag_constraints);
-      main_panel.add(vias_allowed);
+      GuiPanelVertical main_panel = new GuiPanelVertical(new Insets(3,3,3,3));
       
-      // ---------------------------------------------------------------------------
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
-      alabel = resources.newJLabel("no_ripup");
-      gridbag.setConstraints(alabel, gridbag_constraints);
-      main_panel.add(alabel);
-
-      no_ripup = new JCheckBox();
-      no_ripup.addActionListener(actionListener);
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(no_ripup, gridbag_constraints);
-      main_panel.add(no_ripup);
-
-      // ---------------------------------------------------------------------------
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
-      alabel = resources.newJLabel("vias_rem_unconn");
-      gridbag.setConstraints(alabel, gridbag_constraints);
-      main_panel.add(alabel);
-
-      vias_remove_uconn = new JCheckBox();
-      vias_remove_uconn.addActionListener(actionListener);
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-      gridbag.setConstraints(vias_remove_uconn, gridbag_constraints);
-      main_panel.add(vias_remove_uconn);
+      layer_table_model = new WinLayerTableModel(i_board);
+      layer_table = new JTable(layer_table_model);
+      layer_table_model.adjustTableClumns(layer_table);
       
-      // ---------------------------------------------------------------------------
+      main_panel.add(newLayersPanel());
 
-      separator = new JLabel("----------------------------------------  ");
-      gridbag.setConstraints(separator, gridbag_constraints);
-      main_panel.add(separator, gridbag_constraints);
-
-      JLabel passes_label = resources.newJLabel("passes");
-
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.RELATIVE;
-      gridbag_constraints.gridheight = 3;
-      gridbag.setConstraints(passes_label, gridbag_constraints);
-      main_panel.add(passes_label);
+      vias_allowed = resources.newJCheckBox("vias_allowed",actionListener);
+      no_ripup     = resources.newJCheckBox("no_ripup",actionListener);
+      vias_remove_uconn = resources.newJCheckBox("vias_rem_unconn",actionListener);
+      
+      main_panel.add(newOptionsPanel());
 
       fanout_pass_button    = resources.newJCheckBox("fanout",actionListener);
       autoroute_pass_button = resources.newJCheckBox("autoroute",actionListener);
       postroute_pass_button = resources.newJCheckBox("postroute",actionListener);
 
-      gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
-      gridbag_constraints.gridheight = 1;
-      
-      gridbag.setConstraints(fanout_pass_button, gridbag_constraints);
-      main_panel.add(fanout_pass_button, gridbag_constraints);
-
-      gridbag.setConstraints(autoroute_pass_button, gridbag_constraints);
-      main_panel.add(autoroute_pass_button, gridbag_constraints);
-      
-      gridbag.setConstraints(postroute_pass_button, gridbag_constraints);
-      main_panel.add(postroute_pass_button, gridbag_constraints);
-
-      separator = new JLabel("----------------------------------------  ");
-      gridbag.setConstraints(separator, gridbag_constraints);
-      main_panel.add(separator, gridbag_constraints);
+      main_panel.add(newPassesPanel());
 
       detail_window = new WindowAutorouteParameterDetail(stat, p_board_frame);
 
       detail_button = resources.newJButton("detail_parameter",null,actionListener);
-      gridbag.setConstraints(detail_button, gridbag_constraints);
+
       main_panel.add(detail_button);
+
+      add(main_panel.getJPanel());
 
       p_board_frame.set_context_sensitive_help(this, "WindowAutorouteParameter");
 
@@ -209,13 +112,58 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
       pack();
       }
 
+   private JPanel newPassesPanel ()
+      {
+      JPanel risul = new JPanel();
+      
+      risul.setLayout(new BoxLayout(risul, BoxLayout.Y_AXIS));
+      risul.setBorder(resources.newTitledBorder("passes"));
+      risul.setToolTipText(resources.getString("autor_options_tooltip"));
+
+      risul.add(fanout_pass_button);
+      risul.add(autoroute_pass_button);
+      risul.add(postroute_pass_button);
+      
+      return risul;
+      }
+   
+   private JPanel newOptionsPanel ()
+      {
+      JPanel risul = new JPanel();
+      
+      risul.setLayout(new BoxLayout(risul, BoxLayout.Y_AXIS));
+      risul.setBorder(resources.newTitledBorder("autor_options"));
+      risul.setToolTipText(resources.getString("autor_options_tooltip"));
+      
+      risul.add(vias_allowed);
+      risul.add(no_ripup);
+      risul.add(vias_remove_uconn);
+
+      return risul;
+      }
+   
+   private JPanel newLayersPanel ()
+      {
+      JScrollPane a_scroll = new JScrollPane(layer_table);
+
+      JPanel risul = new JPanel(new BorderLayout());
+
+      risul.add(a_scroll,BorderLayout.CENTER);
+      risul.setBorder(resources.newTitledBorder("layer_setup"));
+      risul.setToolTipText(resources.getString("layer_setup_tooltip"));
+      
+      return risul;
+      }
+
+   
+   
    /**
     * Recalculates all displayed values
     */
    public void refresh()
       {
-      ArtSettings settings = board_handling.itera_settings.autoroute_settings;
-      BrdLayerStructure layer_structure = board_handling.get_routing_board().layer_structure;
+      ArtSettings settings = i_board.itera_settings.autoroute_settings;
+      BrdLayerStructure layer_structure = i_board.get_routing_board().layer_structure;
 
       vias_allowed.setSelected(settings.vias_allowed);
       vias_remove_uconn.setSelected(settings.stop_remove_fanout_vias);
@@ -224,20 +172,26 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
       autoroute_pass_button.setSelected(settings.get_with_autoroute());
       postroute_pass_button.setSelected(settings.get_with_postroute());
 
-      for (int index = 0; index < param_list.size(); ++index)
-         {
-         AutorouteParameterRow arow = param_list.get(index);
-         arow.signal_layer_active.setSelected(settings.get_layer_active(layer_structure.get_layer_no(index)));
+      int signal_layer_count = layer_structure.signal_layer_count();
 
-         if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(index)))
+      for (int layer_no = 0; layer_no < signal_layer_count; ++layer_no)
+         {
+         AutorouteParameterRow arow = layer_table_model.get_layer(layer_no);
+
+         arow.signal_layer_name = layer_structure.get_name(layer_no);
+
+         arow.signal_layer_active = settings.get_layer_active(layer_structure.get_layer_no(layer_no));
+
+         if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(layer_no)))
             {
-            arow.signal_layer_combo.setSelectedItem(horizontal);
+            arow.signal_layer_pfdir = AutorouteParameterRow.PFDIR_horizontal;
             }
          else
             {
-            arow.signal_layer_combo.setSelectedItem(vertical);
+            arow.signal_layer_pfdir = AutorouteParameterRow.PFDIR_vertical;
             }
          }
+      
       detail_window.refresh();
       }
 
@@ -260,49 +214,12 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
       detail_window.parent_deiconified();
       super.parent_deiconified();
       }
-
-
-   private class LayerActiveListener implements ActionListener
-      {
-      private final AutorouteParameterRow param;
-
-      public LayerActiveListener(AutorouteParameterRow p_param)
-         {
-         param = p_param;
-         }
-
-      public void actionPerformed(ActionEvent p_evt)
-         {
-         boolean selected = param.signal_layer_active.isSelected();
-         int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(param.signal_layer_no);
-         board_handling.itera_settings.autoroute_settings.set_layer_active(curr_layer_no, selected);
-         }
-      }
-
-   private class PreferredDirectionListener implements ActionListener
-      {
-      private final AutorouteParameterRow param;
-
-      public PreferredDirectionListener(AutorouteParameterRow p_param)
-         {
-         param = p_param;
-         }
-
-      public void actionPerformed(ActionEvent p_evt)
-         {
-         int curr_layer_no = board_handling.get_routing_board().layer_structure.get_layer_no(param.signal_layer_no);
-         board_handling.itera_settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no, param.signal_layer_combo.getSelectedItem() == horizontal);
-         }
-      }
-
-
-
    
    private class AutoParamsListener implements ActionListener
       {
       public void actionPerformed(ActionEvent p_evt)
          {
-         ArtSettings asettings = board_handling.itera_settings.autoroute_settings;
+         ArtSettings asettings = i_board.itera_settings.autoroute_settings;
 
          Object source = p_evt.getSource();
          
@@ -324,17 +241,17 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
          else if ( source == vias_allowed)
             {
             asettings.vias_allowed = vias_allowed.isSelected();
-            board_handling.userPrintln(classname+"vias_allowed="+asettings.vias_allowed);
+            i_board.userPrintln(classname+"vias_allowed="+asettings.vias_allowed);
             }
          else if ( source == vias_remove_uconn)
             {
             asettings.stop_remove_fanout_vias = vias_remove_uconn.isSelected();
-            board_handling.userPrintln(classname+"vias_remove_uconn="+asettings.stop_remove_fanout_vias);
+            i_board.userPrintln(classname+"vias_remove_uconn="+asettings.stop_remove_fanout_vias);
             }
          else if ( source == no_ripup)
             {
             asettings.no_ripup = no_ripup.isSelected();
-            board_handling.userPrintln(classname+"no_ripup="+asettings.no_ripup);
+            i_board.userPrintln(classname+"no_ripup="+asettings.no_ripup);
             }
          else if ( source == detail_button )
             {
