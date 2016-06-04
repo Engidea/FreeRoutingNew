@@ -461,13 +461,16 @@ public final class ShapePolygon extends ShapeSegments
       {
       ShapePolygon hull = convex_hull();
       
-      PlaLineInt[] bounding_lines = new PlaLineInt[hull.border_line_count()];
-      for (int index = 0; index < bounding_lines.length - 1; ++index)
+      int line_count = hull.border_line_count();
+      
+      PlaLineIntAlist bounding_lines = new PlaLineIntAlist(line_count);
+      
+      for (int index = 0; index < line_count - 1; ++index)
          {
-         bounding_lines[index] = new PlaLineInt(hull.corners.get(index), hull.corners.get(index + 1));
+         bounding_lines.add( new PlaLineInt(hull.corners.get(index), hull.corners.get(index + 1)) );
          }
       
-      bounding_lines[bounding_lines.length - 1] = new PlaLineInt(hull.corners.get(hull.border_line_count() - 1), hull.corners.get(0));
+      bounding_lines.add( new PlaLineInt(hull.corners.get(line_count - 1), hull.corners.get(0)) );
       
       return ShapeTile.get_instance(bounding_lines);
       }
@@ -484,9 +487,10 @@ public final class ShapePolygon extends ShapeSegments
       double result = 0;
       PlaPointFloat prev_corner = corners.get(border_line_count() - 2).to_float();
       PlaPointFloat curr_corner = corners.get(border_line_count() - 1).to_float();
-      for (int i = 0; i < border_line_count(); ++i)
+      
+      for (int index = 0; index < border_line_count(); ++index)
          {
-         PlaPointFloat next_corner = corners.get(i).to_float();
+         PlaPointFloat next_corner = corners.get(index).to_float();
          result += curr_corner.v_x * (next_corner.v_y - prev_corner.v_y);
          prev_corner = curr_corner;
          curr_corner = next_corner;

@@ -133,7 +133,7 @@ public final class WinLayerTableModel extends AbstractTableModel implements java
       }
 
    @Override
-   public Class getColumnClass(int p_col)
+   public Class<?> getColumnClass(int p_col)
       {
       switch ( p_col )
          {

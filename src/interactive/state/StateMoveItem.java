@@ -60,9 +60,6 @@ public class StateMoveItem extends StateInteractive
    private Collection<BrdItemViolation> clearance_violations;
 
    private final Collection<IteraNetItems> net_items_list;
-
-   private boolean observers_activated = false;
-
    
    /**
     * Returns a new instance or null, if the items of p_itemlist do not belong to a single component.

@@ -33,6 +33,17 @@ public final class PlaLineIntAlist implements Iterable<PlaLineInt>
       a_list = new ArrayList<PlaLineInt>(size);
       }
    
+   /**
+    * Create a new instance by copying the collection to this Alist
+    * @param p_list
+    */
+   public PlaLineIntAlist(Collection<PlaLineInt> p_list)
+      {
+      int list_len = p_list.size();
+      a_list = new ArrayList<PlaLineInt>(list_len);
+      addAll(p_list);
+      }
+
    public void addAll(Collection<PlaLineInt> p_list )
       {
       a_list.addAll(p_list);

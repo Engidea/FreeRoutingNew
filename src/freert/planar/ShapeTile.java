@@ -33,8 +33,16 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    /**
     * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
     * Then simplify it to return the simplest geometry that fits it
+    * @deprecated use the one with PlaLineIntAlist parameter
     */
    public static ShapeTile get_instance(PlaLineInt[] p_line_arr)
+      {
+      ShapeTileSimplex result = ShapeTileSimplex.get_instance(p_line_arr);
+      
+      return result.simplify();
+      }
+
+   public static ShapeTile get_instance(PlaLineIntAlist p_line_arr)
       {
       ShapeTileSimplex result = ShapeTileSimplex.get_instance(p_line_arr);
       

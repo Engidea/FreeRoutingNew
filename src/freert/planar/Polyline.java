@@ -18,7 +18,6 @@ package freert.planar;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 /**
@@ -819,15 +818,10 @@ public final class Polyline implements java.io.Serializable, PlaObject
                }
             }
          ShapeTile s1 = ShapeTile.get_instance(lines);
-         int cut_line_count = cut_dog_ear_lines.size();
-         if (cut_line_count > 0)
+         
+         if (cut_dog_ear_lines.size() > 0)
             {
-            PlaLineInt[] cut_lines = new PlaLineInt[cut_line_count];
-            Iterator<PlaLineInt> it = cut_dog_ear_lines.iterator();
-            for (int j = 0; j < cut_line_count; ++j)
-               {
-               cut_lines[j] = it.next();
-               }
+            PlaLineIntAlist cut_lines = new PlaLineIntAlist(cut_dog_ear_lines);
             s1 = s1.intersection(ShapeTile.get_instance(cut_lines));
             }
 

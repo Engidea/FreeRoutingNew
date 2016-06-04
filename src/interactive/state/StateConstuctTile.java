@@ -27,6 +27,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import board.varie.ItemFixState;
 import freert.planar.PlaLineInt;
+import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
@@ -75,20 +76,25 @@ public class StateConstuctTile extends StateConstructCorner
       remove_concave_corners_at_close();
       int corner_count = corner_list.size();
       boolean construction_succeeded = corner_count > 2;
+      
       if (construction_succeeded)
          {
          // create the edgelines of the new tile
-         PlaLineInt[] edge_lines = new PlaLineInt[corner_count];
+         PlaLineIntAlist edge_lines = new PlaLineIntAlist(corner_count);
+         
          Iterator<PlaPointInt> it = corner_list.iterator();
          PlaPointInt first_corner = it.next();
          PlaPointInt prev_corner = first_corner;
-         for (int i = 0; i < corner_count - 1; ++i)
+         
+         for (int index = 0; index < corner_count - 1; ++index)
             {
             PlaPointInt next_corner = it.next();
-            edge_lines[i] = new PlaLineInt(prev_corner, next_corner);
+            edge_lines.add( new PlaLineInt(prev_corner, next_corner));
             prev_corner = next_corner;
             }
-         edge_lines[corner_count - 1] = new PlaLineInt(prev_corner, first_corner);
+         
+         edge_lines.add( new PlaLineInt(prev_corner, first_corner));
+         
          ShapeTile obstacle_shape = ShapeTile.get_instance(edge_lines);
 
          int layer = i_brd.itera_settings.layer_no;
@@ -106,6 +112,9 @@ public class StateConstuctTile extends StateConstructCorner
             r_brd.end_notify_observers();
             }
          }
+      
+      
+      
       if (construction_succeeded)
          {
          i_brd.screen_messages.set_status_message(resources.getString("keepout_successful_completed"));
