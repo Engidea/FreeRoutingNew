@@ -54,14 +54,16 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
     */
    public static ShapeTile get_instance(ArrayList<PlaPointInt> p_points_list)
       {
-      PlaLineInt[] line_arr = new PlaLineInt[p_points_list.size()];
+      int list_len = p_points_list.size();
       
-      for (int jndex = 0; jndex < line_arr.length - 1; ++jndex)
+      PlaLineIntAlist line_arr = new PlaLineIntAlist(list_len);
+      
+      for (int jndex = 0; jndex < list_len - 1; ++jndex)
          {
-         line_arr[jndex] = new PlaLineInt(p_points_list.get(jndex), p_points_list.get(jndex + 1));
+         line_arr.add( new PlaLineInt(p_points_list.get(jndex), p_points_list.get(jndex + 1)) );
          }
       
-      line_arr[line_arr.length - 1] = new PlaLineInt(p_points_list.get(line_arr.length - 1), p_points_list.get(0));
+      line_arr.add( new PlaLineInt(p_points_list.get(list_len - 1), p_points_list.get(0)) );
       
       return get_instance(line_arr);
       }
@@ -807,6 +809,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          }
       else if (polygon_corners.size() == 2)
          {
+         // WOW, what a convoluted way to get the result.... TODO simplify
          Polyline curr_polyline = new Polyline(new PlaPointIntAlist(polygon_corners));
          PlaSegmentInt curr_segment = curr_polyline.segment_get(1);
          return curr_segment.to_simplex();
