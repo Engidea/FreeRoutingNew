@@ -29,38 +29,40 @@ public class MainOptions
    String design_file_name = null;
    String design_dir_name = null;
    Locale options_locale = null;
+   boolean system_plaf=true;
 
    public MainOptions(String p_args[])
       {
-      for (int i = 0; i < p_args.length; ++i)
+      for (int index = 0; index < p_args.length; ++index)
          {
-         if (p_args[i].startsWith("-de"))
+         if (p_args[index].startsWith("-de"))
             {
             // the design file is provided
-            if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
+            if (p_args.length > index + 1 && !p_args[index + 1].startsWith("-"))
                {
-               design_file_name = p_args[i + 1];
+               design_file_name = p_args[index + 1];
                }
             }
-         else if (p_args[i].startsWith("-di"))
+         else if (p_args[index].startsWith("-di"))
             {
             // the design directory is provided
-            if (p_args.length > i + 1 && !p_args[i + 1].startsWith("-"))
+            if (p_args.length > index + 1 && !p_args[index + 1].startsWith("-"))
                {
-               design_dir_name = p_args[i + 1];
+               design_dir_name = p_args[index + 1];
                }
             }
-         else if (p_args[i].startsWith("-l"))
+         else if (p_args[index].startsWith("-l"))
             {
             // the locale is provided
-            if (p_args.length > i + 1 && p_args[i + 1].startsWith("d"))
+            if (p_args.length > index + 1 && p_args[index + 1].startsWith("d"))
                {
                options_locale = java.util.Locale.GERMAN;
+               index++;
                }
             }
-         else if (p_args[i].startsWith("-s"))
+         else if (p_args[index].startsWith("-nosysplaf"))
             {
-            //session_file_option = true;
+            system_plaf=false;
             }
          }
       }

@@ -37,6 +37,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingWorker;
+import javax.swing.UIManager;
 import board.varie.DesignFile;
 
 /**
@@ -71,8 +72,11 @@ public class MainApplication extends JFrame
 
    public MainApplication(String p_args[])
       {
-      stat.log = new WindowEventsLog(true);
       main_options = new MainOptions(p_args);
+
+      decideUILookAndFeel(main_options);
+
+      stat.log = new WindowEventsLog(true);
 
       resources = new GuiResources(stat,"gui.resources.MainApplication");
       
@@ -85,6 +89,33 @@ public class MainApplication extends JFrame
       stat.log.setVisible(false);
       }
 
+   
+   /**
+    * NOrmally the look and feel should be the standard one, java, allow to set the systemplaf
+    * to have the system look and feel
+    */
+   private void decideUILookAndFeel (MainOptions options)
+     {
+     try
+       {
+       boolean systemPlaf=false;
+       
+       systemPlaf = options.system_plaf;
+       
+       String systemPlafReq = System.getenv("systemplaf");
+       if ( systemPlafReq != null && systemPlafReq.equalsIgnoreCase("true") )  systemPlaf = true;
+       
+       if ( systemPlaf )
+         UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+       }
+     catch ( Exception exc )
+       {
+       exc.printStackTrace();
+       }
+     }
+      
+   
+   
    /**
     * Creates new form MainApplication
     */
