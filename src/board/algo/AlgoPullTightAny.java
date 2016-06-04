@@ -192,11 +192,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
     */
    private Polyline reduce_corners(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 4) return p_polyline;
+      if (p_polyline.plaline_len() < 4) return p_polyline;
 
-      int last_index = p_polyline.plalinelen(-4);
+      int last_index = p_polyline.plaline_len(-4);
 
-      PlaLineIntAlist new_lines = new PlaLineIntAlist(p_polyline.plalinelen());
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(p_polyline.plaline_len());
       new_lines.add( p_polyline.plaline(0));
       new_lines.add( p_polyline.plaline(1));
 
@@ -293,7 +293,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             {
             curr_polyline = new Polyline(curr_lines);
          
-            if (curr_polyline.plalinelen() != 3) try_skip = false;
+            if (curr_polyline.plaline_len() != 3) try_skip = false;
             
             double length_before = skip_corner.distance(new_a) + skip_corner.distance(new_b);
             double length_after = curr_polyline.length_approx() + 1.5;
@@ -359,14 +359,12 @@ public final class AlgoPullTightAny extends AlgoPullTight
     */
    private Polyline smoothen_corners(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 4) return p_polyline;
+      if (p_polyline.plaline_len() < 4) return p_polyline;
 
       boolean polyline_changed = false;
 
       // create a storage with extra capacity
-      PlaLineIntAlist line_arr = new PlaLineIntAlist(p_polyline.plalinelen(10));
-
-      p_polyline.alist_append_to(line_arr, 0);
+      PlaLineIntAlist line_arr = p_polyline.alist_copy(10);
       
       for (int index = 0; index < line_arr.size(-3); ++index)
          {
@@ -389,7 +387,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
    @Override
    protected Polyline reposition_lines(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 5) return p_polyline;
+      if (p_polyline.plaline_len() < 5) return p_polyline;
 
       boolean polyline_changed = false;
       
@@ -422,9 +420,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
     */
    private Polyline reduce_lines(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 6) return p_polyline;
+      if (p_polyline.plaline_len() < 6) return p_polyline;
 
-      for (int index = 2; index < p_polyline.plalinelen(-2); ++index)
+      for (int index = 2; index < p_polyline.plaline_len(-2); ++index)
          {
          PlaPointFloat prev_corner = p_polyline.corner_approx(index-2);
          
@@ -497,14 +495,14 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
          if (crossed_corners_after_count > 0)
             {
-            if (index >= p_polyline.plalinelen(-3) ) continue;
+            if (index >= p_polyline.plaline_len(-3) ) continue;
 
             PlaPointFloat next_next_corner = p_polyline.corner_approx(index + 2);
 
             if (new_line.side_of(next_next_corner) != line_side) continue;
             }
          
-         PlaLineIntAlist curr_lines = new PlaLineIntAlist(p_polyline.plalinelen());
+         PlaLineIntAlist curr_lines = new PlaLineIntAlist(p_polyline.plaline_len());
          
          int keep_before_ind = index - crossed_corners_before_count;
 
@@ -518,7 +516,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
          boolean check_ok = false;
          
-         if (try_poly.plalinelen() == curr_lines.size())
+         if (try_poly.plaline_len() == curr_lines.size())
             {
             ShapeTile shape_to_check = try_poly.offset_shape(curr_half_width, keep_before_ind - 1);
             check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
@@ -624,7 +622,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             curr_lines.set(p_start_no + 2, new_line);
             Polyline tmp = new Polyline(curr_lines);
 
-            if (tmp.plalinelen() == curr_lines.size())
+            if (tmp.plaline_len() == curr_lines.size())
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, p_start_no + 1);
                check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
@@ -842,7 +840,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             
             Polyline tmp = new Polyline(curr_lines);
 
-            if (tmp.plalinelen() == curr_lines.length)
+            if (tmp.plaline_len() == curr_lines.length)
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, p_start_no + 1);
                check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
@@ -891,7 +889,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
     */
    private Polyline skip_lines(Polyline p_polyline)
       {
-      for (int index = 1; index < p_polyline.plalinelen(-3); ++index)
+      for (int index = 1; index < p_polyline.plaline_len(-3); ++index)
          {
          for (int jndex = 0; jndex <= 1; ++jndex)
             {
@@ -923,7 +921,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                // the two corners are on different sides of the line
                Polyline reduced_polyline = new Polyline(p_polyline.plaline_skip(index + 1, index + 1));
                
-               if ( reduced_polyline.plalinelen() == p_polyline.plalinelen(-1) )
+               if ( reduced_polyline.plaline_len() == p_polyline.plaline_len(-1) )
                   {
                   int shape_no = index - 1;
                   if (jndex == 0)
@@ -942,7 +940,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                }
             
             // now try skipping 2 lines
-            if (index >= p_polyline.plalinelen(-4))  break;
+            if (index >= p_polyline.plaline_len(-4))  break;
             
             PlaPointFloat corner3;
             if (jndex == 1)
@@ -973,7 +971,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
                // the two corners are on different sides of the line
                Polyline reduced_polyline = new Polyline(p_polyline.plaline_skip(index + 1, index + 2));
                
-               if (reduced_polyline.plalinelen() == p_polyline.plalinelen(-2) )
+               if (reduced_polyline.plaline_len() == p_polyline.plaline_len(-2) )
                   {
                   int shape_no = index - 1;
 
@@ -1083,7 +1081,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       
       
       
-      int new_line_count = trace_polyline.plalinelen(1);
+      int new_line_count = trace_polyline.plaline_len(1);
       int diff = 1;
       if (skip_short_segment)
          {
@@ -1140,7 +1138,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          PlaLineInt new_line = reposition_line(check_line_arr, 0);
          if (new_line != null)
             {
-            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plalinelen()];
+            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plaline_len()];
             new_lines[0] = other_trace_line;
             new_lines[1] = new_line;
             for (int index = 2; index < new_lines.length; ++index)
@@ -1171,7 +1169,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().dustance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
       
-      int end_line_no = trace_polyline.plalinelen(-2);
+      int end_line_no = trace_polyline.plaline_len(-2);
       if (skip_short_segment)
          {
          if (trace_polyline.corner_count() < 3) return null;
@@ -1239,7 +1237,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             }
          }
 
-      int new_line_count = trace_polyline.plalinelen(+1);
+      int new_line_count = trace_polyline.plaline_len(+1);
       int diff = 0;
       if (skip_short_segment)
          {
@@ -1276,7 +1274,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
             // constract the new trace polyline.
             
             PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
-            for (int index = 0; index < trace_polyline.plalinelen(-1); ++index)
+            for (int index = 0; index < trace_polyline.plaline_len(-1); ++index)
                {
                new_lines[index] = trace_polyline.plaline(index);
                }
@@ -1299,7 +1297,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
          PlaLineInt new_line = reposition_line(check_line_arr, check_line_arr.length - 5);
          if (new_line != null)
             {
-            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plalinelen()];
+            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plaline_len()];
             
             for (int index = 0; index < new_lines.length - 2; ++index)
                {

@@ -499,7 +499,7 @@ public final class AlgoShoveTraceEntries
                   }
                else
                   {
-                  trace_line_segment_no = p_trace.polyline().plalinelen(-1);
+                  trace_line_segment_no = p_trace.polyline().plaline_len(-1);
                   }
 
                if (projection_side >= 0)

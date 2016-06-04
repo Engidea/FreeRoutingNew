@@ -2284,9 +2284,9 @@ public final class RoutingBoard implements java.io.Serializable
       
       if ( ! combined_polyline.is_valid() ) return from_corner;
       
-      int start_shape_no = combined_polyline.plalinelen() - new_polyline.plalinelen();
+      int start_shape_no = combined_polyline.plaline_len() - new_polyline.plaline_len();
       // calculate the last shapes of combined_polyline for checking
-      ArrayList<ShapeTile> trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.plalinelen(-1));
+      ArrayList<ShapeTile> trace_shapes = combined_polyline.offset_shapes(compensated_half_width, start_shape_no, combined_polyline.plaline_len(-1));
       
       final int trace_shapes_count = trace_shapes.size();
       int last_shape_no = trace_shapes_count;
@@ -2368,7 +2368,7 @@ public final class RoutingBoard implements java.io.Serializable
          
          if (last_segment_length > sample_width)
             {
-            new_polyline = new_polyline.shorten(new_polyline.plalinelen( - (trace_shapes_count - last_shape_no - 1)), sample_width);
+            new_polyline = new_polyline.shorten(new_polyline.plaline_len( - (trace_shapes_count - last_shape_no - 1)), sample_width);
             
             PlaPoint new_last_corner_point = new_polyline.corner_last();
             
@@ -2394,7 +2394,7 @@ public final class RoutingBoard implements java.io.Serializable
             
             if ( ! combined_polyline.is_valid() ) return new_corner;
             
-            shape_index = combined_polyline.plalinelen(-3);
+            shape_index = combined_polyline.plaline_len(-3);
             last_trace_shape = combined_polyline.offset_shape(compensated_half_width, shape_index);
             if (orthogonal_mode)
                {

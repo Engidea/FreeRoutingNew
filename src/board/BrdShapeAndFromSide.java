@@ -116,12 +116,12 @@ public final class BrdShapeAndFromSide
       Polyline polyline = p_trace.polyline();
       KdtreeShapeSearch search_tree = p_trace.r_board.search_tree_manager.get_default_tree();
       
-      if (p_index == polyline.plalinelen(-3) 
-            || polyline.corner_approx(polyline.plalinelen(-2)).distance(polyline.corner_approx(p_index + 1)) < p_trace.get_compensated_half_width(search_tree))
+      if (p_index == polyline.plaline_len(-3) 
+            || polyline.corner_approx(polyline.plaline_len(-2)).distance(polyline.corner_approx(p_index + 1)) < p_trace.get_compensated_half_width(search_tree))
          {
 
-         PlaLineInt curr_line = polyline.plaline(polyline.plalinelen(-1));
-         PlaPointFloat is = polyline.corner_approx(polyline.plalinelen(-3));
+         PlaLineInt curr_line = polyline.plaline(polyline.plaline_len(-1));
+         PlaPointFloat is = polyline.corner_approx(polyline.plaline_len(-3));
          PlaLineInt cut_line;
          if (curr_line.side_of(is) == PlaSide.ON_THE_LEFT)
             {

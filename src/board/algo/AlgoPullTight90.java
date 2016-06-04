@@ -71,7 +71,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
     */
    private Polyline try_skip_second_corner(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 5) return p_polyline;
+      if (p_polyline.plaline_len() < 5) return p_polyline;
 
       PlaLineInt[] check_lines = new PlaLineInt[4];
       check_lines[0] = p_polyline.plaline(1);
@@ -80,7 +80,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
       check_lines[3] = p_polyline.plaline(4);
       Polyline check_polyline = new Polyline(check_lines);
       
-      if (check_polyline.plalinelen() != 4 || ! in_clip_shape(check_polyline.corner_approx(1),null))
+      if (check_polyline.plaline_len() != 4 || ! in_clip_shape(check_polyline.corner_approx(1),null))
          {
          return p_polyline;
          }
@@ -94,7 +94,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
             }
          }
       // now the second corner can be skipped.
-      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.plalinelen(-1)];
+      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.plaline_len(-1)];
       new_lines[0] = p_polyline.plaline(1);
       new_lines[1] = p_polyline.plaline(0);
       for (int index = 2; index < new_lines.length; ++index)
@@ -109,14 +109,14 @@ public final class AlgoPullTight90 extends AlgoPullTight
     */
    private Polyline try_skip_corners(Polyline p_polyline)
       {
-      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.plalinelen()];
+      PlaLineInt[] new_lines = new PlaLineInt[p_polyline.plaline_len()];
       new_lines[0] = p_polyline.plaline(0);
       new_lines[1] = p_polyline.plaline(1);
       int new_line_index = 1;
       boolean polyline_changed = false;
       PlaLineInt[] check_lines = new PlaLineInt[4];
       boolean second_last_corner_skipped = false;
-      for (int index = 5; index <= p_polyline.plalinelen(); ++index)
+      for (int index = 5; index <= p_polyline.plaline_len(); ++index)
          {
          boolean skip_lines = false;
          boolean in_clip_shape = in_clip_shape(p_polyline.corner_approx(index - 3), null);
@@ -125,7 +125,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
             check_lines[0] = new_lines[new_line_index - 1];
             check_lines[1] = new_lines[new_line_index];
             check_lines[2] = p_polyline.plaline(index - 1);
-            if (index < p_polyline.plalinelen())
+            if (index < p_polyline.plaline_len())
                {
                check_lines[3] = p_polyline.plaline(index);
                }
@@ -135,7 +135,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
                check_lines[3] = p_polyline.plaline(index - 2);
                }
             Polyline check_polyline = new Polyline(check_lines);
-            skip_lines = check_polyline.plalinelen() == 4 && in_clip_shape(check_polyline.corner_approx(1),null);
+            skip_lines = check_polyline.plaline_len() == 4 && in_clip_shape(check_polyline.corner_approx(1),null);
             if (skip_lines)
                {
                ShapeTile shape_to_check = check_polyline.offset_shape(curr_half_width, 0);
@@ -149,7 +149,7 @@ public final class AlgoPullTight90 extends AlgoPullTight
             }
          if (skip_lines)
             {
-            if (index == p_polyline.plalinelen())
+            if (index == p_polyline.plaline_len())
                {
                second_last_corner_skipped = true;
                }
@@ -177,16 +177,16 @@ public final class AlgoPullTight90 extends AlgoPullTight
          {
          // The second last corner of p_polyline was skipped
          ++new_line_index;
-         new_lines[new_line_index] = p_polyline.plaline(p_polyline.plalinelen(-1));
+         new_lines[new_line_index] = p_polyline.plaline(p_polyline.plaline_len(-1));
          ++new_line_index;
-         new_lines[new_line_index] = p_polyline.plaline(p_polyline.plalinelen(-2));
+         new_lines[new_line_index] = p_polyline.plaline(p_polyline.plaline_len(-2));
          }
       else
          {
          for (int index = 3; index > 0; --index)
             {
             ++new_line_index;
-            new_lines[new_line_index] = p_polyline.plaline(p_polyline.plalinelen(-index));
+            new_lines[new_line_index] = p_polyline.plaline(p_polyline.plaline_len(-index));
             }
          }
 

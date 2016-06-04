@@ -108,7 +108,7 @@ public final class DsnCoordinateTransform implements java.io.Serializable
     */
    public double[] board_to_dsn(Polyline polyline)
       {
-      int lines_len = polyline.plalinelen();
+      int lines_len = polyline.plaline_len();
       
       double[] result = new double[4 * lines_len];
       

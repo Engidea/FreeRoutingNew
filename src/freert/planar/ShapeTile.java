@@ -884,10 +884,10 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
     */
    public ArrayList<PlaToupleInt> entrance_points(Polyline p_polyline)
       {
-      ArrayList<PlaToupleInt> result = new ArrayList<PlaToupleInt>(2 * p_polyline.plalinelen());
+      ArrayList<PlaToupleInt> result = new ArrayList<PlaToupleInt>(2 * p_polyline.plaline_len());
       int prev_intersection_line_no = -1;
       int prev_intersection_edge_no = -1;
-      for (int line_no = 1; line_no < p_polyline.plalinelen(-1); ++line_no)
+      for (int line_no = 1; line_no < p_polyline.plaline_len(-1); ++line_no)
          {
          PlaSegmentInt curr_line_seg = p_polyline.segment_get(line_no);
          
@@ -1015,7 +1015,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          curr_intersection_tuple = intersection_no.get(curr_intersection_no);
          int curr_polyline_intersection_no = curr_intersection_tuple.v_a;
          
-         int want_len = p_polyline.plalinelen(-curr_polyline_intersection_no + 1);
+         int want_len = p_polyline.plaline_len(-curr_polyline_intersection_no + 1);
          
          PlaLineIntAlist curr_lines = new PlaLineIntAlist(want_len);
 

@@ -617,7 +617,7 @@ public final class AlgoShoveTrace
       else
          check_net_no_arr = NetNosList.EMPTY;
       
-      for (int index = 0; index < p_polyline.plalinelen(-2); ++index)
+      for (int index = 0; index < p_polyline.plaline_len(-2); ++index)
          {
          ShapeTile curr_shape = p_polyline.offset_shape(p_half_width, index);
          

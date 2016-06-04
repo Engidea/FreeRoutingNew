@@ -636,7 +636,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    @Override
    public int tile_shape_count()
       {
-      return Math.max(polyline.plalinelen(-2), 0);
+      return Math.max(polyline.plaline_len(-2), 0);
       }
 
    @Override
@@ -740,12 +740,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       boolean skip_line = other_poly.plaline_last_prev().is_equal_or_opposite(polyline.plaline_first_next());
       
       // assume I want to copy other up until the end line
-      int my_copy_count = other_poly.plalinelen(-1);
+      int my_copy_count = other_poly.plaline_len(-1);
       
       // but if I need to stip the previous one, copy one less
       if (skip_line) my_copy_count--;
       
-      PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plalinelen() + other_poly.plalinelen());
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plaline_len() + other_poly.plaline_len());
       
       // append other up until the last line or less, if requested
       other_poly.alist_append_to(new_lines, 0, my_copy_count);
@@ -755,7 +755,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       Polyline joined_polyline = new Polyline(new_lines);
 
-      if (joined_polyline.plalinelen() != new_lines.size())
+      if (joined_polyline.plaline_len() != new_lines.size())
          {
          // consecutive parallel lines where skipped at the join location combine without performance optimation
          r_board.search_tree_manager.remove(this);
@@ -766,11 +766,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       else
          {
          // reuse the tree entries for better performance create the changed line shape at the join location
-         int to_no = other_poly.plalinelen();
+         int to_no = other_poly.plaline_len();
 
          if (skip_line) --to_no;
 
-         r_board.search_tree_manager.merge_entries_in_front(other.other_trace, this, joined_polyline, other_poly.plalinelen(-3), to_no);
+         r_board.search_tree_manager.merge_entries_in_front(other.other_trace, this, joined_polyline, other_poly.plaline_len(-3), to_no);
          other.other_trace.clear_search_tree_entries();
          polyline = joined_polyline;
          }
@@ -866,12 +866,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       boolean skip_line = polyline.plaline_last_prev().is_equal_or_opposite(other_poly.plaline_first_next());
       
       // assume I want to copy myself up until the end line
-      int my_copy_count = polyline.plalinelen(-1);
+      int my_copy_count = polyline.plaline_len(-1);
       
       // but if I need to stip the previous one, copy one less
       if (skip_line) my_copy_count--;
       
-      PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plalinelen() + other_poly.plalinelen());
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plaline_len() + other_poly.plaline_len());
       
       // append myself up until the last line or less, if requested
       polyline.alist_append_to(new_lines, 0, my_copy_count);
@@ -881,7 +881,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       Polyline joined_polyline = new Polyline(new_lines);
       
-      if (joined_polyline.plalinelen() != new_lines.size())
+      if (joined_polyline.plaline_len() != new_lines.size())
          {
          // consecutive parallel lines where skipped at the join location combine without performance optimation
          r_board.search_tree_manager.remove(this);
@@ -893,11 +893,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       else
          {
          // reuse tree entries for better performance create the changed line shape at the join location
-         int to_no = polyline.plalinelen();
+         int to_no = polyline.plaline_len();
 
          if (skip_line) --to_no;
          
-         r_board.search_tree_manager.merge_entries_at_end(other.other_trace, this, joined_polyline, polyline.plalinelen(-3), to_no);
+         r_board.search_tree_manager.merge_entries_at_end(other.other_trace, this, joined_polyline, polyline.plaline_len(-3), to_no);
          other.other_trace.clear_search_tree_entries();
          polyline = joined_polyline;
          }
@@ -937,7 +937,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       KdtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
 
-      for (int index = 0; index < polyline.plalinelen(-2); ++index)
+      for (int index = 0; index < polyline.plaline_len(-2); ++index)
          {
          PlaSegmentInt curr_segment = polyline.segment_get(index + 1);
 
@@ -1223,7 +1223,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    public final boolean split_at_point(PlaPointInt p_point)
       {
-      for (int index = 1; index < polyline.plalinelen(-1); index++)
+      for (int index = 1; index < polyline.plaline_len(-1); index++)
          {
          PlaSegmentInt curr_line_segment = polyline.segment_get(index);
          
@@ -1505,7 +1505,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // for performance reasons there is some effort to reuse ShapeTree entries of the old trace in the changed trace
 
       // look for the first line in p_new_polyline different from the lines of the existung trace
-      int last_index = Math.min(p_new_polyline.plalinelen(), polyline.plalinelen());
+      int last_index = Math.min(p_new_polyline.plaline_len(), polyline.plaline_len());
       
       int index_of_first_different_line = last_index;
 
@@ -1526,9 +1526,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       for (int index = 1; index <= last_index; ++index)
          {
-         if (p_new_polyline.plaline(p_new_polyline.plalinelen(-index)) != polyline.plaline(polyline.plalinelen(-index)))
+         if (p_new_polyline.plaline(p_new_polyline.plaline_len(-index)) != polyline.plaline(polyline.plaline_len(-index)))
             {
-            index_of_last_different_line = p_new_polyline.plalinelen() - index;
+            index_of_last_different_line = p_new_polyline.plaline_len() - index;
             break;
             }
          }
@@ -1537,7 +1537,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( index_of_last_different_line < 0) return; 
       
       int keep_at_start_count = Math.max(index_of_first_different_line - 2, 0);
-      int keep_at_end_count = Math.max(p_new_polyline.plalinelen() - index_of_last_different_line - 3, 0);
+      int keep_at_end_count = Math.max(p_new_polyline.plaline_len() - index_of_last_different_line - 3, 0);
       r_board.search_tree_manager.change_entries(this, p_new_polyline, keep_at_start_count, keep_at_end_count);
       polyline = p_new_polyline;
 
@@ -1784,7 +1784,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          return false;
          }
 
-      PlaLineInt[] cut_lines = new PlaLineInt[trace_polyline.plalinelen( - latest_entry_tuple.v_a + 1)];
+      PlaLineInt[] cut_lines = new PlaLineInt[trace_polyline.plaline_len( - latest_entry_tuple.v_a + 1)];
       cut_lines[0] = curr_lines[curr_lines.length - 2];
       
       for (int index = 1; index < cut_lines.length; ++index)
@@ -1870,7 +1870,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if (!check_swap)
          {
          double half_width = get_half_width();
-         if (trace_polyline.plalinelen() > 3 && trace_polyline.corner_approx(0).dustance_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
+         if (trace_polyline.plaline_len() > 3 && trace_polyline.corner_approx(0).dustance_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
             {
             // check also for sharp angle with the second line
             check_swap = (contact_last_line.direction().projection(trace_polyline.plaline(2).direction()) == Signum.NEGATIVE);

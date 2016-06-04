@@ -310,11 +310,11 @@ public abstract class AlgoPullTight
     */
    protected Polyline reposition_lines(Polyline p_polyline)
       {
-      if (p_polyline.plalinelen() < 5) return p_polyline;
+      if (p_polyline.plaline_len() < 5) return p_polyline;
       
       PlaLineInt[] line_arr = p_polyline.alist_to_array();
 
-      for (int index = 2; index < p_polyline.plalinelen(-2); ++index)
+      for (int index = 2; index < p_polyline.plaline_len(-2); ++index)
          {
          PlaLineInt new_line = reposition_line(line_arr, index);
 
@@ -426,7 +426,7 @@ public abstract class AlgoPullTight
          
          Polyline tmp = new Polyline(check_lines);
 
-         if (tmp.plalinelen() == 3)
+         if (tmp.plaline_len() == 3)
             {
             ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
             check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
@@ -479,7 +479,7 @@ public abstract class AlgoPullTight
          {
          boolean try_skip;
          
-         if (index == 1 || index == p_polyline.plalinelen(-2))
+         if (index == 1 || index == p_polyline.plaline_len(-2))
             {
             // the position of the first corner and the last corner must be retained exactly
             PlaPoint prev_corner = p_polyline.corner(index - 1);
@@ -506,7 +506,7 @@ public abstract class AlgoPullTight
          
          Polyline tmp = new Polyline(curr_lines);
          
-         boolean check_ok = tmp.plalinelen() == curr_lines.size();
+         boolean check_ok = tmp.plaline_len() == curr_lines.size();
          
          if (check_ok && ! p_polyline.plaline(index).is_multiple_of_45_degree())
             {
@@ -518,7 +518,7 @@ public abstract class AlgoPullTight
                check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
                }
             
-            if (check_ok && (index < p_polyline.plalinelen(-2)))
+            if (check_ok && (index < p_polyline.plaline_len(-2)))
                {
                ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, index - 1);
                check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);

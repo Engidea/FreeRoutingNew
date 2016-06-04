@@ -482,7 +482,7 @@ public final class KdtreeShapeSearch
       {
       // calculate the shapes of p_new_polyline from keep_at_start_count to new_shape_count - keep_at_end_count - 1;
       int compensated_half_width = p_obj.get_half_width() + get_clearance_compensation(p_obj.clearance_idx(), p_obj.get_layer());
-      ArrayList<ShapeTile> changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plalinelen(-1) - p_keep_at_end_count);
+      ArrayList<ShapeTile> changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plaline_len(-1) - p_keep_at_end_count);
       int old_shape_count = p_obj.tree_shape_count(this);
       int new_shape_count = changed_shapes.size() + p_keep_at_start_count + p_keep_at_end_count;
       KdtreeNodeLeaf[] new_leaf_arr = new KdtreeNodeLeaf[new_shape_count];
@@ -682,7 +682,7 @@ public final class KdtreeShapeSearch
     */
    public final void reuse_entries_after_cutout(BrdTracep p_from_trace, BrdTracep p_start_piece, BrdTracep p_end_piece)
       {
-      KdtreeNodeLeaf[] start_piece_leaf_arr = new KdtreeNodeLeaf[p_start_piece.polyline().plalinelen(-2)];
+      KdtreeNodeLeaf[] start_piece_leaf_arr = new KdtreeNodeLeaf[p_start_piece.polyline().plaline_len(-2)];
       KdtreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
       // transfer the entries at the start of p_from_trace to p_start_piece.
       for (int i = 0; i < start_piece_leaf_arr.length - 1; ++i)
@@ -696,7 +696,7 @@ public final class KdtreeShapeSearch
 
       // create the last tree entry of the start piece.
 
-      KdtreeNodeLeaf[] end_piece_leaf_arr = new KdtreeNodeLeaf[p_end_piece.polyline().plalinelen(-2)];
+      KdtreeNodeLeaf[] end_piece_leaf_arr = new KdtreeNodeLeaf[p_end_piece.polyline().plaline_len(-2)];
 
       // create the first tree entry of the end piece.
       end_piece_leaf_arr[0] = insert(p_end_piece, 0);
