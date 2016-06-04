@@ -57,9 +57,9 @@
           <attribute name="SplashScreen-Image" value="logo.gif" /> 
       </manifest>
       <fileset dir="${classes.dir}">
-          <include name="*.gif"/>
           <include name="**/*.class"/>
           <include name="**/*.gif"/>
+          <include name="**/*.png"/>
           <include name="**/*.resources"/>
           <include name="**/*.properties"/>
       </fileset>

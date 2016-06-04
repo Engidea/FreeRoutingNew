@@ -56,7 +56,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private final RouteParameterActionListener actionListener = new RouteParameterActionListener();
 
    private final Stat stat;
-   private final interactive.IteraBoard board_handling;
+   private final interactive.IteraBoard i_board;
    private final GuiResources resources;
    private final JSlider pullt_region_slider,pullt_min_move_slider;
    private final JFormattedTextField pullt_region_field,pullt_min_move_field;
@@ -96,7 +96,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       super(p_board_frame);
       
       stat = p_stat;
-      board_handling = p_board_frame.board_panel.itera_board;
+      i_board = p_board_frame.board_panel.itera_board;
       resources = new GuiResources(p_stat, "gui.resources.WindowRouteParameter");
 
       manual_rule_window = new WindowManualRules(p_board_frame);
@@ -338,7 +338,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    @Override
    public void refresh()
       {
-      board.varie.TraceAngleRestriction snap_angle = board_handling.get_routing_board().brd_rules.get_trace_snap_angle();
+      board.varie.TraceAngleRestriction snap_angle = i_board.get_routing_board().brd_rules.get_trace_snap_angle();
 
       if (snap_angle.is_limit_90())
          {
@@ -353,12 +353,12 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          snap_angle_none_button.setSelected(true);
          }
 
-      if (board_handling.itera_settings.is_stitch_route())
+      if (i_board.itera_settings.is_stitch_route())
          stitch_button.setSelected(true);
       else
          dynamic_button.setSelected(true);
 
-      if (board_handling.itera_settings.get_manual_rule_selection())
+      if (i_board.itera_settings.get_manual_rule_selection())
          {
          manual_button.setSelected(true);
          manual_rule_window.setVisible(true);
@@ -368,31 +368,31 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          automatic_button.setSelected(true);
          }
 
-      shove_check.setSelected(board_handling.itera_settings.is_push_enabled());
-      drag_component_check.setSelected(board_handling.itera_settings.get_drag_components_enabled());
-      via_snap_to_smd_center_check.setSelected(board_handling.itera_settings.is_via_snap_to_smd_center());
-      ignore_conduction_check.setSelected(board_handling.get_routing_board().brd_rules.get_ignore_conduction());
-      hilight_routing_obstacle_check.setSelected(board_handling.itera_settings.is_hilight_routing_obstacle());
-      neckdown_check.setSelected(board_handling.itera_settings.is_automatic_neckdown());
-      clearance_compensation_check.setSelected(board_handling.get_routing_board().search_tree_manager.is_clearance_compensation_used());
+      shove_check.setSelected(i_board.itera_settings.is_push_enabled());
+      drag_component_check.setSelected(i_board.itera_settings.get_drag_components_enabled());
+      via_snap_to_smd_center_check.setSelected(i_board.itera_settings.is_via_snap_to_smd_center());
+      ignore_conduction_check.setSelected(i_board.get_routing_board().brd_rules.get_ignore_conduction());
+      hilight_routing_obstacle_check.setSelected(i_board.itera_settings.is_hilight_routing_obstacle());
+      neckdown_check.setSelected(i_board.itera_settings.is_automatic_neckdown());
+      clearance_compensation_check.setSelected(i_board.get_routing_board().search_tree_manager.is_clearance_compensation_used());
       
-      BrdOutline outline = board_handling.get_routing_board().get_outline();
+      BrdOutline outline = i_board.get_routing_board().get_outline();
       if (outline != null)
          {
          outline_keepout_check.setSelected(outline.keepout_outside_outline_generated());
          }
 
-      double edge_to_turn_dist = board_handling.get_routing_board().brd_rules.get_pin_edge_to_turn_dist();
-      edge_to_turn_dist = board_handling.coordinate_transform.board_to_user(edge_to_turn_dist);
+      double edge_to_turn_dist = i_board.get_routing_board().brd_rules.get_pin_edge_to_turn_dist();
+      edge_to_turn_dist = i_board.coordinate_transform.board_to_user(edge_to_turn_dist);
 
       edge_to_turn_dist_field.setValue(edge_to_turn_dist);
       restrict_pin_exit_directions_check.setSelected(edge_to_turn_dist > 0);
 
-      int region_slider_value = board_handling.itera_settings.pull_tight_region_get() / c_region_scale_factor;
+      int region_slider_value = i_board.itera_settings.pull_tight_region_get() / c_region_scale_factor;
       region_slider_value = Math.min(region_slider_value, c_region_max_slider_value);
       pullt_region_slider.setValue(region_slider_value);
 
-      int min_move_slider_value = board_handling.itera_settings.trace_pullt_min_move / c_accuracy_scale_factor;
+      int min_move_slider_value = i_board.itera_settings.trace_pullt_min_move / c_accuracy_scale_factor;
       min_move_slider_value = Math.min(min_move_slider_value, c_accuracy_max_slider_value);
       pullt_min_move_slider.setValue(min_move_slider_value);
   
@@ -432,13 +432,13 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       
       pullt_region_field.setValue(new_tidy_width);
       
-      board_handling.itera_settings.pull_tight_region_set(new_tidy_width);
+      i_board.itera_settings.pull_tight_region_set(new_tidy_width);
       }
 
    
    private boolean has_free_angle_traces ()
       {
-      Collection<BrdTracep> trace_list = board_handling.get_routing_board().get_traces();
+      Collection<BrdTracep> trace_list = i_board.get_routing_board().get_traces();
      
       for (BrdTracep curr_trace : trace_list)
          {
@@ -457,7 +457,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    
    private void snap_angle_90_button_fun()
       {
-      if (board_handling.get_routing_board().brd_rules.get_trace_snap_angle() == board.varie.TraceAngleRestriction.NINETY)
+      if (i_board.get_routing_board().brd_rules.get_trace_snap_angle() == board.varie.TraceAngleRestriction.NINETY)
          {
          return;
          }
@@ -473,12 +473,12 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          }
       
       stat.userPrintln(classname+" req TraceAngleRestriction.NINETY_DEGREE");
-      board_handling.set_trace_snap_angle(TraceAngleRestriction.NINETY);
+      i_board.set_trace_snap_angle(TraceAngleRestriction.NINETY);
       }
 
    public void snap_angle_45_button_fun()
       {
-      if (board_handling.get_routing_board().brd_rules.is_trace_snap_45())
+      if (i_board.get_routing_board().brd_rules.is_trace_snap_45())
          {
          // this just means that current value is the same as what I want
          return;
@@ -495,43 +495,43 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          }
 
       stat.userPrintln(classname+" req TraceAngleRestriction.FORTYFIVE_DEGREE");
-      board_handling.set_trace_snap_angle(TraceAngleRestriction.FORTYFIVE);
+      i_board.set_trace_snap_angle(TraceAngleRestriction.FORTYFIVE);
       }
 
    public void snap_angle_none_button_fun()
       {
       stat.userPrintln(classname+" req AngleRestriction.NONE");
-      board_handling.set_trace_snap_angle(TraceAngleRestriction.NONE);
+      i_board.set_trace_snap_angle(TraceAngleRestriction.NONE);
       }
 
    public void dynamic_button_fun()
       {
       stat.userPrintln(classname+" req set_stitch_route(false)");
-      board_handling.itera_settings.set_stitch_route(false);
+      i_board.itera_settings.set_stitch_route(false);
       }
 
    public void stitch_button_fun()
       {
       stat.userPrintln(classname+" req set_stitch_route(true)");
-      board_handling.itera_settings.set_stitch_route(true);
+      i_board.itera_settings.set_stitch_route(true);
       }
 
    private void clearance_compensation_fun ()
       {
       boolean want = clearance_compensation_check.isSelected();
       stat.userPrintln(classname+" req clearance_compensation_fun want="+want);
-      board_handling.set_clearance_compensation(want);      
+      i_board.set_clearance_compensation(want);      
       }
    
    private void outline_keepout_fun ()
       {
-      if (board_handling.is_board_read_only())
+      if (i_board.is_board_read_only())
          {
          stat.userPrintln(classname+" outline_keepout_fun board is read only");
          return;
          }
       
-      BrdOutline outline = board_handling.get_routing_board().get_outline();
+      BrdOutline outline = i_board.get_routing_board().get_outline();
       if (outline == null)
          {
          stat.userPrintln(classname+" outline_keepout_fun no outline, yet");
@@ -550,7 +550,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
          manual_rule_window.setVisible(false);
-         board_handling.itera_settings.set_manual_tracewidth_selection(false);
+         i_board.itera_settings.set_manual_tracewidth_selection(false);
          }
       }
 
@@ -565,7 +565,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
             first_time = false;
             }
          manual_rule_window.setVisible(true);
-         board_handling.itera_settings.set_manual_tracewidth_selection(true);
+         i_board.itera_settings.set_manual_tracewidth_selection(true);
          }
 
       boolean first_time = true;
@@ -575,7 +575,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board_handling.itera_settings.set_push_enabled(shove_check.isSelected());
+         i_board.itera_settings.set_push_enabled(shove_check.isSelected());
          refresh();
          }
       }
@@ -584,7 +584,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board_handling.itera_settings.set_via_snap_to_smd_center(via_snap_to_smd_center_check.isSelected());
+         i_board.itera_settings.set_via_snap_to_smd_center(via_snap_to_smd_center_check.isSelected());
          }
       }
 
@@ -592,7 +592,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board_handling.set_ignore_conduction(ignore_conduction_check.isSelected());
+         i_board.set_ignore_conduction(ignore_conduction_check.isSelected());
          }
       }
 
@@ -600,7 +600,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board_handling.itera_settings.set_hilight_routing_obstacle(hilight_routing_obstacle_check.isSelected());
+         i_board.itera_settings.set_hilight_routing_obstacle(hilight_routing_obstacle_check.isSelected());
          }
       }
 
@@ -608,7 +608,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       public void actionPerformed(java.awt.event.ActionEvent p_evt)
          {
-         board_handling.itera_settings.set_drag_components_enabled(drag_component_check.isSelected());
+         i_board.itera_settings.set_drag_components_enabled(drag_component_check.isSelected());
          refresh();
          }
       }
@@ -620,13 +620,13 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          {
          if (restrict_pin_exit_directions_check.isSelected())
             {
-            freert.rules.BoardRules board_rules = board_handling.get_routing_board().brd_rules;
-            double edge_to_turn_dist = board_handling.coordinate_transform.board_to_user(board_rules.get_min_trace_half_width());
-            board_handling.set_pin_edge_to_turn_dist(edge_to_turn_dist);
+            freert.rules.BoardRules board_rules = i_board.get_routing_board().brd_rules;
+            double edge_to_turn_dist = i_board.coordinate_transform.board_to_user(board_rules.get_min_trace_half_width());
+            i_board.set_pin_edge_to_turn_dist(edge_to_turn_dist);
             }
          else
             {
-            board_handling.set_pin_edge_to_turn_dist(0);
+            i_board.set_pin_edge_to_turn_dist(0);
             }
          refresh();
          }
@@ -646,7 +646,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
                }
             float input_value = ((Number) input).floatValue();
             
-            board_handling.set_pin_edge_to_turn_dist(input_value);
+            i_board.set_pin_edge_to_turn_dist(input_value);
             
             stat.userPrintln(classname+"set pin turn dist "+input_value);
             
@@ -668,8 +668,8 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          if (!key_input_completed)
             {
             // restore the text field.
-            double edge_to_turn_dist = board_handling.get_routing_board().brd_rules.get_pin_edge_to_turn_dist();
-            edge_to_turn_dist = board_handling.coordinate_transform.board_to_user(edge_to_turn_dist);
+            double edge_to_turn_dist = i_board.get_routing_board().brd_rules.get_pin_edge_to_turn_dist();
+            edge_to_turn_dist = i_board.coordinate_transform.board_to_user(edge_to_turn_dist);
             
             stat.userPrintln(classname+"restore pin turn dist "+edge_to_turn_dist);
             
@@ -704,7 +704,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       pullt_min_move_slider.setValue(slider_value);
       
-      board_handling.itera_settings.pull_tight_accuracy_set(new_accurracy);
+      i_board.itera_settings.pull_tight_accuracy_set(new_accurracy);
       }
 
    
@@ -722,7 +722,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       boolean want = neckdown_check.isSelected();
       stat.userPrintln(classname+"neckdown_fun want="+want);
-      board_handling.itera_settings.set_automatic_neckdown(want);      
+      i_board.itera_settings.set_automatic_neckdown(want);      
       }
 
    private class RouteParameterActionListener implements ActionListener

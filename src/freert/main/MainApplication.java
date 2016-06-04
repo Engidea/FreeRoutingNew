@@ -32,6 +32,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.LinkedList;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -81,6 +82,10 @@ public class MainApplication extends JFrame
       resources = new GuiResources(stat,"gui.resources.MainApplication");
       
       setTitle(resources.getString("title"));
+      
+      ImageIcon icon = new ImageIcon (getClass().getResource("freert_icon.png"));
+      setIconImage(icon.getImage());
+      
       addWindowListener(new WindowStateListener());
       
       mainApplication();

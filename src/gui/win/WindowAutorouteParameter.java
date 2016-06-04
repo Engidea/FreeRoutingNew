@@ -94,8 +94,8 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
       gridbag.setConstraints(preferred_direction_label, gridbag_constraints);
       main_panel.add(preferred_direction_label);
 
-      this.horizontal = resources.getString("horizontal");
-      this.vertical = resources.getString("vertical");
+      horizontal = resources.getString("horizontal");
+      vertical = resources.getString("vertical");
 
       board.BrdLayerStructure layer_structure = board_handling.get_routing_board().layer_structure;
       int signal_layer_count = layer_structure.signal_layer_count();
@@ -113,8 +113,8 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
          arow.signal_layer_active.addActionListener(new LayerActiveListener(arow));
          gridbag.setConstraints(arow.signal_layer_active,gridbag_constraints);
          main_panel.add(arow.signal_layer_active);
-         arow.signal_layer_combo.addItem(this.horizontal);
-         arow.signal_layer_combo.addItem(this.vertical);
+         arow.signal_layer_combo.addItem(horizontal);
+         arow.signal_layer_combo.addItem(vertical);
          arow.signal_layer_combo.addActionListener(new PreferredDirectionListener(arow));
          
          gridbag_constraints.gridwidth = java.awt.GridBagConstraints.REMAINDER;
@@ -205,8 +205,8 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
 
       p_board_frame.set_context_sensitive_help(this, "WindowAutorouteParameter");
 
-      this.refresh();
-      this.pack();
+      refresh();
+      pack();
       }
 
    /**
@@ -224,21 +224,21 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
       autoroute_pass_button.setSelected(settings.get_with_autoroute());
       postroute_pass_button.setSelected(settings.get_with_postroute());
 
-      for (int i = 0; i < param_list.size(); ++i)
+      for (int index = 0; index < param_list.size(); ++index)
          {
-         AutorouteParameterRow arow = param_list.get(i);
-         arow.signal_layer_active.setSelected(settings.get_layer_active(layer_structure.get_layer_no(i)));
+         AutorouteParameterRow arow = param_list.get(index);
+         arow.signal_layer_active.setSelected(settings.get_layer_active(layer_structure.get_layer_no(index)));
 
-         if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(i)))
+         if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(index)))
             {
-            arow.signal_layer_combo.setSelectedItem(this.horizontal);
+            arow.signal_layer_combo.setSelectedItem(horizontal);
             }
          else
             {
-            arow.signal_layer_combo.setSelectedItem(this.vertical);
+            arow.signal_layer_combo.setSelectedItem(vertical);
             }
          }
-      this.detail_window.refresh();
+      detail_window.refresh();
       }
 
    public void dispose()
