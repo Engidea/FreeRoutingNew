@@ -312,7 +312,7 @@ public abstract class AlgoPullTight
       {
       if (p_polyline.plalinelen() < 5) return p_polyline;
       
-      PlaLineInt[] line_arr = p_polyline.plaline_copy();
+      PlaLineInt[] line_arr = p_polyline.alist_to_array();
 
       for (int index = 2; index < p_polyline.plalinelen(-2); ++index)
          {

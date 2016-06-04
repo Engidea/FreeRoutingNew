@@ -72,6 +72,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
          new_result = smoothen_corners(new_result);
          new_result = reposition_lines(new_result);
          }
+      
       return new_result;
       }
 
@@ -289,7 +290,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       
          polyline_changed = false;
          
-         PlaLineInt[] line_arr = p_polyline.plaline_copy();
+         PlaLineInt[] line_arr = p_polyline.alist_to_array();
 
          for (int index = 1; index < line_arr.length - 2; ++index)
             {

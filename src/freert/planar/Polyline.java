@@ -121,7 +121,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    
    public Polyline copy()
       {
-      return new Polyline(plaline_copy());
+      return new Polyline(alist_copy(0));
       }
    
    
@@ -1233,7 +1233,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaLineIntAlist first_piece = new PlaLineIntAlist(plalinelen());
       
       // Copy from the beginning up to the closing line, that is the line after the one we wish the split
-      plaline_append(first_piece, 0, p_line_no + 1);
+      alist_append_to(first_piece, 0, p_line_no + 1);
 
       // if the corners do not overlap then I can actually add the end line
       if ( ! corner(p_line_no - 1).equals(new_end_corner)) first_piece.add(p_end_line);
@@ -1244,7 +1244,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if ( ! corner(p_line_no).equals(new_end_corner)) second_piece.add( p_end_line );
 
       // and the rest of lines, up until the end
-      plaline_append(second_piece, p_line_no);
+      alist_append_to(second_piece, p_line_no);
  
       Polyline first_poly = new Polyline(first_piece);
 
@@ -1345,7 +1345,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       PlaLineIntAlist new_lines = new PlaLineIntAlist(p_new_line_count);
       
-      plaline_append(new_lines, 0, p_new_line_count - 2);
+      alist_append_to(new_lines, 0, p_new_line_count - 2);
       
       // create the last 2 lines of the new polyline
       PlaPointInt first_line_point = plaline(p_new_line_count - 2).point_a;
@@ -1424,22 +1424,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return lines_list.size() + offset;
       }
    
-   /**
-    * Copy current plaline array into a new one with the same len
-    * Content is copied
-    * @return
-    */
-   public PlaLineInt [] plaline_copy()
-      {
-      int arr_len = plalinelen();
-      
-      PlaLineInt [] risul = new PlaLineInt[arr_len];
-      
-      for (int index=0; index<arr_len; index++)
-         risul[index] = plaline(index);
-      
-      return risul;
-      }
    
    
    /**
@@ -1456,9 +1440,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return new_lines;
          }
       
-      plaline_append(new_lines, 0, p_from_no);
+      alist_append_to(new_lines, 0, p_from_no);
       
-      plaline_append( new_lines, p_to_no + 1);
+      alist_append_to( new_lines, p_to_no + 1);
       
       return new_lines;
       }
@@ -1469,7 +1453,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * @param src_pos
     * @param length
     */
-   public void plaline_append(PlaLineIntAlist dest, int src_pos, int length )
+   public void alist_append_to(PlaLineIntAlist dest, int src_pos, int length )
       {
       for (int index=0; index<length; index++)
          dest.add( plaline(src_pos+index));
@@ -1480,12 +1464,45 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * @param dest
     * @param src_pos
     */
-   public void plaline_append(PlaLineIntAlist dest, int src_pos )
+   public void alist_append_to(PlaLineIntAlist dest, int src_pos )
       {
       int poly_len = plalinelen();
       
       for (int index=src_pos; index<poly_len; index++)
          dest.add( plaline(index));
+      }
+
+   /**
+    * Copy current plaline array into a new one with the same len
+    * Content is copied
+    * @return
+    */
+   public PlaLineInt [] alist_to_array()
+      {
+      int arr_len = plalinelen();
+      
+      PlaLineInt [] risul = new PlaLineInt[arr_len];
+      
+      for (int index=0; index<arr_len; index++)
+         risul[index] = plaline(index);
+      
+      return risul;
+      }
+   
+   /**
+    * Copy the current array list to a new one adding extra space, if needed
+    * @param extra_space
+    * @return
+    */
+   public PlaLineIntAlist alist_copy (int extra_space)
+      {
+      if ( extra_space < 0 ) extra_space = 0;
+      
+      PlaLineIntAlist risul = new PlaLineIntAlist(plalinelen()+extra_space);
+      
+      risul.addAll(lines_list);
+      
+      return risul;
       }
 
    

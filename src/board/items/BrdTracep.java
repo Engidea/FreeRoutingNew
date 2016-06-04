@@ -748,10 +748,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plalinelen() + other_poly.plalinelen());
       
       // append other up until the last line or less, if requested
-      other_poly.plaline_append(new_lines, 0, my_copy_count);
+      other_poly.alist_append_to(new_lines, 0, my_copy_count);
       
       // then append myself, after the first line to the end
-      polyline.plaline_append(new_lines, 1);
+      polyline.alist_append_to(new_lines, 1);
 
       Polyline joined_polyline = new Polyline(new_lines);
 
@@ -874,10 +874,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       PlaLineIntAlist new_lines = new PlaLineIntAlist(polyline.plalinelen() + other_poly.plalinelen());
       
       // append myself up until the last line or less, if requested
-      polyline.plaline_append(new_lines, 0, my_copy_count);
+      polyline.alist_append_to(new_lines, 0, my_copy_count);
       
       // then append other, after the first line to the end
-      other_poly.plaline_append(new_lines, 1);
+      other_poly.alist_append_to(new_lines, 1);
       
       Polyline joined_polyline = new Polyline(new_lines);
       

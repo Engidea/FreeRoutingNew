@@ -1,6 +1,7 @@
 package freert.planar;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import board.varie.BrdChangedArea;
 
@@ -17,6 +18,10 @@ public final class PlaLineIntAlist implements Iterable<PlaLineInt>
       a_list = new ArrayList<PlaLineInt>(size);
       }
    
+   public void addAll(Collection<PlaLineInt> p_list )
+      {
+      a_list.addAll(p_list);
+      }
    
    public PlaLineIntAlist(PlaLineInt [] point_arr )
       {

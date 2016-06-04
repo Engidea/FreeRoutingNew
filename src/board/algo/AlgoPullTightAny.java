@@ -366,7 +366,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       // create a storage with extra capacity
       PlaLineIntAlist line_arr = new PlaLineIntAlist(p_polyline.plalinelen(10));
 
-      p_polyline.plaline_append(line_arr, 0);
+      p_polyline.alist_append_to(line_arr, 0);
       
       for (int index = 0; index < line_arr.size(-3); ++index)
          {
@@ -393,7 +393,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       boolean polyline_changed = false;
       
-      PlaLineInt[] line_arr = p_polyline.plaline_copy();
+      PlaLineInt[] line_arr = p_polyline.alist_to_array();
       
       for (int index = 0; index < line_arr.length - 4; ++index)
          {
@@ -508,11 +508,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
          
          int keep_before_ind = index - crossed_corners_before_count;
 
-         p_polyline.plaline_append(curr_lines, 0, keep_before_ind);
+         p_polyline.alist_append_to(curr_lines, 0, keep_before_ind);
          
          curr_lines.add(new_line);
          
-         p_polyline.plaline_append(curr_lines, index + 1 + crossed_corners_after_count );
+         p_polyline.alist_append_to(curr_lines, index + 1 + crossed_corners_after_count );
          
          Polyline try_poly = new Polyline(curr_lines);
 

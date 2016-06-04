@@ -953,7 +953,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
             
             PlaLineIntAlist curr_lines = new PlaLineIntAlist(curr_polyline_intersection_no + 2);
             
-            p_polyline.plaline_append(curr_lines, 0, curr_polyline_intersection_no + 1);
+            p_polyline.alist_append_to(curr_lines, 0, curr_polyline_intersection_no + 1);
             
             // close the polyline piece with the intersected edge line.
             curr_lines.add(border_line(curr_intersection_tuple.v_b) );
@@ -996,7 +996,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
             
             curr_lines.add( border_line(curr_intersection_tuple.v_b));
             
-            p_polyline.plaline_append( curr_lines, curr_intersection_no_of_polyline, want_len - 2);
+            p_polyline.alist_append_to( curr_lines, curr_intersection_no_of_polyline, want_len - 2);
             
             curr_lines.add( border_line(next_intersection_tuple.v_b));
 
@@ -1021,7 +1021,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
 
          curr_lines.add( border_line(curr_intersection_tuple.v_b));
          
-         p_polyline.plaline_append( curr_lines, curr_polyline_intersection_no, want_len - 1);
+         p_polyline.alist_append_to( curr_lines, curr_polyline_intersection_no, want_len - 1);
 
          // remove try catch and added a validation test before add
          Polyline curr_piece = new Polyline(curr_lines);
