@@ -36,6 +36,7 @@ import board.varie.ItemSelectionFilter;
 import freert.library.LibPadstack;
 import freert.planar.PlaArea;
 import freert.planar.PlaLineInt;
+import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaPointIntAlist;
@@ -520,11 +521,14 @@ final class DsnKeywordWiring extends DsnKeywordScope
             {
             clearance_class_no = net_class.default_item_clearance_classes.get(ItemClass.TRACE);
             }
-         PlaLineInt[] line_arr = new PlaLineInt[path.coordinate_arr.length / 4];
+         
+         int alist_len = path.coordinate_arr.length / 4;
+         
+         PlaLineIntAlist line_arr = new PlaLineIntAlist(alist_len);
          
          double[] curr_point = new double[2];
          
-         for (int index = 0; index < line_arr.length; ++index)
+         for (int index = 0; index < alist_len; ++index)
             {
             curr_point[0] = path.coordinate_arr[4 * index];
             curr_point[1] = path.coordinate_arr[4 * index + 1];
@@ -532,7 +536,8 @@ final class DsnKeywordWiring extends DsnKeywordScope
             curr_point[0] = path.coordinate_arr[4 * index + 2];
             curr_point[1] = path.coordinate_arr[4 * index + 3];
             PlaPointFloat curr_b = p_par.coordinate_transform.dsn_to_board(curr_point);
-            line_arr[index] = new PlaLineInt(curr_a.round(), curr_b.round());
+            
+            line_arr.add( new PlaLineInt(curr_a.round(), curr_b.round()) );
             }
          
          Polyline trace_polyline = new Polyline(line_arr);

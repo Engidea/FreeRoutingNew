@@ -615,18 +615,18 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline reverse()
       {
-      int lines_max = plaline_len();
-            
-      PlaLineInt[] reversed_lines = new PlaLineInt[lines_max];
+      int alist_len = plaline_len();
       
-      int index_down = lines_max-1;
+      PlaLineIntAlist new_arr = new PlaLineIntAlist(alist_len);
       
-      for (int index = 0; index < lines_max; ++index)
+      int index_down = alist_len-1;
+      
+      for (int index = 0; index < alist_len; ++index)
          {
-         reversed_lines[index] = plaline(index_down--).opposite();
+         new_arr.add( plaline(index_down--).opposite());
          }
       
-      return new Polyline(reversed_lines);
+      return new Polyline(new_arr);
       }
 
    /**
@@ -899,11 +899,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
       
-      PlaLineInt[] new_arr = new PlaLineInt[plaline_len()];
+      int alist_len = plaline_len();
       
-      for (int index = 0; index < new_arr.length; ++index)
+      PlaLineIntAlist new_arr = new PlaLineIntAlist(alist_len);
+      
+      for (int index = 0; index < alist_len; ++index)
          {
-         new_arr[index] = plaline(index).translate_by(p_vector);
+         new_arr.add( plaline(index).translate_by(p_vector));
          }
       
       return new Polyline(new_arr);
@@ -914,10 +916,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaLineInt[] new_arr = new PlaLineInt[plaline_len()];
-      for (int index = 0; index < new_arr.length; ++index)
+      int alist_len = plaline_len();
+      
+      PlaLineIntAlist new_arr = new PlaLineIntAlist(alist_len);
+      
+      for (int index = 0; index < alist_len; ++index)
          {
-         new_arr[index] = plaline(index).turn_90_degree(p_factor, p_pole);
+         new_arr.add( plaline(index).turn_90_degree(p_factor, p_pole));
          }
       
       return new Polyline(new_arr);
@@ -961,11 +966,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    public Polyline mirror_horizontal(PlaPointInt p_pole)
       {
-      PlaLineInt[] new_arr = new PlaLineInt[plaline_len()];
-      for (int index = 0; index < new_arr.length; ++index)
+      int alist_len = plaline_len();
+      
+      PlaLineIntAlist new_arr = new PlaLineIntAlist(alist_len);
+
+      for (int index = 0; index < alist_len; ++index)
          {
-         new_arr[index] = plaline(index).mirror_horizontal(p_pole);
+         new_arr.add( plaline(index).mirror_horizontal(p_pole));
          }
+      
       return new Polyline(new_arr);
       }
 

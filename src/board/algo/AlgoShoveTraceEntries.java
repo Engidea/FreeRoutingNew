@@ -817,8 +817,10 @@ public final class AlgoShoveTraceEntries
       }
 
    /**
-    * Pops the next piece with minimal level from the imtersection list Returns null, if the stack is empty. The returned array has
-    * 2 elements. The first is the first entry point, and the second is the last entry point of the minimal level.
+    * Pops the next piece with minimal level from the imtersection list 
+    * @returns null, if the stack is empty. 
+    * The returned array has 2 elements. 
+    * The first is the first entry point, and the second is the last entry point of the minimal level.
     */
    private ShapeTraceEntryPoint[] pop_piece()
       {
@@ -830,23 +832,24 @@ public final class AlgoShoveTraceEntries
             }
          return null;
          }
+      
       ShapeTraceEntryPoint first = list_anchor;
       ShapeTraceEntryPoint prev_first = null;
 
       while (first != null)
          {
-         if (first.stack_level == max_stack_level)
-            {
-            break;
-            }
+         if (first.stack_level == max_stack_level) break;
+
          prev_first = first;
          first = first.next;
          }
+
       if (first == null)
          {
          System.out.println("ShapeTraceEntries: max_stack_level not found");
          return null;
          }
+      
       ShapeTraceEntryPoint[] result = new ShapeTraceEntryPoint[2];
       result[0] = first;
       ShapeTraceEntryPoint last = first;

@@ -1408,8 +1408,11 @@ public final class KdtreeShapeSearch
          // Only the line shapes of the outline are inserted as obstales into the tree.
          result = new ShapeTile[p_board_outline.line_count() * r_board.layer_structure.size()];
          int half_width = BrdOutline.HALF_WIDTH;
+         
          PlaLineInt[] curr_line_arr = new PlaLineInt[3];
+         
          int curr_no = 0;
+         
          for (int layer_no = 0; layer_no < r_board.layer_structure.size(); ++layer_no)
             {
             for (int shape_no = 0; shape_no < p_board_outline.shape_count(); ++shape_no)
