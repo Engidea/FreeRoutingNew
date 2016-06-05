@@ -20,7 +20,6 @@ import java.util.Set;
 import board.awtree.AwtreeShapeSearch;
 import board.items.BrdItem;
 import freert.planar.ShapeTile;
-import freert.varie.NetNosList;
 
 /**
  * Functionality required for items, which can be electrical connected to other items.
@@ -29,26 +28,6 @@ import freert.varie.NetNosList;
 
 public interface BrdConnectable
    {
-   /**
-    * Returns true if this item belongs to the net with number p_net_no.
-    */
-   public boolean contains_net(int p_net_no);
-
-   /**
-    * Returns true if the net number array of this and p_net_no_arr have a common number.
-    */
-   public boolean shares_net_no(NetNosList p_net_no_arr);
-
-   /**
-    * Returns a list of all connectable items overlapping and sharing a net with this item.
-    */
-   Set<BrdItem> get_all_contacts();
-
-   /**
-    * Returns a list of all connectable items overlapping with this item on the input layer and sharing a net with this item.
-    */
-   Set<BrdItem> get_all_contacts(int p_layer);
-
    /**
     * Returns the list of all contacts of a connectable item located at defined connection points. Connection points of traces are
     * there endpoints, connection points of drill_items there center points, and connection points of conduction areas are points on

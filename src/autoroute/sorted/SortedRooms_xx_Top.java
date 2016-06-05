@@ -137,17 +137,21 @@ public final class SortedRooms_xx_Top
       
       for (AwtreeEntry curr_entry : p_own_net_objects)
          {
-         if ( ! (curr_entry.object instanceof BrdConnectable)) continue;
+         if ( ! (curr_entry.object instanceof BrdItem)) continue;
 
-         BrdConnectable curr_object = (BrdConnectable) curr_entry.object;
-         if ( ! curr_object.contains_net(p_autoroute_engine.get_net_no())) continue;
+         BrdItem an_item = (BrdItem) curr_entry.object;
+         
+         if ( ! an_item.contains_net(p_autoroute_engine.get_net_no())) continue;
 
-         ShapeTile curr_connection_shape = curr_object.get_trace_connection_shape(p_autoroute_engine.autoroute_search_tree, curr_entry.shape_index_in_object);
+         if ( ! (an_item instanceof BrdConnectable)) continue;
+         
+         BrdConnectable a_conn = (BrdConnectable) an_item;
+         
+         ShapeTile curr_connection_shape = a_conn.get_trace_connection_shape(p_autoroute_engine.autoroute_search_tree, curr_entry.shape_index_in_object);
 
          if (curr_connection_shape != null && p_room.get_shape().intersects(curr_connection_shape))
             {
-            BrdItem curr_item = (BrdItem) curr_object;
-            ExpandDoorItem new_target_door = new ExpandDoorItem(curr_item, curr_entry.shape_index_in_object, p_room, p_autoroute_engine.autoroute_search_tree);
+            ExpandDoorItem new_target_door = new ExpandDoorItem(an_item, curr_entry.shape_index_in_object, p_room, p_autoroute_engine.autoroute_search_tree);
             p_room.add_target_door(new_target_door);
             }
          }

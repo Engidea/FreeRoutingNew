@@ -1839,11 +1839,7 @@ public final class RoutingBoard implements java.io.Serializable
       int contact_count = 0;
       
       // the connected items must remain connected after moving
-      
-      if (p_item instanceof BrdConnectable)
-         {
-         contact_count = p_item.get_all_contacts().size();
-         }
+      contact_count = p_item.get_all_contacts().size();
       
       if (p_item instanceof BrdTracep && contact_count > 0) return false;
    
@@ -1891,16 +1887,12 @@ public final class RoutingBoard implements java.io.Serializable
          
          Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(index), net_no_arr, p_item.clearance_idx());
 
-         for (AwtreeObject curr_ob : obstacles)
+         for (BrdItem curr_ob : obstacles)
             {
             if ( curr_ob != p_item ) continue;
             
-            if ( !( curr_ob instanceof BrdConnectable ) ) continue;
-            
-            BrdConnectable a_conn = (BrdConnectable)curr_ob;
-            
             // if the connectable contains the given net we are fine
-            if ( a_conn.contains_net(p_new_net_no) ) continue;
+            if ( curr_ob.contains_net(p_new_net_no) ) continue;
 
             return false;
             }

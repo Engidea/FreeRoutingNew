@@ -175,7 +175,8 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       }
 
    /**
-    * Returns true if the net number array of this item contains p_net_no.
+    * This was redefined in BrdConnectable and creating some confusion on Type hierarchy
+    * @return true if the net number array of this item contains p_net_no.
     */
    public final boolean contains_net(int p_net_no)
       {
@@ -208,6 +209,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       }
 
    /**
+    * In theory this was a BrdConnectable but it is actually defined here
     * @return true if the net number array of this and p_net_no_arr have a common number
     */
    public final boolean shares_net_no(NetNosList p_net_no_arr)
@@ -533,8 +535,9 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       }
 
    /**
-    * Returns all connectable Items with a direct contacts to this item on the input layer. The result will be empty, if this item
-    * is not connectable.
+    * The result will be empty, if this item is not connectable.
+    * This method was defined in BrdConnectable but it is actually implemented here
+    * @return all connectable Items with a direct contacts to this item on the input layer. 
     */
    public final Set<BrdItem> get_all_contacts(int p_layer)
       {

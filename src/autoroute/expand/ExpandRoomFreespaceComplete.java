@@ -171,21 +171,23 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       {
       set_net_dependent();
 
-      if ( ! (p_own_net_object.object instanceof BrdConnectable)) return;
+      if ( ! (p_own_net_object.object instanceof BrdItem)) return;
       
-      BrdConnectable curr_object = (BrdConnectable) p_own_net_object.object;
+      BrdItem an_item = (BrdItem) p_own_net_object.object;
 
-      if ( ! curr_object.contains_net(p_net_no)) return;
+      if ( ! an_item.contains_net(p_net_no)) return;
       
-      ShapeTile curr_connection_shape = curr_object.get_trace_connection_shape(p_autoroute_search_tree, p_own_net_object.shape_index_in_object);
+      if ( ! (an_item instanceof BrdConnectable)) return;
+      
+      BrdConnectable a_conn = (BrdConnectable)an_item;
+      
+      ShapeTile curr_connection_shape = a_conn.get_trace_connection_shape(p_autoroute_search_tree, p_own_net_object.shape_index_in_object);
 
       if ( curr_connection_shape == null ) return;
       
       if ( ! get_shape().intersects(curr_connection_shape)) return;
-
-      BrdItem curr_item = (BrdItem) curr_object;
       
-      ExpandDoorItem new_target_door = new ExpandDoorItem(curr_item, p_own_net_object.shape_index_in_object, this, p_autoroute_search_tree);
+      ExpandDoorItem new_target_door = new ExpandDoorItem(an_item, p_own_net_object.shape_index_in_object, this, p_autoroute_search_tree);
       
       add_target_door(new_target_door);
       }
