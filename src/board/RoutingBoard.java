@@ -2247,7 +2247,7 @@ public final class RoutingBoard implements java.io.Serializable
       if ( from_corner_point.is_rational() )
          {
          // So, a trace polyline has always a first corner int, right ?
-         System.err.println(classname+"insert_trace_polyline: from_corner_point NOT int");
+         System.err.println(classname+"insert_trace: from_corner_point NOT int");
          return null;
          }      
       
@@ -2257,7 +2257,7 @@ public final class RoutingBoard implements java.io.Serializable
 
       if ( to_corner_point.is_rational() )
          {
-         System.err.println(classname+"insert_trace_polyline: to_corner_point NOT int");
+         System.err.println(classname+"insert_trace: to_corner_point NOT int");
          // really. what is the point of returning this ? I did not actually route up to this !
          return from_corner;
          }
@@ -2372,15 +2372,13 @@ public final class RoutingBoard implements java.io.Serializable
             
             PlaPoint new_last_corner_point = new_polyline.corner_last();
             
-            if (!(new_last_corner_point instanceof PlaPointInt))
+            if ( new_last_corner_point.is_rational() )
                {
-               System.out.println("insert_forced_trace_segment: IntPoint wanted");
+               System.out.println("insert_trace: A IntPoint wanted");
                return from_corner;
                }
             
-            PlaPointInt new_last_corner = new_last_corner_point.round();
-            
-            new_corner = new_last_corner;
+            new_corner = new_last_corner_point.round();
             
             if (picked_trace == null)
                {
@@ -2430,7 +2428,7 @@ public final class RoutingBoard implements java.io.Serializable
 
          if (!insert_ok)
             {
-            System.out.println("shove trace failed");
+            System.out.println("insert_trace: shove trace failed");
             return null;
             }
          }
@@ -2453,15 +2451,7 @@ public final class RoutingBoard implements java.io.Serializable
          tidy_region = new ShapeTileOctagon(new_corner).enlarge(p_tidy_width);
          }
       
-      NetNosList opt_net_no_arr;
-      if (p_max_recursion_depth <= 0)
-         {
-         opt_net_no_arr = p_net_no_arr;
-         }
-      else
-         {
-         opt_net_no_arr = NetNosList.EMPTY;
-         }
+      NetNosList opt_net_no_arr = p_max_recursion_depth <= 0 ? p_net_no_arr : NetNosList.EMPTY;
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(10,null);
       

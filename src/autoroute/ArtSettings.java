@@ -54,13 +54,6 @@ public final class ArtSettings implements java.io.Serializable
       
       for ( int index=0; index<p_layer_count; index++ ) layers_list.add( new ArtLayer(index));
 
-      stop_remove_fanout_vias = true;
-      }
-
-   public ArtSettings(RoutingBoard p_board)
-      {
-      this(p_board.get_layer_count());
-
       // set default values
       start_ripup_costs = 100;
       autoroute_pass_no = 1;
@@ -71,6 +64,12 @@ public final class ArtSettings implements java.io.Serializable
       with_postroute = true;
       via_costs = 50;
       plane_via_costs = 1;
+      stop_remove_fanout_vias = true;
+      }
+
+   public ArtSettings(RoutingBoard p_board)
+      {
+      this(p_board.get_layer_count());
 
       double horizontal_width = p_board.bounding_box.width();
       double vertical_width = p_board.bounding_box.height();

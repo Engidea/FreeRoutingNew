@@ -17,8 +17,6 @@
 package freert.planar;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
 
 /**
  * A Polyline is a sequence of lines, where no 2 consecutive lines may be parallel. 
@@ -34,7 +32,6 @@ import java.util.LinkedList;
 public final class Polyline implements java.io.Serializable, PlaObject
    {
    private static final long serialVersionUID = 1L;
-   private static final boolean USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES = true;
    private static final String classname="Polyline.";
 
    // the array of lines of this Polyline.
@@ -616,16 +613,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       int alist_len = plaline_len();
       
-      PlaLineIntAlist new_arr = new PlaLineIntAlist(alist_len);
+      PlaLineIntAlist new_list = new PlaLineIntAlist(alist_len);
       
       int index_down = alist_len-1;
       
       for (int index = 0; index < alist_len; ++index)
          {
-         new_arr.add( plaline(index_down--).opposite());
+         new_list.add( plaline(index_down--).opposite());
          }
       
-      return new Polyline(new_arr);
+      return new Polyline(new_list);
       }
 
    /**
@@ -671,9 +668,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       int shape_count = Math.max(to_no - from_no - 1, 0);
       
-      ArrayList<ShapeTile> shape_arr = new ArrayList<ShapeTile>(shape_count);
+      ArrayList<ShapeTile> shape_list = new ArrayList<ShapeTile>(shape_count);
       
-      if (shape_count == 0) return shape_arr;
+      if (shape_count == 0) return shape_list;
       
       PlaDirection prev_dir = plaline(from_no).direction();
       PlaDirection curr_dir = plaline(from_no + 1).direction();
@@ -731,7 +728,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
             }
          PlaPointFloat check_distance_corner = corner_approx(index);
          final double check_dist_square = 2.0 * p_half_width * p_half_width;
-         Collection<PlaLineInt> cut_dog_ear_lines = new LinkedList<PlaLineInt>();
+         PlaLineIntAlist cut_dog_ear_lines = new PlaLineIntAlist(plaline_len());
          PlaDirection tmp_curr_dir = next_dir;
          boolean direction_changed = false;
          
@@ -817,42 +814,31 @@ public final class Polyline implements java.io.Serializable, PlaObject
                curr_line = prev_border_line;
                }
             }
-         ShapeTile s1 = ShapeTile.get_instance(lines);
+         ShapeTile a_shape = ShapeTile.get_instance(lines);
          
          if (cut_dog_ear_lines.size() > 0)
             {
-            PlaLineIntAlist cut_lines = new PlaLineIntAlist(cut_dog_ear_lines);
-            s1 = s1.intersection(ShapeTile.get_instance(cut_lines));
+            a_shape = a_shape.intersection(ShapeTile.get_instance(cut_dog_ear_lines));
             }
 
          ShapeTile bounding_shape;
 
-         if (USE_BOUNDING_OCTAGON_FOR_OFFSET_SHAPES)
-            {
-            // intersect with the bounding octagon
-            ShapeTileOctagon surr_oct = bounding_octagon(index - 1, index);
-            bounding_shape = surr_oct.offset(p_half_width);
-            }
-         else
-            {
-            // intersect with the bounding box
-            ShapeTileBox surr_box = bounding_box(index - 1, index);
-            ShapeTileBox offset_box = surr_box.offset(p_half_width);
-            bounding_shape = offset_box.to_Simplex();
-            }
+         // intersect with the bounding octagon
+         ShapeTileOctagon surr_oct = bounding_octagon(index - 1, index);
+         bounding_shape = surr_oct.offset(p_half_width);
       
-         ShapeTile a_risul = bounding_shape.intersection_with_simplify(s1);
+         ShapeTile a_risul = bounding_shape.intersection_with_simplify(a_shape);
          
          if ( a_risul.is_empty() )
             System.err.println(classname+"offset_shapes: shape is empty");
          else
-            shape_arr.add(a_risul);
+            shape_list.add(a_risul);
          
          prev_dir = curr_dir;
          curr_dir = next_dir;
          }
 
-      return shape_arr;
+      return shape_list;
       }
 
    /**
