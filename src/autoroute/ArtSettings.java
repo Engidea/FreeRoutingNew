@@ -21,6 +21,8 @@
 package autoroute;
 
 import autoroute.expand.ExpandCostFactor;
+import autoroute.varie.ArtLayer;
+import board.BrdLayer;
 import board.RoutingBoard;
 
 /**
@@ -42,17 +44,15 @@ public final class ArtSettings implements java.io.Serializable
    private int plane_via_costs;
    private int start_ripup_costs;
    private int autoroute_pass_no;
-   private final boolean[] layer_active_arr;
-   private final boolean[] preferred_direction_is_horizontal_arr;
-   private final double[] preferred_direction_trace_cost_arr;
-   private final double[] against_preferred_direction_trace_cost_arr;
+
+   private final ArtLayer[] layers_arr;
    
    public ArtSettings(int p_layer_count)
       {
-      layer_active_arr = new boolean[p_layer_count];
-      preferred_direction_is_horizontal_arr = new boolean[p_layer_count];
-      preferred_direction_trace_cost_arr = new double[p_layer_count];
-      against_preferred_direction_trace_cost_arr = new double[p_layer_count];
+      layers_arr = new ArtLayer[p_layer_count];
+      
+      for ( int index=0; index<p_layer_count; index++ ) layers_arr[index] = new ArtLayer(index);
+
       stop_remove_fanout_vias = true;
       }
 
@@ -84,62 +84,60 @@ public final class ArtSettings implements java.io.Serializable
       // make more horizontal preferred direction, if the board is horizontal.
 
       boolean curr_preferred_direction_is_horizontal = horizontal_width < vertical_width;
-      for (int i = 0; i < layer_count; ++i)
+      
+      for (int index = 0; index < layer_count; ++index)
          {
-         layer_active_arr[i] = p_board.layer_structure.is_signal(i);
+         ArtLayer a_layer = art_layer_get(index);
+
+         BrdLayer b_layer = p_board.layer_structure.get(index);
          
-         if (layer_active_arr[i])
+         a_layer.art_layer_active = b_layer.is_signal;
+         
+         if (a_layer.art_layer_active)
             {
             curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
             }
          
-         preferred_direction_is_horizontal_arr[i] = curr_preferred_direction_is_horizontal;
-         preferred_direction_trace_cost_arr[i] = 1;
-         against_preferred_direction_trace_cost_arr[i] = 1;
+         a_layer.preferred_horizontal = curr_preferred_direction_is_horizontal;
+         a_layer.preferred_direction_trace_cost = 1;
+         
+         a_layer.against_direction_trace_cost = 1;
+
          if (curr_preferred_direction_is_horizontal)
             {
-            against_preferred_direction_trace_cost_arr[i] += horizontal_add_costs_against_preferred_dir;
+            a_layer.against_direction_trace_cost += horizontal_add_costs_against_preferred_dir;
             }
          else
             {
-            against_preferred_direction_trace_cost_arr[i] += vertical_add_costs_against_preferred_dir;
+            a_layer.against_direction_trace_cost += vertical_add_costs_against_preferred_dir;
             }
          }
       int signal_layer_count = p_board.layer_structure.signal_layer_count();
+      
       if (signal_layer_count > 2)
          {
          double outer_add_costs = 0.2 * signal_layer_count;
+         
          // increase costs on the outer layers.
-         preferred_direction_trace_cost_arr[0] += outer_add_costs;
-         preferred_direction_trace_cost_arr[layer_count - 1] += outer_add_costs;
-         against_preferred_direction_trace_cost_arr[0] += outer_add_costs;
-         against_preferred_direction_trace_cost_arr[layer_count - 1] += outer_add_costs;
+         art_layer_get(0).add_cost(outer_add_costs);
+
+         art_layer_get(layer_count - 1).add_cost(outer_add_costs);
          }
       }
 
-   /**
-    * Copy constructor
-    */
-   public ArtSettings(ArtSettings p_in)
+   public ArtLayer art_layer_get ( int p_no )
       {
-// should the following two be copied ?      
-//      vias_allowed = p_in.vias_allowed;
-//      no_ripup = p_in.no_ripup;
-      
-      start_ripup_costs = p_in.start_ripup_costs;
-      autoroute_pass_no = p_in.autoroute_pass_no;
-      via_costs = p_in.via_costs;
-      plane_via_costs = p_in.plane_via_costs;
-      layer_active_arr = new boolean[p_in.layer_active_arr.length];
-      System.arraycopy(p_in.layer_active_arr, 0, this.layer_active_arr, 0, layer_active_arr.length);
-      preferred_direction_is_horizontal_arr = new boolean[p_in.preferred_direction_is_horizontal_arr.length];
-      System.arraycopy(p_in.preferred_direction_is_horizontal_arr, 0, this.preferred_direction_is_horizontal_arr, 0, preferred_direction_is_horizontal_arr.length);
-      preferred_direction_trace_cost_arr = new double[p_in.preferred_direction_trace_cost_arr.length];
-      System.arraycopy(p_in.preferred_direction_trace_cost_arr, 0, preferred_direction_trace_cost_arr, 0, preferred_direction_trace_cost_arr.length);
-      against_preferred_direction_trace_cost_arr = new double[p_in.against_preferred_direction_trace_cost_arr.length];
-      System.arraycopy(p_in.against_preferred_direction_trace_cost_arr, 0, against_preferred_direction_trace_cost_arr, 0, against_preferred_direction_trace_cost_arr.length);
+      try
+         {
+         return layers_arr[p_no];
+         }
+      catch ( Exception exc )
+         {
+         exc.printStackTrace();
+         return null;
+         }
       }
-
+   
    public void set_start_ripup_costs(int p_value)
       {
       start_ripup_costs = Math.max(p_value, 1);
@@ -222,125 +220,99 @@ public final class ArtSettings implements java.io.Serializable
 
    public void set_layer_active(int p_layer, boolean p_value)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.set_layer_active: p_layer out of range");
-         return;
-         }
-      layer_active_arr[p_layer] = p_value;
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return;
+      
+      a_layer.art_layer_active = p_value;
       }
 
    public boolean get_layer_active(int p_layer)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.get_layer_active: p_layer out of range");
-         return false;
-         }
-      return layer_active_arr[p_layer];
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return false;
+
+      return a_layer.art_layer_active;
       }
 
    public void set_preferred_direction_is_horizontal(int p_layer, boolean p_value)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.set_preferred_direction_is_horizontal: p_layer out of range");
-         return;
-         }
-      preferred_direction_is_horizontal_arr[p_layer] = p_value;
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return;
+      
+      a_layer.preferred_horizontal = p_value;
       }
 
    public boolean get_preferred_direction_is_horizontal(int p_layer)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.get_preferred_direction_is_horizontal: p_layer out of range");
-         return false;
-         }
-      return preferred_direction_is_horizontal_arr[p_layer];
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return false;
+
+      return a_layer.preferred_horizontal;
       }
 
    public void set_preferred_direction_trace_costs(int p_layer, double p_value)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.set_preferred_direction_trace_costs: p_layer out of range");
-         return;
-         }
-      preferred_direction_trace_cost_arr[p_layer] = Math.max(p_value, 0.1);
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return;
+
+      a_layer.preferred_direction_trace_cost = Math.max(p_value, 0.1);
       }
 
    public double get_preferred_direction_trace_costs(int p_layer)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
-         return 0;
-         }
-      return preferred_direction_trace_cost_arr[p_layer];
-      }
+      ArtLayer a_layer = art_layer_get(p_layer);
 
-   public double get_against_preferred_direction_trace_costs(int p_layer)
-      {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
-         return 0;
-         }
-      return against_preferred_direction_trace_cost_arr[p_layer];
-      }
+      if ( a_layer == null ) return 1;
 
-   public double get_horizontal_trace_costs(int p_layer)
-      {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.get_preferred_direction_trace_costs: p_layer out of range");
-         return 0;
-         }
-      double result;
-      if (preferred_direction_is_horizontal_arr[p_layer])
-         {
-         result = preferred_direction_trace_cost_arr[p_layer];
-         }
-      else
-         {
-         result = against_preferred_direction_trace_cost_arr[p_layer];
-         }
-      return result;
+      return a_layer.preferred_direction_trace_cost;
       }
 
    public void set_against_preferred_direction_trace_costs(int p_layer, double p_value)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.set_against_preferred_direction_trace_costs: p_layer out of range");
-         return;
-         }
-      against_preferred_direction_trace_cost_arr[p_layer] = Math.max(p_value, 0.1);
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return;
+
+      a_layer.against_direction_trace_cost = Math.max(p_value, 0.1);
       }
+   
+   public double get_against_preferred_direction_trace_costs(int p_layer)
+      {
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return 1;
+
+      return a_layer.against_direction_trace_cost;
+      }
+
+   
+   public double get_horizontal_trace_costs(int p_layer)
+      {
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return 1;
+
+      return a_layer.preferred_horizontal ? a_layer.preferred_direction_trace_cost : a_layer.against_direction_trace_cost;
+      }
+
 
    public double get_vertical_trace_costs(int p_layer)
       {
-      if (p_layer < 0 || p_layer >= layer_active_arr.length)
-         {
-         System.out.println("AutorouteSettings.get_against_preferred_direction_trace_costs: p_layer out of range");
-         return 0;
-         }
-      double result;
-      if (preferred_direction_is_horizontal_arr[p_layer])
-         {
-         result = against_preferred_direction_trace_cost_arr[p_layer];
-         }
-      else
-         {
-         result = preferred_direction_trace_cost_arr[p_layer];
-         }
-      return result;
+      ArtLayer a_layer = art_layer_get(p_layer);
+
+      if ( a_layer == null ) return 1;
+
+      return a_layer.preferred_horizontal ? a_layer.against_direction_trace_cost : a_layer.preferred_direction_trace_cost;
       }
 
    public ExpandCostFactor[] get_trace_cost_arr()
       {
-      ExpandCostFactor[] result = new ExpandCostFactor[preferred_direction_trace_cost_arr.length];
+      ExpandCostFactor[] result = new ExpandCostFactor[layers_arr.length];
       
       for (int index = 0; index < result.length; ++index)
          {

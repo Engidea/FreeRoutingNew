@@ -21,6 +21,7 @@ package freert.spectra;
 
 import java.util.Collection;
 import java.util.Iterator;
+import board.BrdLayer;
 
 /**
  * Describes a layer structure read from a dsn file.
@@ -53,7 +54,7 @@ public final class DsnLayerStructure
       arr = new DsnLayer[p_board_layer_structure.size()];
       for (int index = 0; index < arr.length; ++index)
          {
-         board.BrdLayer board_layer = p_board_layer_structure.get(index);
+         BrdLayer board_layer = p_board_layer_structure.get(index);
          arr[index] = new DsnLayer(board_layer.name, index, board_layer.is_signal);
          }
       }

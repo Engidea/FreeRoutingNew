@@ -255,10 +255,9 @@ public class DsnKeywordLibrary extends DsnKeywordScope
       for (int index = first_layer_no; index <= last_layer_no; ++index)
          {
          PlaShape curr_board_shape = p_padstack.get_shape(index);
-         if (curr_board_shape == null)
-            {
-            continue;
-            }
+         
+         if (curr_board_shape == null) continue;
+
          BrdLayer board_layer = p_par.board.layer_structure.get(index);
          DsnLayer curr_layer = new DsnLayer(board_layer.name, index, board_layer.is_signal);
          DsnShape curr_shape = p_par.coordinate_transform.board_to_dsn_rel(curr_board_shape, curr_layer);
@@ -405,9 +404,9 @@ public class DsnKeywordLibrary extends DsnKeywordScope
 
          if (pad_shape.layer == DsnLayer.PCB || pad_shape.layer == DsnLayer.SIGNAL)
             {
-            for (int i = 0; i < padstack_shapes.length; ++i)
+            for (int index = 0; index < padstack_shapes.length; ++index)
                {
-               padstack_shapes[i] = padstack_shape;
+               padstack_shapes[index] = padstack_shape;
                }
             }
          else

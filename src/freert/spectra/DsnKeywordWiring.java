@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
+import board.BrdLayer;
 import board.RoutingBoard;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
@@ -40,6 +41,7 @@ import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaPointIntAlist;
+import freert.planar.PlaShape;
 import freert.planar.Polyline;
 import freert.planar.ShapeTileBox;
 import freert.rules.NetClass;
@@ -251,16 +253,16 @@ final class DsnKeywordWiring extends DsnKeywordScope
          return;
          }
       freert.rules.RuleNet curr_net = p_par.board.brd_rules.nets.get(p_conduction_area.get_net_no(0));
-      freert.planar.PlaArea curr_area = p_conduction_area.get_area();
+      PlaArea curr_area = p_conduction_area.get_area();
       int layer_no = p_conduction_area.get_layer();
-      board.BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
+      BrdLayer board_layer = p_par.board.layer_structure.get(layer_no);
       DsnLayer conduction_layer = new DsnLayer(board_layer.name, layer_no, board_layer.is_signal);
-      freert.planar.PlaShape boundary_shape;
-      freert.planar.PlaShape[] holes;
-      if (curr_area instanceof freert.planar.PlaShape)
+      PlaShape boundary_shape;
+      PlaShape[] holes;
+      if (curr_area instanceof PlaShape)
          {
-         boundary_shape = (freert.planar.PlaShape) curr_area;
-         holes = new freert.planar.PlaShape[0];
+         boundary_shape = (PlaShape) curr_area;
+         holes = new PlaShape[0];
          }
       else
          {

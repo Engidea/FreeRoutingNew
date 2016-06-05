@@ -59,6 +59,7 @@ public final class DsnLayer
     * Creates a new instance of Layer. p_no is the physical layer number starting with 0 at the component side and ending at the
     * solder side. If p_is_signal, the layer is a signal layer, otherwise it is a powerground layer. For Layer objects describing
     * more than 1 layer the number is -1.
+    * TODO this is used basically always to create a DsnLayer from a Brd layer, so make it a constructor
     */
    public DsnLayer(String p_name, int p_no, boolean p_is_signal)
       {

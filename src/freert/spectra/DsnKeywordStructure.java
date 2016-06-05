@@ -104,8 +104,9 @@ public final class DsnKeywordStructure extends DsnKeywordScope
                read_ok = read_layer_scope(p_par.scanner, board_construction_info, p_par.string_quote);
                if (p_par.layer_structure != null)
                   {
-                  // correct the layer_structure because another layer isr read
+                  // correct the layer_structure because another layer is read
                   p_par.layer_structure = new DsnLayerStructure(board_construction_info.layer_info);
+                  System.err.println("Overwriting p_par.layer_structure");
                   }
                }
             else if (next_token == DsnKeyword.VIA)
@@ -635,9 +636,9 @@ public final class DsnKeywordStructure extends DsnKeywordScope
             }
          if (layer_ok)
             {
-            DsnLayer curr_layer = new DsnLayer(layer_string, p_board_construction_info.found_layer_count, is_signal, net_names);
+            // NOTE that the layer_no is calculated here and guarantee linearly increasing
+            DsnLayer curr_layer = new DsnLayer(layer_string, p_board_construction_info.found_layer_count++, is_signal, net_names);
             p_board_construction_info.layer_info.add(curr_layer);
-            ++p_board_construction_info.found_layer_count;
             }
          }
       catch (java.io.IOException e)

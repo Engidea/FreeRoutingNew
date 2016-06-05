@@ -34,28 +34,32 @@ public final class BrdLayerStructure implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    
-   private final ArrayList<BrdLayer>  arr;
+   private final ArrayList<BrdLayer>  layers_list;
 
+   /**
+    * You MUST guarantee that the collection has layer_no from zero onward without holes !!!
+    * @param p_layers
+    */
    public BrdLayerStructure(Collection<DsnLayer> p_layers)
       {
-      arr = new ArrayList<BrdLayer>(p_layers.size());
+      layers_list = new ArrayList<BrdLayer>(p_layers.size());
       
       for (DsnLayer a_layer : p_layers )
          {
-         arr.add ( new BrdLayer(a_layer.layer_no, a_layer.name, a_layer.is_signal) );
+         layers_list.add ( new BrdLayer(a_layer.layer_no, a_layer.name, a_layer.is_signal) );
          }
       
-      Collections.sort(arr);
+      Collections.sort(layers_list);
       }
 
    public int size()
       {
-      return arr.size();
+      return layers_list.size();
       }
 
    public BrdLayer get ( int layer_no )
       {
-      return arr.get(layer_no);
+      return layers_list.get(layer_no);
       }
 
    

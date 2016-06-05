@@ -22,7 +22,8 @@ package board;
 
 /**
  * Describes the structure of a board layer.
- *
+ * One issue in mergin info int this object is that the "creation time" is not consistent, meaning that some info are aquired
+ * at some point in time and others at another point...
  * @author alfons
  */
 public final class BrdLayer implements java.io.Serializable, Comparable<BrdLayer>
@@ -30,15 +31,15 @@ public final class BrdLayer implements java.io.Serializable, Comparable<BrdLayer
    private static final long serialVersionUID = 1L;
 
    public final int layer_no;
-   // The name of the layer
    public final String name;
    // True, if this is a signal layer, which can be used for routing. Otherwise it may be for example a power ground layer.
    public final boolean is_signal;
 
+   
    public BrdLayer(int p_layer_no, String p_name, boolean p_is_signal)
       {
-      layer_no = p_layer_no;
-      name = p_name;
+      layer_no  = p_layer_no;
+      name      = p_name;
       is_signal = p_is_signal;
       }
 
