@@ -187,7 +187,7 @@ public class DsnKeywordAutoroute
                      System.out.println("DsnKeywordAutoroute.read_layer_rule: unexpected key word");
                      return null;
                      }
-                  p_settings.set_preferred_direction_is_horizontal(layer_no, pref_dir_is_horizontal);
+                  p_settings.set_preferred_direction_horizontal(layer_no, pref_dir_is_horizontal);
                   next_token = p_scanner.next_token();
                   if (next_token != DsnKeyword.CLOSED_BRACKET)
                      {
@@ -308,7 +308,7 @@ public class DsnKeywordAutoroute
             }
          p_file.new_line();
          p_file.write("(preferred_direction ");
-         if (p_settings.get_preferred_direction_is_horizontal(layer_idx))
+         if (p_settings.is_preferred_direction_horizontal(layer_idx))
             {
             p_file.write("horizontal)");
             }

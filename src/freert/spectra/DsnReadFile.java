@@ -201,7 +201,7 @@ public final class DsnReadFile
       // Adjust the layer preferred directions in the autoroute settings and deactivate the changed layers.
       autoroute.ArtSettings autoroute_settings = itera_board.itera_settings.autoroute_settings;
       int layer_count = routing_board.get_layer_count();
-      boolean curr_preferred_direction_is_horizontal = autoroute_settings.get_preferred_direction_is_horizontal(0);
+      boolean curr_preferred_direction_is_horizontal = autoroute_settings.is_preferred_direction_horizontal(0);
       for (int i = 0; i < layer_count; ++i)
          {
          if (changed_layer_arr[i])
@@ -210,7 +210,7 @@ public final class DsnReadFile
             }
          else if (autoroute_settings.get_layer_active(i))
             {
-            autoroute_settings.set_preferred_direction_is_horizontal(i, curr_preferred_direction_is_horizontal);
+            autoroute_settings.set_preferred_direction_horizontal(i, curr_preferred_direction_is_horizontal);
             curr_preferred_direction_is_horizontal = !curr_preferred_direction_is_horizontal;
             }
          }

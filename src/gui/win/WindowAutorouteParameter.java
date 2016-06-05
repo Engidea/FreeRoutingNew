@@ -23,7 +23,6 @@ package gui.win;
 import freert.main.Stat;
 import gui.BoardFrame;
 import gui.GuiSubWindowSavable;
-import gui.varie.AutorouteParameterRow;
 import gui.varie.GuiPanelVertical;
 import gui.varie.GuiResources;
 import interactive.IteraBoard;
@@ -39,7 +38,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import autoroute.ArtSettings;
-import board.BrdLayerStructure;
 
 /**
  * Window handling parameters of the automatic routing
@@ -60,7 +58,7 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
    private final JButton detail_button;
    private final WindowAutorouteParameterDetail detail_window;
 
-   private final WinLayerTableModel layer_table_model;
+   private final WinArtLayerTableModel layer_table_model;
    private final JTable layer_table;
    
    private final GuiResources resources;
@@ -80,7 +78,7 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
       // create main panel
       GuiPanelVertical main_panel = new GuiPanelVertical(new Insets(3,3,3,3));
       
-      layer_table_model = new WinLayerTableModel(i_board);
+      layer_table_model = new WinArtLayerTableModel(i_board);
       layer_table = new JTable(layer_table_model);
       layer_table_model.adjustTableClumns(layer_table);
       
@@ -163,7 +161,6 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
    public void refresh()
       {
       ArtSettings settings = i_board.itera_settings.autoroute_settings;
-      BrdLayerStructure layer_structure = i_board.get_routing_board().layer_structure;
 
       vias_allowed.setSelected(settings.vias_allowed);
       vias_remove_uconn.setSelected(settings.stop_remove_fanout_vias);
@@ -172,25 +169,7 @@ public class WindowAutorouteParameter extends GuiSubWindowSavable
       autoroute_pass_button.setSelected(settings.get_with_autoroute());
       postroute_pass_button.setSelected(settings.get_with_postroute());
 
-      int signal_layer_count = layer_structure.signal_layer_count();
-
-      for (int layer_no = 0; layer_no < signal_layer_count; ++layer_no)
-         {
-         AutorouteParameterRow arow = layer_table_model.get_layer(layer_no);
-
-         arow.signal_layer_name = layer_structure.get_name(layer_no);
-
-         arow.signal_layer_active = settings.get_layer_active(layer_structure.get_layer_no(layer_no));
-
-         if (settings.get_preferred_direction_is_horizontal(layer_structure.get_layer_no(layer_no)))
-            {
-            arow.signal_layer_pfdir = AutorouteParameterRow.PFDIR_horizontal;
-            }
-         else
-            {
-            arow.signal_layer_pfdir = AutorouteParameterRow.PFDIR_vertical;
-            }
-         }
+      layer_table_model.fireTableChanged();
       
       detail_window.refresh();
       }

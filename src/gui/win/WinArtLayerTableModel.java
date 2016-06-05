@@ -1,6 +1,5 @@
 package gui.win;
 
-import gui.varie.AutorouteParameterRow;
 import gui.varie.IntKeyStringValue;
 import gui.varie.IntKeyStringValueAlist;
 import interactive.IteraBoard;
@@ -9,8 +8,10 @@ import java.util.ArrayList;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
+import autoroute.varie.ArtLayer;
 
 /*
  *  Copyright (C) 2014  Damiano Bolla  website www.engidea.com
@@ -29,7 +30,13 @@ import javax.swing.table.TableColumnModel;
  */
 
 
-public final class WinLayerTableModel extends AbstractTableModel implements java.io.Serializable
+/**
+ * Actually, this could be merged into ArtSettings...
+ * @author damiano
+ *
+ */
+
+public final class WinArtLayerTableModel extends AbstractTableModel implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    private static final String classname = "WinLayerTableModel.";
@@ -40,34 +47,26 @@ public final class WinLayerTableModel extends AbstractTableModel implements java
    private static final int COL_layer_pfdir=3;
    private static final int COL_layer_count=4;
 
-   public final ArrayList<AutorouteParameterRow> layer_list = new ArrayList<AutorouteParameterRow>(10);
-   public final IntKeyStringValueAlist pfdir_choices;
+   private final ArrayList<ArtLayer> layer_list;
+   private final IntKeyStringValueAlist pfdir_choices;
    private final IteraBoard i_board ;
    
-   public WinLayerTableModel ( IteraBoard p_itera_board )
+   public WinArtLayerTableModel ( IteraBoard p_itera_board )
       {
       i_board = p_itera_board;
       
+      // pick up a direct reference to the storage
+      layer_list  = i_board.itera_settings.autoroute_settings.art_layer_list();
+      
       pfdir_choices = new IntKeyStringValueAlist(2);
-      pfdir_choices.add(AutorouteParameterRow.PFDIR_horizontal,"Horizontal");
-      pfdir_choices.add(AutorouteParameterRow.PFDIR_vertical,"Vertical");
+      pfdir_choices.add(ArtLayer.PFDIR_horizontal,"Horizontal");
+      pfdir_choices.add(ArtLayer.PFDIR_vertical,"Vertical");
       }
 
-   public AutorouteParameterRow get_layer ( int p_no )
+   public void fireTableChanged ()
       {
-      for ( AutorouteParameterRow a_row : layer_list )
-         if ( a_row.signal_layer_no == p_no ) return a_row;
-      
-      AutorouteParameterRow a_row = new AutorouteParameterRow(p_no);
-      layer_list.add(a_row);
-      
-      int row_idx = getRowCount()-1;
-      
-      super.fireTableRowsInserted(row_idx, row_idx);
-
-      return a_row;
+      super.fireTableChanged(new TableModelEvent(this));
       }
-
    
    public void adjustTableClumns ( JTable p_table )
       {
@@ -155,21 +154,21 @@ public final class WinLayerTableModel extends AbstractTableModel implements java
    @Override
    public Object getValueAt(int p_row, int p_col)
       {
-      AutorouteParameterRow a_row = layer_list.get(p_row);
+      ArtLayer a_row = layer_list.get(p_row);
       
       switch ( p_col )
          {
          case COL_layer_idx:
-            return a_row.signal_layer_no;
+            return a_row.layer_no;
 
          case COL_layer_name:
-            return a_row.signal_layer_name;
+            return a_row.layer_name;
             
          case COL_layer_active:
-            return a_row.signal_layer_active;
+            return a_row.art_layer_active;
 
          case COL_layer_pfdir:
-            return pfdir_choices.get(a_row.signal_layer_pfdir);
+            return pfdir_choices.get(a_row.layer_pfdir);
             
          default: 
             return "BAD col="+p_col;
@@ -181,7 +180,7 @@ public final class WinLayerTableModel extends AbstractTableModel implements java
       {
       if ( a_val == null ) return;
       
-      AutorouteParameterRow a_row = layer_list.get(p_row);
+      ArtLayer a_row = layer_list.get(p_row);
       
       switch ( p_col )
          {
@@ -189,11 +188,8 @@ public final class WinLayerTableModel extends AbstractTableModel implements java
             if ( a_val instanceof Boolean )
                {
                Boolean a_bool = (Boolean)a_val;
-               a_row.signal_layer_active = a_bool.booleanValue();
-               
-               int curr_layer_no = i_board.get_routing_board().layer_structure.get_layer_no(a_row.signal_layer_no);
-               i_board.itera_settings.autoroute_settings.set_layer_active(curr_layer_no, a_row.signal_layer_active);
-               i_board.userPrintln(classname+"signal_layer_active="+a_row.signal_layer_active);
+               a_row.art_layer_active = a_bool.booleanValue();
+               i_board.userPrintln(classname+"signal_layer_active="+a_row.art_layer_active);
                }
             break;
 
@@ -201,10 +197,8 @@ public final class WinLayerTableModel extends AbstractTableModel implements java
             if ( a_val instanceof IntKeyStringValue )
                {
                IntKeyStringValue a_kv = (IntKeyStringValue)a_val;
-               a_row.signal_layer_pfdir = a_kv.key;
-               int curr_layer_no = i_board.get_routing_board().layer_structure.get_layer_no(a_row.signal_layer_no);
-               i_board.itera_settings.autoroute_settings.set_preferred_direction_is_horizontal(curr_layer_no, a_row.isHorizontal());
-               i_board.userPrintln(classname+"signal_layer_pfdir="+a_row.signal_layer_pfdir);
+               a_row.layer_pfdir = a_kv.key;
+               i_board.userPrintln(classname+"signal_layer_pfdir="+a_row.layer_pfdir);
                }
             break;
          }

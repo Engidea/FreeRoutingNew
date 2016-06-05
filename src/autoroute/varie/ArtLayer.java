@@ -19,27 +19,44 @@ package autoroute.varie;
 
 /**
  * Autoroute needs to hold some info on layers too...
+ * NOTE that preferred direction is now quite basic, may become more interesting in the future
  * @author damiano
  *
  */
 public final class ArtLayer
    {
-   public final int layer_no;
+   public static final int PFDIR_horizontal=1;  // preferred direction is horizontal
+   public static final int PFDIR_vertical=2;    // vertical
+   
+   public final int layer_no;            // duplicate from BrdLayer
 
+   public String  layer_name;            // duplicate from BrdLayer
    public boolean art_layer_active;      // holds if the layer is active in autoroute mode, was in ArtSettings   
-   public boolean preferred_horizontal;  // if true the preferred direction is horizonatal
+   public int     layer_pfdir;           // Layer preferred direction for autoroute
    public double  preferred_direction_trace_cost;
    public double  against_direction_trace_cost;
 
    public ArtLayer ( int p_layer_no )
       {
       layer_no = p_layer_no;
+      preferred_direction_trace_cost = 1;
+      against_direction_trace_cost = 1;
       }
    
    public void add_cost ( double a_value )
       {
       preferred_direction_trace_cost += a_value;
       against_direction_trace_cost += a_value;
+      }
+   
+   public boolean is_pfdir_horizontal()
+      {
+      return layer_pfdir == PFDIR_horizontal;
+      }
+   
+   public void set_pfdir_horizontal ( boolean p_enbale )
+      {
+      layer_pfdir = p_enbale ? PFDIR_horizontal : PFDIR_vertical;
       }
    
    }
