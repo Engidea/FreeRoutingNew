@@ -1558,7 +1558,7 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Checks, if p_item item is part of a cycle and remove it together with its connection in this case.
+    * Checks, if p_trace is part of a cycle and remove it together with its connection in this case.
     */
    public boolean remove_if_cycle(BrdTracep p_trace)
       {

@@ -997,10 +997,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                // no need to readjust the iterator since we are actually exiting
                own_trace_split = split_tracep_own (index,result,intersecting_lines, p_clip_shape);
      
-               if ( found_trace_split ) split_tracep_remove_cycles (split_pieces);
+               if ( found_trace_split ) remove_if_cycle (split_pieces);
 
                // do this last to preserve traces if possible
-               if ( own_trace_split ) split_tracep_remove_cycles (result);
+               if ( own_trace_split ) remove_if_cycle (result);
                
                if (own_trace_split) break;
                }
@@ -1104,7 +1104,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       split_with_end_line(index + 1, split_line);
       }
 
-   private void split_tracep_remove_cycles ( LinkedList<BrdTracep> a_collection )
+   private void remove_if_cycle ( LinkedList<BrdTracep> a_collection )
       {
       for ( BrdTracep curr_piece : a_collection ) r_board.remove_if_cycle(curr_piece);
       }
