@@ -15,7 +15,7 @@
  *
  * Created on 1. September 2004, 10:13
  */
-package board.kdtree;
+package board.awtree;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -66,18 +66,18 @@ import freert.varie.UnitMeasure;
  *
  * @author Alfons Wirtz
  */
-public final class KdtreeShapeSearch
+public final class AwtreeShapeSearch
    {
    private final RoutingBoard r_board;
 
-   private final KdtreeNodeStack node_stack = new KdtreeNodeStack();
+   private final AwtreeNodeStack node_stack = new AwtreeNodeStack();
    // the fixed directions for calculating bounding RegularTileShapes of shapes to store in this tree.
-   private final KdtreeBoundingOct bounding_directions = KdtreeBoundingOct.INSTANCE;
+   private final AwtreeBoundingOct bounding_directions = AwtreeBoundingOct.INSTANCE;
    // The clearance class number for which the shapes of this tree is compensated, if 0 shapes are not compensated 
    public final int compensated_clearance_class_no;
 
    // Root node - initially null 
-   private KdtreeNode root_node = null;
+   private AwtreeNode root_node = null;
    // The number of entries stored in the tree
    private int leaf_count = 0;
 
@@ -87,7 +87,7 @@ public final class KdtreeShapeSearch
     * If p_compensated_clearance_class_no = 0, the shapes are not compensated
     * Note that for the free angle routing this is the actual class that is created
     */
-   public KdtreeShapeSearch(RoutingBoard p_board, int p_compensated_clearance_class_no)
+   public AwtreeShapeSearch(RoutingBoard p_board, int p_compensated_clearance_class_no)
       {
       r_board = p_board;
       compensated_clearance_class_no = p_compensated_clearance_class_no;
@@ -96,13 +96,13 @@ public final class KdtreeShapeSearch
    /**
     * Inserts all shapes of p_obj into the tree
     */
-   public final void insert(KdtreeObject p_obj)
+   public final void insert(AwtreeObject p_obj)
       {
       int shape_count = p_obj.tree_shape_count(this);
       
       if (shape_count <= 0)  return;
 
-      KdtreeNodeLeaf[] leaf_arr = new KdtreeNodeLeaf[shape_count];
+      AwtreeNodeLeaf[] leaf_arr = new AwtreeNodeLeaf[shape_count];
 
       for (int index = 0; index < shape_count; ++index)
          {
@@ -116,7 +116,7 @@ public final class KdtreeShapeSearch
     * Insert a shape - creates a new node with a bounding shape
     * This is possibly the entry point to understand the whole search tree mechanism
     */
-   protected final KdtreeNodeLeaf insert(KdtreeObject p_object, int p_index)
+   protected final AwtreeNodeLeaf insert(AwtreeObject p_object, int p_index)
       {
       PlaShape object_shape = p_object.get_tree_shape(this, p_index);
       
@@ -135,7 +135,7 @@ public final class KdtreeShapeSearch
          }
       
       // Construct a new KdLeaf and set it up
-      KdtreeNodeLeaf new_leaf = new KdtreeNodeLeaf(p_object, p_index, null, bounding_shape);
+      AwtreeNodeLeaf new_leaf = new AwtreeNodeLeaf(p_object, p_index, null, bounding_shape);
       
       insert_leaf(new_leaf);
       
@@ -145,26 +145,26 @@ public final class KdtreeShapeSearch
    /** 
     * Inserts the leaves of this tree into an array list
     */
-   private final ArrayList<KdtreeNodeLeaf> to_array()
+   private final ArrayList<AwtreeNodeLeaf> to_array()
       {
-      ArrayList<KdtreeNodeLeaf> result = new ArrayList<KdtreeNodeLeaf>(leaf_count);
+      ArrayList<AwtreeNodeLeaf> result = new ArrayList<AwtreeNodeLeaf>(leaf_count);
       
-      KdtreeNode curr_node = root_node;
+      AwtreeNode curr_node = root_node;
       
       if ( curr_node == null ) return result;
       
       for (;;)
          {
          // go down from curr_node to the left most leaf
-         while (curr_node instanceof KdtreeNodeFork)
+         while (curr_node instanceof AwtreeNodeFork)
             {
-            curr_node = ((KdtreeNodeFork) curr_node).first_child;
+            curr_node = ((AwtreeNodeFork) curr_node).first_child;
             }
          
-         result.add( (KdtreeNodeLeaf) curr_node );
+         result.add( (AwtreeNodeLeaf) curr_node );
 
          // go up until parent.second_child != curr_node, which means we came from first_child
-         KdtreeNodeFork curr_parent = curr_node.parent;
+         AwtreeNodeFork curr_parent = curr_node.parent;
 
          while (curr_parent != null && curr_parent.second_child == curr_node)
             {
@@ -183,7 +183,7 @@ public final class KdtreeShapeSearch
    /**
     * removes all entries of p_obj in the tree.
     */
-   public final void remove(KdtreeNodeLeaf[] p_entries)
+   public final void remove(AwtreeNodeLeaf[] p_entries)
       {
       if (p_entries == null) return;
 
@@ -198,11 +198,11 @@ public final class KdtreeShapeSearch
     */
    public String statistics()
       {
-      ArrayList<KdtreeNodeLeaf> leaf_arr = to_array();
+      ArrayList<AwtreeNodeLeaf> leaf_arr = to_array();
       double cumulative_depth = 0;
       int maximum_depth = 0;
       
-      for (KdtreeNodeLeaf a_leaf : leaf_arr )
+      for (AwtreeNodeLeaf a_leaf : leaf_arr )
          {
          if (a_leaf == null ) continue;
 
@@ -246,16 +246,16 @@ public final class KdtreeShapeSearch
    /**
     * Calculates the objects in this tree, which overlap with p_shape
     */
-   public final Set<KdtreeNodeLeaf> get_overlaps(ShapeTile p_shape)
+   public final Set<AwtreeNodeLeaf> get_overlaps(ShapeTile p_shape)
       {
-      Set<KdtreeNodeLeaf> found_overlaps = new TreeSet<KdtreeNodeLeaf>();
+      Set<AwtreeNodeLeaf> found_overlaps = new TreeSet<AwtreeNodeLeaf>();
 
       if (root_node == null) return found_overlaps;
 
       node_stack.reset();
       node_stack.push(root_node);
       
-      KdtreeNode curr_node;
+      AwtreeNode curr_node;
       
       for (;;)
          {
@@ -265,21 +265,21 @@ public final class KdtreeShapeSearch
 
          if ( ! curr_node.bounding_shape.intersects(p_shape)) continue;
          
-         if (curr_node instanceof KdtreeNodeLeaf)
+         if (curr_node instanceof AwtreeNodeLeaf)
             {
-            found_overlaps.add((KdtreeNodeLeaf) curr_node);
+            found_overlaps.add((AwtreeNodeLeaf) curr_node);
             }
          else
             {
-            node_stack.push(((KdtreeNodeFork) curr_node).first_child);
-            node_stack.push(((KdtreeNodeFork) curr_node).second_child);
+            node_stack.push(((AwtreeNodeFork) curr_node).first_child);
+            node_stack.push(((AwtreeNodeFork) curr_node).second_child);
             }
          }
       
       return found_overlaps;
       }
 
-   private final void insert_leaf(KdtreeNodeLeaf p_leaf)
+   private final void insert_leaf(AwtreeNodeLeaf p_leaf)
       {
       leaf_count++;
 
@@ -291,12 +291,12 @@ public final class KdtreeShapeSearch
          }
 
       // Non-empty tree - do a recursive location for leaf replacement
-      KdtreeNodeLeaf leaf_to_replace = position_locate(root_node, p_leaf);
+      AwtreeNodeLeaf leaf_to_replace = position_locate(root_node, p_leaf);
 
       // Construct a new node - whenever a leaf is added so is a new node
       ShapeTileRegular new_bounds = p_leaf.bounding_shape.union(leaf_to_replace.bounding_shape);
-      KdtreeNodeFork curr_parent = leaf_to_replace.parent;
-      KdtreeNodeFork new_node = new KdtreeNodeFork(new_bounds, curr_parent);
+      AwtreeNodeFork curr_parent = leaf_to_replace.parent;
+      AwtreeNodeFork new_node = new AwtreeNodeFork(new_bounds, curr_parent);
 
       if (leaf_to_replace.parent != null)
          {
@@ -321,13 +321,13 @@ public final class KdtreeShapeSearch
          }
       }
 
-   private final KdtreeNodeLeaf position_locate(KdtreeNode p_curr_node, KdtreeNodeLeaf p_leaf_to_insert)
+   private final AwtreeNodeLeaf position_locate(AwtreeNode p_curr_node, AwtreeNodeLeaf p_leaf_to_insert)
       {
-      KdtreeNode curr_node = p_curr_node;
+      AwtreeNode curr_node = p_curr_node;
 
-      while (!(curr_node instanceof KdtreeNodeLeaf))
+      while (!(curr_node instanceof AwtreeNodeLeaf))
          {
-         KdtreeNodeFork curr_inner_node = (KdtreeNodeFork) curr_node;
+         AwtreeNodeFork curr_inner_node = (AwtreeNodeFork) curr_node;
          curr_inner_node.bounding_shape = p_leaf_to_insert.bounding_shape.union(curr_inner_node.bounding_shape);
 
          // Choose the the child, so that the area increase of that child after taking the union
@@ -350,16 +350,16 @@ public final class KdtreeShapeSearch
             curr_node = curr_inner_node.second_child;
             }
          }
-      return (KdtreeNodeLeaf) curr_node;
+      return (AwtreeNodeLeaf) curr_node;
       }
 
 
-   public final void remove_leaf(KdtreeNodeLeaf p_leaf)
+   public final void remove_leaf(AwtreeNodeLeaf p_leaf)
       {
       if (p_leaf == null) return;
 
       // remove the leaf node
-      KdtreeNodeFork parent = p_leaf.parent;
+      AwtreeNodeFork parent = p_leaf.parent;
       p_leaf.bounding_shape = null;
       p_leaf.parent = null;
       p_leaf.object = null;
@@ -374,7 +374,7 @@ public final class KdtreeShapeSearch
          }
 
       // find the other leaf of the parent
-      KdtreeNode other_leaf;
+      AwtreeNode other_leaf;
       if (parent.second_child == p_leaf)
          {
          other_leaf = parent.first_child;
@@ -389,7 +389,7 @@ public final class KdtreeShapeSearch
          other_leaf = null;
          }
       // link the other leaf to the grand_parent and remove the parent node
-      KdtreeNodeFork grand_parent = parent.parent;
+      AwtreeNodeFork grand_parent = parent.parent;
       other_leaf.parent = grand_parent;
       if (grand_parent == null)
          {
@@ -418,7 +418,7 @@ public final class KdtreeShapeSearch
 
       // recalculate the bounding shapes of the ancestors
       // as long as it gets smaller after removing p_leaf
-      KdtreeNodeFork node_to_recalculate = grand_parent;
+      AwtreeNodeFork node_to_recalculate = grand_parent;
       while (node_to_recalculate != null)
          {
          ShapeTileRegular new_bounds = node_to_recalculate.second_child.bounding_shape.union(node_to_recalculate.first_child.bounding_shape);
@@ -485,9 +485,9 @@ public final class KdtreeShapeSearch
       ArrayList<ShapeTile> changed_shapes = offset_shapes(p_new_polyline, compensated_half_width, p_keep_at_start_count, p_new_polyline.plaline_len(-1) - p_keep_at_end_count);
       int old_shape_count = p_obj.tree_shape_count(this);
       int new_shape_count = changed_shapes.size() + p_keep_at_start_count + p_keep_at_end_count;
-      KdtreeNodeLeaf[] new_leaf_arr = new KdtreeNodeLeaf[new_shape_count];
+      AwtreeNodeLeaf[] new_leaf_arr = new AwtreeNodeLeaf[new_shape_count];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
-      KdtreeNodeLeaf[] old_entries = p_obj.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] old_entries = p_obj.get_search_tree_entries(this);
       
       for (int index = 0; index < p_keep_at_start_count; ++index)
          {
@@ -545,15 +545,15 @@ public final class KdtreeShapeSearch
          {
          remove_no = from_shape_count_minus_1;
          }
-      KdtreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
-      KdtreeNodeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
       remove_leaf(from_trace_entries[remove_no]);
       remove_leaf(to_trace_entries[0]);
       
       final int link_shapes_count = link_shapes.size();
       
       int new_shape_count = from_trace_entries.length + link_shapes_count + to_trace_entries.length - 2;
-      KdtreeNodeLeaf[] new_leaf_arr = new KdtreeNodeLeaf[new_shape_count];
+      AwtreeNodeLeaf[] new_leaf_arr = new AwtreeNodeLeaf[new_shape_count];
       int old_to_shape_count = to_trace_entries.length;
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
       // transfer the tree entries except the last or first from p_from_trace to p_to_trace
@@ -609,8 +609,8 @@ public final class KdtreeShapeSearch
       int compensated_half_width = p_to_trace.get_half_width() + get_clearance_compensation(p_to_trace.clearance_idx(), p_to_trace.get_layer());
       ArrayList<ShapeTile> link_shapes = offset_shapes(p_joined_polyline, compensated_half_width, p_from_entry_no, p_to_entry_no);
       boolean change_order = p_from_trace.corner_last().equals(p_to_trace.corner_last());
-      KdtreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
-      KdtreeNodeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] to_trace_entries = p_to_trace.get_search_tree_entries(this);
       // remove the last or first tree entry from p_from_trace and the
       // last tree entry from p_to_trace, because they will be replaced by
       // the new link entries.
@@ -630,7 +630,7 @@ public final class KdtreeShapeSearch
       final int link_shapes_count = link_shapes.size();
       
       int new_shape_count = from_trace_entries.length + link_shapes_count + to_trace_entries.length - 2;
-      KdtreeNodeLeaf[] new_leaf_arr = new KdtreeNodeLeaf[new_shape_count];
+      AwtreeNodeLeaf[] new_leaf_arr = new AwtreeNodeLeaf[new_shape_count];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[new_shape_count];
       // transfer the tree entries except the last from the old shapes
       // of p_to_trace to the new shapes of p_to_trace
@@ -682,8 +682,8 @@ public final class KdtreeShapeSearch
     */
    public final void reuse_entries_after_cutout(BrdTracep p_from_trace, BrdTracep p_start_piece, BrdTracep p_end_piece)
       {
-      KdtreeNodeLeaf[] start_piece_leaf_arr = new KdtreeNodeLeaf[p_start_piece.polyline().plaline_len(-2)];
-      KdtreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] start_piece_leaf_arr = new AwtreeNodeLeaf[p_start_piece.polyline().plaline_len(-2)];
+      AwtreeNodeLeaf[] from_trace_entries = p_from_trace.get_search_tree_entries(this);
       // transfer the entries at the start of p_from_trace to p_start_piece.
       for (int i = 0; i < start_piece_leaf_arr.length - 1; ++i)
          {
@@ -696,7 +696,7 @@ public final class KdtreeShapeSearch
 
       // create the last tree entry of the start piece.
 
-      KdtreeNodeLeaf[] end_piece_leaf_arr = new KdtreeNodeLeaf[p_end_piece.polyline().plaline_len(-2)];
+      AwtreeNodeLeaf[] end_piece_leaf_arr = new AwtreeNodeLeaf[p_end_piece.polyline().plaline_len(-2)];
 
       // create the first tree entry of the end piece.
       end_piece_leaf_arr[0] = insert(p_end_piece, 0);
@@ -718,19 +718,19 @@ public final class KdtreeShapeSearch
     * Puts all items in the tree overlapping with p_shape on layer p_layer into p_obstacles. 
     * If p_layer < 0, the layer is ignored.
     */
-   public final TreeSet<KdtreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos)
+   public final TreeSet<AwtreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos)
       {
-      TreeSet<KdtreeObject> risul_obstacles = new TreeSet<KdtreeObject>();
+      TreeSet<AwtreeObject> risul_obstacles = new TreeSet<AwtreeObject>();
 
-      Collection<KdtreeEntry> tree_entries = new LinkedList<KdtreeEntry>();
+      Collection<AwtreeEntry> tree_entries = new LinkedList<AwtreeEntry>();
 
       calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
 
-      Iterator<KdtreeEntry> it = tree_entries.iterator();
+      Iterator<AwtreeEntry> it = tree_entries.iterator();
       
       while (it.hasNext())
          {
-         KdtreeEntry curr_entry = it.next();
+         AwtreeEntry curr_entry = it.next();
 
          risul_obstacles.add(curr_entry.object);
          }
@@ -741,7 +741,7 @@ public final class KdtreeShapeSearch
    /**
     * Returns all SearchTreeObjects on layer p_layer, which overlap with p_shape. If p_layer < 0, the layer is ignored
     */
-   public final Set<KdtreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer)
+   public final Set<AwtreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer)
       {
       return find_overlap_objects(p_shape, p_layer, NetNosList.EMPTY );
       }
@@ -750,7 +750,7 @@ public final class KdtreeShapeSearch
     * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_obstacles. 
     * If p_layer < 0, the layer is ignored.
     */
-   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, Collection<KdtreeEntry> p_risul_tree)
+   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, Collection<AwtreeEntry> p_risul_tree)
       {
       calc_overlapping_tree_entries(p_shape, p_layer, NetNosList.EMPTY, p_risul_tree);
       }
@@ -760,7 +760,7 @@ public final class KdtreeShapeSearch
     * If p_layer < 0, the layer is ignored. 
     * tree_entries with object containing a net number of p_ignore_net_nos are ignored.
     */
-   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, Collection<KdtreeEntry> p_risul_tree)
+   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, Collection<AwtreeEntry> p_risul_tree)
       {
       if (p_shape == null) return;
       
@@ -777,15 +777,15 @@ public final class KdtreeShapeSearch
          return;
          }
       
-      Collection<KdtreeNodeLeaf> tmp_list = get_overlaps(bounds);
-      Iterator<KdtreeNodeLeaf> it = tmp_list.iterator();
+      Collection<AwtreeNodeLeaf> tmp_list = get_overlaps(bounds);
+      Iterator<AwtreeNodeLeaf> it = tmp_list.iterator();
 
       boolean is_45_degree = p_shape instanceof ShapeTileOctagon;
 
       while (it.hasNext())
          {
-         KdtreeNodeLeaf curr_leaf = it.next();
-         KdtreeObject curr_object = curr_leaf.object;
+         AwtreeNodeLeaf curr_leaf = it.next();
+         AwtreeObject curr_object = curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
          
          // ignore object if it is on a different layer
@@ -813,7 +813,7 @@ public final class KdtreeShapeSearch
 
          if (add_item)
             {
-            KdtreeEntry new_entry = new KdtreeEntry(curr_object, shape_index);
+            AwtreeEntry new_entry = new AwtreeEntry(curr_object, shape_index);
             p_risul_tree.add(new_entry);
             }
          }
@@ -827,7 +827,7 @@ public final class KdtreeShapeSearch
     * if p_layer < 0, the layer is ignored. 
     * Used only internally, because the clearance compensation is not taken innto account.
     */
-   public final void find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<KdtreeEntry> p_result)
+   public final void find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<AwtreeEntry> p_result)
       {
       if (p_shape == null) return;
 
@@ -848,12 +848,12 @@ public final class KdtreeShapeSearch
       // a factor less than sqr2 has evtl. be added because enlarging is not symmetric.
       ShapeTile offset_bounds = bounds.offset(max_clearance);
 
-      Collection<KdtreeNodeLeaf> tmp_list = get_overlaps(offset_bounds);
+      Collection<AwtreeNodeLeaf> tmp_list = get_overlaps(offset_bounds);
       
       // sort the found items by its clearances tp p_cl_type on layer p_layer
-      Set<KdtreeNodeLeafSorted> sorted_items = new TreeSet<KdtreeNodeLeafSorted>();
+      Set<AwtreeNodeLeafSorted> sorted_items = new TreeSet<AwtreeNodeLeafSorted>();
 
-      for ( KdtreeNodeLeaf curr_leaf : tmp_list )
+      for ( AwtreeNodeLeaf curr_leaf : tmp_list )
          {
          BrdItem curr_item = (BrdItem) curr_leaf.object;
          
@@ -868,7 +868,7 @@ public final class KdtreeShapeSearch
          if (!ignore_item)
             {
             int curr_clearance = cl_matrix.value_at(p_cl_type, curr_item.clearance_idx(), p_layer);
-            KdtreeNodeLeafSorted sorted_ob = new KdtreeNodeLeafSorted(curr_leaf, curr_clearance);
+            AwtreeNodeLeafSorted sorted_ob = new AwtreeNodeLeafSorted(curr_leaf, curr_clearance);
             sorted_items.add(sorted_ob);
             }
          }
@@ -877,7 +877,7 @@ public final class KdtreeShapeSearch
       
       ShapeTile curr_offset_shape = p_shape;
       
-      for ( KdtreeNodeLeafSorted tmp_entry : sorted_items )
+      for ( AwtreeNodeLeafSorted tmp_entry : sorted_items )
          {
          int tmp_half_clearance = tmp_entry.clearance / 2;
 
@@ -893,7 +893,7 @@ public final class KdtreeShapeSearch
          
          if (curr_offset_shape.intersects(tmp_offset_shape))
             {
-            p_result.add(new KdtreeEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
+            p_result.add(new AwtreeEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
             }
          }
       }
@@ -903,9 +903,9 @@ public final class KdtreeShapeSearch
     * If p_layer < 0 the layer is ignored.
     * @param p_result a non null Set
     */
-   public final void find_overlap_objects_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Set<KdtreeObject> p_result)
+   public final void find_overlap_objects_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Set<AwtreeObject> p_result)
       {
-      Collection<KdtreeEntry> res_tree_entries = new LinkedList<KdtreeEntry>();
+      Collection<AwtreeEntry> res_tree_entries = new LinkedList<AwtreeEntry>();
       
       if (is_clearance_compensation_used())
          {
@@ -916,7 +916,7 @@ public final class KdtreeShapeSearch
          find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_cl_type, res_tree_entries);
          }
       
-      for (KdtreeEntry curr_entry : res_tree_entries )
+      for (AwtreeEntry curr_entry : res_tree_entries )
          {
          p_result.add(curr_entry.object);
          }
@@ -930,13 +930,13 @@ public final class KdtreeShapeSearch
     */
    public final Set<BrdItem> find_overlap_items_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
-      Set<KdtreeObject> overlaps = new TreeSet<KdtreeObject>();
+      Set<AwtreeObject> overlaps = new TreeSet<AwtreeObject>();
 
       find_overlap_objects_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class, overlaps);
       
       Set<BrdItem> result = new TreeSet<BrdItem>();
       
-      for (KdtreeObject curr_object : overlaps)
+      for (AwtreeObject curr_object : overlaps)
          {
          if ( ! (curr_object instanceof BrdItem) ) continue;
 
@@ -952,9 +952,9 @@ public final class KdtreeShapeSearch
     *  If p_layer < 0, the layer is ignored.
     *  This seems one of the main point for the logic, finding out if something overlaps, damiano
     */
-   public final LinkedList<KdtreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
+   public final LinkedList<AwtreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
-      LinkedList<KdtreeEntry> result = new LinkedList<KdtreeEntry>();
+      LinkedList<AwtreeEntry> result = new LinkedList<AwtreeEntry>();
       
       if ( is_clearance_compensation_used())
          {
@@ -976,7 +976,7 @@ public final class KdtreeShapeSearch
     * If p_ignore_shape != null, objects of type CompleteFreeSpaceExpansionRoom, whose intersection with the shape of p_room is containes in p_ignore_shape, are ignored.
     * Note that this is override in subclasses...
     */
-   public Collection<ExpandRoomFreespaceIncomplete> complete_shape(ExpandRoomFreespaceIncomplete p_room, int p_net_no, KdtreeObject p_ignore_object, ShapeTile p_ignore_shape)
+   public Collection<ExpandRoomFreespaceIncomplete> complete_shape(ExpandRoomFreespaceIncomplete p_room, int p_net_no, AwtreeObject p_ignore_object, ShapeTile p_ignore_shape)
       {
       Collection<ExpandRoomFreespaceIncomplete> result = new LinkedList<ExpandRoomFreespaceIncomplete>();
 
@@ -1003,7 +1003,7 @@ public final class KdtreeShapeSearch
       
       node_stack.reset();
       node_stack.push(root_node);
-      KdtreeNode curr_node;
+      AwtreeNode curr_node;
       int room_layer = p_room.get_layer();
 
       for (;;)
@@ -1014,15 +1014,15 @@ public final class KdtreeShapeSearch
          
          if ( ! curr_node.bounding_shape.intersects(bounding_shape)) continue;
          
-         if ( ! (curr_node instanceof KdtreeNodeLeaf) )
+         if ( ! (curr_node instanceof AwtreeNodeLeaf) )
             {
-            node_stack.push(((KdtreeNodeFork) curr_node).first_child);
-            node_stack.push(((KdtreeNodeFork) curr_node).second_child);
+            node_stack.push(((AwtreeNodeFork) curr_node).first_child);
+            node_stack.push(((AwtreeNodeFork) curr_node).second_child);
             continue;
             }
 
-         KdtreeNodeLeaf curr_leaf = (KdtreeNodeLeaf) curr_node;
-         KdtreeObject curr_object = curr_leaf.object;
+         AwtreeNodeLeaf curr_leaf = (AwtreeNodeLeaf) curr_node;
+         AwtreeObject curr_object = curr_leaf.object;
          int shape_index = curr_leaf.shape_index_in_object;
       
          if ( ! (curr_object.is_trace_obstacle(p_net_no) && curr_object.shape_layer(shape_index) == room_layer && curr_object != p_ignore_object)) continue;
@@ -1250,8 +1250,8 @@ public final class KdtreeShapeSearch
     */
    void change_item_shape(BrdItem p_item, int p_shape_no, ShapeTile p_new_shape)
       {
-      KdtreeNodeLeaf[] old_entries = p_item.get_search_tree_entries(this);
-      KdtreeNodeLeaf[] new_leaf_arr = new KdtreeNodeLeaf[old_entries.length];
+      AwtreeNodeLeaf[] old_entries = p_item.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] new_leaf_arr = new AwtreeNodeLeaf[old_entries.length];
       ShapeTile[] new_precalculated_tree_shapes = new ShapeTile[old_entries.length];
       remove_leaf(old_entries[p_shape_no]);
       for (int i = 0; i < new_precalculated_tree_shapes.length; ++i)
@@ -1490,11 +1490,11 @@ public final class KdtreeShapeSearch
     */
    public final boolean validate_ok (BrdItem p_item)
       {
-      KdtreeNodeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(this);
+      AwtreeNodeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(this);
 
       for (int index = 0; index < curr_tree_entries.length; ++index)
          {
-         KdtreeNodeLeaf curr_leaf = curr_tree_entries[index];
+         AwtreeNodeLeaf curr_leaf = curr_tree_entries[index];
 
          if (curr_leaf.shape_index_in_object != index)
             {

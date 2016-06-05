@@ -25,11 +25,11 @@ import java.util.LinkedList;
 import board.BrdFromSide;
 import board.BrdShapeAndFromSide;
 import board.RoutingBoard;
+import board.awtree.AwtreeShapeSearch;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeShapeSearch;
 import board.varie.BrdStopConnection;
 import board.varie.ShoveDrillResult;
 import freert.planar.PlaDirection;
@@ -85,7 +85,7 @@ public final class AlgoShovePad
          return ShoveDrillResult.NOT_DRILLABLE;
          }
       
-      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
 
@@ -242,7 +242,7 @@ public final class AlgoShovePad
          return false;
          }
       
-      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(p_pad_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_pad_shape, p_layer, NetNosList.EMPTY, p_cl_type);
       

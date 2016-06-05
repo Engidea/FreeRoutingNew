@@ -25,7 +25,7 @@ import java.util.Iterator;
 import autoroute.ArtItem;
 import autoroute.expand.ExpandDrill;
 import board.RoutingBoard;
-import board.kdtree.KdtreeShapeSearch;
+import board.awtree.AwtreeShapeSearch;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -206,7 +206,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       clear_derived_data();
       }
 
-   public ExpandDrill get_autoroute_drill_info(KdtreeShapeSearch p_autoroute_tree)
+   public ExpandDrill get_autoroute_drill_info(AwtreeShapeSearch p_autoroute_tree)
       {
       if ( autoroute_drill_info != null) return autoroute_drill_info;
       

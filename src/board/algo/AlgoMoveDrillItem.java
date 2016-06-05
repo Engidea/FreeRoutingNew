@@ -25,12 +25,12 @@ import java.util.Collection;
 import java.util.LinkedList;
 import board.BrdFromSide;
 import board.RoutingBoard;
+import board.awtree.AwtreeShapeSearch;
 import board.items.BrdAbit;
 import board.items.BrdAbitVia;
 import board.items.BrdAreaConduction;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeShapeSearch;
 import board.varie.ShoveDrillResult;
 import board.varie.TraceAngleRestriction;
 import freert.planar.PlaPointFloat;
@@ -99,7 +99,7 @@ public final class AlgoMoveDrillItem
          attach_allowed = ((BrdAbitVia) p_drill_item).attach_allowed;
          }
       
-      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       
       for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); ++curr_layer)
          {
@@ -157,7 +157,7 @@ public final class AlgoMoveDrillItem
       
       Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
       ignore_items.add(p_drill_item);
-      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       for (int curr_layer = p_drill_item.first_layer(); curr_layer <= p_drill_item.last_layer(); ++curr_layer)
          {
          int curr_ind = curr_layer - p_drill_item.first_layer();
@@ -220,7 +220,7 @@ public final class AlgoMoveDrillItem
          int p_max_via_recursion_depth, 
          boolean p_copper_sharing_allowed)
       {
-      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       AlgoShoveTraceEntries shape_entries = new AlgoShoveTraceEntries(
             p_obstacle_shape, p_layer, p_net_no_arr, p_cl_type, p_from_side, r_board);
       Collection<BrdItem> obstacles = search_tree.find_overlap_items_with_clearance(p_obstacle_shape, p_layer, NetNosList.EMPTY, p_cl_type);
@@ -292,7 +292,7 @@ public final class AlgoMoveDrillItem
     */
    public PlaPointInt[] try_shove_via_points(ShapeTile p_obstacle_shape, int p_layer, BrdAbitVia p_via, int p_cl_class_no, boolean p_extended_check )
       {
-      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       ShapeTile curr_via_shape = p_via.get_tree_shape_on_layer(search_tree, p_layer);
       if (curr_via_shape == null)
          {

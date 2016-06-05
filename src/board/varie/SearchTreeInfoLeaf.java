@@ -15,17 +15,17 @@ package board.varie;
  *
  */
 
-import board.kdtree.KdtreeNodeLeaf;
-import board.kdtree.KdtreeShapeSearch;
+import board.awtree.AwtreeNodeLeaf;
+import board.awtree.AwtreeShapeSearch;
 import freert.planar.ShapeTile;
 
 public final class SearchTreeInfoLeaf
    {
-   public final KdtreeShapeSearch tree;
-   public KdtreeNodeLeaf[] entry_arr;
+   public final AwtreeShapeSearch tree;
+   public AwtreeNodeLeaf[] entry_arr;
    public ShapeTile[] precalculated_tree_shapes;
 
-   public SearchTreeInfoLeaf(KdtreeShapeSearch p_tree)
+   public SearchTreeInfoLeaf(AwtreeShapeSearch p_tree)
       {
       tree = p_tree;
       entry_arr = null;

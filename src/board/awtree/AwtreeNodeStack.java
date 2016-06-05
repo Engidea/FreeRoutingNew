@@ -19,7 +19,7 @@
  *
  */
 
-package board.kdtree;
+package board.awtree;
 
 import java.util.LinkedList;
 
@@ -29,9 +29,9 @@ import java.util.LinkedList;
  *
  * @author Alfons Wirtz
  */
-public final class KdtreeNodeStack
+public final class AwtreeNodeStack
    {
-   private final LinkedList<KdtreeNode> node_list = new LinkedList<KdtreeNode>();
+   private final LinkedList<AwtreeNode> node_list = new LinkedList<AwtreeNode>();
 
    /**
     * Sets the stack to empty.
@@ -44,7 +44,7 @@ public final class KdtreeNodeStack
    /**
     * Pushed p_element onto the stack.
     */
-   public void push(KdtreeNode p_element)
+   public void push(AwtreeNode p_element)
       {
       if ( p_element == null ) return;
       
@@ -55,7 +55,7 @@ public final class KdtreeNodeStack
     * Pops the next element from the top of the stack
     * @return null, if the stack is exhausted.
     */
-   public KdtreeNode pop()
+   public AwtreeNode pop()
       {
       if (node_list.isEmpty() )
          return null;

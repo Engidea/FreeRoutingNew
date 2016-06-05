@@ -21,7 +21,7 @@
 package freert.planar;
 
 import java.util.ArrayList;
-import board.kdtree.KdtreeBoundingOct;
+import board.awtree.AwtreeBoundingOct;
 
 /**
  * Interface describing functionality for connected 2-dimensional shapes in the plane. 
@@ -76,7 +76,7 @@ public interface PlaShape extends PlaArea
    /**
     * @returns the bounding RegularTileShape with the fixed directions p_dirs
     */
-   ShapeTileRegular bounding_shape(KdtreeBoundingOct p_dirs);
+   ShapeTileRegular bounding_shape(AwtreeBoundingOct p_dirs);
 
    /**
     * Returns the distance between p_point and its nearest point on the border of the shape.

@@ -21,7 +21,7 @@ package board.items;
 
 import java.awt.Color;
 import board.RoutingBoard;
-import board.kdtree.KdtreeShapeSearch;
+import board.awtree.AwtreeShapeSearch;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -365,7 +365,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       }
 
    @Override
-   protected final ShapeTile[] calculate_tree_shapes(KdtreeShapeSearch p_search_tree)
+   protected final ShapeTile[] calculate_tree_shapes(AwtreeShapeSearch p_search_tree)
       {
       return p_search_tree.calculate_tree_shapes(this);
       }

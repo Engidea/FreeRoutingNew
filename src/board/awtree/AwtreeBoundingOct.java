@@ -14,7 +14,7 @@
  *   for more details.
  */
 
-package board.kdtree;
+package board.awtree;
 
 import freert.planar.ShapeCircle;
 import freert.planar.ShapeConvex;
@@ -32,9 +32,9 @@ import freert.planar.ShapeTileSimplex;
  * It is called Oct since the bounding end up into an octagon, or at 45 degrees angle, if you wish
  * @author Alfons Wirtz
  */
-public final class KdtreeBoundingOct
+public final class AwtreeBoundingOct
    {
-   public static final KdtreeBoundingOct INSTANCE = new KdtreeBoundingOct();
+   public static final AwtreeBoundingOct INSTANCE = new AwtreeBoundingOct();
 
    /**
     * @return the count of the fixed directions.

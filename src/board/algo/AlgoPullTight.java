@@ -23,12 +23,12 @@ import java.util.Collection;
 import java.util.Set;
 import autoroute.expand.ExpandCostFactor;
 import board.RoutingBoard;
+import board.awtree.AwtreeObject;
+import board.awtree.AwtreeShapeSearch;
 import board.items.BrdAbitPin;
 import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeObject;
-import board.kdtree.KdtreeShapeSearch;
 import board.varie.BrdKeepPoint;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
@@ -188,11 +188,11 @@ public abstract class AlgoPullTight
       changed_region = changed_region.enlarge(changed_area_offset);
 
       // search in the ShapeSearchTree for all overlapping traces with clip_shape on layer_idx
-      Set<KdtreeObject> items = r_board.overlapping_objects(changed_region, layer_idx);
+      Set<AwtreeObject> items = r_board.overlapping_objects(changed_region, layer_idx);
    
       boolean something_changed = false;
       
-      for ( KdtreeObject curr_ob : items )
+      for ( AwtreeObject curr_ob : items )
          {
          if ( is_stop_requested()) break;
          
@@ -282,7 +282,7 @@ public abstract class AlgoPullTight
    public final Polyline pull_tight(Polyline p_polyline, int p_layer, int p_half_width, NetNosList p_net_no_arr, int p_cl_type, Set<BrdAbitPin> p_contact_pins)
       {
       curr_layer = p_layer;
-      KdtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
       curr_half_width = p_half_width + search_tree.get_clearance_compensation(p_cl_type, p_layer);
       curr_net_no_arr = p_net_no_arr;
       curr_cl_type = p_cl_type;

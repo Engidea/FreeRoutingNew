@@ -28,8 +28,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import board.BrdConnectable;
 import board.RoutingBoard;
-import board.kdtree.KdtreeShapeSearch;
-import board.kdtree.KdtreeObject;
+import board.awtree.AwtreeObject;
+import board.awtree.AwtreeShapeSearch;
 import board.varie.BrdTraceInfo;
 import board.varie.ItemFixState;
 import freert.graphics.GdiContext;
@@ -276,7 +276,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   protected final ShapeTile[] calculate_tree_shapes(KdtreeShapeSearch p_search_tree)
+   protected final ShapeTile[] calculate_tree_shapes(AwtreeShapeSearch p_search_tree)
       {
       return p_search_tree.calculate_tree_shapes(this);
       }
@@ -327,7 +327,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
     */
    public abstract LibPadstack get_padstack();
 
-   public ShapeTile get_tree_shape_on_layer(KdtreeShapeSearch p_tree, int p_layer)
+   public ShapeTile get_tree_shape_on_layer(AwtreeShapeSearch p_tree, int p_layer)
       {
       int from_layer = first_layer();
       int to_layer = last_layer();
@@ -372,13 +372,13 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
 
       ShapeTile search_shape = new ShapeTileBox(drill_center);
       
-      Set<KdtreeObject> overlaps = r_board.overlapping_objects(search_shape, -1);
+      Set<AwtreeObject> overlaps = r_board.overlapping_objects(search_shape, -1);
       
-      Iterator<KdtreeObject> iter = overlaps.iterator();
+      Iterator<AwtreeObject> iter = overlaps.iterator();
 
       while (iter.hasNext())
          {
-         KdtreeObject curr_ob = iter.next();
+         AwtreeObject curr_ob = iter.next();
 
          // skip myself
          if ( curr_ob == this ) continue;
@@ -458,7 +458,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public ShapeTile get_trace_connection_shape(KdtreeShapeSearch p_search_tree, int p_index)
+   public ShapeTile get_trace_connection_shape(AwtreeShapeSearch p_search_tree, int p_index)
       {
       return new ShapeTileBox(center_get());
       }

@@ -24,9 +24,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import board.RoutingBoard;
+import board.awtree.AwtreeObject;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeObject;
 import freert.main.Ldbg;
 import freert.main.Mdbg;
 import freert.planar.PlaPointInt;
@@ -64,8 +64,8 @@ public class BrdValidate
             System.out.println(" validate board is on ");
             first_time = false;
             }
-         Collection<KdtreeObject> l = p_board.overlapping_objects(surr_oct, layer);
-         Iterator<KdtreeObject> i = l.iterator();
+         Collection<AwtreeObject> l = p_board.overlapping_objects(surr_oct, layer);
+         Iterator<AwtreeObject> i = l.iterator();
          int clearance_violation_count = 0;
          int conflict_ob_count = 0;
          @SuppressWarnings("unused")

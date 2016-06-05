@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Random;
-import board.kdtree.KdtreeBoundingOct;
+import board.awtree.AwtreeBoundingOct;
 
 /**
  * Shape described bei a closed polygon of corner points. 
@@ -307,7 +307,7 @@ public final class ShapePolygon extends ShapeSegments
 
    
    @Override
-   public ShapeTileRegular bounding_shape(KdtreeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape(AwtreeBoundingOct p_dirs)
       {
       return p_dirs.bounds(this);
       }

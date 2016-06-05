@@ -28,12 +28,12 @@ import java.util.TreeSet;
 import autoroute.ArtItem;
 import board.BrdConnectable;
 import board.RoutingBoard;
+import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeNodeLeaf;
+import board.awtree.AwtreeObject;
+import board.awtree.AwtreeShapeSearch;
 import board.infos.BrdItemViolation;
 import board.infos.PrintableInfo;
-import board.kdtree.KdtreeShapeSearch;
-import board.kdtree.KdtreeEntry;
-import board.kdtree.KdtreeNodeLeaf;
-import board.kdtree.KdtreeObject;
 import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
@@ -57,7 +57,7 @@ import gui.varie.ObjectInfoPanel;
  * Basic class of the items on a board.
  * @author Alfons Wirtz
  */
-public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInfo, UndoableObjectStorable, Serializable
+public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInfo, UndoableObjectStorable, Serializable
    {
    private static final long serialVersionUID = 1L;
    private static final double PROTECT_FANOUT_LENGTH = 400;
@@ -234,21 +234,21 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
       return get_tree_shape(r_board.search_tree_manager.get_default_tree(), p_index);
       }
 
-   public final int tree_shape_count(KdtreeShapeSearch p_tree)
+   public final int tree_shape_count(AwtreeShapeSearch p_tree)
       {
       ShapeTile[] precalculated_tree_shapes = get_precalculated_tree_shapes(p_tree);
       
       return precalculated_tree_shapes.length;
       }
 
-   public final ShapeTile get_tree_shape(KdtreeShapeSearch p_tree, int p_index)
+   public final ShapeTile get_tree_shape(AwtreeShapeSearch p_tree, int p_index)
       {
       ShapeTile[] precalculated_tree_shapes = get_precalculated_tree_shapes(p_tree);
       
       return precalculated_tree_shapes[p_index];
       }
 
-   private ShapeTile[] get_precalculated_tree_shapes(KdtreeShapeSearch p_tree)
+   private ShapeTile[] get_precalculated_tree_shapes(AwtreeShapeSearch p_tree)
       {
       ShapeTile[] precalculated_tree_shapes = search_trees_info.get_precalculated_tree_shapes(p_tree);
 
@@ -264,7 +264,7 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
    /**
     * Calculates the tree shapes for this item for p_search_tree.
     */
-   protected abstract ShapeTile[] calculate_tree_shapes(KdtreeShapeSearch p_search_tree);
+   protected abstract ShapeTile[] calculate_tree_shapes(AwtreeShapeSearch p_search_tree);
 
    /**
     * Returns false, if this item is deleted oor not inserted into the board.
@@ -451,16 +451,16 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
       {
       Collection<BrdItemViolation> result = new LinkedList<BrdItemViolation>();
       
-      KdtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
       
       for (int index = 0; index < tile_shape_count(); ++index)
          {
          ShapeTile curr_tile_shape = get_tile_shape(index);
          
-         Collection<KdtreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(
+         Collection<AwtreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(
                curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
          
-         for (KdtreeEntry curr_entry : curr_overlapping_items )
+         for (AwtreeEntry curr_entry : curr_overlapping_items )
             {
             // skip objects that are not board items
             if ( !(curr_entry.object instanceof BrdItem)) continue;
@@ -512,11 +512,11 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
       
       for (int index = 0; index < tile_shape_count(); ++index)
          {
-         Collection<KdtreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), shape_layer(index));
-         Iterator<KdtreeObject> it = overlapping_items.iterator();
+         Collection<AwtreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), shape_layer(index));
+         Iterator<AwtreeObject> it = overlapping_items.iterator();
          while (it.hasNext())
             {
-            KdtreeObject curr_ob = it.next();
+            AwtreeObject curr_ob = it.next();
             
             if (!(curr_ob instanceof BrdItem)) continue;
 
@@ -546,12 +546,12 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
          {
          if ( shape_layer(index) != p_layer) continue;
 
-         Collection<KdtreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), p_layer);
-         Iterator<KdtreeObject> it = overlapping_items.iterator();
+         Collection<AwtreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), p_layer);
+         Iterator<AwtreeObject> it = overlapping_items.iterator();
 
          while (it.hasNext())
             {
-            KdtreeObject curr_ob = it.next();
+            AwtreeObject curr_ob = it.next();
          
             if (!(curr_ob instanceof BrdItem)) continue;
 
@@ -1160,7 +1160,7 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
     * Sets the item tree entries for the tree with identification number p_tree_no.
     */
    @Override
-   public final void set_search_tree_entries(KdtreeShapeSearch p_tree, KdtreeNodeLeaf[] p_tree_entries)
+   public final void set_search_tree_entries(AwtreeShapeSearch p_tree, AwtreeNodeLeaf[] p_tree_entries)
       {
       search_trees_info.set_tree_entries(p_tree , p_tree_entries);
       }
@@ -1169,7 +1169,7 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
     * Returns the tree entries for the tree with identification number p_tree_no, or null, if for this tree no entries of this item
     * are inserted.
     */
-   public final KdtreeNodeLeaf[] get_search_tree_entries(KdtreeShapeSearch p_tree)
+   public final AwtreeNodeLeaf[] get_search_tree_entries(AwtreeShapeSearch p_tree)
       {
       return search_trees_info.get_tree_entries(p_tree);
       }
@@ -1177,7 +1177,7 @@ public abstract class BrdItem implements GdiDrawable, KdtreeObject, PrintableInf
    /**
     * Sets the precalculated tree shapes tree entries for the tree with identification number p_tree_no.
     */
-   public final void set_precalculated_tree_shapes(ShapeTile[] p_shapes, KdtreeShapeSearch p_tree)
+   public final void set_precalculated_tree_shapes(ShapeTile[] p_shapes, AwtreeShapeSearch p_tree)
       {
       search_trees_info.set_precalculated_tree_shapes(p_shapes, p_tree);
       }

@@ -23,8 +23,8 @@ package autoroute;
 import java.awt.Graphics;
 import java.util.ArrayList;
 import autoroute.expand.ExpandRoomObstacle;
+import board.awtree.AwtreeShapeSearch;
 import board.items.BrdItem;
-import board.kdtree.KdtreeShapeSearch;
 import freert.graphics.GdiContext;
 
 /**
@@ -86,7 +86,7 @@ public final class ArtItem
    /**
     * Gets the ExpansionRoom of of index p_index. Creates it, if it is not yet existing.
     */
-   public ExpandRoomObstacle get_expansion_room(int p_index, KdtreeShapeSearch p_autoroute_tree)
+   public ExpandRoomObstacle get_expansion_room(int p_index, AwtreeShapeSearch p_autoroute_tree)
       {
       int want_size = parent_item.tree_shape_count(p_autoroute_tree);
       

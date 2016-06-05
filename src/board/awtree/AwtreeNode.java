@@ -1,4 +1,4 @@
-package board.kdtree;
+package board.awtree;
 /*
  *  Copyright (C) 2014  Damiano Bolla  website www.engidea.com
  *
@@ -21,8 +21,8 @@ import freert.planar.ShapeTileRegular;
  * Common functionality of inner nodes and leaf nodes
  * Should not be used by itself
  */
-public abstract class KdtreeNode
+public abstract class AwtreeNode
    {
-   public KdtreeNodeFork parent;
+   public AwtreeNodeFork parent;
    public ShapeTileRegular bounding_shape;
    }

@@ -20,7 +20,7 @@
 
 package freert.planar;
 
-import board.kdtree.KdtreeBoundingOct;
+import board.awtree.AwtreeBoundingOct;
 
 /**
  * Implements functionality of orthogonal rectangles in the plane with integer coordinates.
@@ -474,7 +474,7 @@ public final class ShapeTileBox extends ShapeTileRegular
       }
 
    @Override
-   public ShapeTileRegular bounding_shape(KdtreeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape(AwtreeBoundingOct p_dirs)
       {
       return p_dirs.bounds(this);
       }

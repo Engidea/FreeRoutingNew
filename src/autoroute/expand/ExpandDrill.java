@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import autoroute.ArtEngine;
 import autoroute.maze.MazeSearchElement;
-import board.kdtree.KdtreeObject;
+import board.awtree.AwtreeObject;
 import freert.planar.PlaDimension;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapeTile;
@@ -77,15 +77,15 @@ public final class ExpandDrill implements ExpandObject
       {
       ShapeTile search_shape = new ShapeTileBox(location);
       
-      Collection<KdtreeObject> overlaps = p_autoroute_engine.autoroute_search_tree.find_overlap_objects(search_shape, -1);
+      Collection<AwtreeObject> overlaps = p_autoroute_engine.autoroute_search_tree.find_overlap_objects(search_shape, -1);
 
       for (int index = first_layer_no; index <= last_layer_no; ++index)
          {
          ExpandRoomComplete found_room = null;
-         Iterator<KdtreeObject> iter = overlaps.iterator();
+         Iterator<AwtreeObject> iter = overlaps.iterator();
          while (iter.hasNext())
             {
-            board.kdtree.KdtreeObject curr_ob = iter.next();
+            board.awtree.AwtreeObject curr_ob = iter.next();
             
             if (!(curr_ob instanceof ExpandRoomComplete))
                {

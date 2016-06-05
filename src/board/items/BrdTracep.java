@@ -26,9 +26,9 @@ import java.util.TreeSet;
 import board.BrdConnectable;
 import board.RoutingBoard;
 import board.algo.AlgoPullTight;
-import board.kdtree.KdtreeEntry;
-import board.kdtree.KdtreeObject;
-import board.kdtree.KdtreeShapeSearch;
+import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeObject;
+import board.awtree.AwtreeShapeSearch;
 import board.varie.BrdTraceExitRestriction;
 import board.varie.BrdTracepCombineFound;
 import board.varie.ItemFixState;
@@ -149,7 +149,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * tree with id number p_ttree_id_no Equals get_half_width(), if no clearance
     * compensation is used in this tree.
     */
-   public final int get_compensated_half_width(KdtreeShapeSearch p_search_tree)
+   public final int get_compensated_half_width(AwtreeShapeSearch p_search_tree)
       {
       return trace_half_width + p_search_tree.get_clearance_compensation(clearance_idx(), layer_no);
       }
@@ -261,9 +261,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       ShapeTile search_shape = new ShapeTileBox(p_point);
 
-      Set<KdtreeObject> overlaps = r_board.overlapping_objects(search_shape, layer_no);
+      Set<AwtreeObject> overlaps = r_board.overlapping_objects(search_shape, layer_no);
 
-      for (KdtreeObject curr_ob : overlaps)
+      for (AwtreeObject curr_ob : overlaps)
          {
          // skip myself
          if ( curr_ob == this ) continue;
@@ -625,7 +625,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    @Override
-   protected final ShapeTile[] calculate_tree_shapes(KdtreeShapeSearch p_search_tree)
+   protected final ShapeTile[] calculate_tree_shapes(AwtreeShapeSearch p_search_tree)
       {
       return p_search_tree.calculate_tree_shapes(this);
       }
@@ -935,7 +935,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       boolean own_trace_split = false;
       
-      KdtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
+      AwtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
 
       for (int index = 0; index < polyline.plaline_len(-2); ++index)
          {
@@ -948,20 +948,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
          ShapeTile curr_shape = get_tree_shape(default_tree, index);
          
-         LinkedList<KdtreeEntry> over_tree_entries = new LinkedList<KdtreeEntry>();
+         LinkedList<AwtreeEntry> over_tree_entries = new LinkedList<AwtreeEntry>();
 
          // look for intersecting traces with the i-th line segment
          
          default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), over_tree_entries);
          
-         Iterator<KdtreeEntry> over_tree_iter = over_tree_entries.iterator();
+         Iterator<AwtreeEntry> over_tree_iter = over_tree_entries.iterator();
          
          while (over_tree_iter.hasNext())
             {
             // this trace has been deleted in a cleanup operation
             if (!is_on_the_board()) return result;
             
-            KdtreeEntry overlap_tentry = over_tree_iter.next();
+            AwtreeEntry overlap_tentry = over_tree_iter.next();
             
             if (!(overlap_tentry.object instanceof BrdItem)) continue;
             
@@ -1032,7 +1032,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * check if I should aboid testing this segment
     * @return
     */
-   private boolean split_avoid_this_item (int index, KdtreeEntry found_entry, BrdItem overlap_item)
+   private boolean split_avoid_this_item (int index, AwtreeEntry found_entry, BrdItem overlap_item)
       {
       if (overlap_item != this) return false;
       
@@ -1137,7 +1137,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * return true if some other trace was split
     */
-   private boolean split_tracep_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaLineInt> intersecting_lines, KdtreeEntry found_entry )
+   private boolean split_tracep_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaLineInt> intersecting_lines, AwtreeEntry found_entry )
       {
       if ( found_trace == this ) return false;
       
@@ -1454,7 +1454,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    @Override
-   public ShapeTile get_trace_connection_shape(KdtreeShapeSearch p_search_tree, int p_index)
+   public ShapeTile get_trace_connection_shape(AwtreeShapeSearch p_search_tree, int p_index)
       {
       if (p_index < 0 || p_index >= tile_shape_count())
          {

@@ -1,4 +1,4 @@
-package board.kdtree;
+package board.awtree;
 /*
  *  Copyright (C) 2014  Damiano Bolla  website www.engidea.com
  *
@@ -20,12 +20,12 @@ import freert.planar.ShapeTileRegular;
 /**
  * Description of an inner node of the tree, which implements a fork to its two children.
  */
-public final class KdtreeNodeFork extends KdtreeNode
+public final class AwtreeNodeFork extends AwtreeNode
    {
-   public KdtreeNode first_child;
-   public KdtreeNode second_child;
+   public AwtreeNode first_child;
+   public AwtreeNode second_child;
 
-   public KdtreeNodeFork(ShapeTileRegular p_bounding_shape, KdtreeNodeFork p_parent)
+   public AwtreeNodeFork(ShapeTileRegular p_bounding_shape, AwtreeNodeFork p_parent)
       {
       bounding_shape = p_bounding_shape;
       parent = p_parent;

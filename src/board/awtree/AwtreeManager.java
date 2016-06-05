@@ -19,7 +19,7 @@
  *
  */
 
-package board.kdtree;
+package board.awtree;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,21 +34,21 @@ import freert.varie.UndoableObjectNode;
  *
  * @author Alfons Wirtz
  */
-public final class KdtreeManager
+public final class AwtreeManager
    {
    private final RoutingBoard r_board;
-   private final Collection<KdtreeShapeSearch> compensated_search_trees;
+   private final Collection<AwtreeShapeSearch> compensated_search_trees;
 
-   private KdtreeShapeSearch default_tree;
+   private AwtreeShapeSearch default_tree;
    private boolean clearance_compensation_used;   // what does it do ?
    
-   public KdtreeManager(RoutingBoard p_board)
+   public AwtreeManager(RoutingBoard p_board)
       {
       r_board = p_board;
       
-      default_tree = new KdtreeShapeSearch(p_board, 0);
+      default_tree = new AwtreeShapeSearch(p_board, 0);
       
-      compensated_search_trees = new LinkedList<KdtreeShapeSearch>();
+      compensated_search_trees = new LinkedList<AwtreeShapeSearch>();
       compensated_search_trees.add(default_tree);
       
       clearance_compensation_used = false;
@@ -60,7 +60,7 @@ public final class KdtreeManager
     */
    public void insert(BrdItem p_item)
       {
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
          curr_tree.insert(p_item);
          }
@@ -74,9 +74,9 @@ public final class KdtreeManager
       {
       if (!p_item.is_on_the_board()) return;
       
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
-         KdtreeNodeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
+         AwtreeNodeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
 
          if (curr_tree_entries == null) continue;
 
@@ -91,7 +91,7 @@ public final class KdtreeManager
    /**
     * Returns the default tree used in interactive routing.
     */
-   public KdtreeShapeSearch get_default_tree()
+   public AwtreeShapeSearch get_default_tree()
       {
       return default_tree;
       }
@@ -104,7 +104,7 @@ public final class KdtreeManager
     */
    public final boolean validate_ok (BrdItem p_item)
       {
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
          if ( ! curr_tree.validate_ok(p_item)) return false;
          }
@@ -146,7 +146,7 @@ public final class KdtreeManager
          compensated_clearance_class_no = 0;
          }
       
-      default_tree = new KdtreeShapeSearch(r_board, compensated_clearance_class_no);
+      default_tree = new AwtreeShapeSearch(r_board, compensated_clearance_class_no);
       
       compensated_search_trees.add(default_tree);
       
@@ -159,11 +159,11 @@ public final class KdtreeManager
    public void clearance_value_changed()
       {
       // delete all trees except the default tree
-      Iterator<KdtreeShapeSearch> iter = compensated_search_trees.iterator();
+      Iterator<AwtreeShapeSearch> iter = compensated_search_trees.iterator();
 
       while (iter.hasNext())
          {
-         KdtreeShapeSearch curr_tree = iter.next();
+         AwtreeShapeSearch curr_tree = iter.next();
       
          if (curr_tree.compensated_clearance_class_no != default_tree.compensated_clearance_class_no)
             {
@@ -183,7 +183,7 @@ public final class KdtreeManager
     */
    public void clearance_class_removed(int p_no)
       {
-      Iterator<KdtreeShapeSearch> it = compensated_search_trees.iterator();
+      Iterator<AwtreeShapeSearch> it = compensated_search_trees.iterator();
       
       if (p_no == default_tree.compensated_clearance_class_no)
          {
@@ -193,7 +193,7 @@ public final class KdtreeManager
       
       while (it.hasNext())
          {
-         KdtreeShapeSearch curr_tree = it.next();
+         AwtreeShapeSearch curr_tree = it.next();
          if (curr_tree.compensated_clearance_class_no == p_no)
             {
             it.remove();
@@ -205,9 +205,9 @@ public final class KdtreeManager
     * Returns the tree compensated for the clearance class with number p_clearance_vlass_no. 
     * Initialized the tree, if it is not yet allocated.
     */
-   public KdtreeShapeSearch get_autoroute_tree(int p_clearance_class_no)
+   public AwtreeShapeSearch get_autoroute_tree(int p_clearance_class_no)
       {
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
          if (curr_tree.compensated_clearance_class_no == p_clearance_class_no)
             {
@@ -215,7 +215,7 @@ public final class KdtreeManager
             }
          }
 
-      KdtreeShapeSearch curr_autoroute_tree = new KdtreeShapeSearch( r_board, p_clearance_class_no);
+      AwtreeShapeSearch curr_autoroute_tree = new AwtreeShapeSearch( r_board, p_clearance_class_no);
       
       compensated_search_trees.add(curr_autoroute_tree);
       
@@ -238,11 +238,11 @@ public final class KdtreeManager
     */
    public void reset_compensated_trees()
       {
-      Iterator<KdtreeShapeSearch> iter = compensated_search_trees.iterator();
+      Iterator<AwtreeShapeSearch> iter = compensated_search_trees.iterator();
 
       while (iter.hasNext())
          {
-         KdtreeShapeSearch curr_tree = iter.next();
+         AwtreeShapeSearch curr_tree = iter.next();
       
          if (curr_tree != default_tree) iter.remove();
          }
@@ -295,7 +295,7 @@ public final class KdtreeManager
     */
    public void merge_entries_in_front(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
          curr_tree.merge_entries_in_front(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
          }
@@ -307,7 +307,7 @@ public final class KdtreeManager
     */
    public void merge_entries_at_end(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
          curr_tree.merge_entries_at_end(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
          }
@@ -319,7 +319,7 @@ public final class KdtreeManager
     */
    public void change_entries(BrdTracep p_obj, Polyline p_new_polyline, int p_keep_at_start_count, int p_keep_at_end_count)
       {
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
          curr_tree.change_entries(p_obj, p_new_polyline, p_keep_at_start_count, p_keep_at_end_count);
          }
@@ -331,7 +331,7 @@ public final class KdtreeManager
     */
    public void reuse_entries_after_cutout(BrdTracep p_from_trace, BrdTracep p_start_piece, BrdTracep p_end_piece)
       {
-      for (KdtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
          {
          curr_tree.reuse_entries_after_cutout(p_from_trace, p_start_piece, p_end_piece);
          }

@@ -18,8 +18,8 @@ package board.items;
 
 import java.awt.Color;
 import board.RoutingBoard;
+import board.awtree.AwtreeShapeSearch;
 import board.infos.BrdComponent;
-import board.kdtree.KdtreeShapeSearch;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -199,7 +199,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       }
 
    @Override
-   protected final ShapeTile[] calculate_tree_shapes(KdtreeShapeSearch p_search_tree)
+   protected final ShapeTile[] calculate_tree_shapes(AwtreeShapeSearch p_search_tree)
       {
       return p_search_tree.calculate_tree_shapes(this);
       }
@@ -325,7 +325,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       p_graphics_context.fill_area(get_area(), p_g, color, intensity);
       if (display_tree_shapes && intensity > 0 )
          {
-         KdtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
+         AwtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
          for (int i = 0; i < tree_shape_count(default_tree); ++i)
             {
             p_graphics_context.draw_boundary(get_tree_shape(default_tree, i), 1, Color.white, p_g, 1);

@@ -26,8 +26,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import board.BrdConnectable;
 import board.RoutingBoard;
-import board.kdtree.KdtreeShapeSearch;
-import board.kdtree.KdtreeObject;
+import board.awtree.AwtreeObject;
+import board.awtree.AwtreeShapeSearch;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -89,11 +89,11 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
       for (int i = 0; i < tile_shape_count(); ++i)
          {
          ShapeTile curr_shape = get_tile_shape(i);
-         Set<KdtreeObject> overlaps = r_board.overlapping_objects(curr_shape, get_layer());
-         Iterator<KdtreeObject> it = overlaps.iterator();
+         Set<AwtreeObject> overlaps = r_board.overlapping_objects(curr_shape, get_layer());
+         Iterator<AwtreeObject> it = overlaps.iterator();
          while (it.hasNext())
             {
-            KdtreeObject curr_ob = it.next();
+            AwtreeObject curr_ob = it.next();
             if (!(curr_ob instanceof BrdItem))
                {
                continue;
@@ -124,7 +124,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
       }
 
    @Override
-   public ShapeTile get_trace_connection_shape(KdtreeShapeSearch p_search_tree, int p_index)
+   public ShapeTile get_trace_connection_shape(AwtreeShapeSearch p_search_tree, int p_index)
       {
       if (p_index < 0 || p_index >= tree_shape_count(p_search_tree))
          {

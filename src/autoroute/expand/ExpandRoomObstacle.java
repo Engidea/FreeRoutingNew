@@ -27,10 +27,10 @@ import java.util.LinkedList;
 import java.util.List;
 import freert.planar.PlaDimension;
 import freert.planar.ShapeTile;
+import board.awtree.AwtreeObject;
+import board.awtree.AwtreeShapeSearch;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import board.kdtree.KdtreeShapeSearch;
-import board.kdtree.KdtreeObject;
 
 /**
  * Expansion Room used for pushing and ripping obstacles in the autoroute algorithm.
@@ -48,7 +48,7 @@ public final class ExpandRoomObstacle implements ExpandRoomComplete
 
    private boolean doors_calculated = false;
    
-   public ExpandRoomObstacle(BrdItem p_item, int p_index_in_item, KdtreeShapeSearch p_shape_tree)
+   public ExpandRoomObstacle(BrdItem p_item, int p_index_in_item, AwtreeShapeSearch p_shape_tree)
       {
       item = p_item;
       index_in_item = p_index_in_item;
@@ -160,7 +160,7 @@ public final class ExpandRoomObstacle implements ExpandRoomComplete
       }
 
    @Override
-   public KdtreeObject get_object()
+   public AwtreeObject get_object()
       {
       return item;
       }
