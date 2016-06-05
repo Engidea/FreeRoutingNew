@@ -113,9 +113,10 @@ final class DsnKeywordWiring extends DsnKeywordScope
             }
          }
       RoutingBoard board = p_par.i_board.get_routing_board();
-      for (int i = 1; i <= board.brd_rules.nets.max_net_no(); ++i)
+
+      for (int index = 1; index <= board.brd_rules.nets.max_net_no(); ++index)
          {
-         board.normalize_traces(i);
+         board.normalize_traces(index);
          }
       return true;
       }

@@ -886,11 +886,14 @@ public final class RoutingBoard implements java.io.Serializable
 
             BrdTracep curr_trace = (BrdTracep) curr_item;
             
-            if (curr_trace.normalize(null))
+            // really, if a trace is user fixed we should not touch it
+            if ( curr_trace.is_user_fixed() ) continue;
+            
+            if ( curr_trace.normalize(null) )
                {
                something_changed = true;
                }
-            else if (!curr_trace.is_user_fixed() && remove_if_cycle(curr_trace))
+            else if ( remove_if_cycle(curr_trace))
                {
                something_changed = true;
                }
@@ -920,10 +923,7 @@ public final class RoutingBoard implements java.io.Serializable
 
          Collection<BrdTracep> split_pieces = curr_trace.split(location_shape);
 
-         if (split_pieces.size() != 1)
-            {
-            trace_split = true;
-            }
+         if (split_pieces.size() != 1) trace_split = true;
          }
       
       return trace_split;
@@ -2466,7 +2466,7 @@ public final class RoutingBoard implements java.io.Serializable
       // Remove evtl. generated cycles because otherwise pull_tight may not work correctly.
       if (new_trace.normalize(changed_area.get_area(p_layer)))
          {
-         pull_tight_algo.split_traces_at_keep_point();
+         pull_tight_algo.split_traces_keep_point();
 
          // otherwise the new corner may no more be contained in the new trace after optimizing
          ItemSelectionFilter item_filter = new ItemSelectionFilter(ItemSelectionChoice.TRACES);

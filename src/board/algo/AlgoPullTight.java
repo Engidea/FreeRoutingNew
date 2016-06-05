@@ -203,7 +203,7 @@ public abstract class AlgoPullTight
                {
                something_changed = true;
                
-               if ( split_traces_at_keep_point()) break;
+               if ( split_traces_keep_point()) break;
                }
             else if (smoothen_end_corners_at_trace_one(curr_trace))
                {
@@ -588,10 +588,7 @@ public abstract class AlgoPullTight
                r_board.split_traces(adjusted_polyline.corner_last(), trace_layer, curr_net_no);
                r_board.normalize_traces(curr_net_no);
 
-               if (split_traces_at_keep_point())
-                  {
-                  return true;
-                  }
+               if (split_traces_keep_point()) return true;
                }
             }
          }
@@ -606,7 +603,7 @@ public abstract class AlgoPullTight
     * This actually splits the trace since lower down pieces are inserted in the board, if successful
     * @return true, if something was split.
     */
-   public final boolean split_traces_at_keep_point()
+   public final boolean split_traces_keep_point()
       {
       // if no keep point defined
       if ( keep_point == null) return false;
@@ -620,7 +617,7 @@ public abstract class AlgoPullTight
          BrdTracep a_trace = (BrdTracep)curr_item;
          
          // normally there is just one trace at a given keep point, no ?
-         if ( a_trace.split_at_point( keep_point.keep_point) ) return true;
+         if ( a_trace.split_with_point( keep_point.keep_point) ) return true;
          }
 
       return false;

@@ -939,7 +939,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     */
    public final boolean is_user_fixed()
       {
-      return (fixed_state.ordinal() >= ItemFixState.USER_FIXED.ordinal());
+      return fixed_state.ordinal() >= ItemFixState.USER_FIXED.ordinal();
       }
 
    /**

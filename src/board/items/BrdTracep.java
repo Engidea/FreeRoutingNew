@@ -920,6 +920,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * Found cycles are removed. 
     * If nothing is split, the result will contain just this Trace. 
     * If p_clip_shape != null, the split may be resticted to p_clip_shape.
+    * Cannot see where there is a check to avoid splitting an already split trace... must exist, no ?
     * @return the pieces resulting from splitting
     */
    public LinkedList<BrdTracep> split(ShapeTileOctagon p_clip_shape)
@@ -943,6 +944,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
          if (p_clip_shape != null)
             {
+            // yes, it happens that p_clip_shape is null
             if ( ! p_clip_shape.intersects(curr_segment.bounding_box())) continue;
             }
 
@@ -1028,6 +1030,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return result;
       }
    
+   
+   
+   
+   
+   
    /**
     * check if I should aboid testing this segment
     * @return
@@ -1089,6 +1096,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       return false;
       }
+   
    
    private void split_abit (int index,  BrdAbit curr_drill_item, PlaSegmentInt curr_line_segment )
       {
@@ -1218,10 +1226,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
    /**
     * Splits this trace into two at p_point. 
-    * can return null i for example p_point is not located on this trace.
+    * can return false i for example p_point is not located on this trace or already split !
     * @return true if the trace has been split 
     */
-   public final boolean split_at_point(PlaPointInt p_point)
+   public final boolean split_with_point(PlaPointInt p_point)
       {
       for (int index = 1; index < polyline.plaline_len(-1); index++)
          {
