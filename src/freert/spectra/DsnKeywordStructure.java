@@ -22,7 +22,6 @@ package freert.spectra;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import board.BrdLayer;
 import board.BrdLayerStructure;
 import board.RoutingBoard;
 import board.items.BrdAreaConduction;
@@ -839,27 +838,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          return null;
          }
 
-      BrdLayer[] board_layer_arr = new BrdLayer[layer_count];
-      
-      Iterator<DsnLayer> iter = p_board_construction_info.layer_info.iterator();
-
-      for (int index = 0; index < layer_count; ++index)
-         {
-         DsnLayer curr_layer = iter.next();
-
-         if (curr_layer.layer_no < 0 || curr_layer.layer_no >= layer_count)
-            {
-            System.out.println(classname+"calc_board_layers: illegal layer number");
-            return null;
-            }
-         
-         if ( curr_layer.layer_no != index )
-            System.out.println(classname+"calc_board_layers: WARNING different layer_no");
-         
-         board_layer_arr[index] = new BrdLayer(index, curr_layer.name, curr_layer.is_signal);
-         }
-      
-      return new BrdLayerStructure(board_layer_arr);
+      return new BrdLayerStructure(p_board_construction_info.layer_info);
       }
 
    private boolean create_board(DsnReadScopeParameters p_par, DsnBoardConstruction p_board_construction_info)

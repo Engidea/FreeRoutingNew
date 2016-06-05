@@ -20,6 +20,11 @@
 
 package board;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import freert.spectra.DsnLayer;
+
 /**
  * Describes the layer structure of the board.
  *
@@ -29,27 +34,34 @@ public final class BrdLayerStructure implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    
-   private final BrdLayer[] arr;
+   private final ArrayList<BrdLayer>  arr;
 
-   public BrdLayerStructure(BrdLayer[] p_layer_arr)
+   public BrdLayerStructure(Collection<DsnLayer> p_layers)
       {
-      arr = p_layer_arr;
+      arr = new ArrayList<BrdLayer>(p_layers.size());
+      
+      for (DsnLayer a_layer : p_layers )
+         {
+         arr.add ( new BrdLayer(a_layer.layer_no, a_layer.name, a_layer.is_signal) );
+         }
+      
+      Collections.sort(arr);
       }
 
    public int size()
       {
-      return arr.length;
+      return arr.size();
       }
 
    public BrdLayer get ( int layer_no )
       {
-      return arr[layer_no];
+      return arr.get(layer_no);
       }
 
    
    public int get_first_signal_layer_no ( )
       {
-      for (int index=0; index<arr.length; index++)
+      for (int index=0; index<size(); index++)
          {
          BrdLayer layer = get(index);
          
@@ -64,9 +76,9 @@ public final class BrdLayerStructure implements java.io.Serializable
     */
    public int get_no(String p_name)
       {
-      for (int index = 0; index < arr.length; ++index)
+      for (int index = 0; index < size(); ++index)
          {
-         if (p_name.equals(arr[index].name))
+         if (p_name.equals(get(index).name))
             {
             return index;
             }
@@ -79,22 +91,22 @@ public final class BrdLayerStructure implements java.io.Serializable
     */
    public int get_no(BrdLayer p_layer)
       {
-      for (int index = 0; index < arr.length; ++index)
+      for (int index = 0; index < size(); ++index)
          {
-         if (p_layer == arr[index]) return index;
+         if (p_layer == get(index)) return index;
          }
       return -1;
       }
 
    public boolean is_signal ( int layer_no )
       {
-      return arr[layer_no].is_signal;
+      return get(layer_no).is_signal;
       }
    
    
    public String get_name ( int layer_no )
       {
-      return arr[layer_no].name;
+      return get(layer_no).name;
       }
    
    /**
@@ -109,9 +121,9 @@ public final class BrdLayerStructure implements java.io.Serializable
       {
       int found_signal_layers = 0;
 
-      for (int index = 0; index < arr.length; ++index)
+      for (int index = 0; index < size(); ++index)
          {
-         if (arr[index].is_signal) found_signal_layers++;
+         if (get(index).is_signal) found_signal_layers++;
          }
 
       return found_signal_layers;
@@ -124,18 +136,18 @@ public final class BrdLayerStructure implements java.io.Serializable
       {
       int found_signal_layers = 0;
 
-      for (int index = 0; index < arr.length; ++index)
+      for (int index = 0; index < size(); ++index)
          {
-         if (arr[index].is_signal)
+         if (get(index).is_signal)
             {
             if (p_no == found_signal_layers)
                {
-               return arr[index];
+               return get(index);
                }
             ++found_signal_layers;
             }
          }
-      return arr[arr.length - 1];
+      return get(size() - 1);
       }
 
    /**
@@ -145,14 +157,14 @@ public final class BrdLayerStructure implements java.io.Serializable
       {
       int found_signal_layers = 0;
       
-      for (int index = 0; index < arr.length; ++index)
+      for (int index = 0; index < size(); ++index)
          {
-         if (arr[index] == p_layer)
+         if (get(index) == p_layer)
             {
             return found_signal_layers;
             }
          
-         if (arr[index].is_signal)
+         if (get(index).is_signal)
             {
             ++found_signal_layers;
             }

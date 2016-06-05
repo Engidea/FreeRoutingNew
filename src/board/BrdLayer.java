@@ -25,7 +25,7 @@ package board;
  *
  * @author alfons
  */
-public final class BrdLayer implements java.io.Serializable
+public final class BrdLayer implements java.io.Serializable, Comparable<BrdLayer>
    {
    private static final long serialVersionUID = 1L;
 
@@ -47,9 +47,18 @@ public final class BrdLayer implements java.io.Serializable
       return layer_no;
       }
 
+   @Override
    public String toString()
       {
       return name;
+      }
+
+   @Override
+   public int compareTo(BrdLayer p_layer)
+      {
+      if ( p_layer == null ) return -1;
+      
+      return layer_no - p_layer.layer_no;
       }
 
    }
