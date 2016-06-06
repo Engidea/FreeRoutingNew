@@ -109,6 +109,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public final PlaSide side_of( PlaPointInt p_point )
       {
+      if ( p_point == null ) return null;
+      
       int p_b_x = point_b.v_x - point_a.v_x;
       int p_b_y = point_b.v_y - point_a.v_y;
       

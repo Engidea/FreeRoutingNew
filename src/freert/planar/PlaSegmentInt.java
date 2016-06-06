@@ -203,6 +203,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public final  boolean contains(PlaPointInt p_point)
       {
+      if ( p_point == null ) return false;
+      
       if (middle.side_of(p_point) != PlaSide.COLLINEAR) return false;
       
       // create a perpendicular line at p_point and check, that the two
