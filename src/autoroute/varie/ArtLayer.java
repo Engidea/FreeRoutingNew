@@ -1,5 +1,7 @@
 package autoroute.varie;
 
+import java.io.Serializable;
+
 /*
  *  Copyright (C) 2014  Damiano Bolla  website www.engidea.com
  *
@@ -23,8 +25,10 @@ package autoroute.varie;
  * @author damiano
  *
  */
-public final class ArtLayer
+public final class ArtLayer implements Serializable
    {
+   private static final long serialVersionUID = 1L;
+
    public static final int PFDIR_horizontal=1;  // preferred direction is horizontal
    public static final int PFDIR_vertical=2;    // vertical
    
