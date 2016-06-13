@@ -315,7 +315,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    /**
     * Rotates this Item by p_angle_in_degree around p_pole. Does not update the item in the board.
     */
-   public abstract void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole);
+   public abstract void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole);
 
    /**
     * Changes the placement side of this Item and mirrors it at the vertical line through p_pole. Does not update the item in the

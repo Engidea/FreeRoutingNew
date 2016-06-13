@@ -489,7 +489,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    @Override
-   public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
       {
       center_clear();
       clear_derived_data();

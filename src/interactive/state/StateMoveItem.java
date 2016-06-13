@@ -408,7 +408,7 @@ public class StateMoveItem extends StateInteractive
       i_brd.repaint();
       }
 
-   public void rotate(double p_angle_in_degree)
+   public void rotate(int p_angle_in_degree)
       {
       if (p_angle_in_degree == 0) return;
 
@@ -524,7 +524,7 @@ public class StateMoveItem extends StateInteractive
          {
          return;
          }
-      double rotation = component_to_reset.get_rotation_in_degree();
+      int rotation = component_to_reset.get_rotation_in_degree();
       if (!r_brd.brd_components.get_flip_style_rotate_first() || component_to_reset.is_on_front())
          {
          rotation = 360 - rotation;

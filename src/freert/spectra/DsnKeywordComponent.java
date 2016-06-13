@@ -281,11 +281,11 @@ public final class DsnKeywordComponent extends DsnKeywordScope
             {
             System.out.println("Component.read_place_scope: Keyword.FRONT expected");
             }
-         double rotation;
+         int rotation;
          next_token = p_scanner.next_token();
          if (next_token instanceof Double)
             {
-            rotation = ((Double) next_token).doubleValue();
+            rotation = ((Double) next_token).intValue();
             }
          else if (next_token instanceof Integer)
             {
@@ -352,7 +352,15 @@ public final class DsnKeywordComponent extends DsnKeywordScope
             System.out.println("Component.read_place_scope: ) expected");
             return null;
             }
-         DsnComponentLocation result = new DsnComponentLocation(name, location, is_front, rotation, position_fixed, pin_infos, keepout_infos, via_keepout_infos,
+         DsnComponentLocation result = new DsnComponentLocation(
+               name, 
+               location, 
+               is_front, 
+               rotation, 
+               position_fixed, 
+               pin_infos, 
+               keepout_infos, 
+               via_keepout_infos,
                place_keepout_infos);
          return result;
          }

@@ -108,7 +108,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       }
 
    @Override
-   public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
       {
       if (abit_center != null)
          {

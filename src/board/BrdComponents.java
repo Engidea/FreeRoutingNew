@@ -52,7 +52,7 @@ public final class BrdComponents implements java.io.Serializable
     * The items of the component have to be inserted seperately into the board. 
     * If p_on_front is false, the component will be placed on the back side, and p_package_back is used instead of p_package_front.
     */
-   public BrdComponent add(String p_name, PlaPointInt p_location, double p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, boolean p_position_fixed)
+   public BrdComponent add(String p_name, PlaPointInt p_location, int p_rotation_in_degree, boolean p_on_front, LibPackage p_package_front, LibPackage p_package_back, boolean p_position_fixed)
       {
       BrdComponent new_component = new BrdComponent(
             p_name, 
@@ -73,7 +73,7 @@ public final class BrdComponents implements java.io.Serializable
     * The items of the component have to be inserted seperately into the board. 
     * If p_on_front is false, the component will be placed on the back side. The component name is generated internally.
     */
-   public BrdComponent add(PlaPointInt p_location, double p_rotation, boolean p_on_front, LibPackage p_package)
+   public BrdComponent add(PlaPointInt p_location, int p_rotation, boolean p_on_front, LibPackage p_package)
       {
       int an_index = component_list.size() + 1;
       
@@ -199,7 +199,7 @@ public final class BrdComponents implements java.io.Serializable
     * Rotates the component with number p_component_no by p_rotation_in_degree around p_pole. Works contrary to Component.rotate
     * with the undo algorithm of the board.
     */
-   public void rotate(int p_component_no, double p_rotation_in_degree, PlaPointInt p_pole)
+   public void rotate(int p_component_no, int p_rotation_in_degree, PlaPointInt p_pole)
       {
       BrdComponent curr_component = get(p_component_no);
       undo_list.save_for_undo(curr_component);

@@ -31,7 +31,7 @@ public class DsnComponentLocation
    public final boolean is_front;
 
    // The rotation of the component in degree
-   public final double rotation;
+   public final int rotation;
 
    // If true, the component cannot be moved
    public final boolean position_fixed;
@@ -45,8 +45,16 @@ public class DsnComponentLocation
 
    public final Map<String, DsnClearanceInfo> place_keepout_infos;
 
-   public DsnComponentLocation(String p_name, double[] p_coor, boolean p_is_front, double p_rotation, boolean p_position_fixed, Map<String, DsnClearanceInfo> p_pin_infos,
-         Map<String, DsnClearanceInfo> p_keepout_infos, Map<String, DsnClearanceInfo> p_via_keepout_infos, Map<String, DsnClearanceInfo> p_place_keepout_infos)
+   public DsnComponentLocation(
+         String p_name, 
+         double[] p_coor, 
+         boolean p_is_front, 
+         int p_rotation, 
+         boolean p_position_fixed, 
+         Map<String, DsnClearanceInfo> p_pin_infos,
+         Map<String, DsnClearanceInfo> p_keepout_infos, 
+         Map<String, DsnClearanceInfo> p_via_keepout_infos, 
+         Map<String, DsnClearanceInfo> p_place_keepout_infos)
       {
       name = p_name;
       coor = p_coor;

@@ -1586,21 +1586,19 @@ public final class IteraBoard
 
    public void turn_45_degree(int p_factor)
       {
-      if (board_is_read_only || !(interactive_state instanceof StateMoveItem))
-         {
-         // no interactive action when logfile is running
-         return;
-         }
+      if (board_is_read_only ) return;
+
+      if ( !(interactive_state instanceof StateMoveItem)) return;
+
       ((StateMoveItem) interactive_state).turn_45_degree(p_factor);
       }
 
    public void change_placement_side()
       {
-      if (board_is_read_only || !(interactive_state instanceof StateMoveItem))
-         {
-         // no interactive action when logfile is running
-         return;
-         }
+      if (board_is_read_only ) return;
+
+      if ( !(interactive_state instanceof StateMoveItem)) return;
+
       ((StateMoveItem) interactive_state).change_placement_side();
       }
 

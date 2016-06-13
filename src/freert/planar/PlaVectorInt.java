@@ -205,6 +205,11 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       return new PlaPointFloat(v_x, v_y);
       }
 
+   public PlaPointInt to_int()
+      {
+      return new PlaPointInt(v_x, v_y);
+      }
+
    /**
     * Returns an approximation of the signed angle between this vector and p_other.
     */

@@ -1335,7 +1335,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          {
          component_location = null;
          }
-      double rotation_in_degree = p_location.rotation;
+      int rotation_in_degree = p_location.rotation;
 
       BrdComponent new_component = routing_board.brd_components.add(
             p_location.name, 

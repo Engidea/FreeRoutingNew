@@ -183,18 +183,20 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       }
 
    @Override
-   public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
       {
       double angle = Math.toRadians(p_angle_in_degree);
+
       for (ShapeSegments curr_shape : shapes)
          {
          curr_shape = curr_shape.rotate_approx(angle, p_pole);
-
          }
+      
       if (keepout_area != null)
          {
          keepout_area = keepout_area.rotate_approx(angle, p_pole);
          }
+      
       keepout_lines = null;
       }
 

@@ -41,7 +41,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    // The location of the component
    private PlaPointInt location;
    // The rotation of the library package of the component in degree
-   private double rotation_in_degree;
+   private int rotation_in_degree;
    // Contains information for gate swapping and pin swapping, if != null
    private LibLogicalPart logical_part = null;
    // If false, the component will be placed on the back side of the board
@@ -63,7 +63,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    public BrdComponent(
          String p_name, 
          PlaPointInt p_location, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_on_front, 
          LibPackage p_package_front, 
          LibPackage p_package_back, 
@@ -107,7 +107,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       return new BrdComponent(this);
       }
 
-   private double normalize_rotation (double p_rotation_degrees)
+   private int normalize_rotation (int p_rotation_degrees)
       {
       while ( p_rotation_degrees >= 360)
          p_rotation_degrees -= 360;
@@ -129,9 +129,9 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Returns the rotation of this component in degree.
     */
-   public double get_rotation_in_degree()
+   public int get_rotation_in_degree()
       {
-      return rotation_in_degree;
+      return (int)rotation_in_degree;
       }
 
    public boolean is_placed()
@@ -178,22 +178,21 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Rotates this component by p_angle_in_degree around p_pole.
     */
-   public void rotate(double p_angle_in_degree, PlaPointInt p_pole, boolean p_flip_style_rotate_first)
+   public void rotate(int p_angle_degree, PlaPointInt p_pole, boolean p_flip_style_rotate_first)
       {
-      if (p_angle_in_degree == 0) return;
+      if (p_angle_degree == 0) return;
 
-      double turn_angle = p_angle_in_degree;
       if (p_flip_style_rotate_first && !is_on_front())
          {
          // take care of the order of mirroring and rotating on the back side of the board
-         turn_angle = 360 - p_angle_in_degree;
+         p_angle_degree = 360 - p_angle_degree;
          }
 
-      rotation_in_degree = normalize_rotation(rotation_in_degree + turn_angle);
+      rotation_in_degree = normalize_rotation(rotation_in_degree + p_angle_degree);
       
       if (location != null)
          {
-         location = location.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole.to_float()).round();
+         location = location.to_float().rotate(Math.toRadians(p_angle_degree), p_pole.to_float()).round();
          }
       }
 

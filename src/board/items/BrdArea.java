@@ -255,9 +255,9 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       clear_derived_data();
       }
 
-   public void rotate_approx(double p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
       {
-      double turn_angle = p_angle_in_degree;
+      int turn_angle = p_angle_in_degree;
       if (side_changed && r_board.brd_components.get_flip_style_rotate_first())
          {
          turn_angle = 360 - p_angle_in_degree;
