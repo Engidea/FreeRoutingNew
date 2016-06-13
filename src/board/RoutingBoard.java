@@ -391,7 +391,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Inserts a component ouline into the board.
     */
-   public void insert_component_outline(PlaShape p_shape, boolean p_is_front, PlaVectorInt p_translation, double p_rotation_in_degree, int p_component_no, ItemFixState p_fixed_state)
+   public void insert_component_outline(PlaShape p_shape, boolean p_is_front, PlaVectorInt p_translation, int p_rotate_degree, int p_component_no, ItemFixState p_fixed_state)
       {
       if (p_shape == null)
          {
@@ -404,7 +404,7 @@ public final class RoutingBoard implements java.io.Serializable
          return;
          }
       
-      BrdComponentOutline outline = new BrdComponentOutline(p_shape, p_is_front, p_translation, p_rotation_in_degree, p_component_no, p_fixed_state, this);
+      BrdComponentOutline outline = new BrdComponentOutline(p_shape, p_is_front, p_translation, p_rotate_degree, p_component_no, p_fixed_state, this);
       insert_item(outline);
       }
 

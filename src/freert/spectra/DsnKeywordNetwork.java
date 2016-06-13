@@ -1335,12 +1335,12 @@ public class DsnKeywordNetwork extends DsnKeywordScope
          {
          component_location = null;
          }
-      int rotation_in_degree = p_location.rotation;
+      int rotate_degree = p_location.rotation;
 
       BrdComponent new_component = routing_board.brd_components.add(
             p_location.name, 
             component_location, 
-            rotation_in_degree, 
+            rotate_degree, 
             p_location.is_front, 
             curr_front_package, 
             curr_back_package,
@@ -1489,7 +1489,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                         curr_keepout.area, 
                         layer, 
                         component_translation, 
-                        rotation_in_degree, 
+                        rotate_degree, 
                         !p_location.is_front, 
                         clearance_class, 
                         new_component.id_no, 
@@ -1502,7 +1502,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                         curr_keepout.area, 
                         layer, 
                         component_translation, 
-                        rotation_in_degree, 
+                        rotate_degree, 
                         !p_location.is_front, 
                         clearance_class, 
                         new_component.id_no, 
@@ -1515,7 +1515,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                         curr_keepout.area, 
                         layer, 
                         component_translation, 
-                        rotation_in_degree, 
+                        rotate_degree, 
                         !p_location.is_front, 
                         clearance_class, 
                         new_component.id_no,
@@ -1536,7 +1536,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                               curr_keepout.area, 
                               jndex, 
                               component_translation, 
-                              rotation_in_degree, 
+                              rotate_degree, 
                               !p_location.is_front, 
                               clearance_class, 
                               new_component.id_no, 
@@ -1549,7 +1549,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                               curr_keepout.area, 
                               jndex, 
                               component_translation, 
-                              rotation_in_degree, 
+                              rotate_degree, 
                               !p_location.is_front, 
                               clearance_class, 
                               new_component.id_no, 
@@ -1562,7 +1562,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                               curr_keepout.area, 
                               jndex, 
                               component_translation, 
-                              rotation_in_degree, 
+                              rotate_degree, 
                               !p_location.is_front, 
                               clearance_class, 
                               new_component.id_no,
@@ -1582,7 +1582,7 @@ public class DsnKeywordNetwork extends DsnKeywordScope
                a_shape, 
                p_location.is_front, 
                component_translation, 
-               rotation_in_degree, 
+               rotate_degree, 
                new_component.id_no, 
                fixed_state);
          }

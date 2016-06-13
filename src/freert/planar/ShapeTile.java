@@ -775,6 +775,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          return PlaSide.ON_THE_RIGHT;
       }
 
+   @Override
    public ShapeTile turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
       PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
@@ -786,8 +787,9 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * This is probably never tested...
+    * This is used when rotating components
     */
+   @Override
    public ShapeTile rotate_approx(double p_angle, PlaPointFloat p_pole)
       {
       if (p_angle == 0) return this;

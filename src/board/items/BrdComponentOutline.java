@@ -52,23 +52,23 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    private final PlaShape original_shape;
    private final double draw_width;
    
-   
-   private PlaVectorInt translation;
-   private double rotate_degree;
    private boolean is_front;
+   private PlaVectorInt translation;
+   private int rotate_degree;   // this is basically used only when back exporting, so, keep it in sync
 
    private transient PlaArea precalculated_absolute_area = null;
 
-   public BrdComponentOutline(PlaShape p_shape, boolean p_is_front, PlaVectorInt p_translation, double p_rotate_degree, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdComponentOutline(PlaShape p_shape, boolean p_is_front, PlaVectorInt p_translation, int p_rotate_degree, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(NetNosList.EMPTY, 0, 0, p_component_no, p_fixed_state, p_board);
       
       original_shape = p_shape;
+      draw_width     = Math.min(r_board.host_com.get_resolution(UnitMeasure.INCH), 100); // problem with low resolution on Kicad
+
       is_front       = p_is_front;
       translation    = p_translation;
       rotate_degree  = p_rotate_degree;
       
-      draw_width = Math.min(r_board.host_com.get_resolution(UnitMeasure.INCH), 100); // problem with low resolution on Kicad
       }
 
    private BrdComponentOutline ( BrdComponentOutline p_other, int p_id_no )
@@ -76,10 +76,11 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       super(p_other, p_id_no);
       
       original_shape = p_other.original_shape;
+      draw_width     = p_other.draw_width;
+
       is_front       = p_other.is_front;
       translation    = p_other.translation;
       rotate_degree  = p_other.rotate_degree;
-      draw_width     = p_other.draw_width;
       }
    
    @Override
@@ -201,20 +202,21 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    public void change_placement_side(PlaPointInt p_pole)
       {
       is_front = ! is_front;
-      PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
+      
+      PlaPointInt rel_location = translation.to_int();
       
       translation = rel_location.mirror_vertical(p_pole).to_vector();
       
       clear_derived_data();
       }
 
-   private void add_rotation ( double p_rotation )
+   private int rotation_reduce ( int p_rotation )
       {
-      rotate_degree += p_rotation;
-      
-      while (rotate_degree >= 360) rotate_degree -= 360;
+      while (p_rotation >= 360) p_rotation -= 360;
 
-      while (rotate_degree < 0) rotate_degree += 360;
+      while (p_rotation < 0) p_rotation += 360;
+      
+      return p_rotation;
       }
    
    @Override
@@ -225,9 +227,11 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
          p_angle_in_degree = 360 - p_angle_in_degree;
          }
       
-      add_rotation ( p_angle_in_degree );
+      rotate_degree = rotation_reduce ( rotate_degree + p_angle_in_degree );
 
-      PlaPointFloat new_translation = translation.to_float().rotate(Math.toRadians(rotate_degree), p_pole);
+      PlaPointFloat rel_location = translation.to_float();
+      
+      PlaPointFloat new_translation = rel_location.rotate(Math.toRadians(p_angle_in_degree), p_pole);
 
       translation = new_translation.to_vector();
       
@@ -237,7 +241,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      add_rotation ( p_factor * 90);
+      rotate_degree = rotation_reduce ( rotate_degree + p_factor * 90 );
       
       PlaPointInt rel_location = translation.to_int();
       
@@ -260,7 +264,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       if (rotate_degree != 0)
          {
          if (rotate_degree % 90 == 0)
-            turned_area = turned_area.turn_90_degree(((int) rotate_degree) / 90, PlaPointInt.ZERO);
+            turned_area = turned_area.turn_90_degree(rotate_degree / 90, PlaPointInt.ZERO);
          else
             turned_area = turned_area.rotate_approx(Math.toRadians(rotate_degree), PlaPointFloat.ZERO);
          }
