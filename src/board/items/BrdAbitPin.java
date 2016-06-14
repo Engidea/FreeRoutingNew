@@ -111,7 +111,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          int component_ninety_degree_factor = ((int) component_rotation) / 90;
          if (component_ninety_degree_factor != 0)
             {
-            rel_location = rel_location.turn_90_degree(component_ninety_degree_factor);
+            rel_location = rel_location.rotate_90_deg(component_ninety_degree_factor);
             }
          }
       else
@@ -489,7 +489,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    @Override
-   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole)
       {
       center_clear();
       clear_derived_data();

@@ -570,7 +570,7 @@ public final class ShapePolygon extends ShapeSegments
       PlaPointIntAlist new_corners = new PlaPointIntAlist(border_line_count());
       for (int index = 0; index < border_line_count(); ++index)
          {
-         new_corners.add( corners.get(index).turn_90_degree(p_factor, p_pole));
+         new_corners.add( corners.get(index).rotate_90_deg(p_factor, p_pole));
          }
       return new ShapePolygon(new_corners);
       }

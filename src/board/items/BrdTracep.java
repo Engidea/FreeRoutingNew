@@ -656,7 +656,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    @Override
-   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole)
       {
       polyline = polyline.rotate_rad(Math.toRadians(p_angle_in_degree), p_pole);
       }

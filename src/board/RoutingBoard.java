@@ -293,7 +293,7 @@ public final class RoutingBoard implements java.io.Serializable
          PlaArea p_area, 
          int p_layer, 
          PlaVectorInt p_translation, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_side_changed, 
          int p_clearance_class, 
          int p_component_no, 
@@ -333,7 +333,7 @@ public final class RoutingBoard implements java.io.Serializable
          PlaArea p_area, 
          int p_layer, 
          PlaVectorInt p_translation, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_side_changed, 
          int p_clearance_class, 
          int p_component_no,
@@ -371,7 +371,7 @@ public final class RoutingBoard implements java.io.Serializable
          PlaArea p_area, 
          int p_layer, 
          PlaVectorInt p_translation, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_side_changed, 
          int p_clearance_class,
          int p_component_no, 
@@ -383,7 +383,17 @@ public final class RoutingBoard implements java.io.Serializable
          System.out.println("BasicBoard.insert_component_obstacle: p_area is null");
          return;
          }
-      BrdAreaObstacleComp obs = new BrdAreaObstacleComp(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, p_clearance_class, 0, p_component_no, p_name, p_fixed_state,
+      BrdAreaObstacleComp obs = new BrdAreaObstacleComp(
+            p_area, 
+            p_layer, 
+            p_translation, 
+            p_rotation_in_degree, 
+            p_side_changed, 
+            p_clearance_class, 
+            0, 
+            p_component_no, 
+            p_name, 
+            p_fixed_state,
             this);
       insert_item(obs);
       }
@@ -1337,8 +1347,8 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Turns an obstacle area into a conduction area with net number p_net_no If it is convex and has no holes, it is turned into a
-    * Pin, alse into a conduction area.
+    * Turns an obstacle area into a conduction area with net number p_net_no 
+    * If it is convex and has no holes, it is turned into a Pin, alse into a conduction area.
     */
    public BrdConnectable make_conductive(BrdArea p_area, int p_net_no)
       {
@@ -1347,7 +1357,7 @@ public final class RoutingBoard implements java.io.Serializable
       int layer = p_area.get_layer();
       ItemFixState fixed_state = p_area.get_fixed_state();
       PlaVectorInt translation = p_area.get_translation();
-      double rotation = p_area.get_rotation_in_degree();
+      int deg_rotation = p_area.get_rotation_in_degree();
       boolean side_changed = p_area.get_side_changed();
 
       NetNosList net_no_arr = new NetNosList(p_net_no);
@@ -1356,7 +1366,7 @@ public final class RoutingBoard implements java.io.Serializable
             curr_area, 
             layer, 
             translation, 
-            rotation, 
+            deg_rotation, 
             side_changed, 
             net_no_arr, 
             p_area.clearance_idx(), 

@@ -390,7 +390,7 @@ public class StateMoveItem extends StateInteractive
       BrdComponents components = r_brd.brd_components;
       for (BrdComponent curr_component : component_list)
          {
-         components.turn_90_degree(curr_component.id_no, p_factor, current_position);
+         components.rotate_90_deg(curr_component.id_no, p_factor, current_position);
          }
       
       clearance_violations = new LinkedList<BrdItemViolation>();
@@ -415,13 +415,13 @@ public class StateMoveItem extends StateInteractive
       BrdComponents components = r_brd.brd_components;
       for (BrdComponent curr_component : component_list)
          {
-         components.rotate(curr_component.id_no, p_angle_in_degree, current_position);
+         components.rotate_deg(curr_component.id_no, p_angle_in_degree, current_position);
          }
       clearance_violations = new LinkedList<BrdItemViolation>();
       PlaPointFloat float_position = current_position.to_float();
       for (BrdItem curr_item : item_list)
          {
-         curr_item.rotate_approx(p_angle_in_degree, float_position);
+         curr_item.rotate_deg(p_angle_in_degree, float_position);
          clearance_violations.addAll(curr_item.clearance_violations());
          }
       for (IteraNetItems curr_net_items : net_items_list)

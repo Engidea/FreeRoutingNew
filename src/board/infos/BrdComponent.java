@@ -163,7 +163,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
    /**
     * Turns this component by p_factor times 90 degree around p_pole.
     */
-   public void turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public void rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       if (p_factor == 0) return;
 
@@ -171,14 +171,14 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       
       if (location != null)
          {
-         location = location.turn_90_degree(p_factor, p_pole);
+         location = location.rotate_90_deg(p_factor, p_pole);
          }
       }
 
    /**
     * Rotates this component by p_angle_in_degree around p_pole.
     */
-   public void rotate(int p_angle_degree, PlaPointInt p_pole, boolean p_flip_style_rotate_first)
+   public final void rotate_deg(int p_angle_degree, PlaPointInt p_pole, boolean p_flip_style_rotate_first)
       {
       if (p_angle_degree == 0) return;
 
@@ -192,7 +192,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       
       if (location != null)
          {
-         location = location.to_float().rotate_rad(Math.toRadians(p_angle_degree), p_pole.to_float()).round();
+         location = location.to_float().rotate_deg(p_angle_degree, p_pole.to_float()).round();
          }
       }
 

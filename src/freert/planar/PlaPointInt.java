@@ -182,10 +182,10 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
    /**
     * Turns this point by p_factor times 90 degree around p_pole.
     */
-   public final PlaPointInt turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public final PlaPointInt rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       PlaVectorInt v = difference_by(p_pole);
-      v = v.turn_90_degree(p_factor);
+      v = v.rotate_90_deg(p_factor);
       return p_pole.translate_by(v);
       }
    

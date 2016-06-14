@@ -101,18 +101,18 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       {
       if (abit_center != null)
          {
-         abit_center = abit_center.turn_90_degree(p_factor, p_pole);
+         abit_center = abit_center.rotate_90_deg(p_factor, p_pole);
          }
       
       clear_derived_data();
       }
 
    @Override
-   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole)
       {
       if (abit_center != null)
          {
-         PlaPointFloat new_center = abit_center.to_float().rotate_rad(Math.toRadians(p_angle_in_degree), p_pole);
+         PlaPointFloat new_center = abit_center.to_float().rotate_deg(p_angle_in_degree, p_pole);
          abit_center = new_center.round();
          }
       

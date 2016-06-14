@@ -315,7 +315,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    /**
     * Rotates this Item by p_angle_in_degree around p_pole. Does not update the item in the board.
     */
-   public abstract void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole);
+   public abstract void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole);
 
    /**
     * Changes the placement side of this Item and mirrors it at the vertical line through p_pole. Does not update the item in the
@@ -327,6 +327,16 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     * Returns a box containing the geometry of this item.
     */
    public abstract ShapeTileBox bounding_box();
+
+
+   protected static int rotate_deg_reduce ( int p_deg_rotation )
+      {
+      while (p_deg_rotation >= 360) p_deg_rotation -= 360;
+
+      while (p_deg_rotation < 0) p_deg_rotation += 360;
+      
+      return p_deg_rotation;
+      }
 
    /**
     * Translates this item by p_vector in the board.

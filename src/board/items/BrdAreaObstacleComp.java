@@ -44,7 +44,7 @@ public final class BrdAreaObstacleComp extends BrdArea
          PlaArea p_area, 
          int p_layer, 
          PlaVectorInt p_translation, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_side_changed, 
          int p_clearance_type, 
          int p_id_no, 

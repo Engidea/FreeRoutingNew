@@ -210,28 +210,20 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       clear_derived_data();
       }
 
-   private int rotation_reduce ( int p_rotation )
-      {
-      while (p_rotation >= 360) p_rotation -= 360;
-
-      while (p_rotation < 0) p_rotation += 360;
-      
-      return p_rotation;
-      }
    
    @Override
-   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
+   public void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole)
       {
       if (!is_front && r_board.brd_components.get_flip_style_rotate_first())
          {
          p_angle_in_degree = 360 - p_angle_in_degree;
          }
       
-      rotate_degree = rotation_reduce ( rotate_degree + p_angle_in_degree );
+      rotate_degree = rotate_deg_reduce ( rotate_degree + p_angle_in_degree );
 
       PlaPointFloat rel_location = translation.to_float();
       
-      PlaPointFloat new_translation = rel_location.rotate_rad(Math.toRadians(p_angle_in_degree), p_pole);
+      PlaPointFloat new_translation = rel_location.rotate_deg(p_angle_in_degree, p_pole);
 
       translation = new_translation.to_vector();
       
@@ -241,11 +233,11 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
    @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      rotate_degree = rotation_reduce ( rotate_degree + p_factor * 90 );
+      rotate_degree = rotate_deg_reduce ( rotate_degree + p_factor * 90 );
       
       PlaPointInt rel_location = translation.to_int();
       
-      translation = rel_location.turn_90_degree(p_factor, p_pole).to_vector();
+      translation = rel_location.rotate_90_deg(p_factor, p_pole).to_vector();
       
       clear_derived_data();
       }

@@ -52,7 +52,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
    private int layer_no;
    private PlaArea relative_area;
    private PlaVectorInt translation;
-   private double rotation_in_degree;
+   private int rotation_in_degree;
    private boolean side_changed;
 
    private transient PlaArea precalculated_absolute_area = null;
@@ -65,7 +65,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
          PlaArea p_area, 
          int p_layer_no, 
          PlaVectorInt p_translation, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_side_changed, 
          NetNosList p_net_no_arr, 
          int p_clearance_type, 
@@ -92,7 +92,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
          PlaArea p_area, 
          int p_layer, 
          PlaVectorInt p_translation, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_side_changed, 
          int p_clearance_type, 
          int p_id_no, 
@@ -135,14 +135,13 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       
       if ( rotation_in_degree != 0)
          {
-         double rotation = rotation_in_degree;
-         if (rotation % 90 == 0)
+         if (rotation_in_degree % 90 == 0)
             {
-            turned_area = turned_area.rotate_90_deg(((int) rotation) / 90, PlaPointInt.ZERO);
+            turned_area = turned_area.rotate_90_deg(rotation_in_degree / 90, PlaPointInt.ZERO);
             }
          else
             {
-            turned_area = turned_area.rotate_rad(Math.toRadians(rotation), PlaPointFloat.ZERO);
+            turned_area = turned_area.rotate_rad(Math.toRadians(rotation_in_degree), PlaPointFloat.ZERO);
             }
          }
 
@@ -239,38 +238,25 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
    @Override
    public void turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      rotation_in_degree += p_factor * 90;
-      while (rotation_in_degree >= 360)
-         {
-         rotation_in_degree -= 360;
-         }
-      while (rotation_in_degree < 0)
-         {
-         rotation_in_degree += 360;
-         }
-      PlaPointInt rel_location = PlaPointInt.ZERO.translate_by(translation);
+      rotation_in_degree = rotate_deg_reduce(rotation_in_degree + p_factor * 90);
+
+      PlaPointInt rel_location = translation.to_int();
       
-      translation = rel_location.turn_90_degree(p_factor, p_pole).to_vector();
+      translation = rel_location.rotate_90_deg(p_factor, p_pole).to_vector();
       
       clear_derived_data();
       }
 
-   public void rotate_approx(int p_angle_in_degree, PlaPointFloat p_pole)
+   @Override
+   public void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole)
       {
-      int turn_angle = p_angle_in_degree;
       if (side_changed && r_board.brd_components.get_flip_style_rotate_first())
          {
-         turn_angle = 360 - p_angle_in_degree;
+         p_angle_in_degree = 360 - p_angle_in_degree;
          }
-      rotation_in_degree += turn_angle;
-      while (rotation_in_degree >= 360)
-         {
-         rotation_in_degree -= 360;
-         }
-      while (rotation_in_degree < 0)
-         {
-         rotation_in_degree += 360;
-         }
+
+      rotation_in_degree = rotate_deg_reduce ( rotation_in_degree + p_angle_in_degree );
+
       PlaPointFloat new_translation = translation.to_float().rotate_rad(Math.toRadians(p_angle_in_degree), p_pole);
       translation = new_translation.to_vector();
       clear_derived_data();
@@ -344,7 +330,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       return translation;
       }
 
-   public double get_rotation_in_degree()
+   public int get_rotation_in_degree()
       {
       return rotation_in_degree;
       }

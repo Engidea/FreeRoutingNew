@@ -54,7 +54,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
          PlaArea p_area, 
          int p_layer, 
          PlaVectorInt p_translation, 
-         double p_rotation_in_degree, 
+         int p_rotation_in_degree, 
          boolean p_side_changed, 
          NetNosList p_net_no_arr, 
          int p_clearance_class, 

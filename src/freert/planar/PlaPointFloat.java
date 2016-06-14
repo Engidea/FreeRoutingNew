@@ -390,6 +390,14 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       return new PlaPointFloat(p_pole.v_x + new_dx, p_pole.v_y + new_dy);
       }
 
+   public final PlaPointFloat rotate_deg(int p_deg_angle, PlaPointFloat p_pole)
+      {
+      if ( p_deg_angle == 0 ) return this;
+      
+      return rotate_rad(Math.toRadians(p_deg_angle), p_pole);
+      }
+   
+   
    /**
     * @return a new point by p_factor times 90 degree around ZERO.
     */

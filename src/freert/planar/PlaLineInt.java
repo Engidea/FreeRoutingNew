@@ -646,8 +646,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public PlaLineInt turn_90_degree(int p_factor, PlaPointInt p_pole)
       {
-      PlaPointInt new_a = point_a.turn_90_degree(p_factor, p_pole);
-      PlaPointInt new_b = point_b.turn_90_degree(p_factor, p_pole);
+      PlaPointInt new_a = point_a.rotate_90_deg(p_factor, p_pole);
+      PlaPointInt new_b = point_b.rotate_90_deg(p_factor, p_pole);
       return new PlaLineInt(new_a, new_b);
       }
 

@@ -123,37 +123,30 @@ public final class PlaVectorInt  implements java.io.Serializable, PlaObject
       return (long) v_x * p_other.v_y - (long) v_y * p_other.v_x;
       }
 
-   public final PlaVectorInt turn_90_degree(int p_factor)
+   public final PlaVectorInt rotate_90_deg(int p_factor)
       {
       while (p_factor < 0)  p_factor += 4;
 
       while (p_factor >= 4) p_factor -= 4;
 
-      int new_x;
-      int new_y;
       switch (p_factor)
          {
-         case 0: // 0 degree
-            new_x = v_x;
-            new_y = v_y;
-            break;
+         case 0: // 0 degree, just return this object, v_x and v_y are ffinal
+            return this;
+
          case 1: // 90 degree
-            new_x = -v_y;
-            new_y = v_x;
-            break;
+            return new PlaVectorInt(-v_y, v_x);
+            
          case 2: // 180 degree
-            new_x = -v_x;
-            new_y = -v_y;
-            break;
+            return new PlaVectorInt(-v_x, -v_y);
+
          case 3: // 270 degree
-            new_x = v_y;
-            new_y = -v_x;
-            break;
+            return new PlaVectorInt(v_y, -v_x);
+
          default:
-            new_x = 0;
-            new_y = 0;
+            throw new IllegalArgumentException("This should never happen");
+
          }
-      return new PlaVectorInt(new_x, new_y);
       }
 
    public PlaVectorInt mirror_at_y_axis()
