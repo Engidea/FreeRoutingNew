@@ -108,7 +108,7 @@ public final class DrillPageArray
       {
       Collection<ExpandDrillPage> result = new LinkedList<ExpandDrillPage>();
 
-      ShapeTileBox shape_box = p_shape.bounding_box().intersection(this.bounding_box);
+      ShapeTileBox shape_box = p_shape.bounding_box().intersection(bounding_box);
 
       int min_j = (int) Math.floor(((double) (shape_box.box_ll.v_y - bounding_box.box_ll.v_y)) / (double) page_height);
       double max_j = ((double) (shape_box.box_ur.v_y - bounding_box.box_ll.v_y)) / (double) page_height;

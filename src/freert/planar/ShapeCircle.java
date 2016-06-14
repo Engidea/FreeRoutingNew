@@ -250,16 +250,16 @@ public final class ShapeCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public ShapeCircle turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public ShapeCircle rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       PlaPointInt new_center = center.turn_90_degree(p_factor, p_pole);
       return new ShapeCircle(new_center, radius);
       }
 
    @Override
-   public ShapeCircle rotate_approx(double p_angle, PlaPointFloat p_pole)
+   public ShapeCircle rotate_rad(double p_angle, PlaPointFloat p_pole)
       {
-      PlaPointInt new_center = center.to_float().rotate(p_angle, p_pole).round();
+      PlaPointInt new_center = center.to_float().rotate_rad(p_angle, p_pole).round();
       return new ShapeCircle(new_center, radius);
       }
 

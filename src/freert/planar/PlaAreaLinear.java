@@ -262,25 +262,25 @@ public final class PlaAreaLinear implements PlaArea, Serializable
       }
 
    @Override
-   public PlaAreaLinear turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public PlaAreaLinear rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
-      ShapeSegments new_border = border_shape.turn_90_degree(p_factor, p_pole);
+      ShapeSegments new_border = border_shape.rotate_90_deg(p_factor, p_pole);
       ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
       for (int i = 0; i < new_hole_arr.length; ++i)
          {
-         new_hole_arr[i] = hole_arr[i].turn_90_degree(p_factor, p_pole);
+         new_hole_arr[i] = hole_arr[i].rotate_90_deg(p_factor, p_pole);
          }
       return new PlaAreaLinear(new_border, new_hole_arr);
       }
 
    @Override
-   public PlaAreaLinear rotate_approx(double p_angle, PlaPointFloat p_pole)
+   public PlaAreaLinear rotate_rad(double p_angle, PlaPointFloat p_pole)
       {
-      ShapeSegments new_border = border_shape.rotate_approx(p_angle, p_pole);
+      ShapeSegments new_border = border_shape.rotate_rad(p_angle, p_pole);
       ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
-      for (int i = 0; i < new_hole_arr.length; ++i)
+      for (int index = 0; index < new_hole_arr.length; ++index)
          {
-         new_hole_arr[i] = hole_arr[i].rotate_approx(p_angle, p_pole);
+         new_hole_arr[index] = hole_arr[index].rotate_rad(p_angle, p_pole);
          }
       return new PlaAreaLinear(new_border, new_hole_arr);
       }

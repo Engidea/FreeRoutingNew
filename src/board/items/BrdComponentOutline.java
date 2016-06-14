@@ -231,7 +231,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
 
       PlaPointFloat rel_location = translation.to_float();
       
-      PlaPointFloat new_translation = rel_location.rotate(Math.toRadians(p_angle_in_degree), p_pole);
+      PlaPointFloat new_translation = rel_location.rotate_rad(Math.toRadians(p_angle_in_degree), p_pole);
 
       translation = new_translation.to_vector();
       
@@ -264,9 +264,9 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       if (rotate_degree != 0)
          {
          if (rotate_degree % 90 == 0)
-            turned_area = turned_area.turn_90_degree(rotate_degree / 90, PlaPointInt.ZERO);
+            turned_area = turned_area.rotate_90_deg(rotate_degree / 90, PlaPointInt.ZERO);
          else
-            turned_area = turned_area.rotate_approx(Math.toRadians(rotate_degree), PlaPointFloat.ZERO);
+            turned_area = turned_area.rotate_rad(Math.toRadians(rotate_degree), PlaPointFloat.ZERO);
          }
 
       if (!is_front && r_board.brd_components.get_flip_style_rotate_first())

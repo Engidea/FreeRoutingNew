@@ -80,8 +80,7 @@ public final class SortedRooms_xx_Top
          return calculate(p_room);
          }
 
-      // Now calculate the new incomplete rooms together with the doors
-      // between this room and the sorted neighbours.
+      // Now calculate the new incomplete rooms together with the doors between this room and the sorted neighbours.
       if (room_neighbours.sorted_neighbours.isEmpty())
          {
          if (result instanceof ExpandRoomObstacle)

@@ -173,11 +173,11 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       {
       for (ShapeSegments curr_shape : shapes)
          {
-         curr_shape = curr_shape.turn_90_degree(p_factor, p_pole);
+         curr_shape = curr_shape.rotate_90_deg(p_factor, p_pole);
          }
       if (keepout_area != null)
          {
-         keepout_area = keepout_area.turn_90_degree(p_factor, p_pole);
+         keepout_area = keepout_area.rotate_90_deg(p_factor, p_pole);
          }
       keepout_lines = null;
       }
@@ -189,12 +189,12 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
 
       for (ShapeSegments curr_shape : shapes)
          {
-         curr_shape = curr_shape.rotate_approx(angle, p_pole);
+         curr_shape = curr_shape.rotate_rad(angle, p_pole);
          }
       
       if (keepout_area != null)
          {
-         keepout_area = keepout_area.rotate_approx(angle, p_pole);
+         keepout_area = keepout_area.rotate_rad(angle, p_pole);
          }
       
       keepout_lines = null;

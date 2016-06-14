@@ -118,7 +118,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          {
          // rotation may be not exact
          PlaPointFloat location_approx = rel_location.to_float();
-         location_approx = location_approx.rotate(Math.toRadians(component_rotation), PlaPointFloat.ZERO);
+         location_approx = location_approx.rotate_rad(Math.toRadians(component_rotation), PlaPointFloat.ZERO);
          rel_location = location_approx.to_vector();
          }
       
@@ -275,12 +275,12 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
             int pin_ninety_degree_factor = ((int) pin_rotation) / 90;
             if (pin_ninety_degree_factor != 0)
                {
-               curr_shape = (ShapeConvex) curr_shape.turn_90_degree(pin_ninety_degree_factor, PlaPointInt.ZERO);
+               curr_shape = (ShapeConvex) curr_shape.rotate_90_deg(pin_ninety_degree_factor, PlaPointInt.ZERO);
                }
             }
          else
             {
-            curr_shape = (ShapeConvex) curr_shape.rotate_approx(Math.toRadians(pin_rotation), PlaPointFloat.ZERO);
+            curr_shape = (ShapeConvex) curr_shape.rotate_rad(Math.toRadians(pin_rotation), PlaPointFloat.ZERO);
             }
 
          if (mirror_at_y_axis)
@@ -296,12 +296,12 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
             int component_ninety_degree_factor = ((int) component_rotation) / 90;
             if (component_ninety_degree_factor != 0)
                {
-               translated_shape = (ShapeConvex) translated_shape.turn_90_degree(component_ninety_degree_factor, PlaPointInt.ZERO);
+               translated_shape = (ShapeConvex) translated_shape.rotate_90_deg(component_ninety_degree_factor, PlaPointInt.ZERO);
                }
             }
          else
             {
-            translated_shape = (ShapeConvex) translated_shape.rotate_approx(Math.toRadians(component_rotation), PlaPointFloat.ZERO);
+            translated_shape = (ShapeConvex) translated_shape.rotate_rad(Math.toRadians(component_rotation), PlaPointFloat.ZERO);
             }
          if (!component.is_on_front() && r_board.brd_components.get_flip_style_rotate_first())
             {

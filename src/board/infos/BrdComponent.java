@@ -192,7 +192,7 @@ public final class BrdComponent implements UndoableObjectStorable, PrintableInfo
       
       if (location != null)
          {
-         location = location.to_float().rotate(Math.toRadians(p_angle_degree), p_pole.to_float()).round();
+         location = location.to_float().rotate_rad(Math.toRadians(p_angle_degree), p_pole.to_float()).round();
          }
       }
 

@@ -60,13 +60,13 @@ public abstract class ShapeSegments implements PlaShape, java.io.Serializable
     * Turns this shape by p_factor times 90 degree around p_pole.
     */
    @Override
-   public abstract ShapeSegments turn_90_degree(int p_factor, PlaPointInt p_pole);
+   public abstract ShapeSegments rotate_90_deg(int p_factor, PlaPointInt p_pole);
 
    /**
     * Rotates this shape around p_pole by p_angle. The result may be not exact.
     */
    @Override
-   public abstract ShapeSegments rotate_approx(double p_angle, PlaPointFloat p_pole);
+   public abstract ShapeSegments rotate_rad(double p_angle, PlaPointFloat p_pole);
 
    /**
     * Mirrors this shape at the horizontal line through p_pole.

@@ -565,7 +565,7 @@ public final class ShapePolygon extends ShapeSegments
       }
 
    @Override
-   public ShapePolygon turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public ShapePolygon rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       PlaPointIntAlist new_corners = new PlaPointIntAlist(border_line_count());
       for (int index = 0; index < border_line_count(); ++index)
@@ -576,7 +576,7 @@ public final class ShapePolygon extends ShapeSegments
       }
 
    @Override
-   public ShapePolygon rotate_approx(double p_angle, PlaPointFloat p_pole)
+   public ShapePolygon rotate_rad(double p_angle, PlaPointFloat p_pole)
       {
       if (p_angle == 0) return this;
 
@@ -584,7 +584,7 @@ public final class ShapePolygon extends ShapeSegments
       
       for (int index = 0; index < border_line_count(); ++index)
          {
-         new_corners.add( corners.get(index).to_float().rotate(p_angle, p_pole).round());
+         new_corners.add( corners.get(index).to_float().rotate_rad(p_angle, p_pole).round());
          }
       
       return new ShapePolygon(new_corners);

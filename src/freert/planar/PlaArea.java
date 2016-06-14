@@ -98,12 +98,12 @@ public interface PlaArea extends PlaObject
    /**
     * Turns this area by p_factor times 90 degree around p_pole.
     */
-   PlaArea turn_90_degree(int p_factor, PlaPointInt p_pole);
+   PlaArea rotate_90_deg(int p_factor, PlaPointInt p_pole);
 
    /**
     * Rotates the area around p_pole by p_angle. The result may be not exact.
     */
-   PlaArea rotate_approx(double p_angle, PlaPointFloat p_pole);
+   PlaArea rotate_rad(double p_angle, PlaPointFloat p_pole);
 
    /**
     * Returns the affine translation of the area by p_vector

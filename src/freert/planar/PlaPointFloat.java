@@ -377,14 +377,14 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
    /**
     * Rotates this FloatPoints by p_angle ( in radian ) around the p_pole.
     */
-   public PlaPointFloat rotate(double p_angle, PlaPointFloat p_pole)
+   public PlaPointFloat rotate_rad(double p_rad_angle, PlaPointFloat p_pole)
       {
-      if (p_angle == 0)  return this;
+      if (p_rad_angle == 0)  return this;
       
       double dx = v_x - p_pole.v_x;
       double dy = v_y - p_pole.v_y;
-      double sin_angle = Math.sin(p_angle);
-      double cos_angle = Math.cos(p_angle);
+      double sin_angle = Math.sin(p_rad_angle);
+      double cos_angle = Math.cos(p_rad_angle);
       double new_dx = dx * cos_angle - dy * sin_angle;
       double new_dy = dx * sin_angle + dy * cos_angle;
       return new PlaPointFloat(p_pole.v_x + new_dx, p_pole.v_y + new_dy);
@@ -393,7 +393,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
    /**
     * @return a new point by p_factor times 90 degree around ZERO.
     */
-   public PlaPointFloat turn_90_degree(int p_factor)
+   public PlaPointFloat rotate_90_deg(int p_factor)
       {
       while (p_factor < 0)  p_factor += 4;
 
@@ -434,7 +434,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
    public PlaPointFloat turn_90_degree(int p_factor, PlaPointFloat p_pole)
       {
       PlaPointFloat v = substract(p_pole);
-      v = v.turn_90_degree(p_factor);
+      v = v.rotate_90_deg(p_factor);
       return p_pole.add(v);
       }
 

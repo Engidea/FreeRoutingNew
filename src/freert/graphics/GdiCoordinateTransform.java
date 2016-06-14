@@ -114,7 +114,7 @@ public final class GdiCoordinateTransform implements java.io.Serializable
     */
    public Point2D board_to_screen(PlaPointFloat p_point)
       {
-      PlaPointFloat rotated_point = p_point.rotate(rotation_radiants, rotation_pole);
+      PlaPointFloat rotated_point = p_point.rotate_rad(rotation_radiants, rotation_pole);
 
       double x, y;
       
@@ -166,7 +166,7 @@ public final class GdiCoordinateTransform implements java.io.Serializable
       
       PlaPointFloat result = new PlaPointFloat(x, y);
       
-      return result.rotate(-rotation_radiants, rotation_pole);
+      return result.rotate_rad(-rotation_radiants, rotation_pole);
       }
 
    /**

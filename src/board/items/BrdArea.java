@@ -138,11 +138,11 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
          double rotation = rotation_in_degree;
          if (rotation % 90 == 0)
             {
-            turned_area = turned_area.turn_90_degree(((int) rotation) / 90, PlaPointInt.ZERO);
+            turned_area = turned_area.rotate_90_deg(((int) rotation) / 90, PlaPointInt.ZERO);
             }
          else
             {
-            turned_area = turned_area.rotate_approx(Math.toRadians(rotation), PlaPointFloat.ZERO);
+            turned_area = turned_area.rotate_rad(Math.toRadians(rotation), PlaPointFloat.ZERO);
             }
          }
 
@@ -271,7 +271,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
          {
          rotation_in_degree += 360;
          }
-      PlaPointFloat new_translation = translation.to_float().rotate(Math.toRadians(p_angle_in_degree), p_pole);
+      PlaPointFloat new_translation = translation.to_float().rotate_rad(Math.toRadians(p_angle_in_degree), p_pole);
       translation = new_translation.to_vector();
       clear_derived_data();
       }

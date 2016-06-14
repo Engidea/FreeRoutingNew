@@ -500,7 +500,7 @@ public final class ShapeTileBox extends ShapeTileRegular
       }
 
    @Override
-   public ShapeTileBox turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public ShapeTileBox rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       PlaPointInt p1 = box_ll.turn_90_degree(p_factor, p_pole);
       PlaPointInt p2 = box_ur.turn_90_degree(p_factor, p_pole);

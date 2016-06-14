@@ -776,12 +776,12 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    @Override
-   public ShapeTile turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public ShapeTile rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
-      for (int i = 0; i < new_lines.length; ++i)
+      for (int index = 0; index < new_lines.length; ++index)
          {
-         new_lines[i] = border_line(i).turn_90_degree(p_factor, p_pole);
+         new_lines[index] = border_line(index).turn_90_degree(p_factor, p_pole);
          }
       return get_instance(new_lines);
       }
@@ -790,7 +790,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
     * This is used when rotating components
     */
    @Override
-   public ShapeTile rotate_approx(double p_angle, PlaPointFloat p_pole)
+   public ShapeTile rotate_rad(double p_angle, PlaPointFloat p_pole)
       {
       if (p_angle == 0) return this;
 
@@ -799,7 +799,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       PlaPointIntAlist new_corners = new PlaPointIntAlist(points_count);
       
       for (int index = 0; index < points_count; ++index)
-         new_corners.add( corner_approx(index).rotate(p_angle, p_pole).round() );
+         new_corners.add( corner_approx(index).rotate_rad(p_angle, p_pole).round() );
 
       Polypoint corner_polygon = new Polypoint(new_corners);
       

@@ -196,14 +196,14 @@ public final class BrdComponents implements java.io.Serializable
       }
 
    /**
-    * Rotates the component with number p_component_no by p_rotation_in_degree around p_pole. Works contrary to Component.rotate
-    * with the undo algorithm of the board.
+    * Rotates the component with number p_component_no by p_rotation_in_degree around p_pole. 
+    * Works contrary to Component.rotate with the undo algorithm of the board.
     */
-   public void rotate(int p_component_no, int p_rotation_in_degree, PlaPointInt p_pole)
+   public void rotate(int p_component_no, int p_rotate_degree, PlaPointInt p_pole)
       {
       BrdComponent curr_component = get(p_component_no);
       undo_list.save_for_undo(curr_component);
-      curr_component.rotate(p_rotation_in_degree, p_pole, flip_style_rotate_first);
+      curr_component.rotate(p_rotate_degree, p_pole, flip_style_rotate_first);
       }
 
    /**
