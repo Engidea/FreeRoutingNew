@@ -631,7 +631,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    /**
-    * returns the count of tile shapes of this polyline
+    * @return the count of tile shapes of this polyline
     */
    @Override
    public int tile_shape_count()

@@ -509,6 +509,7 @@ public final class ShapeTileBox extends ShapeTileRegular
       int lly = Math.min(p1.v_y, p2.v_y);
       int urx = Math.max(p1.v_x, p2.v_x);
       int ury = Math.max(p1.v_y, p2.v_y);
+      
       return new ShapeTileBox(llx, lly, urx, ury);
       }
 

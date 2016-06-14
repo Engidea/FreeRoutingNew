@@ -39,7 +39,7 @@ public final class ShapeTileSimplex extends ShapeTile
    // Standard implementation for an empty Simplex.
    public static final ShapeTileSimplex EMPTY = new ShapeTileSimplex(new ArrayList<PlaLineInt>());
    
-   private final ArrayList<PlaLineInt> lines_arr;
+   private final ArrayList<PlaLineInt> lines_list;
 
    // the following fields are for storing pre calculated data
    transient private PlaPointInt[]    precalc_corners_int = null;
@@ -56,11 +56,11 @@ public final class ShapeTileSimplex extends ShapeTile
       {
       int arr_len = p_line_arr.length;
       
-      lines_arr = new ArrayList<PlaLineInt>(arr_len);
+      lines_list = new ArrayList<PlaLineInt>(arr_len);
       
-      for (int index=0; index<arr_len; index++) lines_arr.add(p_line_arr[index]);
+      for (int index=0; index<arr_len; index++) lines_list.add(p_line_arr[index]);
       
-      Collections.sort(lines_arr);
+      Collections.sort(lines_list);
       }
    
    /**
@@ -69,18 +69,23 @@ public final class ShapeTileSimplex extends ShapeTile
     */
    private ShapeTileSimplex(ArrayList<PlaLineInt> p_line_arr)
       {
-      lines_arr = p_line_arr;
+      lines_list = p_line_arr;
 
-      Collections.sort(lines_arr);
+      Collections.sort(lines_list);
       }
    
-   private ShapeTileSimplex(PlaLineIntAlist p_line_alist)
+   /**
+    * To be used when you know that the lines are surely OK
+    * Example, when creating a new object from a mirros or rotate operation
+    * @param p_line_alist
+    */
+   public ShapeTileSimplex(PlaLineIntAlist p_line_alist)
       {
-      lines_arr = new ArrayList<PlaLineInt>(p_line_alist.size());
+      lines_list = new ArrayList<PlaLineInt>(p_line_alist.size());
       
-      for ( PlaLineInt a_line : p_line_alist ) lines_arr.add(a_line);
+      for ( PlaLineInt a_line : p_line_alist ) lines_list.add(a_line);
 
-      Collections.sort(lines_arr);
+      Collections.sort(lines_list);
       }
 
    
@@ -114,12 +119,12 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public boolean is_empty()
       {
-      return tlines_size() == 0;
+      return lines_size() == 0;
       }
 
-   public int tlines_size()
+   private int lines_size()
       {
-      return lines_arr.size();
+      return lines_list.size();
       }
    
    /**
@@ -128,13 +133,13 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public int border_line_count()
       {
-      return tlines_size();
+      return lines_size();
       }
    
    
    public PlaLineInt tline_get (int index)
       {
-      return lines_arr.get(index);
+      return lines_list.get(index);
       }
    
    /**
@@ -149,7 +154,7 @@ public final class ShapeTileSimplex extends ShapeTile
       else if (is_IntBox())
          return bounding_box();
       else if (is_IntOctagon())
-         return to_IntOctagon();
+         return to_octagon();
       else
          return this;
       }
@@ -161,7 +166,7 @@ public final class ShapeTileSimplex extends ShapeTile
     */
    private int get_prev_index ( int cur_index )
       {
-      return cur_index == 0 ? tlines_size() - 1 : cur_index - 1;
+      return cur_index == 0 ? lines_size() - 1 : cur_index - 1;
       }
 
    
@@ -171,17 +176,17 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public boolean corner_is_bounded(int p_no)
       {
-      if (tlines_size() == 1) return false;
+      if (lines_size() == 1) return false;
 
       if (p_no < 0)
          {
          System.out.println("corner: p_no is < 0");
          p_no = 0;
          }
-      else if (p_no >= tlines_size())
+      else if (p_no >= lines_size())
          {
          System.out.println("corner: p_index must be less than arr.length - 1");
-         p_no = tlines_size() - 1;
+         p_no = lines_size() - 1;
          }
 
       
@@ -199,11 +204,11 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public boolean is_bounded()
       {
-      if (tlines_size() == 0)  return true;
+      if (lines_size() == 0)  return true;
 
-      if (tlines_size() < 3)  return false;
+      if (lines_size() < 3)  return false;
  
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          {
          if (! corner_is_bounded(index)) return false;
          }
@@ -220,13 +225,13 @@ public final class ShapeTileSimplex extends ShapeTile
          System.out.println("Simplex.corner: p_no is < 0");
          p_no = 0;
          }
-      else if (p_no >= tlines_size())
+      else if (p_no >= lines_size())
          {
          System.out.println("Simplex.corner: p_no must be less than arr.length - 1");
-         p_no = tlines_size() - 1;
+         p_no = lines_size() - 1;
          }
 
-      if (precalc_corners_int == null)  precalc_corners_int = new PlaPointInt[tlines_size()];
+      if (precalc_corners_int == null)  precalc_corners_int = new PlaPointInt[lines_size()];
       
       if (precalc_corners_int[p_no] != null) return precalc_corners_int[p_no];
 
@@ -245,20 +250,20 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public PlaPointFloat corner_approx(int p_no)
       {
-      if (tlines_size() == 0) return null;
+      if (lines_size() == 0) return null;
 
       if (p_no < 0)
          {
          System.out.println("Simplex.corner_approx: p_no is < 0");
          p_no = 0;
          }
-      else if (p_no >= tlines_size())
+      else if (p_no >= lines_size())
          {
          System.out.println("Simplex.corner_approx: p_no must be less than arr.length - 1");
-         p_no = tlines_size() - 1;
+         p_no = lines_size() - 1;
          }
       
-      if (precalc_corners_float == null) precalc_corners_float = new PlaPointFloat[tlines_size()];
+      if (precalc_corners_float == null) precalc_corners_float = new PlaPointFloat[lines_size()];
       
       if (precalc_corners_float[p_no] != null) return precalc_corners_float[p_no];
 
@@ -273,7 +278,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public PlaPointFloat[] corner_approx_arr()
       {
-      if (precalc_corners_float == null) precalc_corners_float = new PlaPointFloat[tlines_size()];
+      if (precalc_corners_float == null) precalc_corners_float = new PlaPointFloat[lines_size()];
 
       for (int index = 0; index < precalc_corners_float.length; ++index)
          {
@@ -294,7 +299,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public PlaLineInt border_line(int p_no)
       {
-      if (tlines_size() <= 0)
+      if (lines_size() <= 0)
          {
          System.out.println("Simplex.edge_line : simplex is empty");
          return null;
@@ -305,10 +310,10 @@ public final class ShapeTileSimplex extends ShapeTile
          System.out.println("Simplex.edge_line : p_no is < 0");
          p_no = 0;
          }
-      else if (p_no >= tlines_size())
+      else if (p_no >= lines_size())
          {
          System.out.println("Simplex.edge_line: p_no must be less than arr.length - 1");
-         p_no = tlines_size() - 1;
+         p_no = lines_size() - 1;
          }
 
       return tline_get(p_no);
@@ -320,20 +325,20 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public PlaDimension dimension()
       {
-      if (tlines_size() == 0)
+      if (lines_size() == 0)
          {
          return PlaDimension.EMPTY;
          }
-      if (tlines_size() > 4)
+      if (lines_size() > 4)
          {
          return PlaDimension.AREA;
          }
-      if (tlines_size() == 1)
+      if (lines_size() == 1)
          {
          // we have a half plane
          return PlaDimension.AREA;
          }
-      if (tlines_size() == 2)
+      if (lines_size() == 2)
          {
          if (tline_get(0).overlaps(tline_get(1)))
             {
@@ -342,7 +347,7 @@ public final class ShapeTileSimplex extends ShapeTile
          return PlaDimension.AREA;
          }
       
-      if (tlines_size() == 3)
+      if (lines_size() == 3)
          {
          if (tline_get(0).overlaps(tline_get(1)) || tline_get(0).overlaps(tline_get(2)) || tline_get(1).overlaps(tline_get(2)))
             {
@@ -441,7 +446,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public boolean is_IntBox()
       {
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          {
          PlaLineInt curr_line = tline_get(index);
 
@@ -459,7 +464,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public boolean is_IntOctagon()
       {
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          {
          PlaLineInt curr_line = tline_get(index);
 
@@ -475,7 +480,7 @@ public final class ShapeTileSimplex extends ShapeTile
     * Converts this IntSimplex to an IntOctagon. 
     * @returns null, if that is not possible, because not all lines of this IntSimplex are 45 degree
     */
-   public ShapeTileOctagon to_IntOctagon()
+   public ShapeTileOctagon to_octagon()
       {
       if ( ! is_IntOctagon()) return null;
 
@@ -492,7 +497,7 @@ public final class ShapeTileSimplex extends ShapeTile
       int llx = -PlaLimits.CRIT_INT;
       int ulx = -PlaLimits.CRIT_INT;
 
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          {
          PlaLineInt curr_line = tline_get(index);
          PlaPointInt a = curr_line.point_a;
@@ -562,9 +567,9 @@ public final class ShapeTileSimplex extends ShapeTile
       {
       if (p_vector.equals(PlaVectorInt.ZERO)) return this;
 
-      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(tlines_size());
+      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(lines_size());
       
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          new_arr.add( tline_get(index).translate_by(p_vector) );
       
       return new ShapeTileSimplex(new_arr);
@@ -577,7 +582,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override
    public ShapeTileBox bounding_box()
       {
-      if (tlines_size() == 0) return ShapeTileBox.EMPTY;
+      if (lines_size() == 0) return ShapeTileBox.EMPTY;
 
       if (precalc_bounding_box != null) return precalc_bounding_box;
 
@@ -586,7 +591,7 @@ public final class ShapeTileSimplex extends ShapeTile
       double urx = Integer.MIN_VALUE;
       double ury = Integer.MIN_VALUE;
 
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          {
          PlaPointFloat curr = corner_approx(index);
          llx = Math.min(llx, curr.v_x);
@@ -621,7 +626,7 @@ public final class ShapeTileSimplex extends ShapeTile
       double llx = Integer.MAX_VALUE;
       double urx = Integer.MIN_VALUE;
 
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          {
          PlaPointFloat curr = corner_approx(index);
          lx = Math.min(lx, curr.v_x);
@@ -671,8 +676,8 @@ public final class ShapeTileSimplex extends ShapeTile
       {
       if (p_width == 0) return this;
 
-      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(tlines_size());
-      for (int index = 0; index < tlines_size(); ++index)
+      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(lines_size());
+      for (int index = 0; index < lines_size(); ++index)
          {
          new_arr.add(tline_get(index).translate(-p_width));
          }
@@ -722,9 +727,9 @@ public final class ShapeTileSimplex extends ShapeTile
       {
       if (is_empty() || p_other.is_empty()) return EMPTY;
       
-      ArrayList<PlaLineInt>  new_arr = new ArrayList<PlaLineInt>(tlines_size() + p_other.tlines_size());
-      new_arr.addAll(lines_arr);
-      new_arr.addAll(p_other.lines_arr);
+      ArrayList<PlaLineInt>  new_arr = new ArrayList<PlaLineInt>(lines_size() + p_other.lines_size());
+      new_arr.addAll(lines_list);
+      new_arr.addAll(p_other.lines_list);
       
       ShapeTileSimplex result = new ShapeTileSimplex(new_arr);
       
@@ -760,7 +765,7 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public int border_line_index(PlaLineInt p_line)
       {
-      for (int index = 0; index < tlines_size(); ++index)
+      for (int index = 0; index < lines_size(); ++index)
          {
          if (p_line.equals(tline_get(index)))
             {
@@ -775,13 +780,13 @@ public final class ShapeTileSimplex extends ShapeTile
     */
    public ShapeTileSimplex remove_border_line(int p_no)
       {
-      if (p_no < 0 || p_no >= tlines_size())
+      if (p_no < 0 || p_no >= lines_size())
          {
          return this;
          }
       
-      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(tlines_size());
-      new_arr.addAll(lines_arr);
+      ArrayList<PlaLineInt> new_arr = new ArrayList<PlaLineInt>(lines_size());
+      new_arr.addAll(lines_list);
       
       new_arr.remove(p_no);
       
@@ -831,7 +836,7 @@ public final class ShapeTileSimplex extends ShapeTile
          return result;
          }
       
-      int inner_corner_count = inner_simplex.tlines_size();
+      int inner_corner_count = inner_simplex.lines_size();
       PlaLineInt[][] division_line_arr = new PlaLineInt[inner_corner_count][];
       for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no)
          {
@@ -855,7 +860,7 @@ public final class ShapeTileSimplex extends ShapeTile
       for (int inner_corner_no = 0; inner_corner_no < inner_corner_count; ++inner_corner_no)
          {
          PlaLineInt next_division_line;
-         if (inner_corner_no == inner_simplex.tlines_size() - 1)
+         if (inner_corner_no == inner_simplex.lines_size() - 1)
             next_division_line = division_line_arr[0][0];
          else
             next_division_line = division_line_arr[inner_corner_no + 1][0];
@@ -1018,13 +1023,13 @@ public final class ShapeTileSimplex extends ShapeTile
     */
    ShapeTileSimplex remove_redundant_lines()
       {
-      ArrayList<PlaLineInt> work_arr = new ArrayList<PlaLineInt>(tlines_size());
+      ArrayList<PlaLineInt> work_arr = new ArrayList<PlaLineInt>(lines_size());
 
       // copy the sorted lines of arr into line_arr while skipping multiple lines
       PlaLineInt prev = tline_get(0);
       work_arr.add(prev);
       
-      for (int index = 1; index < tlines_size(); ++index)
+      for (int index = 1; index < lines_size(); ++index)
          {
          PlaLineInt a_line = tline_get(index);
          
@@ -1193,7 +1198,7 @@ public final class ShapeTileSimplex extends ShapeTile
             }
          }
 
-      if (new_length == tlines_size())
+      if (new_length == lines_size())
          {
          return this; // nothing removed
          }
@@ -1270,7 +1275,7 @@ public final class ShapeTileSimplex extends ShapeTile
 
       double min_distance = Integer.MAX_VALUE;
 
-      for (int ind = 0; ind < p_outer_simplex.tlines_size(); ++ind)
+      for (int ind = 0; ind < p_outer_simplex.lines_size(); ++ind)
          {
          PlaLineInt outer_line = p_outer_simplex.tline_get(outer_line_no);
          PlaDirection curr_projection_dir =  inner_corner.perpendicular_direction(outer_line);
@@ -1298,7 +1303,7 @@ public final class ShapeTileSimplex extends ShapeTile
                int tmp_outer_line_no = outer_line_no;
                while (!second_projection_visible)
                   {
-                  if (tmp_outer_line_no == p_outer_simplex.tlines_size() - 1)
+                  if (tmp_outer_line_no == p_outer_simplex.lines_size() - 1)
                      {
                      tmp_outer_line_no = 0;
                      }
@@ -1334,7 +1339,7 @@ public final class ShapeTileSimplex extends ShapeTile
                second_projection_dir = curr_second_projection_dir;
                }
             }
-         if (outer_line_no == p_outer_simplex.tlines_size() - 1)
+         if (outer_line_no == p_outer_simplex.lines_size() - 1)
             {
             outer_line_no = 0;
             }

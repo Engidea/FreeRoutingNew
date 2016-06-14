@@ -33,15 +33,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
    /**
     * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
     * Then simplify it to return the simplest geometry that fits it
-    * @deprecated use the one with PlaLineIntAlist parameter
     */
-   public static ShapeTile get_instance(PlaLineInt[] p_line_arr)
-      {
-      ShapeTileSimplex result = ShapeTileSimplex.get_instance(p_line_arr);
-      
-      return result.simplify();
-      }
-
    public static ShapeTile get_instance(PlaLineIntAlist p_line_arr)
       {
       ShapeTileSimplex result = ShapeTileSimplex.get_instance(p_line_arr);
@@ -775,15 +767,22 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          return PlaSide.ON_THE_RIGHT;
       }
 
+   /**
+    * This is override in subclasses
+    */
    @Override
    public ShapeTile rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
-      PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
-      for (int index = 0; index < new_lines.length; ++index)
+      int line_count = border_line_count();
+      
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(line_count);
+
+      for (int index = 0; index < line_count; ++index)
          {
-         new_lines[index] = border_line(index).rotate_90_deg(p_factor, p_pole);
+         new_lines.add( border_line(index).rotate_90_deg(p_factor, p_pole) );
          }
-      return get_instance(new_lines);
+      
+      return new ShapeTileSimplex(new_lines);
       }
 
    /**
@@ -826,26 +825,34 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          }
       }
 
-   public ShapeTile mirror_vertical(PlaPointInt p_pole)
+   @Override
+   public ShapeTileSimplex mirror_vertical(PlaPointInt p_pole)
       {
-      PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
+      int line_count = border_line_count();
       
-      for (int index = 0; index < new_lines.length; ++index)
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(line_count);
+      
+      for (int index = 0; index < line_count; ++index)
          {
-         new_lines[index] = border_line(index).mirror_vertical(p_pole);
+         new_lines.add( border_line(index).mirror_vertical(p_pole));
          }
       
-      return get_instance(new_lines);
+      return new ShapeTileSimplex(new_lines);
       }
 
-   public ShapeTile mirror_horizontal(PlaPointInt p_pole)
+   @Override
+   public ShapeTileSimplex mirror_horizontal(PlaPointInt p_pole)
       {
-      PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
-      for (int i = 0; i < new_lines.length; ++i)
+      int line_count = border_line_count();
+      
+      PlaLineIntAlist new_lines = new PlaLineIntAlist(line_count);
+      
+      for (int index = 0; index < line_count; ++index)
          {
-         new_lines[i] = border_line(i).mirror_horizontal(p_pole);
+         new_lines.add( border_line(index).mirror_horizontal(p_pole));
          }
-      return get_instance(new_lines);
+      
+      return new ShapeTileSimplex(new_lines);
       }
 
    /**
@@ -1067,6 +1074,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
          result[0] = this;
          return result;
          }
+      
       ShapeTile[] section_boxes = bounding_box().divide_into_sections(p_max_section_width);
       Collection<ShapeTile> section_list = new LinkedList<ShapeTile>();
       for (int i = 0; i < section_boxes.length; ++i)
@@ -1187,8 +1195,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       return false;
       }
 
-   // auxiliary functions needed because the virtual function mechanism does
-   // not work in parameter position
+   // auxiliary functions needed because the virtual function mechanism does not work in parameter position
    abstract ShapeTile intersection(ShapeTileSimplex p_other);
 
    abstract ShapeTile intersection(ShapeTileOctagon p_other);

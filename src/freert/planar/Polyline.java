@@ -679,9 +679,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
          {
          PlaDirection next_dir = plaline(index + 1).direction();
 
-         PlaLineInt[] lines = new PlaLineInt[4];
+         PlaLineIntAlist lines = new PlaLineIntAlist(4);
 
-         lines[0] = plaline(index).translate(-p_half_width);
+         lines.add ( plaline(index).translate(-p_half_width) );
          // current center line translated to the right
 
          // create the front line of the offset shape
@@ -689,16 +689,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
          // left turn from curr_line to next_line
          if (next_dir_from_curr_dir == PlaSide.ON_THE_LEFT)
             {
-            lines[1] = plaline(index + 1).translate(-p_half_width);
+            lines.add ( plaline(index + 1).translate(-p_half_width) );
             // next right line
             }
          else
             {
-            lines[1] = plaline(index + 1).opposite().translate(-p_half_width);
+            lines.add ( plaline(index + 1).opposite().translate(-p_half_width) );
             // next left line in opposite direction
             }
 
-         lines[2] = plaline(index).opposite().translate(-p_half_width);
+         lines.add ( plaline(index).opposite().translate(-p_half_width) );
          // current left line in opposite direction
 
          // create the back line of the offset shape
@@ -706,28 +706,31 @@ public final class Polyline implements java.io.Serializable, PlaObject
          // left turn from prev_line to curr_line
          if (curr_dir_from_prev_dir == PlaSide.ON_THE_LEFT)
             {
-            lines[3] = plaline(index - 1).translate(-p_half_width);
+            lines.add ( plaline(index - 1).translate(-p_half_width) );
             // previous line translated to the right
             }
          else
             {
-            lines[3] = plaline(index - 1).opposite().translate(-p_half_width);
+            lines.add ( plaline(index - 1).opposite().translate(-p_half_width) );
             // previous left line in opposite direction
             }
+         
          // cut off outstanding corners with following shapes
          PlaPointFloat corner_to_check = null;
-         PlaLineInt curr_line = lines[1];
+         PlaLineInt curr_line = lines.get(1);
          PlaLineInt check_line = null;
+         
          if (next_dir_from_curr_dir == PlaSide.ON_THE_LEFT)
             {
-            check_line = lines[2];
+            check_line = lines.get(2);
             }
          else
             {
-            check_line = lines[0];
+            check_line = lines.get(0);
             }
          PlaPointFloat check_distance_corner = corner_approx(index);
          final double check_dist_square = 2.0 * p_half_width * p_half_width;
+         
          PlaLineIntAlist cut_dog_ear_lines = new PlaLineIntAlist(plaline_len());
          PlaDirection tmp_curr_dir = next_dir;
          boolean direction_changed = false;
@@ -771,13 +774,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
          check_distance_corner = corner_approx(index - 1);
          if (curr_dir_from_prev_dir == PlaSide.ON_THE_LEFT)
             {
-            check_line = lines[2];
+            check_line = lines.get(2);
             }
          else
             {
-            check_line = lines[0];
+            check_line = lines.get(0);
             }
-         curr_line = lines[3];
+         curr_line = lines.get(3);
          tmp_curr_dir = prev_dir;
          direction_changed = false;
          for (int jndex = index - 2; jndex >= 1; --jndex)
@@ -1404,7 +1407,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
    
    /**
-    * return the plalinelen plus or minus the given offset
+    * return the plalinelen plus the given offset
     * @param offset
     * @return
     */
