@@ -682,13 +682,10 @@ public final class MazeSearch
          }
 
       double door_length;
+      
       TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
-      if (angle_restriction.is_limit_90())
-         {
-         ShapeTileBox door_box = door_shape.bounding_box();
-         door_length = door_box.max_width();
-         }
-      else if (angle_restriction.is_limit_45() )
+      
+      if (angle_restriction.is_limit_45() )
          {
          ShapeTileOctagon door_oct = door_shape.bounding_octagon();
          door_length = door_oct.max_width();

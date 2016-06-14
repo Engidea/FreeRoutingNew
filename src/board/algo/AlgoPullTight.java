@@ -101,9 +101,7 @@ public abstract class AlgoPullTight
          p_board.userPrintln("null p_stoppable", new IllegalArgumentException("need to give me something"));
          }
       
-      if (angle_restriction.is_limit_90() )
-         return new AlgoPullTight90(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
-      else if (angle_restriction.is_limit_45())
+      if (angle_restriction.is_limit_45())
          return new AlgoPullTight45(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
       else
          return new AlgoPullTightAny(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
@@ -306,7 +304,7 @@ public abstract class AlgoPullTight
 
    /**
     * tries to shorten p_polyline by relocating its lines
-    * This is overridden in any angle (not used) and instead used in 45 an 90 degrees
+    * This is overridden in any angle (not used) and instead used in 45 degrees
     */
    protected Polyline reposition_lines(Polyline p_polyline)
       {

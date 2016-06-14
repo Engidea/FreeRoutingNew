@@ -62,11 +62,7 @@ public class StateDragItem extends StateDrag
       
       PlaPointInt from_location = previous_location.round();
       
-      if (r_brd.brd_rules.is_trace_snap_90())
-         {
-         to_location = to_location.orthogonal_projection(from_location);
-         }
-      else if (r_brd.brd_rules.is_trace_snap_45())
+      if (r_brd.brd_rules.is_trace_snap_45())
          {
          to_location = to_location.fortyfive_degree_projection(from_location);
          }
@@ -80,6 +76,7 @@ public class StateDragItem extends StateDrag
          }
 
       StateDragMoveComponent move_component = null;
+      
       PlaVectorInt rel_coor = to_location.difference_by(from_location);
       
       double length = rel_coor.distance();

@@ -66,6 +66,7 @@ public interface PlaArea extends PlaObject
    /**
     * Returns the smallest surrounding box of the area. If the area is not
     * bounded, some coordinates of the resulting box may be equal
+    * TODO this may probably be deleted, it is too limited
     * Integer.MAX_VALUE
     */
    ShapeTileBox bounding_box();

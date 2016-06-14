@@ -126,14 +126,11 @@ public class StateConstructCorner extends StateInteractive
       PlaPointInt last_corner = corner_list.getLast();
       PlaPointInt add_corner = null;
 
-      if (r_brd.brd_rules.is_trace_snap_90())
-         {
-         add_corner = last_corner.ninety_degree_corner(first_corner, true);
-         }
-      else if (r_brd.brd_rules.is_trace_snap_45() )
+      if (r_brd.brd_rules.is_trace_snap_45() )
          {
          add_corner = last_corner.fortyfive_degree_corner(first_corner, true);
          }
+      
       if (add_corner != null)
          {
          corner_list.add(add_corner);
@@ -146,14 +143,10 @@ public class StateConstructCorner extends StateInteractive
    private PlaPointInt snap_to_restriction(PlaPointInt p_point)
       {
       PlaPointInt result;
+      
       boolean list_empty = (corner_list.size() == 0);
       
-      if (r_brd.brd_rules.is_trace_snap_90() && !list_empty)
-         {
-         PlaPointInt last_corner = corner_list.getLast();
-         result = p_point.orthogonal_projection(last_corner);
-         }
-      else if (r_brd.brd_rules.is_trace_snap_45() && !list_empty)
+      if ( ! list_empty && r_brd.brd_rules.is_trace_snap_45() )
          {
          PlaPointInt last_corner = corner_list.getLast();
          result = p_point.fortyfive_degree_projection(last_corner);
@@ -162,6 +155,7 @@ public class StateConstructCorner extends StateInteractive
          {
          result = p_point;
          }
+      
       return result;
       }
    }

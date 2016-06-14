@@ -774,12 +774,7 @@ public final class AlgoShoveTrace
          offset_shape = offset_shape.enlarge(half_cl_offset);
          }
       
-      if (r_board.brd_rules.is_trace_snap_90())
-         {
-         offset_shape = offset_shape.bounding_box();
-         }
-      
-      else if (r_board.brd_rules.is_trace_snap_45())
+      if (r_board.brd_rules.is_trace_snap_45())
          {
          offset_shape = offset_shape.bounding_octagon();
          }

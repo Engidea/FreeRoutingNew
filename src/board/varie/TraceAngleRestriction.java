@@ -21,7 +21,7 @@
 package board.varie;
 
 /**
- * Enum for angle restrictions none, 45 degree and 90 degree.
+ * Enum for angle restrictions none, 45 degree
  * Really, just make it serializabe and be done with it, no ?
  *
  * @author Alfons Wirtz
@@ -30,11 +30,9 @@ public final class TraceAngleRestriction
    {
    private static final int ANGLE_NONE=0;
    private static final int ANGLE_45D=1;
-   private static final int ANGLE_90D=2;
    
    public static final TraceAngleRestriction NONE      = new TraceAngleRestriction(ANGLE_NONE, "None");
    public static final TraceAngleRestriction FORTYFIVE = new TraceAngleRestriction(ANGLE_45D, "45 degree");
-   public static final TraceAngleRestriction NINETY    = new TraceAngleRestriction(ANGLE_90D, "90 degree");
 
    private final String name;
    private final int index;
@@ -45,7 +43,6 @@ public final class TraceAngleRestriction
          {
          case ANGLE_NONE: return NONE;
          case ANGLE_45D: return FORTYFIVE;
-         case ANGLE_90D: return NINETY;
          default:
             System.err.println("TraceAngleRestriction: ERROR bad index="+index);
             return NONE;
@@ -66,11 +63,6 @@ public final class TraceAngleRestriction
    public boolean is_limit_45()
       {
       return index==ANGLE_45D;
-      }
-
-   public boolean is_limit_90()
-      {
-      return index==ANGLE_90D;
       }
 
    /**

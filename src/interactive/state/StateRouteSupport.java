@@ -708,12 +708,7 @@ public final class StateRouteSupport
       
       result.add(p_from_point);
  
-      if (angle_restriction.is_limit_90() )
-         {
-         PlaPointInt extra = p_from_point.ninety_degree_corner(p_to_point, true);
-         if ( extra != null ) result.add(extra);
-         }
-      else if (angle_restriction.is_limit_45() )
+      if (angle_restriction.is_limit_45() )
          {
          PlaPointInt extra = p_from_point.fortyfive_degree_corner(p_to_point, true);
          if ( extra != null ) result.add(extra);

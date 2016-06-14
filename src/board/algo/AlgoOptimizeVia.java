@@ -327,7 +327,7 @@ public final class AlgoOptimizeVia
             PlaVectorInt diff_vector = projection.difference_by(via_center);
             boolean projection_ok = true;
             TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
-            if (projection.equals(via_center) || angle_restriction.is_limit_90() && !diff_vector.is_orthogonal()
+            if (projection.equals(via_center) && !diff_vector.is_orthogonal()
                   || angle_restriction.is_limit_45() && !diff_vector.is_multiple_of_45_degree())
                {
                projection_ok = false;
@@ -569,7 +569,7 @@ public final class AlgoOptimizeVia
          if (result != null) return result;
          }
       
-      if (scalar_product > 0 && ! r_board.brd_rules.is_trace_snap_90())
+      if ( scalar_product > 0 )
          {
          // acute angle
          PlaPointInt to_point_1;

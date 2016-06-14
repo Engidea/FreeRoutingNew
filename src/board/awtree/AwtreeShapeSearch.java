@@ -1305,18 +1305,12 @@ public final class AwtreeShapeSearch
          else
             {
             ShapeTile curr_tile_shape;
-            if (r_board.brd_rules.is_trace_snap_90() )
-               {
-               curr_tile_shape = curr_shape.bounding_box();
-               }
-            else if (r_board.brd_rules.is_trace_snap_45())
-               {
+            
+            if (r_board.brd_rules.is_trace_snap_45())
                curr_tile_shape = curr_shape.bounding_octagon();
-               }
             else
-               {
                curr_tile_shape = curr_shape.bounding_tile();
-               }
+
             int offset_width = get_clearance_compensation(p_drill_item.clearance_idx(), p_drill_item.shape_layer(index));
             if (curr_tile_shape == null)
                {

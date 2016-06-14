@@ -13,8 +13,6 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * PullTight90.java
- *
  * Created on 19. Juli 2003, 18:59
  */
 package board.algo;

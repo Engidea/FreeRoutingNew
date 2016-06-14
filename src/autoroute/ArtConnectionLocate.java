@@ -421,22 +421,6 @@ public abstract class ArtConnectionLocate
       return shrinked_room_shape.nearest_point_approx(current_from_point).round().to_float();
       }
 
-   private static PlaPointFloat ninety_degree_corner(PlaPointFloat p_from_point, PlaPointFloat p_to_point, boolean p_horizontal_first)
-      {
-      double x;
-      double y;
-      if (p_horizontal_first)
-         {
-         x = p_to_point.v_x;
-         y = p_from_point.v_y;
-         }
-      else
-         {
-         x = p_from_point.v_x;
-         y = p_to_point.v_y;
-         }
-      return new PlaPointFloat(x, y);
-      }
 
    private static PlaPointFloat fortyfive_degree_corner(PlaPointFloat p_from_point, PlaPointFloat p_to_point, boolean p_horizontal_first)
       {
@@ -508,9 +492,7 @@ public abstract class ArtConnectionLocate
     */
    static PlaPointFloat calculate_additional_corner(PlaPointFloat p_from_point, PlaPointFloat p_to_point, boolean p_horizontal_first, TraceAngleRestriction p_angle_restriction)
       {
-      if (p_angle_restriction.is_limit_90() )
-         return  ninety_degree_corner(p_from_point, p_to_point, p_horizontal_first);
-      else if (p_angle_restriction.is_limit_45() )
+      if (p_angle_restriction.is_limit_45() )
          return fortyfive_degree_corner(p_from_point, p_to_point, p_horizontal_first);
       else
          return p_to_point;

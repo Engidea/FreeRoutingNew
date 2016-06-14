@@ -106,14 +106,12 @@ public class StateCircleConstrut extends StateInteractive
       if (construction_succeeded)
          {
          obstacle_shape = new ShapeCircle(center, radius);
-         if (r_brd.brd_rules.is_trace_snap_90())
-            {
-            obstacle_shape = obstacle_shape.bounding_box();
-            }
-         else if (r_brd.brd_rules.is_trace_snap_45())
+         
+         if (r_brd.brd_rules.is_trace_snap_45())
             {
             obstacle_shape = obstacle_shape.bounding_octagon();
             }
+         
          construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
          }
 

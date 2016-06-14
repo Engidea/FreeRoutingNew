@@ -2155,17 +2155,10 @@ public final class RoutingBoard implements java.io.Serializable
       AwtreeShapeSearch search_tree = search_tree_manager.get_default_tree();
       int compensated_half_width = p_half_width + search_tree.get_clearance_compensation(p_clearance_class_no, p_layer);
       ArrayList<ShapeTile> trace_shapes = p_polyline.offset_shapes(compensated_half_width, 0, p_polyline.corner_count());
-      boolean orthogonal_mode = brd_rules.is_trace_snap_90();
 
       for (int index = 0; index < trace_shapes.size(); ++index)
          {
          ShapeTile curr_trace_shape = trace_shapes.get(index);
-         
-         if (orthogonal_mode)
-            {
-            // why is this needed ?
-            curr_trace_shape = curr_trace_shape.bounding_box();
-            }
          
          BrdFromSide from_side = new BrdFromSide(p_polyline, index + 1, curr_trace_shape);
 
@@ -2283,17 +2276,9 @@ public final class RoutingBoard implements java.io.Serializable
       final int trace_shapes_count = trace_shapes.size();
       int last_shape_no = trace_shapes_count;
       
-      boolean orthogonal_mode = brd_rules.is_trace_snap_90();
-      
       for (int index = 0; index < trace_shapes_count; ++index)
          {
          ShapeTile curr_trace_shape = trace_shapes.get(index);
-         
-         if (orthogonal_mode)
-            {
-            // What is this doing here ?
-            curr_trace_shape = curr_trace_shape.bounding_box();
-            }
          
          BrdFromSide from_side = new BrdFromSide(combined_polyline, combined_polyline.corner_count() - trace_shapes_count - 1 + index, curr_trace_shape);
 
@@ -2340,12 +2325,6 @@ public final class RoutingBoard implements java.io.Serializable
          // Sample the shove line to a shorter shove distance and try again.
          ShapeTile last_trace_shape = trace_shapes.get(last_shape_no);
          
-         if (orthogonal_mode)
-            {
-            // what is this doing here ?
-            last_trace_shape = last_trace_shape.bounding_box();
-            }
-         
          int sample_width = 2 * get_min_trace_half_width();
          PlaPointFloat last_corner = new_polyline.corner_approx(last_shape_no + 1);
          PlaPointFloat prev_last_corner = new_polyline.corner_approx(last_shape_no);
@@ -2386,10 +2365,6 @@ public final class RoutingBoard implements java.io.Serializable
             
             shape_index = combined_polyline.plaline_len(-3);
             last_trace_shape = combined_polyline.offset_shape(compensated_half_width, shape_index);
-            if (orthogonal_mode)
-               {
-               last_trace_shape = last_trace_shape.bounding_box();
-               }
             }
          
          BrdFromSide from_side = new BrdFromSide(combined_polyline, shape_index, last_trace_shape);

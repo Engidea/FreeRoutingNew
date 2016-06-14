@@ -503,48 +503,6 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       return result;
       }
 
-   /**
-    * Calculates a corner point p so that the lines through this point and p and from p to p_to_point are hprizontal or vertical,
-    * and that the angle at p will be 90 degree. If p_left_turn, p_to_point will be on the left of the line from this point to p,
-    * else on the right. Returns null, if the line from this point to p_to_point is already orthogonal.
-    */
-   public PlaPointInt ninety_degree_corner(PlaPointInt p_to_point, boolean p_left_turn)
-      {
-      int dx = p_to_point.v_x - this.v_x;
-      int dy = p_to_point.v_y - this.v_y;
-      PlaPointInt result;
-
-      // handle the 4 quadrants
-
-      if (dx > 0 && dy > 0 || dx < 0 && dy < 0)
-         {
-         if (p_left_turn)
-            {
-            result = new PlaPointInt(p_to_point.v_x, this.v_y);
-            }
-         else
-            {
-            result = new PlaPointInt(this.v_x, p_to_point.v_y);
-            }
-         }
-      else if (dx < 0 && dy > 0 || dx > 0 && dy < 0)
-         {
-         if (p_left_turn)
-            {
-            result = new PlaPointInt(this.v_x, p_to_point.v_y);
-            }
-         else
-            {
-            result = new PlaPointInt(p_to_point.v_x, this.v_y);
-            }
-         }
-      else
-         {
-         // the line from this point to p_to_point is already orthogonal
-         result = null;
-         }
-      return result;
-      }
 
    @Override
    public int compare_x_y(PlaPointRational p_other)

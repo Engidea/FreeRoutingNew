@@ -743,13 +743,9 @@ public final class DsnKeywordStructure extends DsnKeywordScope
          {
          Object next_token = p_scanner.next_token();
          
-         TraceAngleRestriction snap_angle;
+         TraceAngleRestriction snap_angle = TraceAngleRestriction.NONE;
          
-         if (next_token == DsnKeyword.NINETY_DEGREE)
-            {
-            snap_angle = TraceAngleRestriction.NINETY;
-            }
-         else if (next_token == DsnKeyword.FORTYFIVE_DEGREE)
+         if (next_token == DsnKeyword.FORTYFIVE_DEGREE)
             {
             snap_angle = TraceAngleRestriction.FORTYFIVE;
             }
@@ -784,11 +780,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       p_file.write("snap_angle ");
       p_file.new_line();
 
-      if (p_angle_restriction.is_limit_90() )
-         {
-         p_file.write("ninety_degree");
-         }
-      else if (p_angle_restriction.is_limit_45())
+      if (p_angle_restriction.is_limit_45())
          {
          p_file.write("fortyfive_degree");
          }

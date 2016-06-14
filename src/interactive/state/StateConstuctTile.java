@@ -167,23 +167,6 @@ public class StateConstuctTile extends StateConstructCorner
          // In 45 degree case just skip last corner as nothing like the following
          // calculation for the 90 degree case to keep the angle restrictions is implemented.
          
-         if (r_brd.brd_rules.is_trace_snap_90() )
-            {
-            // prevent generating a non orthogonal line by changing the previous corner
-            PlaPointInt prev_prev_corner = null;
-            if (new_length >= 3)
-               {
-               prev_prev_corner = corner_arr[new_length - 3];
-               }
-            if (prev_prev_corner != null && prev_prev_corner.v_x == prev_corner.v_x)
-               {
-               corner_arr[new_length - 2] = new PlaPointInt(prev_corner.v_x, last_corner.v_y);
-               }
-            else
-               {
-               corner_arr[new_length - 2] = new PlaPointInt(last_corner.v_x, prev_corner.v_y);
-               }
-            }
          curr_corner = prev_corner;
          }
       

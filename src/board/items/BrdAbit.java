@@ -160,12 +160,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       
       PlaPointInt add_corner = null;
       
-      if (r_board.brd_rules.is_trace_snap_90() )
-         {
-         // Make shure, that the traces will remain 90- or 45-degree.
-         add_corner = old_center.ninety_degree_corner(new_center, true);
-         }
-      else if (r_board.brd_rules.is_trace_snap_45())
+      if (r_board.brd_rules.is_trace_snap_45())
          {
          add_corner = old_center.fortyfive_degree_corner(new_center, true);
          }

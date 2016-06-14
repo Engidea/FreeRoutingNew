@@ -25,7 +25,6 @@ import board.RoutingBoard;
 import board.infos.BrdViaInfo;
 import board.varie.ItemFixState;
 import board.varie.ShoveDrillResult;
-import board.varie.TraceAngleRestriction;
 import freert.library.LibPadstack;
 import freert.planar.PlaLimits;
 import freert.planar.PlaPoint;
@@ -87,19 +86,10 @@ public final class AlgoShoveVia
       double check_radius = p_via_radius + 0.5 * r_board.get_clearance(p_cl_class, p_cl_class, p_layer) + r_board.get_min_trace_half_width();
 
       ShapeTile tile_shape;
-      boolean is_90_degree;
-      if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY)
-         {
-         tile_shape = via_shape.bounding_box();
-         is_90_degree = true;
-         }
-      else
-         {
-         tile_shape = via_shape.bounding_octagon();
-         is_90_degree = false;
-         }
 
-      BrdFromSide from_side = calculate_from_side(p_location.to_float(), tile_shape, p_room_shape.to_Simplex(), check_radius, is_90_degree);
+      tile_shape = via_shape.bounding_octagon();
+
+      BrdFromSide from_side = calculate_from_side(p_location.to_float(), tile_shape, p_room_shape.to_Simplex(), check_radius);
 
       if (from_side == null) return ShoveDrillResult.NOT_DRILLABLE;
 
@@ -140,18 +130,8 @@ public final class AlgoShoveVia
          if (curr_pad_shape == null) continue;
 
          curr_pad_shape = (PlaShape) curr_pad_shape.translate_by(translate_vector);
-         ShapeTile tile_shape;
          
-         if (r_board.brd_rules.is_trace_snap_90())
-            {
-            // this is understandable
-            tile_shape = curr_pad_shape.bounding_box();
-            }
-         else
-            {
-            // this is understandable, 
-            tile_shape = curr_pad_shape.bounding_octagon();
-            }
+         ShapeTile tile_shape = curr_pad_shape.bounding_octagon();
          
          BrdFromSide from_side = r_board.shove_pad_algo.calc_from_side(tile_shape, p_location, index, calc_from_side_offset, p_via_info.get_clearance_class());
          if ( r_board.shove_pad_algo.check_forced_pad(
@@ -215,21 +195,11 @@ public final class AlgoShoveVia
             }
          
          ShapeTile start_trace_shape = null;
-         if (r_board.brd_rules.get_trace_snap_angle() == TraceAngleRestriction.NINETY)
+
+         tile_shape = curr_pad_shape.bounding_octagon();
+         if (start_trace_circle != null)
             {
-            tile_shape = curr_pad_shape.bounding_box();
-            if (start_trace_circle != null)
-               {
-               start_trace_shape = start_trace_circle.bounding_box();
-               }
-            }
-         else
-            {
-            tile_shape = curr_pad_shape.bounding_octagon();
-            if (start_trace_circle != null)
-               {
-               start_trace_shape = start_trace_circle.bounding_octagon();
-               }
+            start_trace_shape = start_trace_circle.bounding_octagon();
             }
          
          BrdFromSide from_side = r_board.shove_pad_algo.calc_from_side(
@@ -281,7 +251,7 @@ public final class AlgoShoveVia
       return true;
       }
 
-   private BrdFromSide calculate_from_side(PlaPointFloat p_via_location, ShapeTile p_via_shape, ShapeTileSimplex p_room_shape, double p_dist, boolean is_90_degree)
+   private BrdFromSide calculate_from_side(PlaPointFloat p_via_location, ShapeTile p_via_shape, ShapeTileSimplex p_room_shape, double p_dist )
       {
       ShapeTileBox via_box = p_via_shape.bounding_box();
       for (int index = 0; index < 4; ++index)
@@ -316,23 +286,13 @@ public final class AlgoShoveVia
             }
          if (p_room_shape.contains(check_point))
             {
-            int from_side_no;
-            if (is_90_degree)
-               {
-               from_side_no = index;
-               }
-            else
-               {
-               from_side_no = 2 * index;
-               }
+            int from_side_no = 2 * index;
+
             PlaPointFloat curr_border_point = new PlaPointFloat(border_x, border_y);
             return new BrdFromSide(from_side_no, curr_border_point);
             }
          }
-      if (is_90_degree)
-         {
-         return null;
-         }
+
       // try the diagonal drections
       double dist = p_dist / PlaLimits.sqrt2;
       double border_dist = via_box.max_width() / (2 * PlaLimits.sqrt2);

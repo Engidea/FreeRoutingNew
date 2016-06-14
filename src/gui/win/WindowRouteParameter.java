@@ -62,7 +62,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private final JFormattedTextField pullt_region_field,pullt_min_move_field;
    private final JFormattedTextField edge_to_turn_dist_field;
 
-   private final JRadioButton snap_angle_90_button;  
    private final JRadioButton snap_angle_45_button;
    private final JRadioButton snap_angle_none_button;
    
@@ -107,7 +106,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       GuiPanelVertical main_panel = new GuiPanelVertical(new Insets(3,3,3,3));
 
-      snap_angle_90_button = resources.newJRadioButton("90_degree",actionListener);
       snap_angle_45_button = resources.newJRadioButton("45_degree",actionListener);
       snap_angle_none_button = resources.newJRadioButton("none",actionListener);
 
@@ -280,18 +278,14 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private JPanel newSnapAnglePanel ()
       {
       ButtonGroup group = new ButtonGroup();
-      group.add(snap_angle_90_button);
       group.add(snap_angle_45_button);
       group.add(snap_angle_none_button);
       snap_angle_none_button.setSelected(true);
 
       JPanel risul = new JPanel();
-      risul.setLayout(new BoxLayout(risul, BoxLayout.Y_AXIS));
       risul.setBorder(resources.newTitledBorder("snap_angle"));
       risul.setToolTipText(resources.getString("snap_angle_tooltip"));
 
-      
-      risul.add(snap_angle_90_button);
       risul.add(snap_angle_45_button);
       risul.add(snap_angle_none_button);
       
@@ -338,20 +332,12 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    @Override
    public void refresh()
       {
-      board.varie.TraceAngleRestriction snap_angle = i_board.get_routing_board().brd_rules.get_trace_snap_angle();
+      TraceAngleRestriction snap_angle = i_board.get_routing_board().brd_rules.get_trace_snap_angle();
 
-      if (snap_angle.is_limit_90())
-         {
-         snap_angle_90_button.setSelected(true);
-         }
-      else if (snap_angle.is_limit_45())
-         {
+      if (snap_angle.is_limit_45())
          snap_angle_45_button.setSelected(true);
-         }
       else
-         {
          snap_angle_none_button.setSelected(true);
-         }
 
       if (i_board.itera_settings.is_stitch_route())
          stitch_button.setSelected(true);
@@ -453,27 +439,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          }
       
       return false;
-      }
-   
-   private void snap_angle_90_button_fun()
-      {
-      if (i_board.get_routing_board().brd_rules.get_trace_snap_angle() == board.varie.TraceAngleRestriction.NINETY)
-         {
-         return;
-         }
-      
-      if (has_free_angle_traces())
-         {
-         String curr_message = resources.getString("change_snap_angle_90");
-         if (!WindowMessage.confirm(curr_message))
-            {
-            refresh();
-            return;
-            }
-         }
-      
-      stat.userPrintln(classname+" req TraceAngleRestriction.NINETY_DEGREE");
-      i_board.set_trace_snap_angle(TraceAngleRestriction.NINETY);
       }
 
    public void snap_angle_45_button_fun()
@@ -731,9 +696,7 @@ public class WindowRouteParameter extends GuiSubWindowSavable
          {
          Object src = p_evt.getSource();
          
-         if ( src == snap_angle_90_button )
-            snap_angle_90_button_fun();
-         else if ( src == snap_angle_45_button )
+         if ( src == snap_angle_45_button )
             snap_angle_45_button_fun();
          else if ( src == snap_angle_none_button )
             snap_angle_none_button_fun();
