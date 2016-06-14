@@ -564,6 +564,7 @@ public abstract class AlgoPullTight
          {
          connection_to_trace_improved = false;
          Polyline adjusted_polyline = smoothen_end_corners_at_trace_two(curr_trace);
+         
          if (adjusted_polyline != null)
             {
             result = true;

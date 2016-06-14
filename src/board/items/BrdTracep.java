@@ -971,12 +971,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
             if ( split_avoid_this_item(index, overlap_tentry, overlap_item)) continue;
             
-            if (!overlap_item.shares_net(this)) continue;
+            if ( ! overlap_item.shares_net(this)) continue;
                
             if (overlap_item instanceof BrdTracep)
                {
                BrdTracep found_trace = (BrdTracep) overlap_item;
                
+               // this is the segment of the other trace that needs to be "joined" with this trace
                PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
                
                ArrayList<PlaLineInt> intersecting_lines = found_line_segment.intersection(curr_segment);
@@ -989,6 +990,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                if (found_trace_split)
                   {
                   // reread the overlapping tree entries and reset the iterator, because the board has changed
+                  // Would it be good to just return ? since I have split a trace and the system should readjust ?
                   default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), over_tree_entries);
                   over_tree_iter = over_tree_entries.iterator();
                   }
@@ -1003,6 +1005,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
                // do this last to preserve traces if possible
                if ( own_trace_split ) remove_if_cycle (result);
+               
+//               if ( found_trace_split ) break;  // nop, not much satisfaction...
                
                if (own_trace_split) break;
                }
@@ -1036,8 +1040,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
    
    /**
-    * check if I should aboid testing this segment
-    * @return
+    * check if I should avoid testing this segment
+    * @return true if this item should not  be used in the split algo
     */
    private boolean split_avoid_this_item (int index, AwtreeEntry found_entry, BrdItem overlap_item)
       {
