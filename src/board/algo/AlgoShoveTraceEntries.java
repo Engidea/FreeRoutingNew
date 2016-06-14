@@ -101,7 +101,8 @@ public final class AlgoShoveTraceEntries
             }
 
          boolean contains_own_net = curr_item.shares_net_no(own_net_nos);
-         if (curr_item instanceof BrdAreaConduction && (contains_own_net || !((BrdAreaConduction) curr_item).get_is_obstacle()))
+         
+         if (curr_item instanceof BrdAreaConduction && (contains_own_net || !((BrdAreaConduction) curr_item).is_area_obstacle()))
             {
             continue;
             }

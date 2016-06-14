@@ -162,7 +162,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          return false;
          }
       
-      if (p_other instanceof BrdAreaConduction && !((BrdAreaConduction) p_other).get_is_obstacle())
+      if (p_other instanceof BrdAreaConduction && !((BrdAreaConduction) p_other).is_area_obstacle())
          {
          return false;
          }

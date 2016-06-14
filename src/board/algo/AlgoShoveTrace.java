@@ -159,10 +159,13 @@ public final class AlgoShoveTrace
          
          for (int index = 0; index < try_via_centers.length; ++index)
             {
+            if ( shove_via_ok ) break;
+            
             if ( index == 0 || curr_shove_via_center.dustance_square(try_via_centers[index].to_float()) <= max_dist_square)
                {
                PlaVectorInt delta = try_via_centers[index].difference_by(curr_shove_via.center_get());
                Collection<BrdItem> ignore_items = new LinkedList<BrdItem>();
+               
                if (r_board.move_drill_algo.check(curr_shove_via, delta, p_max_recursion_depth, p_max_via_recursion_depth - 1, ignore_items,  p_time_limit))
                   {
                   shove_via_ok = true;
@@ -186,7 +189,11 @@ public final class AlgoShoveTrace
          return false;
          }
 
+      // pippo, this should never happen now
       boolean is_orthogonal_mode = p_trace_shape instanceof ShapeTileBox;
+      
+      if ( is_orthogonal_mode )
+         System.err.println("NOOOOOO");
       
       for (;;)
          {
@@ -218,7 +225,9 @@ public final class AlgoShoveTrace
          for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
             PlaDirection curr_dir = curr_substitute_trace.polyline().plaline(index + 1).direction();
+            
             boolean is_in_front = p_dir == null || p_dir.equals(curr_dir);
+            
             if (is_in_front)
                {
                BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, true);
@@ -634,7 +643,7 @@ public final class AlgoShoveTrace
                }
             else if (curr_item instanceof BrdAreaConduction)
                {
-               is_obstacle = ((BrdAreaConduction) curr_item).get_is_obstacle();
+               is_obstacle = ((BrdAreaConduction) curr_item).is_area_obstacle();
                }
             else if (curr_item instanceof BrdAreaObstacleVia || curr_item instanceof BrdAreaObstacleComp)
                {

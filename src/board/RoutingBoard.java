@@ -2765,7 +2765,7 @@ public final class RoutingBoard implements java.io.Serializable
 
          BrdLayer curr_layer = layer_structure.get(curr_conduction_area.get_layer());
          
-         if (curr_layer.is_signal && curr_conduction_area.get_is_obstacle() != p_value)
+         if (curr_layer.is_signal && curr_conduction_area.is_area_obstacle() != p_value)
             {
             curr_conduction_area.set_is_obstacle(p_value);
             something_changed = true;

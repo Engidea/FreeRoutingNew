@@ -21,7 +21,6 @@
 package board.items;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import board.BrdConnectable;
@@ -48,7 +47,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
    {
    private static final long serialVersionUID = 1L;
 
-   private boolean is_obstacle;
+   private boolean is_obstacle;   // if tue this is normally an obstacle
    
    public BrdAreaConduction(
          PlaArea p_area, 
@@ -66,6 +65,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
          RoutingBoard p_board)
       {
       super(p_area, p_layer, p_translation, p_rotation_in_degree, p_side_changed, p_net_no_arr, p_clearance_class, p_id_no, p_group_no, p_name, p_fixed_state, p_board);
+
       is_obstacle = p_is_obstacle;
       }
 
@@ -86,36 +86,39 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
    public Set<BrdItem> get_normal_contacts()
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
-      for (int i = 0; i < tile_shape_count(); ++i)
+      
+      for (int index = 0; index < tile_shape_count(); ++index)
          {
-         ShapeTile curr_shape = get_tile_shape(i);
+         ShapeTile curr_shape = get_tile_shape(index);
+         
          Set<AwtreeObject> overlaps = r_board.overlapping_objects(curr_shape, get_layer());
-         Iterator<AwtreeObject> it = overlaps.iterator();
-         while (it.hasNext())
+
+         for ( AwtreeObject curr_ob : overlaps )
             {
-            AwtreeObject curr_ob = it.next();
-            if (!(curr_ob instanceof BrdItem))
-               {
-               continue;
-               }
+            if (!(curr_ob instanceof BrdItem)) continue;
+
             BrdItem curr_item = (BrdItem) curr_ob;
-            if (curr_item != this && curr_item.shares_net(this) && curr_item.shares_layer(this))
+
+            if (curr_item == this ) continue;
+            
+            if ( ! curr_item.shares_net(this) ) continue;
+            
+            if ( ! curr_item.shares_layer(this) ) continue;
+            
+            if (curr_item instanceof BrdTracep)
                {
-               if (curr_item instanceof BrdTracep)
+               BrdTracep curr_trace = (BrdTracep) curr_item;
+               if (curr_shape.contains(curr_trace.corner_first()) || curr_shape.contains(curr_trace.corner_last()))
                   {
-                  BrdTracep curr_trace = (BrdTracep) curr_item;
-                  if (curr_shape.contains(curr_trace.corner_first()) || curr_shape.contains(curr_trace.corner_last()))
-                     {
-                     result.add(curr_item);
-                     }
+                  result.add(curr_item);
                   }
-               else if (curr_item instanceof BrdAbit)
+               }
+            else if (curr_item instanceof BrdAbit)
+               {
+               BrdAbit curr_drill_item = (BrdAbit) curr_item;
+               if (curr_shape.contains(curr_drill_item.center_get()))
                   {
-                  BrdAbit curr_drill_item = (BrdAbit) curr_item;
-                  if (curr_shape.contains(curr_drill_item.center_get()))
-                     {
-                     result.add(curr_item);
-                     }
+                  result.add(curr_item);
                   }
                }
             }
@@ -153,15 +156,17 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
    @Override
    public boolean is_obstacle(BrdItem p_other)
       {
-      if ( is_obstacle) return super.is_obstacle(p_other);
+      // if this area may be an obstacle then check if it is currently on the same net
+      if ( is_obstacle ) return super.is_obstacle(p_other);
 
       return false;
       }
 
    /**
-    * Returns if this conduction area is regarded as obstacle to traces of foreign nets.
+    * If it returns false it means that any net can connect to this conduction area
+    * @return if this conduction area is regarded as obstacle to traces of foreign nets.
     */
-   public boolean get_is_obstacle()
+   public boolean is_area_obstacle()
       {
       return is_obstacle;
       }

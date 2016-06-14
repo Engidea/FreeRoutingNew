@@ -341,8 +341,6 @@ public final class SortedRooms_xx_Degree
          {
          prev_neighbour = calculate_new_incomplete_rooms(p_autoroute_engine, room_simplex, prev_neighbour, next_neighbour );
          }
-         
-      
       }
 
    }
