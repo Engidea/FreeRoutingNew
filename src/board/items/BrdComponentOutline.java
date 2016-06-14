@@ -231,7 +231,7 @@ public final class BrdComponentOutline extends BrdItem implements java.io.Serial
       }
 
    @Override
-   public void turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public void rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       rotate_degree = rotate_deg_reduce ( rotate_degree + p_factor * 90 );
       

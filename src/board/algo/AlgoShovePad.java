@@ -380,7 +380,7 @@ public final class AlgoShovePad
       PlaLineInt[] line_arr = new PlaLineInt[3];
       PlaDirection curr_dir = p_border_line.direction();
       line_arr[0] = new PlaLineInt(p_shape_center, curr_dir);
-      line_arr[1] = new PlaLineInt(p_shape_center, curr_dir.turn_45_degree(2));
+      line_arr[1] = new PlaLineInt(p_shape_center, curr_dir.rotate_45_deg(2));
       line_arr[2] = new PlaLineInt(offset_projection.round(), curr_dir);
       Polyline check_line = new Polyline(line_arr);
       

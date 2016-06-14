@@ -1584,13 +1584,13 @@ public final class IteraBoard
       ((StateSelectedItem) interactive_state).toggle_clearance_violations();
       }
 
-   public void turn_45_degree(int p_factor)
+   public void rotate_45_deg(int p_factor)
       {
       if (board_is_read_only ) return;
 
       if ( !(interactive_state instanceof StateMoveItem)) return;
 
-      ((StateMoveItem) interactive_state).turn_45_degree(p_factor);
+      ((StateMoveItem) interactive_state).rotate_45_deg(p_factor);
       }
 
    public void change_placement_side()

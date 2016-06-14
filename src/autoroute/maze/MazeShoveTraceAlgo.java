@@ -178,7 +178,7 @@ public final class MazeShoveTraceAlgo
          // create the line segment for shoving
 
          PlaSegmentFloat shrinked_line_segment = polar_line_segment.shrink_segment(compensated_trace_half_width);
-         PlaDirection perpendicular_direction = shove_trace_line.direction().turn_45_degree(2);
+         PlaDirection perpendicular_direction = shove_trace_line.direction().rotate_45_deg(2);
          if (side_of_trace_line == PlaSide.ON_THE_LEFT)
             {
             if (p_shove_to_the_left)

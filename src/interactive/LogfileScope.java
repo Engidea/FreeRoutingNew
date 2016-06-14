@@ -394,7 +394,7 @@ public abstract class LogfileScope
          if (p_return_state instanceof StateMoveItem)
             {
             int factor = p_logfile.read_int();
-            ((StateMoveItem) p_return_state).turn_90_degree(factor);
+            ((StateMoveItem) p_return_state).rotate_90_degree(factor);
             return p_return_state;
             }
 
@@ -415,7 +415,7 @@ public abstract class LogfileScope
          if (p_return_state instanceof StateMoveItem)
             {
             int angle = p_logfile.read_int();
-            ((StateMoveItem) p_return_state).rotate(angle);
+            ((StateMoveItem) p_return_state).rotate_deg(angle);
             return p_return_state;
             }
 

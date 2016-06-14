@@ -781,7 +781,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       PlaLineInt[] new_lines = new PlaLineInt[border_line_count()];
       for (int index = 0; index < new_lines.length; ++index)
          {
-         new_lines[index] = border_line(index).turn_90_degree(p_factor, p_pole);
+         new_lines[index] = border_line(index).rotate_90_deg(p_factor, p_pole);
          }
       return get_instance(new_lines);
       }

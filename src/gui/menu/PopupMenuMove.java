@@ -58,7 +58,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               turn_45_degree(2);
+               rotate_45_deg(2);
                }
          });
       rotate_menu.add(turn_90_item);
@@ -69,7 +69,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               turn_45_degree(4);
+               rotate_45_deg(4);
                }
          });
       rotate_menu.add(turn_180_item);
@@ -80,7 +80,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               turn_45_degree(6);
+               rotate_45_deg(6);
                }
          });
       rotate_menu.add(turn_270_item);
@@ -91,7 +91,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               turn_45_degree(1);
+               rotate_45_deg(1);
                }
          });
       rotate_menu.add(turn_45_item);
@@ -102,7 +102,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               turn_45_degree(3);
+               rotate_45_deg(3);
                }
          });
       rotate_menu.add(turn_135_item);
@@ -113,7 +113,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               turn_45_degree(5);
+               rotate_45_deg(5);
                }
          });
       rotate_menu.add(turn_225_item);
@@ -124,7 +124,7 @@ public class PopupMenuMove extends PopupMenuDisplay
          {
             public void actionPerformed(ActionEvent evt)
                {
-               turn_45_degree(7);
+               rotate_45_deg(7);
                }
          });
       rotate_menu.add(turn_315_item);
@@ -182,9 +182,9 @@ public class PopupMenuMove extends PopupMenuDisplay
       this.add(cancel_item, 4);
       }
 
-   private void turn_45_degree(int p_factor)
+   private void rotate_45_deg(int p_factor)
       {
-      board_panel.itera_board.turn_45_degree(p_factor);
+      board_panel.itera_board.rotate_45_deg(p_factor);
       board_panel.move_mouse(board_panel.right_button_click_location);
       }
    }

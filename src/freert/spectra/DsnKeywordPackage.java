@@ -26,6 +26,7 @@ import java.util.LinkedList;
 import board.BrdLayer;
 import board.items.BrdItem;
 import freert.planar.PlaShape;
+import freert.spectra.varie.DsnPinInfo;
 
 /**
  * Class for reading and writing package scopes from dsn-files.
@@ -34,10 +35,28 @@ import freert.planar.PlaShape;
  */
 public class DsnKeywordPackage
    {
+   public final String name;
+   /** List of objects of type PinInfo. */
+   public final DsnPinInfo[] pin_info_arr;
+   /** The outline of the package. */
+   public final Collection<DsnShape> outline;
+   /** Collection of keepoouts belonging to this package */
+   public final Collection<DsnScopeArea> keepouts;
+   /** Collection of via keepoouts belonging to this package */
+   public final Collection<DsnScopeArea> via_keepouts;
+   /** Collection of place keepoouts belonging to this package */
+   public final Collection<DsnScopeArea> place_keepouts;
+   /** If false, the package is placed on the back side of the board */
+   public final boolean is_front;
 
    /** Creates a new instance of Package */
-   public DsnKeywordPackage(String p_name, PinInfo[] p_pin_info_arr, Collection<DsnShape> p_outline, Collection<DsnScopeArea> p_keepouts,
-         Collection<DsnScopeArea> p_via_keepouts, Collection<DsnScopeArea> p_place_keepouts, boolean p_is_front)
+   public DsnKeywordPackage(
+         String p_name, 
+         DsnPinInfo[] p_pin_info_arr, 
+         Collection<DsnShape> p_outline, 
+         Collection<DsnScopeArea> p_keepouts,
+         Collection<DsnScopeArea> p_via_keepouts, 
+         Collection<DsnScopeArea> p_place_keepouts, boolean p_is_front)
       {
       name = p_name;
       pin_info_arr = p_pin_info_arr;
@@ -64,7 +83,7 @@ public class DsnKeywordPackage
             return null;
             }
          String package_name = (String) next_token;
-         Collection<PinInfo> pin_info_list = new LinkedList<PinInfo>();
+         Collection<DsnPinInfo> pin_info_list = new LinkedList<DsnPinInfo>();
          for (;;)
             {
             Object prev_token = next_token;
@@ -84,7 +103,7 @@ public class DsnKeywordPackage
                {
                if (next_token == DsnKeyword.PIN)
                   {
-                  PinInfo next_pin = read_pin_info(p_scanner);
+                  DsnPinInfo next_pin = read_pin_info(p_scanner);
                   if (next_pin == null)
                      {
                      return null;
@@ -140,8 +159,8 @@ public class DsnKeywordPackage
                   }
                }
             }
-         PinInfo[] pin_info_arr = new PinInfo[pin_info_list.size()];
-         Iterator<PinInfo> it = pin_info_list.iterator();
+         DsnPinInfo[] pin_info_arr = new DsnPinInfo[pin_info_list.size()];
+         Iterator<DsnPinInfo> it = pin_info_list.iterator();
          for (int i = 0; i < pin_info_arr.length; ++i)
             {
             pin_info_arr[i] = it.next();
@@ -266,7 +285,7 @@ public class DsnKeywordPackage
       }
 
    /** Reads the information of a single pin in a package. */
-   private static PinInfo read_pin_info(JflexScanner p_scanner)
+   private static DsnPinInfo read_pin_info(JflexScanner p_scanner)
       {
       try
          {
@@ -287,7 +306,7 @@ public class DsnKeywordPackage
             System.out.println("Package.read_pin_info: String or Integer expected");
             return null;
             }
-         double rotation = 0;
+         int rotation = 0;
 
          p_scanner.yybegin(DsnFileScanner.NAME); // to be able to handle pin names starting with a digit.
          next_token = p_scanner.next_token();
@@ -368,7 +387,7 @@ public class DsnKeywordPackage
                   }
                }
             }
-         return new PinInfo(padstack_name, pin_name, pin_coor, rotation);
+         return new DsnPinInfo(padstack_name, pin_name, pin_coor, rotation);
          }
       catch (java.io.IOException e)
          {
@@ -377,9 +396,9 @@ public class DsnKeywordPackage
          }
       }
 
-   private static double read_rotation(JflexScanner p_scanner)
+   private static int read_rotation(JflexScanner p_scanner)
       {
-      double result = 0;
+      int result = 0;
       try
          {
          Object next_token = p_scanner.next_token();
@@ -389,7 +408,9 @@ public class DsnKeywordPackage
             }
          else if (next_token instanceof Double)
             {
-            result = ((Double) next_token).doubleValue();
+            Double a_double = (Double) next_token;
+            System.out.println("Package.read_rotation: rotation double="+a_double);
+            result = a_double.intValue();
             }
          else
             {
@@ -464,40 +485,5 @@ public class DsnKeywordPackage
          System.out.println("Package.read_placement_side: closing bracket expected");
          }
       return result;
-      }
-
-   public final String name;
-   /** List of objects of type PinInfo. */
-   public final PinInfo[] pin_info_arr;
-   /** The outline of the package. */
-   public final Collection<DsnShape> outline;
-   /** Collection of keepoouts belonging to this package */
-   public final Collection<DsnScopeArea> keepouts;
-   /** Collection of via keepoouts belonging to this package */
-   public final Collection<DsnScopeArea> via_keepouts;
-   /** Collection of place keepoouts belonging to this package */
-   public final Collection<DsnScopeArea> place_keepouts;
-   /** If false, the package is placed on the back side of the board */
-   public final boolean is_front;
-
-   /** Describes the Iinformation of a pin in a package. */
-   static public class PinInfo
-      {
-      PinInfo(String p_padstack_name, String p_pin_name, double[] p_rel_coor, double p_rotation)
-         {
-         padstack_name = p_padstack_name;
-         pin_name = p_pin_name;
-         rel_coor = p_rel_coor;
-         rotation = p_rotation;
-         }
-
-      /** Phe name of the pastack of this pin. */
-      public final String padstack_name;
-      /** Phe name of this pin. */
-      public final String pin_name;
-      /** The x- and y-coordinates relative to the package location. */
-      public final double[] rel_coor;
-      /** The rotation of the pin relative to the package. */
-      public final double rotation;
       }
    }

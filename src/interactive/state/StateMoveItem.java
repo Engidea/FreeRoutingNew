@@ -331,7 +331,7 @@ public class StateMoveItem extends StateInteractive
          }
       else
          {
-         rotate(-p_rotation);
+         rotate_deg(-p_rotation);
          }
       return this;
       }
@@ -383,7 +383,7 @@ public class StateMoveItem extends StateInteractive
    /**
     * Turns the items in the list by p_factor times 90 degree around the current position.
     */
-   public void turn_90_degree(int p_factor)
+   public void rotate_90_degree(int p_factor)
       {
       if (p_factor == 0) return;
 
@@ -396,7 +396,7 @@ public class StateMoveItem extends StateInteractive
       clearance_violations = new LinkedList<BrdItemViolation>();
       for (BrdItem curr_item : item_list)
          {
-         curr_item.turn_90_degree(p_factor, current_position);
+         curr_item.rotate_90_deg(p_factor, current_position);
          clearance_violations.addAll(curr_item.clearance_violations());
          }
       for (IteraNetItems curr_net_items : net_items_list)
@@ -408,7 +408,7 @@ public class StateMoveItem extends StateInteractive
       i_brd.repaint();
       }
 
-   public void rotate(int p_angle_in_degree)
+   public void rotate_deg(int p_angle_in_degree)
       {
       if (p_angle_in_degree == 0) return;
 
@@ -436,15 +436,15 @@ public class StateMoveItem extends StateInteractive
    /**
     * Turns the items in the list by p_factor times 90 degree around the current position.
     */
-   public void turn_45_degree(int p_factor)
+   public void rotate_45_deg(int p_factor)
       {
       if (p_factor % 2 == 0)
          {
-         turn_90_degree(p_factor / 2);
+         rotate_90_degree(p_factor / 2);
          }
       else
          {
-         rotate(p_factor * 45);
+         rotate_deg(p_factor * 45);
          }
       }
 
@@ -529,7 +529,7 @@ public class StateMoveItem extends StateInteractive
          {
          rotation = 360 - rotation;
          }
-      rotate(rotation);
+      rotate_deg(rotation);
       }
 
    /**
@@ -540,15 +540,15 @@ public class StateMoveItem extends StateInteractive
       StateInteractive curr_return_state = this;
       if (p_key_char == '+')
          {
-         turn_90_degree(1);
+         rotate_90_degree(1);
          }
       else if (p_key_char == '*')
          {
-         turn_90_degree(2);
+         rotate_90_degree(2);
          }
       else if (p_key_char == '-')
          {
-         turn_90_degree(3);
+         rotate_90_degree(3);
          }
       else if (p_key_char == '/')
          {

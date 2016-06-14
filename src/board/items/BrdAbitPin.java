@@ -100,15 +100,15 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       LibPackagePin package_pin = lib_package.get_pin(pin_no);
       PlaVectorInt rel_location = package_pin.relative_location();
       
-      double component_rotation = component.get_rotation_in_degree();
+      int rotation_deg = component.get_rotation_in_degree();
       if (!component.is_on_front() && !r_board.brd_components.get_flip_style_rotate_first())
          {
          rel_location = package_pin.relative_location().mirror_at_y_axis();
          }
       
-      if (component_rotation % 90 == 0)
+      if (rotation_deg % 90 == 0)
          {
-         int component_ninety_degree_factor = ((int) component_rotation) / 90;
+         int component_ninety_degree_factor = rotation_deg / 90;
          if (component_ninety_degree_factor != 0)
             {
             rel_location = rel_location.rotate_90_deg(component_ninety_degree_factor);
@@ -118,7 +118,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          {
          // rotation may be not exact
          PlaPointFloat location_approx = rel_location.to_float();
-         location_approx = location_approx.rotate_rad(Math.toRadians(component_rotation), PlaPointFloat.ZERO);
+         location_approx = location_approx.rotate_deg(rotation_deg, PlaPointFloat.ZERO);
          rel_location = location_approx.to_vector();
          }
       
@@ -250,7 +250,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       
       PlaVectorInt rel_location = package_pin.relative_location();
       
-      double component_rotation = component.get_rotation_in_degree();
+      int component_rotation = component.get_rotation_in_degree();
 
       boolean mirror_at_y_axis = !component.is_on_front() && !r_board.brd_components.get_flip_style_rotate_first();
 
@@ -269,13 +269,13 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
 
          if (curr_shape == null)  continue;
 
-         double pin_rotation = package_pin.rotation_in_degree;
+         int pin_rotation = package_pin.rotation_in_degree;
          if (pin_rotation % 90 == 0)
             {
-            int pin_ninety_degree_factor = ((int) pin_rotation) / 90;
+            int pin_ninety_degree_factor = pin_rotation/ 90;
             if (pin_ninety_degree_factor != 0)
                {
-               curr_shape = (ShapeConvex) curr_shape.rotate_90_deg(pin_ninety_degree_factor, PlaPointInt.ZERO);
+               curr_shape = curr_shape.rotate_90_deg(pin_ninety_degree_factor, PlaPointInt.ZERO);
                }
             }
          else
@@ -293,7 +293,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
 
          if (component_rotation % 90 == 0)
             {
-            int component_ninety_degree_factor = ((int) component_rotation) / 90;
+            int component_ninety_degree_factor = component_rotation / 90;
             if (component_ninety_degree_factor != 0)
                {
                translated_shape = (ShapeConvex) translated_shape.rotate_90_deg(component_ninety_degree_factor, PlaPointInt.ZERO);
@@ -385,7 +385,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          if (curr_rotation_in_degree % 45 == 0)
             {
             int fortyfive_degree_factor = ((int) curr_rotation_in_degree) / 45;
-            curr_exit_direction = curr_padstack_exit_direction.turn_45_degree(fortyfive_degree_factor);
+            curr_exit_direction = curr_padstack_exit_direction.rotate_45_deg(fortyfive_degree_factor);
             }
          else
             {
@@ -482,7 +482,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       }
 
    @Override
-   public void turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public void rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       center_clear();
       clear_derived_data();

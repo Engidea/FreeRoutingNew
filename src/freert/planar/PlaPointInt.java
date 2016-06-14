@@ -547,9 +547,9 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       if (side == PlaSide.COLLINEAR) return PlaDirection.NULL;
       
       if (side == PlaSide.ON_THE_RIGHT)
-         return p_line.direction().turn_45_degree(2);
+         return p_line.direction().rotate_45_deg(2);
       else
-         return p_line.direction().turn_45_degree(6);
+         return p_line.direction().rotate_45_deg(6);
       }
    
    

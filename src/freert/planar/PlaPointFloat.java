@@ -439,7 +439,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
    /**
     * Turns this FloatPoint by p_factor times 90 degree around p_pole.
     */
-   public PlaPointFloat turn_90_degree(int p_factor, PlaPointFloat p_pole)
+   public PlaPointFloat rotate_90_deg(int p_factor, PlaPointFloat p_pole)
       {
       PlaPointFloat v = substract(p_pole);
       v = v.rotate_90_deg(p_factor);

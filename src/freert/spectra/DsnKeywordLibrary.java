@@ -35,6 +35,7 @@ import freert.planar.ShapeConvex;
 import freert.planar.ShapePolygon;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileSimplex;
+import freert.spectra.varie.DsnPinInfo;
 import freert.spectra.varie.DsnReadUtils;
 
 /**
@@ -142,9 +143,9 @@ public class DsnKeywordLibrary extends DsnKeywordScope
          {
          DsnKeywordPackage curr_package = it.next();
          LibPackagePin[] pin_arr = new LibPackagePin[curr_package.pin_info_arr.length];
-         for (int i = 0; i < pin_arr.length; ++i)
+         for (int index = 0; index < pin_arr.length; ++index)
             {
-            DsnKeywordPackage.PinInfo pin_info = curr_package.pin_info_arr[i];
+            DsnPinInfo pin_info = curr_package.pin_info_arr[index];
             int rel_x = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[0]));
             int rel_y = (int) Math.round(p_par.coordinate_transform.dsn_to_board(pin_info.rel_coor[1]));
             PlaVectorInt rel_coor = new PlaVectorInt(rel_x, rel_y);
@@ -154,7 +155,7 @@ public class DsnKeywordLibrary extends DsnKeywordScope
                System.out.println("Library.read_scope: board padstack not found");
                return false;
                }
-            pin_arr[i] = new LibPackagePin(pin_info.pin_name, board_padstack.pads_no, rel_coor, pin_info.rotation);
+            pin_arr[index] = new LibPackagePin(pin_info.pin_name, board_padstack.pads_no, rel_coor, pin_info.rotation);
             }
          
          PlaShape[] outline_arr = new PlaShape[curr_package.outline.size()];
@@ -177,12 +178,12 @@ public class DsnKeywordLibrary extends DsnKeywordScope
          generate_missing_keepout_names("place_keepout_", curr_package.place_keepouts);
          freert.spectra.varie.DsnPackageKeepout[] keepout_arr = new freert.spectra.varie.DsnPackageKeepout[curr_package.keepouts.size()];
          Iterator<DsnScopeArea> it2 = curr_package.keepouts.iterator();
-         for (int i = 0; i < keepout_arr.length; ++i)
+         for (int index = 0; index < keepout_arr.length; ++index)
             {
             DsnScopeArea curr_keepout = it2.next();
             DsnLayer curr_layer = curr_keepout.shape_list.iterator().next().layer;
             PlaArea curr_area = DsnShape.transform_area_to_board_rel(curr_keepout.shape_list, p_par.coordinate_transform);
-            keepout_arr[i] = new freert.spectra.varie.DsnPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
+            keepout_arr[index] = new freert.spectra.varie.DsnPackageKeepout(curr_keepout.area_name, curr_area, curr_layer.layer_no);
             }
          freert.spectra.varie.DsnPackageKeepout[] via_keepout_arr = new freert.spectra.varie.DsnPackageKeepout[curr_package.via_keepouts.size()];
          it2 = curr_package.via_keepouts.iterator();

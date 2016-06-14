@@ -235,7 +235,7 @@ public final class PlaSegmentFloat implements PlaObject
       PlaPointFloat projected_a;
       if (p_line_segment.point_a.scalar_product(p_line_segment.point_b, point_a) < 0)
          {
-         PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_a, p_line_segment.point_b.turn_90_degree(1, p_line_segment.point_a));
+         PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_a, p_line_segment.point_b.rotate_90_deg(1, p_line_segment.point_a));
          projected_a = curr_perpendicular_line.intersection(this);
          if (projected_a == null || Math.abs(projected_a.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_a.v_y) >= PlaLimits.CRIT_INT)
             {
@@ -251,7 +251,7 @@ public final class PlaSegmentFloat implements PlaObject
 
       if (p_line_segment.point_b.scalar_product(p_line_segment.point_a, point_b) < 0)
          {
-         PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_b, p_line_segment.point_a.turn_90_degree(1, p_line_segment.point_b));
+         PlaSegmentFloat curr_perpendicular_line = new PlaSegmentFloat(p_line_segment.point_b, p_line_segment.point_a.rotate_90_deg(1, p_line_segment.point_b));
          projected_b = curr_perpendicular_line.intersection(this);
          if (projected_b == null || Math.abs(projected_b.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_b.v_y) >= PlaLimits.CRIT_INT)
             {

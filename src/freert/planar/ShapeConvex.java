@@ -48,4 +48,11 @@ public interface ShapeConvex extends PlaShape
     * Returns the minimum diameter of the shape.
     */
    double min_width();
+   
+   /**
+    * Subclasses implementing this will be returning a ShapeConvex, not just a PlaArea
+    */
+   ShapeConvex rotate_90_deg(int p_factor, PlaPointInt p_pole);
+
+   
    }

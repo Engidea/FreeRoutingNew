@@ -310,7 +310,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    /**
     * Turns this Item by p_factor times 90 degree around p_pole. Does not update the item in the board.
     */
-   public abstract void turn_90_degree(int p_factor, PlaPointInt p_pole);
+   public abstract void rotate_90_deg(int p_factor, PlaPointInt p_pole);
 
    /**
     * Rotates this Item by p_angle_in_degree around p_pole. Does not update the item in the board.
@@ -318,8 +318,8 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    public abstract void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole);
 
    /**
-    * Changes the placement side of this Item and mirrors it at the vertical line through p_pole. Does not update the item in the
-    * board.
+    * Changes the placement side of this Item and mirrors it at the vertical line through p_pole. 
+    * Does not update the item in the board.
     */
    public abstract void change_placement_side(PlaPointInt p_pole);
 

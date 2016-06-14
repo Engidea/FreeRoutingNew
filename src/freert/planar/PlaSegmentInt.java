@@ -61,9 +61,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
 
       PlaDirection dir = new PlaDirection(p_from_corner, p_to_corner);
       
-      start  = new PlaLineInt(p_from_corner, dir.turn_45_degree(2));
+      start  = new PlaLineInt(p_from_corner, dir.rotate_45_deg(2));
       middle = new PlaLineInt(p_from_corner, p_to_corner);
-      end    = new PlaLineInt(p_to_corner, dir.turn_45_degree(2));
+      end    = new PlaLineInt(p_to_corner, dir.rotate_45_deg(2));
       
       start_point = p_from_corner;
       end_point   = p_to_corner;
@@ -210,7 +210,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       // create a perpendicular line at p_point and check, that the two
       // endpoints of this segment are on difcferent sides of that line.
       
-      PlaDirection perpendicular_direction = middle.direction().turn_45_degree(2);
+      PlaDirection perpendicular_direction = middle.direction().rotate_45_deg(2);
       PlaLineInt perpendicular_line = new PlaLineInt(p_point, perpendicular_direction);
       PlaSide start_point_side = perpendicular_line.side_of(start_point());
       PlaSide end_point_side = perpendicular_line.side_of(end_point());

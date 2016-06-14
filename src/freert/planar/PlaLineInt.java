@@ -622,8 +622,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
 
       if (line_side == PlaSide.COLLINEAR) return null;
 
-      PlaDirection dir1 = direction().turn_45_degree(2);
-      PlaDirection dir2 = direction().turn_45_degree(6);
+      PlaDirection dir1 = direction().rotate_45_deg(2);
+      PlaDirection dir2 = direction().rotate_45_deg(6);
 
       PlaPoint check_point_1 = p_from_point.translate_by(dir1);
 
@@ -644,7 +644,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    /**
     * Turns this line by p_factor times 90 degree around p_pole.
     */
-   public PlaLineInt turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public PlaLineInt rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       PlaPointInt new_a = point_a.rotate_90_deg(p_factor, p_pole);
       PlaPointInt new_b = point_b.rotate_90_deg(p_factor, p_pole);

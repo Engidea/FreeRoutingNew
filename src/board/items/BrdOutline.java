@@ -169,7 +169,7 @@ public final class BrdOutline extends BrdItem implements java.io.Serializable
       }
 
    @Override
-   public void turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public void rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       for (ShapeSegments curr_shape : shapes)
          {

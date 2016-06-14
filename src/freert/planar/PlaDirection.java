@@ -281,7 +281,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
    /**
     * turns the direction by p_factor times 45 degree
     */
-  public PlaDirection turn_45_degree(int p_factor)
+  public PlaDirection rotate_45_deg(int p_factor)
      {
      long new_x;
      long new_y;

@@ -85,7 +85,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       // construct perpendicular lines at the start and at the end to represent
       PlaDirection dir = new PlaDirection(corner_first, corners_alist.get(1));
 
-      lines_list.add(new PlaLineInt(corner_first, dir.turn_45_degree(2)) );
+      lines_list.add(new PlaLineInt(corner_first, dir.rotate_45_deg(2)) );
 
       for (int index = 1; index < input_len; ++index)
          lines_list.add( new PlaLineInt(corners_alist.get(index - 1), corners_alist.get(index) ) );
@@ -95,7 +95,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       // the first and the last point of point_arr as intersection of lines.
       dir = new PlaDirection(corner_last, corners_alist.get(input_len - 2));
 
-      lines_list.add( new PlaLineInt(corner_last, dir.turn_45_degree(2) ) );
+      lines_list.add( new PlaLineInt(corner_last, dir.rotate_45_deg(2) ) );
       
       corners_allocate(corner_count());
       
@@ -210,9 +210,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       PlaDirection dir = new PlaDirection(p_from_corner, p_to_corner);
       
-      lines_list.add( new PlaLineInt(p_from_corner, dir.turn_45_degree(2)) );
+      lines_list.add( new PlaLineInt(p_from_corner, dir.rotate_45_deg(2)) );
       lines_list.add( new PlaLineInt(p_from_corner, p_to_corner) );
-      lines_list.add( new PlaLineInt(p_to_corner, dir.turn_45_degree(2)) );
+      lines_list.add( new PlaLineInt(p_to_corner, dir.rotate_45_deg(2)) );
       
       corners_allocate(corner_count());
 
@@ -894,7 +894,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    /**
     * Returns the polyline turned by p_factor times 90 degree around p_pole.
     */
-   public Polyline turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public Polyline rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       int alist_len = plaline_len();
       
@@ -902,7 +902,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       for (int index = 0; index < alist_len; ++index)
          {
-         new_arr.add( plaline(index).turn_90_degree(p_factor, p_pole));
+         new_arr.add( plaline(index).rotate_90_deg(p_factor, p_pole));
          }
       
       return new Polyline(new_arr);
@@ -1346,7 +1346,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       PlaLineInt new_prev_last_line = new PlaLineInt(first_line_point, new_last_corner);
       new_lines.add( new_prev_last_line );
-      new_lines.add( new PlaLineInt(new_last_corner, new_prev_last_line.direction().turn_45_degree(6) ));
+      new_lines.add( new PlaLineInt(new_last_corner, new_prev_last_line.direction().rotate_45_deg(6) ));
       
       return new Polyline(new_lines);
       }

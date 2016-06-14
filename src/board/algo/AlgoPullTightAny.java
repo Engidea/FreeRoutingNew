@@ -838,11 +838,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
          PlaDirection new_line_dir;
          if (prev_corner_side == PlaSide.ON_THE_LEFT)
             {
-            new_line_dir = other_trace_line.direction().turn_45_degree(2);
+            new_line_dir = other_trace_line.direction().rotate_45_deg(2);
             }
          else
             {
-            new_line_dir = other_trace_line.direction().turn_45_degree(6);
+            new_line_dir = other_trace_line.direction().rotate_45_deg(6);
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
          double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;
@@ -994,11 +994,11 @@ public final class AlgoPullTightAny extends AlgoPullTight
          PlaDirection new_line_dir;
          if (prev_corner_side == PlaSide.ON_THE_LEFT)
             {
-            new_line_dir = other_trace_line.direction().turn_45_degree(6);
+            new_line_dir = other_trace_line.direction().rotate_45_deg(6);
             }
          else
             {
-            new_line_dir = other_trace_line.direction().turn_45_degree(2);
+            new_line_dir = other_trace_line.direction().rotate_45_deg(2);
             }
          PlaLineInt translate_line = new PlaLineInt(curr_end_corner.to_float().round(), new_line_dir);
          double translate_dist = (PlaLimits.sqrt2 - 1) * curr_half_width;

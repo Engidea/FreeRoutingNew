@@ -648,9 +648,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    @Override
-   public void turn_90_degree(int p_factor, PlaPointInt p_pole)
+   public void rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
-      polyline = polyline.turn_90_degree(p_factor, p_pole);
+      polyline = polyline.rotate_90_deg(p_factor, p_pole);
       
       clear_derived_data();
       }
@@ -1104,7 +1104,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
       if ( ! curr_line_segment.contains(split_point) ) return;
       
-      PlaDirection split_line_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+      PlaDirection split_line_direction = curr_line_segment.get_line().direction().rotate_45_deg(2);
       
       PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
    
@@ -1238,7 +1238,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          // The split point (an integer) is within the current line segment
          if ( ! curr_line_segment.contains(p_point)) continue;
          
-         PlaDirection split_direction = curr_line_segment.get_line().direction().turn_45_degree(2);
+         PlaDirection split_direction = curr_line_segment.get_line().direction().rotate_45_deg(2);
 
          PlaLineInt split_line = new PlaLineInt(p_point, split_direction);
          
@@ -1822,7 +1822,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       PlaLineIntAlist s_lines = new PlaLineIntAlist(3);
       
-      s_lines.add( new PlaLineInt(pin_center, pin_exit_direction.turn_45_degree(2)));
+      s_lines.add( new PlaLineInt(pin_center, pin_exit_direction.rotate_45_deg(2)));
       s_lines.add( nearest_pin_exit_ray );
       s_lines.add( offset_pin_shape.border_line(nearest_border_line_no) );
 

@@ -1387,7 +1387,7 @@ public final class MazeSearch
       PlaLineIntAlist line_arr = new PlaLineIntAlist(3);
       
       line_arr.add( door_line.translate(check_radius));
-      line_arr.add( new PlaLineInt(door_center, door_line.direction().turn_45_degree(2)) );
+      line_arr.add( new PlaLineInt(door_center, door_line.direction().rotate_45_deg(2)) );
       line_arr.add( door_line.translate(-check_radius) );
 
       Polyline check_polyline = new Polyline(line_arr);
