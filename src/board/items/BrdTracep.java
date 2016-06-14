@@ -617,7 +617,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    /**
-    * Returns the polyline of this trace.
+    * @returns the polyline of this trace.
     */
    public Polyline polyline()
       {

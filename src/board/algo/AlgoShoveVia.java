@@ -54,8 +54,8 @@ public final class AlgoShoveVia
       }
    
    /**
-    * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces. p_room_shape is used for
-    * calculating the from_side.
+    * Checks, if a Via is possible at the input layer after evtl. shoving aside obstacle traces. 
+    * p_room_shape is used for calculating the from_side.
     */
    public ShoveDrillResult check_layer(
          double p_via_radius, 
@@ -80,8 +80,10 @@ public final class AlgoShoveVia
          return ShoveDrillResult.NOT_DRILLABLE;
          }
       
+      PlaPointInt location_int = (PlaPointInt)p_location;
       
-      ShapeConvex via_shape = new ShapeCircle((PlaPointInt) p_location, (int) Math.ceil(p_via_radius));
+      
+      ShapeConvex via_shape = new ShapeCircle(location_int, (int) Math.ceil(p_via_radius));
 
       double check_radius = p_via_radius + 0.5 * r_board.get_clearance(p_cl_class, p_cl_class, p_layer) + r_board.get_min_trace_half_width();
 
@@ -89,7 +91,7 @@ public final class AlgoShoveVia
 
       tile_shape = via_shape.bounding_octagon();
 
-      BrdFromSide from_side = calculate_from_side(p_location.to_float(), tile_shape, p_room_shape.to_Simplex(), check_radius);
+      BrdFromSide from_side = calculate_from_side(location_int, tile_shape, p_room_shape.to_Simplex(), check_radius);
 
       if (from_side == null) return ShoveDrillResult.NOT_DRILLABLE;
 
@@ -251,14 +253,16 @@ public final class AlgoShoveVia
       return true;
       }
 
-   private BrdFromSide calculate_from_side(PlaPointFloat p_via_location, ShapeTile p_via_shape, ShapeTileSimplex p_room_shape, double p_dist )
+   private BrdFromSide calculate_from_side(PlaPointInt p_via_location, ShapeTile p_via_shape, ShapeTileSimplex p_room_shape, double p_dist )
       {
+      PlaPointFloat check_point;
+      double border_x;
+      double border_y;
+
       ShapeTileBox via_box = p_via_shape.bounding_box();
+
       for (int index = 0; index < 4; ++index)
          {
-         PlaPointFloat check_point;
-         double border_x;
-         double border_y;
          if (index == 0)
             {
             check_point = new PlaPointFloat(p_via_location.v_x, p_via_location.v_y - p_dist);
@@ -284,10 +288,10 @@ public final class AlgoShoveVia
             border_x = via_box.box_ll.v_x;
             border_y = p_via_location.v_y;
             }
+         
          if (p_room_shape.contains(check_point))
             {
             int from_side_no = 2 * index;
-
             PlaPointFloat curr_border_point = new PlaPointFloat(border_x, border_y);
             return new BrdFromSide(from_side_no, curr_border_point);
             }
@@ -296,11 +300,9 @@ public final class AlgoShoveVia
       // try the diagonal drections
       double dist = p_dist / PlaLimits.sqrt2;
       double border_dist = via_box.max_width() / (2 * PlaLimits.sqrt2);
+      
       for (int index = 0; index < 4; ++index)
          {
-         PlaPointFloat check_point;
-         double border_x;
-         double border_y;
          if (index == 0)
             {
             check_point = new PlaPointFloat(p_via_location.v_x + dist, p_via_location.v_y - dist);
@@ -320,20 +322,21 @@ public final class AlgoShoveVia
             border_y = p_via_location.v_y + border_dist;
             }
          else
-            // i == 3
             {
+            // i == 3
             check_point = new PlaPointFloat(p_via_location.v_x - dist, p_via_location.v_y - dist);
             border_x = p_via_location.v_x - border_dist;
             border_y = p_via_location.v_y - border_dist;
             }
+         
          if (p_room_shape.contains(check_point))
             {
-
             int from_side_no = 2 * index + 1;
             PlaPointFloat curr_border_point = new PlaPointFloat(border_x, border_y);
             return new BrdFromSide(from_side_no, curr_border_point);
             }
          }
+
       return null;
       }
    }

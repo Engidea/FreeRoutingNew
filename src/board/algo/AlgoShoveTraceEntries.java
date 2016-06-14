@@ -60,8 +60,8 @@ public final class AlgoShoveTraceEntries
    
    private BrdFromSide from_side;
    private ShapeTraceEntryPoint list_anchor;
-   private int trace_piece_count;
-   private int max_stack_level;
+   private int trace_piece_count = 0;
+   private int max_stack_level = 0;
    private boolean shape_contains_trace_tails = false;
    private BrdItem found_obstacle = null;
    
@@ -81,8 +81,6 @@ public final class AlgoShoveTraceEntries
       from_side = p_from_side;
       r_board = p_board;
       list_anchor = null;
-      trace_piece_count = 0;
-      max_stack_level = 0;
       }
 
    /**
@@ -257,18 +255,20 @@ public final class AlgoShoveTraceEntries
       }
 
    /**
-    * Cuts out all traces in p_item_list out of the stored shape. Traces with net number p_except_net_no are ignored
+    * Cuts out all traces in p_item_list out of the stored shape. 
+    * Traces with net number p_except_net_no are ignored
     */
    public void cutout_traces(Collection<BrdItem> p_item_list)
       {
-      Iterator<BrdItem> it = p_item_list.iterator();
-      while (it.hasNext())
+      for ( BrdItem curr_item : p_item_list )
          {
-         BrdItem curr_item = it.next();
-         if (curr_item instanceof BrdTracep && !curr_item.shares_net_no(own_net_nos))
-            {
-            cutout_trace((BrdTracep) curr_item, shape, cl_class);
-            }
+         if ( ! ( curr_item instanceof BrdTracep ) ) continue;
+         
+         BrdTracep a_trace = (BrdTracep)curr_item;
+         
+         if ( a_trace.shares_net_no(own_net_nos)) continue;
+         
+         cutout_trace(a_trace, shape, cl_class);
          }
       }
 
@@ -291,6 +291,7 @@ public final class AlgoShoveTraceEntries
       ShapeConvex offset_shape;
       RoutingBoard board = p_trace.r_board;
       AwtreeShapeSearch search_tree = board.search_tree_manager.get_default_tree();
+
       if (search_tree.is_clearance_compensation_used())
          {
          double curr_offset = p_trace.get_compensated_half_width(search_tree) + c_offset_add;
@@ -303,8 +304,10 @@ public final class AlgoShoveTraceEntries
          offset_shape = p_shape.offset(p_trace.get_half_width());
          offset_shape = offset_shape.offset(cl_offset);
          }
+      
       Polyline trace_lines = p_trace.polyline();
       ArrayList<Polyline> pieces = offset_shape.cutout(trace_lines);
+      
       if (pieces.size() == 1 && pieces.get(0) == trace_lines)
          {
          // nothing cut off
@@ -318,6 +321,7 @@ public final class AlgoShoveTraceEntries
       else
          {
          board.remove_item(p_trace);
+         
          for (int index = 0; index < pieces.size(); ++index)
             {
             board.insert_trace_without_cleaning(

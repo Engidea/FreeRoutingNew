@@ -40,7 +40,6 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.varie.NetNosList;
 import freert.varie.TimeLimit;
@@ -156,10 +155,9 @@ public final class AlgoShovePad
          return ShoveDrillResult.NOT_DRILLABLE;
          }
 
-      boolean is_orthogonal_mode = p_pad_shape instanceof ShapeTileBox;
-      
       for (;;)
          {
+         // TODO make sure that this terminates
          BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
       
          if (curr_substitute_trace == null)  break;
@@ -180,7 +178,7 @@ public final class AlgoShovePad
             
             if ( ! is_in_front ) continue;
 
-            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, true);
+            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, true);
       
             if (!r_board.shove_trace_algo.shove_trace_check(
                   curr.shape, 
@@ -267,10 +265,10 @@ public final class AlgoShovePad
          }
       boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr);
       shape_entries.cutout_traces(obstacles);
-      boolean is_orthogonal_mode = p_pad_shape instanceof ShapeTileBox;
 
       for (;;)
          {
+         // TODO make sure that this terminates
          BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
          
          if (curr_substitute_trace == null) break;
@@ -283,7 +281,7 @@ public final class AlgoShovePad
          NetNosList curr_net_no_arr = curr_substitute_trace.net_nos;
          for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
-            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, false);
+            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, false);
             
             if (!r_board.shove_trace_algo.shove_trace_insert(
                   curr.shape, 

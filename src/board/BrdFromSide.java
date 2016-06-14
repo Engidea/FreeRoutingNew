@@ -13,8 +13,6 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * CalcFromSide.java
- *
  * Created on 17. August 2003, 07:36
  */
 
@@ -30,7 +28,7 @@ import freert.planar.Polyline;
 import freert.planar.ShapeTile;
 
 /**
- *
+ * This is kind of a direction, basically p_no indicates a "direction starting from 0 to 
  * @author Alfons Wirtz
  */
 public final class BrdFromSide

@@ -188,12 +188,6 @@ public final class AlgoShoveTrace
          r_board.shove_fail_obstacle_set(obstacle);
          return false;
          }
-
-      // pippo, this should never happen now
-      boolean is_orthogonal_mode = p_trace_shape instanceof ShapeTileBox;
-      
-      if ( is_orthogonal_mode )
-         System.err.println("NOOOOOO");
       
       for (;;)
          {
@@ -230,7 +224,7 @@ public final class AlgoShoveTrace
             
             if (is_in_front)
                {
-               BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, true);
+               BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, true);
                if (!shove_trace_check(curr.shape, 
                      curr.from_side, 
                      curr_dir, 
@@ -496,10 +490,11 @@ public final class AlgoShoveTrace
 
       boolean tails_exist_before = r_board.contains_trace_tails(obstacles, p_net_no_arr);
       shape_entries.cutout_traces(obstacles);
-      boolean is_orthogonal_mode = p_trace_shape instanceof ShapeTileBox;
+
       
       for (;;)
          {
+         // TODO make sure this terminates
          BrdTracep curr_substitute_trace = shape_entries.next_substitute_trace_piece();
       
          if (curr_substitute_trace == null)  break;
@@ -532,7 +527,7 @@ public final class AlgoShoveTrace
          NetNosList curr_net_no_arr = curr_substitute_trace.net_nos;
          for (int index = 0; index < curr_substitute_trace.tile_shape_count(); ++index)
             {
-            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, is_orthogonal_mode, false);
+            BrdShapeAndFromSide curr = new BrdShapeAndFromSide(curr_substitute_trace, index, false);
             if ( !  shove_trace_insert(
                   curr.shape, 
                   curr.from_side, 
