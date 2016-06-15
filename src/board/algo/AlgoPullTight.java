@@ -69,8 +69,6 @@ public abstract class AlgoPullTight
    private final BrdKeepPoint keep_point;
    // If stoppable_thread != null, the algorithm can be requested to be stopped.
    private final ThreadStoppable stoppable;
-   // the clip shape may be null if the pull ticht region is MAX INT
-   protected final ShapeTileOctagon curr_clip_shape;
    
    protected final int min_move_dist;
 
@@ -88,7 +86,6 @@ public abstract class AlgoPullTight
    public static AlgoPullTight get_instance(
          RoutingBoard p_board, 
          NetNosList p_only_net_no_arr, 
-         ShapeTileOctagon p_clip_shape, 
          int p_min_move_dist, 
          ThreadStoppable p_stoppable, 
          BrdKeepPoint p_keep_point)
@@ -102,9 +99,9 @@ public abstract class AlgoPullTight
          }
       
       if (angle_restriction.is_limit_45())
-         return new AlgoPullTight45(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
+         return new AlgoPullTight45(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_min_move_dist );
       else
-         return new AlgoPullTightAny(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_clip_shape,p_min_move_dist );
+         return new AlgoPullTightAny(p_board, p_only_net_no_arr, p_stoppable, p_keep_point,p_min_move_dist );
       }
 
    /**
@@ -115,14 +112,12 @@ public abstract class AlgoPullTight
          NetNosList p_only_net_no_arr, 
          ThreadStoppable p_stoppable_thread, 
          BrdKeepPoint p_keep_point,
-         ShapeTileOctagon p_clip_shape,
          int p_min_move_dist)
       {
       r_board = p_board;
       only_net_no_arr = p_only_net_no_arr;
       stoppable = p_stoppable_thread;
       keep_point = p_keep_point;
-      curr_clip_shape = p_clip_shape;
       min_move_dist = Math.max(p_min_move_dist, 10);
       }
 
@@ -132,38 +127,6 @@ public abstract class AlgoPullTight
    protected abstract Polyline smoothen_start_corner_at_trace(BrdTracep p_trace);
 
    protected abstract Polyline smoothen_end_corner_at_trace(BrdTracep p_trace);
-
-   
-   /**
-    * Return true if points fll within the lip shape or clip_shape is null
-    */
-   protected final boolean in_clip_shape ( PlaPointFloat c_1, PlaPointFloat c_2, PlaPointFloat c_3 )
-      {
-      if ( curr_clip_shape == null ) return true;
-      
-      if ( ! curr_clip_shape.contains(c_1) ) return false;
-      
-      if ( ! curr_clip_shape.contains(c_2) ) return false;
-      
-      return curr_clip_shape.contains(c_3);
-      }
-   
-   protected final boolean in_clip_shape ( PlaPointFloat c_1, PlaPointFloat c_2 )
-      {
-      if ( curr_clip_shape == null ) return true;
-      
-      if ( ! curr_clip_shape.contains(c_1) ) return false;
-      
-      return curr_clip_shape.contains(c_2);
-      }
-
-   protected final boolean in_clip_shape ( PlaPoint c_1 )
-      {
-      if ( curr_clip_shape == null ) return true;
-      
-      return curr_clip_shape.contains_inside(c_1);
-      }
-   
    
    /**
     * Now, if there is a stop I should cleanup properly, ok ?
@@ -336,20 +299,6 @@ public abstract class AlgoPullTight
    protected PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_no)
       {
       if (p_line_arr.length - p_no < 3) return null;
-
-      if (curr_clip_shape != null)
-         {
-         // check, that the corners of the line to translate are inside the clip shape
-         for (int index = -1; index < 1; ++index)
-            {
-            PlaPoint curr_corner = p_line_arr[p_no + index].intersection(p_line_arr[p_no + index + 1] , "should not matter");
-
-            // it is fair to consider this a failure
-            if ( curr_corner.is_NaN() ) return null;
-
-            if (curr_clip_shape.is_outside(curr_corner)) return null;
-            }
-         }
       
       PlaLineInt translate_line = p_line_arr[p_no];
       

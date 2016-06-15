@@ -31,7 +31,6 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
-import freert.planar.ShapeTileOctagon;
 import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
@@ -54,10 +53,9 @@ public final class AlgoPullTightAny extends AlgoPullTight
          NetNosList p_only_net_no_arr, 
          ThreadStoppable p_stoppable_thread, 
          BrdKeepPoint p_keep_point,
-         ShapeTileOctagon p_clip_shape,
          int p_min_move_dist)
       {
-      super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point, p_clip_shape, p_min_move_dist);
+      super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point, p_min_move_dist);
       }
 
    /**
@@ -176,8 +174,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
          PlaPointFloat next_corner = p_polyline.corner_approx(index+1);
 
          if ( next_corner.is_NaN() ) continue;
-         
-         if (! in_clip_shape(prev_corner,next_corner))  continue;
 
          PlaLineInt translate_line = p_polyline.plaline(index);
          
@@ -299,8 +295,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       // cannot smoothen if is not a number
       if ( curr_corner.is_NaN() ) return null;
-      
-      if ( ! in_clip_shape(curr_corner, null)) return null;
 
       double cosinus_angle = a_line.cos_angle(b_line);
 
@@ -417,19 +411,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
    protected PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_start_no)
       {
       if (p_line_arr.length - p_start_no < 5) return null;
-
-      if (curr_clip_shape != null)
-         {
-         // check, that the corners of the line to translate are inside the clip shape
-         for (int index = 1; index < 3; ++index)
-            {
-            PlaPointFloat curr_corner = p_line_arr[p_start_no + index].intersection_approx(p_line_arr[p_start_no + index + 1]);
-
-            if ( curr_corner.is_NaN() ) return null;
-            
-            if (! curr_clip_shape.contains(curr_corner)) return null;
-            }
-         }
 
       PlaLineInt translate_line = p_line_arr[p_start_no + 2];
       
@@ -654,8 +635,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
                corner1 = p_polyline.corner_approx(index + 1);
                corner2 = p_polyline.corner_approx(index + 2);
                }
-            
-            if (! in_clip_shape(corner1,corner2) ) continue;
 
             PlaSide side1 = curr_line.side_of(corner1);
             PlaSide side2 = curr_line.side_of(corner2);
@@ -695,8 +674,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
                {
                corner3 = p_polyline.corner_approx(index + 1);
                }
-            
-            if ( ! in_clip_shape(corner3, null)) continue;
             
             if (jndex == 0)
                {
@@ -746,8 +723,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaLineInt other_prev_trace_line = null;
       Polyline trace_polyline = p_trace.polyline();
       PlaPoint curr_end_corner = trace_polyline.corner_first();
-
-      if ( ! in_clip_shape(curr_end_corner) ) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_first_next();
 
@@ -906,8 +881,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
       Polyline trace_polyline = p_trace.polyline();
       
       PlaPoint curr_end_corner = trace_polyline.corner_last();
-
-      if ( ! in_clip_shape(curr_end_corner)) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
 

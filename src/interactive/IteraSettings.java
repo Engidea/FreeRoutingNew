@@ -49,8 +49,6 @@ public final class IteraSettings implements java.io.Serializable
    public boolean select_on_all_visible_layers;
    // Route mode: stitching or dynamic 
    public boolean is_stitch_route;
-   // The width of the pull tight region of traces around the cursor 
-   public int trace_pull_tight_region_width;
    /// The accuracy of the pull tight algorithm, the minimum move that will be done 
    public int trace_pullt_min_move;
    // Via snaps to smd center, if attach smd is allowed.
@@ -100,7 +98,6 @@ public final class IteraSettings implements java.io.Serializable
       drag_components_enabled = true;
       select_on_all_visible_layers = true; // else selection is only on the current layer
       is_stitch_route = false; // else interactive routing is dynamic
-      trace_pull_tight_region_width = Integer.MAX_VALUE;
       trace_pullt_min_move = 500;
       via_snap_to_smd_center = true;
       horizontal_component_grid = 0;   // pippo
@@ -211,14 +208,6 @@ public final class IteraSettings implements java.io.Serializable
    public ItemSelectionFilter get_item_selection_filter()
       {
       return item_selection_filter;
-      }
-
-   /** 
-    * The width of the pull tight region of traces around the cursor 
-    */
-   public int pull_tight_region_get()
-      {
-      return trace_pull_tight_region_width;
       }
 
    /**
@@ -363,17 +352,6 @@ public final class IteraSettings implements java.io.Serializable
       is_stitch_route = p_value;
 
       act_log.start_scope(LogfileScope.SET_STITCH_ROUTE, p_value);
-      }
-
-   /**
-    * Changes the current width of the tidy region for traces.
-    */
-   public void pull_tight_region_set(int p_value)
-      {
-      if (settings_read_only) return;
-
-      trace_pull_tight_region_width = p_value;
-      act_log.start_scope(LogfileScope.SET_PULL_TIGHT_REGION_WIDTH, p_value);
       }
 
    /**

@@ -58,8 +58,8 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private final Stat stat;
    private final interactive.IteraBoard i_board;
    private final GuiResources resources;
-   private final JSlider pullt_region_slider,pullt_min_move_slider;
-   private final JFormattedTextField pullt_region_field,pullt_min_move_field;
+   private final JSlider pullt_min_move_slider;
+   private final JFormattedTextField pullt_min_move_field;
    private final JFormattedTextField edge_to_turn_dist_field;
 
    private final JRadioButton snap_angle_45_button;
@@ -81,9 +81,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private final JCheckBox outline_keepout_check;
 
    private boolean key_input_completed = true;
-
-   private static final int c_region_max_slider_value = 999;
-   private static final int c_region_scale_factor = 200;
    
    private static final int c_accuracy_max_slider_value = 100;
    private static final int c_accuracy_scale_factor = 20;
@@ -143,12 +140,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       main_panel.add(newPinExitPanel());
 
-      pullt_region_field = newJNumber(number_format,5,false);
-      
-      pullt_region_slider = new JSlider();
-      pullt_region_slider.setMaximum(c_region_max_slider_value);
-      pullt_region_slider.addChangeListener(new PullTightRegionChangeListener());
-
       pullt_min_move_field = newJNumber(number_format,5,false);
       
       pullt_min_move_slider = new JSlider();
@@ -182,15 +173,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       risul.setToolTipText(resources.getString("pull_tight_parameters_tooltip"));  
 
       JPanel inner = new JPanel();
-      inner.add(resources.newJLabel("region_width_field","region_width_field_tooltip"));
-      inner.add(pullt_region_field);
-      
-      risul.add(inner);
-      risul.add(pullt_region_slider);
-      
-      // ------------------------ second part
-      
-      inner = new JPanel();
       inner.add(resources.newJLabel("pull_tight_min_move","pull_tight_min_move_tooltip"));
       inner.add(pullt_min_move_field);
       
@@ -374,10 +356,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       edge_to_turn_dist_field.setValue(edge_to_turn_dist);
       restrict_pin_exit_directions_check.setSelected(edge_to_turn_dist > 0);
 
-      int region_slider_value = i_board.itera_settings.pull_tight_region_get() / c_region_scale_factor;
-      region_slider_value = Math.min(region_slider_value, c_region_max_slider_value);
-      pullt_region_slider.setValue(region_slider_value);
-
       int min_move_slider_value = i_board.itera_settings.trace_pullt_min_move / c_accuracy_scale_factor;
       min_move_slider_value = Math.min(min_move_slider_value, c_accuracy_max_slider_value);
       pullt_min_move_slider.setValue(min_move_slider_value);
@@ -400,27 +378,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       super.parent_deiconified();
       }
-
-   private void set_pull_tight_region(int p_slider_value)
-      {
-      int slider_value = Math.max(p_slider_value, 0);
-
-      slider_value = Math.min(p_slider_value, c_region_max_slider_value);
-
-      int new_tidy_width = slider_value * c_region_scale_factor;
-      
-      if (slider_value >= 0.9 * c_region_max_slider_value)
-         {
-         new_tidy_width = Integer.MAX_VALUE;
-         }
-      
-      pullt_region_slider.setValue(slider_value);
-      
-      pullt_region_field.setValue(new_tidy_width);
-      
-      i_board.itera_settings.pull_tight_region_set(new_tidy_width);
-      }
-
    
    private boolean has_free_angle_traces ()
       {
@@ -645,15 +602,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
 
       public void focusGained(java.awt.event.FocusEvent p_evt)
          {
-         }
-      }
-
-
-   private class PullTightRegionChangeListener implements ChangeListener
-      {
-      public void stateChanged(ChangeEvent evt)
-         {
-         set_pull_tight_region(pullt_region_slider.getValue());
          }
       }
    

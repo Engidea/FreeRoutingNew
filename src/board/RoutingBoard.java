@@ -1647,11 +1647,9 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * Removes the items in p_item_list and pulls the nearby rubber traces tight. 
     */
-   public boolean remove_items_and_pull_tight(Collection<BrdItem> p_item_list, int p_tidy_width, int p_pull_tight_accuracy, boolean p_with_delete_fixed)
+   public boolean remove_items_and_pull_tight(Collection<BrdItem> p_item_list, int p_pull_tight_accuracy, boolean p_with_delete_fixed)
       {
       boolean all_deleted = true;
-
-      ShapeTileOctagon tidy_region = p_tidy_width < Integer.MAX_VALUE ? ShapeTileOctagon.EMPTY : null;
       
       changed_area_clear();
       
@@ -1669,8 +1667,6 @@ public final class RoutingBoard implements java.io.Serializable
             {
             ShapeTile curr_shape = curr_item.get_tile_shape(index);
             changed_area.join(curr_shape, curr_item.shape_layer(index));
-
-            if (tidy_region != null ) tidy_region = tidy_region.union(curr_shape.bounding_octagon());
             }
          
          remove_item(curr_item);
@@ -1686,11 +1682,9 @@ public final class RoutingBoard implements java.io.Serializable
          combine_traces(curr_net_no);
          }
       
-      if (tidy_region != null ) tidy_region = tidy_region.enlarge(p_tidy_width);
-      
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
       
-      changed_area_optimize(NetNosList.EMPTY, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
+      changed_area_optimize(NetNosList.EMPTY, p_pull_tight_accuracy, null, t_limit, null);
       
       return all_deleted;
       }
@@ -1720,14 +1714,11 @@ public final class RoutingBoard implements java.io.Serializable
     * If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds. 
     * If p_keep_point != null, traces on layer p_keep_point_layer containing p_keep_point will also contain this point after optimizing.
     */
-   public final void changed_area_optimize(NetNosList p_only_net_no_arr, ShapeTileOctagon p_clip_shape, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
+   public final void changed_area_optimize(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
       {
       if ( changed_area.is_clear() ) return;
       
-      // a clip shape of empty would result in nothing done since all points would match
-      if (p_clip_shape == ShapeTileOctagon.EMPTY) return;
-      
-      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_clip_shape, p_pullt_min_move, p_thread, p_keep_point );
+      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_pullt_min_move, p_thread, p_keep_point );
       
       pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
       
@@ -1739,7 +1730,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       if (changed_area.is_clear() ) return;
       
-      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, null, p_pullt_min_move, p_thread, null);
+      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_pullt_min_move, p_thread, null);
       
       pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
       
@@ -1921,7 +1912,6 @@ public final class RoutingBoard implements java.io.Serializable
          PlaVectorInt p_vector, 
          int p_max_recursion_depth, 
          int p_max_via_recursion_depth, 
-         int p_tidy_width, 
          int p_pull_tight_accuracy,
          int p_pull_tight_time_limit)
       {
@@ -1938,25 +1928,21 @@ public final class RoutingBoard implements java.io.Serializable
             curr_contact.set_fixed_state(ItemFixState.UNFIXED);
             }
          }
-
-      ShapeTileOctagon tidy_region = p_tidy_width < Integer.MAX_VALUE ? ShapeTileOctagon.EMPTY : null;
       
       NetNosList net_no_arr = p_drill_item.net_nos;
       
       changed_area_clear();
       
-      if (!move_drill_algo.insert(p_drill_item, p_vector, p_max_recursion_depth, p_max_via_recursion_depth, tidy_region))
+      if (!move_drill_algo.insert(p_drill_item, p_vector, p_max_recursion_depth, p_max_via_recursion_depth, null))
          {
          return false;
          }
-      
-      if (tidy_region != null) tidy_region = tidy_region.enlarge(p_tidy_width);
       
       NetNosList opt_net_no_arr = p_max_recursion_depth <= 0 ? net_no_arr : NetNosList.EMPTY;
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(p_pull_tight_time_limit);
 
-      changed_area_optimize(opt_net_no_arr, tidy_region, p_pull_tight_accuracy, null, t_limit, null);
+      changed_area_optimize(opt_net_no_arr, p_pull_tight_accuracy, null, t_limit, null);
       
       return true;
       }
@@ -2058,7 +2044,6 @@ public final class RoutingBoard implements java.io.Serializable
          int[] p_trace_pen_halfwidth_arr, 
          int p_max_recursion_depth,
          int p_max_via_recursion_depth, 
-         int p_tidy_width, 
          int p_pull_tight_accuracy, 
          int p_pull_tight_time_limit)
       {
@@ -2077,13 +2062,11 @@ public final class RoutingBoard implements java.io.Serializable
       
       if ( ! r_ok ) return false;
       
-      ShapeTileOctagon tidy_clip_shape = p_tidy_width < Integer.MAX_VALUE ? new ShapeTileOctagon (p_location).enlarge(p_tidy_width) : null;
-      
       NetNosList opt_net_no_arr = p_max_recursion_depth <= 0 ? p_net_no_arr : NetNosList.EMPTY;
 
       TimeLimitStoppable t_limit = new TimeLimitStoppable(s_PREVENT_ENDLESS_LOOP);
 
-      changed_area_optimize(opt_net_no_arr, tidy_clip_shape, p_pull_tight_accuracy, null, t_limit, null);
+      changed_area_optimize(opt_net_no_arr, p_pull_tight_accuracy, null, t_limit, null);
 
       return true;
       }
@@ -2105,7 +2088,6 @@ public final class RoutingBoard implements java.io.Serializable
          int p_max_recursion_depth,
          int p_max_via_recursion_depth, 
          int p_max_spring_over_recursion_depth, 
-         int p_tidy_width, 
          int p_pull_tight_accuracy, 
          boolean p_with_check, 
          TimeLimit p_time_limit)
@@ -2124,7 +2106,6 @@ public final class RoutingBoard implements java.io.Serializable
             p_max_recursion_depth, 
             p_max_via_recursion_depth,
             p_max_spring_over_recursion_depth, 
-            p_tidy_width, 
             p_pull_tight_accuracy, 
             p_with_check, 
             p_time_limit);
@@ -2230,7 +2211,6 @@ public final class RoutingBoard implements java.io.Serializable
          int p_max_recursion_depth,
          int p_max_via_recursion_depth, 
          int p_max_spring_over_recursion_depth, 
-         int p_tidy_width, 
          int p_pullt_min_move, 
          boolean p_with_check, 
          TimeLimit p_time_limit)
@@ -2421,24 +2401,13 @@ public final class RoutingBoard implements java.io.Serializable
       BrdTracep new_trace = insert_trace_without_cleaning(new_polyline, p_layer, p_half_width, p_net_no_arr,p_clearance_class_no, ItemFixState.UNFIXED);
       
       new_trace.combine(20);
-
-      ShapeTileOctagon tidy_region = null;
-      if (p_tidy_width < Integer.MAX_VALUE)
-         {
-         tidy_region = new ShapeTileOctagon(new_corner).enlarge(p_tidy_width);
-         }
       
       NetNosList opt_net_no_arr = p_max_recursion_depth <= 0 ? p_net_no_arr : NetNosList.EMPTY;
       
       TimeLimitStoppable t_limit = new TimeLimitStoppable(10,null);
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(
-            this, 
-            opt_net_no_arr, 
-            tidy_region, 
-            p_pullt_min_move, 
-            t_limit, 
-            new BrdKeepPoint( new_corner, p_layer) );
+            this, opt_net_no_arr, p_pullt_min_move,t_limit,new BrdKeepPoint( new_corner, p_layer) );
 
       // Remove evtl. generated cycles because otherwise pull_tight may not work correctly.
       if (new_trace.normalize(changed_area.get_area(p_layer)))
@@ -2460,10 +2429,7 @@ public final class RoutingBoard implements java.io.Serializable
          }
 
       // To avoid, that a separate handling for moving backwards in the own trace line becomes necessesary, pull tight is called here.
-      if (p_tidy_width > 0 && new_trace != null)
-         {
-         new_trace.pull_tight(pull_tight_algo);
-         }
+      if ( new_trace != null) new_trace.pull_tight(pull_tight_algo);
       
       return new_corner;
       }

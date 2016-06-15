@@ -377,7 +377,7 @@ public final class StateSelectedItem extends StateInteractive
       
       if (i_brd.itera_settings.push_enabled)
          {
-         all_items_removed = r_brd.remove_items_and_pull_tight(items_list, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pullt_min_move, with_delete_fixed);
+         all_items_removed = r_brd.remove_items_and_pull_tight(items_list, i_brd.itera_settings.trace_pullt_min_move, with_delete_fixed);
          }
       else
          {

@@ -24,7 +24,6 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTileBox;
-import freert.planar.ShapeTileOctagon;
 import freert.rules.RuleNet;
 import freert.rules.RuleViaInfoList;
 import freert.varie.NetNosList;
@@ -207,7 +206,6 @@ public final class StateRouteSupport
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 
             max_spring_over_recursion_depth, 
-            itera_settings.trace_pull_tight_region_width, 
             itera_settings.trace_pullt_min_move, 
             ! is_stitch_mode, 
             t_limit);
@@ -248,22 +246,6 @@ public final class StateRouteSupport
          {
          route_completed = connect_to_target(curr_corner);
          }
-
-      ShapeTileOctagon tidy_clip_shape;
-      
-      if (itera_settings.trace_pull_tight_region_width == Integer.MAX_VALUE)
-         {
-         tidy_clip_shape = null;
-         }
-      else if (itera_settings.trace_pull_tight_region_width == 0)
-         {
-         tidy_clip_shape = ShapeTileOctagon.EMPTY;
-         }
-      else
-         {
-         // this is probably the idea of it, however, is it really useful ?
-         tidy_clip_shape = new ShapeTileOctagon(ok_point).enlarge(itera_settings.trace_pull_tight_region_width);
-         }
       
       NetNosList opt_net_no_arr = max_shove_trace_recursion_depth <= 0 ? net_nos : NetNosList.EMPTY;
       
@@ -280,13 +262,7 @@ public final class StateRouteSupport
       
       t_limit = new TimeLimitStoppable(s_PULL_TIGHT_TIME_MAX);
       
-      r_board.changed_area_optimize(
-            opt_net_no_arr, 
-            tidy_clip_shape, 
-            itera_settings.trace_pullt_min_move, 
-            null, 
-            t_limit, 
-            new BrdKeepPoint(ok_point, layer_active_no) );
+      r_board.changed_area_optimize(opt_net_no_arr, itera_settings.trace_pullt_min_move, null, t_limit, new BrdKeepPoint(ok_point, layer_active_no) );
       
       return route_completed;
       }
@@ -349,7 +325,6 @@ public final class StateRouteSupport
                pen_half_width_arr, 
                max_shove_trace_recursion_depth, 
                0, 
-               itera_settings.trace_pull_tight_region_width,
                itera_settings.trace_pullt_min_move, 
                s_PULL_TIGHT_TIME_MAX);
          
@@ -478,7 +453,6 @@ public final class StateRouteSupport
                   max_shove_trace_recursion_depth,
                   max_shove_via_recursion_depth, 
                   max_spring_over_recursion_depth, 
-                  itera_settings.trace_pull_tight_region_width, 
                   itera_settings.trace_pullt_min_move, 
                   ! is_stitch_mode, 
                   time_limit);
@@ -886,7 +860,6 @@ public final class StateRouteSupport
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 
             max_spring_over_recursion_depth, 
-            itera_settings.trace_pull_tight_region_width, 
             itera_settings.trace_pullt_min_move, 
             ! is_stitch_mode, 
             time_limit);
@@ -934,7 +907,6 @@ public final class StateRouteSupport
             max_shove_trace_recursion_depth,
             max_shove_via_recursion_depth, 
             max_spring_over_recursion_depth, 
-            itera_settings.trace_pull_tight_region_width, 
             itera_settings.trace_pullt_min_move, 
             !is_stitch_mode, time_limit);
       

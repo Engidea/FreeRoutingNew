@@ -1353,23 +1353,28 @@ public final class GuiConfigFile
          return false;
          }
       int pull_tight_region = (Integer) next_token;
+
+      System.out.println("GuiConfigFile.read_pull_tight_region_scope: SHOULD NOT BE CALLED");
+
       next_token = scanner.next_token();
       if (next_token != GuiConfigKeyword.CLOSED_BRACKET)
          {
          System.out.println("GuiConfigFile.read_pull_tight_region_scope: closing bracket expected");
          return false;
          }
-      board_handling.itera_settings.pull_tight_region_set(pull_tight_region);
       return true;
       }
 
+   /**
+    * TODO delete this, no more used
+    * @throws java.io.IOException
+    */
    private void write_pull_tight_region_scope() throws java.io.IOException
       {
       out_file.start_scope();
       out_file.write("pull_tight_region ");
       out_file.new_line();
-      Integer pull_tight_region = board_handling.itera_settings.pull_tight_region_get();
-      out_file.write(pull_tight_region.toString());
+      out_file.write("0");
       out_file.end_scope();
       }
 

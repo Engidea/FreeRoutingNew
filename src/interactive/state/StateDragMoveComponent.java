@@ -188,7 +188,7 @@ public final class StateDragMoveComponent
     * Moves all items in the group by translate_vector and shoves aside obstacle traces.
     * @return false, if that was not possible without creating clearance violations. In this case an undo may be necessary.
     */
-   public boolean drag_move(int p_tidy_width, int p_pull_tight_accuracy)
+   public boolean drag_move( int p_pull_tight_accuracy)
       {
       if ( ! all_items_movable) return false;
       
@@ -206,7 +206,7 @@ public final class StateDragMoveComponent
             {
             BrdAbit curr_drill_item = (BrdAbit) an_item.item;
 
-            boolean move_ok = r_board.move_drill_item(curr_drill_item, translate_vector, max_recursion_depth, max_via_recursion_depth, p_tidy_width, p_pull_tight_accuracy, s_TIGHT_TIME_ms);
+            boolean move_ok = r_board.move_drill_item(curr_drill_item, translate_vector, max_recursion_depth, max_via_recursion_depth, p_pull_tight_accuracy, s_TIGHT_TIME_ms);
 
             if ( move_ok) continue;
 

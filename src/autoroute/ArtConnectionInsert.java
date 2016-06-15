@@ -190,7 +190,6 @@ public final class ArtConnectionInsert
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
-               Integer.MAX_VALUE, 
                ctrl.pull_tight_accuracy, 
                true, 
                null);
@@ -330,7 +329,6 @@ public final class ArtConnectionInsert
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
-               Integer.MAX_VALUE, 
                ctrl.pull_tight_accuracy, 
                true, 
                null);
@@ -347,7 +345,6 @@ public final class ArtConnectionInsert
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
-               Integer.MAX_VALUE, 
                ctrl.pull_tight_accuracy, 
                true, null);
 
@@ -366,7 +363,6 @@ public final class ArtConnectionInsert
                   ctrl.max_shove_trace_recursion_depth, 
                   ctrl.max_shove_via_recursion_depth, 
                   ctrl.max_spring_over_recursion_depth, 
-                  Integer.MAX_VALUE, 
                   ctrl.pull_tight_accuracy, 
                   true, null);
 
@@ -385,7 +381,6 @@ public final class ArtConnectionInsert
             ctrl.max_shove_trace_recursion_depth, 
             ctrl.max_shove_via_recursion_depth, 
             ctrl.max_spring_over_recursion_depth, 
-            Integer.MAX_VALUE, 
             ctrl.pull_tight_accuracy, 
             true, null);
       

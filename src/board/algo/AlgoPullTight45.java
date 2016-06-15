@@ -32,7 +32,6 @@ import freert.planar.PlaSide;
 import freert.planar.PlaVectorInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
-import freert.planar.ShapeTileOctagon;
 import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
@@ -48,10 +47,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
          NetNosList p_only_net_no_arr, 
          ThreadStoppable p_stoppable_thread, 
          BrdKeepPoint p_keep_point,
-         ShapeTileOctagon p_clip_shape,
          int p_min_move_dist)
       {
-      super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point, p_clip_shape, p_min_move_dist );
+      super(p_board, p_only_net_no_arr, p_stoppable_thread, p_keep_point, p_min_move_dist );
       }
 
    @Override
@@ -104,7 +102,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
 
       for (int index = 0; index < 4; ++index)
          {
-         curr_corner_in_clip_shape[index] = in_clip_shape(curr_corner[index]);
+         curr_corner_in_clip_shape[index] = true;
          }
 
       boolean polyline_changed = false;
@@ -148,7 +146,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             polyline_changed = true;
             }
          
-         curr_corner_in_clip_shape[3] = in_clip_shape(curr_corner[3]);
+         curr_corner_in_clip_shape[3] = true;
          
          if (curr_corner_in_clip_shape[1] && curr_corner_in_clip_shape[2] && curr_corner_in_clip_shape[3])
             {
@@ -240,7 +238,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
             {
             polyline_changed = true;
             curr_corner[1] = new_corner;
-            curr_corner_in_clip_shape[1] = curr_clip_shape == null || !curr_clip_shape.is_outside(curr_corner[1]);
+            curr_corner_in_clip_shape[1] = true;
 
             r_board.changed_area.join(new_corner.to_float(), curr_layer);
             r_board.changed_area.join(curr_corner[1].to_float(), curr_layer);
@@ -576,8 +574,6 @@ public final class AlgoPullTight45 extends AlgoPullTight
       
       PlaPoint curr_end_corner = trace_polyline.corner_first();
 
-      if (! in_clip_shape(curr_end_corner)) return null;
-
       PlaPoint curr_prev_end_corner = trace_polyline.corner_first_next();
       PlaSide prev_corner_side = null;
       PlaDirection line_direction = trace_polyline.plaline(1).direction();
@@ -710,8 +706,6 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaLineInt other_prev_trace_line = null;
       Polyline trace_polyline = p_trace.polyline();
       PlaPoint curr_end_corner = trace_polyline.corner_last();
-
-      if ( ! in_clip_shape(curr_end_corner)) return null;
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
       PlaSide prev_corner_side = null;

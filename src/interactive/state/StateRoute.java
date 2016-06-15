@@ -403,7 +403,7 @@ public abstract class StateRoute extends StateInteractive
          Collection<BrdItem> remove_items = tail.get_connection_items(BrdStopConnection.VIA);
          if (i_brd.itera_settings.push_enabled)
             {
-            r_brd.remove_items_and_pull_tight(remove_items, i_brd.itera_settings.trace_pull_tight_region_width, i_brd.itera_settings.trace_pullt_min_move, false);
+            r_brd.remove_items_and_pull_tight(remove_items, i_brd.itera_settings.trace_pullt_min_move, false);
             }
          else
             {
