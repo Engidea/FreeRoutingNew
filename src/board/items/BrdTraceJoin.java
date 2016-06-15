@@ -1,6 +1,5 @@
 /*
- *  Copyright (C) 2014  Alfons Wirtz  
- *   website www.freerouting.net
+ *  Copyright (C) 2014  Damiano Bolla  website www.engidea.com
  *
  *   This program is free software: you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -13,15 +12,13 @@
  *   GNU General Public License at <http://www.gnu.org/licenses/> 
  *   for more details.
  *
- * DrillItem.java
- *
- * Created on 27. Juni 2003, 11:38
  */
 
 package board.items;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Set;
@@ -32,9 +29,10 @@ import board.awtree.AwtreeObject;
 import board.awtree.AwtreeShapeSearch;
 import board.varie.BrdTraceInfo;
 import board.varie.ItemFixState;
+import board.varie.ItemSelectionChoice;
+import board.varie.ItemSelectionFilter;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
-import freert.library.LibPadstack;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaPointIntAlist;
@@ -42,28 +40,30 @@ import freert.planar.PlaShape;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.planar.ShapeTileOctagon;
 import freert.varie.NetNosList;
+import gui.varie.ObjectInfoPanel;
 
 /**
- * Common superclass for Pins and Vias
- * The name is just some kind of reasonable that means some piece of a board...
- * @author Alfons Wirtz
+ * There is a need to clearly mark the joining point of traces, mostly so I could make sure that start and end trace points
+ * are integer points, but the idea could also be that trace join could be "fixed". so specific points stay in place and so on
+ * As usual, the idea is simple, the complicated part is to actually do it....
+ * This is of course quite similar to a via but it has no padstack and the dimension should be the min trace width of the connected net
  */
-public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io.Serializable
+public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
    
-   // The center point of the drill item, can be null, what is the reasons for a rational ??? 
+   // The center point of the Join 
    private PlaPointInt abit_center;
    
    // pre calculated minimal width of the shapes of this DrillItem on all layers
    private Double precalculated_min_width = null;
-   // Pre calculated first layer, where this DrillItem contains a pad shape. If < 0, the value is not yet calculated
-   private int precalculated_first_layer = -1;
-   // Pre calculated last layer, where this DrillItem contains a pad shape. If < 0, the value is not yet calculated
-   private int precalculated_last_layer = -1;
 
-   protected BrdAbit(PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   // a trace join can only be on a specific layer
+   private int on_layer = -1;
+
+   protected BrdTraceJoin(PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
       super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
 
@@ -73,25 +73,45 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    /**
     * For the copy constructor
     */
-   protected BrdAbit ( BrdAbit p_other, int p_id_no )
+   private BrdTraceJoin ( BrdTraceJoin p_other, int p_id_no )
       {
       super(p_other, p_id_no);
       
       abit_center = p_other.abit_center;
       }
    
+   @Override
+   public BrdTraceJoin copy(int p_id_no)
+      {
+      return new BrdTraceJoin(this,p_id_no);
+      }
    
+   
+   
+   @Override
+   public final boolean is_selected_by_filter(ItemSelectionFilter p_filter)
+      {
+      if (!is_selected_by_fixed_filter(p_filter)) return false;
 
+      return p_filter.is_selected(ItemSelectionChoice.TRACES);
+      }
+   
+   
+   @Override
+   public boolean is_obstacle(BrdItem p_other)
+      {
+      // this join is an obstacle only if it does NOT share a net with p_other
+      return p_other.shares_net(this) == false;
+      }
+
+   
    /**
     * Works only for symmetric DrillItems
     */
    @Override
    public void translate_by(PlaVectorInt p_vector)
       {
-      if (abit_center != null)
-         {
-         abit_center = abit_center.translate_by(p_vector);
-         }
+      abit_center = abit_center.translate_by(p_vector);
       
       clear_derived_data();
       }
@@ -99,10 +119,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public void rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
-      if (abit_center != null)
-         {
-         abit_center = abit_center.rotate_90_deg(p_factor, p_pole);
-         }
+      abit_center = abit_center.rotate_90_deg(p_factor, p_pole);
       
       clear_derived_data();
       }
@@ -110,11 +127,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public void rotate_deg(int p_angle_in_degree, PlaPointFloat p_pole)
       {
-      if (abit_center != null)
-         {
-         PlaPointFloat new_center = abit_center.to_float().rotate_deg(p_angle_in_degree, p_pole);
-         abit_center = new_center.round();
-         }
+      PlaPointFloat new_center = abit_center.to_float().rotate_deg(p_angle_in_degree, p_pole);
+
+      abit_center = new_center.round();
       
       clear_derived_data();
       }
@@ -122,10 +137,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public void change_placement_side(PlaPointInt p_pole)
       {
-      if (abit_center != null)
-         {
-         abit_center = abit_center.mirror_vertical(p_pole);
-         }
+      abit_center = abit_center.mirror_vertical(p_pole);
       
       clear_derived_data();
       }
@@ -203,46 +215,24 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public int first_layer()
       {
-      if (precalculated_first_layer < 0)
-         {
-         LibPadstack padstack = get_padstack();
-         if (is_placed_on_front() || padstack.placed_absolute)
-            {
-            precalculated_first_layer = padstack.from_layer();
-            }
-         else
-            {
-            precalculated_first_layer = padstack.board_layer_count() - padstack.to_layer() - 1;
-            }
-         }
-      
-      return precalculated_first_layer;
+      return on_layer;
       }
 
    @Override
    public int last_layer()
       {
-      if (precalculated_last_layer < 0)
-         {
-         LibPadstack padstack = get_padstack();
-         if (is_placed_on_front() || padstack.placed_absolute)
-            {
-            precalculated_last_layer = padstack.to_layer();
-            }
-         else
-            {
-            precalculated_last_layer = padstack.board_layer_count() - padstack.from_layer() - 1;
-            }
-         }
-      return precalculated_last_layer;
+      return on_layer;
       }
 
    /**
     * Need to have the shape...
-    * @param p_index
-    * @return
     */
-   public abstract PlaShape get_shape(int p_index);
+   public PlaShape get_shape(int p_index)
+      {
+      ShapeTileOctagon octa = new ShapeTileOctagon(center_get());
+
+      return octa.enlarge(min_width());
+      }
 
    @Override
    public ShapeTileBox bounding_box()
@@ -264,37 +254,13 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
    @Override
    public int tile_shape_count()
       {
-      LibPadstack padstack = get_padstack();
-      int from_layer = padstack.from_layer();
-      int to_layer = padstack.to_layer();
-      return to_layer - from_layer + 1;
+      return 1;
       }
 
    @Override
    protected final ShapeTile[] calculate_tree_shapes(AwtreeShapeSearch p_search_tree)
       {
       return p_search_tree.calculate_tree_shapes(this);
-      }
-
-   /**
-    * Returns the smallest distance from the center to the border of the shape on any layer.
-    */
-   public final double smallest_radius()
-      {
-      double result = Double.MAX_VALUE;
-      
-      PlaPointFloat center = center_get().to_float();
-      
-      for (int index = 0; index < tile_shape_count(); ++index)
-         {
-         PlaShape curr_shape = get_shape(index);
-         
-         if (curr_shape == null) continue;
-         
-         result = Math.min(result, curr_shape.border_distance(center));
-         }
-
-      return result;
       }
 
    /** 
@@ -306,56 +272,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       return abit_center;
       }
 
-   protected final void center_set(PlaPointInt p_center)
+   public final void center_set(PlaPointInt p_center)
       {
       abit_center = p_center;
-      }
-
-   protected final void center_clear()
-      {
-      abit_center = null;
-      }
-   
-   
-   /**
-    * Returns the padstack of this drillitem.
-    */
-   public abstract LibPadstack get_padstack();
-
-   public ShapeTile get_tree_shape_on_layer(AwtreeShapeSearch p_tree, int p_layer)
-      {
-      int from_layer = first_layer();
-      int to_layer = last_layer();
-      if (p_layer < from_layer || p_layer > to_layer)
-         {
-         System.out.println("DrillItem.get_tree_shape_on_layer: p_layer out of range");
-         return null;
-         }
-      return get_tree_shape(p_tree, p_layer - from_layer);
-      }
-
-   public ShapeTile get_tile_shape_on_layer(int p_layer)
-      {
-      int from_layer = first_layer();
-      int to_layer = last_layer();
-      if (p_layer < from_layer || p_layer > to_layer)
-         {
-         System.out.println("DrillItem.get_tile_shape_on_layer: p_layer out of range");
-         return null;
-         }
-      return get_tile_shape(p_layer - from_layer);
-      }
-
-   public PlaShape get_shape_on_layer(int p_layer)
-      {
-      int from_layer = first_layer();
-      int to_layer = last_layer();
-      if (p_layer < from_layer || p_layer > to_layer)
-         {
-         System.out.println("DrillItem.get_shape_on_layer: p_layer out of range");
-         return null;
-         }
-      return get_shape(p_layer - from_layer);
       }
 
    @Override
@@ -474,34 +393,41 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       if (precalculated_min_width != null ) return precalculated_min_width.doubleValue();
       
       double min_width = Integer.MAX_VALUE;
-      int begin_layer = first_layer();
-      int end_layer = last_layer();
-
-      for (int curr_layer = begin_layer; curr_layer <= end_layer; ++curr_layer)
-         {
-         if ( ! r_board.layer_structure.is_signal(curr_layer)) continue;
-         
-         PlaShape curr_shape = get_shape_on_layer(curr_layer);
-         
-         if (curr_shape == null) continue;
-         
-         ShapeTileBox curr_bounding_box = curr_shape.bounding_box();
-         min_width = Math.min(min_width, curr_bounding_box.width());
-         min_width = Math.min(min_width, curr_bounding_box.height());
-         }
-
-      precalculated_min_width = Double.valueOf(min_width);
 
       return precalculated_min_width.doubleValue();
       }
 
+   
+   @Override
+   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+      {
+      p_window.append_bold("trace_join");
+      p_window.append(" center ");
+      p_window.append(center_get().to_float());
+      p_window.append(r_board.layer_structure.get_name(first_layer()));
+      print_connectable_item_info(p_window, p_locale);
+      p_window.newline();
+      }
+   
+   
+   @Override
+   public boolean write(ObjectOutputStream p_stream)
+      {
+      try
+         {
+         p_stream.writeObject(this);
+         }
+      catch (java.io.IOException e)
+         {
+         return false;
+         }
+      return true;
+      }
+   
    @Override
    public void clear_derived_data()
       {
       super.clear_derived_data();
-      
-      precalculated_first_layer = -1;
-      precalculated_last_layer = -1;
       }
 
    @Override
@@ -510,6 +436,20 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       return GdiDrawable.MIDDLE_DRAW_PRIORITY;
       }
 
+   @Override
+   public double get_draw_intensity( GdiContext p_graphics_context)
+      {
+      return p_graphics_context.get_trace_color_intensity();
+      }
+
+   @Override
+   public Color[] get_draw_colors(GdiContext p_graphics_context)
+      {
+      return p_graphics_context.get_trace_colors(is_user_fixed());
+      }
+   
+
+   
    @Override
    public final void draw( Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)
       {

@@ -17,6 +17,7 @@ package board.items;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -230,16 +231,19 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return (contact_list.size() == 0);
       }
 
+   @Override
    public Color[] get_draw_colors(GdiContext p_graphics_context)
       {
       return p_graphics_context.get_trace_colors(is_user_fixed());
       }
 
+   @Override
    public int get_draw_priority()
       {
       return GdiDrawable.MAX_DRAW_PRIORITY;
       }
 
+   @Override
    public double get_draw_intensity( GdiContext p_graphics_context)
       {
       return p_graphics_context.get_trace_color_intensity();
@@ -514,6 +518,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return result;
       }
 
+   @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
@@ -1481,7 +1486,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return result;
       }
 
-   public boolean write(java.io.ObjectOutputStream p_stream)
+   @Override
+   public boolean write(ObjectOutputStream p_stream)
       {
       try
          {

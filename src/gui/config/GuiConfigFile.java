@@ -1121,7 +1121,6 @@ public final class GuiConfigFile
       write_shove_enabled_scope();
       write_drag_components_enabled_scope();
       write_hilight_routing_obstacle_scope();
-      write_pull_tight_region_scope();
       write_pull_tight_accuracy_scope();
       write_clearance_compensation_scope();
       write_ignore_conduction_scope();
@@ -1344,6 +1343,9 @@ public final class GuiConfigFile
       out_file.end_scope();
       }
 
+   /**
+    * TODO delete this
+    */
    private boolean read_pull_tight_region_scope() throws java.io.IOException
       {
       Object next_token = scanner.next_token();
@@ -1352,7 +1354,6 @@ public final class GuiConfigFile
          System.out.println("GuiConfigFile.read_pull_tight_region_scope: Integer expected");
          return false;
          }
-      int pull_tight_region = (Integer) next_token;
 
       System.out.println("GuiConfigFile.read_pull_tight_region_scope: SHOULD NOT BE CALLED");
 
@@ -1365,18 +1366,6 @@ public final class GuiConfigFile
       return true;
       }
 
-   /**
-    * TODO delete this, no more used
-    * @throws java.io.IOException
-    */
-   private void write_pull_tight_region_scope() throws java.io.IOException
-      {
-      out_file.start_scope();
-      out_file.write("pull_tight_region ");
-      out_file.new_line();
-      out_file.write("0");
-      out_file.end_scope();
-      }
 
    private boolean read_pull_tight_accuracy_scope() throws java.io.IOException
       {

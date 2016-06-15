@@ -42,7 +42,7 @@ public interface BrdConnectable
    Set<BrdItem> get_connected_set(int p_net_no);
 
    /**
-    * Returns for each convex shape of a connectable item the subshape of points, where traces can be connected to that item.
+    * @return for each convex shape of a connectable item the subshape of points, where traces can be connected to that item.
     */
    ShapeTile get_trace_connection_shape(AwtreeShapeSearch p_tree, int p_index);
    }

@@ -106,8 +106,7 @@ public final class BrdAreaObstacleVia extends BrdArea
    @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
-      p_window.append_bold(resources.getString("via_keepout"));
+      p_window.append_bold( "via_keepout");
       print_shape_info(p_window, p_locale);
       print_clearance_info(p_window, p_locale);
       print_clearance_violation_info(p_window, p_locale);

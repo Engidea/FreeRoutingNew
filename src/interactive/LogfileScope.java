@@ -948,6 +948,9 @@ public abstract class LogfileScope
          }
       }
 
+   /*
+    * TODO remove this is you are not using it for something else
+    */
    private static class SetPullTightRegionWidthScope extends LogfileScope
       {
       public SetPullTightRegionWidthScope(String p_name)
@@ -957,7 +960,7 @@ public abstract class LogfileScope
 
       public StateInteractive read_scope(Actlog p_logfile, StateInteractive p_return_state, IteraBoard p_board_handling)
          {
-         int new_tidy_width = p_logfile.read_int();
+         p_logfile.read_int();
          
          return p_return_state;
          }

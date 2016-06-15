@@ -104,6 +104,7 @@ public final class BrdViaInfoList implements java.io.Serializable, PrintableInfo
       return vinfo_list.remove(p_via_info);
       }
 
+   @Override
    public void print_info(gui.varie.ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);

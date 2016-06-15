@@ -135,11 +135,13 @@ public final class LibPackage implements Comparable<LibPackage>, PrintableInfo, 
       return pin_arr.length;
       }
 
+   @Override
    public String toString()
       {
       return pkg_name;
       }
 
+   @Override
    public void print_info(gui.varie.ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);

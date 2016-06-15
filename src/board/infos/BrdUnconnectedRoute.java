@@ -60,15 +60,16 @@ public final class BrdUnconnectedRoute implements Comparable<BrdUnconnectedRoute
       via_count = curr_via_count;
       }
 
+   @Override
    public String toString()
       {
-
       String result = resources.getString("net") + " " + net.name + ": " + resources.getString("trace_count") + " " + trace_count.toString() + ", " + resources.getString("via_count")
             + " " + via_count.toString();
 
       return result;
       }
 
+   @Override
    public int compareTo(BrdUnconnectedRoute p_other)
       {
       int result = net.name.compareTo(p_other.net.name);

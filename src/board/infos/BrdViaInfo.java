@@ -92,11 +92,13 @@ public final class BrdViaInfo implements Comparable<BrdViaInfo>, PrintableInfo, 
       attach_smd_allowed = p_attach_smd_allowed;
       }
 
+   @Override
    public int compareTo(BrdViaInfo p_other)
       {
       return via_name.compareTo(p_other.via_name);
       }
 
+   @Override
    public void print_info(gui.varie.ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);

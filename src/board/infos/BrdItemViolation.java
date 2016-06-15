@@ -20,9 +20,9 @@
 
 package board.infos;
 
+import board.items.BrdItem;
 import freert.planar.ShapeConvex;
 import gui.varie.ObjectInfoPanel;
-import board.items.BrdItem;
 
 /**
  * Information of a clearance violation between 2 items.
@@ -48,6 +48,7 @@ public final class BrdItemViolation implements PrintableInfo
       layer_no = p_layer_no;
       }
 
+   @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);

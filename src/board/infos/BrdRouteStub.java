@@ -69,6 +69,7 @@ public final class BrdRouteStub implements Comparable<BrdRouteStub>, PrintableIn
       return result;
       }
 
+   @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       p_window.append_bold(resources.getString("stub"));

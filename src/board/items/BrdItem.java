@@ -223,7 +223,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       }
    
    /**
-    * Returns the number of shapes of this item after decomposition into convex polygonal shapes
+    * @returns the number of shapes of this item after decomposition into convex polygonal shapes
     */
    public abstract int tile_shape_count();
 
@@ -299,6 +299,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
 
    /**
     * write this item to an output stream
+    * TODO I need to have a look if this is one of the best practice
     */
    public abstract boolean write(ObjectOutputStream p_stream);
 

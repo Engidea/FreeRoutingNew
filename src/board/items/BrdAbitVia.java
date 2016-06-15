@@ -19,6 +19,7 @@
  */
 package board.items;
 
+import java.awt.Color;
 import java.io.ObjectOutputStream;
 import java.util.Collection;
 import java.util.Iterator;
@@ -29,6 +30,7 @@ import board.awtree.AwtreeShapeSearch;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
+import freert.graphics.GdiContext;
 import freert.library.LibPadstack;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
@@ -251,7 +253,8 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       return p_filter.is_selected(ItemSelectionChoice.VIAS);
       }
 
-   public java.awt.Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
+   @Override
+   public Color[] get_draw_colors(GdiContext p_graphics_context)
       {
       if ( net_count() == 0)
          {
@@ -269,6 +272,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
          }
       }
 
+   @Override
    public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
       double result;
@@ -290,6 +294,7 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       return result;
       }
 
+   @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
@@ -298,10 +303,11 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
       p_window.append(this.center_get().to_float());
       p_window.append(", " + resources.getString("padstack"));
       p_window.append(padstack.pads_name, resources.getString("padstack_info"), padstack);
-      this.print_connectable_item_info(p_window, p_locale);
+      print_connectable_item_info(p_window, p_locale);
       p_window.newline();
       }
 
+   @Override
    public boolean write(ObjectOutputStream p_stream)
       {
       try

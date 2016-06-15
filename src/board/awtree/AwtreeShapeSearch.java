@@ -31,6 +31,7 @@ import board.items.BrdAbitPin;
 import board.items.BrdArea;
 import board.items.BrdItem;
 import board.items.BrdOutline;
+import board.items.BrdTraceJoin;
 import board.items.BrdTracep;
 import freert.main.Ldbg;
 import freert.main.Mdbg;
@@ -1289,6 +1290,20 @@ public final class AwtreeShapeSearch
       }
 
    /**
+    * This is for a board trace join
+    */
+   public final ShapeTile[] calculate_tree_shapes(BrdTraceJoin p_join)
+      {
+      ShapeTileOctagon octa = new ShapeTileOctagon(p_join.center_get());
+      
+      ShapeTile[] result = new ShapeTile[1];
+
+      result[0] = octa.enlarge(p_join.min_width());
+
+      return result;
+      }
+
+   /**
     * This is for Drill items
     */
    public final ShapeTile[] calculate_tree_shapes(BrdAbit p_drill_item)
@@ -1311,13 +1326,13 @@ public final class AwtreeShapeSearch
             else
                curr_tile_shape = curr_shape.bounding_tile();
 
-            int offset_width = get_clearance_compensation(p_drill_item.clearance_idx(), p_drill_item.shape_layer(index));
             if (curr_tile_shape == null)
                {
                System.out.println("ShapeSearchTree.calculate_tree_shapes: shape is null");
                }
             else
                {
+               int offset_width = get_clearance_compensation(p_drill_item.clearance_idx(), p_drill_item.shape_layer(index));
                curr_tile_shape = curr_tile_shape.enlarge(offset_width);
                }
             result[index] = curr_tile_shape;

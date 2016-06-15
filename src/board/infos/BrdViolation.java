@@ -89,6 +89,7 @@ public final class BrdViolation implements Comparable<BrdViolation>, PrintableIn
       return result;
       }
 
+   @Override
    public String toString()
       {
       board.BrdLayerStructure layer_structure = board_frame.board_panel.itera_board.get_routing_board().layer_structure;
@@ -97,11 +98,13 @@ public final class BrdViolation implements Comparable<BrdViolation>, PrintableIn
       return result;
       }
 
+   @Override
    public void print_info(gui.varie.ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       violation.print_info(p_window, p_locale);
       }
 
+   @Override
    public int compareTo(BrdViolation p_other)
       {
       if (location.v_x > p_other.location.v_x)  return 1;

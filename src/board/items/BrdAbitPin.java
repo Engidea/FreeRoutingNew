@@ -566,6 +566,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       return p_filter.is_selected(ItemSelectionChoice.PINS);
       }
 
+   @Override
    public Color[] get_draw_colors(freert.graphics.GdiContext p_graphics_context)
       {
       if ( net_count() > 0)
@@ -577,6 +578,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          }
       }
 
+   @Override
    public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
       return p_graphics_context.get_pin_color_intensity();
@@ -619,6 +621,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       return changed_to;
       }
 
+   @Override
    public boolean write(java.io.ObjectOutputStream p_stream)
       {
       try
@@ -699,6 +702,7 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
       return padstack_bounding_box.max_width();
       }
 
+   @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);

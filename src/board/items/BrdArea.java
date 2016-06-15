@@ -285,27 +285,29 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       return p_filter.is_selected(ItemSelectionChoice.KEEPOUT);
       }
 
+   @Override
    public Color[] get_draw_colors(GdiContext p_graphics_context)
       {
       return p_graphics_context.get_obstacle_colors();
       }
 
+   @Override
    public double get_draw_intensity(GdiContext p_graphics_context)
       {
       return p_graphics_context.get_obstacle_color_intensity();
       }
 
+   @Override
    public int get_draw_priority()
       {
       return freert.graphics.GdiDrawable.MIN_DRAW_PRIORITY;
       }
 
+   @Override
    public void draw(java.awt.Graphics p_g, GdiContext p_graphics_context, Color[] p_color_arr, double p_intensity)
       {
-      if (p_graphics_context == null || p_intensity <= 0)
-         {
-         return;
-         }
+      if (p_graphics_context == null || p_intensity <= 0) return;
+
       Color color = p_color_arr[layer_no];
       double intensity = p_graphics_context.get_layer_visibility(layer_no) * p_intensity;
       p_graphics_context.fill_area(get_area(), p_g, color, intensity);
@@ -403,6 +405,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       precalculated_absolute_area = null;
       }
 
+   @Override
    public boolean write(java.io.ObjectOutputStream p_stream)
       {
       try

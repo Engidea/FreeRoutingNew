@@ -81,6 +81,7 @@ public final class AirLineInfo implements Comparable<AirLineInfo>, PrintableInfo
          }
       }
 
+   @Override
    public void print_info(gui.varie.ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("interactive.resources.RatsNest", p_locale);
