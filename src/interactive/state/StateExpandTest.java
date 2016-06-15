@@ -265,7 +265,7 @@ public final class StateExpandTest extends StateInteractive
       if (search_result == null) return;
       
       SortedSet<BrdItem> ripped_item_list = new TreeSet<BrdItem>();
-      locate_connection = ArtConnectionLocate.get_instance(search_result, control_settings, autoroute_engine.autoroute_search_tree,
+      locate_connection = ArtConnectionLocate.get_instance(search_result, control_settings, autoroute_engine.art_search_tree,
             r_brd.brd_rules.get_trace_snap_angle(), ripped_item_list );
       r_brd.generate_snapshot();
       

@@ -217,7 +217,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
 
       NetNosList net_no_arr = new NetNosList(p_autoroute_engine.get_net_no() );
       
-      p_autoroute_engine.autoroute_search_tree.calc_overlapping_tree_entries(get_shape(), get_layer(), net_no_arr, overlapping_objects);
+      p_autoroute_engine.art_search_tree.calc_overlapping_tree_entries(get_shape(), get_layer(), net_no_arr, overlapping_objects);
 
       for (AwtreeEntry curr_entry : overlapping_objects )
          {
@@ -229,7 +229,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
 
          if (curr_object.shape_layer(curr_entry.shape_index_in_object) != get_layer()) continue;
 
-         ShapeTile curr_shape = curr_object.get_tree_shape(p_autoroute_engine.autoroute_search_tree, curr_entry.shape_index_in_object);
+         ShapeTile curr_shape = curr_object.get_tree_shape(p_autoroute_engine.art_search_tree, curr_entry.shape_index_in_object);
 
          ShapeTile intersection = get_shape().intersection(curr_shape);
 

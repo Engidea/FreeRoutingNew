@@ -112,7 +112,7 @@ public final class MazeSearch
       r_board    = art_engine.r_board;
       art_ctrl   = p_ctrl;
       random_generator.setSeed(p_ctrl.ripup_costs); // To get reproducible random numbers in the ripup algorithm.
-      search_tree = p_art_engine.autoroute_search_tree;
+      search_tree = p_art_engine.art_search_tree;
       destination_distance = new ExpandDestinationDistance(art_ctrl.trace_costs, art_ctrl.layer_active, art_ctrl.min_normal_via_cost, art_ctrl.min_cheap_via_cost);
       maze_shove_trace = new MazeShoveTraceAlgo(r_board, art_ctrl);
 
@@ -523,7 +523,7 @@ public final class MazeSearch
             if (curr_obstacle_item instanceof board.items.BrdAbitVia)
                {
                board.items.BrdAbitVia curr_via = (board.items.BrdAbitVia) curr_obstacle_item;
-               ExpandDrill via_drill_info = curr_via.get_autoroute_drill_info(art_engine.autoroute_search_tree);
+               ExpandDrill via_drill_info = curr_via.get_autoroute_drill_info(art_engine.art_search_tree);
                expand_to_drill(via_drill_info, p_element, ripup_costs);
                }
             }
@@ -559,7 +559,7 @@ public final class MazeSearch
          {
          if (to_door == p_list_element.door) continue;
 
-         ShapeTile target_shape = ((BrdConnectable) to_door.item).get_trace_connection_shape(art_engine.autoroute_search_tree, to_door.tree_entry_no);
+         ShapeTile target_shape = ((BrdConnectable) to_door.item).get_trace_connection_shape(art_engine.art_search_tree, to_door.tree_entry_no);
 
          PlaPointFloat connection_point = target_shape.nearest_point_approx(p_shape_entry_middle);
          
@@ -1396,7 +1396,7 @@ public final class MazeSearch
 
       NetNosList ignore_net_nos = new NetNosList(art_ctrl.net_no);
 
-      Set<AwtreeObject> overlapping_objects = art_engine.autoroute_search_tree.find_overlap_objects(check_shape, curr_layer, ignore_net_nos );
+      Set<AwtreeObject> overlapping_objects = art_engine.art_search_tree.find_overlap_objects(check_shape, curr_layer, ignore_net_nos );
 
       for (AwtreeObject curr_object : overlapping_objects)
          {

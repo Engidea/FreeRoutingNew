@@ -33,9 +33,9 @@ import board.awtree.AwtreeShapeSearch;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
 import freert.graphics.GdiContext;
+import freert.planar.PlaAreaLinear;
 import freert.planar.PlaDimension;
 import freert.planar.PlaPointInt;
-import freert.planar.PlaAreaLinear;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 
@@ -73,16 +73,18 @@ public final class ExpandDrillPage implements ExpandObject
     * Gets and possibly recalculates drill bits
     * Returns the drills on this page. If p_atttach_smd, drilling to SMD pins is allowed.
     */
-   public Collection<ExpandDrill> get_drills(ArtEngine p_autoroute_engine, boolean p_attach_smd)
+   public Collection<ExpandDrill> get_drills(ArtEngine p_art_engine, boolean p_attach_smd)
       {
       // if the net I am handling is this net return the current drills
-      if ( p_autoroute_engine.get_net_no() == net_no) return drill_list;
+      if ( p_art_engine.get_net_no() == net_no) return drill_list;
       
       // now, it happens that I recalculate the parameters...
-      net_no = p_autoroute_engine.get_net_no();
+      net_no = p_art_engine.get_net_no();
       drill_list.clear();
       
-      AwtreeShapeSearch search_tree = r_board.search_tree_manager.get_default_tree();
+      // Use the search tree from the autoroute, it is adjusted with compensation
+      AwtreeShapeSearch search_tree = p_art_engine.art_search_tree;
+      
       Collection<AwtreeEntry> overlaps = new LinkedList<AwtreeEntry>();
       search_tree.calc_overlapping_tree_entries(page_shape, -1, overlaps);
       Collection<ShapeTile> cutout_shapes = new LinkedList<ShapeTile>();
@@ -138,10 +140,10 @@ public final class ExpandDrillPage implements ExpandObject
          PlaPointInt curr_drill_location = null;
          if (p_attach_smd)
             {
-            curr_drill_location = calc_pin_center_in_drill(curr_drill_shape, drill_first_layer, p_autoroute_engine.r_board);
+            curr_drill_location = calc_pin_center_in_drill(curr_drill_shape, drill_first_layer, p_art_engine.r_board);
             if (curr_drill_location == null)
                {
-               curr_drill_location = calc_pin_center_in_drill(curr_drill_shape, drill_last_layer, p_autoroute_engine.r_board);
+               curr_drill_location = calc_pin_center_in_drill(curr_drill_shape, drill_last_layer, p_art_engine.r_board);
                }
             }
          if (curr_drill_location == null)
@@ -149,7 +151,7 @@ public final class ExpandDrillPage implements ExpandObject
             curr_drill_location = curr_drill_shape.centre_of_gravity().round();
             }
          ExpandDrill new_drill = new ExpandDrill(curr_drill_shape, curr_drill_location, drill_first_layer, drill_last_layer);
-         if (new_drill.calculate_expansion_rooms(p_autoroute_engine))
+         if (new_drill.calculate_expansion_rooms(p_art_engine))
             {
             drill_list.add(new_drill);
             }

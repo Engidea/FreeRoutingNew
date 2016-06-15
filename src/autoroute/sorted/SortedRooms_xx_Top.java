@@ -62,14 +62,14 @@ public final class SortedRooms_xx_Top
       {
       int net_no = r_engine.get_net_no();
 
-      SortedRooms_xx_Degree room_neighbours = calculate_neighbours(p_room, net_no, r_engine.autoroute_search_tree, r_engine.new_room_id_no() );
+      SortedRooms_xx_Degree room_neighbours = calculate_neighbours(p_room, net_no, r_engine.art_search_tree, r_engine.new_room_id_no() );
 
       if (room_neighbours == null) return null;
 
       // Check, that each side of the romm shape has at least one touching neighbour.
       // Otherwise improve the room shape by enlarging.
 
-      boolean edge_removed = room_neighbours.try_remove_edge(net_no, r_engine.autoroute_search_tree );
+      boolean edge_removed = room_neighbours.try_remove_edge(net_no, r_engine.art_search_tree );
       
       ExpandRoomComplete result = room_neighbours.completed_room;
       
@@ -145,11 +145,11 @@ public final class SortedRooms_xx_Top
          
          BrdConnectable a_conn = (BrdConnectable) an_item;
          
-         ShapeTile curr_connection_shape = a_conn.get_trace_connection_shape(p_autoroute_engine.autoroute_search_tree, curr_entry.shape_index_in_object);
+         ShapeTile curr_connection_shape = a_conn.get_trace_connection_shape(p_autoroute_engine.art_search_tree, curr_entry.shape_index_in_object);
 
          if (curr_connection_shape != null && p_room.get_shape().intersects(curr_connection_shape))
             {
-            ExpandDoorItem new_target_door = new ExpandDoorItem(an_item, curr_entry.shape_index_in_object, p_room, p_autoroute_engine.autoroute_search_tree);
+            ExpandDoorItem new_target_door = new ExpandDoorItem(an_item, curr_entry.shape_index_in_object, p_room, p_autoroute_engine.art_search_tree);
             p_room.add_target_door(new_target_door);
             }
          }

@@ -62,7 +62,7 @@ public final class ArtEngine
    // The PCB-board of this autoroute algorithm
    public final RoutingBoard r_board;
    // The current search tree used in autoroute. It depends on the trace clearance class used in the autoroute algorithm.
-   public final AwtreeShapeSearch autoroute_search_tree;
+   public final AwtreeShapeSearch art_search_tree;
    // The net number used for routing in this autoroute algorithm.
    private final int route_net_no;
    // The 2-dimensional array of rectangular pages of ExpansionDrills
@@ -82,7 +82,7 @@ public final class ArtEngine
       route_net_no = p_net_no;
       stoppable = p_stoppable;
 
-      autoroute_search_tree = r_board.search_tree_manager.get_autoroute_tree(p_trace_clearance_class_no);
+      art_search_tree = r_board.search_tree_manager.get_autoroute_tree(p_trace_clearance_class_no);
 
       double max_drill_page_width = 5 * r_board.brd_rules.get_default_via_diameter();
       max_drill_page_width = Math.max(max_drill_page_width, 10000);
@@ -110,7 +110,7 @@ public final class ArtEngine
          return ArtResult.NOT_ROUTED;
          }
 
-      ArtConnectionLocate locate_connection = ArtConnectionLocate.get_instance(search_result, p_ctrl, autoroute_search_tree, r_board.brd_rules.get_trace_snap_angle(), p_ripped_item_list);
+      ArtConnectionLocate locate_connection = ArtConnectionLocate.get_instance(search_result, p_ctrl, art_search_tree, r_board.brd_rules.get_trace_snap_angle(), p_ripped_item_list);
       if ( ! locate_connection.is_initialized() )
          {
          r_board.userPrintln(classname+"autoroute_connection: ! is_initialized");
@@ -199,7 +199,7 @@ public final class ArtEngine
    public void autoroute_clear()
       {
       for (ExpandRoomFreespaceComplete curr_room : complete_expansion_rooms)
-         curr_room.remove_from_tree(autoroute_search_tree);
+         curr_room.remove_from_tree(art_search_tree);
       
       complete_expansion_rooms.clear();
       
@@ -314,7 +314,7 @@ public final class ArtEngine
 
       remove_all_doors(p_room);
       
-      p_room.remove_from_tree(autoroute_search_tree);
+      p_room.remove_from_tree(art_search_tree);
       
       complete_expansion_rooms.remove(p_room);
       
@@ -343,7 +343,7 @@ public final class ArtEngine
                break;
                }
             }
-         Collection<ExpandRoomFreespaceIncomplete> completed_shapes = autoroute_search_tree.complete_shape(p_room, route_net_no, ignore_object, from_door_shape);
+         Collection<ExpandRoomFreespaceIncomplete> completed_shapes = art_search_tree.complete_shape(p_room, route_net_no, ignore_object, from_door_shape);
          
          remove_incomplete_expansion_room(p_room);
          
@@ -369,7 +369,7 @@ public final class ArtEngine
                // the shape of the first completed room may have changed and may
                // intersect now with the other shapes. Therefore the completed shapes
                // have to be recalculated.
-               Collection<ExpandRoomFreespaceIncomplete> curr_completed_shapes = autoroute_search_tree.complete_shape(curr_incomplete_room, route_net_no, ignore_object, from_door_shape);
+               Collection<ExpandRoomFreespaceIncomplete> curr_completed_shapes = art_search_tree.complete_shape(curr_incomplete_room, route_net_no, ignore_object, from_door_shape);
                Iterator<ExpandRoomFreespaceIncomplete> it2 = curr_completed_shapes.iterator();
                while (it2.hasNext())
                   {
@@ -405,7 +405,7 @@ public final class ArtEngine
       
       complete_expansion_rooms.add(completed_room);
       
-      autoroute_search_tree.insert(completed_room);
+      art_search_tree.insert(completed_room);
       
       return completed_room;
       }

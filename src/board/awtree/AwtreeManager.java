@@ -89,7 +89,7 @@ public final class AwtreeManager
       }
 
    /**
-    * Returns the default tree used in interactive routing.
+    * @return the default tree used in interactive routing.
     */
    public AwtreeShapeSearch get_default_tree()
       {
