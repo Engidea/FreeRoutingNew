@@ -113,10 +113,9 @@ public final class SortedRooms_xx_Top
          PlaLineInt curr_line = room_shape.border_line(index);
          
          if ( ! insert_door_ok_test(p_room, curr_line)) continue;
+
+         ShapeTile new_room_shape = new ShapeTileSimplex(curr_line.opposite());
          
-         PlaLineInt[] shape_line = new PlaLineInt[1];
-         shape_line[0] = curr_line.opposite();
-         ShapeTile new_room_shape = new ShapeTileSimplex(shape_line);
          ShapeTile new_contained_shape = room_shape.intersection(new_room_shape);
          ExpandRoomFreespace new_room = r_engine.add_incomplete_expansion_room(new_room_shape, p_room.get_layer(), new_contained_shape);
          ExpandDoor new_door = new ExpandDoor(p_room, new_room, PlaDimension.LINE);

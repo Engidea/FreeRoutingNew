@@ -272,10 +272,9 @@ public final class PlaSegmentFloat implements PlaObject
       {
       double dx = point_b.v_x - point_a.v_x;
       double dy = point_b.v_y - point_a.v_y;
-      if (dx == 0 && dy == 0)
-         {
-         return this;
-         }
+      
+      if (dx == 0 && dy == 0) return this;
+
       double length = Math.sqrt(dx * dx + dy * dy);
       double offset = Math.min(p_offset, length / 2);
       PlaPointFloat new_a = new PlaPointFloat(point_a.v_x + (dx * offset) / length, point_a.v_y + (dy * offset) / length);
@@ -290,21 +289,18 @@ public final class PlaSegmentFloat implements PlaObject
    public PlaPointFloat nearest_segment_point(PlaPointFloat p_from_point)
       {
       PlaPointFloat projection = perpendicular_projection(p_from_point);
+
       if (projection.is_contained_in_box(point_a, point_b, 0.01))
          {
          return projection;
          }
+      
       // Now the projection is outside the line segment.
-      PlaPointFloat result;
+
       if (p_from_point.dustance_square(point_a) <= p_from_point.dustance_square(point_b))
-         {
-         result = point_a;
-         }
+         return point_a;
       else
-         {
-         result = point_b;
-         }
-      return result;
+         return point_b;
       }
 
    /**

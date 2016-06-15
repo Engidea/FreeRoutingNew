@@ -299,9 +299,11 @@ public final class ArtEngine
 
          // add a new incomplete room to curr_neighbour.
          int[] touching_sides = room_shape.touching_sides(neighbour_shape);
-         PlaLineInt[] line_arr = new PlaLineInt[1];
-         line_arr[0] = neighbour_shape.border_line(touching_sides[1]).opposite();
-         ShapeTileSimplex new_incomplete_room_shape = ShapeTileSimplex.get_instance(line_arr);
+         PlaLineInt a_line = neighbour_shape.border_line(touching_sides[1]).opposite();
+
+         ShapeTileSimplex new_incomplete_room_shape = new ShapeTileSimplex(a_line);
+         
+         
          ExpandRoomFreespaceIncomplete new_incomplete_room = add_incomplete_expansion_room(new_incomplete_room_shape, room_layer, intersection);
 
          ExpandDoor new_door = new ExpandDoor(curr_neighbour, new_incomplete_room, PlaDimension.LINE);

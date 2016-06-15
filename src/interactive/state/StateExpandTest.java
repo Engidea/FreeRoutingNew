@@ -19,6 +19,9 @@
  */
 package interactive.state;
 
+import freert.planar.PlaPointFloat;
+import freert.planar.ShapeTile;
+import freert.planar.ShapeTileBox;
 import interactive.IteraBoard;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -36,9 +39,6 @@ import autoroute.maze.MazeSearchResult;
 import board.BrdConnectable;
 import board.items.BrdItem;
 import board.varie.BrdStopConnection;
-import freert.planar.PlaPointFloat;
-import freert.planar.ShapeTile;
-import freert.planar.ShapeTileBox;
 
 /**
  * State for testing the expanding algorithm of the autorouter.
@@ -51,15 +51,15 @@ public final class StateExpandTest extends StateInteractive
    private ArtControl control_settings;
    private ArtEngine autoroute_engine;
 
-   public StateExpandTest(PlaPointFloat p_location, StateInteractive p_return_state, IteraBoard p_board_handling)
+   public StateExpandTest(StateInteractive p_return_state, IteraBoard p_board_handling)
       {
       super(p_return_state, p_board_handling, null);
-      expand_test_init(p_location);
       }
 
-   private void expand_test_init(PlaPointFloat p_location)
+   public void expand_test_init(PlaPointFloat p_location)
       {
       // look if an autoroute can be started at the input location
+      i_brd.userPrintln("expand_test_init: at "+p_location);
 
       int layer = i_brd.itera_settings.layer_no;
       Collection<BrdItem> found_items = r_brd.pick_items(p_location.round(), layer);

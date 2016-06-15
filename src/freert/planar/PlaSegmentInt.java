@@ -175,27 +175,22 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public ShapeTileSimplex to_simplex()
       {
-      PlaLineInt[] line_arr = new PlaLineInt[4];
+      ArrayList<PlaLineInt> line_arr = new ArrayList<PlaLineInt>(4);
+      
       if (end_point().side_of(start) == PlaSide.ON_THE_RIGHT)
-         {
-         line_arr[0] = start.opposite();
-         }
+         line_arr.add( start.opposite());
       else
-         {
-         line_arr[0] = start;
-         }
-      line_arr[1] = middle;
-      line_arr[2] = middle.opposite();
+         line_arr.add( start);
+      
+      line_arr.add( middle );
+      line_arr.add( middle.opposite() );
+      
       if (start_point().side_of(end) == PlaSide.ON_THE_RIGHT)
-         {
-         line_arr[3] = end.opposite();
-         }
+         line_arr.add( end.opposite() );
       else
-         {
-         line_arr[3] = end;
-         }
-      ShapeTileSimplex result = ShapeTileSimplex.get_instance(line_arr);
-      return result;
+         line_arr.add( end );
+      
+      return new ShapeTileSimplex(line_arr);
       }
 
    /**

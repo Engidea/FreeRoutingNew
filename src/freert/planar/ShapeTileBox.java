@@ -20,6 +20,7 @@
 
 package freert.planar;
 
+import java.util.ArrayList;
 import board.awtree.AwtreeBoundingOct;
 
 /**
@@ -732,19 +733,15 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    public ShapeTileSimplex to_Simplex()
       {
-      PlaLineInt[] line_arr;
-      if (is_empty())
-         {
-         line_arr = new PlaLineInt[0];
-         }
-      else
-         {
-         line_arr = new PlaLineInt[4];
-         line_arr[0] = new PlaLineInt(box_ll, PlaDirection.RIGHT);
-         line_arr[1] = new PlaLineInt(box_ur, PlaDirection.UP);
-         line_arr[2] = new PlaLineInt(box_ur, PlaDirection.LEFT);
-         line_arr[3] = new PlaLineInt(box_ll, PlaDirection.DOWN);
-         }
+      if (is_empty()) return ShapeTileSimplex.EMPTY;
+
+      ArrayList<PlaLineInt> line_arr = new ArrayList<PlaLineInt>(4);
+      
+      line_arr.add( new PlaLineInt(box_ll, PlaDirection.RIGHT) );
+      line_arr.add( new PlaLineInt(box_ur, PlaDirection.UP) );
+      line_arr.add( new PlaLineInt(box_ur, PlaDirection.LEFT));
+      line_arr.add( new PlaLineInt(box_ll, PlaDirection.DOWN));
+
       return new ShapeTileSimplex(line_arr);
       }
 

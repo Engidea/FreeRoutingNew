@@ -48,26 +48,20 @@ public final class ShapeTileSimplex extends ShapeTile
    transient private ShapeTileOctagon precalc_bounding_octagon = null;
    
 
+   public ShapeTileSimplex ( PlaLineInt p_line )
+      {
+      lines_list = new ArrayList<PlaLineInt>(1);
+      
+      lines_list.add(p_line);
+      }
+
    /**
     * Constructs a Simplex from the directed lines in p_line_arr. 
     * The simplex will not be normalized. To get a normalized simplex use TileShape.get_instance
-    */
-   public ShapeTileSimplex(PlaLineInt[] p_line_arr)
-      {
-      int arr_len = p_line_arr.length;
-      
-      lines_list = new ArrayList<PlaLineInt>(arr_len);
-      
-      for (int index=0; index<arr_len; index++) lines_list.add(p_line_arr[index]);
-      
-      Collections.sort(lines_list);
-      }
-   
-   /**
-    * Careful, the arraylist is not copyed, yet
+    * Careful, the arraylist is not copyed
     * @param p_line_arr
     */
-   private ShapeTileSimplex(ArrayList<PlaLineInt> p_line_arr)
+   public ShapeTileSimplex(ArrayList<PlaLineInt> p_line_arr)
       {
       lines_list = p_line_arr;
 
@@ -88,18 +82,6 @@ public final class ShapeTileSimplex extends ShapeTile
       Collections.sort(lines_list);
       }
 
-   
-   /**
-    * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
-    */
-   public static ShapeTileSimplex get_instance(PlaLineInt[] p_line_arr)
-      {
-      if (p_line_arr.length <= 0) return ShapeTileSimplex.EMPTY;
-      
-      ShapeTileSimplex curr_simplex = new ShapeTileSimplex(p_line_arr);
-
-      return curr_simplex.remove_redundant_lines();
-      }
 
    /**
     * creates a Simplex as intersection of the halfplanes defined by an array of directed lines
@@ -112,6 +94,8 @@ public final class ShapeTileSimplex extends ShapeTile
       
       return curr_simplex.remove_redundant_lines();
       }
+   
+   
    
    /**
     * @return true, if this simplex is empty
@@ -906,23 +890,26 @@ public final class ShapeTileSimplex extends ShapeTile
             if (merge_first_division_line)
                ++piece_line_count;
             
-            PlaLineInt[] piece_lines = new PlaLineInt[piece_line_count];
-            piece_lines[0] = new PlaLineInt(curr_division_lines[1].point_b, curr_division_lines[1].point_a);
-            piece_lines[1] = curr_division_lines[0];
-            int curr_line_no = 1;
+            PlaLineIntAlist piece_lines = new PlaLineIntAlist(piece_line_count);
+            piece_lines.add( new PlaLineInt(curr_division_lines[1].point_b, curr_division_lines[1].point_a) );
+            piece_lines.add( curr_division_lines[0] );
+
             if (merge_prev_division_line)
                {
-               ++curr_line_no;
-               piece_lines[curr_line_no] = prev_division_line;
+               piece_lines.add( prev_division_line );
                }
+            
             if (merge_first_division_line)
                {
-               ++curr_line_no;
-               piece_lines[curr_line_no] = new PlaLineInt(first_division_line.point_b, first_division_line.point_a);
+               piece_lines.add( new PlaLineInt(first_division_line.point_b, first_division_line.point_a));
                }
+            
             ShapeTileSimplex curr_piece = new ShapeTileSimplex(piece_lines);
+         
             result_list.add(curr_piece.intersection(p_outer_simplex));
             }
+         
+         
          // construct an unbounded simplex from next_division_line,
          // inner_simplex.line [inner_corner_no] and the last current division line
          // and intersect it with the outer simplex
@@ -936,7 +923,6 @@ public final class ShapeTileSimplex extends ShapeTile
             {
             PlaDirection prev_dir = prev_division_line.direction();
             if (last_curr_dir.determinant(prev_dir) > 0)
-
                {
                // the previous division line may intersect
                // the last current division line inside p_divide_simplex
@@ -959,39 +945,33 @@ public final class ShapeTileSimplex extends ShapeTile
                merge_first_division_line = true;
                }
             }
-         int piece_line_count = 1;
-         if (merge_next_division_line)
-            ++piece_line_count;
-         if (merge_last_curr_division_line)
-            ++piece_line_count;
-         if (merge_prev_division_line)
-            ++piece_line_count;
-         if (merge_first_division_line)
-            ++piece_line_count;
-         PlaLineInt[] piece_lines = new PlaLineInt[piece_line_count];
+         
+         ArrayList<PlaLineInt> piece_lines = new ArrayList<PlaLineInt>(6);   // this is the possible max
+         
          PlaLineInt curr_line = inner_simplex.tline_get(inner_corner_no);
-         piece_lines[0] = new PlaLineInt(curr_line.point_b, curr_line.point_a);
-         int curr_line_no = 0;
+         
+         piece_lines.add( new PlaLineInt(curr_line.point_b, curr_line.point_a) );
+         
          if (merge_next_division_line)
             {
-            ++curr_line_no;
-            piece_lines[curr_line_no] = new PlaLineInt(next_division_line.point_b, next_division_line.point_a);
+            piece_lines.add( new PlaLineInt(next_division_line.point_b, next_division_line.point_a) );
             }
+         
          if (merge_last_curr_division_line)
             {
-            ++curr_line_no;
-            piece_lines[curr_line_no] = last_curr_division_line;
+            piece_lines.add( last_curr_division_line );
             }
+         
          if (merge_prev_division_line)
             {
-            ++curr_line_no;
-            piece_lines[curr_line_no] = prev_division_line;
+            piece_lines.add( prev_division_line );
             }
+         
          if (merge_first_division_line)
             {
-            ++curr_line_no;
-            piece_lines[curr_line_no] = new PlaLineInt(first_division_line.point_b, first_division_line.point_a);
+            piece_lines.add( new PlaLineInt(first_division_line.point_b, first_division_line.point_a) );
             }
+         
          ShapeTileSimplex curr_piece = new ShapeTileSimplex(piece_lines);
          result_list.add(curr_piece.intersection(p_outer_simplex));
          next_division_line = prev_division_line;

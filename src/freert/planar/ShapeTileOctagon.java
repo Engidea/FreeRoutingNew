@@ -16,6 +16,7 @@
 
 package freert.planar;
 
+import java.util.ArrayList;
 import board.awtree.AwtreeBoundingOct;
 
 /**
@@ -650,20 +651,18 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    @Override   
    public ShapeTileSimplex to_Simplex()
       {
-      if (is_empty())
-         {
-         return ShapeTileSimplex.EMPTY;
-         }
-      if (precalculated_to_simplex == null)
-         {
-         PlaLineInt[] line_arr = new PlaLineInt[8];
-         for (int i = 0; i < 8; ++i)
-            {
-            line_arr[i] = border_line(i);
-            }
-         ShapeTileSimplex curr_simplex = new ShapeTileSimplex(line_arr);
-         precalculated_to_simplex = curr_simplex.remove_redundant_lines();
-         }
+      if (is_empty()) return ShapeTileSimplex.EMPTY;
+      
+      if ( precalculated_to_simplex != null) return precalculated_to_simplex;
+      
+      ArrayList<PlaLineInt> line_arr = new ArrayList<PlaLineInt>(8);
+      
+      for (int index = 0; index < 8; ++index) line_arr.add( border_line(index));
+      
+      ShapeTileSimplex curr_simplex = new ShapeTileSimplex(line_arr);
+      
+      precalculated_to_simplex = curr_simplex.remove_redundant_lines();
+
       return precalculated_to_simplex;
       }
 

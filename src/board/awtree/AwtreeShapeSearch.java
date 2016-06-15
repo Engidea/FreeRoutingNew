@@ -1117,7 +1117,7 @@ public final class AwtreeShapeSearch
          }
       if (cut_line != null)
          {
-         ShapeTile result_piece = ShapeTile.get_instance(cut_line);
+         ShapeTile result_piece = new ShapeTileSimplex(cut_line);
          if (room_shape != null)
             {
             result_piece = room_shape.intersection(result_piece);
@@ -1160,7 +1160,7 @@ public final class AwtreeShapeSearch
             return result;
             }
          // Calculate the new shape to be contained in the result shape.
-         ShapeTile cut_half_plane = ShapeTile.get_instance(cut_line);
+         ShapeTile cut_half_plane = new ShapeTileSimplex(cut_line);
          ShapeTile new_shape_to_be_contained = shape_to_be_contained.intersection(cut_half_plane);
 
          ShapeTile result_piece;
@@ -1176,7 +1176,7 @@ public final class AwtreeShapeSearch
             {
             result.add(new ExpandRoomFreespaceIncomplete(result_piece, layer, new_shape_to_be_contained));
             }
-         ShapeTile opposite_half_plane = ShapeTile.get_instance(cut_line.opposite());
+         ShapeTile opposite_half_plane = new ShapeTileSimplex(cut_line.opposite());
          ShapeTile rest_piece;
          if (room_shape == null)
             {

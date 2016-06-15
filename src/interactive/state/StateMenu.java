@@ -26,6 +26,7 @@ import interactive.IteraBoard;
 import interactive.LogfileScope;
 import java.util.Collection;
 import java.util.Set;
+import board.BrdLayerStructure;
 import board.items.BrdItem;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
@@ -96,6 +97,35 @@ public class StateMenu extends StateInteractive
       return result;
       }
 
+   private void change_layer_next ( int delta )
+      {
+      if ( delta == 0 ) return;
+      
+      // increase the current layer to the next signal layer
+      BrdLayerStructure layer_structure = r_brd.layer_structure;
+      
+      int current_layer_no = i_brd.itera_settings.layer_no;
+      
+      int layer_count = layer_structure.size();
+      
+      for (int index=0; index<layer_count; index++)
+         {
+         current_layer_no += delta;
+      
+         // if we are going up and we went above the maximum, get back to a safe value
+         if (delta > 0 && current_layer_no >= layer_count ) current_layer_no = 0;
+         
+         // if we are going down and we went below, go back to the top
+         if (delta < 0 && current_layer_no < 0 ) current_layer_no = layer_count-1;
+    
+         // if the layer is good, then we are done
+         if ( layer_structure.is_signal(current_layer_no)) break;
+         }
+      
+      i_brd.set_current_layer(current_layer_no);
+      }
+   
+   
    /**
     * Action to be taken when a key shortcut is pressed.
     */
@@ -108,12 +138,14 @@ public class StateMenu extends StateInteractive
          }
       else if (p_key_char == 'd')
          {
-         curr_return_state = new StateMenuDrag(i_brd, actlog);
+         return new StateMenuDrag(i_brd, actlog);
          }
       else if (p_key_char == 'e')
          {
          // It seems to me that this is quite useful to understand what is happening... damiano
-         curr_return_state = new StateExpandTest(i_brd.get_current_mouse_position(), this, i_brd);
+         StateExpandTest expand = new StateExpandTest( this, i_brd);
+         expand.expand_test_init(i_brd.get_current_mouse_position());
+         return expand;
          }
       else if (p_key_char == 'g')
          {
@@ -154,40 +186,11 @@ public class StateMenu extends StateInteractive
          }
       else if (p_key_char == '+')
          {
-         // increase the current layer to the next signal layer
-         board.BrdLayerStructure layer_structure = r_brd.layer_structure;
-         int current_layer_no = i_brd.itera_settings.layer_no;
-         for (;;)
-            {
-            ++current_layer_no;
-            if (current_layer_no >= layer_structure.size() || layer_structure.is_signal(current_layer_no))
-               {
-               break;
-               }
-            }
-         if (current_layer_no < layer_structure.size())
-            {
-            i_brd.set_current_layer(current_layer_no);
-            }
+         change_layer_next(1);
          }
       else if (p_key_char == '-')
          {
-         // decrease the current layer to the previous signal layer
-         board.BrdLayerStructure layer_structure = r_brd.layer_structure;
-         int current_layer_no = i_brd.itera_settings.layer_no;
-         for (;;)
-            {
-            --current_layer_no;
-            if (current_layer_no < 0 || layer_structure.is_signal(current_layer_no))
-               {
-               break;
-               }
-            }
-         if (current_layer_no >= 0)
-            {
-            i_brd.set_current_layer(current_layer_no);
-            }
-
+         change_layer_next(-1);
          }
       else
          {

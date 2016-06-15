@@ -233,7 +233,7 @@ public final class SortedRooms_xx_Degree
                   PlaPointInt cut_line_start = prev_neighbour.last_corner();
                   PlaPointInt cut_line_end = next_neighbour.first_corner();
                   PlaLineInt cut_line = new PlaLineInt(cut_line_start, cut_line_end);
-                  ShapeTile cut_half_plane = ShapeTile.get_instance(cut_line);
+                  ShapeTile cut_half_plane = new ShapeTileSimplex(cut_line);
                   ((ExpandRoomFreespaceComplete) completed_room).set_shape(completed_room.get_shape().intersection(cut_half_plane));
                   
                   corner_cut_off = true;

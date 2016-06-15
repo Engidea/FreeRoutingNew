@@ -25,6 +25,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaSide;
 import freert.planar.Polyline;
 import freert.planar.ShapeTile;
+import freert.planar.ShapeTileSimplex;
 
 /**
  * Used in the shove algorithm to calculate the fromside for pushing and to cut off dog ears of the trace shape.
@@ -55,7 +56,7 @@ public final class BrdShapeAndFromSide
       PlaLineInt end_cutline = calc_cutline_at_end(p_index, p_trace);
       if (end_cutline != null)
          {
-         ShapeTile cut_plane = ShapeTile.get_instance(end_cutline);
+         ShapeTile cut_plane = new ShapeTileSimplex(end_cutline);
          ShapeTile tmp_shape = curr_shape.intersection(cut_plane);
          if (tmp_shape != curr_shape && !tmp_shape.is_empty())
             {
@@ -66,7 +67,7 @@ public final class BrdShapeAndFromSide
       PlaLineInt start_cutline = calc_cutline_at_start(p_index, p_trace);
       if (start_cutline != null)
          {
-         ShapeTile cut_plane = ShapeTile.get_instance(start_cutline);
+         ShapeTile cut_plane = new ShapeTileSimplex(start_cutline);
          ShapeTile tmp_shape = curr_shape.intersection(cut_plane);
          if (tmp_shape != curr_shape && !tmp_shape.is_empty())
             {

@@ -59,16 +59,6 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       
       return get_instance(line_arr);
       }
-   
-   /**
-    * creates a half_plane from a directed line
-    */
-   public static ShapeTile get_instance(PlaLineInt p_line)
-      {
-      PlaLineIntAlist lines = new PlaLineIntAlist(1);
-      lines.add( p_line);
-      return ShapeTileSimplex.get_instance(lines);
-      }
 
    public abstract ShapeTile offset(double p_distance);
 
