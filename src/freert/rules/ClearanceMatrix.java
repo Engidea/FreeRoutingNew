@@ -41,7 +41,7 @@ public final class ClearanceMatrix implements java.io.Serializable
    private int[] max_value_on_layer;       // maximum clearance value for each layer
    
    /**
-    * Creates a new instance with the 2 clearance classes "none"and "default" ans initializes it with p_default_value.
+    * Creates a new instance with the 2 clearance classes "none" and "default" ans initializes it with p_default_value.
     */
    public static ClearanceMatrix get_default_instance(BrdLayerStructure p_layer_structure, int p_default_value)
       {

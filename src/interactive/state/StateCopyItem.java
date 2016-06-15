@@ -230,12 +230,12 @@ public class StateCopyItem extends StateInteractive
             curr_item.set_component_no(new_cmp_no);
             }
          }
+      
       boolean all_items_inserted = true;
-      it = item_list.iterator();
       boolean first_time = true;
-      while (it.hasNext())
+      
+      for ( BrdItem curr_item : item_list )
          {
-         BrdItem curr_item = it.next();
          if (curr_item.r_board != null && curr_item.clearance_violation_count() == 0)
             {
             if (first_time)
@@ -251,6 +251,7 @@ public class StateCopyItem extends StateInteractive
             all_items_inserted = false;
             }
          }
+      
       if (all_items_inserted)
          {
          i_brd.screen_messages.set_status_message(resources.getString("all_items_inserted"));

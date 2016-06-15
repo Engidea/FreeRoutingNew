@@ -1259,6 +1259,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return false;
       }
 
+   // damiano, this is the basic switch to insert one trace join on the board...
+   private static boolean join_inserted = true;
+   
+   
    /**
     * Splits this trace at the line with number p_line_no into two 
     * by inserting p_endline as concluding line of the first split piece and as the start line of the second split piece
@@ -1281,6 +1285,15 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       r_board.remove_item(this);
 
       BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(0), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      
+      if ( ! join_inserted )
+         {
+         // ok, this whouls add just one Trace join, just one
+         Polyline ap = split_polylines.get(0);
+         BrdTraceJoin join = new BrdTraceJoin(ap.corner(0).round(), net_nos, clearance_idx(), 0, get_component_no(), get_fixed_state(), r_board);
+         r_board.insert_item(join);
+         join_inserted = true;
+         }
       
       if ( a_trace != null ) risul.add( a_trace );
       

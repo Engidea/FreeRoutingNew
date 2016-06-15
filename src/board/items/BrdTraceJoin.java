@@ -58,14 +58,14 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
    private PlaPointInt abit_center;
    
    // pre calculated minimal width of the shapes of this DrillItem on all layers
-   private Double precalculated_min_width = null;
+   private Double min_width = null;
 
    // a trace join can only be on a specific layer
-   private int on_layer = -1;
+   private int on_layer = 0;
 
-   protected BrdTraceJoin(PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_group_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   protected BrdTraceJoin(PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
-      super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
+      super(p_net_no_arr, p_clearance_type, p_id_no, p_component_no, p_fixed_state, p_board);
 
       abit_center = p_center;
       }
@@ -86,14 +86,12 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
       return new BrdTraceJoin(this,p_id_no);
       }
    
-   
-   
    @Override
    public final boolean is_selected_by_filter(ItemSelectionFilter p_filter)
       {
       if (!is_selected_by_fixed_filter(p_filter)) return false;
 
-      return p_filter.is_selected(ItemSelectionChoice.TRACES);
+      return p_filter.is_selected(ItemSelectionChoice.TRACEJ);
       }
    
    
@@ -104,10 +102,6 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
       return p_other.shares_net(this) == false;
       }
 
-   
-   /**
-    * Works only for symmetric DrillItems
-    */
    @Override
    public void translate_by(PlaVectorInt p_vector)
       {
@@ -390,11 +384,11 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
     */
    public double min_width()
       {
-      if (precalculated_min_width != null ) return precalculated_min_width.doubleValue();
+      if (min_width != null ) return min_width.doubleValue();
       
-      double min_width = Integer.MAX_VALUE;
+      min_width = Double.valueOf(50000);
 
-      return precalculated_min_width.doubleValue();
+      return min_width.doubleValue();
       }
 
    

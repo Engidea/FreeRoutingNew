@@ -70,13 +70,13 @@ public final class BoardRules implements Serializable
    private transient TraceAngleRestriction trace_angle_restriction;
    private transient IteraBoard itera_board;
 
-   public BoardRules(IteraBoard p_itera_board, BrdLayerStructure p_layer_structure, ClearanceMatrix p_clearance_matrix)
+   public BoardRules(IteraBoard p_itera_board, BrdLayerStructure p_layer_structure )
       {
       itera_board = p_itera_board;
       
       net_classes = new NetClasses();
       layer_structure = p_layer_structure;
-      clearance_matrix = p_clearance_matrix;
+      clearance_matrix = ClearanceMatrix.get_default_instance(p_layer_structure, 0);;
       trace_angle_restriction = TraceAngleRestriction.NONE;
       min_trace_half_width = 100000;
       max_trace_half_width = 100;

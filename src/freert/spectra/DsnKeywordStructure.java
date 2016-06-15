@@ -33,7 +33,6 @@ import freert.main.Mdbg;
 import freert.planar.ShapeSegments;
 import freert.planar.ShapeTileBox;
 import freert.rules.BoardRules;
-import freert.rules.ClearanceMatrix;
 import freert.spectra.varie.DsnKeywordAutoroute;
 import freert.spectra.varie.DsnReadUtils;
 import freert.varie.ItemClass;
@@ -845,7 +844,6 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       p_par.layer_structure = new DsnLayerStructure(p_board_construction_info.layer_info);
       
       DsnRectangle bounding_box = p_board_construction_info.bounding_shape.bounding_box();
-
       
       // Calculate an appropriate scaling between dsn coordinates and board coordinates.
       int scale_factor = Math.max(p_par.dsn_resolution, 1);
@@ -903,9 +901,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       
       Collection<ShapeSegments> hole_shapes = separate_holes(board_outline_shapes);
       
-      ClearanceMatrix clearance_matrix = ClearanceMatrix.get_default_instance(board_layer_structure, 0);
-      
-      BoardRules board_rules = new BoardRules(p_par.i_board, board_layer_structure, clearance_matrix);
+      BoardRules board_rules = new BoardRules(p_par.i_board, board_layer_structure );
       
       DsnParserInfo specctra_parser_info = new DsnParserInfo(p_par);
       

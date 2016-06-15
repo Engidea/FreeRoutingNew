@@ -1256,9 +1256,9 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public int get_clearance(int p_class_1, int p_class_2, int p_layer)
       {
-      if (brd_rules == null || brd_rules.clearance_matrix == null)
+      if ( brd_rules.clearance_matrix == null)
          {
-         System.err.println(classname+"get_clearance: rules or clearance matrix are anull");
+         System.err.println(classname+"get_clearance: clearance matrix are anull");
          return 0;
          }
 
@@ -1388,7 +1388,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       if (p_item == null) return;
 
-      if (brd_rules == null || brd_rules.clearance_matrix == null || p_item.clearance_idx() < 0 || p_item.clearance_idx() >= brd_rules.clearance_matrix.get_class_count())
+      if ( p_item.clearance_idx() < 0 || p_item.clearance_idx() >= brd_rules.clearance_matrix.get_class_count())
          {
          System.err.println(classname+"insert_item: clearance_class no out of range");
          p_item.set_clearance_idx(0);

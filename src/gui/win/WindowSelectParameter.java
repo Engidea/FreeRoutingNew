@@ -92,12 +92,12 @@ public class WindowSelectParameter extends GuiSubWindowSavable
 
       item_selection_choices = new javax.swing.JCheckBox[filter_values.length];
 
-      for (int i = 0; i < filter_values.length; ++i)
+      for (int index = 0; index < filter_values.length; ++index)
          {
-         item_selection_choices[i] = new javax.swing.JCheckBox(resources.getString(filter_values[i].toString()));
-         gridbag.setConstraints(item_selection_choices[i], gridbag_constraints);
-         main_panel.add(item_selection_choices[i], gridbag_constraints);
-         item_selection_choices[i].addActionListener(new ItemSelectionListener(i));
+         item_selection_choices[index] = new javax.swing.JCheckBox(resources.getString(filter_values[index].toString()));
+         gridbag.setConstraints(item_selection_choices[index], gridbag_constraints);
+         main_panel.add(item_selection_choices[index], gridbag_constraints);
+         item_selection_choices[index].addActionListener(new ItemSelectionListener(index));
          }
 
       javax.swing.JLabel separator2 = new javax.swing.JLabel("  ----------------------------------------  ");
