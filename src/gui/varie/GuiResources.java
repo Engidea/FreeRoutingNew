@@ -108,6 +108,17 @@ public final class GuiResources
       return risul;
       }
    
+   public JRadioButton newJRadioButton ( String label, String tooltip_en, ActionListener listener )
+      {
+      JRadioButton risul = new JRadioButton(getString(label));
+
+      if ( tooltip_en != null ) risul.setToolTipText(getString(tooltip_en));
+
+      if ( listener != null ) risul.addActionListener(listener);
+      
+      return risul;
+      }
+
    public JCheckBox newJCheckBox ( String label, ActionListener listener )
       {
       JCheckBox risul = new JCheckBox(getString(label));
