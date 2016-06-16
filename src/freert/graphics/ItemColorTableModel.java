@@ -133,10 +133,10 @@ public final class ItemColorTableModel extends ColorTableModel implements java.i
       {
       super(p_item_color_model.table_data.length, p_item_color_model.stat);
 
-      for (int i = 0; i < this.table_data.length; ++i)
+      for (int index = 0; index < table_data.length; ++index)
          {
-         this.table_data[i] = new Object[p_item_color_model.table_data[i].length];
-         System.arraycopy(p_item_color_model.table_data[i], 0, this.table_data[i], 0, this.table_data[i].length);
+         table_data[index] = new Object[p_item_color_model.table_data[index].length];
+         System.arraycopy(p_item_color_model.table_data[index], 0, table_data[index], 0, table_data[index].length);
          }
       }
    
@@ -158,7 +158,7 @@ public final class ItemColorTableModel extends ColorTableModel implements java.i
    public void setValueAt(Object p_value, int p_row, int p_col)
       {
       super.setValueAt(p_value, p_row, p_col);
-      this.item_colors_precalculated = false;
+      item_colors_precalculated = false;
       }
 
    /**
@@ -166,8 +166,7 @@ public final class ItemColorTableModel extends ColorTableModel implements java.i
     */
    public boolean isCellEditable(int p_row, int p_col)
       {
-      // Note that the data/cell address is constant,
-      // no matter where the cell appears onscreen.
+      // Note that the data/cell address is constant, no matter where the cell appears onscreen.
       return p_col >= 1;
       }
 
@@ -175,32 +174,28 @@ public final class ItemColorTableModel extends ColorTableModel implements java.i
       {
       if ( ! item_colors_precalculated)  precalulate_item_colors();
       
-      Color[] result;
       if (p_fixed)
          {
-         result = precalculated_item_colors[ItemColorName.FIXED_TRACES.ordinal() - 1];
+         return precalculated_item_colors[ItemColorName.FIXED_TRACES.ordinal() - 1];
          }
       else
          {
-         result = precalculated_item_colors[ItemColorName.TRACES.ordinal() - 1];
+         return precalculated_item_colors[ItemColorName.TRACES.ordinal() - 1];
          }
-      return result;
       }
 
    Color[] get_via_colors(boolean p_fixed)
       {
       if ( ! item_colors_precalculated)  precalulate_item_colors();
       
-      Color[] result;
       if (p_fixed)
          {
-         result = precalculated_item_colors[ItemColorName.FIXED_VIAS.ordinal() - 1];
+         return precalculated_item_colors[ItemColorName.FIXED_VIAS.ordinal() - 1];
          }
       else
          {
-         result = precalculated_item_colors[ItemColorName.VIAS.ordinal() - 1];
+         return precalculated_item_colors[ItemColorName.VIAS.ordinal() - 1];
          }
-      return result;
       }
 
    Color[] get_pin_colors()
@@ -289,26 +284,26 @@ public final class ItemColorTableModel extends ColorTableModel implements java.i
 
    private void set_colors(int p_item_type, Color[] p_color_arr)
       {
-      for (int layer = 0; layer < this.table_data.length - 1; ++layer)
+      for (int layer = 0; layer < table_data.length - 1; ++layer)
          {
          int color_index = layer % p_color_arr.length;
-         this.table_data[layer][p_item_type] = p_color_arr[color_index];
+         table_data[layer][p_item_type] = p_color_arr[color_index];
          }
-      table_data[this.table_data.length - 1][p_item_type] = p_color_arr[p_color_arr.length - 1];
-      this.item_colors_precalculated = false;
+      table_data[table_data.length - 1][p_item_type] = p_color_arr[p_color_arr.length - 1];
+      item_colors_precalculated = false;
       }
 
    private void precalulate_item_colors()
       {
       precalculated_item_colors = new Color[ItemColorName.values().length - 1][];
       
-      for (int i = 0; i < precalculated_item_colors.length; ++i)
+      for (int index = 0; index < precalculated_item_colors.length; ++index)
          {
-         precalculated_item_colors[i] = new Color[table_data.length];
-         Color[] curr_row = precalculated_item_colors[i];
-         for (int j = 0; j < table_data.length; ++j)
+         precalculated_item_colors[index] = new Color[table_data.length];
+         Color[] curr_row = precalculated_item_colors[index];
+         for (int jndex = 0; jndex < table_data.length; ++jndex)
             {
-            curr_row[j] = (Color) getValueAt(j, i + 1);
+            curr_row[jndex] = (Color) getValueAt(jndex, index + 1);
             }
          }
       

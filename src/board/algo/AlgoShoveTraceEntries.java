@@ -219,7 +219,7 @@ public final class AlgoShoveTraceEntries
                curr_trace.get_half_width(), 
                curr_trace.net_nos,
                curr_trace.clearance_idx(), 
-               0, 0, ItemFixState.UNFIXED, r_board);
+               0, ItemFixState.UNFIXED, r_board);
          }
       catch ( Exception exc )
          {
@@ -351,7 +351,7 @@ public final class AlgoShoveTraceEntries
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
             p_trace.net_nos, 
-            p_trace.clearance_idx(), 0, 0, ItemFixState.UNFIXED,
+            p_trace.clearance_idx(), 0, ItemFixState.UNFIXED,
             board);
 
       board.undo_items.insert(start_piece);
@@ -362,7 +362,7 @@ public final class AlgoShoveTraceEntries
             p_trace.get_layer(), 
             p_trace.get_half_width(), 
             p_trace.net_nos, 
-            p_trace.clearance_idx(), 0, 0, ItemFixState.UNFIXED, board);
+            p_trace.clearance_idx(), 0, ItemFixState.UNFIXED, board);
 
       board.undo_items.insert(end_piece);
       end_piece.set_on_the_board(true);

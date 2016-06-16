@@ -83,11 +83,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          NetNosList p_net_no_arr, 
          int p_clearance_type, 
          int p_id_no, 
-         int p_group_no, 
          ItemFixState p_fixed_state, 
          RoutingBoard p_board)
       {
-      super(p_net_no_arr, p_clearance_type, p_id_no, p_group_no, p_fixed_state, p_board);
+      super(p_net_no_arr, p_clearance_type, p_id_no, 0, p_fixed_state, p_board);
       
       trace_half_width = p_half_width;
 
@@ -1290,7 +1289,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          // ok, this whouls add just one Trace join, just one
          Polyline ap = split_polylines.get(0);
-         BrdTraceJoin join = new BrdTraceJoin(ap.corner(0).round(), net_nos, clearance_idx(), 0, get_component_no(), get_fixed_state(), r_board);
+         BrdTraceJoin join = new BrdTraceJoin(ap.corner(0).round(), net_nos, clearance_idx(), 0, get_fixed_state(), r_board);
          r_board.insert_item(join);
          join_inserted = true;
          }

@@ -515,7 +515,6 @@ public final class GdiContext implements java.io.Serializable
 
    public Color[] get_trace_colors(boolean p_fixed)
       {
-
       return item_color_table.get_trace_colors(p_fixed);
       }
 

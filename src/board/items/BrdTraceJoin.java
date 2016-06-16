@@ -63,9 +63,9 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
    // a trace join can only be on a specific layer
    private int on_layer = 0;
 
-   protected BrdTraceJoin(PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, int p_component_no, ItemFixState p_fixed_state, RoutingBoard p_board)
+   public BrdTraceJoin(PlaPointInt p_center, NetNosList p_net_no_arr, int p_clearance_type, int p_id_no, ItemFixState p_fixed_state, RoutingBoard p_board)
       {
-      super(p_net_no_arr, p_clearance_type, p_id_no, p_component_no, p_fixed_state, p_board);
+      super(p_net_no_arr, p_clearance_type, p_id_no, 0, p_fixed_state, p_board);
 
       abit_center = p_center;
       }
@@ -221,7 +221,7 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
    /**
     * Need to have the shape...
     */
-   public PlaShape get_shape(int p_index)
+   private PlaShape get_shape()
       {
       ShapeTileOctagon octa = new ShapeTileOctagon(center_get());
 
@@ -231,18 +231,8 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
    @Override
    public ShapeTileBox bounding_box()
       {
-      ShapeTileBox result = ShapeTileBox.EMPTY;
-      
-      for (int index = 0; index < tile_shape_count(); ++index)
-         {
-         PlaShape curr_shape = get_shape(index);
-
-         if (curr_shape == null) continue;
-
-         result = result.union(curr_shape.bounding_box());
-         }
-
-      return result;
+      PlaShape curr_shape = get_shape();
+      return curr_shape.bounding_box();
       }
 
    @Override
@@ -386,7 +376,7 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
       {
       if (min_width != null ) return min_width.doubleValue();
       
-      min_width = Double.valueOf(50000);
+      min_width = Double.valueOf(500);
 
       return min_width.doubleValue();
       }
@@ -464,7 +454,7 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
       double intensity = p_intensity / Math.max(visibility_factor, 1);
       for (int index = 0; index <= to_layer - from_layer; ++index)
          {
-         PlaShape curr_shape = get_shape(index);
+         PlaShape curr_shape = get_shape();
          
          if (curr_shape == null) continue;
 

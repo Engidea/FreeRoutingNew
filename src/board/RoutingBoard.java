@@ -190,7 +190,7 @@ public final class RoutingBoard implements java.io.Serializable
       {
       if ( ! p_polyline.is_valid() ) return null;
 
-      BrdTracep new_trace = new BrdTracep(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, 0, 0, p_fixed_state, this);
+      BrdTracep new_trace = new BrdTracep(p_polyline, p_layer, p_half_width, p_net_no_arr, p_clearance_class, 0, p_fixed_state, this);
       
       if (new_trace.corner_first().equals(new_trace.corner_last()))
          {
@@ -1132,7 +1132,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public boolean check_trace (Polyline p_polyline, int p_layer, int p_pen_half_width, NetNosList p_net_no_arr, int p_clearance_class)
       {
-      BrdTracep tmp_trace = new BrdTracep(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, 0, ItemFixState.UNFIXED, this);
+      BrdTracep tmp_trace = new BrdTracep(p_polyline, p_layer, p_pen_half_width, p_net_no_arr, p_clearance_class, 0, ItemFixState.UNFIXED, this);
       
       Set<BrdAbitPin> contact_pins = tmp_trace.touching_pins_at_end_corners();
       
