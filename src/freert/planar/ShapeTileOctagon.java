@@ -17,7 +17,6 @@
 package freert.planar;
 
 import java.util.ArrayList;
-import board.awtree.AwtreeBoundingOct;
 
 /**
  *
@@ -667,9 +666,9 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       }
 
    @Override   
-   public ShapeTileRegular bounding_shape(AwtreeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape()
       {
-      return p_dirs.bounds(this);
+      return bounding_octagon();
       }
 
    @Override   
@@ -782,7 +781,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    @Override   
    ShapeTileOctagon intersection(ShapeTileBox p_other)
       {
-      return intersection(p_other.to_IntOctagon());
+      return intersection(p_other.bounding_octagon());
       }
 
    /**
@@ -813,7 +812,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    @Override   
    public boolean intersects(ShapeTileBox p_other)
       {
-      return intersects(p_other.to_IntOctagon());
+      return intersects(p_other.bounding_octagon());
       }
 
    /**
@@ -1030,7 +1029,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    @Override   
    public ShapeTileOctagon union(ShapeTileBox p_other)
       {
-      return union(p_other.to_IntOctagon());
+      return union(p_other.bounding_octagon());
       }
 
    /**
@@ -1219,7 +1218,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
    @Override
    public PlaSide compare(ShapeTileBox p_other, int p_edge_no)
       {
-      return compare(p_other.to_IntOctagon(), p_edge_no);
+      return compare(p_other.bounding_octagon(), p_edge_no);
       }
 
    @Override
@@ -1389,7 +1388,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
          {
          // there is only an overlap at the border
          ShapeTileOctagon[] result = new ShapeTileOctagon[1];
-         result[0] = p_d.to_IntOctagon();
+         result[0] = p_d.bounding_octagon();
          return result;
          }
 
@@ -1521,7 +1520,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       // add the 4 boxes to the result
       for (int i = 0; i < 4; ++i)
          {
-         result[i] = boxes[i].to_IntOctagon();
+         result[i] = boxes[i].bounding_octagon();
          }
 
       // add the 4 octagons to the result

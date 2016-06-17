@@ -1111,15 +1111,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       PlaPointInt split_point = curr_drill_item.center_get();
    
       if ( ! curr_line_segment.contains(split_point) ) return;
-      
-//      PlaDirection split_line_direction = curr_line_segment.get_line().direction().rotate_45_deg(2);
-      
-//      PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
-   
-      // Icould have a split with int point parameter, it is then known that I am splitting at int point...
-//      split_with_end_line(index + 1, split_line);
-      
-      split_with_point(index + 1, split_point);
+
+      // the plus one is from how the caller handles indexes...
+      split_at_point(index + 1, split_point);
       }
 
    private void remove_if_cycle ( LinkedList<BrdTracep> a_collection )
@@ -1304,7 +1298,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * can return false i for example p_point is not located on this trace or already split !
     * @return true if the trace has been split 
     */
-   public final boolean split_with_point(int line_idx, PlaPointInt p_point)
+   public final boolean split_at_point(int line_idx, PlaPointInt p_point)
       {
       if (!is_on_the_board()) return false;
 

@@ -21,7 +21,6 @@
 package freert.planar;
 
 import java.util.ArrayList;
-import board.awtree.AwtreeBoundingOct;
 
 /**
  * Interface describing functionality for connected 2-dimensional shapes in the plane. 
@@ -74,9 +73,9 @@ public interface PlaShape extends PlaArea
    ShapeTile bounding_tile();
 
    /**
-    * @returns the bounding RegularTileShape with the fixed directions p_dirs
+    * @returns the bounding RegularTileShape that is now always an octagon
     */
-   ShapeTileRegular bounding_shape(AwtreeBoundingOct p_dirs);
+   ShapeTileRegular bounding_shape();
 
    /**
     * Returns the distance between p_point and its nearest point on the border of the shape.

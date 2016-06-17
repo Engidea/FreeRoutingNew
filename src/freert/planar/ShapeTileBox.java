@@ -21,7 +21,6 @@
 package freert.planar;
 
 import java.util.ArrayList;
-import board.awtree.AwtreeBoundingOct;
 
 /**
  * Implements functionality of orthogonal rectangles in the plane with integer coordinates.
@@ -348,7 +347,7 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    public ShapeTileOctagon bounding_octagon()
       {
-      return to_IntOctagon();
+      return new ShapeTileOctagon(box_ll.v_x, box_ll.v_y, box_ur.v_x, box_ur.v_y, box_ll.v_x - box_ur.v_y, box_ur.v_x - box_ll.v_y, box_ll.v_x + box_ll.v_y, box_ur.v_x + box_ur.v_y);
       }
 
    @Override
@@ -423,7 +422,7 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    ShapeTileOctagon intersection(ShapeTileOctagon p_other)
       {
-      return p_other.intersection(to_IntOctagon());
+      return p_other.intersection(bounding_octagon());
       }
 
    @Override
@@ -475,9 +474,9 @@ public final class ShapeTileBox extends ShapeTileRegular
       }
 
    @Override
-   public ShapeTileRegular bounding_shape(AwtreeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape()
       {
-      return p_dirs.bounds(this);
+      return bounding_octagon();
       }
 
    /**
@@ -719,13 +718,6 @@ public final class ShapeTileBox extends ShapeTileRegular
       return result;
       }
 
-   /**
-    * Returns an object of class IntOctagon defining the same shape
-    */
-   public ShapeTileOctagon to_IntOctagon()
-      {
-      return new ShapeTileOctagon(box_ll.v_x, box_ll.v_y, box_ur.v_x, box_ur.v_y, box_ll.v_x - box_ur.v_y, box_ur.v_x - box_ll.v_y, box_ll.v_x + box_ll.v_y, box_ur.v_x + box_ur.v_y);
-      }
 
    /**
     * Returns an object of class Simplex defining the same shape
@@ -845,13 +837,13 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    public boolean is_contained_in(ShapeTileOctagon p_other)
       {
-      return p_other.contains(to_IntOctagon());
+      return p_other.contains(bounding_octagon());
       }
 
    @Override
    public boolean intersects(ShapeTileOctagon p_other)
       {
-      return p_other.intersects(to_IntOctagon());
+      return p_other.intersects(bounding_octagon());
       }
 
    @Override
@@ -869,13 +861,13 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    public ShapeTileOctagon union(ShapeTileOctagon p_other)
       {
-      return p_other.union(to_IntOctagon());
+      return p_other.union(bounding_octagon());
       }
 
    @Override
    public PlaSide compare(ShapeTileOctagon p_other, int p_edge_no)
       {
-      return to_IntOctagon().compare(p_other, p_edge_no);
+      return bounding_octagon().compare(p_other, p_edge_no);
       }
 
    /**
@@ -1011,7 +1003,7 @@ public final class ShapeTileBox extends ShapeTileRegular
    @Override
    ShapeTileOctagon[] cutout_from(ShapeTileOctagon p_oct)
       {
-      return to_IntOctagon().cutout_from(p_oct);
+      return bounding_octagon().cutout_from(p_oct);
       }
 
 

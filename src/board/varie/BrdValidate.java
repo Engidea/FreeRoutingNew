@@ -51,7 +51,7 @@ public class BrdValidate
 
       boolean result = true;
 
-      ShapeTileOctagon surr_oct = p_board.bounding_box.to_IntOctagon();
+      ShapeTileOctagon surr_oct = p_board.bounding_box.bounding_octagon();
       int layer_count = p_board.get_layer_count();
       if (last_violation_count == null)
          {

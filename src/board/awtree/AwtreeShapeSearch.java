@@ -72,8 +72,6 @@ public final class AwtreeShapeSearch
    private final RoutingBoard r_board;
 
    private final AwtreeNodeStack node_stack = new AwtreeNodeStack();
-   // the fixed directions for calculating bounding RegularTileShapes of shapes to store in this tree.
-   private final AwtreeBoundingOct bounding_directions = AwtreeBoundingOct.INSTANCE;
    // The clearance class number for which the shapes of this tree is compensated, if 0 shapes are not compensated 
    public final int compensated_clearance_class_no;
 
@@ -127,7 +125,7 @@ public final class AwtreeShapeSearch
          return null;
          }
 
-      ShapeTileRegular bounding_shape = object_shape.bounding_shape(bounding_directions);
+      ShapeTileRegular bounding_shape = object_shape.bounding_shape();
 
       if (bounding_shape == null)
          {
@@ -771,7 +769,7 @@ public final class AwtreeShapeSearch
          return;
          }
       
-      ShapeTileRegular bounds = p_shape.bounding_shape(bounding_directions);
+      ShapeTileRegular bounds = p_shape.bounding_shape();
       if (bounds == null)
          {
          System.err.println("board.ShapeSearchTree.overlaps: p_shape not bounded");
@@ -836,7 +834,7 @@ public final class AwtreeShapeSearch
 
       ClearanceMatrix cl_matrix = r_board.brd_rules.clearance_matrix;
       
-      ShapeTileRegular bounds = p_shape.bounding_shape(bounding_directions);
+      ShapeTileRegular bounds = p_shape.bounding_shape();
 
       if (bounds == null)
          {
@@ -995,7 +993,7 @@ public final class AwtreeShapeSearch
          start_shape = start_shape.intersection(p_room.get_shape());
          }
 
-      ShapeTileRegular bounding_shape = start_shape.bounding_shape(bounding_directions);
+      ShapeTileRegular bounding_shape = start_shape.bounding_shape();
       if (start_shape.dimension() == PlaDimension.AREA)
          {
          ExpandRoomFreespaceIncomplete new_room = new ExpandRoomFreespaceIncomplete(start_shape, p_room.get_layer(), p_room.get_contained_shape());
@@ -1047,7 +1045,7 @@ public final class AwtreeShapeSearch
                   new_result.addAll(restrain_shape(curr_incomplete_room, curr_object_shape));
                   for (ExpandRoomFreespaceIncomplete tmp_room : new_result)
                      {
-                     new_bounding_shape = new_bounding_shape.union(tmp_room.get_shape().bounding_shape(bounding_directions));
+                     new_bounding_shape = new_bounding_shape.union(tmp_room.get_shape().bounding_shape());
                      }
                   }
                }
@@ -1055,7 +1053,7 @@ public final class AwtreeShapeSearch
             if (!something_changed)
                {
                new_result.add(curr_incomplete_room);
-               new_bounding_shape = new_bounding_shape.union(curr_incomplete_room.get_shape().bounding_shape(bounding_directions));
+               new_bounding_shape = new_bounding_shape.union(curr_incomplete_room.get_shape().bounding_shape());
                }
             }
          result = new_result;

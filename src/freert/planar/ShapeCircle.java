@@ -22,7 +22,6 @@ package freert.planar;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import board.awtree.AwtreeBoundingOct;
 
 /**
  * Describes functionality of a circle shape in the plane
@@ -291,9 +290,9 @@ public final class ShapeCircle implements ShapeConvex , Serializable
       }
 
    @Override
-   public ShapeTileRegular bounding_shape(AwtreeBoundingOct p_dirs)
+   public ShapeTileRegular bounding_shape()
       {
-      return p_dirs.bounds(this);
+      return bounding_octagon();
       }
 
    @Override
