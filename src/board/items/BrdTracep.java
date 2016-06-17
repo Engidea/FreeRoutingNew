@@ -1112,12 +1112,14 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
       if ( ! curr_line_segment.contains(split_point) ) return;
       
-      PlaDirection split_line_direction = curr_line_segment.get_line().direction().rotate_45_deg(2);
+//      PlaDirection split_line_direction = curr_line_segment.get_line().direction().rotate_45_deg(2);
       
-      PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
+//      PlaLineInt split_line = new PlaLineInt(split_point, split_line_direction);
    
       // Icould have a split with int point parameter, it is then known that I am splitting at int point...
-      split_with_end_line(index + 1, split_line);
+//      split_with_end_line(index + 1, split_line);
+      
+      split_with_point(index + 1, split_point);
       }
 
    private void remove_if_cycle ( LinkedList<BrdTracep> a_collection )
@@ -1233,29 +1235,99 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
    
    /**
-    * Splits this trace into two at p_point. 
-    * can return false i for example p_point is not located on this trace or already split !
-    * @return true if the trace has been split 
+    * Checks, if the intersection of the p_line_no-th line of this trace with p_line is inside the pad of a pin. 
+    * In this case the trace will be split only, if the intersection is at the center of the pin. 
+    * Extending the function to vias leaded to broken connection problems wenn the autorouter connected to a trace.
+    * @return true if a split is allowed
     */
-   public final boolean split_with_point(PlaPointInt p_point)
+   private boolean split_inside_drill_pad_allowed(PlaPointInt intersection)
       {
-      for (int index = 1; index < polyline.plaline_len(-1); index++)
+      Collection<BrdItem> overlap_items = r_board.pick_items(intersection, get_layer() );
+      
+      boolean pad_found = false;
+      
+      for (BrdItem curr_item : overlap_items)
+         {
+         if ( ! curr_item.shares_net(this)) continue;
+
+         if (curr_item instanceof BrdAbitPin)
+            {
+            BrdAbit curr_drill_item = (BrdAbit) curr_item;
+            
+            pad_found = true;  // remember that I have found a pad here
+            
+            if (curr_drill_item.center_get().equals(intersection))
+               {
+               // split always allowed at the center of a drill item.
+               return true; 
+               }
+            }
+         else if (curr_item instanceof BrdTracep)
+            {
+            BrdTracep curr_trace = (BrdTracep) curr_item;
+            
+            if (curr_trace == this ) continue;
+            
+            if ( curr_trace.corner_first().equals(intersection) || curr_trace.corner_last().equals(intersection) )
+               {
+               return true;
+               }
+            }
+         }
+      
+      // a split is allowed if we are not inside a pad
+      return pad_found == false;
+      }
+
+   /**
+    * Search in the trace polyline for the point 
+    * @param p_point
+    * @return a valid index if found or -1
+    */
+   public int polyline_find_line_idx ( PlaPointInt p_point )
+      {
+      int idx_max = polyline.plaline_len(-1);
+      
+      for (int index = 1; index < idx_max ; index++)
          {
          PlaSegmentInt curr_line_segment = polyline.segment_get(index);
          
          // The split point (an integer) is within the current line segment
-         if ( ! curr_line_segment.contains(p_point)) continue;
-         
-         PlaDirection split_direction = curr_line_segment.get_line().direction().rotate_45_deg(2);
-
-         PlaLineInt split_line = new PlaLineInt(p_point, split_direction);
-         
-         ArrayList<BrdTracep> result = split_with_end_line(index, split_line);
-         
-         if (result.size() > 0 )  return true;
+         if ( curr_line_segment.contains(p_point)) return index;
          }
+      
+      return -1;
+      }
 
-      return false;
+   /**
+    * Splits this trace into two at p_point. 
+    * can return false i for example p_point is not located on this trace or already split !
+    * @return true if the trace has been split 
+    */
+   public final boolean split_with_point(int line_idx, PlaPointInt p_point)
+      {
+      if (!is_on_the_board()) return false;
+
+      // if split prohibited do nothing
+      if ( ! split_inside_drill_pad_allowed(p_point)) return false;
+
+      ArrayList<Polyline> split_polylines = new ArrayList<Polyline>(2);
+      
+      split_polylines = polyline.split_at_point(line_idx, p_point);
+         
+      if (split_polylines.size() < 2 ) return false;
+      
+      r_board.remove_item(this);
+
+      BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(0), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      
+      if ( a_trace == null ) System.err.println("split_with_point: fail1");
+      
+      a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(1), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      
+      if ( a_trace == null ) System.err.println("split_with_point: fail2");
+
+      return true;
       }
 
    // damiano, this is the basic switch to insert one trace join on the board...

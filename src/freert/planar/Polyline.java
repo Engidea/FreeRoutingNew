@@ -428,6 +428,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
     */
    private boolean has_corner_loopt()
       {
+      // the meaning being that the polylineis "invalid"
+      if ( ! is_valid() ) return true;
+      
       PlaPoint first_corner = corner_first();
 
       for (int index = 1; index < corner_count(); ++index)
@@ -1252,7 +1255,119 @@ public final class Polyline implements java.io.Serializable, PlaObject
       return result;
       }
 
+   /**
+    * Returns true of the given point is equal at start of polyline
+    * @param p_point
+    * @return
+    */
+   public boolean equal_at_start ( PlaPointInt p_point )
+      {
+      if ( p_point == null ) return false;
+      
+      PlaPoint first = corner_first();
+      return first.equals(p_point);
+      }
 
+   /**
+    * Returns true if the given point is equal at start of given line
+    * @param line_idx is from 1 to n-2 since begin and end lines are "dummy"
+    * @param p_point
+    * @return
+    */
+   public boolean equal_at_start ( int line_idx, PlaPointInt p_point )
+      {
+      if ( p_point == null ) return false;
+
+      PlaPoint corner = corner(line_idx-1);
+      return corner.equals(p_point);
+      }
+
+   /**
+    * Returns true of the given point is equal at end of polyline
+    * @param p_point
+    * @return
+    */
+   public boolean equal_at_end ( PlaPointInt p_point )
+      {
+      if ( p_point == null ) return false;
+      
+      PlaPoint last = corner_last();
+      return last.equals(p_point);
+      }
+   
+   /**
+    * Returns true if the given point is equal at start of given line
+    * @param line_idx is from 1 to n-2 since begin and end lines are "dummy"
+    * @param p_point
+    * @return
+    */
+   public boolean equal_at_end ( int line_idx, PlaPointInt p_point )
+      {
+      if ( p_point == null ) return false;
+
+      PlaPoint corner = corner(line_idx);
+      return corner.equals(p_point);
+      }
+
+   /**
+    * Splits this polyline at the line with number p_line_no into two 
+    * insert a line that is at 45 degree of the segment that was split 
+    * @return an empty result if nothing wqs split
+    */
+   public ArrayList<Polyline> split_at_point(int p_line_no, PlaPointInt p_point)
+      {
+      ArrayList<Polyline> result = new ArrayList<Polyline>(2);
+      
+      if (p_line_no < 1 || p_line_no > plaline_len(-2) )
+         {
+         System.out.println("split_at_point.split: p_line_no out of range");
+         return result;
+         }
+      
+      if ( equal_at_start(p_point) ) return result;
+      
+      if ( equal_at_end(p_point) ) return result;
+      
+      if ( equal_at_start(p_line_no, p_point) ) return result;
+      
+      if ( equal_at_end(p_line_no, p_point) ) return result;
+
+      PlaLineInt a_line = plaline(p_line_no);
+      
+      PlaLineIntAlist first_piece = new PlaLineIntAlist(plaline_len());
+      
+      // Copy from the beginning up to the closing line, including the closing line
+      alist_append_to(first_piece, 0, p_line_no+1);
+      
+      // now add the end line
+      PlaDirection split_direction = a_line.direction().rotate_45_deg(2);
+      first_piece.add(new PlaLineInt(p_point, split_direction));
+
+      Polyline first_poly = new Polyline(first_piece);
+
+      if (first_poly.has_corner_loopt() ) return result;
+
+      
+      PlaLineIntAlist second_piece = new PlaLineIntAlist(plaline_len());
+      
+      // add the slit point to the second part
+      second_piece.add(new PlaLineInt(p_point, split_direction));
+
+      // and the rest of lines, up until the end
+      alist_append_to(second_piece, p_line_no);
+      
+      Polyline second_poly = new Polyline(second_piece);
+      
+      if ( second_poly.has_corner_loopt() )  return result;
+
+      result.add(first_poly);
+      result.add(second_poly);
+      
+      return result;
+      }
+
+   
+   
    public boolean contains(PlaPointInt p_point)
       {
       for (int index = 1; index < plaline_len(-1); ++index)

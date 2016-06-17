@@ -564,8 +564,12 @@ public abstract class AlgoPullTight
          {
          BrdTracep a_trace = (BrdTracep)curr_item;
          
+         int line_idx = a_trace.polyline_find_line_idx(keep_point.keep_point);
+         
+         if ( line_idx < 1 ) continue;
+         
          // normally there is just one trace at a given keep point, no ?
-         if ( a_trace.split_with_point( keep_point.keep_point) ) return true;
+         if ( a_trace.split_with_point(line_idx, keep_point.keep_point) ) return true;
          }
 
       return false;
