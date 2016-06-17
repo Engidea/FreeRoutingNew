@@ -38,7 +38,7 @@ import board.varie.BrdStopConnection;
 import board.varie.ItemFixState;
 import board.varie.ItemSelectionChoice;
 import board.varie.ItemSelectionFilter;
-import board.varie.SearchTreesInfo;
+import board.varie.BrdItemAwtreeInfo;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
 import freert.planar.PlaDimension;
@@ -80,7 +80,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    // Temporary data used in the auto route algorithm. 
    private transient ArtItem art_item;
    // points to the entries of this item in the ShapeSearchTrees 
-   private transient SearchTreesInfo search_trees_info = new SearchTreesInfo();
+   private transient BrdItemAwtreeInfo awtree_info = new BrdItemAwtreeInfo();
 
    /**
     * Called by subclasses, obviously
@@ -133,7 +133,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    public final void set_transient_field ( RoutingBoard p_board )
       {
       r_board = p_board;
-      search_trees_info = new SearchTreesInfo();
+      awtree_info = new BrdItemAwtreeInfo();
       }
    
    
@@ -252,12 +252,12 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
 
    private ShapeTile[] get_precalculated_tree_shapes(AwtreeShapeSearch p_tree)
       {
-      ShapeTile[] precalculated_tree_shapes = search_trees_info.get_precalculated_tree_shapes(p_tree);
+      ShapeTile[] precalculated_tree_shapes = awtree_info.get_precalculated_tree_shapes(p_tree);
 
       if (precalculated_tree_shapes == null)
          {
          precalculated_tree_shapes = calculate_tree_shapes( p_tree);
-         search_trees_info.set_precalculated_tree_shapes(precalculated_tree_shapes, p_tree);
+         awtree_info.set_precalculated_tree_shapes(precalculated_tree_shapes, p_tree);
          }
       
       return precalculated_tree_shapes;
@@ -1176,7 +1176,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    @Override
    public final void set_search_tree_entries(AwtreeShapeSearch p_tree, AwtreeNodeLeaf[] p_tree_entries)
       {
-      search_trees_info.set_tree_entries(p_tree , p_tree_entries);
+      awtree_info.set_tree_entries(p_tree , p_tree_entries);
       }
 
    /**
@@ -1185,7 +1185,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     */
    public final AwtreeNodeLeaf[] get_search_tree_entries(AwtreeShapeSearch p_tree)
       {
-      return search_trees_info.get_tree_entries(p_tree);
+      return awtree_info.get_tree_entries(p_tree);
       }
 
    /**
@@ -1193,7 +1193,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     */
    public final void set_precalculated_tree_shapes(ShapeTile[] p_shapes, AwtreeShapeSearch p_tree)
       {
-      search_trees_info.set_precalculated_tree_shapes(p_shapes, p_tree);
+      awtree_info.set_precalculated_tree_shapes(p_shapes, p_tree);
       }
 
    /**
@@ -1201,7 +1201,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     */
    public final void clear_search_tree_entries()
       {
-      search_trees_info.clear();
+      awtree_info.clear();
       }
 
    /**
@@ -1232,7 +1232,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     */
    public void clear_derived_data()
       {
-      search_trees_info.clear_precalculated_tree_shapes();
+      awtree_info.clear_precalculated_tree_shapes();
       
       art_item_clear();
       }

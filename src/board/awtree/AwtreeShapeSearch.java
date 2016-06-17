@@ -1271,6 +1271,9 @@ public final class AwtreeShapeSearch
       p_item.set_search_tree_entries(this, new_leaf_arr );
       }
 
+   
+   
+   
    /**
     * This is for a board trace
     */
@@ -1292,11 +1295,9 @@ public final class AwtreeShapeSearch
     */
    public final ShapeTile[] calculate_tree_shapes(BrdTraceJoin p_join)
       {
-      ShapeTileOctagon octa = new ShapeTileOctagon(p_join.center_get());
-      
       ShapeTile[] result = new ShapeTile[1];
 
-      result[0] = octa.enlarge(p_join.min_width());
+      result[0] =  p_join.get_shape();
 
       return result;
       }
@@ -1373,9 +1374,9 @@ public final class AwtreeShapeSearch
       
       ShapeTile[] result = new ShapeTile[tree_shape_list.size()];
       Iterator<ShapeTile> it = tree_shape_list.iterator();
-      for (int i = 0; i < result.length; ++i)
+      for (int index = 0; index < result.length; ++index)
          {
-         result[i] = it.next();
+         result[index] = it.next();
          }
       return result;
       }

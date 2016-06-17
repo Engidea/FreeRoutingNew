@@ -19,16 +19,22 @@ import board.awtree.AwtreeNodeLeaf;
 import board.awtree.AwtreeShapeSearch;
 import freert.planar.ShapeTile;
 
-public final class SearchTreeInfoLeaf
+public final class BrdItemAwtreeInfoLeaf
    {
    public final AwtreeShapeSearch tree;
    public AwtreeNodeLeaf[] entry_arr;
    public ShapeTile[] precalculated_tree_shapes;
 
-   public SearchTreeInfoLeaf(AwtreeShapeSearch p_tree)
+   public BrdItemAwtreeInfoLeaf(AwtreeShapeSearch p_tree, ShapeTile[] precalculated_shapes)
       {
       tree = p_tree;
-      entry_arr = null;
-      precalculated_tree_shapes = null;
+      precalculated_tree_shapes = precalculated_shapes;
       }
+
+   public BrdItemAwtreeInfoLeaf(AwtreeShapeSearch p_tree, AwtreeNodeLeaf[] p_entry_arr)
+      {
+      tree = p_tree;
+      entry_arr = p_entry_arr;
+      }
+
    }

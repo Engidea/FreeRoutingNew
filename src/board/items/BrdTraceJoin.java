@@ -221,7 +221,7 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
    /**
     * Need to have the shape...
     */
-   private PlaShape get_shape()
+   public final ShapeTileOctagon get_shape()
       {
       ShapeTileOctagon octa = new ShapeTileOctagon(center_get());
 

@@ -224,6 +224,7 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public ShapeTileBox bounding_box()
       {
+      // TODO it should be possible to use start and end points and not calculate them again
       PlaPointFloat start_corner = middle.intersection_approx(start);
       PlaPointFloat end_corner = middle.intersection_approx(end);
       double llx = Math.min(start_corner.v_x, end_corner.v_x);

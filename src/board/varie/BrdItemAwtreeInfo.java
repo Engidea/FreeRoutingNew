@@ -21,7 +21,6 @@
 
 package board.varie;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import board.awtree.AwtreeNodeLeaf;
 import board.awtree.AwtreeShapeSearch;
@@ -31,9 +30,9 @@ import freert.planar.ShapeTile;
  * Stores information about the search trees of the board items, which is pre calculated for performance reasons.
  * @author Alfons Wirtz
  */
-public final class SearchTreesInfo
+public final class BrdItemAwtreeInfo
    {
-   private final Collection<SearchTreeInfoLeaf> leaves_list = new LinkedList<SearchTreeInfoLeaf>();
+   private final LinkedList<BrdItemAwtreeInfoLeaf> leaves_list = new LinkedList<BrdItemAwtreeInfoLeaf>();
 
    /**
     * Returns the tree entries for the given tree  or null, if for this tree no entries of this item
@@ -41,13 +40,11 @@ public final class SearchTreesInfo
     */
    public AwtreeNodeLeaf[] get_tree_entries(AwtreeShapeSearch p_tree)
       {
-      for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
+      for (BrdItemAwtreeInfoLeaf curr_tree_info : leaves_list)
          {
-         if (curr_tree_info.tree == p_tree)
-            {
-            return curr_tree_info.entry_arr;
-            }
+         if (curr_tree_info.tree == p_tree) return curr_tree_info.entry_arr;
          }
+
       return null;
       }
 
@@ -62,7 +59,7 @@ public final class SearchTreesInfo
     */
    public void set_tree_entries( AwtreeShapeSearch p_tree , AwtreeNodeLeaf[] p_tree_entries)
       {
-      for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
+      for (BrdItemAwtreeInfoLeaf curr_tree_info : leaves_list)
          {
          if (curr_tree_info.tree == p_tree)
             {
@@ -71,8 +68,8 @@ public final class SearchTreesInfo
             }
          }
       
-      SearchTreeInfoLeaf new_tree_info = new SearchTreeInfoLeaf(p_tree);
-      new_tree_info.entry_arr = p_tree_entries;
+      BrdItemAwtreeInfoLeaf new_tree_info = new BrdItemAwtreeInfoLeaf(p_tree, p_tree_entries);
+
       leaves_list.add(new_tree_info);
       }
 
@@ -82,13 +79,11 @@ public final class SearchTreesInfo
     */
    public ShapeTile[] get_precalculated_tree_shapes(AwtreeShapeSearch p_tree)
       {
-      for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
+      for (BrdItemAwtreeInfoLeaf curr_tree_info : leaves_list)
          {
-         if (curr_tree_info.tree == p_tree)
-            {
-            return curr_tree_info.precalculated_tree_shapes;
-            }
+         if (curr_tree_info.tree == p_tree) return curr_tree_info.precalculated_tree_shapes;
          }
+
       return null;
       }
 
@@ -97,7 +92,7 @@ public final class SearchTreesInfo
     */
    public void set_precalculated_tree_shapes(ShapeTile[] p_tile_shapes, AwtreeShapeSearch p_tree)
       {
-      for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
+      for (BrdItemAwtreeInfoLeaf curr_tree_info : leaves_list)
          {
          if (curr_tree_info.tree == p_tree)
             {
@@ -106,8 +101,8 @@ public final class SearchTreesInfo
             }
          }
       
-      SearchTreeInfoLeaf new_tree_info = new SearchTreeInfoLeaf(p_tree);
-      new_tree_info.precalculated_tree_shapes = p_tile_shapes;
+      BrdItemAwtreeInfoLeaf new_tree_info = new BrdItemAwtreeInfoLeaf(p_tree, p_tile_shapes);
+      
       leaves_list.add(new_tree_info);
       }
 
@@ -116,7 +111,7 @@ public final class SearchTreesInfo
     */
    public void clear_precalculated_tree_shapes()
       {
-      for (SearchTreeInfoLeaf curr_tree_info : leaves_list)
+      for (BrdItemAwtreeInfoLeaf curr_tree_info : leaves_list)
          {
          curr_tree_info.precalculated_tree_shapes = null;
          }
