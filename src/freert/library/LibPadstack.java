@@ -86,29 +86,32 @@ public final class LibPadstack implements Comparable<LibPadstack>, PrintableInfo
       }
 
    /**
-    * Returns the first layer of this padstack with a shape != null.
+    * Returns -1 if there is no shape at all... (is it even possible ?)
+    * @return the first layer of this padstack with a shape != null.
     */
    public int from_layer()
       {
-      int result = 0;
-      while (result < shapes.length && shapes[result] == null)
+      for (int index=0; index < shapes.length; index++ )
          {
-         ++result;
+         if ( shapes[index] != null ) return index;
          }
-      return result;
+         
+      // THIS is actually wrong, need some error handling on constructor
+      return 0;
       }
 
    /**
-    * Returns the last layer of this padstack with a shape != null.
+    * @returns the last layer of this padstack with a shape != null.
     */
    public int to_layer()
       {
-      int result = shapes.length - 1;
-      while (result >= 0 && shapes[result] == null)
+      for (int index = shapes.length - 1; index >= 0 ; index-- )
          {
-         --result;
+         if ( shapes[index] != null ) return index;
          }
-      return result;
+      
+      // THIS is actually wrong, need some error handling on constructor
+      return shapes.length - 1;
       }
 
    /** Returns the layer ciount of the board of this padstack. */

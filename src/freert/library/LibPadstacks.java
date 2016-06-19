@@ -21,8 +21,8 @@
 package freert.library;
 
 import java.util.Vector;
-import freert.planar.ShapeConvex;
 import board.BrdLayerStructure;
+import freert.planar.ShapeConvex;
 
 /**
  * Describes a library of padstacks for pins or vias.
@@ -101,8 +101,9 @@ public final class LibPadstacks implements java.io.Serializable
       }
 
    /**
-    * Appends a new padstack with the input shapes to this padstacks. p_shapes is an array of dimension board layer_count. The
-    * padatack name is generated internally.
+    * Appends a new padstack with the input shapes to this padstacks.
+    * p_shapes is an array of dimension board layer_count. 
+    * The padatack name is generated internally.
     */
    public LibPadstack add(ShapeConvex[] p_shapes)
       {
