@@ -334,6 +334,9 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
       return get_tree_shape(p_tree, p_layer - from_layer);
       }
 
+   /**
+    * Why this one ?
+    */
    public final ShapeTile get_tile_shape_on_layer(int p_layer)
       {
       int from_layer = first_layer();
@@ -343,7 +346,7 @@ public abstract class BrdAbit extends BrdItem implements BrdConnectable, java.io
          System.out.println("DrillItem.get_tile_shape_on_layer: p_layer out of range");
          return null;
          }
-      return get_tile_shape(p_layer - from_layer);
+      return tile_shape_get(p_layer - from_layer);
       }
 
    public final PlaShape get_shape_on_layer(int p_layer)

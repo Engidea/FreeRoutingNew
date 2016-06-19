@@ -1108,7 +1108,7 @@ public final class RoutingBoard implements java.io.Serializable
 
                if (intersection == null)
                   {
-                  ShapeTile obstacle_trace_shape = curr_item.get_tile_shape(curr_tree_entry.shape_index_in_object);
+                  ShapeTile obstacle_trace_shape = curr_item.tile_shape_get(curr_tree_entry.shape_index_in_object);
                   intersection = p_shape.intersection(obstacle_trace_shape);
                   }
                
@@ -1138,7 +1138,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       for (int index = 0; index < tmp_trace.tile_shape_count(); ++index)
          {
-         if (!check_trace(tmp_trace.get_tile_shape(index), p_layer, p_net_no_arr, p_clearance_class, contact_pins))
+         if (!check_trace(tmp_trace.tile_shape_get(index), p_layer, p_net_no_arr, p_clearance_class, contact_pins))
             {
             return false;
             }
@@ -1665,7 +1665,7 @@ public final class RoutingBoard implements java.io.Serializable
          
          for (int index = 0; index < curr_item.tile_shape_count(); ++index)
             {
-            ShapeTile curr_shape = curr_item.get_tile_shape(index);
+            ShapeTile curr_shape = curr_item.tile_shape_get(index);
             changed_area.join(curr_shape, curr_item.shape_layer(index));
             }
          
@@ -1848,7 +1848,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       for (int index = 0; index < p_item.tile_shape_count(); ++index)
          {
-         ShapeTile moved_shape = (ShapeTile) p_item.get_tile_shape(index).translate_by(p_vector);
+         ShapeTile moved_shape = (ShapeTile) p_item.tile_shape_get(index).translate_by(p_vector);
 
          if (!moved_shape.is_contained_in(bounding_box)) return false;
          
@@ -1884,7 +1884,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       for (int index = 0; index < p_item.tile_shape_count(); ++index)
          {
-         ShapeTile curr_shape = p_item.get_tile_shape(index);
+         ShapeTile curr_shape = p_item.tile_shape_get(index);
          
          Set<BrdItem> obstacles = overlapping_items_with_clearance(curr_shape, p_item.shape_layer(index), net_no_arr, p_item.clearance_idx());
 

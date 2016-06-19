@@ -228,10 +228,10 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    public abstract int tile_shape_count();
 
    /**
-    * Returns the p_index-throws shape of this item after decomposition into convex polygonal shapes
+    * @return the p_index-throws shape of this item after decomposition into convex polygonal shapes
     * Overriden in subclasses
     */
-   public ShapeTile get_tile_shape(int p_index)
+   public ShapeTile tile_shape_get(int p_index)
       {
       return get_tree_shape(r_board.search_tree_manager.get_default_tree(), p_index);
       }
@@ -486,7 +486,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       
       for (int index = 0; index < tile_shape_count(); ++index)
          {
-         ShapeTile curr_tile_shape = get_tile_shape(index);
+         ShapeTile curr_tile_shape = tile_shape_get(index);
          
          Collection<AwtreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(
                curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
@@ -543,7 +543,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       
       for (int index = 0; index < tile_shape_count(); ++index)
          {
-         Collection<AwtreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), shape_layer(index));
+         Collection<AwtreeObject> overlapping_items = r_board.overlapping_objects(tile_shape_get(index), shape_layer(index));
          Iterator<AwtreeObject> it = overlapping_items.iterator();
          while (it.hasNext())
             {
@@ -578,7 +578,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
          {
          if ( shape_layer(index) != p_layer) continue;
 
-         Collection<AwtreeObject> overlapping_items = r_board.overlapping_objects(get_tile_shape(index), p_layer);
+         Collection<AwtreeObject> overlapping_items = r_board.overlapping_objects(tile_shape_get(index), p_layer);
          Iterator<AwtreeObject> it = overlapping_items.iterator();
 
          while (it.hasNext())
@@ -938,7 +938,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       
       for (int index = 0; index < tile_shape_count(); ++index)
          {
-         ShapeTile curr_shape = get_tile_shape(index);
+         ShapeTile curr_shape = tile_shape_get(index);
          if (curr_shape.is_empty())
             {
             System.out.println("Item.validate: shape is empty");

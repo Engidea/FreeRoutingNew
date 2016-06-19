@@ -216,7 +216,7 @@ public  class BrdArea extends BrdItem implements java.io.Serializable
       }
 
    @Override
-   public ShapeTile get_tile_shape(int p_no)
+   public ShapeTile tile_shape_get(int p_no)
       {
       ShapeTile[] tile_shapes = split_to_convex();
       if (tile_shapes == null || p_no < 0 || p_no >= tile_shapes.length)

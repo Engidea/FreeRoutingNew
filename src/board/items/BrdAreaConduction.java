@@ -89,7 +89,7 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
       
       for (int index = 0; index < tile_shape_count(); ++index)
          {
-         ShapeTile curr_shape = get_tile_shape(index);
+         ShapeTile curr_shape = tile_shape_get(index);
          
          Set<AwtreeObject> overlaps = r_board.overlapping_objects(curr_shape, get_layer());
 
