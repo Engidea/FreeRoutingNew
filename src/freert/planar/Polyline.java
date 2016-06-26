@@ -40,9 +40,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
    private PlaPointFloat[] precalculated_float_corners = null;
    private PlaPoint[]      precalculated_corners = null;        // need to ba an array since not all are calculated 
    private ShapeTileBox    precalculated_bounding_box = null;
-
-   private  PlaPointInt corner_first;
-   private  PlaPointInt corner_last;
    
    /**
     * creates a polyline of length point_arr.size + 1 so that the i-th corner of p_polygon will be the
@@ -80,22 +77,22 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if ( input_len < 2)
          throw new IllegalArgumentException(classname+"B must contain at least 2 different points");
       
-      corner_first = corners_alist.get(0);
+      PlaPointInt acorner = corners_alist.get(0);
       
       // construct perpendicular lines at the start and at the end to represent
-      PlaDirection dir = new PlaDirection(corner_first, corners_alist.get(1));
+      PlaDirection dir = new PlaDirection(acorner, corners_alist.get(1));
 
-      lines_list.add(new PlaLineInt(corner_first, dir.rotate_45_deg(2)) );
+      lines_list.add(new PlaLineInt(acorner, dir.rotate_45_deg(2)) );
 
       for (int index = 1; index < input_len; ++index)
          lines_list.add( new PlaLineInt(corners_alist.get(index - 1), corners_alist.get(index) ) );
       
-      corner_last = corners_alist.get(input_len - 1);
+      acorner = corners_alist.get(input_len - 1);
       
       // the first and the last point of point_arr as intersection of lines.
-      dir = new PlaDirection(corner_last, corners_alist.get(input_len - 2));
+      dir = new PlaDirection(acorner, corners_alist.get(input_len - 2));
 
-      lines_list.add( new PlaLineInt(corner_last, dir.rotate_45_deg(2) ) );
+      lines_list.add( new PlaLineInt(acorner, dir.rotate_45_deg(2) ) );
       
       corners_allocate(corner_count());
       
@@ -203,8 +200,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
       {
       if (p_from_corner.equals(p_to_corner))
          throw new IllegalArgumentException(classname+"C must contain at least 2 different points");
-      
-      corner_first = p_from_corner;
       
       lines_list = new ArrayList<PlaLineInt>(3);
       
