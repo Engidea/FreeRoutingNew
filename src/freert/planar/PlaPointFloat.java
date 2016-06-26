@@ -141,6 +141,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
     */
    public PlaPointInt round()
       {
+      if ( is_NaN() ) return new PlaPointInt();
+      
       return new PlaPointInt(Math.round(v_x), Math.round(v_y));
       }
 
@@ -274,7 +276,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       }
 
    /**
-    * Returns an approximation of the perpendicular projection of this point onto p_line
+    * @returns an approximation of the perpendicular projection of this point onto p_line
     */
    public PlaPointFloat projection_approx(PlaLineInt p_line)
       {
@@ -451,6 +453,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
     */
    public boolean is_contained_in_box(PlaPointFloat p_1, PlaPointFloat p_2, double p_tolerance)
       {
+      if ( is_NaN() ) return false;
+      
       double min_x;
       double max_x;
       

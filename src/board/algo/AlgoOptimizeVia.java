@@ -324,8 +324,12 @@ public final class AlgoOptimizeVia
             {
             PlaSegmentFloat curr_line = new PlaSegmentFloat(float_check_corner, float_prev_corner);
             PlaPointInt projection = curr_line.perpendicular_projection(float_via_center).round();
-            PlaVectorInt diff_vector = projection.difference_by(via_center);
+            
             boolean projection_ok = true;
+
+            if ( projection.is_NaN() ) projection_ok = false;
+            
+            PlaVectorInt diff_vector = projection.difference_by(via_center);
             TraceAngleRestriction angle_restriction = r_board.brd_rules.get_trace_snap_angle();
             if (projection.equals(via_center) && !diff_vector.is_orthogonal()
                   || angle_restriction.is_limit_45() && !diff_vector.is_multiple_of_45_degree())

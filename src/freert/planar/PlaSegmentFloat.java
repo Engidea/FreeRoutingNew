@@ -72,7 +72,8 @@ public final class PlaSegmentFloat implements PlaObject
       }
 
    /**
-    * Calculates the intersection of this line with p_other. Returns null, if the lines are parallel.
+    * Calculates the intersection of this line with p_other. 
+    * @returns null, if the lines are parallel.
     */
    public PlaPointFloat intersection(PlaSegmentFloat p_other)
       {
@@ -136,19 +137,25 @@ public final class PlaSegmentFloat implements PlaObject
       }
 
    /**
-    * Returns an approximation of the perpensicular projection of p_point onto this line.
+    * May return a NaN if no projection exist !
+    * @returns an approximation of the perpensicular projection of p_point onto this line.
     */
    public PlaPointFloat perpendicular_projection(PlaPointFloat p_point)
       {
       double dx = point_b.v_x - point_a.v_x;
       double dy = point_b.v_y - point_a.v_y;
       
+      // This just means that we are adealing wiht a point... possibly never happens
       if (dx == 0 && dy == 0) return point_a;
 
       double dxdx = dx * dx;
       double dydy = dy * dy;
       double dxdy = dx * dy;
       double denominator = dxdx + dydy;
+      
+      // this will return a NaN
+      if ( denominator == 0 ) return new PlaPointFloat();
+      
       double det = point_a.v_x * point_b.v_y - point_b.v_x * point_a.v_y;
 
       double x = (p_point.v_x * dxdx + p_point.v_y * dxdy + det * dy) / denominator;
@@ -163,16 +170,11 @@ public final class PlaSegmentFloat implements PlaObject
    public double segment_distance(PlaPointFloat p_point)
       {
       PlaPointFloat projection = perpendicular_projection(p_point);
-      double result;
+
       if (projection.is_contained_in_box(point_a, point_b, 0.01))
-         {
-         result = p_point.distance(projection);
-         }
-      else
-         {
-         result = Math.min(p_point.distance(point_a), p_point.distance(point_b));
-         }
-      return result;
+         return p_point.distance(projection);
+
+      return Math.min(p_point.distance(point_a), p_point.distance(point_b));
       }
 
    /**
@@ -197,11 +199,13 @@ public final class PlaSegmentFloat implements PlaObject
       else
          {
          projected_a = perpendicular_projection(p_line_segment.point_a);
+         
+         if ( projected_a.is_NaN() ) return null;
+         
          if (Math.abs(projected_a.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_a.v_y) >= PlaLimits.CRIT_INT)
-            {
             return null;
-            }
          }
+
       PlaPointFloat projected_b;
       if (point_b.scalar_product(point_a, p_line_segment.point_b) < 0)
          {
@@ -211,16 +215,18 @@ public final class PlaSegmentFloat implements PlaObject
          {
          projected_b = perpendicular_projection(p_line_segment.point_b);
          }
-      if (Math.abs(projected_b.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_b.v_y) >= PlaLimits.CRIT_INT)
-         {
-         return null;
-         }
+      
+      if ( projected_b.is_NaN() ) return null;
+      
+      if (Math.abs(projected_b.v_x) >= PlaLimits.CRIT_INT || Math.abs(projected_b.v_y) >= PlaLimits.CRIT_INT) return null;
+
       return new PlaSegmentFloat(projected_a, projected_b);
       }
 
    /**
     * Returns the projection of p_line_segment onto this oriented line segment by moving p_line_segment perpendicular into the
-    * direction of this line segmant Returns null, if the projection is empty or p_line_segment.a == p_line_segment.b
+    * direction of this line segmant 
+    * @returns null, if the projection is empty or p_line_segment.a == p_line_segment.b
     */
    public PlaSegmentFloat segment_projection_2(PlaSegmentFloat p_line_segment)
       {
@@ -228,10 +234,12 @@ public final class PlaSegmentFloat implements PlaObject
          {
          return null;
          }
+      
       if (p_line_segment.point_b.scalar_product(p_line_segment.point_a, point_a) <= 0)
          {
          return null;
          }
+      
       PlaPointFloat projected_a;
       if (p_line_segment.point_a.scalar_product(p_line_segment.point_b, point_a) < 0)
          {
@@ -262,6 +270,7 @@ public final class PlaSegmentFloat implements PlaObject
          {
          projected_b = point_b;
          }
+      
       return new PlaSegmentFloat(projected_a, projected_b);
       }
 

@@ -1377,7 +1377,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
 
    /**
     * Creates a perpendicular line segment from p_from_point onto the nearest line segment of this polyline to p_from_side. 
-    * Returns null, if the perpendicular line does not intersect the neares line segment inside its segment bounds or if p_from_point is
+    * @returns null, if the perpendicular line does not intersect the neares line segment inside its segment bounds or if p_from_point is
     * contained in this polyline.
     */
    public PlaSegmentInt projection_line(PlaPointInt p_from_point)
@@ -1392,6 +1392,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       for (int index = 1; index < plaline_len(-1); ++index)
          {
          PlaPointFloat projection = from_point.projection_approx(plaline(index));
+         
+         if ( projection.is_NaN()) continue;
+         
          double curr_distance = projection.distance(from_point);
          
          if (curr_distance >= min_distance) continue;
