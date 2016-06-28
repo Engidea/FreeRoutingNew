@@ -100,7 +100,7 @@ public class StateConstuctTile extends StateConstructCorner
          int layer = i_brd.itera_settings.layer_no;
          int cl_class = BoardRules.clearance_null_idx;
 
-         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
+         construction_succeeded = r_brd.check_shape(obstacle_shape.split_to_convex(), layer, NetNosList.EMPTY, cl_class);
          if (construction_succeeded)
             {
 

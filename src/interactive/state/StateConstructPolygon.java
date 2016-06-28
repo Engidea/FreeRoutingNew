@@ -27,6 +27,7 @@ import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaPointIntAlist;
 import freert.planar.ShapePolygon;
+import freert.planar.ShapeTile;
 import freert.rules.BoardRules;
 import freert.varie.NetNosList;
 
@@ -72,18 +73,22 @@ public class StateConstructPolygon extends StateConstructCorner
          ShapePolygon obstacle_shape = new ShapePolygon(corner_arr);
          
          int cl_class = BoardRules.clearance_null_idx;
-         if (obstacle_shape.split_to_convex() == null)
+         
+         ShapeTile [] tiles = obstacle_shape.split_to_convex();
+         
+         if (tiles == null)
             {
             // shape is invalid, maybe it has selfintersections
             construction_succeeded = false;
             }
          else
             {
-            construction_succeeded = r_brd.check_shape(obstacle_shape, i_brd.itera_settings.layer_no, NetNosList.EMPTY, cl_class);
+            construction_succeeded = r_brd.check_shape(tiles, i_brd.itera_settings.layer_no, NetNosList.EMPTY, cl_class);
             }
+         
+         
          if (construction_succeeded)
             {
-
             r_brd.start_notify_observers();
 
             r_brd.generate_snapshot();

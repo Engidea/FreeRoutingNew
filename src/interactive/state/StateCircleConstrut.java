@@ -112,7 +112,7 @@ public class StateCircleConstrut extends StateInteractive
             obstacle_shape = obstacle_shape.bounding_octagon();
             }
          
-         construction_succeeded = r_brd.check_shape(obstacle_shape, layer, NetNosList.EMPTY, cl_class);
+         construction_succeeded = r_brd.check_shape(obstacle_shape.split_to_convex(), layer, NetNosList.EMPTY, cl_class);
          }
 
       if (construction_succeeded)

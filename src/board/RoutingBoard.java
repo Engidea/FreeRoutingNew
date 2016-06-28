@@ -1025,10 +1025,8 @@ public final class RoutingBoard implements java.io.Serializable
     * WARNING apparently p_net_no_Arr is always empty, does not seems correct no ?
     * @return true if it can be inserted
     */
-   public boolean check_shape(PlaArea p_shape, int p_layer, NetNosList p_net_no_arr, int p_cl_class)
+   public boolean check_shape(ShapeTile[] tiles, int p_layer, NetNosList p_net_no_arr, int p_cl_class)
       {
-      ShapeTile[] tiles = p_shape.split_to_convex();
-      
       AwtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
       
       for (int index = 0; index < tiles.length; ++index)
