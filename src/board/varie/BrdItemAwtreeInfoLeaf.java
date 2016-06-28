@@ -19,6 +19,12 @@ import board.awtree.AwtreeNodeLeaf;
 import board.awtree.AwtreeShapeSearch;
 import freert.planar.ShapeTile;
 
+/**
+ * A BrdItem has a cached info on the search tree...
+ * @author damiano
+ *
+ */
+
 public final class BrdItemAwtreeInfoLeaf
    {
    public final AwtreeShapeSearch tree;

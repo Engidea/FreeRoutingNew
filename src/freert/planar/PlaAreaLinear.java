@@ -101,33 +101,24 @@ public final class PlaAreaLinear implements PlaArea, Serializable
    @Override
    public boolean contains(PlaPointFloat p_point)
       {
-      if (!border_shape.contains(p_point))
+      if (!border_shape.contains(p_point)) return false;
+
+      for (int index = 0; index < hole_arr.length; ++index)
          {
-         return false;
+         if (hole_arr[index].contains(p_point)) return false;
          }
-      for (int i = 0; i < hole_arr.length; ++i)
-         {
-         if (hole_arr[i].contains(p_point))
-            {
-            return false;
-            }
-         }
+
       return true;
       }
 
    @Override
    public boolean contains(PlaPoint p_point)
       {
-      if (!border_shape.contains(p_point))
+      if (!border_shape.contains(p_point)) return false;
+
+      for (int index = 0; index < hole_arr.length; ++index)
          {
-         return false;
-         }
-      for (int i = 0; i < hole_arr.length; ++i)
-         {
-         if (hole_arr[i].contains_inside(p_point))
-            {
-            return false;
-            }
+         if (hole_arr[index].contains_inside(p_point)) return false;
          }
       return true;
       }
@@ -136,18 +127,23 @@ public final class PlaAreaLinear implements PlaArea, Serializable
    public PlaPointFloat nearest_point_approx(PlaPointFloat p_from_point)
       {
       double min_dist = Double.MAX_VALUE;
+      
       PlaPointFloat result = null;
       ShapeTile[] convex_shapes = split_to_convex();
-      for (int i = 0; i < convex_shapes.length; ++i)
+      
+      for (int index = 0; index < convex_shapes.length; ++index)
          {
-         PlaPointFloat curr_nearest_point = convex_shapes[i].nearest_point_approx(p_from_point);
+         PlaPointFloat curr_nearest_point = convex_shapes[index].nearest_point_approx(p_from_point);
+      
          double curr_dist = curr_nearest_point.dustance_square(p_from_point);
+         
          if (curr_dist < min_dist)
             {
             min_dist = curr_dist;
             result = curr_nearest_point;
             }
          }
+      
       return result;
       }
 
@@ -172,17 +168,19 @@ public final class PlaAreaLinear implements PlaArea, Serializable
    public PlaPointFloat[] corner_approx_arr()
       {
       int corner_count = border_shape.border_line_count();
-      for (int i = 0; i < hole_arr.length; ++i)
+      
+      for (int index = 0; index < hole_arr.length; ++index)
          {
-         corner_count += hole_arr[i].border_line_count();
+         corner_count += hole_arr[index].border_line_count();
          }
+      
       PlaPointFloat[] result = new PlaPointFloat[corner_count];
       PlaPointFloat[] curr_corner_arr = border_shape.corner_approx_arr();
       System.arraycopy(curr_corner_arr, 0, result, 0, curr_corner_arr.length);
       int dest_pos = curr_corner_arr.length;
-      for (int i = 0; i < hole_arr.length; ++i)
+      for (int index = 0; index < hole_arr.length; ++index)
          {
-         curr_corner_arr = hole_arr[i].corner_approx_arr();
+         curr_corner_arr = hole_arr[index].corner_approx_arr();
          System.arraycopy(curr_corner_arr, 0, result, dest_pos, curr_corner_arr.length);
          dest_pos += curr_corner_arr.length;
          }
@@ -265,11 +263,14 @@ public final class PlaAreaLinear implements PlaArea, Serializable
    public PlaAreaLinear rotate_90_deg(int p_factor, PlaPointInt p_pole)
       {
       ShapeSegments new_border = border_shape.rotate_90_deg(p_factor, p_pole);
+      
       ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
-      for (int i = 0; i < new_hole_arr.length; ++i)
+      
+      for (int index = 0; index < new_hole_arr.length; ++index)
          {
-         new_hole_arr[i] = hole_arr[i].rotate_90_deg(p_factor, p_pole);
+         new_hole_arr[index] = hole_arr[index].rotate_90_deg(p_factor, p_pole);
          }
+      
       return new PlaAreaLinear(new_border, new_hole_arr);
       }
 
@@ -290,9 +291,9 @@ public final class PlaAreaLinear implements PlaArea, Serializable
       {
       ShapeSegments new_border = border_shape.mirror_vertical(p_pole);
       ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
-      for (int i = 0; i < new_hole_arr.length; ++i)
+      for (int index = 0; index < new_hole_arr.length; ++index)
          {
-         new_hole_arr[i] = hole_arr[i].mirror_vertical(p_pole);
+         new_hole_arr[index] = hole_arr[index].mirror_vertical(p_pole);
          }
       return new PlaAreaLinear(new_border, new_hole_arr);
 
@@ -303,20 +304,22 @@ public final class PlaAreaLinear implements PlaArea, Serializable
       {
       ShapeSegments new_border = border_shape.mirror_horizontal(p_pole);
       ShapeSegments[] new_hole_arr = new ShapeSegments[hole_arr.length];
-      for (int i = 0; i < new_hole_arr.length; ++i)
+      for (int index = 0; index < new_hole_arr.length; ++index)
          {
-         new_hole_arr[i] = hole_arr[i].mirror_horizontal(p_pole);
+         new_hole_arr[index] = hole_arr[index].mirror_horizontal(p_pole);
          }
       return new PlaAreaLinear(new_border, new_hole_arr);
 
       }
 
-   static private void cutout_hole_piece(ShapeTile p_divide_piece, ShapeTile p_hole_piece, Collection<ShapeTile> p_result_pieces)
+   private void cutout_hole_piece(ShapeTile p_divide_piece, ShapeTile p_hole_piece, Collection<ShapeTile> p_result_pieces)
       {
       ShapeTile[] result_pieces = p_divide_piece.cutout(p_hole_piece);
-      for (int i = 0; i < result_pieces.length; ++i)
+      
+      for (int index = 0; index < result_pieces.length; ++index)
          {
-         ShapeTile curr_piece = result_pieces[i];
+         ShapeTile curr_piece = result_pieces[index];
+         
          if (curr_piece.dimension() == PlaDimension.AREA)
             {
             p_result_pieces.add(curr_piece);

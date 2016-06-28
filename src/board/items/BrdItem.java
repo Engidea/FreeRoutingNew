@@ -51,6 +51,7 @@ import freert.planar.ShapeTileBox;
 import freert.rules.RuleNets;
 import freert.varie.NetNosList;
 import freert.varie.UndoableObjectStorable;
+import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -1241,13 +1242,6 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       awtree_leaves.add(new_tree_info);
       }
 
-   /**
-    * Sets the search tree entries of this item to empty
-    */
-   public final void clear_search_tree_entries()
-      {
-      awtree_leaves.clear();
-      }
 
    /**
     * Gets the information for the autoroute algorithm. 
@@ -1281,17 +1275,27 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       
       art_item_clear();
       }
+   
+   /**
+    * Sets the search tree entries of this item to empty
+    */
+   public final void clear_search_tree_entries()
+      {
+      awtree_leaves.clear();
+      }
+   
 
    /**
     * Internal function used in the implementation of print_info
     */
    protected final void print_net_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
-      for (int i = 0; i < net_count(); ++i)
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
+      
+      for (int index = 0; index < net_count(); ++index)
          {
          p_window.append(", " + resources.getString("net") + " ");
-         freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(get_net_no(i));
+         freert.rules.RuleNet curr_net = r_board.brd_rules.nets.get(get_net_no(index));
          p_window.append(curr_net.name, resources.getString("net_info"), curr_net);
          }
       }
@@ -1301,13 +1305,13 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     */
    protected final void print_clearance_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      if (clearance_idx > 0)
-         {
-         java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
-         p_window.append(", " + resources.getString("clearance_class") + " ");
-         String name = r_board.brd_rules.clearance_matrix.get_name(clearance_idx);
-         p_window.append(name, resources.getString("clearance_info"), r_board.brd_rules.clearance_matrix.get_row(clearance_idx));
-         }
+      if (clearance_idx <= 0) return;
+      
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
+
+      p_window.append(", " + resources.getString("clearance_class") + " ");
+      String name = r_board.brd_rules.clearance_matrix.get_name(clearance_idx);
+      p_window.append(name, resources.getString("clearance_info"), r_board.brd_rules.clearance_matrix.get_row(clearance_idx));
       }
 
    /**
@@ -1315,12 +1319,11 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
     */
    protected final void print_fixed_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      if (fixed_state != ItemFixState.UNFIXED)
-         {
-         java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.FixedState", p_locale);
-         p_window.append(", ");
-         p_window.append(resources.getString(fixed_state.toString()));
-         }
+      if (fixed_state == ItemFixState.UNFIXED) return;
+      
+      GuiResources resources = r_board.newGuiResources("board.resources.FixedState");
+      p_window.append(", ");
+      p_window.append(resources.getString(fixed_state.toString()));
       }
 
    /**
@@ -1329,13 +1332,13 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    protected final void print_contact_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
       Collection<BrdItem> contacts = get_normal_contacts();
-      if (!contacts.isEmpty())
-         {
-         java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
-         p_window.append(", " + resources.getString("contacts") + " ");
-         Integer contact_count = contacts.size();
-         p_window.append_items(contact_count.toString(), resources.getString("contact_info"), contacts);
-         }
+
+      if ( contacts.isEmpty() ) return;
+      
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
+      p_window.append(", " + resources.getString("contacts") + " ");
+      Integer contact_count = contacts.size();
+      p_window.append_items(contact_count.toString(), resources.getString("contact_info"), contacts);
       }
 
    /**
@@ -1347,7 +1350,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       
       if ( clearance_violations.isEmpty() ) return;
       
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
       p_window.append(", ");
       Integer violation_count = clearance_violations.size();
       Collection<PrintableInfo> violations = new java.util.LinkedList<PrintableInfo>();

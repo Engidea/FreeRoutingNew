@@ -92,6 +92,7 @@ import freert.varie.TimeLimitStoppable;
 import freert.varie.UndoableObjectNode;
 import freert.varie.UndoableObjectStorable;
 import freert.varie.UndoableObjects;
+import gui.varie.GuiResources;
 
 /**
  * Contains higher level functions of a board
@@ -2654,15 +2655,9 @@ public final class RoutingBoard implements java.io.Serializable
 
       for (BrdItem curr_item : board_items)
          {
-         if (! curr_item.is_route())
-            {
-            continue;
-            }
+         if (! curr_item.is_route()) continue;
          
-         if (curr_item.net_count() != 1)
-            {
-            continue;
-            }
+         if (curr_item.net_count() != 1)  continue;
          
          if (p_net_no > 0 && curr_item.get_net_no(0) != p_net_no) continue;
          
@@ -2892,6 +2887,11 @@ public final class RoutingBoard implements java.io.Serializable
    public final void userPrintln( String message, Exception exc )
       {
       stat.userPrintln(message, exc);
+      }
+   
+   public final GuiResources newGuiResources ( String key )
+      {
+      return new GuiResources (stat, key);
       }
    
    /**
