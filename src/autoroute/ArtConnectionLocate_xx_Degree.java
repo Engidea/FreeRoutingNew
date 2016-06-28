@@ -61,7 +61,7 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
          {
          if (current_to_door_index == current_target_door_index)
             {
-            PlaPointFloat nearest_point = current_target_shape.nearest_point(current_from_point.round()).to_float();
+            PlaPointFloat nearest_point = current_target_shape.nearest_point_approx(current_from_point.round());
             ++current_to_door_index;
             result.add(nearest_point);
             }
@@ -278,13 +278,13 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
                }
             }
          }
+      
       if (end_of_trace)
          {
          new_door_ind = current_target_door_index;
          }
 
-      // Check clearance violation with the previous door shapes
-      // and correct them in this case.
+      // Check clearance violation with the previous door shapes and correct them in this case.
 
       PlaSegmentFloat check_line = new PlaSegmentFloat(current_from_point, result_corner);
       int check_from_door_index = Math.max(current_to_door_index - 5, current_from_door_index + 1);

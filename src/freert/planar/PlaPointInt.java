@@ -244,7 +244,7 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       return (long) v_x * p_other.v_y - (long) v_y * p_other.v_x;
       }
 
-   @Override
+//   @Override
    public PlaPoint perpendicular_projection(PlaLineInt p_line)
       {
       PlaVectorInt v  = p_line.point_b.difference_by(p_line.point_a);

@@ -393,9 +393,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    
    
    /**
-    * returns the perpendicular projection of p_point onto this line
+    * @returns the perpendicular projection of p_point onto this line
     */
-   public PlaPoint perpendicular_projection(PlaPoint p_point)
+   public PlaPoint perpendicular_projection(PlaPointInt p_point)
       {
       return p_point.perpendicular_projection(this);
       }

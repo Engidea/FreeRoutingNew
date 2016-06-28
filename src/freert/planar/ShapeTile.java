@@ -316,7 +316,8 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * Returns the point in this shape, which has the smallest distance to p_from_point. 
+    * @deprecated notused anymore, maybe
+    * @returns the point in this shape, which has the smallest distance to p_from_point. 
     * if that point is contained in this shape
     */
    public PlaPoint nearest_point(PlaPointInt p_from_point)
@@ -326,6 +327,11 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       return nearest_border_point(p_from_point);
       }
 
+   public PlaPointFloat nearest_point_approx(PlaPointInt p_from_point)
+      {
+      return nearest_point_approx(p_from_point.to_float());
+      }
+   
    public PlaPointFloat nearest_point_approx(PlaPointFloat p_from_point)
       {
       if (contains(p_from_point)) return p_from_point;
@@ -337,7 +343,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
     * TODO this is one that needs to return int points !!! damiano
     * @return a nearest point to p_from_point on the edge of the shape
     */
-   public PlaPoint nearest_border_point(PlaPoint p_from_point)
+   public PlaPoint nearest_border_point(PlaPointInt p_from_point)
       {
       int line_count = border_line_count();
       

@@ -235,7 +235,8 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return side_of(p_line.point_a, p_line.point_b);
       }
 
-   @Override
+   /*
+//   @Override
    public PlaPoint perpendicular_projection(PlaLineInt p_line)
       {
       // this function is at the moment only implemented for lines consisting of IntPoints.
@@ -288,6 +289,8 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       
       return new PlaPointRational(proj_x, proj_y, denominator);
       }
+*/
+
 
    @Override
    public int compare_x_y(PlaPointRational p_other)

@@ -77,8 +77,8 @@ public abstract class PlaPoint implements PlaObject, Serializable
 
    /**
     * returns the nearest point to this point on p_line
-    */
    public abstract PlaPoint perpendicular_projection(PlaLineInt p_line);
+    */
 
 
 

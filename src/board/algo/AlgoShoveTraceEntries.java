@@ -35,6 +35,7 @@ import board.varie.ShapeTraceEntryPoint;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
+import freert.planar.PlaPointInt;
 import freert.planar.PlaToupleInt;
 import freert.planar.Polyline;
 import freert.planar.ShapeConvex;
@@ -420,7 +421,7 @@ public final class AlgoShoveTraceEntries
 
       if ( ! p_trace.is_nets_normal() ) return false;
 
-      PlaPoint end_corner = p_trace.corner_first();
+      PlaPointInt end_corner = p_trace.corner_first().round();
       
       Collection<BrdItem> contact_list;
       for (int index = 0; index < 2; ++index)
@@ -517,7 +518,7 @@ public final class AlgoShoveTraceEntries
                shape_contains_trace_tails = true;
                }
             }
-         end_corner = p_trace.corner_last();
+         end_corner = p_trace.corner_last().round();
          }
 
       found_obstacle = p_trace;
