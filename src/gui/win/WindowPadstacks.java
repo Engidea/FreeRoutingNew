@@ -22,8 +22,8 @@ package gui.win;
 
 import freert.library.LibPadstack;
 import freert.library.LibPadstacks;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjectStorable;
 import gui.BoardFrame;
 import board.items.BrdAbit;
 
@@ -79,11 +79,11 @@ public class WindowPadstacks extends WindowObjectListWithFilter
          }
       board.RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       java.util.Set<board.items.BrdItem> board_instances = new java.util.TreeSet<board.items.BrdItem>();
-      java.util.Iterator<UndoableObjectNode> it = routing_board.undo_items.start_read_object();
+      java.util.Iterator<UndoObjectNode> it = routing_board.undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_object = routing_board.undo_items.read_object(it);
+         UndoObjectStorable curr_object = routing_board.undo_items.read_next(it);
       
          if (curr_object == null)  break;
 

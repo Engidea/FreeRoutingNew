@@ -562,7 +562,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    /**
-    * returns the first corner of the trace
     * returns the first corner of this trace, which is the intersection of the first and second lines of its polyline
     * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
     * Well, it would be nice if it was that easy. not, unfortunately.
@@ -573,7 +572,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    /**
-    * returns the last corner of the trace
     * returns the last corner of this trace, which is the intersection of the last two lines of its polyline
     * It MUST return an int point otherwise I will notbe able to connect to a pin !!!
     * Well, it would be nice if it was that easy. not, unfortunately.

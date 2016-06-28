@@ -22,8 +22,8 @@ import freert.planar.PlaSegmentFloat;
 import freert.rules.RuleNet;
 import freert.varie.NetNosList;
 import freert.varie.TimeLimitStoppable;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjectStorable;
 import gui.varie.GuiResources;
 import interactive.BrdActionThread;
 import interactive.IteraBoard;
@@ -171,11 +171,11 @@ public class BatchAutorouter
       
       Set<BrdItem> handeled_items = new TreeSet<BrdItem>();
 
-      Iterator<UndoableObjectNode> iter = routing_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> iter = routing_board.undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_ob = routing_board.undo_items.read_object(iter);
+         UndoObjectStorable curr_ob = routing_board.undo_items.read_next(iter);
 
          if (curr_ob == null) break;
          

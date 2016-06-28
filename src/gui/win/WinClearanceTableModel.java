@@ -1,8 +1,8 @@
 package gui.win;
 
 import freert.rules.ClearanceMatrix;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjects;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjects;
 import gui.ComboBoxLayer;
 import gui.varie.GuiResources;
 import interactive.IteraBoard;
@@ -108,13 +108,13 @@ public class WinClearanceTableModel extends AbstractTableModel implements java.i
       int curr_column = p_col - 1;
 
       // check, if there are items on the board assigned to clearance class i or j.
-      UndoableObjects item_list = itera_board.get_routing_board().undo_items;
+      UndoObjects item_list = itera_board.get_routing_board().undo_items;
       boolean items_already_assigned_row = false;
       boolean items_already_assigned_column = false;
-      java.util.Iterator<UndoableObjectNode> it = item_list.start_read_object();
+      java.util.Iterator<UndoObjectNode> it = item_list.start_read_object();
       for (;;)
          {
-         board.items.BrdItem curr_item = (board.items.BrdItem) item_list.read_object(it);
+         board.items.BrdItem curr_item = (board.items.BrdItem) item_list.read_next(it);
          if (curr_item == null)
             {
             break;

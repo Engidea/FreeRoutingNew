@@ -22,7 +22,7 @@ package interactive;
 
 import freert.graphics.GdiContext;
 import freert.main.Stat;
-import freert.varie.UndoableObjectNode;
+import freert.varie.UndoObjectNode;
 import gui.varie.GuiResources;
 import java.awt.Graphics;
 import java.util.Collection;
@@ -62,10 +62,10 @@ public final class RatsNest
          net_item_lists.add(new LinkedList<BrdItem>());
          }
       
-      Iterator<UndoableObjectNode> it = p_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = p_board.undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) p_board.undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) p_board.undo_items.read_next(it);
          
          if (curr_item == null) break;
 

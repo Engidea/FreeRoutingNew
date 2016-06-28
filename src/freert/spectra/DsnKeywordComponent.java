@@ -25,7 +25,7 @@ import board.RoutingBoard;
 import board.items.BrdArea;
 import board.items.BrdItem;
 import freert.spectra.varie.DsnReadUtils;
-import freert.varie.UndoableObjectNode;
+import freert.varie.UndoObjectNode;
 
 /**
  * Handles the placement bata of a library component.
@@ -213,11 +213,11 @@ public final class DsnKeywordComponent extends DsnKeywordScope
 
    private static BrdArea get_keepout(RoutingBoard p_board, int p_component_no, String p_name)
       {
-      Iterator<UndoableObjectNode> it = p_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = p_board.undo_items.start_read_object();
       
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) p_board.undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) p_board.undo_items.read_next(it);
 
          if (curr_item == null) break;
 

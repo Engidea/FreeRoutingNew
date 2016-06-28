@@ -27,8 +27,8 @@ import board.infos.PrintableInfo;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
 import board.items.BrdTracep;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjects;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjects;
 
 /**
  * Describes properties for an individual electrical net.
@@ -110,13 +110,13 @@ public final class RuleNet implements Comparable<RuleNet>, PrintableInfo, java.i
       {
       LinkedList<BrdItem> result = new LinkedList<BrdItem>();
 
-      UndoableObjects item_list = parent.get_board().undo_items;
+      UndoObjects item_list = parent.get_board().undo_items;
       
-      Iterator<UndoableObjectNode> it = item_list.start_read_object();
+      Iterator<UndoObjectNode> it = item_list.start_read_object();
       
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) item_list.read_object(it);
+         BrdItem curr_item = (BrdItem) item_list.read_next(it);
 
          if (curr_item == null) break;
 
@@ -137,13 +137,13 @@ public final class RuleNet implements Comparable<RuleNet>, PrintableInfo, java.i
       {
       LinkedList<BrdAbitPin> result = new LinkedList<board.items.BrdAbitPin>();
 
-      UndoableObjects item_list = parent.get_board().undo_items;
+      UndoObjects item_list = parent.get_board().undo_items;
       
-      Iterator<UndoableObjectNode> it = item_list.start_read_object();
+      Iterator<UndoObjectNode> it = item_list.start_read_object();
 
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) item_list.read_object(it);
+         BrdItem curr_item = (BrdItem) item_list.read_next(it);
 
          if (curr_item == null) break;
 
@@ -164,13 +164,13 @@ public final class RuleNet implements Comparable<RuleNet>, PrintableInfo, java.i
       {
       LinkedList<BrdItem> result = new LinkedList<BrdItem>();
       
-      UndoableObjects item_list = parent.get_board().undo_items;
+      UndoObjects item_list = parent.get_board().undo_items;
       
-      Iterator<UndoableObjectNode> iter = item_list.start_read_object();
+      Iterator<UndoObjectNode> iter = item_list.start_read_object();
       
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) item_list.read_object(iter);
+         BrdItem curr_item = (BrdItem) item_list.read_next(iter);
          
          if (curr_item == null) break;
 

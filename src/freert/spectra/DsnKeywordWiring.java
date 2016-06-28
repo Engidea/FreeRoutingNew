@@ -49,7 +49,7 @@ import freert.rules.RuleNet;
 import freert.spectra.varie.DsnReadUtils;
 import freert.varie.ItemClass;
 import freert.varie.NetNosList;
-import freert.varie.UndoableObjectNode;
+import freert.varie.UndoObjectNode;
 import gui.varie.IndentFileWriter;
 
 /**
@@ -138,10 +138,10 @@ final class DsnKeywordWiring extends DsnKeywordScope
          write_via_scope(p_par, curr_via);
          }
       // write the conduction areas
-      Iterator<UndoableObjectNode> it2 = p_par.board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> it2 = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         Object curr_ob = p_par.board.undo_items.read_object(it2);
+         Object curr_ob = p_par.board.undo_items.read_next(it2);
          if (curr_ob == null) break;
 
          if (!(curr_ob instanceof BrdAreaConduction)) continue;

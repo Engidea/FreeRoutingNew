@@ -48,7 +48,7 @@ import freert.planar.PlaLineInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileSimplex;
 import freert.varie.ThreadStoppable;
-import freert.varie.UndoableObjectNode;
+import freert.varie.UndoObjectNode;
 
 /**
  * Temporary autoroute data stored on the RoutingBoard.
@@ -181,11 +181,11 @@ public final class ArtEngine
 
    private void autoroute_clear_items()
       {
-      Iterator<UndoableObjectNode> iter = r_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> iter = r_board.undo_items.start_read_object();
 
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(iter);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_next(iter);
 
          if (curr_item == null) break;
 

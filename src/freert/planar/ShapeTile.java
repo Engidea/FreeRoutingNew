@@ -315,18 +315,6 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       return border_distance(centre_of_gravity());
       }
 
-   /**
-    * @deprecated notused anymore, maybe
-    * @returns the point in this shape, which has the smallest distance to p_from_point. 
-    * if that point is contained in this shape
-    */
-   public PlaPoint nearest_point(PlaPointInt p_from_point)
-      {
-      if (!is_outside(p_from_point)) return p_from_point;
-
-      return nearest_border_point(p_from_point);
-      }
-
    public PlaPointFloat nearest_point_approx(PlaPointInt p_from_point)
       {
       return nearest_point_approx(p_from_point.to_float());

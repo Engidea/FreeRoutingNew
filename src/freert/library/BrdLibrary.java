@@ -24,8 +24,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import board.RoutingBoard;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjectStorable;
 
 /**
  * Describes a board library of packages and padstacks.
@@ -155,11 +155,11 @@ public final class BrdLibrary implements java.io.Serializable
     */
    public boolean is_used(LibPadstack p_padstack, RoutingBoard p_board)
       {
-      Iterator<UndoableObjectNode> it = p_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = p_board.undo_items.start_read_object();
 
       for (;;)
          {
-         UndoableObjectStorable curr_item = p_board.undo_items.read_object(it);
+         UndoObjectStorable curr_item = p_board.undo_items.read_next(it);
       
          if (curr_item == null) break;
 

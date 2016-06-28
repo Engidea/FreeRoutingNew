@@ -24,7 +24,7 @@ import freert.library.LibLogicalPart;
 import freert.library.LibPackage;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectStorable;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -32,7 +32,7 @@ import gui.varie.ObjectInfoPanel;
  *
  * @author Alfons Wirtz
  */
-public final class BrdComponent implements UndoableObjectStorable, PrintableInfo, java.io.Serializable
+public final class BrdComponent implements UndoObjectStorable, PrintableInfo, java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 

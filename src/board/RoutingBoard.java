@@ -89,9 +89,9 @@ import freert.varie.NetNosList;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimit;
 import freert.varie.TimeLimitStoppable;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjectStorable;
-import freert.varie.UndoableObjects;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjectStorable;
+import freert.varie.UndoObjects;
 import gui.varie.GuiResources;
 
 /**
@@ -105,7 +105,7 @@ public final class RoutingBoard implements java.io.Serializable
    private static final int s_PREVENT_ENDLESS_LOOP = 5;
 
    // List of items inserted into this board, may be less than all available components
-   public final UndoableObjects undo_items;
+   public final UndoObjects undo_items;
    // List of placed components on the board
    public final BrdComponents brd_components;
    // Class defining the rules for items to be inserted into this board. Contains for example the clearance matrix.
@@ -163,7 +163,7 @@ public final class RoutingBoard implements java.io.Serializable
       layer_structure = p_layer_structure;
       brd_rules = p_rules;
       brd_library = new BrdLibrary();
-      undo_items = new UndoableObjects();
+      undo_items = new UndoObjects();
       brd_components = new BrdComponents();
       host_com = p_host_com;
       bounding_box = p_bounding_box;
@@ -450,11 +450,11 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public BrdOutline get_outline()
       {
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_item = undo_items.read_object(it);
+         UndoObjectStorable curr_item = undo_items.read_next(it);
       
          if (curr_item == null)  break;
 
@@ -488,10 +488,10 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public BrdItem get_item(int p_id_no)
       {
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
 
          if (curr_item == null)  break;
      
@@ -507,10 +507,10 @@ public final class RoutingBoard implements java.io.Serializable
    public Collection<BrdItem> get_items()
       {
       Collection<BrdItem> result = new LinkedList<BrdItem>();
-      Iterator<UndoableObjectNode> iter = undo_items.start_read_object();
+      Iterator<UndoObjectNode> iter = undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(iter);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(iter);
 
          if (curr_item == null) break;
          
@@ -527,10 +527,10 @@ public final class RoutingBoard implements java.io.Serializable
    public Collection<BrdItem> get_connectable_items(int p_net_no)
       {
       Collection<BrdItem> result = new LinkedList<BrdItem>();
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
          
          if (curr_item == null) break;
 
@@ -567,10 +567,10 @@ public final class RoutingBoard implements java.io.Serializable
    public int connectable_item_count(int p_net_no)
       {
       int result = 0;
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
       
          if (curr_item == null) break;
         
@@ -588,10 +588,10 @@ public final class RoutingBoard implements java.io.Serializable
    public Collection<BrdItem> get_component_items(int p_component_no)
       {
       Collection<BrdItem> result = new LinkedList<BrdItem>();
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
          
          if (curr_item == null) break;
 
@@ -610,11 +610,11 @@ public final class RoutingBoard implements java.io.Serializable
       {
       Collection<BrdAbitPin> result = new LinkedList<BrdAbitPin>();
       
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
 
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
       
          if (curr_item == null) break;
 
@@ -633,10 +633,10 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public BrdAbitPin get_pin(int p_component_no, int p_pin_no)
       {
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
          if (curr_item == null)
             {
             break;
@@ -698,10 +698,10 @@ public final class RoutingBoard implements java.io.Serializable
    public Collection<BrdAreaConduction> get_conduction_areas()
       {
       Collection<BrdAreaConduction> result = new LinkedList<BrdAreaConduction>();
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = undo_items.read_object(it);
+         UndoObjectStorable curr_item = undo_items.read_next(it);
          
          if (curr_item == null) break;
 
@@ -720,11 +720,11 @@ public final class RoutingBoard implements java.io.Serializable
       {
       LinkedList<BrdAbitPin> result = new LinkedList<BrdAbitPin>();
 
-      Iterator<UndoableObjectNode> iter = undo_items.start_read_object();
+      Iterator<UndoObjectNode> iter = undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_item = undo_items.read_object(iter);
+         UndoObjectStorable curr_item = undo_items.read_next(iter);
 
          if (curr_item == null) break;
 
@@ -742,10 +742,10 @@ public final class RoutingBoard implements java.io.Serializable
    public Collection<BrdAbitPin> get_smd_pins()
       {
       Collection<BrdAbitPin> result = new LinkedList<BrdAbitPin>();
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = undo_items.read_object(it);
+         UndoObjectStorable curr_item = undo_items.read_next(it);
          if (curr_item == null) break;
 
          if ( ! ( curr_item instanceof BrdAbitPin) ) continue;
@@ -765,10 +765,10 @@ public final class RoutingBoard implements java.io.Serializable
    public Collection<BrdAbitVia> get_vias()
       {
       Collection<BrdAbitVia> result = new LinkedList<BrdAbitVia>();
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = undo_items.read_object(it);
+         UndoObjectStorable curr_item = undo_items.read_next(it);
 
          if (curr_item == null) break;
 
@@ -785,10 +785,10 @@ public final class RoutingBoard implements java.io.Serializable
    public Collection<BrdTracep> get_traces()
       {
       Collection<BrdTracep> result = new LinkedList<BrdTracep>();
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = undo_items.read_object(it);
+         UndoObjectStorable curr_item = undo_items.read_next(it);
          if (curr_item == null)  break;
 
          if (curr_item instanceof BrdTracep)
@@ -805,11 +805,11 @@ public final class RoutingBoard implements java.io.Serializable
       {
       double result = 0;
       
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
 
       for (;;)
          {
-         UndoableObjectStorable curr_item = undo_items.read_object(it);
+         UndoObjectStorable curr_item = undo_items.read_next(it);
       
          if (curr_item == null) break;
 
@@ -832,11 +832,11 @@ public final class RoutingBoard implements java.io.Serializable
          {
          boolean something_changed = false;
 
-         Iterator<UndoableObjectNode> iter = undo_items.start_read_object();
+         Iterator<UndoObjectNode> iter = undo_items.start_read_object();
          
          for (;;)
             {
-            BrdItem curr_item = (BrdItem) undo_items.read_object(iter);
+            BrdItem curr_item = (BrdItem) undo_items.read_next(iter);
       
             if (curr_item == null) break;
             
@@ -862,52 +862,36 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public void normalize_traces(int p_net_no)
       {
-      boolean something_changed = true;
-      BrdItem curr_item = null;
-      
       // It was getting stuck, so, the simplest thing to do is to add a timeout, until the whole system is fixed
       long time_end = System.currentTimeMillis() + 20 * 1000;
 
-      while (something_changed && System.currentTimeMillis() < time_end  )
+      Iterator<UndoObjectNode> itera = undo_items.start_read_object();
+      
+      while ( System.currentTimeMillis() < time_end )
          {
-         something_changed = false;
-         Iterator<UndoableObjectNode> itera = undo_items.start_read_object();
+         BrdItem curr_item = (BrdItem) undo_items.read_next(itera);
          
-         while ( System.currentTimeMillis() < time_end )
+         // this just measn end of items.
+         if (curr_item == null) break;
+         
+         if ( ! curr_item.is_on_the_board() ) continue;
+
+         if ( ! curr_item.contains_net(p_net_no) ) continue;
+         
+         if ( ! ( curr_item instanceof BrdTracep ) ) continue;
+
+         BrdTracep curr_trace = (BrdTracep) curr_item;
+         
+         // really, if a trace is user fixed we should not touch it
+         if ( curr_trace.is_user_fixed() ) continue;
+         
+         if ( curr_trace.normalize(null) )
             {
-            try
-               {
-               curr_item = (BrdItem) undo_items.read_object(itera);
-               }
-            catch (ConcurrentModificationException e)
-               {
-               System.out.println(classname+"normalize_traces: concurrent change");
-               // well, if it happens I may as well get out and let the whole system try again
-               return;
-               }
-            
-            // this just measn end of items.
-            if (curr_item == null) break;
-            
-            if ( ! curr_item.is_on_the_board() ) continue;
-
-            if ( ! curr_item.contains_net(p_net_no) ) continue;
-            
-            if ( ! ( curr_item instanceof BrdTracep ) ) continue;
-
-            BrdTracep curr_trace = (BrdTracep) curr_item;
-            
-            // really, if a trace is user fixed we should not touch it
-            if ( curr_trace.is_user_fixed() ) continue;
-            
-            if ( curr_trace.normalize(null) )
-               {
-               something_changed = true;
-               }
-            else if ( remove_if_cycle(curr_trace))
-               {
-               something_changed = true;
-               }
+            ;
+            }
+         else if ( remove_if_cycle(curr_trace))
+            {
+            ;
             }
          }
       }
@@ -950,10 +934,10 @@ public final class RoutingBoard implements java.io.Serializable
       if (p_net_no <= 0) return result;
       
       SortedSet<BrdItem> items_to_handle = new TreeSet<BrdItem>();
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
          if (curr_item == null) break;
        
          if (curr_item instanceof BrdConnectable && curr_item.contains_net(p_net_no))
@@ -1167,13 +1151,13 @@ public final class RoutingBoard implements java.io.Serializable
       // draw all items on the board
       for (int curr_priority = GdiDrawable.MIN_DRAW_PRIORITY; curr_priority <= GdiDrawable.MIDDLE_DRAW_PRIORITY; ++curr_priority)
          {
-         Iterator<UndoableObjectNode> iter = undo_items.start_read_object();
+         Iterator<UndoObjectNode> iter = undo_items.start_read_object();
          
          for (;;)
             {
             try
                {
-               BrdItem curr_item = (BrdItem) undo_items.read_object(iter);
+               BrdItem curr_item = (BrdItem) undo_items.read_next(iter);
          
                if (curr_item == null) break;
 
@@ -1414,13 +1398,13 @@ public final class RoutingBoard implements java.io.Serializable
       {
       brd_components.undo(observers);
       
-      Collection<UndoableObjectStorable> cancelled_objects = new LinkedList<UndoableObjectStorable>();
-      Collection<UndoableObjectStorable> restored_objects = new LinkedList<UndoableObjectStorable>();
+      Collection<UndoObjectStorable> cancelled_objects = new LinkedList<UndoObjectStorable>();
+      Collection<UndoObjectStorable> restored_objects = new LinkedList<UndoObjectStorable>();
       
       boolean result = undo_items.undo(cancelled_objects, restored_objects);
       
       // update the search trees
-      Iterator<UndoableObjectStorable> iter = cancelled_objects.iterator();
+      Iterator<UndoObjectStorable> iter = cancelled_objects.iterator();
 
       while (iter.hasNext())
          {
@@ -1473,11 +1457,11 @@ public final class RoutingBoard implements java.io.Serializable
    public boolean redo(Set<Integer> p_changed_nets)
       {
       brd_components.redo(observers);
-      Collection<UndoableObjectStorable> cancelled_objects = new LinkedList<UndoableObjectStorable>();
-      Collection<UndoableObjectStorable> restored_objects = new LinkedList<UndoableObjectStorable>();
+      Collection<UndoObjectStorable> cancelled_objects = new LinkedList<UndoObjectStorable>();
+      Collection<UndoObjectStorable> restored_objects = new LinkedList<UndoObjectStorable>();
       boolean result = undo_items.redo(cancelled_objects, restored_objects);
       // update the search trees
-      Iterator<UndoableObjectStorable> it = cancelled_objects.iterator();
+      Iterator<UndoObjectStorable> it = cancelled_objects.iterator();
       while (it.hasNext())
          {
          BrdItem curr_item = (BrdItem) it.next();
@@ -2709,12 +2693,12 @@ public final class RoutingBoard implements java.io.Serializable
       
       boolean something_changed = false;
       
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
 
       for (;;)
          {
          // Change the is_obstacle property of all conduction areas of the board.
-         BrdItem curr_item = (BrdItem) undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) undo_items.read_next(it);
 
          if (curr_item == null)  break;
          
@@ -2747,11 +2731,11 @@ public final class RoutingBoard implements java.io.Serializable
       {
       boolean something_changed = false;
       
-      Iterator<UndoableObjectNode> it = undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_ob = undo_items.read_object(it);
+         UndoObjectStorable curr_ob = undo_items.read_next(it);
 
          if (curr_ob == null) break;
 

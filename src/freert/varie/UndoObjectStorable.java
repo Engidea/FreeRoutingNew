@@ -20,7 +20,7 @@ package freert.varie;
  * An object of class UndoableObjects.Storable must not contain any references.
  */
 
-public interface UndoableObjectStorable extends Comparable<Object>
+public interface UndoObjectStorable extends Comparable<Object>
    {
    /**
     * Creates an exact copy of this object

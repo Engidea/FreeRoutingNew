@@ -28,8 +28,8 @@ import freert.host.ObserverItem;
 import freert.library.LibPackage;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjects;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjects;
 
 /**
  * Contains the lists of components on the board.
@@ -40,7 +40,7 @@ public final class BrdComponents implements java.io.Serializable
    {
    private static final long serialVersionUID = 1L;
 
-   private final UndoableObjects undo_list = new UndoableObjects();
+   private final UndoObjects undo_list = new UndoObjects();
 
    private final Vector<BrdComponent> component_list = new Vector<BrdComponent>();
 
@@ -159,11 +159,11 @@ public final class BrdComponents implements java.io.Serializable
     */
    private void restore_component_arr_from_undo_list(ObserverItem p_observers)
       {
-      Iterator<UndoableObjectNode> iter = undo_list.start_read_object();
+      Iterator<UndoObjectNode> iter = undo_list.start_read_object();
       
       for (;;)
          {
-         BrdComponent curr_component = (BrdComponent) undo_list.read_object(iter);
+         BrdComponent curr_component = (BrdComponent) undo_list.read_next(iter);
 
          if (curr_component == null) break;
 

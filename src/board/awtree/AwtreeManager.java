@@ -28,7 +28,7 @@ import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracep;
 import freert.planar.Polyline;
-import freert.varie.UndoableObjectNode;
+import freert.varie.UndoObjectNode;
 
 /**
  *
@@ -219,11 +219,11 @@ public final class AwtreeManager
       
       compensated_search_trees.add(curr_autoroute_tree);
       
-      Iterator<UndoableObjectNode> iter = r_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> iter = r_board.undo_items.start_read_object();
 
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(iter);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_next(iter);
       
          if (curr_item == null) break;
 
@@ -259,11 +259,11 @@ public final class AwtreeManager
 
    private void remove_all_board_items()
       {
-      Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = r_board.undo_items.start_read_object();
 
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_next(it);
         
          if (curr_item == null)  break;
 
@@ -273,11 +273,11 @@ public final class AwtreeManager
 
    private void insert_all_board_items()
       {
-      Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = r_board.undo_items.start_read_object();
       
       for (;;)
          {
-         BrdItem curr_item = (BrdItem) r_board.undo_items.read_object(it);
+         BrdItem curr_item = (BrdItem) r_board.undo_items.read_next(it);
       
          if (curr_item == null) break;
 

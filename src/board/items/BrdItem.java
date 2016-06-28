@@ -50,7 +50,7 @@ import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.rules.RuleNets;
 import freert.varie.NetNosList;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectStorable;
 import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 
@@ -58,7 +58,7 @@ import gui.varie.ObjectInfoPanel;
  * Basic class of the items on a board.
  * @author Alfons Wirtz
  */
-public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInfo, UndoableObjectStorable, Serializable
+public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInfo, UndoObjectStorable, Serializable
    {
    private static final long serialVersionUID = 1L;
    private static final double PROTECT_FANOUT_LENGTH = 400;

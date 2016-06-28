@@ -22,8 +22,8 @@ import board.items.BrdAbitVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
 import freert.planar.PlaPointFloat;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjectStorable;
 
 /**
  * Reads the vias and traces on the board in ascending x order. 
@@ -60,10 +60,10 @@ public class BatchSortedRouteItems
       BrdItem result = null;
       PlaPointFloat curr_min_coor = new PlaPointFloat(Integer.MAX_VALUE, Integer.MAX_VALUE);
       int curr_min_layer = Integer.MAX_VALUE;
-      Iterator<UndoableObjectNode> it = r_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> it = r_board.undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = r_board.undo_items.read_object(it);
+         UndoObjectStorable curr_item = r_board.undo_items.read_next(it);
          if (curr_item == null)
             {
             break;
@@ -93,7 +93,7 @@ public class BatchSortedRouteItems
       it = r_board.undo_items.start_read_object();
       for (;;)
          {
-         UndoableObjectStorable curr_item = r_board.undo_items.read_object(it);
+         UndoObjectStorable curr_item = r_board.undo_items.read_next(it);
          if (curr_item == null)
             {
             break;

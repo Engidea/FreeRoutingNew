@@ -37,8 +37,8 @@ import freert.spectra.varie.DsnKeywordAutoroute;
 import freert.spectra.varie.DsnReadUtils;
 import freert.varie.ItemClass;
 import freert.varie.NetNosList;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjectStorable;
 import gui.varie.IndentFileWriter;
 
 /**
@@ -303,11 +303,11 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       bounding_rectangle.write_scope(p_par.file, p_par.identifier_type);
       p_par.file.end_scope();
       // lookup the outline in the board
-      UndoableObjectStorable curr_ob = null;
-      Iterator<UndoableObjectNode> it = p_par.board.undo_items.start_read_object();
+      UndoObjectStorable curr_ob = null;
+      Iterator<UndoObjectNode> it = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         curr_ob = p_par.board.undo_items.read_object(it);
+         curr_ob = p_par.board.undo_items.read_next(it);
          if (curr_ob == null)
             {
             break;
@@ -351,7 +351,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       it = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         curr_ob = p_par.board.undo_items.read_object(it);
+         curr_ob = p_par.board.undo_items.read_next(it);
          if (curr_ob == null)
             {
             break;
@@ -378,7 +378,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       it = p_par.board.undo_items.start_read_object();
       for (;;)
          {
-         curr_ob = p_par.board.undo_items.read_object(it);
+         curr_ob = p_par.board.undo_items.read_next(it);
          if (curr_ob == null)  break;
 
          if (!(curr_ob instanceof board.items.BrdAreaConduction)) continue;

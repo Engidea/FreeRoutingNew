@@ -251,7 +251,7 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
 
       if (end_of_trace)
          {
-         PlaPointFloat nearest_point = current_target_shape.nearest_point(current_from_point.round()).to_float();
+         PlaPointFloat nearest_point = current_target_shape.nearest_point_approx(current_from_point);
          result_corner = nearest_point;
          if (left_tangent_point != null && nearest_point.side_of(current_from_point, left_tangent_point) == PlaSide.ON_THE_LEFT)
             {

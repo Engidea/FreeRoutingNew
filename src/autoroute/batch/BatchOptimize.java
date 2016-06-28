@@ -17,8 +17,8 @@ package autoroute.batch;
 
 import freert.planar.PlaPointFloat;
 import freert.rules.BoardRules;
-import freert.varie.UndoableObjectNode;
-import freert.varie.UndoableObjectStorable;
+import freert.varie.UndoObjectNode;
+import freert.varie.UndoObjectStorable;
 import interactive.BrdActionThread;
 import java.util.Collection;
 import java.util.Iterator;
@@ -272,11 +272,11 @@ public class BatchOptimize
       {
       double result = 0;
       
-      Iterator<UndoableObjectNode> iter = p_board.undo_items.start_read_object();
+      Iterator<UndoObjectNode> iter = p_board.undo_items.start_read_object();
       
       for (;;)
          {
-         UndoableObjectStorable curr_item = p_board.undo_items.read_object(iter);
+         UndoObjectStorable curr_item = p_board.undo_items.read_next(iter);
          
          if (curr_item == null)  break;
 
