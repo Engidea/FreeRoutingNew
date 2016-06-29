@@ -70,17 +70,6 @@ public abstract class PlaPoint implements PlaObject, Serializable
     */
    public abstract PlaPointInt round();
 
-   /**
-    * Returns true, if this point lies in the interiour or on the border of p_box.
-    */
-   public abstract boolean is_contained_in(ShapeTileBox p_box);
-
-   /**
-    * returns the nearest point to this point on p_line
-   public abstract PlaPoint perpendicular_projection(PlaLineInt p_line);
-    */
-
-
 
    /**
     * The function returns Side.ON_THE_LEFT, if this Point is on the left of the line from p_1 to p_2; 

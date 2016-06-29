@@ -1227,7 +1227,7 @@ public final class RoutingBoard implements java.io.Serializable
    /**
     * checks, if p_point is contained in the bounding box of this board.
     */
-   public boolean contains(PlaPoint p_point)
+   public boolean contains(PlaPointInt p_point)
       {
       return p_point.is_contained_in(bounding_box);
       }

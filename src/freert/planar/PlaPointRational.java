@@ -147,35 +147,6 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       }
    
 
-   
-   
-   
-   @Override
-   public boolean is_contained_in(ShapeTileBox p_box)
-      {
-      BigInteger tmp = BigInteger.valueOf(p_box.box_ll.v_x).multiply(rp_z);
-      if (rp_x.compareTo(tmp) < 0)
-         {
-         return false;
-         }
-      tmp = BigInteger.valueOf(p_box.box_ll.v_y).multiply(rp_z);
-      if (rp_y.compareTo(tmp) < 0)
-         {
-         return false;
-         }
-      tmp = BigInteger.valueOf(p_box.box_ur.v_x).multiply(rp_z);
-      if (rp_x.compareTo(tmp) > 0)
-         {
-         return false;
-         }
-      tmp = BigInteger.valueOf(p_box.box_ur.v_y).multiply(rp_z);
-      if (rp_y.compareTo(tmp) > 0)
-         {
-         return false;
-         }
-      return true;
-      }
-
    @Override
    public PlaPointRational translate_by(PlaVectorInt p_vector)
       {

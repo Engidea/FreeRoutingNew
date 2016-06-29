@@ -157,10 +157,6 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       return b_risul;
       }
    
-   
-   
-   
-   @Override
    public boolean is_contained_in(ShapeTileBox p_box)
       {
       return v_x >= p_box.box_ll.v_x && v_y >= p_box.box_ll.v_y && v_x <= p_box.box_ur.v_x && v_y <= p_box.box_ur.v_y;
