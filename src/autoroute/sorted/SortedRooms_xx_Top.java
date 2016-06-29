@@ -46,12 +46,10 @@ import freert.planar.ShapeTileSimplex;
 public final class SortedRooms_xx_Top
    {
    private final ArtEngine r_engine;
-//   private final RoutingBoard r_board;
    
    public SortedRooms_xx_Top (ArtEngine p_engine)
       {
       r_engine = p_engine;
-//      r_board  = r_engine.r_board;
       }
 
    /**
@@ -387,23 +385,19 @@ public final class SortedRooms_xx_Top
       
       BrdItem curr_item = p_room.get_item();
 
-      if (curr_item instanceof BrdTracep)
-         {
-         int room_index = p_room.get_index_in_item();
-         BrdTracep curr_trace = (BrdTracep) curr_item;
-         if (room_index == 0 || room_index == curr_trace.tile_shape_count() - 1)
-            {
-            PlaLineInt curr_trace_line = curr_trace.polyline().plaline(room_index + 1);
-            if ( ! curr_trace_line.is_parallel(p_door_line))
-               {
-               return false;
-               }
-            }
-         }
+      // the test is only for the traces
+      if ( ! (curr_item instanceof BrdTracep)) return true;
       
-      // why is it a return true if it is not a polyline ? should be false, no ?
-      
-      return true;
+      int room_index = p_room.get_index_in_item();
+      BrdTracep curr_trace = (BrdTracep) curr_item;
+
+      // the test is only for the firat and last room of a trace, all the rest is fine
+      if ( room_index != 0 && room_index != curr_trace.tile_shape_count() - 1) return true;
+
+      PlaLineInt curr_trace_line = curr_trace.polyline().plaline(room_index + 1);
+
+      // insert is ok only if both lines are aprallel
+      return curr_trace_line.is_parallel(p_door_line);
       }
    
    
