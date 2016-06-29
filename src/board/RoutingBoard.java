@@ -981,9 +981,9 @@ public final class RoutingBoard implements java.io.Serializable
       }
 
    /**
-    * Returns all items on layer p_layer, which overlap with p_area. If p_layer < 0, the layer is ignored
+    * @Returns all items on layer p_layer, which overlap with p_area. If p_layer < 0, the layer is ignored
     */
-   public Set<BrdItem> overlapping_items(PlaArea p_area, int p_layer)
+   public Set<BrdItem> overlapping_items(ShapeTile p_area, int p_layer)
       {
       Set<BrdItem> result = new TreeSet<BrdItem>();
       
@@ -995,10 +995,7 @@ public final class RoutingBoard implements java.io.Serializable
          
          for (AwtreeObject curr_overlap : curr_overlaps)
             {
-            if (curr_overlap instanceof BrdItem)
-               {
-               result.add((BrdItem) curr_overlap);
-               }
+            if (curr_overlap instanceof BrdItem)  result.add((BrdItem) curr_overlap);
             }
          }
       return result;
@@ -1936,12 +1933,14 @@ public final class RoutingBoard implements java.io.Serializable
     * If p_from_item != null, items, which are connected to p_from_item, are ignored. 
     * Returns null, if no item is found, If p_layer < 0, the layer is ignored
     */
-   public BrdItem pick_nearest_routing_item(PlaPoint p_location, int p_layer, BrdItem p_from_item)
+   public BrdItem pick_nearest_routing_item(PlaPointInt p_location, int p_layer, BrdItem p_from_item)
       {
       ShapeTile point_shape = new ShapeTileBox(p_location);
 
       Collection<BrdItem> found_items = overlapping_items(point_shape, p_layer);
+      
       PlaPointFloat pick_location = p_location.to_float();
+      
       double min_dist = Integer.MAX_VALUE;
       BrdItem nearest_item = null;
       Set<BrdItem> ignore_set = null;
@@ -1956,12 +1955,11 @@ public final class RoutingBoard implements java.io.Serializable
          if (curr_item instanceof BrdTracep)
             {
             BrdTracep curr_trace = (BrdTracep) curr_item;
+            
             if (p_layer < 0 || curr_trace.get_layer() == p_layer)
                {
-               if (nearest_item instanceof BrdAbit)
-                  {
-                  continue; // prefer drill items
-                  }
+               if (nearest_item instanceof BrdAbit) continue; // prefer drill items
+
                int trace_radius = curr_trace.get_half_width();
                curr_dist = curr_trace.polyline().distance(pick_location);
                if (curr_dist < min_dist && curr_dist <= trace_radius)
@@ -1973,6 +1971,7 @@ public final class RoutingBoard implements java.io.Serializable
          else if (curr_item instanceof BrdAbit)
             {
             BrdAbit curr_drill_item = (BrdAbit) curr_item;
+            
             if (p_layer < 0 || curr_drill_item.is_on_layer(p_layer))
                {
                PlaPointFloat drill_item_center = curr_drill_item.center_get().to_float();

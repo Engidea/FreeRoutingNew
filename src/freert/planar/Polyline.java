@@ -515,7 +515,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       }
 
    /**
-    * returns the array of the intersection of two consecutive lines approximated by FloatPoint's.
+    * @return the array of the intersection of two consecutive lines approximated by FloatPoint's.
     */
    public PlaPointFloat[] corner_approx_arr()
       {
@@ -1047,15 +1047,16 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaPointFloat nearest_point = null;
       // calculate the nearest corner point
       PlaPointFloat[] corners = corner_approx_arr();
-      for (int i = 0; i < corners.length; ++i)
+      for (int index = 0; index < corners.length; ++index)
          {
-         double curr_distance = corners[i].distance(p_from_point);
+         double curr_distance = corners[index].distance(p_from_point);
          if (curr_distance < min_distance)
             {
             min_distance = curr_distance;
-            nearest_point = corners[i];
+            nearest_point = corners[index];
             }
          }
+      
       final double c_tolerance = 1;
       for (int index = 1; index < plaline_len(-1); ++index)
          {
@@ -1064,6 +1065,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          if (curr_distance < min_distance)
             {
             // look, if the projection is inside the segment
+            // uff, this is similar to some other way of doing it with plaside....
             double segment_length = corners[index].distance(corners[index - 1]);
             if (projection.distance(corners[index]) + projection.distance(corners[index - 1]) < segment_length + c_tolerance)
                {

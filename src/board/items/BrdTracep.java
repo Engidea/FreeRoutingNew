@@ -386,6 +386,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    /**
+    * This could be reasonably converted to an int point, but maybenot yet...
     * @return the endpoint of this trace with the shortest distance to p_from_point
     */
    public PlaPoint nearest_end_point(PlaPointInt p_from_point)

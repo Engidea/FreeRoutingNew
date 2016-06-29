@@ -131,17 +131,9 @@ public abstract class StateRoute extends StateInteractive
          BrdTracep picked_trace = (BrdTracep) picked_item;
          
          PlaPoint picked_corner = picked_trace.nearest_end_point(location);
-         
-         if ( (picked_corner instanceof PlaPointInt)  && p_location.distance(picked_corner.to_float()) < 5 * picked_trace.get_half_width())
-            {
-            // Why should it fail if it is a rational ... anyway, the check for distance is somewhat correct
-            location = (PlaPointInt) picked_corner;
-            }
-         else
-            {
-            PlaPointFloat nearest_point = picked_trace.polyline().nearest_point_approx(p_location);
-            location = nearest_point.round();
-            }
+
+         // whatever it is, thie is the most reasonable starting point
+         location = picked_corner.round();
          
          start_ok = routing_board.connect_to_trace(location, picked_trace, picked_trace.get_half_width(), picked_trace.clearance_idx());
          
