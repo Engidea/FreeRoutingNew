@@ -27,7 +27,6 @@ import board.varie.ItemFixState;
 import board.varie.ShoveDrillResult;
 import freert.library.LibPadstack;
 import freert.planar.PlaLimits;
-import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
 import freert.planar.PlaShape;
@@ -62,7 +61,7 @@ public final class AlgoShoveVia
          int p_cl_class, 
          boolean p_attach_smd_allowed, 
          ShapeTile p_room_shape, 
-         PlaPoint p_location, 
+         PlaPointInt p_location, 
          int p_layer,
          NetNosList p_net_no_arr, 
          int p_max_recursion_depth, 
@@ -73,17 +72,7 @@ public final class AlgoShoveVia
          return ShoveDrillResult.DRILLABLE;
          }
       
-      
-      if ( p_location.is_rational() )
-         {
-         // ahhh the pleasure of rationals...
-         return ShoveDrillResult.NOT_DRILLABLE;
-         }
-      
-      PlaPointInt location_int = (PlaPointInt)p_location;
-      
-      
-      ShapeConvex via_shape = new ShapeCircle(location_int, (int) Math.ceil(p_via_radius));
+      ShapeConvex via_shape = new ShapeCircle(p_location, (int) Math.ceil(p_via_radius));
 
       double check_radius = p_via_radius + 0.5 * r_board.get_clearance(p_cl_class, p_cl_class, p_layer) + r_board.get_min_trace_half_width();
 
@@ -91,7 +80,7 @@ public final class AlgoShoveVia
 
       tile_shape = via_shape.bounding_octagon();
 
-      BrdFromSide from_side = calculate_from_side(location_int, tile_shape, p_room_shape.to_Simplex(), check_radius);
+      BrdFromSide from_side = calculate_from_side(p_location, tile_shape, p_room_shape.to_Simplex(), check_radius);
 
       if (from_side == null) return ShoveDrillResult.NOT_DRILLABLE;
 
