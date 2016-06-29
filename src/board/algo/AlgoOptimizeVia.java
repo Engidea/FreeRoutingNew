@@ -122,7 +122,7 @@ public final class AlgoOptimizeVia
       
       if (is_plane_or_fanout_via)
          {
-         return opt_plane_or_fanout_via( p_via, p_trace_pull_tight_accuracy, p_max_recursion_depth); // pippo
+         return opt_plane_or_fanout_via( p_via, p_trace_pull_tight_accuracy, p_max_recursion_depth); 
          }
       
       PlaPointInt via_center = p_via.center_get();

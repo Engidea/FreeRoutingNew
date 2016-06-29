@@ -1694,28 +1694,22 @@ public final class RoutingBoard implements java.io.Serializable
     * If p_time_limit > 0; the algorithm will be stopped after p_time_limit Milliseconds. 
     * If p_keep_point != null, traces on layer p_keep_point_layer containing p_keep_point will also contain this point after optimizing.
     */
-   public final void changed_area_optimize(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread, BrdKeepPoint p_keep_point)
+   public final void changed_area_optimize(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_tlimit, BrdKeepPoint p_keep_point)
       {
       if ( changed_area.is_clear() ) return;
       
-      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_pullt_min_move, p_thread, p_keep_point );
+      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_pullt_min_move, p_tlimit, p_keep_point );
       
       pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
       
       gdi_update_join(changed_area.surrounding_box());
+      
       changed_area.clear(get_layer_count());
       }
 
-   public final void changed_area_optimize(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_thread )
+   public final void changed_area_optimize(NetNosList p_only_net_no_arr, int p_pullt_min_move, ExpandCostFactor[] p_trace_cost_arr, TimeLimitStoppable p_tlimit )
       {
-      if (changed_area.is_clear() ) return;
-      
-      AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(this, p_only_net_no_arr, p_pullt_min_move, p_thread, null);
-      
-      pull_tight_algo.optimize_changed_area(p_trace_cost_arr);
-      
-      gdi_update_join(changed_area.surrounding_box());
-      changed_area.clear(get_layer_count());
+      changed_area_optimize(p_only_net_no_arr, p_pullt_min_move, p_trace_cost_arr, p_tlimit, null );
       }
 
    

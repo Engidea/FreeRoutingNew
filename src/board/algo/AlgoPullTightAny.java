@@ -127,8 +127,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
       return new Polyline(line_arr);
       }
 
-   @Override
-   protected Polyline reposition_lines(Polyline p_polyline)
+   private Polyline reposition_lines(Polyline p_polyline)
       {
       if (p_polyline.plaline_len() < 5) return p_polyline;
 
@@ -408,8 +407,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
     * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter
     * @return null if it fails to shorten
     */
-   @Override
-   protected PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_start_no)
+   private PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_start_no)
       {
       if (p_line_arr.length - p_start_no < 5) return null;
 

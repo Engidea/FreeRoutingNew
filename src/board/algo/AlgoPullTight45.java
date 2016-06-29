@@ -42,8 +42,7 @@ import freert.varie.ThreadStoppable;
  */
 public final class AlgoPullTight45 extends AlgoPullTight
    {
-   public AlgoPullTight45(
-         RoutingBoard p_board, 
+   public AlgoPullTight45(RoutingBoard p_board, 
          NetNosList p_only_net_no_arr, 
          ThreadStoppable p_stoppable_thread, 
          BrdKeepPoint p_keep_point,
@@ -696,6 +695,158 @@ public final class AlgoPullTight45 extends AlgoPullTight
       return null;
       }
 
+   /**
+    * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter
+    * @return null if it fails to shorten
+    */
+   private PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_no)
+      {
+      if (p_line_arr.length - p_no < 3) return null;
+      
+      PlaLineInt translate_line = p_line_arr[p_no];
+      
+      PlaPoint prev_corner = p_line_arr[p_no - 2].intersection(p_line_arr[p_no - 1], "probably messy");
+      
+      if ( prev_corner.is_NaN() ) return null;
+      
+      PlaPoint next_corner = p_line_arr[p_no + 1].intersection(p_line_arr[p_no + 2], "probably messy");
+
+      if ( next_corner.is_NaN() ) return null;
+
+      double prev_dist = translate_line.distance_signed(prev_corner.to_float());
+      double next_dist = translate_line.distance_signed(next_corner.to_float());
+      
+      // the 2 corners are at different sides of translate_line
+      if (Signum.of(prev_dist) != Signum.of(next_dist)) return null;
+      
+      PlaPoint nearest_point;
+      double max_translate_dist;
+      
+      if (Math.abs(prev_dist) < Math.abs(next_dist))
+         {
+         nearest_point = prev_corner;
+         max_translate_dist = prev_dist;
+         }
+      else
+         {
+         nearest_point = next_corner;
+         max_translate_dist = next_dist;
+         }
+      
+      double translate_dist = max_translate_dist;
+      double delta_dist = max_translate_dist;
+      PlaSide side_of_nearest_point = translate_line.side_of(nearest_point);
+      int sign = Signum.as_int(max_translate_dist);
+      PlaLineInt new_line = null;
+      PlaLineInt[] check_lines = new PlaLineInt[3];
+      check_lines[0] = p_line_arr[p_no - 1];
+      check_lines[2] = p_line_arr[p_no + 1];
+      boolean first_time = true;
+      
+      while (first_time || Math.abs(delta_dist) > min_move_dist)
+         {
+         boolean check_ok = false;
+
+         if (first_time && nearest_point instanceof PlaPointInt)
+            {
+            check_lines[1] = new PlaLineInt((PlaPointInt)nearest_point, translate_line.direction());
+            }
+         else
+            {
+            check_lines[1] = translate_line.translate(-translate_dist);
+            }
+         
+         if (check_lines[1].equals(translate_line))
+            {
+            // may happen at first time if nearest_point is not an IntPoint
+            return null;
+            }
+         
+         PlaSide new_line_side_of_nearest_point = check_lines[1].side_of(nearest_point);
+         
+         if (new_line_side_of_nearest_point != side_of_nearest_point && new_line_side_of_nearest_point != PlaSide.COLLINEAR)
+            {
+            // moved a little bit to far at the first time because of numerical inaccuracy may happen if nearest_point is not an IntPoint
+            double shorten_value = sign * 0.5;
+            max_translate_dist -= shorten_value;
+            translate_dist -= shorten_value;
+            delta_dist -= shorten_value;
+            continue;
+            }
+         
+         Polyline tmp = new Polyline(check_lines);
+
+         if (tmp.plaline_len() == 3)
+            {
+            ShapeTile shape_to_check = tmp.offset_shape(curr_half_width, 0);
+            check_ok = r_board.check_trace(shape_to_check, curr_layer, curr_net_no_arr, curr_cl_type, contact_pins);
+            }
+         
+         delta_dist /= 2;
+         
+         if (check_ok)
+            {
+            new_line = check_lines[1];
+            if (first_time)
+               {
+               // biggest possible change
+               break;
+               }
+            translate_dist += delta_dist;
+            }
+         else
+            {
+            translate_dist -= delta_dist;
+            }
+         first_time = false;
+         }
+      
+      if (new_line != null )
+         {
+         // mark the changed area
+         PlaPointFloat afloat = check_lines[0].intersection_approx(new_line);
+         if ( ! afloat.is_NaN() ) r_board.changed_area.join(afloat, curr_layer);
+         
+         afloat = check_lines[2].intersection_approx(new_line);
+         if ( ! afloat.is_NaN() ) r_board.changed_area.join(afloat, curr_layer);
+         
+         afloat = p_line_arr[p_no - 1].intersection_approx(p_line_arr[p_no]);
+         if ( ! afloat.is_NaN() ) r_board.changed_area.join(afloat, curr_layer);
+         
+         afloat = p_line_arr[p_no].intersection_approx(p_line_arr[p_no + 1]);
+         if ( ! afloat.is_NaN() ) r_board.changed_area.join(afloat, curr_layer);
+         }
+
+      return new_line;
+      }
+   
+   /**
+    * tries to shorten p_polyline by relocating its lines
+    * This is overridden in any angle (not used) and instead used in 45 degrees
+    */
+   private Polyline reposition_lines(Polyline p_polyline)
+      {
+      if (p_polyline.plaline_len() < 5) return p_polyline;
+      
+      PlaLineInt[] line_arr = p_polyline.alist_to_array();
+
+      for (int index = 2; index < p_polyline.plaline_len(-2); ++index)
+         {
+         PlaLineInt new_line = reposition_line(line_arr, index);
+
+         if (new_line == null) continue;
+         
+         line_arr[index] = new_line;
+         
+         Polyline result = new Polyline(line_arr);
+         
+         return skip_segments_of_length_0(result);
+         }
+      
+      return p_polyline;
+      }
+   
+   
    @Override
    protected Polyline smoothen_end_corner_at_trace(BrdTracep p_trace)
       {

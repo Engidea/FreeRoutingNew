@@ -66,9 +66,8 @@ public final class ArtControl
    // The upper bound for the last layer of vias 
    public int via_upper_bound;
    // The width of the region around changed traces, where traces are pulled tight 
-   public int tidy_region_width;
    // The pull tight accuracy of traces 
-   public int pull_tight_accuracy;  // interesting
+   public int art_pullt_min_move;  // interesting
    // The maximum recursion depth for shoving traces 
    public int max_shove_trace_recursion_depth;
    // The maximum recursion depth for shoving obstacles 
@@ -127,27 +126,30 @@ public final class ArtControl
       via_radius_arr = new double[layer_count];
       add_via_costs = new ArtViaCost[layer_count];
 
-      for (int i = 0; i < layer_count; ++i)
+      for (int index = 0; index < layer_count; ++index)
          {
-         add_via_costs[i] = new ArtViaCost(layer_count);
-         layer_active[i] = p_settings.autoroute_settings.get_layer_active(i);
+         add_via_costs[index] = new ArtViaCost(layer_count);
+         layer_active[index] = p_settings.autoroute_settings.get_layer_active(index);
          }
       
       is_fanout = false;
       stop_remove_fanout_vias = true;
       with_neckdown = p_settings.is_automatic_neckdown();
-      tidy_region_width = Integer.MAX_VALUE;
-      pull_tight_accuracy = 500;
+      
+      art_pullt_min_move = p_settings.trace_pullt_min_move;
+      
       max_shove_trace_recursion_depth = 20;
       max_shove_via_recursion_depth = 5;
       max_spring_over_recursion_depth = 5;
-      for (int i = 0; i < layer_count; ++i)
+
+      for (int index = 0; index < layer_count; ++index)
          {
-         for (int j = 0; j < layer_count; ++j)
+         for (int jndex = 0; jndex < layer_count; ++jndex)
             {
-            add_via_costs[i].to_layer[j] = 0;
+            add_via_costs[index].to_layer[jndex] = 0;
             }
          }
+      
       trace_costs = p_trace_costs_arr;
       attach_smd_allowed = false;
       via_lower_bound = 0;

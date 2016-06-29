@@ -1510,16 +1510,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    public final boolean pull_tight(boolean p_own_net_only, int p_pullt_min_move, ThreadStoppable p_stoppable_thread)
       {
-      NetNosList opt_net_no_arr;
-      
-      if (p_own_net_only)
-         {
-         opt_net_no_arr = net_nos;
-         }
-      else
-         {
-         opt_net_no_arr = NetNosList.EMPTY;
-         }
+      NetNosList opt_net_no_arr = p_own_net_only ? net_nos : NetNosList.EMPTY;
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(r_board, opt_net_no_arr, p_pullt_min_move, p_stoppable_thread, null );
       
@@ -1531,16 +1522,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    public boolean smoothen_end_corners_fork(boolean p_own_net_only, int p_pullt_min_move, ThreadStoppable p_stoppable_thread)
       {
-      NetNosList opt_net_no_arr;
-      
-      if (p_own_net_only)
-         {
-         opt_net_no_arr = net_nos;
-         }
-      else
-         {
-         opt_net_no_arr = NetNosList.EMPTY;
-         }
+      NetNosList opt_net_no_arr = p_own_net_only ? net_nos : NetNosList.EMPTY;
       
       AlgoPullTight pull_tight_algo = AlgoPullTight.get_instance(r_board, opt_net_no_arr, p_pullt_min_move, p_stoppable_thread, null );
 

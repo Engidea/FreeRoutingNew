@@ -190,7 +190,7 @@ public final class ArtConnectionInsert
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
-               ctrl.pull_tight_accuracy, 
+               ctrl.art_pullt_min_move, 
                true, 
                null);
          
@@ -329,7 +329,7 @@ public final class ArtConnectionInsert
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
-               ctrl.pull_tight_accuracy, 
+               ctrl.art_pullt_min_move, 
                true, 
                null);
 
@@ -345,7 +345,7 @@ public final class ArtConnectionInsert
                ctrl.max_shove_trace_recursion_depth, 
                ctrl.max_shove_via_recursion_depth, 
                ctrl.max_spring_over_recursion_depth, 
-               ctrl.pull_tight_accuracy, 
+               ctrl.art_pullt_min_move, 
                true, null);
 
          if (curr_ok_point != neck_down_end_point) return p_from_corner;
@@ -363,7 +363,7 @@ public final class ArtConnectionInsert
                   ctrl.max_shove_trace_recursion_depth, 
                   ctrl.max_shove_via_recursion_depth, 
                   ctrl.max_spring_over_recursion_depth, 
-                  ctrl.pull_tight_accuracy, 
+                  ctrl.art_pullt_min_move, 
                   true, null);
 
             if (curr_ok_point != add_corner) return p_from_corner;
@@ -381,7 +381,7 @@ public final class ArtConnectionInsert
             ctrl.max_shove_trace_recursion_depth, 
             ctrl.max_shove_via_recursion_depth, 
             ctrl.max_spring_over_recursion_depth, 
-            ctrl.pull_tight_accuracy, 
+            ctrl.art_pullt_min_move, 
             true, null);
       
       return ok_point;
