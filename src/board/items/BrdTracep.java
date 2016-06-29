@@ -262,7 +262,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // point should land on either first or last corner
       if ( !(p_point.equals(corner_first()) || p_point.equals(corner_last()))) return result;
 
-      ShapeTile search_shape = new ShapeTileBox(p_point);
+      ShapeTileBox search_shape = p_point.to_box();
 
       Set<AwtreeObject> overlaps = r_board.overlapping_objects(search_shape, layer_no);
 

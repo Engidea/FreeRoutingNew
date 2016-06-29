@@ -57,7 +57,6 @@ public final class OtherColorTableModel extends ColorTableModel implements java.
 
    /**
     * Copy construcror.
-    */
    public OtherColorTableModel(OtherColorTableModel p_item_color_model)
       {
       super(p_item_color_model.table_data.length, p_item_color_model.stat);
@@ -67,6 +66,7 @@ public final class OtherColorTableModel extends ColorTableModel implements java.
          System.arraycopy(p_item_color_model.table_data[i], 0, this.table_data[i], 0, this.table_data[i].length);
          }
       }
+    */
 
    public int getColumnCount()
       {

@@ -95,7 +95,6 @@ public final class GdiContext implements java.io.Serializable
 
    /**
     * Copy constructor
-    */
    public GdiContext(GdiContext p_graphics_context)
       {
       coordinate_transform  = new GdiCoordinateTransform(p_graphics_context.coordinate_transform);
@@ -104,6 +103,7 @@ public final class GdiContext implements java.io.Serializable
       color_intensity_table = new ColorIntensityTable(p_graphics_context.color_intensity_table);
       layer_visibility_arr  = p_graphics_context.copy_layer_visibility_arr();
       }
+    */
 
    
    public boolean is_valid_layer ( int layer_no )
@@ -117,10 +117,8 @@ public final class GdiContext implements java.io.Serializable
     */
    public void change_design_bounds(ShapeTileBox p_new_design_bounds)
       {
-      if (p_new_design_bounds.equals(coordinate_transform.design_box))
-         {
-         return;
-         }
+      if (p_new_design_bounds.equals(coordinate_transform.design_box)) return;
+
       Dimension screen_bounds = coordinate_transform.screen_bounds;
       coordinate_transform = new GdiCoordinateTransform(p_new_design_bounds, screen_bounds);
       }
@@ -749,13 +747,15 @@ public final class GdiContext implements java.io.Serializable
       layer_visibility_arr = p_layer_visibility_arr;
       }
 
+/*   
    public double[] copy_layer_visibility_arr()
       {
       double[] result = new double[layer_visibility_arr.length];
       System.arraycopy(layer_visibility_arr, 0, result, 0, layer_visibility_arr.length);
       return result;
       }
-
+*/
+   
    /** 
     * Returns the number of layers on the board 
     */

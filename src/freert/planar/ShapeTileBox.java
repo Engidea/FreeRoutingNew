@@ -43,27 +43,6 @@ public final class ShapeTileBox extends ShapeTileRegular
       box_ll = a_point;
       box_ur = a_point;
       }
-   
-   public ShapeTileBox (PlaPoint a_point)
-      {
-      if ( a_point.is_rational() )
-         {
-         PlaPointFloat fp = a_point.to_float();
-         double p_ll_x = Math.floor(fp.v_x);
-         double p_ll_y = Math.floor(fp.v_y);
-         double p_ur_x = Math.ceil(fp.v_x);
-         double p_ur_y = Math.ceil(fp.v_y);
-         
-         box_ll = new PlaPointInt(p_ll_x, p_ll_y);
-         box_ur = new PlaPointInt(p_ur_x, p_ur_y);
-         }
-      else 
-         {
-         PlaPointInt i_point = a_point.round();
-         box_ll = i_point;
-         box_ur = i_point;
-         }
-      }
 
    /**
     * Creates an IntBox from its lower left and upper right corners.

@@ -54,6 +54,9 @@ public abstract class PlaPoint implements PlaObject, Serializable
          }
       }
 
+   
+   public abstract ShapeTileBox to_box ();
+   
    public abstract boolean equals(PlaPointInt p_other);
    
    public abstract boolean equals(PlaPointRational p_other);

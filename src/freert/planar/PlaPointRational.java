@@ -92,6 +92,21 @@ public final class PlaPointRational extends PlaPoint implements java.io.Serializ
       return new PlaPointFloat(xd, yd);
       }
    
+   @Override
+   public ShapeTileBox to_box ()
+      {
+      PlaPointFloat fp = to_float();
+      double p_ll_x = Math.floor(fp.v_x);
+      double p_ll_y = Math.floor(fp.v_y);
+      double p_ur_x = Math.ceil(fp.v_x);
+      double p_ur_y = Math.ceil(fp.v_y);
+      
+      PlaPointInt box_ll = new PlaPointInt(p_ll_x, p_ll_y);
+      PlaPointInt box_ur = new PlaPointInt(p_ur_x, p_ur_y);
+      return new ShapeTileBox(box_ll,box_ur);
+      }
+   
+   
    
    public final PlaPointInt round()
       {

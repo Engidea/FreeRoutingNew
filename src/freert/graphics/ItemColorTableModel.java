@@ -128,7 +128,6 @@ public final class ItemColorTableModel extends ColorTableModel implements java.i
 
    /**
     * Copy construcror.
-    */
    public ItemColorTableModel(ItemColorTableModel p_item_color_model)
       {
       super(p_item_color_model.table_data.length, p_item_color_model.stat);
@@ -139,6 +138,7 @@ public final class ItemColorTableModel extends ColorTableModel implements java.i
          System.arraycopy(p_item_color_model.table_data[index], 0, table_data[index], 0, table_data[index].length);
          }
       }
+    */
    
    public int getColumnCount()
       {

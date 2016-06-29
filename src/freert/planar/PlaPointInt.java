@@ -232,6 +232,14 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       return new PlaPointFloat(v_x, v_y);
       }
 
+   @Override
+   public ShapeTileBox to_box ()
+      {
+      return new ShapeTileBox(this);
+      }
+   
+   
+   
    /**
     * returns the determinant of the vectors (x, y) and (p_other.x, p_other.y)
     */

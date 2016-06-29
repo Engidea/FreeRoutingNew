@@ -52,7 +52,6 @@ public class ColorIntensityTable implements java.io.Serializable
 
    /**
     * Copy constructor.
-    */
    public ColorIntensityTable(ColorIntensityTable p_color_intesity_table)
       {
       this.inte_arr = new double[p_color_intesity_table.inte_arr.length];
@@ -61,6 +60,7 @@ public class ColorIntensityTable implements java.io.Serializable
          this.inte_arr[i] = p_color_intesity_table.inte_arr[i];
          }
       }
+    */
 
    public double get_value(int p_no)
       {

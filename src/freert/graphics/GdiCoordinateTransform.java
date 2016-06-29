@@ -79,12 +79,14 @@ public final class GdiCoordinateTransform implements java.io.Serializable
       display_y_offset = scale_factor * design_box_with_offset.box_ll.v_y;
       }
 
+/*   
    public GdiCoordinateTransform(GdiCoordinateTransform p_coordinate_transform)
       {
-      screen_bounds = new Dimension(p_coordinate_transform.screen_bounds);
-      design_box = new ShapeTileBox(p_coordinate_transform.design_box.box_ll, p_coordinate_transform.design_box.box_ur);
-      rotation_pole = new PlaPointFloat(p_coordinate_transform.rotation_pole.v_x, p_coordinate_transform.rotation_pole.v_y);
-      design_box_with_offset = new ShapeTileBox(p_coordinate_transform.design_box_with_offset.box_ll, p_coordinate_transform.design_box_with_offset.box_ur);
+      screen_bounds = p_coordinate_transform.screen_bounds;
+      design_box = p_coordinate_transform.design_box;
+      rotation_pole = p_coordinate_transform.rotation_pole;
+      design_box_with_offset = p_coordinate_transform.design_box_with_offset;
+      
       scale_factor = p_coordinate_transform.scale_factor;
       display_x_offset = p_coordinate_transform.display_x_offset;
       display_y_offset = p_coordinate_transform.display_y_offset;
@@ -92,7 +94,8 @@ public final class GdiCoordinateTransform implements java.io.Serializable
       mirror_top_bottom = p_coordinate_transform.mirror_top_bottom;
       rotation_radiants = p_coordinate_transform.rotation_radiants;
       }
-
+*/
+   
    /**
     * scale a value from the board to the screen coordinate system
     */

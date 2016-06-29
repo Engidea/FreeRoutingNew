@@ -308,19 +308,13 @@ public final class ShapeTileSimplex extends ShapeTile
    @Override   
    public PlaDimension dimension()
       {
-      if (lines_size() == 0)
-         {
-         return PlaDimension.EMPTY;
-         }
-      if (lines_size() > 4)
-         {
-         return PlaDimension.AREA;
-         }
-      if (lines_size() == 1)
-         {
-         // we have a half plane
-         return PlaDimension.AREA;
-         }
+      if (lines_size() == 0) return PlaDimension.EMPTY;
+
+      if (lines_size() > 4) return PlaDimension.AREA;
+
+      // we have a half plane
+      if (lines_size() == 1) return PlaDimension.AREA;
+      
       if (lines_size() == 2)
          {
          if (tline_get(0).overlaps(tline_get(1)))
@@ -337,6 +331,7 @@ public final class ShapeTileSimplex extends ShapeTile
             // simplex is 1 dimensional and unbounded at one side
             return PlaDimension.LINE;
             }
+
          PlaPoint intersection = tline_get(1).intersection(tline_get(2), "what does this do ?");
          
          PlaSide side_of_line0 = tline_get(0).side_of(intersection);
@@ -344,11 +339,13 @@ public final class ShapeTileSimplex extends ShapeTile
             {
             return PlaDimension.AREA;
             }
+         
          if (side_of_line0 == PlaSide.ON_THE_LEFT)
             {
             System.out.println("empty Simplex not normalized");
             return PlaDimension.EMPTY;
             }
+         
          // now the 3 lines intersect in the same point
          return PlaDimension.POINT;
          }
