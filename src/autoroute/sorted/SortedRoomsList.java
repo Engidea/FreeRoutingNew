@@ -24,7 +24,6 @@ package autoroute.sorted;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.SortedSet;
 import java.util.TreeSet;
 import autoroute.ArtEngine;
 import autoroute.expand.ExpandDoor;
@@ -51,21 +50,21 @@ import freert.planar.ShapeTileSimplex;
  *
  * @author Alfons Wirtz
  */
-public final class SortedRooms_xx_Degree
+public final class SortedRoomsList
    {
    private final ExpandRoom from_room;
-   final ExpandRoomComplete completed_room;
    private final ShapeTile room_shape;
-   final SortedSet<SortedRoom_xx_Degree> sorted_neighbours;
-   final Collection<AwtreeEntry> own_net_objects;
+   
+   final ExpandRoomComplete completed_room;
+   
+   final TreeSet<SortedRoom> sorted_neighbours = new TreeSet<SortedRoom>();
+   final LinkedList<AwtreeEntry> own_net_objects = new LinkedList<AwtreeEntry>();
 
-   SortedRooms_xx_Degree(ExpandRoom p_from_room, ExpandRoomComplete p_completed_room)
+   SortedRoomsList(ExpandRoom p_from_room, ExpandRoomComplete p_completed_room)
       {
       from_room = p_from_room;
       completed_room = p_completed_room;
       room_shape = p_completed_room.get_shape();
-      sorted_neighbours = new TreeSet<SortedRoom_xx_Degree>();
-      own_net_objects = new LinkedList<AwtreeEntry>();
       }
 
 
@@ -76,7 +75,7 @@ public final class SortedRooms_xx_Degree
          boolean p_room_touch_is_corner,
          boolean p_neighbour_room_touch_is_corner)
       {
-      sorted_neighbours.add( new SortedRoom_xx_Degree(
+      sorted_neighbours.add( new SortedRoom(
             room_shape, 
             p_neighbour_shape, 
             p_touching_side_no_of_room, 
@@ -102,7 +101,7 @@ public final class SortedRooms_xx_Degree
       int prev_edge_no = -1;
       int curr_edge_no = 0;
 
-      for ( SortedRoom_xx_Degree next_neighbour : sorted_neighbours )
+      for ( SortedRoom next_neighbour : sorted_neighbours )
          {
          if (next_neighbour.touching_side_no_of_room == prev_edge_no) continue;
 
@@ -163,7 +162,7 @@ public final class SortedRooms_xx_Degree
    
    
    
-   private SortedRoom_xx_Degree calculate_new_incomplete_rooms (ArtEngine p_autoroute_engine, ShapeTileSimplex room_simplex, SortedRoom_xx_Degree prev_neighbour , SortedRoom_xx_Degree next_neighbour )
+   private SortedRoom calculate_new_incomplete_rooms (ArtEngine p_autoroute_engine, ShapeTileSimplex room_simplex, SortedRoom prev_neighbour , SortedRoom next_neighbour )
       {
       int first_touching_side_no = prev_neighbour.touching_side_no_of_room;
       int last_touching_side_no = next_neighbour.touching_side_no_of_room;
@@ -331,13 +330,13 @@ public final class SortedRooms_xx_Degree
     * Called from calculate_doors(). The shape of the room p_result may change inside this function.
     * Wow.... pippo interesting....
     */
-   public void calculate_new_incomplete_rooms(ArtEngine p_autoroute_engine)
+   void calculate_new_incomplete_rooms(ArtEngine p_autoroute_engine)
       {
-      SortedRoom_xx_Degree prev_neighbour = sorted_neighbours.last();
+      SortedRoom prev_neighbour = sorted_neighbours.last();
 
       ShapeTileSimplex room_simplex = from_room.get_shape().to_Simplex();
 
-      for ( SortedRoom_xx_Degree next_neighbour : sorted_neighbours )
+      for ( SortedRoom next_neighbour : sorted_neighbours )
          {
          prev_neighbour = calculate_new_incomplete_rooms(p_autoroute_engine, room_simplex, prev_neighbour, next_neighbour );
          }

@@ -43,11 +43,11 @@ import freert.planar.PlaPointInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileSimplex;
 
-public final class SortedRooms_xx_Top
+public final class SortedRoomsTop
    {
    private final ArtEngine r_engine;
    
-   public SortedRooms_xx_Top (ArtEngine p_engine)
+   public SortedRoomsTop (ArtEngine p_engine)
       {
       r_engine = p_engine;
       }
@@ -60,7 +60,7 @@ public final class SortedRooms_xx_Top
       {
       int net_no = r_engine.get_net_no();
 
-      SortedRooms_xx_Degree room_neighbours = calculate_neighbours(p_room, net_no, r_engine.art_search_tree, r_engine.new_room_id_no() );
+      SortedRoomsList room_neighbours = calculate_neighbours(p_room, net_no, r_engine.art_search_tree, r_engine.new_room_id_no() );
 
       if (room_neighbours == null) return null;
 
@@ -124,7 +124,7 @@ public final class SortedRooms_xx_Top
       }
 
    
-   private static void calculate_target_doors(ExpandRoomFreespaceComplete p_room, Collection<AwtreeEntry> p_own_net_objects, ArtEngine p_autoroute_engine)
+   private void calculate_target_doors(ExpandRoomFreespaceComplete p_room, Collection<AwtreeEntry> p_own_net_objects, ArtEngine p_autoroute_engine)
       {
       if (!p_own_net_objects.isEmpty())
          {
@@ -154,7 +154,7 @@ public final class SortedRooms_xx_Top
       }
 
    
-   private SortedRooms_xx_Degree calculate_neighbours(ExpandRoom p_room, int p_net_no, AwtreeShapeSearch p_autoroute_search_tree, int p_room_id_no )
+   private SortedRoomsList calculate_neighbours(ExpandRoom p_room, int p_net_no, AwtreeShapeSearch p_autoroute_search_tree, int p_room_id_no )
       {
       ShapeTile room_shape = p_room.get_shape();
       ExpandRoomComplete completed_room;
@@ -173,7 +173,7 @@ public final class SortedRooms_xx_Top
          return null;
          }
       
-      SortedRooms_xx_Degree result = new SortedRooms_xx_Degree(p_room, completed_room);
+      SortedRoomsList result = new SortedRoomsList(p_room, completed_room);
       
       LinkedList<AwtreeEntry> overlapping_objects = new LinkedList<AwtreeEntry>();
       

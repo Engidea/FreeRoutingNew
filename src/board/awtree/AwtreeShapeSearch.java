@@ -1479,6 +1479,7 @@ public final class AwtreeShapeSearch
          {
          return p_room_list;
          }
+      
       double max_section_width = 0.5 * Math.max(p_board_bounding_box.height(), p_board_bounding_box.width());
       ShapeTile[] section_arr = curr_room.get_shape().divide_into_sections(max_section_width);
       Collection<ExpandRoomFreespaceIncomplete> result = new LinkedList<ExpandRoomFreespaceIncomplete>();
@@ -1488,6 +1489,7 @@ public final class AwtreeShapeSearch
          ExpandRoomFreespaceIncomplete curr_section_room = new ExpandRoomFreespaceIncomplete(curr_section, curr_room.get_layer(), curr_shape_to_be_contained);
          result.add(curr_section_room);
          }
+      
       return result;
       }
 

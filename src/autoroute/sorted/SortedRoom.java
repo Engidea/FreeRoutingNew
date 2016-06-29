@@ -29,7 +29,7 @@ import freert.varie.Signum;
  * @author Alfons Wirtz
  */
 
-public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degree>
+public final class SortedRoom implements Comparable<SortedRoom>
    {
    static private final double c_dist_tolerance = 1;
 
@@ -49,7 +49,7 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
    private PlaPointInt precalculated_last_corner = null;
 
    
-   public SortedRoom_xx_Degree(
+   SortedRoom(
          ShapeTile p_room_shape, 
          ShapeTile p_neighbour_shape, 
          int p_touching_side_no_of_room, 
@@ -70,7 +70,7 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
     * in ascending order.
     */
    @Override
-   public int compareTo(SortedRoom_xx_Degree p_other)
+   public int compareTo(SortedRoom p_other)
       {
       int compare_value = touching_side_no_of_room - p_other.touching_side_no_of_room;
 
@@ -114,9 +114,9 @@ public final class SortedRoom_xx_Degree implements Comparable<SortedRoom_xx_Degr
       }
 
    /**
-    * Returns the first corner of the intersection shape with the neighbour.
+    * @return the first corner of the intersection shape with the neighbour.
     */
-   public PlaPointInt first_corner()
+   PlaPointInt first_corner()
       {
       if (precalculated_first_corner != null) return precalculated_first_corner;
 

@@ -756,7 +756,7 @@ public final class ShapeTileSimplex extends ShapeTile
       }
 
    /**
-    * Enlarges the simplex by removing the edge line with index p_no. The result simplex may get unbounded.
+    * Enlarges the simplex by removing the edge line with index p_no. The result simplex may be unbounded.
     */
    public ShapeTileSimplex remove_border_line(int p_no)
       {

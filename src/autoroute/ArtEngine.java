@@ -35,7 +35,7 @@ import autoroute.expand.ExpandRoomFreespaceIncomplete;
 import autoroute.expand.ExpandRoomObstacle;
 import autoroute.maze.MazeSearch;
 import autoroute.maze.MazeSearchResult;
-import autoroute.sorted.SortedRooms_xx_Top;
+import autoroute.sorted.SortedRoomsTop;
 import autoroute.varie.ArtResult;
 import board.RoutingBoard;
 import board.awtree.AwtreeObject;
@@ -416,7 +416,7 @@ public final class ArtEngine
     */
    private ExpandRoomComplete calculate_doors(ExpandRoom p_room)
       {
-      SortedRooms_xx_Top calculator = new SortedRooms_xx_Top(this);
+      SortedRoomsTop calculator = new SortedRoomsTop(this);
       
       return calculator.calculate(p_room);
       }
