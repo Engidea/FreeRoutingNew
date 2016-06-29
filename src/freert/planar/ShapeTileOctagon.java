@@ -1325,7 +1325,7 @@ public final class ShapeTileOctagon extends ShapeTileRegular
       for (PlaDirection curr_dir : eight_45_degree)
          {
          PlaPointInt curr_border_point = border_point(p_point, curr_dir);
-         double curr_dist = inside_point.dustance_square(curr_border_point.to_float());
+         double curr_dist = inside_point.distance_square(curr_border_point.to_float());
          for (int i = 0; i < p_max_result_points; ++i)
             {
             if (curr_dist < min_dist[i])

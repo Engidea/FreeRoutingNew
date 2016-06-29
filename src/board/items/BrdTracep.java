@@ -1807,7 +1807,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          int curr_intersecting_border_line_no = offset_pin_shape.intersecting_border_line_no(pin_center, curr_exit_restriction.direction);
          PlaLineInt curr_pin_exit_ray = new PlaLineInt(pin_center, curr_exit_restriction.direction);
          PlaPointFloat curr_exit_corner = curr_pin_exit_ray.intersection_approx(offset_pin_shape.border_line(curr_intersecting_border_line_no));
-         double curr_exit_corner_distance = curr_exit_corner.dustance_square(trace_entry_location_approx);
+         double curr_exit_corner_distance = curr_exit_corner.distance_square(trace_entry_location_approx);
          boolean new_nearest_corner_found = false;
          if (curr_exit_corner_distance + TOLERANCE < min_exit_corner_distance)
             {
@@ -1819,8 +1819,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             for (int index = 1; index < trace_polyline.corner_count(); ++index)
                {
                PlaPointFloat curr_trace_corner = trace_polyline.corner_approx(index);
-               double curr_trace_corner_distance = curr_trace_corner.dustance_square(curr_exit_corner);
-               double old_trace_corner_distance = curr_trace_corner.dustance_square(nearest_exit_corner);
+               double curr_trace_corner_distance = curr_trace_corner.distance_square(curr_exit_corner);
+               double old_trace_corner_distance = curr_trace_corner.distance_square(nearest_exit_corner);
                if (curr_trace_corner_distance + TOLERANCE < old_trace_corner_distance)
                   {
                   new_nearest_corner_found = true;
@@ -1965,7 +1965,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if (!check_swap)
          {
          double half_width = get_half_width();
-         if (trace_polyline.plaline_len() > 3 && trace_polyline.corner_approx(0).dustance_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
+         if (trace_polyline.plaline_len() > 3 && trace_polyline.corner_approx(0).distance_square(trace_polyline.corner_approx(1)) <= half_width * half_width)
             {
             // check also for sharp angle with the second line
             check_swap = (contact_last_line.direction().projection(trace_polyline.plaline(2).direction()) == Signum.NEGATIVE);

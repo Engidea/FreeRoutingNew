@@ -726,7 +726,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_first_next();
 
-      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().dustance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
+      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().distance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
       
       int start_line_no = 1;
 
@@ -884,7 +884,7 @@ public final class AlgoPullTightAny extends AlgoPullTight
 
       PlaPoint curr_prev_end_corner = trace_polyline.corner_last_prev();
 
-      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().dustance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
+      boolean skip_short_segment = !(curr_end_corner instanceof PlaPointInt) && curr_end_corner.to_float().distance_square(curr_prev_end_corner.to_float()) < SMOOTH_LENGTH;
       
       int end_line_no = trace_polyline.plaline_len(-2);
       if (skip_short_segment)

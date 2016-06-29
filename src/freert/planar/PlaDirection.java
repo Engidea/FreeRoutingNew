@@ -289,37 +289,39 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
      switch (p_factor % 8)
         {
         case 0: // 0 degree
-           new_x = dir_x;
-           new_y = dir_y;
-           break;
+           return this;
+
         case 1: // 45 degree
-           new_x = dir_x - dir_y;
-           new_y = dir_x + dir_y;
-           break;
+           return new PlaDirection(dir_x - dir_y, dir_x + dir_y, is_NaN);
+
         case 2: // 90 degree
-           new_x = -dir_y;
-           new_y = dir_x;
-           break;
+           return new PlaDirection(-dir_y, dir_x, is_NaN);
+        
         case 3: // 135 degree
            new_x = -dir_x - dir_y;
            new_y = dir_x - dir_y;
            break;
+        
         case 4: // 180 degree
            new_x = -dir_x;
            new_y = -dir_y;
            break;
+        
         case 5: // 225 degree
            new_x = dir_y - dir_x;
            new_y = -dir_x - dir_y;
            break;
+        
         case 6: // 270 degree
            new_x = dir_y;
            new_y = -dir_x;
            break;
+        
         case 7: // 315 degree
            new_x = dir_x + dir_y;
            new_y = dir_y - dir_x;
            break;
+        
         default:
            return new PlaDirection(0, 0, true);
         }

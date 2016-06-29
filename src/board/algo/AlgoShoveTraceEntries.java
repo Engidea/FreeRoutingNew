@@ -575,8 +575,8 @@ public final class AlgoShoveTraceEntries
       if (from_side.border_intersection != null)
          {
          from_point_projection = from_side.border_intersection.projection_approx(shape.border_line(from_side.side_no));
-         from_point_dist = from_point_projection.dustance_square(compare_corner_1);
-         if (from_point_dist >= compare_corner_1.dustance_square(compare_corner_2))
+         from_point_dist = from_point_projection.distance_square(compare_corner_1);
+         if (from_point_dist >= compare_corner_1.distance_square(compare_corner_2))
             {
             from_side = new BrdFromSide(from_side.side_no, null);
             }
@@ -596,14 +596,14 @@ public final class AlgoShoveTraceEntries
             if (from_side.border_intersection != null)
                {
                PlaPointFloat curr_projection = curr.entry_approx.projection_approx(shape.border_line(from_side.side_no));
-               if (curr_projection.dustance_square(compare_corner_1) >= from_point_dist && curr_projection.dustance_square(from_point_projection) <= curr_projection.dustance_square(compare_corner_1))
+               if (curr_projection.distance_square(compare_corner_1) >= from_point_dist && curr_projection.distance_square(from_point_projection) <= curr_projection.distance_square(compare_corner_1))
                   {
                   break;
                   }
                }
             else
                {
-               if (curr.entry_approx.dustance_square(compare_corner_2) <= curr.entry_approx.dustance_square(compare_corner_1))
+               if (curr.entry_approx.distance_square(compare_corner_2) <= curr.entry_approx.distance_square(compare_corner_1))
                   {
                   break;
                   }

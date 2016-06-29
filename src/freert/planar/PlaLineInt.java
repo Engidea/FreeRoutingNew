@@ -613,8 +613,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * Calculates the direction from p_from_point to the nearest point on this line to p_fro_point. 
-    * Returns null, if p_from_point is contained in this line.
+    * Calculates the direction from p_from_point to the nearest point on this line to p_fro_point.
+    * The difficult part is that the point may be on the left or right of the line, and the direction is different 
+    * @returns null, if p_from_point is contained in this line.
     */
    public PlaDirection perpendicular_direction(PlaPointInt p_from_point)
       {
@@ -623,19 +624,21 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       if (line_side == PlaSide.COLLINEAR) return null;
 
       PlaDirection dir1 = direction().rotate_45_deg(2);
-      PlaDirection dir2 = direction().rotate_45_deg(6);
-
-      PlaPoint check_point_1 = p_from_point.translate_by(dir1);
+      
+      // move the point a bit in the newly found direction
+      PlaPointInt check_point_1 = p_from_point.translate_by(dir1);
 
       if (side_of(check_point_1) != line_side) return dir1;
 
-      PlaPoint check_point_2 = p_from_point.translate_by(dir2);
+      PlaDirection dir2 = direction().rotate_45_deg(6);
+      
+      PlaPointInt check_point_2 = p_from_point.translate_by(dir2);
       
       if (side_of(check_point_2) != line_side) return dir2;
 
       PlaPointFloat nearest_line_point = p_from_point.to_float().projection_approx(this);
       
-      if (nearest_line_point.dustance_square(check_point_1.to_float()) <= nearest_line_point.dustance_square(check_point_2.to_float()))
+      if (nearest_line_point.distance_square(check_point_1.to_float()) <= nearest_line_point.distance_square(check_point_2.to_float()))
          return dir1;
       else
          return dir2;

@@ -735,7 +735,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          
          for (int jndex = index + 2; jndex < plaline_len(-1); ++jndex)
             {
-            if (corner_approx(jndex - 1).dustance_square(check_distance_corner) > check_dist_square)
+            if (corner_approx(jndex - 1).distance_square(check_distance_corner) > check_dist_square)
                {
                break;
                }
@@ -783,7 +783,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          direction_changed = false;
          for (int jndex = index - 2; jndex >= 1; --jndex)
             {
-            if (corner_approx(jndex).dustance_square(check_distance_corner) > check_dist_square)
+            if (corner_approx(jndex).distance_square(check_distance_corner) > check_dist_square)
                {
                break;
                }
@@ -1380,7 +1380,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * @returns null, if the perpendicular line does not intersect the neares line segment inside its segment bounds or if p_from_point is
     * contained in this polyline.
     */
-   public PlaSegmentInt projection_line(PlaPointInt p_from_point)
+   public Polyline projection_line(PlaPointInt p_from_point)
       {
       if ( p_from_point == null ) return null;
       
@@ -1391,7 +1391,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       for (int index = 1; index < plaline_len(-1); ++index)
          {
-         PlaPointFloat projection = from_point.projection_approx(plaline(index));
+         PlaLineInt this_line = plaline(index);
+         
+         PlaPointFloat projection = from_point.projection_approx(this_line);
          
          if ( projection.is_NaN()) continue;
          
@@ -1399,15 +1401,15 @@ public final class Polyline implements java.io.Serializable, PlaObject
          
          if (curr_distance >= min_distance) continue;
 
-         PlaDirection direction_towards_line = plaline(index).perpendicular_direction(p_from_point);
+         PlaDirection direction_towards_line = this_line.perpendicular_direction(p_from_point);
         
          if (direction_towards_line == null) continue;
 
-         PlaLineInt curr_result_line = new PlaLineInt(p_from_point, direction_towards_line);
+         PlaLineInt a_result_line = new PlaLineInt(p_from_point, direction_towards_line);
          PlaPoint prev_corner = corner(index - 1);
          PlaPoint next_corner = corner(index);
-         PlaSide prev_corner_side = curr_result_line.side_of(prev_corner);
-         PlaSide next_corner_side = curr_result_line.side_of(next_corner);
+         PlaSide prev_corner_side = a_result_line.side_of(prev_corner);
+         PlaSide next_corner_side = a_result_line.side_of(next_corner);
          
          if (prev_corner_side != PlaSide.COLLINEAR && next_corner_side != PlaSide.COLLINEAR && prev_corner_side == next_corner_side)
             {
@@ -1415,18 +1417,18 @@ public final class Polyline implements java.io.Serializable, PlaObject
             continue;
             }
          
-         nearest_line = plaline(index);
+         nearest_line = this_line;
          min_distance = curr_distance;
-         result_line = curr_result_line;
+         result_line = a_result_line;
          }
 
       if (nearest_line == null) return null;
 
       PlaLineInt start_line = new PlaLineInt(p_from_point, nearest_line.direction());
 
-      PlaSegmentInt result = new PlaSegmentInt(start_line, result_line, nearest_line);
+      PlaLineIntAlist alist = new PlaLineIntAlist(start_line, result_line, nearest_line);
       
-      return result;
+      return new Polyline (alist);
       }
 
    /**

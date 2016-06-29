@@ -135,7 +135,7 @@ public final class PlaAreaLinear implements PlaArea, Serializable
          {
          PlaPointFloat curr_nearest_point = convex_shapes[index].nearest_point_approx(p_from_point);
       
-         double curr_dist = curr_nearest_point.dustance_square(p_from_point);
+         double curr_dist = curr_nearest_point.distance_square(p_from_point);
          
          if (curr_dist < min_dist)
             {

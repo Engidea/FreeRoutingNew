@@ -33,7 +33,7 @@ public final class IteraEdge implements Comparable<IteraEdge>
       from_corner = p_from_corner;
       to_item = p_to_item;
       to_corner = p_to_corner;
-      length_square = p_to_corner.dustance_square(p_from_corner);
+      length_square = p_to_corner.distance_square(p_from_corner);
       }
 
    /**

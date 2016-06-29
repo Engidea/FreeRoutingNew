@@ -242,7 +242,7 @@ public final class AlgoMoveDrillItem
             {
             if (index != 0 ) continue;
             
-            if ( check_via_center.dustance_square(try_via_centers[index].to_float()) > max_dist_square) continue;
+            if ( check_via_center.distance_square(try_via_centers[index].to_float()) > max_dist_square) continue;
             
             LinkedList<BrdItem> ignore_items = new LinkedList<BrdItem>();
           

@@ -438,7 +438,7 @@ public abstract class AlgoPullTight
             // this is the general case for testing if to skip
             PlaPointFloat prev_corner = p_polyline.corner_approx(index - 1);
             PlaPointFloat curr_corner = p_polyline.corner_approx(index);
-            try_skip = curr_corner.dustance_square(prev_corner) < c_min_corner_dist_square;
+            try_skip = curr_corner.distance_square(prev_corner) < c_min_corner_dist_square;
             }
 
          if ( ! try_skip) continue;

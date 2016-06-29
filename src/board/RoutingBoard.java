@@ -2561,13 +2561,9 @@ public final class RoutingBoard implements java.io.Serializable
       // no connection line necessary
       if (apoly.contains(p_from_point)) return true;
       
-      PlaSegmentInt projection_line = apoly.projection_line(p_from_point);
-      
-      if (projection_line == null) return false;
+      Polyline connection_line = apoly.projection_line(p_from_point);
 
-      Polyline connection_line = projection_line.to_polyline();
-
-      if (connection_line == null || connection_line.corner_count() != 2) return false;
+      if ( connection_line == null || ! connection_line.is_valid() ) return false;
 
       int trace_layer = p_to_trace.get_layer();
       
