@@ -29,10 +29,8 @@ import freert.graphics.GdiContext;
 
 /**
  * Temporary data stored in board Items used in the autoroute algorithm
- *
  * @author Alfons Wirtz
  */
-
 public final class ArtItem
    {
    private final BrdItem parent_item;

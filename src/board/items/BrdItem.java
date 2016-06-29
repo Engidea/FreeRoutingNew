@@ -197,7 +197,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       }
 
    /**
-    * Returns, if this item in not allowed to overlap with p_other.
+    * @return  if this item in not allowed to overlap with p_other.
     */
    public abstract boolean is_obstacle(BrdItem p_other);
 
@@ -432,24 +432,30 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
 
    /**
     * Returns true if curr_item is an obstacle as clearance violation
+    * Basically, if it is an obstacle generally, check further if it has a clearance violation
     * @param curr_item
-    * @return
+    * @return true if it is an obstacle
     */
-   private boolean clearance_violation_obstacle (BrdItem curr_item )
+   private boolean is_obstacle_clearance (BrdItem curr_item )
       {
       boolean is_obstacle = curr_item.is_obstacle(this);
       
+      // If generally speaking the item is not an obstacle we are good
       if ( ! is_obstacle ) return false;
       
+      // at thispoint, everything that is not two traces is an obstacle
       if ( ! ( this instanceof BrdTracep && curr_item instanceof BrdTracep ) ) return true;   
 
       // Look, if both traces are connected to the same tie pin.
       // In this case they are allowed to overlap without sharing a net.
+      
       BrdTracep this_trace = (BrdTracep) this;
       boolean contact_found = false;
       
       PlaPoint contact_point = this_trace.corner_first();
+      
       Collection<BrdItem> curr_contacts = this_trace.get_normal_contacts(contact_point, true);
+      
       if (curr_contacts.contains(curr_item)) contact_found = true;
          
       if ( ! contact_found)
@@ -460,7 +466,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
          }
       
       // there is no contact at all, it is an obstacle
-      if ( contact_found ) return true;
+      if ( ! contact_found ) return true;
 
       for (BrdItem curr_contact : curr_contacts)
          {
@@ -503,7 +509,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
             BrdItem curr_item = (BrdItem) curr_entry.object;
             
             // if current item is not an obstacle for this item, no check to do
-            if (! clearance_violation_obstacle(curr_item)) continue;
+            if (! is_obstacle_clearance(curr_item)) continue;
 
             ShapeTile shape_1 = curr_tile_shape;
             ShapeTile shape_2 = curr_item.get_tree_shape(default_tree, curr_entry.shape_index_in_object);
@@ -643,19 +649,17 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       }
 
    /**
-    * auxiliary function
-    * Overridden in subclasses
+    * auxiliary function Overridden in subclasses
     */
-   public PlaPointInt normal_contact_point(BrdTracep p_other)
+   protected PlaPointInt normal_contact_point(BrdTracep p_other)
       {
       return null;
       }
 
    /**
-    * auxiliary function
-    * Overridden in subclasses
+    * auxiliary function Overridden in subclasses
     */
-   public PlaPointInt normal_contact_point(BrdAbit p_other)
+   protected PlaPointInt normal_contact_point(BrdAbit p_other)
       {
       return null;
       }

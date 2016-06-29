@@ -321,7 +321,7 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
       }
 
    @Override
-   public PlaPointInt normal_contact_point(BrdAbit p_other)
+   protected PlaPointInt normal_contact_point(BrdAbit p_other)
       {
       if ( ! shares_layer(p_other) ) return null;
       
@@ -333,7 +333,7 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
       }
 
    @Override
-   public PlaPointInt normal_contact_point(BrdTracep p_trace)
+   protected PlaPointInt normal_contact_point(BrdTracep p_trace)
       {
       if ( ! shares_layer(p_trace)) return null;
 

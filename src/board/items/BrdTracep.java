@@ -316,13 +316,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    @Override
-   public PlaPointInt normal_contact_point(BrdAbit p_drill_item)
+   protected PlaPointInt normal_contact_point(BrdAbit p_drill_item)
       {
       return p_drill_item.normal_contact_point(this);
       }
 
    @Override
-   public PlaPointInt normal_contact_point(BrdTracep p_other)
+   protected PlaPointInt normal_contact_point(BrdTracep p_other)
       {
       if ( layer_no != p_other.layer_no) return null;
 

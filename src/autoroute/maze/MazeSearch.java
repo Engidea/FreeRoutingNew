@@ -127,14 +127,15 @@ public final class MazeSearch
 
          curr_info.set_start_info(false);
          
-         for (int index = 0; index < curr_item.tree_shape_count(search_tree); ++index)
+         int tree_shape_count = curr_item.tree_shape_count(search_tree);
+         
+         for (int index = 0; index < tree_shape_count; ++index)
             {
             ShapeTile curr_tree_shape = curr_item.get_tree_shape(search_tree, index);
             
-            if (curr_tree_shape != null)
-               {
-               destination_distance.join(curr_tree_shape.bounding_box(), curr_item.shape_layer(index));
-               }
+            if (curr_tree_shape == null) continue;
+
+            destination_distance.join(curr_tree_shape.bounding_box(), curr_item.shape_layer(index));
             }
          }
 
@@ -159,7 +160,9 @@ public final class MazeSearch
          
          BrdConnectable a_conn = (BrdConnectable)curr_item;
 
-         for (int index = 0; index < curr_item.tree_shape_count(search_tree); ++index)
+         int tree_shape_count = curr_item.tree_shape_count(search_tree);
+         
+         for (int index = 0; index < tree_shape_count; ++index)
             {
             ShapeTile contained_shape = a_conn.get_trace_connection_shape(search_tree, index);
             

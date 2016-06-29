@@ -83,11 +83,8 @@ public final class ArtConnection
          {
          PlaPointInt prev_contact_point = p_item.normal_contact_point(curr_item);
 
-         if (prev_contact_point == null)
-            {
-            // no unique contact point
-            continue;
-            }
+         // no unique contact point
+         if (prev_contact_point == null) continue;
          
          int prev_contact_layer = p_item.first_common_layer(curr_item);
          boolean fork_found = false;
@@ -98,10 +95,8 @@ public final class ArtConnection
             // Only for pins and vias items of more than 1 connection are collected
             BrdTracep start_trace = (BrdTracep) p_item;
             Collection<BrdItem> check_contacts = start_trace.get_normal_contacts(prev_contact_point, false);
-            if (check_contacts.size() != 1)
-               {
-               fork_found = true;
-               }
+
+            if (check_contacts.size() != 1) fork_found = true;
             }
          
          for (;;)
@@ -123,6 +118,7 @@ public final class ArtConnection
                   }
                break;
                }
+            
             connection_items.add(curr_item);
             Collection<BrdItem> curr_item_contacts = curr_item.get_normal_contacts();
             // filter the contacts at the previous contact point, because we were already there.
@@ -156,10 +152,9 @@ public final class ArtConnection
                      }
                   }
                }
-            if (next_contact == null)
-               {
-               break;
-               }
+            
+            if (next_contact == null) break;
+            
             curr_item = next_contact;
             prev_contact_point = next_contact_point;
             prev_contact_layer = next_contact_layer;
