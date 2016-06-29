@@ -80,7 +80,6 @@ public interface PlaShape extends PlaArea
    /**
     * Returns the distance between p_point and its nearest point on the border of the shape.
     */
-
    double border_distance(PlaPointFloat p_point);
 
    /**

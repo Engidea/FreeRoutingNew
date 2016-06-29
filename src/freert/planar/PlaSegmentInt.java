@@ -39,6 +39,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
    private final PlaPoint start_point;
    private final PlaPoint end_point;
    
+   private transient ShapeTileBox bounding_box;
+   private transient ShapeTileOctagon bounding_octagon;
+   
    /**
     * Creates a line segment from the 3 input lines.
     *  It starts at the intersection of p_start_line and p_middle_line and ends at the
@@ -224,16 +227,19 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public ShapeTileBox bounding_box()
       {
-      // TODO it should be possible to use start and end points and not calculate them again
-      PlaPointFloat start_corner = middle.intersection_approx(start);
-      PlaPointFloat end_corner = middle.intersection_approx(end);
+      if ( bounding_box != null ) return bounding_box;
+      
+      PlaPointFloat start_corner = start_point_approx();
+      PlaPointFloat end_corner   = end_point_approx();
       double llx = Math.min(start_corner.v_x, end_corner.v_x);
       double lly = Math.min(start_corner.v_y, end_corner.v_y);
       double urx = Math.max(start_corner.v_x, end_corner.v_x);
       double ury = Math.max(start_corner.v_y, end_corner.v_y);
       PlaPointInt lower_left = new PlaPointInt(Math.floor(llx), Math.floor(lly));
       PlaPointInt upper_right = new PlaPointInt(Math.ceil(urx), Math.ceil(ury));
-      return new ShapeTileBox(lower_left, upper_right);
+      bounding_box = new ShapeTileBox(lower_left, upper_right);
+      
+      return bounding_box;
       }
 
    /**
@@ -241,8 +247,10 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
     */
    public ShapeTileOctagon bounding_octagon()
       {
-      PlaPointFloat start_corner = middle.intersection_approx(start);
-      PlaPointFloat end_corner = middle.intersection_approx(end);
+      if ( bounding_octagon != null ) return bounding_octagon;
+      
+      PlaPointFloat start_corner = start_point_approx();
+      PlaPointFloat end_corner = end_point_approx();
       double lx = Math.floor(Math.min(start_corner.v_x, end_corner.v_x));
       double ly = Math.floor(Math.min(start_corner.v_y, end_corner.v_y));
       double rx = Math.ceil(Math.max(start_corner.v_x, end_corner.v_x));
@@ -264,7 +272,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
             lrx, 
             llx, 
             urx);
-      return result.normalize();
+      bounding_octagon = result.normalize();
+      
+      return bounding_octagon;
       }
 
    /**
