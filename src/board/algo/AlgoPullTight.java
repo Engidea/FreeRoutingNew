@@ -508,8 +508,9 @@ public abstract class AlgoPullTight
       boolean connection_to_trace_improved = true;
       
       BrdTracep curr_trace = p_trace;
+      int loop_counter=0;
       
-      while (connection_to_trace_improved)
+      while (connection_to_trace_improved && loop_counter++ < 100)
          {
          connection_to_trace_improved = false;
          Polyline adjusted_polyline = smoothen_end_corners_at_trace_two(curr_trace);

@@ -498,7 +498,7 @@ public final class AlgoShoveTraceEntries
                int projection_side = offset_shape.contains_on_border_line_no(projection);
                int trace_line_segment_no;
                // the following may not be correct because the trace may not conntain a suitable
-               // line for the construction oof the end line of the substitute trace.
+               // line for the construction of the end line of the substitute trace.
                if (index == 0)
                   {
                   trace_line_segment_no = 0;

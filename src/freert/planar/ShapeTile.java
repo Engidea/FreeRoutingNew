@@ -369,6 +369,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       for (int next_ind = 0; next_ind < line_count; ++next_ind)
          {
          PlaPoint projection = border_line(curr_ind).perpendicular_projection(p_from_point);
+         
          if ((!corner_is_bounded(curr_ind) || border_line(prev_ind).side_of(projection) == PlaSide.ON_THE_RIGHT)
                && (!corner_is_bounded(next_ind) || border_line(next_ind).side_of(projection) == PlaSide.ON_THE_RIGHT))
             {
@@ -380,6 +381,7 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
                nearest_point = projection;
                }
             }
+         
          prev_ind = curr_ind;
          curr_ind = next_ind;
          }

@@ -17,6 +17,7 @@
 package board.algo;
 
 import java.util.Collection;
+import java.util.TreeSet;
 import board.RoutingBoard;
 import board.items.BrdItem;
 import board.items.BrdTracep;
@@ -899,58 +900,61 @@ public final class AlgoPullTightAny extends AlgoPullTight
       PlaDirection line_direction = trace_polyline.plaline(end_line_no).direction().opposite();
       PlaDirection prev_line_direction = trace_polyline.plaline(end_line_no).direction().opposite();
 
-      java.util.Collection<BrdItem> contact_list = p_trace.get_end_contacts();
+      TreeSet<BrdItem> contact_list = p_trace.get_end_contacts();
+      
       for (BrdItem curr_contact : contact_list)
          {
-         if (curr_contact instanceof BrdTracep && !curr_contact.is_shove_fixed())
+         if ( !(curr_contact instanceof BrdTracep) ) return null;
+         
+         if ( curr_contact.is_shove_fixed()) return null;
+
+         BrdTracep a_trace = (BrdTracep)curr_contact;
+         
+         Polyline c_trace_poly = a_trace.polyline();
+         
+         // cannot reduce anything if the trace is already at minimum
+         if (c_trace_poly.corner_count() <= 2) continue;
+         
+         PlaPointFloat curr_other_trace_corner_approx;
+         PlaLineInt curr_other_trace_line;
+         PlaLineInt curr_other_prev_trace_line;
+
+         if (c_trace_poly.corner_first().equals(curr_end_corner))
             {
-            Polyline contact_trace_polyline = ((BrdTracep) curr_contact).polyline();
-            if (contact_trace_polyline.corner_count() > 2)
-               {
-               PlaPointFloat curr_other_trace_corner_approx;
-               PlaLineInt curr_other_trace_line;
-               PlaLineInt curr_other_prev_trace_line;
-               if (contact_trace_polyline.corner_first().equals(curr_end_corner))
-                  {
-                  curr_other_trace_corner_approx = contact_trace_polyline.corner_approx(1);
-                  curr_other_trace_line = contact_trace_polyline.plaline(1);
-                  curr_other_prev_trace_line = contact_trace_polyline.plaline(2);
-                  }
-               else
-                  {
-                  int curr_corner_no = contact_trace_polyline.corner_count() - 2;
-                  curr_other_trace_corner_approx = contact_trace_polyline.corner_approx(curr_corner_no);
-                  curr_other_trace_line = contact_trace_polyline.plaline(curr_corner_no + 1).opposite();
-                  curr_other_prev_trace_line = contact_trace_polyline.plaline(curr_corner_no);
-                  }
-               PlaSide curr_prev_corner_side = curr_prev_end_corner.side_of(curr_other_trace_line);
-               Signum curr_projection = line_direction.projection(curr_other_trace_line.direction());
-               boolean other_trace_found = false;
-               if (curr_projection == Signum.POSITIVE && curr_prev_corner_side != PlaSide.COLLINEAR)
-                  {
-                  acute_angle = true;
-                  other_trace_found = true;
-                  }
-               else if (curr_projection == Signum.ZERO && trace_polyline.corner_count() > 2)
-                  {
-                  if (prev_line_direction.projection(curr_other_trace_line.direction()) == Signum.POSITIVE)
-                     {
-                     bend = true;
-                     other_trace_found = true;
-                     }
-                  }
-               if (other_trace_found)
-                  {
-                  other_trace_corner_approx = curr_other_trace_corner_approx;
-                  other_trace_line = curr_other_trace_line;
-                  prev_corner_side = curr_prev_corner_side;
-                  other_prev_trace_line = curr_other_prev_trace_line;
-                  }
-               }
+            curr_other_trace_corner_approx = c_trace_poly.corner_approx(1);
+            curr_other_trace_line = c_trace_poly.plaline(1);
+            curr_other_prev_trace_line = c_trace_poly.plaline(2);
             }
          else
             {
-            return null;
+            int curr_corner_no = c_trace_poly.corner_count() - 2;
+            curr_other_trace_corner_approx = c_trace_poly.corner_approx(curr_corner_no);
+            curr_other_trace_line = c_trace_poly.plaline(curr_corner_no + 1).opposite();
+            curr_other_prev_trace_line = c_trace_poly.plaline(curr_corner_no);
+            }
+         
+         PlaSide curr_prev_corner_side = curr_prev_end_corner.side_of(curr_other_trace_line);
+         Signum curr_projection = line_direction.projection(curr_other_trace_line.direction());
+         boolean other_trace_found = false;
+         if (curr_projection == Signum.POSITIVE && curr_prev_corner_side != PlaSide.COLLINEAR)
+            {
+            acute_angle = true;
+            other_trace_found = true;
+            }
+         else if (curr_projection == Signum.ZERO && trace_polyline.corner_count() > 2)
+            {
+            if (prev_line_direction.projection(curr_other_trace_line.direction()) == Signum.POSITIVE)
+               {
+               bend = true;
+               other_trace_found = true;
+               }
+            }
+         if (other_trace_found)
+            {
+            other_trace_corner_approx = curr_other_trace_corner_approx;
+            other_trace_line = curr_other_trace_line;
+            prev_corner_side = curr_prev_corner_side;
+            other_prev_trace_line = curr_other_prev_trace_line;
             }
          }
 
@@ -979,24 +983,29 @@ public final class AlgoPullTightAny extends AlgoPullTight
          double other_dist = Math.abs(translate_line.distance_signed(other_trace_corner_approx));
          translate_dist = Math.min(translate_dist, prev_corner_dist);
          translate_dist = Math.min(translate_dist, other_dist);
+         
          if (translate_dist >= 0.99)
             {
-
             translate_dist = Math.max(translate_dist - 1, 1);
             if (translate_line.side_of(curr_prev_end_corner) == PlaSide.ON_THE_LEFT)
                {
                translate_dist = -translate_dist;
                }
+
             PlaLineInt add_line = translate_line.translate(translate_dist);
             // constract the new trace polyline.
             
-            PlaLineInt[] new_lines = new PlaLineInt[new_line_count];
-            for (int index = 0; index < trace_polyline.plaline_len(-1); ++index)
+            PlaLineIntAlist new_lines = new PlaLineIntAlist(new_line_count);
+            
+            int l_count = trace_polyline.plaline_len(-1); // copy until before the end line
+            
+            for (int index = 0; index < l_count; ++index)
                {
-               new_lines[index] = trace_polyline.plaline(index);
+               new_lines.add( trace_polyline.plaline(index));
                }
-            new_lines[new_lines.length - 2] = add_line;
-            new_lines[new_lines.length - 1] = other_trace_line;
+            
+            new_lines.add( add_line );
+            new_lines.add( other_trace_line);
             
             return new Polyline(new_lines);
             }

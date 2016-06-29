@@ -183,7 +183,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Get a list of all items with a connection point on the layer of this trace equal to its last corner.
     */
-   public final Set<BrdItem> get_end_contacts()
+   public final TreeSet<BrdItem> get_end_contacts()
       {
       return get_normal_contacts(corner_last(), false);
       }
