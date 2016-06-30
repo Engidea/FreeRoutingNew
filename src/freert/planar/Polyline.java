@@ -1580,23 +1580,6 @@ public final class Polyline implements java.io.Serializable, PlaObject
       for (int index=src_pos; index<poly_len; index++)
          dest.add( plaline(index));
       }
-
-   /**
-    * Copy current plaline array into a new one with the same len
-    * Content is copied
-    * @return
-    */
-   public PlaLineInt [] alist_to_array()
-      {
-      int arr_len = plaline_len();
-      
-      PlaLineInt [] risul = new PlaLineInt[arr_len];
-      
-      for (int index=0; index<arr_len; index++)
-         risul[index] = plaline(index);
-      
-      return risul;
-      }
    
    /**
     * Copy the current array list to a new one adding extra space, if needed

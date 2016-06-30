@@ -25,6 +25,7 @@ import board.varie.BrdKeepPoint;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLimits;
 import freert.planar.PlaLineInt;
+import freert.planar.PlaLineIntAlist;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -285,12 +286,13 @@ public final class AlgoPullTight45 extends AlgoPullTight
       
          polyline_changed = false;
          
-         PlaLineInt[] line_arr = p_polyline.alist_to_array();
-
-         for (int index = 1; index < line_arr.length - 2; ++index)
+         // note that it gets "changed" on the fly
+         PlaLineIntAlist line_arr = p_polyline.alist_copy(0);
+         
+         for (int index = 1; index < line_arr.size() - 2; ++index)
             {
-            PlaDirection d1 = line_arr[index].direction();
-            PlaDirection d2 = line_arr[index + 1].direction();
+            PlaDirection d1 = line_arr.get(index).direction();
+            PlaDirection d2 = line_arr.get(index + 1).direction();
             
             if (d1.is_multiple_of_45_degree() && d2.is_multiple_of_45_degree() && d1.projection(d2) != Signum.POSITIVE)
                {
@@ -301,17 +303,17 @@ public final class AlgoPullTight45 extends AlgoPullTight
                   // the greedy smoothening couldn't change the polyline
                   new_line = smoothen_sharp_corner(line_arr, index);
                   }
-               if (new_line != null)
-                  {
-                  polyline_changed = true;
-                  // add the new line into the line array
-                  PlaLineInt[] tmp_lines = new PlaLineInt[line_arr.length + 1];
-                  System.arraycopy(line_arr, 0, tmp_lines, 0, index + 1);
-                  tmp_lines[index + 1] = new_line;
-                  System.arraycopy(line_arr, index + 1, tmp_lines, index + 2, tmp_lines.length - (index + 2));
-                  line_arr = tmp_lines;
-                  ++index;
-                  }
+               
+               if (new_line == null) continue;
+               
+               polyline_changed = true;
+               // add the new line into the line array
+               PlaLineIntAlist tmp_lines = new PlaLineIntAlist(line_arr.size() + 1);
+               line_arr.append_to(tmp_lines, 0, index + 1);
+               tmp_lines.add(new_line);
+               line_arr.append_to(tmp_lines, index + 2);
+               line_arr = tmp_lines;
+               ++index;
                }
             }
          
@@ -328,9 +330,9 @@ public final class AlgoPullTight45 extends AlgoPullTight
     * adds a line between at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree. 
     * The distance of the new line to the corner will be so small that no clearance check is necessary.
     */
-   private PlaLineInt smoothen_sharp_corner(PlaLineInt[] p_line_arr, int p_no)
+   private PlaLineInt smoothen_sharp_corner(PlaLineIntAlist p_line_arr, int p_no)
       {
-      PlaPointFloat curr_corner = p_line_arr[p_no].intersection_approx(p_line_arr[p_no + 1]);
+      PlaPointFloat curr_corner = p_line_arr.get(p_no).intersection_approx(p_line_arr.get(p_no + 1));
       if (curr_corner.v_x != (int) curr_corner.v_x)
          {
          // intersection of 2 diagonal lines is not integer
@@ -342,11 +344,11 @@ public final class AlgoPullTight45 extends AlgoPullTight
                }
             }
          }
-      PlaPointFloat prev_corner = p_line_arr[p_no].intersection_approx(p_line_arr[p_no - 1]);
-      PlaPointFloat next_corner = p_line_arr[p_no + 1].intersection_approx(p_line_arr[p_no + 2]);
+      PlaPointFloat prev_corner = p_line_arr.get(p_no).intersection_approx(p_line_arr.get(p_no - 1));
+      PlaPointFloat next_corner = p_line_arr.get(p_no + 1).intersection_approx(p_line_arr.get(p_no + 2));
 
-      PlaDirection prev_dir = p_line_arr[p_no].direction();
-      PlaDirection next_dir = p_line_arr[p_no + 1].direction();
+      PlaDirection prev_dir = p_line_arr.get(p_no).direction();
+      PlaDirection next_dir = p_line_arr.get(p_no + 1).direction();
       
       PlaDirection new_line_dir = prev_dir.add(next_dir);
       
@@ -373,13 +375,13 @@ public final class AlgoPullTight45 extends AlgoPullTight
       }
 
    /**
-    * Smoothens with a short axis parrallel line to remove a non integer corner of two intersecting diagonal lines. Returns null, if
-    * that is not possible.
+    * Smoothens with a short axis parrallel line to remove a non integer corner of two intersecting diagonal lines. 
+    * Returns null, if that is not possible.
     */
-   private PlaLineInt smoothen_non_integer_corner(PlaLineInt[] p_line_arr, int p_no)
+   private PlaLineInt smoothen_non_integer_corner(PlaLineIntAlist p_line_arr, int p_no)
       {
-      PlaLineInt prev_line = p_line_arr[p_no];
-      PlaLineInt next_line = p_line_arr[p_no + 1];
+      PlaLineInt prev_line = p_line_arr.get(p_no);
+      PlaLineInt next_line = p_line_arr.get(p_no + 1);
       if (prev_line.is_equal_or_opposite(next_line))
          {
          return null;
@@ -389,8 +391,8 @@ public final class AlgoPullTight45 extends AlgoPullTight
          return null;
          }
       PlaPointFloat curr_corner = prev_line.intersection_approx(next_line);
-      PlaPointFloat prev_corner = prev_line.intersection_approx(p_line_arr[p_no - 1]);
-      PlaPointFloat next_corner = next_line.intersection_approx(p_line_arr[p_no + 2]);
+      PlaPointFloat prev_corner = prev_line.intersection_approx(p_line_arr.get(p_no - 1));
+      PlaPointFloat next_corner = next_line.intersection_approx(p_line_arr.get(p_no + 2));
       PlaLineInt result = null;
       int new_x = 0;
       int new_y = 0;
@@ -457,19 +459,19 @@ public final class AlgoPullTight45 extends AlgoPullTight
     * adds a line between at p_no to smoothen a 90 degree corner between p_line_1 and p_line_2 to 45 degree. 
     * The distance of the new line to the corner will be so big that a clearance check is necessary.
     */
-   private PlaLineInt smoothen_corner(PlaLineInt[] p_line_arr, int p_no)
+   private PlaLineInt smoothen_corner(PlaLineIntAlist p_line_arr, int p_no)
       {
-      PlaPointFloat prev_corner = p_line_arr[p_no].intersection_approx(p_line_arr[p_no - 1]);
+      PlaPointFloat prev_corner = p_line_arr.get(p_no).intersection_approx(p_line_arr.get(p_no - 1));
       if ( prev_corner.is_NaN()) return null;
       
-      PlaPointFloat curr_corner = p_line_arr[p_no].intersection_approx(p_line_arr[p_no + 1]);
+      PlaPointFloat curr_corner = p_line_arr.get(p_no).intersection_approx(p_line_arr.get(p_no + 1));
       if ( curr_corner.is_NaN()) return null;
       
-      PlaPointFloat next_corner = p_line_arr[p_no + 1].intersection_approx(p_line_arr[p_no + 2]);
+      PlaPointFloat next_corner = p_line_arr.get(p_no + 1).intersection_approx(p_line_arr.get(p_no + 2));
       if ( next_corner.is_NaN()) return null;
 
-      PlaDirection prev_dir = p_line_arr[p_no].direction();
-      PlaDirection next_dir = p_line_arr[p_no + 1].direction();
+      PlaDirection prev_dir = p_line_arr.get(p_no).direction();
+      PlaDirection next_dir = p_line_arr.get(p_no + 1).direction();
       
       PlaDirection new_line_dir = prev_dir.add(next_dir);
       
@@ -500,9 +502,10 @@ public final class AlgoPullTight45 extends AlgoPullTight
          {
          max_translate_dist = -max_translate_dist;
          }
+      
       PlaLineInt[] check_lines = new PlaLineInt[3];
-      check_lines[0] = p_line_arr[p_no];
-      check_lines[2] = p_line_arr[p_no + 1];
+      check_lines[0] = p_line_arr.get(p_no);
+      check_lines[2] = p_line_arr.get(p_no + 1);
       double translate_dist = max_translate_dist;
       double delta_dist = max_translate_dist;
       PlaSide side_of_nearest_corner = translate_line.side_of(nearest_corner);
@@ -672,23 +675,20 @@ public final class AlgoPullTight45 extends AlgoPullTight
          }
       else if (bend)
          {
-         PlaLineInt[] check_line_arr = new PlaLineInt[trace_polyline.plaline_len(+1)];
-         check_line_arr[0] = other_prev_trace_line;
-         check_line_arr[1] = other_trace_line;
-         for (int index = 2; index < check_line_arr.length; ++index)
-            {
-            check_line_arr[index] = trace_polyline.plaline(index - 1);
-            }
+         PlaLineIntAlist check_line_arr = new PlaLineIntAlist(trace_polyline.plaline_len(+2));
+         check_line_arr.add( other_prev_trace_line);
+         check_line_arr.add( other_trace_line);
+         trace_polyline.alist_append_to(check_line_arr, 1);
+         
          PlaLineInt new_line = reposition_line(check_line_arr, 2);
+         
          if (new_line != null)
             {
-            PlaLineInt[] new_lines = new PlaLineInt[trace_polyline.plaline_len()];
-            new_lines[0] = other_trace_line;
-            new_lines[1] = new_line;
-            for (int index = 2; index < new_lines.length; ++index)
-               {
-               new_lines[index] = trace_polyline.plaline(index);
-               }
+            PlaLineIntAlist new_lines = new PlaLineIntAlist(trace_polyline.plaline_len());
+            new_lines.add( other_trace_line);
+            new_lines.add( new_line);
+            trace_polyline.alist_append_to(new_lines, 2);
+
             return new Polyline(new_lines);
             }
          }
@@ -699,17 +699,17 @@ public final class AlgoPullTight45 extends AlgoPullTight
     * Tries to reposition the line with index p_no to make the polyline consisting of p_line_arr shorter
     * @return null if it fails to shorten
     */
-   private PlaLineInt reposition_line(PlaLineInt[] p_line_arr, int p_no)
+   private PlaLineInt reposition_line(PlaLineIntAlist p_line_arr, int p_no)
       {
-      if (p_line_arr.length - p_no < 3) return null;
+      if (p_line_arr.size() - p_no < 3) return null;
       
-      PlaLineInt translate_line = p_line_arr[p_no];
+      PlaLineInt translate_line = p_line_arr.get(p_no);
       
-      PlaPoint prev_corner = p_line_arr[p_no - 2].intersection(p_line_arr[p_no - 1], "probably messy");
+      PlaPoint prev_corner = p_line_arr.get(p_no - 2).intersection(p_line_arr.get(p_no - 1), "probably messy");
       
       if ( prev_corner.is_NaN() ) return null;
       
-      PlaPoint next_corner = p_line_arr[p_no + 1].intersection(p_line_arr[p_no + 2], "probably messy");
+      PlaPoint next_corner = p_line_arr.get(p_no + 1).intersection(p_line_arr.get(p_no + 2), "probably messy");
 
       if ( next_corner.is_NaN() ) return null;
 
@@ -738,9 +738,10 @@ public final class AlgoPullTight45 extends AlgoPullTight
       PlaSide side_of_nearest_point = translate_line.side_of(nearest_point);
       int sign = Signum.as_int(max_translate_dist);
       PlaLineInt new_line = null;
+      
       PlaLineInt[] check_lines = new PlaLineInt[3];
-      check_lines[0] = p_line_arr[p_no - 1];
-      check_lines[2] = p_line_arr[p_no + 1];
+      check_lines[0] = p_line_arr.get(p_no - 1);
+      check_lines[2] = p_line_arr.get(p_no + 1);
       boolean first_time = true;
       
       while (first_time || Math.abs(delta_dist) > min_move_dist)
@@ -810,10 +811,10 @@ public final class AlgoPullTight45 extends AlgoPullTight
          afloat = check_lines[2].intersection_approx(new_line);
          if ( ! afloat.is_NaN() ) r_board.changed_area.join(afloat, curr_layer);
          
-         afloat = p_line_arr[p_no - 1].intersection_approx(p_line_arr[p_no]);
+         afloat = p_line_arr.get(p_no - 1).intersection_approx(p_line_arr.get(p_no));
          if ( ! afloat.is_NaN() ) r_board.changed_area.join(afloat, curr_layer);
          
-         afloat = p_line_arr[p_no].intersection_approx(p_line_arr[p_no + 1]);
+         afloat = p_line_arr.get(p_no).intersection_approx(p_line_arr.get(p_no + 1));
          if ( ! afloat.is_NaN() ) r_board.changed_area.join(afloat, curr_layer);
          }
 
@@ -828,7 +829,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
       {
       if (p_polyline.plaline_len() < 5) return p_polyline;
       
-      PlaLineInt[] line_arr = p_polyline.alist_to_array();
+      PlaLineIntAlist line_arr = p_polyline.alist_copy(0);
 
       for (int index = 2; index < p_polyline.plaline_len(-2); ++index)
          {
@@ -836,7 +837,7 @@ public final class AlgoPullTight45 extends AlgoPullTight
 
          if (new_line == null) continue;
          
-         line_arr[index] = new_line;
+         line_arr.set(index, new_line);
          
          Polyline result = new Polyline(line_arr);
          
@@ -960,15 +961,12 @@ public final class AlgoPullTight45 extends AlgoPullTight
          }
       else if (bend)
          {
-         PlaLineInt[] check_line_arr = new PlaLineInt[trace_polyline.plaline_len(+1)];
+         PlaLineIntAlist check_line_arr = new PlaLineIntAlist(trace_polyline.plaline_len(+1));
          
-         for (int index = 0; index < trace_polyline.plaline_len(-1); ++index)
-            {
-            check_line_arr[index] = trace_polyline.plaline(index);
-            }
+         trace_polyline.alist_append_to(check_line_arr, 0,trace_polyline.plaline_len(-1));
          
-         check_line_arr[check_line_arr.length - 2] = other_trace_line;
-         check_line_arr[check_line_arr.length - 1] = other_prev_trace_line;
+         check_line_arr.add( other_trace_line);
+         check_line_arr.add( other_prev_trace_line);
 
          PlaLineInt new_line = reposition_line(check_line_arr, trace_polyline.plaline_len(-2));
          

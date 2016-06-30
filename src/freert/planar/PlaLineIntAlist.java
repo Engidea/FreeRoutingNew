@@ -150,6 +150,12 @@ public final class PlaLineIntAlist implements Iterable<PlaLineInt>
          dest.add(get(index));
       }
    
+   public void append_to(PlaLineIntAlist dest, int src_pos, int length )
+      {
+      for (int index=0; index<length; index++)
+         dest.add( get(src_pos+index));
+      }
+   
    /**
     * Add to the p_area the corner that results from crossing line p_index with p_index+1
     * @param p_area
