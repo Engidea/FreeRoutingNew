@@ -923,7 +923,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * Found cycles are removed. 
     * If nothing is split, the result will contain just this Trace. 
     * If p_clip_shape != null, the split may be resticted to p_clip_shape.
-    * Cannot see where there is a check to avoid splitting an already split trace... must exist, no ?
+    * When you split the "other" trace, you end up with two traces, but this trace is still one
+    * but when you split this trace, this trace actually disappear and should NOT be returned or worked on
     * @return the pieces resulting from splitting
     */
    public LinkedList<BrdTracep> split(ShapeTileOctagon p_clip_shape)
@@ -954,7 +955,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          ShapeTile curr_shape = get_tree_shape(default_tree, index);
          
          // look for intersecting traces with the i-th line segment
-         
          Collection<AwtreeEntry> over_tree_entries = default_tree.find_overlap_tree_entries(curr_shape, get_layer());
          
          Iterator<AwtreeEntry> over_tree_iter = over_tree_entries.iterator();
@@ -962,7 +962,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          while (over_tree_iter.hasNext())
             {
             // this trace has been deleted in a cleanup operation
-            if (!is_on_the_board()) return result;
+            if ( ! is_on_the_board()) return result;
             
             AwtreeEntry overlap_tentry = over_tree_iter.next();
             

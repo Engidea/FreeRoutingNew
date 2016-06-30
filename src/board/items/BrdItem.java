@@ -202,7 +202,8 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    public abstract boolean is_obstacle(BrdItem p_other);
 
    /**
-    * Returns true if the net number arrays of this and p_other have a common number.
+    * Test if this item shares a net with the other item, meaning they can be tied together
+    * @returns true if the net number arrays of this and p_other have a common number
     */
    public final boolean shares_net(BrdItem p_other)
       {
@@ -288,7 +289,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    protected abstract ShapeTile[] calculate_tree_shapes(AwtreeShapeSearch p_search_tree);
 
    /**
-    * Returns false, if this item is deleted oor not inserted into the board.
+    * @returns false, if this item is deleted or not inserted into the board.
     */
    public final boolean is_on_the_board()
       {
