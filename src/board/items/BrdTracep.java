@@ -1130,11 +1130,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          // yes, we have a trace split
          have_trace_split = true;
 
-         result.add(curr_split_pieces.get(0));
-         
-         if (curr_split_pieces.size() < 2 ) continue;
-         
-         result.add(curr_split_pieces.get(1));
+         result.addAll(curr_split_pieces);
          }
       
       return have_trace_split;
@@ -1158,14 +1154,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          ArrayList<BrdTracep> curr_split_pieces = found_trace.split_with_end_line(line_no, inter_line);
 
          if (curr_split_pieces.size() < 1 ) continue;
-         
-         split_pieces.add(curr_split_pieces.get(0));
 
          have_trace_split = true;
 
-         if (curr_split_pieces.size() < 2 ) continue;
-
-         split_pieces.add(curr_split_pieces.get(1));
+         split_pieces.addAll(curr_split_pieces);
          }
    
       if ( ! have_trace_split) split_pieces.add(found_trace);
