@@ -21,10 +21,11 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 import freert.main.Stat;
 import gui.varie.GuiResources;
 
@@ -47,52 +48,28 @@ public final class BoardPanelStatus extends JPanel
       {
       GuiResources resources = new GuiResources(p_stat,"gui.resources.BoardPanelStatus");
       setLayout(new BorderLayout());
-      setPreferredSize(new Dimension(300, 20));
-
-      JPanel left_message_panel = new JPanel();
-      left_message_panel.setLayout(new BorderLayout());
 
       status_message = resources.newJLabel("status_line");
-      status_message.setHorizontalAlignment(SwingConstants.CENTER);
-      left_message_panel.add(status_message, BorderLayout.CENTER);
+      status_message.setForeground(Color.BLUE);
 
+      add(status_message,BorderLayout.LINE_START);
+      
+      JPanel center_panel=new JPanel(new FlowLayout(FlowLayout.LEFT,20,0));
+      
       add_message = resources.newJLabel("additional_text_field");
       add_message.setMaximumSize(new Dimension(300, 14));
-      add_message.setMinimumSize(new Dimension(140, 14));
-      add_message.setPreferredSize(new Dimension(180, 14));
-      left_message_panel.add(add_message, BorderLayout.EAST);
 
-      add(left_message_panel, BorderLayout.CENTER);
-
-      JPanel right_message_panel = new JPanel();
-      right_message_panel.setLayout(new BorderLayout());
-
-      right_message_panel.setMinimumSize(new Dimension(200, 20));
-      right_message_panel.setOpaque(false);
-      right_message_panel.setPreferredSize(new Dimension(450, 20));
+      center_panel.add(add_message);
 
       current_layer = resources.newJLabel("current_layer");
-      right_message_panel.add(current_layer, BorderLayout.CENTER);
 
-      JPanel cursor_panel = new JPanel();
-      cursor_panel.setLayout(new BorderLayout());
-      cursor_panel.setMinimumSize(new Dimension(220, 14));
-      cursor_panel.setPreferredSize(new Dimension(220, 14));
-
-      JLabel cursor = resources.newJLabel("cursor");
-      cursor.setHorizontalAlignment(SwingConstants.CENTER);
-      cursor.setMaximumSize(new Dimension(100, 14));
-      cursor.setMinimumSize(new Dimension(50, 14));
-      cursor.setPreferredSize(new Dimension(50, 14));
-      cursor_panel.add(cursor, BorderLayout.WEST);
-
+      center_panel.add(current_layer);
+      
+      add(center_panel,BorderLayout.CENTER);
+      
       mouse_position = resources.newJLabel("(0,0)");
       mouse_position.setMaximumSize(new Dimension(170, 14));
-      mouse_position.setPreferredSize(new Dimension(170, 14));
-      cursor_panel.add(mouse_position, BorderLayout.EAST);
-
-      right_message_panel.add(cursor_panel, BorderLayout.EAST);
-
-      add(right_message_panel, BorderLayout.EAST);
+      
+      add(mouse_position,BorderLayout.LINE_END);
       }
    }

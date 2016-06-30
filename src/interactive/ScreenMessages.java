@@ -20,12 +20,12 @@
 
 package interactive;
 
+import java.text.NumberFormat;
+import board.BrdLayer;
 import freert.main.Stat;
 import freert.planar.PlaPointFloat;
 import gui.BoardPanelStatus;
 import gui.varie.GuiResources;
-import javax.swing.JLabel;
-import board.BrdLayer;
 
 /**
  * Text fields to display messages on the screen.
@@ -41,31 +41,23 @@ public final class ScreenMessages
    private final String active_layer_string;
    private final String target_layer_string;
 
-   private final JLabel add_field;
-   private final JLabel status_field;
-   private final JLabel layer_field;
-   private final JLabel mouse_position;
+   private final BoardPanelStatus statusPanel;
    
    private String prev_target_layer_name = EMPTY;
    private boolean write_protected = false;
    
    // The number format for displaying the trace length 
-   private final java.text.NumberFormat number_format;
+   private final NumberFormat number_format;
    
    public ScreenMessages( BoardPanelStatus p_panel, Stat p_stat)
       {
       stat = p_stat;
-
-      status_field  = p_panel.status_message;
-      add_field     = p_panel.add_message;
-      layer_field   =  p_panel.current_layer;
-      mouse_position =  p_panel.mouse_position;
+      
+      statusPanel = p_panel;
 
       resources = new GuiResources(p_stat,"interactive.resources.ScreenMessages");
       active_layer_string = resources.getString("current_layer") + " ";
       target_layer_string = resources.getString("target_layer") + " ";
-      
-      add_field.setText(EMPTY);
 
       number_format = java.text.NumberFormat.getInstance(p_stat.locale);
       number_format.setMaximumFractionDigits(4);
@@ -78,7 +70,7 @@ public final class ScreenMessages
       {
       if ( write_protected)  return;
 
-      status_field.setText(p_message);
+      statusPanel.status_message.setText(p_message);
       }
 
    /**
@@ -88,31 +80,31 @@ public final class ScreenMessages
       {
       if ( write_protected ) return;
 
-      layer_field.setText(active_layer_string + p_layer.name);
+      statusPanel.current_layer.setText(active_layer_string + p_layer.name);
       }
 
    public void set_interactive_autoroute_info(int p_found, int p_not_found, int p_items_to_go)
       {
-      add_field.setText(resources.getString("to_route") + " " + p_items_to_go);
-      layer_field.setText(resources.getString("found") + " " + p_found + ", " + resources.getString("failed") + " " + p_not_found);
+      statusPanel.add_message.setText(resources.getString("to_route") + " " + p_items_to_go);
+      statusPanel.current_layer.setText(resources.getString("found") + " " + p_found + ", " + resources.getString("failed") + " " + p_not_found);
       }
 
    public void set_batch_autoroute_info(int items_to_go, int routed, int ripped, int failed)
       {
-      add_field.setText(resources.getString("to_route") + " " + items_to_go + ", " + resources.getString("routed") + " " + routed + ", ");
-      layer_field.setText(resources.getString("ripped") + " " + ripped + ", " + resources.getString("failed") + " " + failed);
+      statusPanel.add_message.setText(resources.getString("to_route") + " " + items_to_go + ", " + resources.getString("routed") + " " + routed + ", ");
+      statusPanel.current_layer.setText(resources.getString("ripped") + " " + ripped + ", " + resources.getString("failed") + " " + failed);
       }
 
    public void set_batch_fanout_info(int p_pass_no, int p_components_to_go)
       {
-      add_field.setText(resources.getString("fanout_pass") + " " + p_pass_no + ": ");
-      layer_field.setText(resources.getString("still") + " " + p_components_to_go + " " + resources.getString("components"));
+      statusPanel.add_message.setText(resources.getString("fanout_pass") + " " + p_pass_no + ": ");
+      statusPanel.current_layer.setText(resources.getString("still") + " " + p_components_to_go + " " + resources.getString("components"));
       }
 
    public void set_post_route_info(int p_via_count, double p_trace_length)
       {
-      add_field.setText(resources.getString("via_count") + " " + p_via_count);
-      layer_field.setText(resources.getString("trace_length") + " " + this.number_format.format(p_trace_length));
+      statusPanel.add_message.setText(resources.getString("via_count") + " " + p_via_count);
+      statusPanel.current_layer.setText(resources.getString("trace_length") + " " + number_format.format(p_trace_length));
       }
 
    /**
@@ -125,7 +117,7 @@ public final class ScreenMessages
       // tiny optimization, avoid updating the field if the value is the same..
       if ( p_layer_name.equals(prev_target_layer_name) ) return;
       
-      add_field.setText(target_layer_string + p_layer_name);
+      statusPanel.add_message.setText(target_layer_string + p_layer_name);
       
       prev_target_layer_name = p_layer_name;
       }
@@ -134,7 +126,7 @@ public final class ScreenMessages
       {
       if ( write_protected) return;
       
-      mouse_position.setText(p_pos.to_string(stat.locale));
+      statusPanel.mouse_position.setText(p_pos.to_string(stat.locale));
       }
 
    /**
@@ -144,7 +136,7 @@ public final class ScreenMessages
       {
       if ( write_protected ) return;
 
-      add_field.setText(EMPTY);
+      statusPanel.add_message.setText(EMPTY);
       
       prev_target_layer_name = EMPTY;
       }
@@ -156,9 +148,9 @@ public final class ScreenMessages
       {
       if ( write_protected ) return;
       
-      status_field.setText(EMPTY);
+      statusPanel.add_message.setText(EMPTY);
       clear_add_field();
-      layer_field.setText(EMPTY);
+      statusPanel.current_layer.setText(EMPTY);
       }
 
    /**
