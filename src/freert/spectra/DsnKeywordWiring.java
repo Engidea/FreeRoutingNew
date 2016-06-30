@@ -321,7 +321,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       {
       DsnNetId net_id = null;
       String clearance_class_name = null;
-      board.varie.ItemFixState fixed = board.varie.ItemFixState.UNFIXED;
+      ItemFixState fixed = ItemFixState.UNFIXED;
       DsnPath path = null; // Used, if a trace is read.
       DsnShape border_shape = null; // Used, if a conduction area is read.
       Collection<DsnShape> hole_list = new LinkedList<DsnShape>();
@@ -608,7 +608,7 @@ final class DsnKeywordWiring extends DsnKeywordScope
       {
       try
          {
-         board.varie.ItemFixState fixed = board.varie.ItemFixState.UNFIXED;
+         ItemFixState fixed = ItemFixState.UNFIXED;
          // read the padstack name
          Object next_token = p_par.scanner.next_token();
          if (!(next_token instanceof String))
@@ -748,28 +748,28 @@ final class DsnKeywordWiring extends DsnKeywordScope
       return false;
       }
 
-   static board.varie.ItemFixState calc_fixed(JflexScanner p_scanner)
+   private static ItemFixState calc_fixed(JflexScanner p_scanner)
       {
       try
          {
          // assume wire state is unfixed
-         board.varie.ItemFixState result = board.varie.ItemFixState.UNFIXED;
+         ItemFixState result = ItemFixState.UNFIXED;
          
          // handling the type of the wiring
          Object next_token = p_scanner.next_token();
          
          if (next_token == DsnKeyword.SHOVE_FIXED)
             {
-            result = board.varie.ItemFixState.SHOVE_FIXED;
+            result = ItemFixState.SHOVE_FIXED;
             }
          else if (next_token == DsnKeyword.FIX)
             {
-            result = board.varie.ItemFixState.SYSTEM_FIXED;
+            result = ItemFixState.SYSTEM_FIXED;
             }
          else if (next_token == DsnKeyword.PROTECT)
             {
             // damiano, I have to find out how to ask Kicad NOT to protect traces...
-            result = board.varie.ItemFixState.USER_FIXED;
+            result = ItemFixState.USER_FIXED;
             }
          
          next_token = p_scanner.next_token();
@@ -777,14 +777,14 @@ final class DsnKeywordWiring extends DsnKeywordScope
          if (next_token != DsnKeyword.CLOSED_BRACKET)
             {
             System.out.println("Wiring.is_fixed: ) expected");
-            return board.varie.ItemFixState.UNFIXED;
+            return ItemFixState.UNFIXED;
             }
          return result;
          }
       catch (java.io.IOException e)
          {
          System.out.println("Wiring.is_fixed: IO error scanning file");
-         return board.varie.ItemFixState.UNFIXED;
+         return ItemFixState.UNFIXED;
          }
       }
 

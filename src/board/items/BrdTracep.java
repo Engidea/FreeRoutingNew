@@ -976,6 +976,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                
             if (overlap_item instanceof BrdTracep)
                {
+               // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
+               
                BrdTracep found_trace = (BrdTracep) overlap_item;
                
                // this is the segment of the other trace that needs to be "joined" with this trace

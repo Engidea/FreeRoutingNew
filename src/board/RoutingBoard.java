@@ -195,10 +195,9 @@ public final class RoutingBoard implements java.io.Serializable
       
       if (new_trace.corner_first().equals(new_trace.corner_last()))
          {
-         if (p_fixed_state.ordinal() < ItemFixState.USER_FIXED.ordinal())
-            {
-            return null;
-            }
+         // this would be an "invalid" trace, and we zap it only if it is not a "FIXED" trace
+         // I wonder if this is actually possibly useful, since there are tons of places in the code that check for the above...
+         if (p_fixed_state.ordinal() < ItemFixState.USER_FIXED.ordinal()) return null;
          }
       
       insert_item(new_trace);
