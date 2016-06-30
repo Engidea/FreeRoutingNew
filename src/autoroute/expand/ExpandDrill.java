@@ -30,6 +30,7 @@ import freert.planar.PlaDimension;
 import freert.planar.PlaPointInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
+import freert.varie.NetNosList;
 
 /**
  * Layer change expansion object in the maze search algorithm.
@@ -77,7 +78,7 @@ public final class ExpandDrill implements ExpandObject
       {
       ShapeTile search_shape = new ShapeTileBox(location);
       
-      Collection<AwtreeObject> overlaps = p_autoroute_engine.art_search_tree.find_overlap_objects(search_shape, -1);
+      Collection<AwtreeObject> overlaps = p_autoroute_engine.art_search_tree.find_overlap_objects(search_shape, -1, NetNosList.EMPTY);
 
       for (int index = first_layer_no; index <= last_layer_no; ++index)
          {

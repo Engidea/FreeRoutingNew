@@ -245,9 +245,9 @@ public final class AwtreeShapeSearch
    /**
     * Calculates the objects in this tree, which overlap with p_shape
     */
-   public final Set<AwtreeNodeLeaf> get_overlaps(ShapeTile p_shape)
+   private final TreeSet<AwtreeNodeLeaf> get_overlaps(ShapeTile p_shape)
       {
-      Set<AwtreeNodeLeaf> found_overlaps = new TreeSet<AwtreeNodeLeaf>();
+      TreeSet<AwtreeNodeLeaf> found_overlaps = new TreeSet<AwtreeNodeLeaf>();
 
       if (root_node == null) return found_overlaps;
 
@@ -430,25 +430,9 @@ public final class AwtreeShapeSearch
          node_to_recalculate = node_to_recalculate.parent;
          }
       }
-
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
-   
    
    /**
-    * Returns, if for the shapes stored in this tree clearance compensation is used.
+    * @returns, if for the shapes stored in this tree clearance compensation is used.
     */
    public final boolean is_clearance_compensation_used()
       {
@@ -719,28 +703,13 @@ public final class AwtreeShapeSearch
     */
    public final TreeSet<AwtreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos)
       {
-      TreeSet<AwtreeObject> risul_obstacles = new TreeSet<AwtreeObject>();
+      TreeSet<AwtreeObject> risul = new TreeSet<AwtreeObject>();
 
       Collection<AwtreeEntry> tree_entries = find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
-
-      Iterator<AwtreeEntry> it = tree_entries.iterator();
       
-      while (it.hasNext())
-         {
-         AwtreeEntry curr_entry = it.next();
-
-         risul_obstacles.add(curr_entry.object);
-         }
+      for (AwtreeEntry curr_entry : tree_entries ) risul.add(curr_entry.object);
       
-      return risul_obstacles;
-      }
-
-   /**
-    * Returns all SearchTreeObjects on layer p_layer, which overlap with p_shape. If p_layer < 0, the layer is ignored
-    */
-   public final Set<AwtreeObject> find_overlap_objects(ShapeConvex p_shape, int p_layer)
-      {
-      return find_overlap_objects(p_shape, p_layer, NetNosList.EMPTY );
+      return risul;
       }
 
    /**
@@ -819,10 +788,9 @@ public final class AwtreeShapeSearch
     * if p_layer < 0, the layer is ignored. 
     * Used only internally, because the clearance compensation is not taken innto account.
     */
-   public final Collection<AwtreeEntry> find_overlap_tree_entries_with_clearance(
-         ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<AwtreeEntry> p_result)
+   private final Collection<AwtreeEntry> find_overlap_tree_entries_with_clearance_fun(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type)
       {
-      if (p_result == null) p_result = new LinkedList<AwtreeEntry>();
+      Collection<AwtreeEntry> p_result = new LinkedList<AwtreeEntry>();
 
       if (p_shape == null) return p_result;
       
@@ -883,37 +851,12 @@ public final class AwtreeShapeSearch
          // enlarge both item shapes by the half clearance to create symmetry.
          ShapeConvex tmp_offset_shape = (ShapeConvex) tmp_shape.enlarge(curr_half_clearance);
          
-         if (curr_offset_shape.intersects(tmp_offset_shape))
-            {
-            p_result.add(new AwtreeEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
-            }
+         if ( ! curr_offset_shape.intersects(tmp_offset_shape)) continue;
+
+         p_result.add(new AwtreeEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
          }
       
       return p_result;
-      }
-
-   /**
-    * Puts all items in the tree overlapping with p_shape on layer p_layer into p_result
-    * If p_layer < 0 the layer is ignored.
-    * @param p_result a non null Set
-    */
-   public final void find_overlap_objects_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Set<AwtreeObject> p_result)
-      {
-      Collection<AwtreeEntry> res_tree_entries;
-      
-      if (is_clearance_compensation_used())
-         {
-         res_tree_entries = find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
-         }
-      else
-         {
-         res_tree_entries = find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_cl_type, null);
-         }
-      
-      for (AwtreeEntry curr_entry : res_tree_entries )
-         {
-         p_result.add(curr_entry.object);
-         }
       }
 
    /**
@@ -924,14 +867,14 @@ public final class AwtreeShapeSearch
     */
    public final Set<BrdItem> find_overlap_items_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
-      Set<AwtreeObject> overlaps = new TreeSet<AwtreeObject>();
+      Collection<AwtreeEntry> overlaps = find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
 
-      find_overlap_objects_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class, overlaps);
-      
       Set<BrdItem> result = new TreeSet<BrdItem>();
       
-      for (AwtreeObject curr_object : overlaps)
+      for (AwtreeEntry curr_tentry : overlaps)
          {
+         AwtreeObject curr_object  = curr_tentry.object;
+         
          if ( ! (curr_object instanceof BrdItem) ) continue;
 
          result.add((BrdItem) curr_object);
@@ -949,13 +892,9 @@ public final class AwtreeShapeSearch
    public final Collection<AwtreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       if ( is_clearance_compensation_used())
-         {
          return find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
-         }
       else
-         {
-         return find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class, null);
-         }
+         return find_overlap_tree_entries_with_clearance_fun(p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
       }
 
    /**

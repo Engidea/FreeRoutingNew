@@ -965,7 +965,7 @@ public final class RoutingBoard implements java.io.Serializable
     */
    public final Set<AwtreeObject> overlapping_objects(ShapeConvex p_shape, int p_layer)
       {
-      return search_tree_manager.get_default_tree().find_overlap_objects(p_shape, p_layer);
+      return search_tree_manager.get_default_tree().find_overlap_objects(p_shape, p_layer, NetNosList.EMPTY);
       }
 
    /**
@@ -1017,12 +1017,12 @@ public final class RoutingBoard implements java.io.Serializable
          
          if ( ! curr_shape.is_contained_in(bounding_box)) return false;
          
-         Set<AwtreeObject> found_obstacles = new TreeSet<AwtreeObject>();
+         Collection<AwtreeEntry> obstacles = default_tree.find_overlap_tree_entries_with_clearance(curr_shape, p_layer, p_net_no_arr, p_cl_class);
          
-         default_tree.find_overlap_objects_with_clearance(curr_shape, p_layer, p_net_no_arr, p_cl_class, found_obstacles);
-         
-         for (AwtreeObject curr_ob : found_obstacles)
+         for (AwtreeEntry cur_entry : obstacles)
             {
+            AwtreeObject curr_ob = cur_entry.object;
+            
             boolean is_obstacle = p_net_no_arr.is_obstacle(curr_ob);
              
             if (is_obstacle) return false;
@@ -1044,18 +1044,7 @@ public final class RoutingBoard implements java.io.Serializable
       
       AwtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
       
-      Collection<AwtreeEntry> tree_entries;
-      
-      NetNosList ignore_net_nos = NetNosList.EMPTY;
-      
-      if (default_tree.is_clearance_compensation_used())
-         {
-         tree_entries = default_tree.find_overlap_tree_entries(p_shape, p_layer, ignore_net_nos);
-         }
-      else
-         {
-         tree_entries = default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos, p_cl_class, null);
-         }
+      Collection<AwtreeEntry> tree_entries = default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, NetNosList.EMPTY, p_cl_class);
       
       for (AwtreeEntry curr_tree_entry : tree_entries)
          {
