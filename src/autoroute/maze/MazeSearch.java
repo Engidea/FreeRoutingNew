@@ -545,7 +545,7 @@ public final class MazeSearch
          boolean enter_through_small_door = false;
          if (p_list_element.door instanceof ExpandDoor)
             {
-            ExpandRoomComplete from_room = ((ExpandDoor) p_list_element.door).other_room(p_list_element.next_room);
+            ExpandRoomComplete from_room = ((ExpandDoor) p_list_element.door).other_room_complete(p_list_element.next_room);
             if (from_room instanceof ExpandRoomObstacle)
                {
                // otherwise entering through the small door may fail, because it was not checked.
@@ -711,7 +711,7 @@ public final class MazeSearch
          {
          return false;
          }
-      ExpandRoomComplete next_room = p_door.other_room(p_from_element.next_room);
+      ExpandRoomComplete next_room = p_door.other_room_complete(p_from_element.next_room);
       int layer = p_from_element.next_room.get_layer();
       PlaPointFloat shape_entry_middle = p_shape_entry.point_a.middle_point(p_shape_entry.point_b);
       double expansion_value = p_from_element.expansion_value + p_add_costs
@@ -1076,7 +1076,7 @@ public final class MazeSearch
 
          }
       
-      ExpandRoomComplete previous_room = p_list_element.door.other_room(p_list_element.next_room);
+      ExpandRoomComplete previous_room = p_list_element.door.other_room_complete(p_list_element.next_room);
       boolean room_was_shoved = p_list_element.adjustment != MazeAdjustment.NONE;
       BrdItem previous_item = null;
       if (previous_room != null && previous_room instanceof ExpandRoomObstacle)
@@ -1430,7 +1430,7 @@ public final class MazeSearch
       if (!(p_list_element.door instanceof ExpandDoor)) return false;
     
       ExpandDoor curr_door = (ExpandDoor) p_list_element.door;
-      ExpandRoomComplete from_room = curr_door.other_room(p_list_element.next_room);
+      ExpandRoomComplete from_room = curr_door.other_room_complete(p_list_element.next_room);
 
       if (!(from_room instanceof ExpandRoomObstacle)) return false;
 

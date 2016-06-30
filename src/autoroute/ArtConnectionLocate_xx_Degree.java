@@ -340,7 +340,7 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
     */
    private PlaPointFloat calc_door_left_corner(ArtBacktrackElement p_to_info)
       {
-      ExpandRoomComplete from_room = p_to_info.door.other_room(p_to_info.next_room);
+      ExpandRoomComplete from_room = p_to_info.door.other_room_complete(p_to_info.next_room);
       
       if ( from_room == null ) return null;
       
@@ -356,7 +356,7 @@ final class ArtConnectionLocate_xx_Degree extends ArtConnectionLocate
     */
    private PlaPointFloat calc_door_right_corner(ArtBacktrackElement p_to_info)
       {
-      ExpandRoomComplete from_room = p_to_info.door.other_room(p_to_info.next_room);
+      ExpandRoomComplete from_room = p_to_info.door.other_room_complete(p_to_info.next_room);
       
       if ( from_room == null ) return null;
       

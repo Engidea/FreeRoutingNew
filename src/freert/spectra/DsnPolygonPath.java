@@ -32,10 +32,8 @@ import gui.varie.IndentFileWriter;
  *
  * @author Alfons Wirtz
  */
-public class DsnPolygonPath extends DsnPath
+public final class DsnPolygonPath extends DsnPath
    {
-
-   /** Creates a new instance of PolygonPath */
    public DsnPolygonPath(DsnLayer p_layer, double p_width, double[] p_coordinate_arr)
       {
       super(p_layer, p_width, p_coordinate_arr);
@@ -114,7 +112,7 @@ public class DsnPolygonPath extends DsnPath
       return result;
       }
 
-   public freert.planar.PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
+   public PlaShape transform_to_board_rel(DsnCoordinateTransform p_coordinate_transform)
       {
       PlaPointFloat[] corner_arr = new PlaPointFloat[coordinate_arr.length / 2];
       double[] curr_point = new double[2];
@@ -137,7 +135,7 @@ public class DsnPolygonPath extends DsnPath
          rounded_corner_arr.add(corner_arr[i].round());
          }
       
-      PlaShape result = new freert.planar.ShapePolygon(rounded_corner_arr);
+      PlaShape result = new ShapePolygon(rounded_corner_arr);
       
       if (offset > 0)
          {

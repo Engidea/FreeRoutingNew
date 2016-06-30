@@ -138,7 +138,7 @@ public final class ExpandDrill implements ExpandObject
       }
 
    @Override
-   public ExpandRoomComplete other_room(ExpandRoomComplete p_room)
+   public ExpandRoomComplete other_room_complete(ExpandRoomComplete p_room)
       {
       return null;
       }

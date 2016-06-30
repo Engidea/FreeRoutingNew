@@ -37,7 +37,11 @@ import freert.spectra.DsnWriteScopeParameter;
 import freert.spectra.JflexScanner;
 import freert.spectra.varie.DsnKeywordAutoroute;
 import gui.varie.IndentFileWriter;
+import interactive.IteraBoard;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import board.RoutingBoard;
 
 /**
@@ -49,17 +53,17 @@ import board.RoutingBoard;
 public class RulesFile
    {
 
-   public static void write(interactive.IteraBoard p_board_handling, java.io.OutputStream p_output_stream, String p_design_name)
+   public static void write(IteraBoard i_board, OutputStream p_output_stream, String p_design_name)
       {
       IndentFileWriter output_file = new IndentFileWriter(p_output_stream);
-      RoutingBoard routing_board = p_board_handling.get_routing_board();
-      DsnWriteScopeParameter write_scope_parameter = new DsnWriteScopeParameter(routing_board, p_board_handling.itera_settings.autoroute_settings, output_file,
+      RoutingBoard routing_board = i_board.get_routing_board();
+      DsnWriteScopeParameter write_scope_parameter = new DsnWriteScopeParameter(routing_board, i_board.itera_settings.autoroute_settings, output_file,
             routing_board.host_com.specctra_parser_info.string_quote, routing_board.host_com.coordinate_transform, false);
       try
          {
          write_rules(write_scope_parameter, p_design_name);
          }
-      catch (java.io.IOException e)
+      catch (IOException e)
          {
          System.out.println("unable to write rules to file");
          }
@@ -67,13 +71,13 @@ public class RulesFile
          {
          output_file.close();
          }
-      catch (java.io.IOException e)
+      catch (IOException e)
          {
          System.out.println("unable to close rules file");
          }
       }
 
-   public static boolean read(java.io.InputStream p_input_stream, String p_design_name, interactive.IteraBoard p_board_handling)
+   public static boolean read(InputStream p_input_stream, String p_design_name, IteraBoard p_board_handling)
       {
       RoutingBoard routing_board = p_board_handling.get_routing_board();
       JflexScanner scanner = new DsnFileScanner(new InputStreamReader(p_input_stream));
@@ -105,7 +109,7 @@ public class RulesFile
             return false;
             }
          }
-      catch (java.io.IOException e)
+      catch (IOException e)
          {
          System.out.println("RulesFile.read: IO error scanning file");
          return false;
@@ -120,7 +124,7 @@ public class RulesFile
             {
             next_token = scanner.next_token();
             }
-         catch (java.io.IOException e)
+         catch (IOException e)
             {
             System.out.println("RulesFile.read: IO error scanning file");
             return false;
@@ -191,7 +195,7 @@ public class RulesFile
       return true;
       }
 
-   private static void write_rules(DsnWriteScopeParameter p_par, String p_design_name) throws java.io.IOException
+   private static void write_rules(DsnWriteScopeParameter p_par, String p_design_name) throws IOException
       {
       p_par.file.start_scope();
       p_par.file.write("rules PCB ");
@@ -283,7 +287,7 @@ public class RulesFile
             }
          return true;
          }
-      catch (java.io.IOException e)
+      catch (IOException e)
          {
          System.out.println("RulesFile.add_layer_rules: IO error scanning file");
          return false;

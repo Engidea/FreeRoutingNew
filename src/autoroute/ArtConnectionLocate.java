@@ -383,7 +383,7 @@ public abstract class ArtConnectionLocate
             }
          else
             {
-            curr_next_room = curr_backtrack_door.other_room(curr_next_room);
+            curr_next_room = curr_backtrack_door.other_room_complete(curr_next_room);
             }
          curr_maze_search_element = curr_backtrack_door.get_maze_search_element(curr_section_no);
          curr_backtrack_element = new ArtBacktrackElement(curr_backtrack_door, curr_section_no, curr_next_room);

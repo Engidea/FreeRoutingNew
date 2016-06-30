@@ -31,7 +31,6 @@ import board.items.BrdAreaObstacleVia;
 import board.items.BrdItem;
 import board.items.BrdTracep;
 import board.varie.ItemFixState;
-import board.varie.ShapeTraceEntryPoint;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
@@ -60,7 +59,7 @@ public final class AlgoShoveTraceEntries
    private final int cl_class;
    
    private BrdFromSide from_side;
-   private ShapeTraceEntryPoint list_anchor;
+   private ShoveTraceEntryPoint list_anchor;
    private int trace_piece_count = 0;
    private int max_stack_level = 0;
    private boolean shape_contains_trace_tails = false;
@@ -165,7 +164,7 @@ public final class AlgoShoveTraceEntries
     */
    public BrdTracep next_substitute_trace_piece()
       {
-      ShapeTraceEntryPoint[] entries = pop_piece();
+      ShoveTraceEntryPoint[] entries = pop_piece();
 
       if (entries == null) return null;
 
@@ -531,7 +530,7 @@ public final class AlgoShoveTraceEntries
          {
          return; // from side is already legal
          }
-      ShapeTraceEntryPoint curr_node = list_anchor;
+      ShoveTraceEntryPoint curr_node = list_anchor;
       int curr_fromside_no = 0;
       PlaPointFloat curr_entry_approx = null;
       while (curr_node != null)
@@ -582,8 +581,8 @@ public final class AlgoShoveTraceEntries
             }
          }
       // search the first intersection point between the side middle and compare_corner_2
-      ShapeTraceEntryPoint curr = list_anchor;
-      ShapeTraceEntryPoint prev = null;
+      ShoveTraceEntryPoint curr = list_anchor;
+      ShoveTraceEntryPoint prev = null;
 
       while (curr != null)
          {
@@ -614,7 +613,7 @@ public final class AlgoShoveTraceEntries
          }
       if (curr != null && curr != list_anchor)
          {
-         ShapeTraceEntryPoint new_anchor = curr;
+         ShoveTraceEntryPoint new_anchor = curr;
 
          while (curr != null)
             {
@@ -644,7 +643,7 @@ public final class AlgoShoveTraceEntries
 
       curr = list_anchor.next;
       NetNosList curr_net_nos;
-      ShapeTraceEntryPoint next;
+      ShoveTraceEntryPoint next;
 
       if (curr != null)
          {
@@ -656,7 +655,7 @@ public final class AlgoShoveTraceEntries
          next = null;
          curr_net_nos = NetNosList.EMPTY;
          }
-      ShapeTraceEntryPoint before_prev = null;
+      ShoveTraceEntryPoint before_prev = null;
       while (next != null)
          {
          NetNosList next_net_nos = next.trace.net_nos;
@@ -707,7 +706,7 @@ public final class AlgoShoveTraceEntries
       {
       if (list_anchor == null) return true;
 
-      ShapeTraceEntryPoint curr_entry = list_anchor;
+      ShoveTraceEntryPoint curr_entry = list_anchor;
       NetNosList curr_net_nos = curr_entry.trace.net_nos;
       int curr_level;
 
@@ -738,12 +737,12 @@ public final class AlgoShoveTraceEntries
             }
 
          // set stack level for all entries of the current net;
-         ShapeTraceEntryPoint check_entry = curr_entry.next;
+         ShoveTraceEntryPoint check_entry = curr_entry.next;
          int index_of_next_foreign_set = 0;
          int index_of_last_occurance_of_set = 0;
          int next_index = 0;
-         ShapeTraceEntryPoint last_own_entry = null;
-         ShapeTraceEntryPoint first_foreign_entry = null;
+         ShoveTraceEntryPoint last_own_entry = null;
+         ShoveTraceEntryPoint first_foreign_entry = null;
 
          while (check_entry != null)
             {
@@ -764,7 +763,7 @@ public final class AlgoShoveTraceEntries
                }
             check_entry = check_entry.next;
             }
-         ShapeTraceEntryPoint next_entry = null;
+         ShoveTraceEntryPoint next_entry = null;
 
          if (next_index != 0)
             {
@@ -828,7 +827,7 @@ public final class AlgoShoveTraceEntries
     * The returned array has 2 elements. 
     * The first is the first entry point, and the second is the last entry point of the minimal level.
     */
-   private ShapeTraceEntryPoint[] pop_piece()
+   private ShoveTraceEntryPoint[] pop_piece()
       {
       if (list_anchor == null)
          {
@@ -839,8 +838,8 @@ public final class AlgoShoveTraceEntries
          return null;
          }
       
-      ShapeTraceEntryPoint first = list_anchor;
-      ShapeTraceEntryPoint prev_first = null;
+      ShoveTraceEntryPoint first = list_anchor;
+      ShoveTraceEntryPoint prev_first = null;
 
       while (first != null)
          {
@@ -856,10 +855,10 @@ public final class AlgoShoveTraceEntries
          return null;
          }
       
-      ShapeTraceEntryPoint[] result = new ShapeTraceEntryPoint[2];
+      ShoveTraceEntryPoint[] result = new ShoveTraceEntryPoint[2];
       result[0] = first;
-      ShapeTraceEntryPoint last = first;
-      ShapeTraceEntryPoint after_last = first.next;
+      ShoveTraceEntryPoint last = first;
+      ShoveTraceEntryPoint after_last = first.next;
 
       while (after_last != null)
          {
@@ -885,7 +884,7 @@ public final class AlgoShoveTraceEntries
 
       // recalculate max_stack_level;
       max_stack_level = 0;
-      ShapeTraceEntryPoint curr = list_anchor;
+      ShoveTraceEntryPoint curr = list_anchor;
       while (curr != null)
          {
          if (curr.stack_level > max_stack_level)
@@ -907,9 +906,9 @@ public final class AlgoShoveTraceEntries
 
    private void insert_entry_point(BrdTracep p_trace, int p_trace_line_no, int p_edge_no, PlaPointFloat p_entry_approx)
       {
-      ShapeTraceEntryPoint new_entry = new ShapeTraceEntryPoint(p_trace, p_trace_line_no, p_edge_no, p_entry_approx);
-      ShapeTraceEntryPoint curr_prev = null;
-      ShapeTraceEntryPoint curr_next = list_anchor;
+      ShoveTraceEntryPoint new_entry = new ShoveTraceEntryPoint(p_trace, p_trace_line_no, p_edge_no, p_entry_approx);
+      ShoveTraceEntryPoint curr_prev = null;
+      ShoveTraceEntryPoint curr_next = list_anchor;
 
       // insert the new entry into the sorted list
       while (curr_next != null)

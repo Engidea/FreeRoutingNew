@@ -114,7 +114,7 @@ public final class MazeShoveTraceAlgo
       if (from_door.dimension.is_area())
          {
          // shove from a link door into the direction of the other link door.
-         ExpandRoomComplete other_room = from_door.other_room(p_obstacle_room);
+         ExpandRoomComplete other_room = from_door.other_room_complete(p_obstacle_room);
 
          if (!(other_room instanceof ExpandRoomObstacle)) return false;
          
@@ -142,7 +142,7 @@ public final class MazeShoveTraceAlgo
          }
       else
          {
-         ExpandRoomComplete from_room = from_door.other_room(p_obstacle_room);
+         ExpandRoomComplete from_room = from_door.other_room_complete(p_obstacle_room);
          PlaPointFloat from_point = from_room.get_shape().centre_of_gravity();
          PlaLineInt shove_trace_line = trace_polyline.plaline(trace_corner_no + 1);
          PlaSegmentFloat door_line_segment = from_door_shape.diagonal_corner_segment();

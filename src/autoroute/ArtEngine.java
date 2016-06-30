@@ -285,7 +285,7 @@ public final class ArtEngine
       
       for (ExpandDoor curr_door : room_doors)
          {
-         ExpandRoom curr_neighbour = curr_door.other_room(p_room);
+         ExpandRoom curr_neighbour = curr_door.other_room_complete(p_room);
       
          if (curr_neighbour == null) continue;
          
@@ -374,7 +374,7 @@ public final class ArtEngine
                while (it2.hasNext())
                   {
                   ExpandRoomFreespaceIncomplete tmp_room = it2.next();
-                  ExpandRoomFreespaceComplete completed_room = this.add_complete_room(tmp_room);
+                  ExpandRoomFreespaceComplete completed_room = add_complete_room(tmp_room);
                   if (completed_room != null)
                      {
                      result.add(completed_room);
@@ -426,9 +426,11 @@ public final class ArtEngine
     */
    public void complete_neigbour_rooms(ExpandRoomComplete p_room)
       {
-      if (p_room.get_doors() == null) return;
+      List<ExpandDoor> doors = p_room.get_doors();
+      
+      if ( doors == null) return;
 
-      Iterator<ExpandDoor> iter = p_room.get_doors().iterator();
+      Iterator<ExpandDoor> iter = doors.iterator();
       while (iter.hasNext())
          {
          ExpandDoor curr_door = iter.next();
@@ -461,7 +463,7 @@ public final class ArtEngine
     */
    public void invalidate_drill_pages(ShapeTile p_shape)
       {
-      this.drill_page_array.invalidate(p_shape);
+      drill_page_array.invalidate(p_shape);
       }
 
    /**
@@ -469,12 +471,10 @@ public final class ArtEngine
     */
    public void remove_all_doors(ExpandRoom p_room)
       {
-      Iterator<ExpandDoor> it = p_room.get_doors().iterator();
-      while (it.hasNext())
+      for ( ExpandDoor curr_door : p_room.get_doors() )
          {
-         ExpandDoor curr_door = it.next();
-
          ExpandRoom other_room = curr_door.other_room(p_room);
+
          if (other_room == null) continue;
          
          other_room.remove_door(curr_door);
@@ -494,21 +494,23 @@ public final class ArtEngine
    Set<ExpandRoomFreespaceComplete> get_rooms_with_target_items(Set<BrdItem> p_items)
       {
       Set<ExpandRoomFreespaceComplete> result = new TreeSet<ExpandRoomFreespaceComplete>();
-      if (this.complete_expansion_rooms != null)
+      
+      if (complete_expansion_rooms == null) return result;
+      
+      for (ExpandRoomFreespaceComplete curr_room : complete_expansion_rooms)
          {
-         for (ExpandRoomFreespaceComplete curr_room : this.complete_expansion_rooms)
+         Collection<ExpandDoorItem> target_door_list = curr_room.get_target_doors();
+
+         for (ExpandDoorItem curr_target_door : target_door_list)
             {
-            Collection<ExpandDoorItem> target_door_list = curr_room.get_target_doors();
-            for (ExpandDoorItem curr_target_door : target_door_list)
-               {
-               BrdItem curr_target_item = curr_target_door.item;
-               if (p_items.contains(curr_target_item))
-                  {
-                  result.add(curr_room);
-                  }
-               }
+            BrdItem curr_target_item = curr_target_door.item;
+         
+            if ( ! p_items.contains(curr_target_item)) continue;
+
+            result.add(curr_room);
             }
          }
+
       return result;
       }
 
@@ -520,16 +522,12 @@ public final class ArtEngine
       {
       if (complete_expansion_rooms == null) return true;
 
-      boolean result = true;
-
       for (ExpandRoomFreespaceComplete curr_room : complete_expansion_rooms)
          {
-         if (!curr_room.validate(this))
-            {
-            result = false;
-            }
+         if (! curr_room.validate(this) ) return false;
          }
-      return result;
+
+      return true;
       }
 
    public int new_room_id_no()

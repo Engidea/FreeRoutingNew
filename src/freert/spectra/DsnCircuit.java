@@ -21,6 +21,8 @@
 
 package freert.spectra;
 
+import java.util.Collection;
+import java.util.LinkedList;
 import freert.spectra.varie.DsnReadUtils;
 
 /**
@@ -38,8 +40,8 @@ public class DsnCircuit
       Object next_token = null;
       double min_trace_length = 0;
       double max_trace_length = 0;
-      java.util.Collection<String> use_via = new java.util.LinkedList<String>();
-      java.util.Collection<String> use_layer = new java.util.LinkedList<String>();
+      Collection<String> use_via = new LinkedList<String>();
+      Collection<String> use_layer = new LinkedList<String>();
       for (;;)
          {
          Object prev_token = next_token;

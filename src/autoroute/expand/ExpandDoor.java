@@ -99,27 +99,14 @@ public final class ExpandDoor implements ExpandObject
     * if p_roon is neither equal to this.first_room nor to this.second_room, or if the
     * other room is not a CompleteExpansionRoom.
     */
-   public ExpandRoomComplete other_room(ExpandRoomComplete p_room)
+   @Override
+   public ExpandRoomComplete other_room_complete(ExpandRoomComplete p_room)
       {
-      ExpandRoom result;
+      ExpandRoom result = other_room(p_room);
+
+      if ( result == null ) return null;
       
-      if (p_room == first_room)
-         {
-         result = second_room;
-         }
-      else if (p_room == second_room)
-         {
-         result = first_room;
-         }
-      else
-         {
-         return null;
-         }
-      
-      if ( result instanceof ExpandRoomComplete )
-         {
-         return (ExpandRoomComplete) result;
-         }
+      if ( result instanceof ExpandRoomComplete ) return (ExpandRoomComplete) result;
       
       return null;
       }

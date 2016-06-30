@@ -44,7 +44,7 @@ public interface ExpandObject
    /**
     * @return the other room to p_room if this is a door and the other room is a CompleteExpansionRoom. Else null is returned.
     */
-   ExpandRoomComplete other_room(ExpandRoomComplete p_room);
+   ExpandRoomComplete other_room_complete(ExpandRoomComplete p_room);
 
    /**
     * Returns the count of MazeSearchElements in this expandable object

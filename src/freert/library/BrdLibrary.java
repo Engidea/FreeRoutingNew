@@ -20,6 +20,7 @@
 
 package freert.library;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -49,13 +50,11 @@ public final class BrdLibrary implements java.io.Serializable
    /** 
     * Sets the subset of padstacks from this.padstacks, which can be used in routing for inserting vias
     */
-   public void set_via_padstacks(LibPadstack[] p_padstacks)
+   public void set_via_padstacks(ArrayList<LibPadstack> p_padstacks)
       {
       via_padstacks.clear();
       
-      for (int index = 0; index < p_padstacks.length; ++index)
-         via_padstacks.add(p_padstacks[index]);
-
+      via_padstacks.addAll(p_padstacks);
       }
 
    /** 
