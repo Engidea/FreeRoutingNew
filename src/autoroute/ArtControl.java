@@ -25,6 +25,7 @@ import autoroute.varie.ArtViaCost;
 import autoroute.varie.ArtViaMask;
 import board.RoutingBoard;
 import board.infos.BrdViaInfo;
+import freert.library.LibPadstack;
 import freert.planar.ShapeConvex;
 import freert.rules.NetClass;
 import freert.rules.RuleNet;
@@ -162,9 +163,6 @@ public final class ArtControl
 
    /**
     * Apparently it is kind of possible to have a non present net ???
-    * @param p_net_no
-    * @param p_board
-    * @param p_via_costs
     */
    private void net_init( RoutingBoard p_board, int p_via_costs)
       {
@@ -179,6 +177,7 @@ public final class ArtControl
          }
       else
          {
+         System.out.println("ArtControl.net_init: STRANGE curr_net==null");
          trace_clearance_idx = 1;
          via_rule = p_board.brd_rules.via_rules.firstElement();
          curr_net_class = null;
@@ -187,19 +186,14 @@ public final class ArtControl
       for (int index = 0; index < layer_count; ++index)
          {
          if (net_no > 0)
-            {
             trace_half_width[index] = p_board.brd_rules.get_trace_half_width(net_no, index);
-            }
          else
-            {
             trace_half_width[index] = p_board.brd_rules.get_trace_half_width(1, index);
-            }
          
          compensated_trace_half_width[index] = trace_half_width[index] + p_board.brd_rules.clearance_matrix.clearance_compensation_value(trace_clearance_idx, index);
-         if (curr_net_class != null && !curr_net_class.is_active_routing_layer(index))
-            {
-            layer_active[index] = false;
-            }
+
+         // this may actually override a previous setting...
+         if (curr_net_class != null && !curr_net_class.is_active_routing_layer(index)) layer_active[index] = false;
          }
       
       if (via_rule.via_count() > 0)
@@ -212,30 +206,26 @@ public final class ArtControl
          }
       
       via_info_arr = new ArtViaMask[via_rule.via_count()];
+      
       for (int index = 0; index < via_rule.via_count(); ++index)
          {
          BrdViaInfo curr_via = via_rule.get_via(index);
-         if (curr_via.attach_smd_allowed())
-            {
-            attach_smd_allowed = true;
-            }
-         freert.library.LibPadstack curr_via_padstack = curr_via.get_padstack();
+      
+         if (curr_via.attach_smd_allowed()) attach_smd_allowed = true;
+
+         LibPadstack curr_via_padstack = curr_via.get_padstack();
          int from_layer = curr_via_padstack.from_layer();
          int to_layer = curr_via_padstack.to_layer();
+         
          for (int jndex = from_layer; jndex <= to_layer; ++jndex)
             {
             ShapeConvex curr_shape = curr_via_padstack.get_shape(jndex);
-            double curr_radius;
-            if (curr_shape != null)
-               {
-               curr_radius = 0.5 * curr_shape.max_width();
-               }
-            else
-               {
-               curr_radius = 0;
-               }
+            
+            double curr_radius = curr_shape != null ? 0.5 * curr_shape.max_width() : 0;
+
             via_radius_arr[jndex] = Math.max(via_radius_arr[jndex], curr_radius);
             }
+
          via_info_arr[index] = new ArtViaMask(from_layer, to_layer, curr_via.attach_smd_allowed());
          }
       
@@ -250,8 +240,4 @@ public final class ArtControl
       min_normal_via_cost = p_via_costs * via_cost_factor;
       min_cheap_via_cost = 0.8 * min_normal_via_cost;
       }
-
-
-
-
    }

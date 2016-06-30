@@ -113,8 +113,8 @@ public final class AwtreeManager
       }
 
    /**
-    * Returns, if clearance compensation is used for the default tree. 
     * This is normally the case, if there exist only the clearance classes null and default in the clearance matrix.
+    * @return if clearance compensation is used for the default tree. 
     */
    public boolean is_clearance_compensation_used()
       {
@@ -134,17 +134,9 @@ public final class AwtreeManager
       remove_all_board_items();
       
       compensated_search_trees.clear();
-      
-      int compensated_clearance_class_no;
-      
-      if (p_value)
-         {
-         compensated_clearance_class_no = 1;
-         }
-      else
-         {
-         compensated_clearance_class_no = 0;
-         }
+
+      // So, if clearance compensation is used use class no 1 otherwise zero.... 
+      int compensated_clearance_class_no = p_value ? 1 : 0;
       
       default_tree = new AwtreeShapeSearch(r_board, compensated_clearance_class_no);
       
@@ -194,10 +186,8 @@ public final class AwtreeManager
       while (it.hasNext())
          {
          AwtreeShapeSearch curr_tree = it.next();
-         if (curr_tree.compensated_clearance_class_no == p_no)
-            {
-            it.remove();
-            }
+         
+         if (curr_tree.compensated_clearance_class_no == p_no) it.remove();
          }
       }
 

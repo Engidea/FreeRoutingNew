@@ -1734,18 +1734,17 @@ public final class RoutingBoard implements java.io.Serializable
 
       AwtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
 
-      Collection<AwtreeEntry> obstacle_entries = default_tree.find_overlap_tree_entries_with_clearance(
-            shape_to_check, p_layer, p_net_no_arr, p_cl_class_no);
+      Collection<AwtreeEntry> obstacle_list = default_tree.find_overlap_tree_entries_with_clearance(shape_to_check, p_layer, p_net_no_arr, p_cl_class_no);
 
-      for (AwtreeEntry curr_obstacle_entry : obstacle_entries)
+      for (AwtreeEntry obstacle_entry : obstacle_list)
          {
-         if ( ! (curr_obstacle_entry.object instanceof BrdItem)) continue;
+         if ( ! (obstacle_entry.object instanceof BrdItem)) continue;
 
-         BrdItem curr_obstacle = (BrdItem) curr_obstacle_entry.object;
+         BrdItem obstacle_item = (BrdItem) obstacle_entry.object;
 
-         if ( p_only_not_shovable_obstacles && curr_obstacle.is_route() && ! curr_obstacle.is_shove_fixed()) continue;
+         if ( p_only_not_shovable_obstacles && obstacle_item.is_route() && ! obstacle_item.is_shove_fixed()) continue;
 
-         ShapeTile curr_obstacle_shape = curr_obstacle_entry.object.get_tree_shape(default_tree, curr_obstacle_entry.shape_index_in_object);
+         ShapeTile curr_obstacle_shape = obstacle_entry.object.get_tree_shape(default_tree, obstacle_entry.shape_index_in_object);
          ShapeTile curr_offset_shape;
          PlaPointFloat nearest_obstacle_point;
          double shorten_value;
@@ -1753,11 +1752,11 @@ public final class RoutingBoard implements java.io.Serializable
          if (default_tree.is_clearance_compensation_used())
             {
             curr_offset_shape = shape_to_check;
-            shorten_value = p_trace_half_width + brd_rules.clearance_matrix.clearance_compensation_value(curr_obstacle.clearance_idx(), p_layer);
+            shorten_value = p_trace_half_width + brd_rules.clearance_matrix.clearance_compensation_value(obstacle_item.clearance_idx(), p_layer);
             }
          else
             {
-            int clearance_value = get_clearance(curr_obstacle.clearance_idx(), p_cl_class_no, p_layer);
+            int clearance_value = get_clearance(obstacle_item.clearance_idx(), p_cl_class_no, p_layer);
             curr_offset_shape = shape_to_check.offset(clearance_value);
             shorten_value = p_trace_half_width + clearance_value;
             }

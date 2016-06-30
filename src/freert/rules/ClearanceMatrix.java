@@ -268,7 +268,8 @@ public final class ClearanceMatrix implements java.io.Serializable
       }
 
    /**
-    * Return the clearance compensation value of p_clearance_class_no on layer p_layer.
+    * 
+    * @return the clearance compensation value of p_clearance_class_no on layer p_layer.
     */
    public int clearance_compensation_value(int p_clearance_class_no, int p_layer)
       {

@@ -495,10 +495,9 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
          {
          ShapeTile curr_tile_shape = tile_shape_get(index);
          
-         Collection<AwtreeEntry> curr_overlapping_items = default_tree.find_overlap_tree_entries_with_clearance(
-               curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
+         Collection<AwtreeEntry> overlap_list = default_tree.find_overlap_tree_entries_with_clearance(curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
          
-         for (AwtreeEntry curr_entry : curr_overlapping_items )
+         for (AwtreeEntry curr_entry : overlap_list )
             {
             // skip objects that are not board items
             if ( !(curr_entry.object instanceof BrdItem)) continue;
