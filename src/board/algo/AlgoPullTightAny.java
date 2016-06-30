@@ -476,8 +476,6 @@ public final class AlgoPullTightAny extends AlgoPullTight
          nearest_point = next_corner;
          max_translate_dist = next_dist;
          }
-
-      int line_arr_size = p_line_arr.size();
       
       PlaLineIntAlist curr_lines = new PlaLineIntAlist(p_line_arr.to_alist());
       

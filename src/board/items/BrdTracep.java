@@ -1129,12 +1129,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
          // yes, we have a trace split
          have_trace_split = true;
+
+         result.add(curr_split_pieces.get(0));
          
-         result.addAll(curr_split_pieces.get(0).split(p_clip_shape));
-
          if (curr_split_pieces.size() < 2 ) continue;
-
-         result.addAll(curr_split_pieces.get(1).split(p_clip_shape));
+         
+         result.add(curr_split_pieces.get(1));
          }
       
       return have_trace_split;
