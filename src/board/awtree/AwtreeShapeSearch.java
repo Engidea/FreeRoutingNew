@@ -721,9 +721,7 @@ public final class AwtreeShapeSearch
       {
       TreeSet<AwtreeObject> risul_obstacles = new TreeSet<AwtreeObject>();
 
-      Collection<AwtreeEntry> tree_entries = new LinkedList<AwtreeEntry>();
-
-      calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, tree_entries);
+      Collection<AwtreeEntry> tree_entries = find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
 
       Iterator<AwtreeEntry> it = tree_entries.iterator();
       
@@ -746,45 +744,38 @@ public final class AwtreeShapeSearch
       }
 
    /**
-    * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_obstacles. 
+    * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_risul_tree. 
     * If p_layer < 0, the layer is ignored.
     */
-   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, Collection<AwtreeEntry> p_risul_tree)
+   public final Collection<AwtreeEntry> find_overlap_tree_entries(ShapeConvex p_shape, int p_layer)
       {
-      calc_overlapping_tree_entries(p_shape, p_layer, NetNosList.EMPTY, p_risul_tree);
+      return find_overlap_tree_entries(p_shape, p_layer, NetNosList.EMPTY);
       }
 
    /**
-    * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_obstacles. 
+    * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_risul_tree. 
     * If p_layer < 0, the layer is ignored. 
     * tree_entries with object containing a net number of p_ignore_net_nos are ignored.
     */
-   public final void calc_overlapping_tree_entries(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos, Collection<AwtreeEntry> p_risul_tree)
+   public final Collection<AwtreeEntry> find_overlap_tree_entries(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos)
       {
-      if (p_shape == null) return;
-      
-      if (p_risul_tree == null)
-         {
-         System.err.println("calc_overlapping_tree_entries p_risul_tree is null");
-         return;
-         }
+      Collection<AwtreeEntry> p_risul_tree = new LinkedList<AwtreeEntry>();
+
+      if (p_shape == null) return p_risul_tree;
       
       ShapeTileRegular bounds = p_shape.bounding_shape();
       if (bounds == null)
          {
          System.err.println("board.ShapeSearchTree.overlaps: p_shape not bounded");
-         return;
+         return p_risul_tree;
          }
-      
-      Collection<AwtreeNodeLeaf> tmp_list = get_overlaps(bounds);
-      Iterator<AwtreeNodeLeaf> it = tmp_list.iterator();
 
       boolean is_45_degree = p_shape instanceof ShapeTileOctagon;
 
-      while (it.hasNext())
+      for ( AwtreeNodeLeaf curr_leaf : get_overlaps(bounds) )
          {
-         AwtreeNodeLeaf curr_leaf = it.next();
          AwtreeObject curr_object = curr_leaf.object;
+         
          int shape_index = curr_leaf.shape_index_in_object;
          
          // ignore object if it is on a different layer
@@ -816,6 +807,8 @@ public final class AwtreeShapeSearch
             p_risul_tree.add(new_entry);
             }
          }
+      
+      return p_risul_tree;
       }
 
    /**
@@ -826,20 +819,21 @@ public final class AwtreeShapeSearch
     * if p_layer < 0, the layer is ignored. 
     * Used only internally, because the clearance compensation is not taken innto account.
     */
-   public final void find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<AwtreeEntry> p_result)
+   public final Collection<AwtreeEntry> find_overlap_tree_entries_with_clearance(
+         ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Collection<AwtreeEntry> p_result)
       {
-      if (p_shape == null) return;
+      if (p_result == null) p_result = new LinkedList<AwtreeEntry>();
 
-      if (p_result == null) return;
-
+      if (p_shape == null) return p_result;
+      
       ClearanceMatrix cl_matrix = r_board.brd_rules.clearance_matrix;
       
       ShapeTileRegular bounds = p_shape.bounding_shape();
 
       if (bounds == null)
          {
-         System.out.println("find_overlap_tree_entries_with_clearance: p_shape is not bounded");
-         bounds = r_board.get_bounding_box();
+         System.err.println("find_overlap_tree_entries_with_clearance: p_shape is not bounded");
+         return p_result;
          }
       
       int max_clearance = (int) (1.2 * cl_matrix.max_value(p_cl_type, p_layer));
@@ -864,12 +858,11 @@ public final class AwtreeShapeSearch
 
          ignore_item = p_ignore_net_nos.is_connectable(curr_item);
          
-         if (!ignore_item)
-            {
-            int curr_clearance = cl_matrix.value_at(p_cl_type, curr_item.clearance_idx(), p_layer);
-            AwtreeNodeLeafSorted sorted_ob = new AwtreeNodeLeafSorted(curr_leaf, curr_clearance);
-            sorted_items.add(sorted_ob);
-            }
+         if ( ignore_item ) continue;
+
+         int curr_clearance = cl_matrix.value_at(p_cl_type, curr_item.clearance_idx(), p_layer);
+         AwtreeNodeLeafSorted sorted_ob = new AwtreeNodeLeafSorted(curr_leaf, curr_clearance);
+         sorted_items.add(sorted_ob);
          }
       
       int curr_half_clearance = 0;
@@ -895,6 +888,8 @@ public final class AwtreeShapeSearch
             p_result.add(new AwtreeEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
             }
          }
+      
+      return p_result;
       }
 
    /**
@@ -904,15 +899,15 @@ public final class AwtreeShapeSearch
     */
    public final void find_overlap_objects_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type, Set<AwtreeObject> p_result)
       {
-      Collection<AwtreeEntry> res_tree_entries = new LinkedList<AwtreeEntry>();
+      Collection<AwtreeEntry> res_tree_entries;
       
       if (is_clearance_compensation_used())
          {
-         calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, res_tree_entries);
+         res_tree_entries = find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
          }
       else
          {
-         find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_cl_type, res_tree_entries);
+         res_tree_entries = find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_cl_type, null);
          }
       
       for (AwtreeEntry curr_entry : res_tree_entries )
@@ -951,20 +946,16 @@ public final class AwtreeShapeSearch
     *  If p_layer < 0, the layer is ignored.
     *  This seems one of the main point for the logic, finding out if something overlaps, damiano
     */
-   public final LinkedList<AwtreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
+   public final Collection<AwtreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
-      LinkedList<AwtreeEntry> result = new LinkedList<AwtreeEntry>();
-      
       if ( is_clearance_compensation_used())
          {
-         calc_overlapping_tree_entries(p_shape, p_layer, p_ignore_net_nos, result);
+         return find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
          }
       else
          {
-         find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class, result);
+         return find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class, null);
          }
-      
-      return result;
       }
 
    /**

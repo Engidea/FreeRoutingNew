@@ -213,13 +213,12 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    public final boolean validate(ArtEngine p_autoroute_engine)
       {
       boolean result = true;
-      LinkedList<AwtreeEntry> overlapping_objects = new LinkedList<AwtreeEntry>();
 
       NetNosList net_no_arr = new NetNosList(p_autoroute_engine.get_net_no() );
       
-      p_autoroute_engine.art_search_tree.calc_overlapping_tree_entries(get_shape(), get_layer(), net_no_arr, overlapping_objects);
+      Collection<AwtreeEntry> overlap = p_autoroute_engine.art_search_tree.find_overlap_tree_entries(get_shape(), get_layer(), net_no_arr);
 
-      for (AwtreeEntry curr_entry : overlapping_objects )
+      for (AwtreeEntry curr_entry : overlap )
          {
          if (curr_entry.object == this) continue;
 

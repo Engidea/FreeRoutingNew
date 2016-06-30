@@ -85,8 +85,8 @@ public final class ExpandDrillPage implements ExpandObject
       // Use the search tree from the autoroute, it is adjusted with compensation
       AwtreeShapeSearch search_tree = p_art_engine.art_search_tree;
       
-      Collection<AwtreeEntry> overlaps = new LinkedList<AwtreeEntry>();
-      search_tree.calc_overlapping_tree_entries(page_shape, -1, overlaps);
+      Collection<AwtreeEntry> overlaps = search_tree.find_overlap_tree_entries(page_shape, -1);
+      
       Collection<ShapeTile> cutout_shapes = new LinkedList<ShapeTile>();
 
       // drills on top of existing vias are used in the ripup algorithm

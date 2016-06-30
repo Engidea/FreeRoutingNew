@@ -953,11 +953,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
          ShapeTile curr_shape = get_tree_shape(default_tree, index);
          
-         LinkedList<AwtreeEntry> over_tree_entries = new LinkedList<AwtreeEntry>();
-
          // look for intersecting traces with the i-th line segment
          
-         default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), over_tree_entries);
+         Collection<AwtreeEntry> over_tree_entries = default_tree.find_overlap_tree_entries(curr_shape, get_layer());
          
          Iterator<AwtreeEntry> over_tree_iter = over_tree_entries.iterator();
          
@@ -994,7 +992,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                   {
                   // reread the overlapping tree entries and reset the iterator, because the board has changed
                   // Would it be good to just return ? since I have split a trace and the system should readjust ?
-                  default_tree.calc_overlapping_tree_entries(curr_shape, get_layer(), over_tree_entries);
+                  over_tree_entries = default_tree.find_overlap_tree_entries(curr_shape, get_layer());
                   over_tree_iter = over_tree_entries.iterator();
                   }
                
@@ -1028,11 +1026,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if ( ! own_trace_split ) result.add(this);
       
-      if (result.size() > 1)
-         {
-         // need to clean up possible autoroute information
-         for (BrdItem curr_item : result)  curr_item.art_item_clear(); 
-         }
+      // need to clean up possible autoroute information
+      for (BrdItem curr_item : result)  curr_item.art_item_clear(); 
       
       return result;
       }

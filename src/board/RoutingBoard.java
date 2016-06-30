@@ -1044,17 +1044,17 @@ public final class RoutingBoard implements java.io.Serializable
       
       AwtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
       
-      LinkedList<AwtreeEntry> tree_entries = new LinkedList<AwtreeEntry>();
+      Collection<AwtreeEntry> tree_entries;
       
       NetNosList ignore_net_nos = NetNosList.EMPTY;
       
       if (default_tree.is_clearance_compensation_used())
          {
-         default_tree.calc_overlapping_tree_entries(p_shape, p_layer, ignore_net_nos, tree_entries);
+         tree_entries = default_tree.find_overlap_tree_entries(p_shape, p_layer, ignore_net_nos);
          }
       else
          {
-         default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos, p_cl_class, tree_entries);
+         tree_entries = default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, ignore_net_nos, p_cl_class, null);
          }
       
       for (AwtreeEntry curr_tree_entry : tree_entries)

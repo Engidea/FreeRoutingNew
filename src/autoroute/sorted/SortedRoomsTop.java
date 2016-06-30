@@ -20,7 +20,6 @@ package autoroute.sorted;
  */
 
 import java.util.Collection;
-import java.util.LinkedList;
 import autoroute.ArtEngine;
 import autoroute.ArtItem;
 import autoroute.expand.ExpandDoor;
@@ -175,9 +174,7 @@ public final class SortedRoomsTop
       
       SortedRoomsList result = new SortedRoomsList(p_room, completed_room);
       
-      LinkedList<AwtreeEntry> overlapping_objects = new LinkedList<AwtreeEntry>();
-      
-      p_autoroute_search_tree.calc_overlapping_tree_entries(room_shape, p_room.get_layer(), overlapping_objects);
+      Collection<AwtreeEntry> overlapping_objects = p_autoroute_search_tree.find_overlap_tree_entries(room_shape, p_room.get_layer());
 
       // Calculate the touching neigbour objects and sort them in counterclock sence around the border of the room shape.
       
