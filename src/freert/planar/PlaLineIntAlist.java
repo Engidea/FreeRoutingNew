@@ -121,6 +121,15 @@ public final class PlaLineIntAlist implements Iterable<PlaLineInt>
       return a_list.toArray(new PlaLineInt[size()]);
       }
    
+   /**
+    * Return the actual back storage, it is not a copy
+    * @return
+    */
+   public ArrayList<PlaLineInt>to_alist()
+      {
+      return a_list;
+      }
+   
    @Override
    public Iterator<PlaLineInt> iterator()
       {
