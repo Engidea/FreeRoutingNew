@@ -328,7 +328,9 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          PlaPointInt i_intersect = f_intersect.round();
          
          // if the intersect point is actually inside the segment I can actually add it
-         if ( i_intersect.is_inside(myi_start, myi_end)) risul.add(i_intersect);
+         if ( ! i_intersect.is_inside(myi_start, myi_end, 0.11)) return risul; 
+
+         risul.add(i_intersect);
          
          return risul;
          }
@@ -337,11 +339,11 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       // remember that I am splitting this segment against another one... I should NOT go outside the boundary of this !!
       PlaPointInt oti_start = p_other.start_point.round();
 
-      if ( oti_start.is_inside(myi_start, myi_end)) risul.add(oti_start);
+      if ( oti_start.is_inside(myi_start, myi_end, 0.1)) risul.add(oti_start);
 
       PlaPointInt oti_end = p_other.start_point.round();
 
-      if ( oti_end.is_inside(myi_start, myi_end)) risul.add(oti_end);
+      if ( oti_end.is_inside(myi_start, myi_end, 0.1)) risul.add(oti_end);
       
       return risul;
       }

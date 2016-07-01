@@ -483,7 +483,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * returns true, if this and p_ob define the same line
+    * @return true, if this and p_ob define the same line
     */
    public boolean is_equal_or_opposite(PlaLineInt p_other)
       {

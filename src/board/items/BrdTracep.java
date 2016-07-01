@@ -38,6 +38,8 @@ import board.varie.ItemSelectionFilter;
 import board.varie.TraceAngleRestriction;
 import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaLineIntAlist;
@@ -973,17 +975,21 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       for (PlaPointInt inter_point : intersecting_points )
          {
-         if ( have_trace_split ) break;
-         
          int line_no = found_entry.shape_index_in_object + 1;
          
          ArrayList<BrdTracep> curr_split_pieces = found_trace.split_with_end_point(line_no, inter_point);
 
-         if (curr_split_pieces.size() < 1 ) continue;
+         if (curr_split_pieces.size() < 1 )
+            {
+            System.err.println("split_wtrace_other_points: HAPPENS");
+            continue;
+            }
 
          have_trace_split = true;
 
          split_pieces.addAll(curr_split_pieces);
+         
+         break;
          }
    
       if ( ! have_trace_split) split_pieces.add(found_trace);
@@ -998,16 +1004,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       for (PlaPointInt inter_point : intersecting_points )
          {
-         if ( have_trace_split ) break;
-         
          ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, inter_point);
 
-         if (curr_split_pieces.size() < 1 ) continue;
-
+         if (curr_split_pieces.size() < 1 )
+            {
+            System.err.println("split_wtrace_other_points: HAPPENS_B");
+            continue;
+            }
+         
          // yes, we have a trace split
          have_trace_split = true;
 
          result.addAll(curr_split_pieces);
+         
+         break;
          }
       
       return have_trace_split;
@@ -1024,7 +1034,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       ArrayList<PlaPointInt> intersecting_points = found_line_segment.intersection_points(curr_segment);
    
+// pippo      
+      
       if ( intersecting_points.size() < 1) return false;
+      
+      if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         r_board.userPrintln("split_wtrace_points: have "+intersecting_points.size()+" intersection");
       
       // try splitting the found trace first
       boolean other_split = split_wtrace_other_points (found_trace, clean_list, intersecting_points, overlap_tentry);
@@ -1102,7 +1117,16 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                
             if (overlap_item instanceof BrdTracep)
                {
-               own_trace_split = split_wtrace(clean_list, index+1, curr_segment, overlap_tentry, (BrdTracep) overlap_item);
+               if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+                  {
+                  r_board.userPrintln("split: USE split_wtrace_points");
+                  own_trace_split = split_wtrace_points(clean_list, index+1, curr_segment, overlap_tentry, (BrdTracep) overlap_item);
+                  }
+               else
+                  {
+                  // original algorithm here
+                  own_trace_split = split_wtrace(clean_list, index+1, curr_segment, overlap_tentry, (BrdTracep) overlap_item);
+                  }
                
                if (own_trace_split) break;
                }
@@ -1397,6 +1421,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(1), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
       if ( a_trace != null ) risul.add( a_trace );
+      
+      if ( risul.size() != 2 ) System.err.println("split_with_end_point: STRANGE");
 
       return risul;
       }

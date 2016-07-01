@@ -85,6 +85,7 @@ public final class WindowDebugConfig extends GuiSubWindowSavable
       risul.add(newCheckbox(resources, mask_list, "Push", Mdbg.PUSH));
       risul.add(newCheckbox(resources, mask_list, "Push Trace", Mdbg.PUSH_TRACE));
       risul.add(newCheckbox(resources, mask_list, "Clearance Violation", Mdbg.CLRVIOL));
+      risul.add(newCheckbox(resources, mask_list, "Trace Split", Mdbg.TRACE_SPLIT));
       
       return risul.getJPanel();
       }
@@ -103,6 +104,7 @@ public final class WindowDebugConfig extends GuiSubWindowSavable
       risul.add(newCheckbox(resources, level_list, "Warning", Ldbg.WARNING));
       risul.add(newCheckbox(resources, level_list, "Error", Ldbg.ERROR));
       risul.add(newCheckbox(resources, level_list, "SPC_A", Ldbg.SPC_A));
+      risul.add(newCheckbox(resources, level_list, "SPC_B", Ldbg.SPC_A));
       
       return risul.getJPanel();
       }

@@ -20,18 +20,6 @@
 
 package gui;
 
-import freert.main.Stat;
-import freert.planar.PlaPointFloat;
-import gui.menu.PopupMenuCopy;
-import gui.menu.PopupMenuDynamicRoute;
-import gui.menu.PopupMenuInsertCancel;
-import gui.menu.PopupMenuMain;
-import gui.menu.PopupMenuMove;
-import gui.menu.PopupMenuSelectedItems;
-import gui.menu.PopupMenuStitchRoute;
-import gui.menu.PupupMenuCornerItemConstruction;
-import gui.varie.GuiCursor;
-import gui.varie.GuiCursorCrossHair;
 import interactive.IteraBoard;
 import interactive.ScreenMessages;
 import java.awt.AWTException;
@@ -54,6 +42,18 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import freert.main.Stat;
+import freert.planar.PlaPointFloat;
+import gui.menu.PopupMenuCopy;
+import gui.menu.PopupMenuDynamicRoute;
+import gui.menu.PopupMenuInsertCancel;
+import gui.menu.PopupMenuMain;
+import gui.menu.PopupMenuMove;
+import gui.menu.PopupMenuSelectedItems;
+import gui.menu.PopupMenuStitchRoute;
+import gui.menu.PupupMenuCornerItemConstruction;
+import gui.varie.GuiCursor;
+import gui.varie.GuiCursorCrossHair;
 
 /**
  * Panel containing the graphical representation of a routing board.
@@ -245,6 +245,8 @@ public final class BoardPanel extends JPanel
          }
       else if (evt.getButton() == 3)
          {
+         right_button_click_location = evt.getPoint();
+
          JPopupMenu curr_menu = itera_board.get_current_popup_menu();
          if (curr_menu != null)
             {
@@ -263,7 +265,7 @@ public final class BoardPanel extends JPanel
                }
             curr_menu.show(this, curr_x, curr_y);
             }
-         right_button_click_location = evt.getPoint();
+         
          }
       }
 
@@ -277,7 +279,7 @@ public final class BoardPanel extends JPanel
       
       if (itera_board != null) itera_board.draw(p_g);
       
-      if (custom_cursor != null)  custom_cursor.draw(p_g);
+      if (custom_cursor != null) custom_cursor.draw(p_g);
       }
 
 

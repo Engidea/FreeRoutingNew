@@ -156,6 +156,10 @@ public final class StateSelectedItem extends StateInteractive
          {
          result = extent_to_whole_connected_sets();
          }
+      else if (p_key_char == 'S')
+         {
+         result = selected_split_traces();
+         }
       else if (p_key_char == 'u')
          {
          unfix_items();
@@ -183,6 +187,44 @@ public final class StateSelectedItem extends StateInteractive
       return result;
       }
 
+   /**
+    * Split the currently selected traces and turn debuggin  on on the process
+    * pippo
+    */
+   public StateInteractive selected_split_traces()
+      {
+//      int prev_mask = r_brd.stat.debug_mask;
+//      int prev_level = r_brd.stat.debug_level;
+      
+      //      r_brd.stat.debug_mask = Mdbg.TRACE_SPLIT;
+      //r_brd.stat.debug_level |= Ldbg.DEBUG;
+      
+      if ( r_brd.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         r_brd.userPrintln("selected_split_traces: DEBUG");
+
+      for ( BrdItem curr_item : items_list )
+         {
+         if ( ! ( curr_item instanceof BrdTracep) ) continue;
+
+         BrdTracep a_trace = (BrdTracep)curr_item;
+         
+         if ( r_brd.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+            r_brd.userPrintln("split: "+a_trace);
+
+         a_trace.split(null);
+         }
+
+      if ( r_brd.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         r_brd.userPrintln("selected_split_traces: DEBUG END");
+      
+      //r_brd.stat.debug_mask = prev_mask;
+      //r_brd.stat.debug_level = prev_level;
+
+      return this;
+      }
+   
+   
+   
    /**
     * fixes all items in this selected set
     */
@@ -356,17 +398,17 @@ public final class StateSelectedItem extends StateInteractive
 
       // calculate the changed nets for updating the ratsnest
       Set<Integer> changed_nets = new TreeSet<Integer>();
-      Iterator<BrdItem> it = items_list.iterator();
-      while (it.hasNext())
+      
+      for ( BrdItem curr_item : items_list )
          {
-         BrdItem curr_item = it.next();
-         if (curr_item instanceof BrdConnectable)
+
+         if ( ! ( curr_item instanceof BrdConnectable) ) continue;
+         
+         for (int index = 0; index < curr_item.net_count(); ++index)
             {
-            for (int i = 0; i < curr_item.net_count(); ++i)
-               {
-               changed_nets.add(curr_item.get_net_no(i));
-               }
+            changed_nets.add(curr_item.get_net_no(index));
             }
+
          }
       
       
@@ -391,10 +433,8 @@ public final class StateSelectedItem extends StateInteractive
 
       actlog_start_scope(LogfileScope.DELETE_SELECTED);
 
-      for (Integer curr_net_no : changed_nets)
-         {
-         i_brd.update_ratsnest(curr_net_no.intValue());
-         }
+      for (Integer curr_net_no : changed_nets) i_brd.update_ratsnest(curr_net_no.intValue());
+      
       i_brd.repaint();
       
       return return_state;
@@ -635,7 +675,7 @@ public final class StateSelectedItem extends StateInteractive
          {
          if (is_stop_requested(p_thread)) break;
          
-         if (curr_item.net_count() != 1)continue;
+         if (curr_item.net_count() != 1) continue;
          
          i_brd.userPrintln("pull_tight: item "+curr_item);
          
@@ -821,22 +861,22 @@ public final class StateSelectedItem extends StateInteractive
     */
    public StateInteractive extent_to_whole_connections()
       {
-      Set<BrdItem> new_selected_items = new TreeSet<BrdItem>();
-      Iterator<BrdItem> it = items_list.iterator();
-      while (it.hasNext())
+      Set<BrdItem> selected_items = new TreeSet<BrdItem>();
+
+      for ( BrdItem curr_item : items_list )
          {
-         BrdItem curr_item = it.next();
          if (curr_item instanceof BrdConnectable)
             {
-            new_selected_items.addAll(curr_item.get_connection_items());
+            selected_items.addAll(curr_item.get_connection_items());
             }
          }
-      if (new_selected_items.isEmpty())
+
+      if (selected_items.isEmpty())
          {
          return return_state;
          }
       
-      items_list = new_selected_items;
+      items_list = selected_items;
 
       actlog_start_scope(LogfileScope.EXTEND_TO_WHOLE_CONNECTIONS);
 

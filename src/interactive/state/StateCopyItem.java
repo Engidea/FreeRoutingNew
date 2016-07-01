@@ -23,11 +23,13 @@ package interactive.state;
 import interactive.Actlog;
 import interactive.IteraBoard;
 import interactive.LogfileScope;
+import java.awt.Graphics;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.swing.JPopupMenu;
 import board.RoutingBoard;
 import board.infos.BrdComponent;
 import board.items.BrdAbit;
@@ -268,12 +270,14 @@ public class StateCopyItem extends StateInteractive
       i_brd.repaint();
       }
 
+   @Override
    public StateInteractive left_button_clicked(PlaPointFloat p_location)
       {
       insert();
       return this;
       }
 
+   @Override
    public StateInteractive process_logfile_point(PlaPointFloat p_location)
       {
       change_position(p_location);
@@ -281,21 +285,18 @@ public class StateCopyItem extends StateInteractive
       return this;
       }
 
-   public void draw(java.awt.Graphics p_graphics)
+   @Override
+   public void draw(Graphics p_graphics)
       {
-      if (item_list == null)
-         {
-         return;
-         }
-      Iterator<BrdItem> it = item_list.iterator();
-      while (it.hasNext())
-         {
-         BrdItem curr_item = it.next();
+      if (item_list == null) return;
+
+      for ( BrdItem curr_item : item_list )
+
          curr_item.draw(p_graphics, i_brd.gdi_context, i_brd.gdi_context.get_hilight_color(), i_brd.gdi_context.get_hilight_color_intensity());
-         }
       }
 
-   public javax.swing.JPopupMenu get_popup_menu()
+   @Override
+   public JPopupMenu get_popup_menu()
       {
       return i_brd.get_panel().popup_menu_copy;
       }

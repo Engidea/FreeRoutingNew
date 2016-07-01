@@ -105,9 +105,10 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
     * If any of the points are NaN then this return false 
     * @param begin
     * @param end
+    * @param margin if zero it will return true for equality on endpoints
     * @return true if this point is inside begin - end
     */
-   public boolean is_inside ( PlaPointInt begin, PlaPointInt end )
+   public boolean is_inside ( PlaPointInt begin, PlaPointInt end, double margin )
       {
       if ( is_nan || begin.is_nan || end.is_nan ) return false;
       
@@ -115,9 +116,9 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       double d_end_this = end.distance_square(this);
       double d_begin_end = begin.distance_square(end);
       
-      if ( d_begin_end >= d_begin_this )
+      if ( d_begin_end >= d_begin_this + margin )
          {
-         if ( d_begin_end >= d_end_this )
+         if ( d_begin_end >= d_end_this + margin )
             {
             // simplest case, the new point is in the middle of start end
             return true; 
@@ -130,7 +131,7 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
          }
       else
          {
-         if ( d_begin_end >= d_end_this )
+         if ( d_begin_end >= d_end_this + margin )
             {
             // new point is on the right of end, close to it
             return false;

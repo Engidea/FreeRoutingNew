@@ -33,6 +33,7 @@ public class IteraPullTightThread extends BrdActionThread
       if ( ! hdlg.is_StateSelectedItem() ) return;
 
       StateInteractive return_state = ((StateSelectedItem) hdlg.interactive_state).pull_tight(this);
+      
       hdlg.set_interactive_state(return_state);
       }
    }

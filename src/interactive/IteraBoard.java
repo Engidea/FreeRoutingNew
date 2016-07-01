@@ -785,30 +785,24 @@ public final class IteraBoard
    /**
     * Draws the board and all temporary construction graphics in the current interactive state.
     */
-   public void draw(Graphics p_graphics)
+   public final void draw(Graphics p_graphics)
       {
-      if (r_board == null)
-         {
-         return;
-         }
+      if (r_board == null) return;
+
       r_board.draw(p_graphics, gdi_context);
 
       if (ratsnest != null)
-         {
          ratsnest.draw(p_graphics, gdi_context);
-         }
+      
       if (clearance_violations != null)
-         {
          clearance_violations.draw(p_graphics, gdi_context);
-         }
+
       if (interactive_state != null)
-         {
          interactive_state.draw(p_graphics);
-         }
+
       if (interactive_action_thread != null)
-         {
          interactive_action_thread.draw(p_graphics);
-         }
+
       }
 
    public void generate_snapshot()
@@ -1413,6 +1407,7 @@ public final class IteraBoard
       if ( ! is_StateSelectedItem()) return;
 
       StateInteractive new_state = ((StateSelectedItem) interactive_state).cutout_items();
+      
       set_interactive_state(new_state);
       }
 
