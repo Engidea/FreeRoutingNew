@@ -20,7 +20,6 @@ import java.awt.Graphics;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Set;
 import java.util.TreeSet;
@@ -965,6 +964,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
    
    /**
+            if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+
     * return true if some other trace was split
     */
    private boolean split_wtrace_other_points (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points, AwtreeEntry found_entry )
@@ -981,7 +982,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
          if (curr_split_pieces.size() < 1 )
             {
-            System.err.println("split_wtrace_other_points: HAPPENS");
+            r_board.userPrintln("split_wtrace_other_points: split_with_end_point FAILED");
             continue;
             }
 
@@ -1024,6 +1025,25 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
    
    
+
+   // damiano, this is the basic switch to insert one trace join on the board...
+   private static BrdTraceJoin join_inserted = null;
+   
+   private void join_move_to ( PlaPointInt a_point )
+      {
+/*      
+      if ( join_inserted == null )
+         {
+         // ok, this whouls add just one Trace join, just one
+         join_inserted = new BrdTraceJoin(a_point, net_nos, clearance_idx(), 0, get_fixed_state(), r_board);
+         r_board.insert_item(join_inserted);
+         }
+      else
+         {
+         join_inserted.move_to(a_point);
+         }
+*/      
+      }
    
    private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeEntry overlap_tentry, BrdTracep found_trace )
       {
@@ -1034,12 +1054,14 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       ArrayList<PlaPointInt> intersecting_points = found_line_segment.intersection_points(curr_segment);
    
-// pippo      
+      join_move_to ( new PlaPointInt(0,0));
       
       if ( intersecting_points.size() < 1) return false;
       
       if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
          r_board.userPrintln("split_wtrace_points: have "+intersecting_points.size()+" intersection");
+
+      join_move_to ( intersecting_points.get(0));
       
       // try splitting the found trace first
       boolean other_split = split_wtrace_other_points (found_trace, clean_list, intersecting_points, overlap_tentry);
@@ -1097,20 +1119,20 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          
          // look for intersecting traces with the i-th line segment
          Collection<AwtreeEntry> over_tree_entries = default_tree.find_overlap_tree_entries(curr_shape, get_layer());
+
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+            r_board.userPrintln("split: over_tree_entries "+over_tree_entries.size());
          
-         Iterator<AwtreeEntry> over_tree_iter = over_tree_entries.iterator();
-         
-         while (over_tree_iter.hasNext())
+         for ( AwtreeEntry overlap_tentry : over_tree_entries )
             {
             // this trace has been deleted in a cleanup operation
             if ( ! is_on_the_board()) return clean_list;
-            
-            AwtreeEntry overlap_tentry = over_tree_iter.next();
             
             if (!(overlap_tentry.object instanceof BrdItem)) continue;
             
             BrdItem overlap_item = (BrdItem) overlap_tentry.object;
 
+            // this checks if it is ok splitting myself, or something like that
             if ( split_avoid_this_item(index, overlap_tentry, overlap_item)) continue;
             
             if ( ! overlap_item.shares_net(this)) continue;
@@ -1161,6 +1183,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    private boolean split_avoid_this_item (int index, AwtreeEntry found_entry, BrdItem overlap_item)
       {
       if (overlap_item != this) return false;
+      
+      // here I am actually looking if I should "split" myself.... really 
+      // Basically, it should happen if you "go over" your trace and you are overstepping
       
       int line_index_in_object = found_entry.shape_index_in_object; 
       
@@ -1426,9 +1451,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       return risul;
       }
-
-   // damiano, this is the basic switch to insert one trace join on the board...
-   private static boolean join_inserted = true;
    
    
    /**
@@ -1454,14 +1476,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(0), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
-      if ( ! join_inserted )
-         {
-         // ok, this whouls add just one Trace join, just one
-         Polyline ap = split_polylines.get(0);
-         BrdTraceJoin join = new BrdTraceJoin(ap.corner(0).round(), net_nos, clearance_idx(), 0, get_fixed_state(), r_board);
-         r_board.insert_item(join);
-         join_inserted = true;
-         }
       
       if ( a_trace != null ) risul.add( a_trace );
       

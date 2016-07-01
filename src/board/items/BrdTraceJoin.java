@@ -94,6 +94,12 @@ public final class BrdTraceJoin extends BrdItem implements BrdConnectable, java.
       return p_filter.is_selected(ItemSelectionChoice.TRACEJ);
       }
    
+   public void move_to ( PlaPointInt a_point )
+      {
+      if ( a_point == null ) return;
+      
+      abit_center = a_point;
+      }
    
    @Override
    public boolean is_obstacle(BrdItem p_other)

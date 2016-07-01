@@ -1321,13 +1321,18 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return result;
          }
       
-      if ( equal_at_start(p_point) ) return result;
+      PlaLineInt split_line = plaline(p_line_no);
       
-      if ( equal_at_end(p_point) ) return result;
+      // The idea being that the split point should be in this "line" with some tolerance
+      if ( split_line.side_of(p_point.to_float(), 0.01) != PlaSide.COLLINEAR ) return result;
       
-      if ( equal_at_start(p_line_no, p_point) ) return result;
+      // not only the splitpoint must be colinear, it must also be "within" this "segment"
+      if ( ! p_point.is_inside(corner(p_line_no-1).round(), corner(p_line_no).round(), 0.1)) return result;
       
-      if ( equal_at_end(p_line_no, p_point) ) return result;
+ //     if ( equal_at_start(p_point) ) return result;
+ //     if ( equal_at_end(p_point) ) return result;
+ //     if ( equal_at_start(p_line_no, p_point) ) return result;
+ //     if ( equal_at_end(p_line_no, p_point) ) return result;
 
       PlaLineInt a_line = plaline(p_line_no);
       
