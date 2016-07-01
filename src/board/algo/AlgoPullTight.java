@@ -19,6 +19,7 @@
  */
 package board.algo;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
 import autoroute.expand.ExpandCostFactor;
@@ -406,7 +407,10 @@ public abstract class AlgoPullTight
          if ( line_idx < 1 ) continue;
          
          // normally there is just one trace at a given keep point, no ?
-         if ( a_trace.split_at_point(line_idx, keep_point.keep_point) ) return true;
+         ArrayList<BrdTracep> clean_list = a_trace.split_with_end_point(line_idx, keep_point.keep_point);
+         
+         // return true if something happenend
+         return clean_list.size() > 0;
          }
 
       return false;

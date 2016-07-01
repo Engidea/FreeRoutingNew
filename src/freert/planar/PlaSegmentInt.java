@@ -304,6 +304,51 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       }
 
    /**
+    * Return a list of intersection points where the segments "touch"
+    * The difficult part is when the two segments overlap...
+    * @param p_other
+    * @return
+    */
+   public ArrayList<PlaPointInt> intersection_points(PlaSegmentInt p_other)
+      {
+      ArrayList<PlaPointInt> risul = new ArrayList<PlaPointInt> (2);
+      
+      PlaPointInt myi_start = start_point.round();
+      PlaPointInt myi_end = end_point.round();
+      
+      if ( ! middle.is_parallel(p_other.middle))
+         {
+         PlaPointFloat f_intersect = middle.intersection_approx(p_other.middle);
+         if ( f_intersect.is_NaN() )
+            {
+            System.err.println("intersection_points: How did this happen ?");
+            return risul;
+            }
+         
+         PlaPointInt i_intersect = f_intersect.round();
+         
+         // if the intersect point is actually inside the segment I can actually add it
+         if ( i_intersect.is_inside(myi_start, myi_end)) risul.add(i_intersect);
+         
+         return risul;
+         }
+      
+      // now, segments are parallel... so I will be returing two points... which ones ?
+      // remember that I am splitting this segment against another one... I should NOT go outside the boundary of this !!
+      PlaPointInt oti_start = p_other.start_point.round();
+
+      if ( oti_start.is_inside(myi_start, myi_end)) risul.add(oti_start);
+
+      PlaPointInt oti_end = p_other.start_point.round();
+
+      if ( oti_end.is_inside(myi_start, myi_end)) risul.add(oti_end);
+      
+      return risul;
+      }
+
+   
+   
+   /**
     * Looks up the intersections of this line segment with p_other. 
     * The result array may have length 0, 1 or 2. 
     * If the segments do not intersect the result array will have length 0. 

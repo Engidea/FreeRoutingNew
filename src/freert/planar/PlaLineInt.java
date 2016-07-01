@@ -63,8 +63,9 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       }
 
    /**
-    * returns true, if this and p_ob define the same line
+    * @return true, if this and p_ob define the same line
     */
+   @Override
    public final boolean equals(Object p_ob)
       {
       if (p_ob == null)  return false;
@@ -179,12 +180,11 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public boolean is_on_the_left(ShapeTile p_tile)
       {
-      for (int index = 0; index < p_tile.border_line_count(); ++index)
+      int border_line_count = p_tile.border_line_count();
+      
+      for (int index = 0; index < border_line_count; ++index)
          {
-         if (side_of(p_tile.corner(index)) == PlaSide.ON_THE_RIGHT)
-            {
-            return false;
-            }
+         if (side_of(p_tile.corner(index)) == PlaSide.ON_THE_RIGHT) return false;
          }
       return true;
       }
@@ -194,12 +194,11 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     */
    public boolean is_on_the_right(ShapeTile p_tile)
       {
-      for (int index = 0; index < p_tile.border_line_count(); ++index)
+      int border_line_count = p_tile.border_line_count();
+      
+      for (int index = 0; index < border_line_count; ++index)
          {
-         if (side_of(p_tile.corner(index)) == PlaSide.ON_THE_LEFT)
-            {
-            return false;
-            }
+         if (side_of(p_tile.corner(index)) == PlaSide.ON_THE_LEFT) return false;
          }
       return true;
       }

@@ -929,7 +929,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * Note that if other trace is split I do NOT reret the iterator of found items anymore, seems to be ok
     * @return tue if this trace has been split and therefore the algo should terminate
     */
-   private boolean split_with_trace (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeEntry overlap_tentry, BrdTracep found_trace )
+   private boolean split_wtrace (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeEntry overlap_tentry, BrdTracep found_trace )
       {
       // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
       
@@ -937,15 +937,17 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
       
       ArrayList<PlaLineInt> intersecting_lines = found_line_segment.intersection(curr_segment);
-   
+
+      if ( intersecting_lines.size() < 1) return false;
+      
       // try splitting the found trace first
-      boolean other_split = split_tracep_other (found_trace, clean_list, intersecting_lines, overlap_tentry);
+      boolean other_split = split_wtrace_other (found_trace, clean_list, intersecting_lines, overlap_tentry);
       
       // now try splitting the own trace
       intersecting_lines = curr_segment.intersection(found_line_segment);
       
       // no need to readjust the iterator since we are actually exiting
-      boolean own_split = split_tracep_own (seg_index, clean_list ,intersecting_lines);
+      boolean own_split = split_wtrace_own (seg_index, clean_list ,intersecting_lines);
    
 //      if ( other_split && own_split == false ) System.err.println("other_split && own_split == false");
       
@@ -954,6 +956,89 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       return own_split;
       }
    
+   
+   
+   
+   
+   
+   
+   /**
+    * return true if some other trace was split
+    */
+   private boolean split_wtrace_other_points (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points, AwtreeEntry found_entry )
+      {
+      if ( found_trace == this ) return false;
+      
+      boolean have_trace_split = false;
+      
+      for (PlaPointInt inter_point : intersecting_points )
+         {
+         if ( have_trace_split ) break;
+         
+         int line_no = found_entry.shape_index_in_object + 1;
+         
+         ArrayList<BrdTracep> curr_split_pieces = found_trace.split_with_end_point(line_no, inter_point);
+
+         if (curr_split_pieces.size() < 1 ) continue;
+
+         have_trace_split = true;
+
+         split_pieces.addAll(curr_split_pieces);
+         }
+   
+      if ( ! have_trace_split) split_pieces.add(found_trace);
+
+      return have_trace_split;
+      }
+
+   
+   private boolean split_wtrace_own_point (int line_index, LinkedList<BrdTracep> result, ArrayList<PlaPointInt> intersecting_points )
+      {
+      boolean have_trace_split = false;
+      
+      for (PlaPointInt inter_point : intersecting_points )
+         {
+         if ( have_trace_split ) break;
+         
+         ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, inter_point);
+
+         if (curr_split_pieces.size() < 1 ) continue;
+
+         // yes, we have a trace split
+         have_trace_split = true;
+
+         result.addAll(curr_split_pieces);
+         }
+      
+      return have_trace_split;
+      }
+   
+   
+   
+   private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeEntry overlap_tentry, BrdTracep found_trace )
+      {
+      // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
+      
+      // this is the segment of the other trace that needs to be "joined" with this trace
+      PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
+      
+      ArrayList<PlaPointInt> intersecting_points = found_line_segment.intersection_points(curr_segment);
+   
+      if ( intersecting_points.size() < 1) return false;
+      
+      // try splitting the found trace first
+      boolean other_split = split_wtrace_other_points (found_trace, clean_list, intersecting_points, overlap_tentry);
+  
+      // no need to readjust the iterator since we are actually exiting
+      boolean own_split = split_wtrace_own_point (seg_index, clean_list ,intersecting_points);
+   
+      if ( other_split && own_split == false ) System.err.println("other_split && own_split == false");
+      
+      if ( other_split || own_split ) remove_if_cycle (clean_list);
+      
+      return own_split;
+      }
+
    
    
    /**
@@ -1017,7 +1102,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                
             if (overlap_item instanceof BrdTracep)
                {
-               own_trace_split = split_with_trace(clean_list, index+1, curr_segment, overlap_tentry, (BrdTracep) overlap_item);
+               own_trace_split = split_wtrace(clean_list, index+1, curr_segment, overlap_tentry, (BrdTracep) overlap_item);
                
                if (own_trace_split) break;
                }
@@ -1115,11 +1200,11 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( ! curr_line_segment.contains(split_point) ) return;
 
       // the plus one is from how the caller handles indexes...
-      split_at_point(index + 1, split_point);
+      split_with_end_point(index + 1, split_point);
       }
 
 
-   private boolean split_tracep_own (int line_index, LinkedList<BrdTracep> result, ArrayList<PlaLineInt> intersecting_lines )
+   private boolean split_wtrace_own (int line_index, LinkedList<BrdTracep> result, ArrayList<PlaLineInt> intersecting_lines )
       {
       boolean have_trace_split = false;
       
@@ -1143,7 +1228,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * return true if some other trace was split
     */
-   private boolean split_tracep_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaLineInt> intersecting_lines, AwtreeEntry found_entry )
+   private boolean split_wtrace_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaLineInt> intersecting_lines, AwtreeEntry found_entry )
       {
       if ( found_trace == this ) return false;
       
@@ -1286,32 +1371,34 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * Splits this trace into two at p_point. 
     * can return false i for example p_point is not located on this trace or already split !
-    * @return true if the trace has been split 
+    * @return the splitted traces, if any, so you can do cleanup 
     */
-   public final boolean split_at_point(int line_idx, PlaPointInt p_point)
+   public final ArrayList<BrdTracep> split_with_end_point(int line_idx, PlaPointInt p_point)
       {
-      if (!is_on_the_board()) return false;
+      ArrayList<BrdTracep> risul = new  ArrayList<BrdTracep>(2);
+      
+      if (!is_on_the_board()) return risul;
 
       // if split prohibited do nothing
-      if ( ! split_inside_drill_pad_allowed(p_point)) return false;
+      if ( ! split_inside_drill_pad_allowed(p_point)) return risul;
 
       ArrayList<Polyline> split_polylines = new ArrayList<Polyline>(2);
       
       split_polylines = polyline.split_at_point(line_idx, p_point);
          
-      if (split_polylines.size() < 2 ) return false;
+      if (split_polylines.size() < 2 ) return risul;
       
       r_board.remove_item(this);
 
       BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(0), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
-      if ( a_trace == null ) System.err.println("split_with_point: fail1");
+      if ( a_trace != null ) risul.add( a_trace );
       
       a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(1), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
-      if ( a_trace == null ) System.err.println("split_with_point: fail2");
+      if ( a_trace != null ) risul.add( a_trace );
 
-      return true;
+      return risul;
       }
 
    // damiano, this is the basic switch to insert one trace join on the board...
@@ -1485,7 +1572,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    /**
-    * pippo
     * @param p_own_net_only
     * @param p_pull_tight_accuracy
     * @return
