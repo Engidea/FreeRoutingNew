@@ -1031,7 +1031,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
    private void join_move_to ( PlaPointInt a_point )
       {
-/*      
+      // show the dot only when enabling special A
+      if ( ! r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_A)) return;
+
       if ( join_inserted == null )
          {
          // ok, this whouls add just one Trace join, just one
@@ -1042,7 +1044,6 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          join_inserted.move_to(a_point);
          }
-*/      
       }
    
    private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeEntry overlap_tentry, BrdTracep found_trace )

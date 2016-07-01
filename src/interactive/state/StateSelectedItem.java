@@ -156,10 +156,6 @@ public final class StateSelectedItem extends StateInteractive
          {
          result = extent_to_whole_connected_sets();
          }
-      else if (p_key_char == 'S')
-         {
-         result = selected_split_traces();
-         }
       else if (p_key_char == 'u')
          {
          unfix_items();
@@ -189,9 +185,9 @@ public final class StateSelectedItem extends StateInteractive
 
    /**
     * Split the currently selected traces and turn debuggin  on on the process
-    * pippo
+    * Used for debugging, can be removed once I actually have a clear idea on this...
     */
-   public StateInteractive selected_split_traces()
+   private StateInteractive selected_split_traces()
       {
 //      int prev_mask = r_brd.stat.debug_mask;
 //      int prev_level = r_brd.stat.debug_level;
