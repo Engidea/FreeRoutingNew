@@ -2,33 +2,56 @@ FreeRouting
 ===========
 
 You should be able to run it by going to deploy and use run.sh
+You can run the jar and it is not dependent on the java web start anymore
+
 There is a single button that allows you to open a dsn, normally exported from Kicad
-Below there are message windows...
+Below the button there are message windows...
 
 I am currently trying to reach the following goal
 
+- Broadly speking making Freerouting more predictable and resilient
+  As far as I can tell and for the use I make this is now true, you are welcome to report issues
+  If you do so, either provide a video of the issue or the DSN and a contact point
+  Post a message on www.freerouting.eu
+
 - Automatic fix of "unconnected" tracks when importing from Kicad (done)
   What you do is to use the autorouter and configure it not to do ripup or optimizations
+  This is also done, it could get better once more quirks are understood and fixed
 
 - Automatic fix of clearance violations by push and shove tracks and vias (still looking)
-
+  
 - Should be possible to autoroute the "short" connections and the one going to groundplane automatically
+  It is kind of fanout, but I have still to get to it
 
-There is an example video at http://www.freerouting.eu/videos/example-31-may-2016.ogv
-
-Please excuse me if I am simplifying the code by "extracting" quite a few of the static inner classes and assign unique
-name to them, I find the code much simpler to read if I do not have to follow the prefix
-
-Yes, I understand the reasoning and it is formally correct, it is just me that prefers to have a uniquely clear classname
-
-At the moment you can run the jar and it is not dependent on the java web start anymore
+There are videos at http://www.freerouting.eu/
 
 I must tell you all that Alfons is great, we should all be grateful to him for FreeRouting
 
-NOTE: This is a new repo since for some misterious reason Github did not show the previous one up
-
 
 Damiano
+
+Notes
+=============
+
+This is a new repo since for some misterious reason Github did not show the previous one up
+
+Please excuse me if I am simplifying the code by "extracting" quite a few of the static inner classes and assign unique
+name to them, I find the code much simpler to read if I do not have to follow the prefix
+Yes, I understand the reasoning and it is formally correct, it is just me that prefers to have a uniquely clear classname
+
+How to run the Freerouting project in the Eclipse IDE
+==================================================================================
+
+1) Have a Java to run Eclipse Java (I use Luna), download Eclipse Java from www.eclipse.org
+
+2) install git and do
+   git clone https://github.com/Engidea/FreeRoutingNew.git
+
+3) you should be able to run Freerouting by going to deploy and use run.sh
+
+4) Create a new Java project and tell Eclipse to use the given directory and ant buildfile
+
+5) Tell to eclipse to add the java help jar to the jarfiles 
 
 
 Original from Alfons
@@ -86,17 +109,4 @@ Additional steps for users of CadSoft-Eagle:
 6) Choose in the Files pulldown-menu of Eagle the item "execute Script" and select my_design.scr.
 
 
-Here are some instructions how to run the Freerouting project in the Eclipse IDE.
-==================================================================================
-
-1) Have a Java to run Eclipse Java (I use Luna), download Eclipse Java from www.eclipse.org
-
-2) install git and do
-   git clone https://github.com/Engidea/FreeRoutingNew.git
-
-3) you should be able to run Freerouting by going to deploy and use run.sh
-
-4) Create a new Java project and tell Eclipse to use the given directory and ant buildfile
-
-5) Tell to eclipse to add the java help jar to the jarfiles 
 
