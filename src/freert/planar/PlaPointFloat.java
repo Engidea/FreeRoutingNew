@@ -136,6 +136,54 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       return result;
       }
 
+
+   
+   /**
+    * Assume that this point is on the line that contains begin and end
+    * The method will return true if this point is begin <= this <= end
+    * If any of the points are NaN then this return false 
+    * @param begin
+    * @param end
+    * @param margin if zero it will return true for equality on endpoints
+    * @return true if this point is inside begin - end
+    */
+   public boolean is_inside ( PlaPointFloat begin, PlaPointFloat end, double margin )
+      {
+      if ( is_nan || begin.is_nan || end.is_nan ) return false;
+      
+      double d_begin_this = begin.distance_square(this);
+      double d_end_this   = end.distance_square(this);
+      double d_begin_end  = begin.distance_square(end);
+      
+      if ( d_begin_end >= d_begin_this + margin )
+         {
+         if ( d_begin_end >= d_end_this + margin )
+            {
+            // simplest case, the new point is in the middle of start end
+            return true; 
+            }
+         else
+            {
+            // new point is on the left of start point, close to it
+            return false;
+            }
+         }
+      else
+         {
+         if ( d_begin_end >= d_end_this + margin )
+            {
+            // new point is on the right of end, close to it
+            return false;
+            }
+         else
+            {
+            // new point is on the left, far away
+            return false;
+            }
+         }
+      }
+   
+   
    /**
     * rounds the coordinates from an object of class Point_double to an object of class IntPoint
     */

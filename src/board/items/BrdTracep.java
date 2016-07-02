@@ -970,6 +970,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     */
    private boolean split_wtrace_other_points (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points, AwtreeEntry found_entry )
       {
+      if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_B))
+         r_board.userPrintln("split_wtrace_other_points: found_trace == this is "+(found_trace == this) );
+
       if ( found_trace == this ) return false;
       
       boolean have_trace_split = false;
@@ -978,6 +981,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          {
          int line_no = found_entry.shape_index_in_object + 1;
          
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_B))
+            r_board.userPrintln("split_wtrace_other_points: point "+inter_point);
+
          ArrayList<BrdTracep> curr_split_pieces = found_trace.split_with_end_point(line_no, inter_point);
 
          if (curr_split_pieces.size() < 1 )
@@ -1051,9 +1057,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
       
       // this is the segment of the other trace that needs to be "joined" with this trace
-      PlaSegmentInt found_line_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
+      PlaSegmentInt other_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
       
-      ArrayList<PlaPointInt> intersecting_points = found_line_segment.intersection_points(curr_segment);
+      // the order is important since I wish to "constraint" the result to curr_segment and not to other_segment 
+      ArrayList<PlaPointInt> intersecting_points = curr_segment.intersection_points(other_segment);
    
       join_move_to ( new PlaPointInt(0,0));
       
@@ -1070,7 +1077,8 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // no need to readjust the iterator since we are actually exiting
       boolean own_split = split_wtrace_own_point (seg_index, clean_list ,intersecting_points);
    
-      if ( other_split && own_split == false ) System.err.println("other_split && own_split == false");
+      if ( other_split && own_split == false ) 
+         r_board.userPrintln("split_wtrace_points: other_split && own_split == false");
       
       if ( other_split || own_split ) remove_if_cycle (clean_list);
       
@@ -1104,22 +1112,22 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       AwtreeShapeSearch default_tree = r_board.search_tree_manager.get_default_tree();
 
-      for (int index = 0; index < polyline.plaline_len(-2); ++index)
+      for (int my_line_index = 1; my_line_index < polyline.plaline_len(-1); ++my_line_index)
          {
          if ( own_trace_split )  break;
 
-         PlaSegmentInt curr_segment = polyline.segment_get(index + 1);
+         PlaSegmentInt my_segment = polyline.segment_get(my_line_index);
 
          if (p_clip_shape != null)
             {
             // yes, it happens that p_clip_shape is null
-            if ( ! p_clip_shape.intersects(curr_segment.bounding_box())) continue;
+            if ( ! p_clip_shape.intersects(my_segment.bounding_box())) continue;
             }
 
-         ShapeTile curr_shape = get_tree_shape(default_tree, index);
+         ShapeTile my_segment_shape = get_tree_shape(default_tree, my_line_index-1);
          
          // look for intersecting traces with the i-th line segment
-         Collection<AwtreeEntry> over_tree_entries = default_tree.find_overlap_tree_entries(curr_shape, get_layer());
+         Collection<AwtreeEntry> over_tree_entries = default_tree.find_overlap_tree_entries(my_segment_shape, get_layer());
 
          if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
             r_board.userPrintln("split: over_tree_entries "+over_tree_entries.size());
@@ -1134,7 +1142,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             BrdItem overlap_item = (BrdItem) overlap_tentry.object;
 
             // this checks if it is ok splitting myself, or something like that
-            if ( split_avoid_this_item(index, overlap_tentry, overlap_item)) continue;
+            if ( split_avoid_this_item(my_line_index-1, overlap_tentry, overlap_item)) continue;
             
             if ( ! overlap_item.shares_net(this)) continue;
                
@@ -1143,19 +1151,19 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
                if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
                   {
                   r_board.userPrintln("split: USE split_wtrace_points");
-                  own_trace_split = split_wtrace_points(clean_list, index+1, curr_segment, overlap_tentry, (BrdTracep) overlap_item);
+                  own_trace_split = split_wtrace_points(clean_list, my_line_index, my_segment, overlap_tentry, (BrdTracep) overlap_item);
                   }
                else
                   {
                   // original algorithm here
-                  own_trace_split = split_wtrace(clean_list, index+1, curr_segment, overlap_tentry, (BrdTracep) overlap_item);
+                  own_trace_split = split_wtrace(clean_list, my_line_index, my_segment, overlap_tentry, (BrdTracep) overlap_item);
                   }
                
                if (own_trace_split) break;
                }
             else if (overlap_item instanceof BrdAbit)
                {
-               split_abit (index,  (BrdAbit)overlap_item, curr_segment);
+               split_abit (my_line_index,  (BrdAbit)overlap_item, my_segment);
                }
             else if ( overlap_item instanceof BrdAreaConduction )
                {
@@ -1181,32 +1189,33 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * check if I should avoid testing this segment
     * @return true if this item should not  be used in the split algo
     */
-   private boolean split_avoid_this_item (int index, AwtreeEntry found_entry, BrdItem overlap_item)
+   private boolean split_avoid_this_item (int my_line_index, AwtreeEntry overlap_entry, BrdItem overlap_item)
       {
       if (overlap_item != this) return false;
       
       // here I am actually looking if I should "split" myself.... really 
       // Basically, it should happen if you "go over" your trace and you are overstepping
       
-      int line_index_in_object = found_entry.shape_index_in_object; 
+      // this is zero based, meaning that the first shape
+      int line_index_in_object = overlap_entry.shape_index_in_object; 
       
-      if ( line_index_in_object >= index - 1 && line_index_in_object <= index + 1)
+      if ( line_index_in_object >= my_line_index - 1 && line_index_in_object <= my_line_index + 1)
          {
          // don't split own trace at this line or at neighbour lines
          return true;
          }
 
       // try to handle intermediate segments of length 0 by comparing end corners
-      if (index < line_index_in_object)
+      if (my_line_index < line_index_in_object)
          {
-         if (polyline.corner(index + 1).equals(polyline.corner(line_index_in_object)))
+         if (polyline.corner(my_line_index + 1).equals(polyline.corner(line_index_in_object)))
             {
             return true;
             }
          }
-      else if (line_index_in_object < index)
+      else if (line_index_in_object < my_line_index)
          {
-         if (polyline.corner(line_index_in_object + 1).equals(polyline.corner(index)))
+         if (polyline.corner(line_index_in_object + 1).equals(polyline.corner(my_line_index)))
             {
             return true;
             }
@@ -1243,14 +1252,14 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
    
    
-   private void split_abit (int index,  BrdAbit curr_drill_item, PlaSegmentInt curr_line_segment )
+   private void split_abit (int my_line_index,  BrdAbit curr_drill_item, PlaSegmentInt curr_line_segment )
       {
       PlaPointInt split_point = curr_drill_item.center_get();
    
       if ( ! curr_line_segment.contains(split_point) ) return;
 
       // the plus one is from how the caller handles indexes...
-      split_with_end_point(index + 1, split_point);
+      split_with_end_point(my_line_index, split_point);
       }
 
 
@@ -1431,25 +1440,42 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
       // if split prohibited do nothing
       if ( ! split_inside_drill_pad_allowed(p_point)) return risul;
-
-      ArrayList<Polyline> split_polylines = new ArrayList<Polyline>(2);
       
-      split_polylines = polyline.split_at_point(line_idx, p_point);
+      ArrayList<Polyline> split_polylines = polyline.split_at_point(line_idx, p_point);
          
-      if (split_polylines.size() < 2 ) return risul;
+      if (split_polylines.size() < 2 )
+         {
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_C))
+            r_board.userPrintln("split_with_end_point: split_at_point FAIL");
+         
+         return risul;
+         }
       
       r_board.remove_item(this);
 
-      BrdTracep a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(0), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      BrdTracep first_trace = r_board.insert_trace_without_cleaning(split_polylines.get(0), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
-      if ( a_trace != null ) risul.add( a_trace );
+      if ( first_trace == null ) 
+         {
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_C))
+            r_board.userPrintln("split_with_end_point: first insert FAILS");
+         
+         return risul;
+         }
       
-      a_trace = r_board.insert_trace_without_cleaning(split_polylines.get(1), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
+      BrdTracep second_trace = r_board.insert_trace_without_cleaning(split_polylines.get(1), get_layer(), get_half_width(), net_nos, clearance_idx(), get_fixed_state());
       
-      if ( a_trace != null ) risul.add( a_trace );
+      if ( second_trace == null ) 
+         {
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_C))
+            r_board.userPrintln("split_with_end_point: second insert FAILS");
+         
+         return risul;
+         }
       
-      if ( risul.size() != 2 ) System.err.println("split_with_end_point: STRANGE");
-
+      risul.add( first_trace );
+      risul.add( second_trace );
+      
       return risul;
       }
    

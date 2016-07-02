@@ -113,8 +113,8 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
       if ( is_nan || begin.is_nan || end.is_nan ) return false;
       
       double d_begin_this = begin.distance_square(this);
-      double d_end_this = end.distance_square(this);
-      double d_begin_end = begin.distance_square(end);
+      double d_end_this   = end.distance_square(this);
+      double d_begin_end  = begin.distance_square(end);
       
       if ( d_begin_end >= d_begin_this + margin )
          {

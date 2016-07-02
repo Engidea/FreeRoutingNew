@@ -97,14 +97,15 @@ public final class WindowDebugConfig extends GuiSubWindowSavable
 
       risul.setBorder(resources.newTitledBorder("Level"));
  
-      risul.add(newCheckbox(resources, level_list, "Fine", Ldbg.FINE));
-      risul.add(newCheckbox(resources, level_list, "Trace", Ldbg.TRACE));
-      risul.add(newCheckbox(resources, level_list, "Debug", Ldbg.DEBUG));
-      risul.add(newCheckbox(resources, level_list, "Notice", Ldbg.NOTICE));
+      risul.add(newCheckbox(resources, level_list, "Fine",    Ldbg.FINE));
+      risul.add(newCheckbox(resources, level_list, "Trace",   Ldbg.TRACE));
+      risul.add(newCheckbox(resources, level_list, "Debug",   Ldbg.DEBUG));
+      risul.add(newCheckbox(resources, level_list, "Notice",  Ldbg.NOTICE));
       risul.add(newCheckbox(resources, level_list, "Warning", Ldbg.WARNING));
-      risul.add(newCheckbox(resources, level_list, "Error", Ldbg.ERROR));
-      risul.add(newCheckbox(resources, level_list, "SPC_A", Ldbg.SPC_A));
-      risul.add(newCheckbox(resources, level_list, "SPC_B", Ldbg.SPC_A));
+      risul.add(newCheckbox(resources, level_list, "Error",   Ldbg.ERROR));
+      risul.add(newCheckbox(resources, level_list, "SPC_A",   Ldbg.SPC_A));
+      risul.add(newCheckbox(resources, level_list, "SPC_B",   Ldbg.SPC_B));
+      risul.add(newCheckbox(resources, level_list, "SPC_C",   Ldbg.SPC_C));
       
       return risul.getJPanel();
       }
