@@ -1476,46 +1476,34 @@ public final class GuiConfigFile
       out_file.end_scope();
       }
 
+   /**
+    * @deprecated
+    */
    private boolean read_clearance_compensation_scope() throws java.io.IOException
       {
       Object next_token = scanner.next_token();
-      boolean clearance_compensation;
-      if (next_token == GuiConfigKeyword.ON)
-         {
-         clearance_compensation = true;
-         }
-      else if (next_token == GuiConfigKeyword.OFF)
-         {
-         clearance_compensation = false;
-         }
-      else
-         {
-         System.out.println("GuiConfigFile.read_clearance_compensation_scope: unexpected token");
-         return false;
-         }
+
       next_token = scanner.next_token();
+
       if (next_token != GuiConfigKeyword.CLOSED_BRACKET)
          {
          System.out.println("GuiConfigFile.read_clearance_compensation_scope: closing bracket expected");
          return false;
          }
-      board_handling.set_clearance_compensation(clearance_compensation);
+
       return true;
       }
 
+   /**
+    * @Deprecated
+    * @throws java.io.IOException
+    */
    private void write_clearance_compensation_scope() throws java.io.IOException
       {
       out_file.start_scope();
       out_file.write("clearance_compensation ");
       out_file.new_line();
-      if (board_handling.get_routing_board().search_tree_manager.is_clearance_compensation_used())
-         {
-         out_file.write("on");
-         }
-      else
-         {
-         out_file.write("off");
-         }
+      out_file.write("off");
       out_file.end_scope();
       }
 

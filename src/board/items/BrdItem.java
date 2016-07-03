@@ -496,7 +496,7 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
 
    
    /**
-    * Returns a list of all clearance violations of this item with other items. 
+    * @returns a list of all clearance violations of this item with other items. 
     * The first_item in such an object is always this item.
     */
    public final Collection<BrdItemViolation> clearance_violations()
@@ -533,14 +533,13 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
                continue;
                }
             
-            if (!r_board.search_tree_manager.is_clearance_compensation_used())
-               {
-               double cl_offset = 0.5 * r_board.brd_rules.clearance_matrix.value_at(curr_item.clearance_idx, clearance_idx, shape_layer(index));
-               shape_1 = shape_1.enlarge(cl_offset);
-               shape_2 = shape_2.enlarge(cl_offset);
-               }
+            // this is the reason why this test is "different" that the normal behaviour...
+            double cl_offset = 0.5 * r_board.brd_rules.clearance_matrix.value_at(curr_item.clearance_idx, clearance_idx, shape_layer(index));
+            shape_1 = shape_1.enlarge(cl_offset);
+            shape_2 = shape_2.enlarge(cl_offset);
 
             ShapeTile intersection = shape_1.intersection(shape_2);
+
             if (intersection.dimension() == PlaDimension.AREA )
                {
                BrdItemViolation curr_violation = new BrdItemViolation(this, curr_item, intersection, shape_layer(index));
@@ -1149,12 +1148,9 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
       
       clear_derived_data();
       
-      if ( r_board.search_tree_manager.is_clearance_compensation_used())
-         {
-         // reinsert the item into the search tree, because the compensated shape has changed.
-         r_board.search_tree_manager.remove(this);
-         r_board.search_tree_manager.insert(this);
-         }
+      // Seems correct... reinsert the item into the search tree, because the compensated shape has changed.
+      r_board.search_tree_manager.remove(this);
+      r_board.search_tree_manager.insert(this);
       }
 
    /**

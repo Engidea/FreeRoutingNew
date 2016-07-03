@@ -1062,17 +1062,13 @@ public abstract class LogfileScope
          super(p_name);
          }
 
+      /**
+       * @deprecated
+       */
       public StateInteractive read_scope(Actlog p_logfile, StateInteractive p_return_state, IteraBoard p_board_handling)
          {
          int new_clearance_type = p_logfile.read_int();
-         if (new_clearance_type == 0)
-            {
-            p_board_handling.get_routing_board().search_tree_manager.set_clearance_compensation_used(false);
-            }
-         else
-            {
-            p_board_handling.get_routing_board().search_tree_manager.set_clearance_compensation_used(true);
-            }
+
          return p_return_state;
          }
       }

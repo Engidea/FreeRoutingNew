@@ -20,8 +20,6 @@
 
 package gui.win;
 
-import freert.main.Ldbg;
-import freert.main.Mdbg;
 import freert.rules.ClearanceMatrix;
 import gui.BoardFrame;
 import gui.ComboBoxLayer;
@@ -189,21 +187,20 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
       for (;;)
          {
          new_name = JOptionPane.showInputDialog(resources.getString("new_name"));
-         if (new_name == null)
-            {
-            return;
-            }
+
+         if (new_name == null) return;
+
          new_name = new_name.trim();
-         if (is_legal_class_name(new_name))
-            {
-            break;
-            }
+
+         if (is_legal_class_name(new_name)) break;
          }
+
       final RoutingBoard routing_board = board_frame.board_panel.itera_board.get_routing_board();
       final ClearanceMatrix clearance_matrix = routing_board.brd_rules.clearance_matrix;
 
       // Check, if the name exists already.
       boolean name_exists = false;
+      
       for (int i = 0; i < clearance_matrix.get_class_count(); ++i)
          {
          if (new_name.equals(clearance_matrix.get_name(i)))
@@ -216,12 +213,6 @@ public final class WindowClearanceMatrix extends GuiSubWindowSavable
       if (name_exists) return;
  
       clearance_matrix.append_class(new_name);
-
-      if ( routing_board.debug(Mdbg.GUI, Ldbg.RELEASE))
-         {
-         // clearance compensation is only used, if there are only the clearance classes default and null.
-         routing_board.search_tree_manager.set_clearance_compensation_used(false);
-         }
       
       adjust_clearance_table();
       }

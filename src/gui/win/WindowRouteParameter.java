@@ -77,7 +77,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
    private final JCheckBox hilight_routing_obstacle_check;
    private final JCheckBox neckdown_check;
    private final JCheckBox restrict_pin_exit_directions_check;
-   private final JCheckBox clearance_compensation_check;
    private final JCheckBox outline_keepout_check;
 
    private boolean key_input_completed = true;
@@ -124,7 +123,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       hilight_routing_obstacle_check = resources.newJCheckBox("hilight_routing_obstacle","hilight_routing_obstacle_tooltip",new HilightObstacleListener());
       ignore_conduction_check = resources.newJCheckBox("ignore_conduction_areas","ignore_conduction_areas_tooltip",new IgnoreConductionListener());
       neckdown_check = resources.newJCheckBox("automatic_neckdown","automatic_neckdown_tooltip",actionListener);
-      clearance_compensation_check = resources.newJCheckBox("clearance_compensation","clearance_compensation_tooltip",actionListener);
       outline_keepout_check = resources.newJCheckBox("keepout_outside_outline","keepout_outside_outline_tooltip",actionListener);
       
       main_panel.add(newCheckboxesPanel());
@@ -214,7 +212,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       risul.add(hilight_routing_obstacle_check);
       risul.add(ignore_conduction_check);
       risul.add(neckdown_check);
-      risul.add(clearance_compensation_check);
       risul.add(outline_keepout_check);
       
       return risul;
@@ -342,7 +339,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       ignore_conduction_check.setSelected(i_board.get_routing_board().brd_rules.get_ignore_conduction());
       hilight_routing_obstacle_check.setSelected(i_board.itera_settings.is_hilight_routing_obstacle());
       neckdown_check.setSelected(i_board.itera_settings.is_automatic_neckdown());
-      clearance_compensation_check.setSelected(i_board.get_routing_board().search_tree_manager.is_clearance_compensation_used());
       
       BrdOutline outline = i_board.get_routing_board().get_outline();
       if (outline != null)
@@ -436,13 +432,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
       {
       stat.userPrintln(classname+" req set_stitch_route(true)");
       i_board.itera_settings.set_stitch_route(true);
-      }
-
-   private void clearance_compensation_fun ()
-      {
-      boolean want = clearance_compensation_check.isSelected();
-      stat.userPrintln(classname+" req clearance_compensation_fun want="+want);
-      i_board.set_clearance_compensation(want);      
       }
    
    private void outline_keepout_fun ()
@@ -652,8 +641,6 @@ public class WindowRouteParameter extends GuiSubWindowSavable
             dynamic_button_fun();
          else if ( src == stitch_button )
             stitch_button_fun();
-         else if ( src == clearance_compensation_check )
-            clearance_compensation_fun();
          else if ( src == outline_keepout_check )
             outline_keepout_fun();
          else if ( src == neckdown_check )

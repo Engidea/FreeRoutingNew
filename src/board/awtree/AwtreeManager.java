@@ -31,7 +31,9 @@ import freert.planar.Polyline;
 import freert.varie.UndoObjectNode;
 
 /**
- *
+ * The "default_tree" normally do not use clearance compensation, and declares to do so
+ * It is possible to create other threes that use clearance compensation and this is what it is done
+ * Having the "default" tree use a "forced" clearance is no use and especially confuses the logic
  * @author Alfons Wirtz
  */
 public final class AwtreeManager
@@ -40,18 +42,16 @@ public final class AwtreeManager
    private final Collection<AwtreeShapeSearch> compensated_search_trees;
 
    private AwtreeShapeSearch default_tree;
-   private boolean clearance_compensation_used;   // what does it do ?
    
    public AwtreeManager(RoutingBoard p_board)
       {
       r_board = p_board;
       
+      // create a default tree that do NOT use clearance compensation, the program will take care of it during queries
       default_tree = new AwtreeShapeSearch(p_board, 0);
       
       compensated_search_trees = new LinkedList<AwtreeShapeSearch>();
       compensated_search_trees.add(default_tree);
-      
-      clearance_compensation_used = false;
       }
 
    /**
@@ -60,10 +60,8 @@ public final class AwtreeManager
     */
    public void insert(BrdItem p_item)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
-         {
-         curr_tree.insert(p_item);
-         }
+      for (AwtreeShapeSearch curr_tree : compensated_search_trees) curr_tree.insert(p_item);
+      
       p_item.set_on_the_board(true);
       }
 
@@ -113,39 +111,6 @@ public final class AwtreeManager
       }
 
    /**
-    * This is normally the case, if there exist only the clearance classes null and default in the clearance matrix.
-    * @return if clearance compensation is used for the default tree. 
-    */
-   public boolean is_clearance_compensation_used()
-      {
-      return clearance_compensation_used;
-      }
-
-   /**
-    * Sets the usage of clearance compensation to true or false.
-    * Maybe this is part of the issue ? Damiano
-    */
-   public void set_clearance_compensation_used(boolean p_value)
-      {
-      if ( clearance_compensation_used == p_value) return;
-      
-      clearance_compensation_used = p_value;
-      
-      remove_all_board_items();
-      
-      compensated_search_trees.clear();
-
-      // So, if clearance compensation is used use class no 1 otherwise zero.... 
-      int compensated_clearance_class_no = p_value ? 1 : 0;
-      
-      default_tree = new AwtreeShapeSearch(r_board, compensated_clearance_class_no);
-      
-      compensated_search_trees.add(default_tree);
-      
-      insert_all_board_items();
-      }
-
-   /**
     * Actions to be done, when a value in the clearance matrix is changed interactively.
     */
    public void clearance_value_changed()
@@ -163,11 +128,8 @@ public final class AwtreeManager
             }
          }
       
-      if (clearance_compensation_used)
-         {
-         remove_all_board_items();
-         insert_all_board_items();
-         }
+      //remove_all_board_items();
+      //insert_all_board_items();
       }
 
    /**
@@ -192,8 +154,8 @@ public final class AwtreeManager
       }
 
    /**
-    * Returns the tree compensated for the clearance class with number p_clearance_vlass_no. 
-    * Initialized the tree, if it is not yet allocated.
+    * Allocate the tree, if it is not yet allocated.
+    * @returns the tree compensated for the clearance class with number p_clearance_vlass_no. 
     */
    public AwtreeShapeSearch get_autoroute_tree(int p_clearance_class_no)
       {

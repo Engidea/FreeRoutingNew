@@ -334,18 +334,6 @@ public final class IteraBoard
       }
 
    /**
-    * Switches clearance compensation on or off.
-    */
-   public void set_clearance_compensation(boolean p_value)
-      {
-      if (board_is_read_only) return;
-
-      r_board.search_tree_manager.set_clearance_compensation_used(p_value);
-      
-      actlog.start_scope(LogfileScope.SET_CLEARANCE_COMPENSATION, p_value);
-      }
-
-   /**
     * Changes the current snap angle in the interactive board handling.
     */
    public void set_trace_snap_angle(board.varie.TraceAngleRestriction p_snap_angle)

@@ -887,9 +887,11 @@ public final class AwtreeShapeSearch
 
    /**
     * Returns all objects of class TreeEntry, which overlap with p_shape on layer p_layer inclusive clearance
-    *  p_clearance_class is the index in the clearance matrix, which describes the required clearance restrictions to other items. 
-    *  If p_layer < 0, the layer is ignored.
-    *  This seems one of the main point for the logic, finding out if something overlaps, damiano
+    * p_clearance_class is the index in the clearance matrix, which describes the required clearance restrictions to other items. 
+    * If p_layer < 0, the layer is ignored.
+    * This seems one of the main point for the logic, finding out if something overlaps, damiano
+    * The code is actually correct since the logic is somewhat inverted, meaning that if "the system" uses by itself clearance compensation you do not have to use a "specilized"
+    * method to do the search with clearance...
     */
    public final Collection<AwtreeFindEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
