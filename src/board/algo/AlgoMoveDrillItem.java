@@ -40,6 +40,7 @@ import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.planar.ShapeTileOctagon;
 import freert.varie.NetNosList;
+import freert.varie.PlaPointIntDist;
 import freert.varie.TimeLimit;
 
 /**
@@ -321,7 +322,12 @@ public final class AlgoMoveDrillItem
          
          if (p_extended_check) try_count = 4;
 
-         try_via_centers = curr_offset_octagon.nearest_border_projections(curr_via_center, try_count);
+         Collection<PlaPointIntDist> nearest_list = curr_offset_octagon.nearest_border_projections(curr_via_center, try_count);
+         
+         try_via_centers = new PlaPointInt[nearest_list.size()];
+         int index=0;
+         
+         for ( PlaPointIntDist a_row : nearest_list ) try_via_centers[index++] = a_row.i_point;
          }
       else
          {

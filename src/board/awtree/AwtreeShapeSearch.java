@@ -829,7 +829,9 @@ public final class AwtreeShapeSearch
          if ( ignore_item ) continue;
 
          int curr_clearance = cl_matrix.value_at(p_cl_type, curr_item.clearance_idx(), p_layer);
+         
          AwtreeNodeLeafSorted sorted_ob = new AwtreeNodeLeafSorted(curr_leaf, curr_clearance);
+         
          sorted_items.add(sorted_ob);
          }
       

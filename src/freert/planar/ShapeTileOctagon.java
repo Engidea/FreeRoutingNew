@@ -17,6 +17,9 @@
 package freert.planar;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.TreeSet;
+import freert.varie.PlaPointIntDist;
 
 /**
  *
@@ -1300,25 +1303,19 @@ public final class ShapeTileOctagon extends ShapeTileRegular
          PlaDirection.DOWN, PlaDirection.DOWN45 };
 
    /**
-    * Calculates the sorted p_max_result_points nearest points on the border of this octagon in the 45-degree directions. p_point is
-    * assumed to be located in the inside of this octagon.
-    * 
+    * Calculates the sorted p_max_result_points nearest points on the border of this octagon in the 45-degree directions.
+    * p_point is assumed to be located in the inside of this octagon.
     * @return and empty array if conditions are not met
     */
-   public PlaPointInt[] nearest_border_projections(PlaPointInt p_point, int p_max_result_points)
+   public Collection<PlaPointIntDist> nearest_border_projections(PlaPointInt p_point, int p_max_result_points)
       {
-      if (!contains(p_point)) return new PlaPointInt[0];
+      TreeSet<PlaPointIntDist> risul = new TreeSet<PlaPointIntDist>();
+      
+      if (!contains(p_point)) return risul;
 
-      if (p_max_result_points <= 0) return new PlaPointInt[0];
+      if (p_max_result_points <= 0) return risul;
 
       p_max_result_points = Math.min(p_max_result_points, 8);
-
-      PlaPointInt[] result = new PlaPointInt[p_max_result_points];
-
-      double[] min_dist = new double[p_max_result_points];
-
-      for (int index = 0; index < p_max_result_points; ++index)
-         min_dist[index] = Double.MAX_VALUE;
 
       PlaPointFloat inside_point = p_point.to_float();
 
@@ -1326,23 +1323,13 @@ public final class ShapeTileOctagon extends ShapeTileRegular
          {
          PlaPointInt curr_border_point = border_point(p_point, curr_dir);
          double curr_dist = inside_point.distance_square(curr_border_point.to_float());
-         for (int i = 0; i < p_max_result_points; ++i)
-            {
-            if (curr_dist < min_dist[i])
-               {
-               for (int k = p_max_result_points - 1; k > i; --k)
-                  {
-                  min_dist[k] = min_dist[k - 1];
-                  result[k] = result[k - 1];
-                  }
-               min_dist[i] = curr_dist;
-               result[i] = curr_border_point;
-               break;
-               }
-            }
+
+         PlaPointIntDist a_value = new PlaPointIntDist(curr_border_point,curr_dist);
+         
+         risul.add(a_value);
          }
 
-      return result;
+      return risul;
       }
 
    /**
