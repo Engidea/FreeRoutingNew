@@ -26,7 +26,7 @@ import java.util.TreeSet;
 import board.BrdConnectable;
 import board.RoutingBoard;
 import board.algo.AlgoPullTight;
-import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeFindEntry;
 import board.awtree.AwtreeObject;
 import board.awtree.AwtreeShapeSearch;
 import board.varie.BrdTraceExitRestriction;
@@ -930,7 +930,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * Note that if other trace is split I do NOT reret the iterator of found items anymore, seems to be ok
     * @return tue if this trace has been split and therefore the algo should terminate
     */
-   private boolean split_wtrace (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeEntry overlap_tentry, BrdTracep found_trace )
+   private boolean split_wtrace (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeFindEntry overlap_tentry, BrdTracep found_trace )
       {
       // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
       
@@ -968,7 +968,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
     * return true if some other trace was split
     */
-   private boolean split_wtrace_other_points (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points, AwtreeEntry found_entry )
+   private boolean split_wtrace_other_points (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points, AwtreeFindEntry found_entry )
       {
       if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_B))
          r_board.userPrintln("split_wtrace_other_points: found_trace == this is "+(found_trace == this) );
@@ -1052,7 +1052,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          }
       }
    
-   private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeEntry overlap_tentry, BrdTracep found_trace )
+   private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeFindEntry overlap_tentry, BrdTracep found_trace )
       {
       // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
       
@@ -1062,7 +1062,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // the order is important since I wish to "constraint" the result to curr_segment and not to other_segment 
       ArrayList<PlaPointInt> intersecting_points = curr_segment.intersection_points(other_segment);
    
-      join_move_to ( new PlaPointInt(0,0));
+//      join_move_to ( new PlaPointInt(0,0));
       
       if ( intersecting_points.size() < 1) return false;
       
@@ -1127,12 +1127,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          ShapeTile my_segment_shape = get_tree_shape(default_tree, my_line_index-1);
          
          // look for intersecting traces with the i-th line segment
-         Collection<AwtreeEntry> over_tree_entries = default_tree.find_overlap_tree_entries(my_segment_shape, get_layer());
+         Collection<AwtreeFindEntry> over_tree_entries = default_tree.find_overlap_tree_entries(my_segment_shape, get_layer());
 
          if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
             r_board.userPrintln("split: over_tree_entries "+over_tree_entries.size());
          
-         for ( AwtreeEntry overlap_tentry : over_tree_entries )
+         for ( AwtreeFindEntry overlap_tentry : over_tree_entries )
             {
             // this trace has been deleted in a cleanup operation
             if ( ! is_on_the_board()) return clean_list;
@@ -1141,6 +1141,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             
             BrdItem overlap_item = (BrdItem) overlap_tentry.object;
 
+            if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+               r_board.userPrintln("split: overlap_item "+overlap_item);
+            
             // this checks if it is ok splitting myself, or something like that
             if ( split_avoid_this_item(my_line_index-1, overlap_tentry, overlap_item)) continue;
             
@@ -1189,7 +1192,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * check if I should avoid testing this segment
     * @return true if this item should not  be used in the split algo
     */
-   private boolean split_avoid_this_item (int my_line_index, AwtreeEntry overlap_entry, BrdItem overlap_item)
+   private boolean split_avoid_this_item (int my_line_index, AwtreeFindEntry overlap_entry, BrdItem overlap_item)
       {
       if (overlap_item != this) return false;
       
@@ -1287,7 +1290,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    /**
     * return true if some other trace was split
     */
-   private boolean split_wtrace_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaLineInt> intersecting_lines, AwtreeEntry found_entry )
+   private boolean split_wtrace_other (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaLineInt> intersecting_lines, AwtreeFindEntry found_entry )
       {
       if ( found_trace == this ) return false;
       

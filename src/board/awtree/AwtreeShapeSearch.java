@@ -705,9 +705,9 @@ public final class AwtreeShapeSearch
       {
       TreeSet<AwtreeObject> risul = new TreeSet<AwtreeObject>();
 
-      Collection<AwtreeEntry> tree_entries = find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
+      Collection<AwtreeFindEntry> tree_entries = find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
       
-      for (AwtreeEntry curr_entry : tree_entries ) risul.add(curr_entry.object);
+      for (AwtreeFindEntry curr_entry : tree_entries ) risul.add(curr_entry.object);
       
       return risul;
       }
@@ -716,19 +716,19 @@ public final class AwtreeShapeSearch
     * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_risul_tree. 
     * If p_layer < 0, the layer is ignored.
     */
-   public final Collection<AwtreeEntry> find_overlap_tree_entries(ShapeConvex p_shape, int p_layer)
+   public final Collection<AwtreeFindEntry> find_overlap_tree_entries(ShapeConvex p_shape, int p_layer)
       {
       return find_overlap_tree_entries(p_shape, p_layer, NetNosList.EMPTY);
       }
 
    /**
     * Puts all tree entries overlapping with p_shape on layer p_layer into the list p_risul_tree. 
-    * If p_layer < 0, the layer is ignored. 
+    * If p_layer < 0, the layer is ignored. pippo
     * tree_entries with object containing a net number of p_ignore_net_nos are ignored.
     */
-   public final LinkedList<AwtreeEntry> find_overlap_tree_entries(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos)
+   public final LinkedList<AwtreeFindEntry> find_overlap_tree_entries(ShapeConvex p_shape, int p_layer, NetNosList p_ignore_net_nos)
       {
-      LinkedList<AwtreeEntry> risul_list = new LinkedList<AwtreeEntry>();
+      LinkedList<AwtreeFindEntry> risul_list = new LinkedList<AwtreeFindEntry>();
 
       if (p_shape == null) return risul_list;
       
@@ -772,7 +772,7 @@ public final class AwtreeShapeSearch
 
          if (add_item)
             {
-            AwtreeEntry new_entry = new AwtreeEntry(curr_object, shape_index);
+            AwtreeFindEntry new_entry = new AwtreeFindEntry(curr_object, shape_index);
             risul_list.add(new_entry);
             }
          }
@@ -788,9 +788,9 @@ public final class AwtreeShapeSearch
     * if p_layer < 0, the layer is ignored. 
     * Used only internally, because the clearance compensation is not taken innto account.
     */
-   private final LinkedList<AwtreeEntry> find_overlap_tree_entries_with_clearance_fun(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type)
+   private final Collection<AwtreeFindEntry> find_overlap_tree_entries_with_clearance_fun(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_cl_type)
       {
-      LinkedList<AwtreeEntry> result_list = new LinkedList<AwtreeEntry>();
+      LinkedList<AwtreeFindEntry> result_list = new LinkedList<AwtreeFindEntry>();
 
       if (p_shape == null) return result_list;
       
@@ -853,7 +853,7 @@ public final class AwtreeShapeSearch
          
          if ( ! curr_offset_shape.intersects(tmp_offset_shape)) continue;
 
-         result_list.add(new AwtreeEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
+         result_list.add(new AwtreeFindEntry(tmp_entry.leaf.object, tmp_entry.leaf.shape_index_in_object));
          }
       
       return result_list;
@@ -869,9 +869,9 @@ public final class AwtreeShapeSearch
       {
       TreeSet<BrdItem> result = new TreeSet<BrdItem>();
 
-      Collection<AwtreeEntry> overlaps = find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
+      Collection<AwtreeFindEntry> overlaps = find_overlap_tree_entries_with_clearance(p_shape, p_layer, p_ignore_net_nos, p_clearance_class);
       
-      for (AwtreeEntry curr_tentry : overlaps)
+      for (AwtreeFindEntry curr_tentry : overlaps)
          {
          AwtreeObject curr_object  = curr_tentry.object;
          
@@ -889,7 +889,7 @@ public final class AwtreeShapeSearch
     *  If p_layer < 0, the layer is ignored.
     *  This seems one of the main point for the logic, finding out if something overlaps, damiano
     */
-   public final LinkedList<AwtreeEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
+   public final Collection<AwtreeFindEntry> find_overlap_tree_entries_with_clearance(ShapeTile p_shape, int p_layer, NetNosList p_ignore_net_nos, int p_clearance_class)
       {
       if ( is_clearance_compensation_used())
          return find_overlap_tree_entries(p_shape, p_layer, p_ignore_net_nos);
@@ -1024,11 +1024,14 @@ public final class AwtreeShapeSearch
 
          return result;
          }
+      
+      
       PlaLineInt cut_line = null;
       double cut_line_distance = -1;
       for (int index = 0; index < obstacle_simplex.border_line_count(); ++index)
          {
          PlaSegmentInt curr_line_segment = new PlaSegmentInt(obstacle_simplex, index);
+         
          if (room_shape.is_intersected_interiour_by(curr_line_segment))
             {
             // otherwise curr_object may not touch the intersection of p_shape with the half_plane defined by the cut_line.
@@ -1044,6 +1047,9 @@ public final class AwtreeShapeSearch
                }
             }
          }
+      
+      
+      
       if (cut_line != null)
          {
          ShapeTile result_piece = new ShapeTileSimplex(cut_line);
@@ -1088,6 +1094,9 @@ public final class AwtreeShapeSearch
             // occupied from somewhere else.
             return result;
             }
+         
+         
+         
          // Calculate the new shape to be contained in the result shape.
          ShapeTile cut_half_plane = new ShapeTileSimplex(cut_line);
          ShapeTile new_shape_to_be_contained = shape_to_be_contained.intersection(cut_half_plane);
@@ -1105,6 +1114,7 @@ public final class AwtreeShapeSearch
             {
             result.add(new ExpandRoomFreespaceIncomplete(result_piece, layer, new_shape_to_be_contained));
             }
+         
          ShapeTile opposite_half_plane = new ShapeTileSimplex(cut_line.opposite());
          ShapeTile rest_piece;
          if (room_shape == null)

@@ -38,7 +38,7 @@ import board.algo.AlgoPullTight;
 import board.algo.AlgoShovePad;
 import board.algo.AlgoShoveTrace;
 import board.algo.AlgoShoveVia;
-import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeFindEntry;
 import board.awtree.AwtreeManager;
 import board.awtree.AwtreeObject;
 import board.awtree.AwtreeShapeSearch;
@@ -1016,9 +1016,9 @@ public final class RoutingBoard implements java.io.Serializable
          
          if ( ! curr_shape.is_contained_in(bounding_box)) return false;
          
-         Collection<AwtreeEntry> obstacles = default_tree.find_overlap_tree_entries_with_clearance(curr_shape, p_layer, p_net_no_arr, p_cl_class);
+         Collection<AwtreeFindEntry> obstacles = default_tree.find_overlap_tree_entries_with_clearance(curr_shape, p_layer, p_net_no_arr, p_cl_class);
          
-         for (AwtreeEntry cur_entry : obstacles)
+         for (AwtreeFindEntry cur_entry : obstacles)
             {
             AwtreeObject curr_ob = cur_entry.object;
             
@@ -1043,9 +1043,9 @@ public final class RoutingBoard implements java.io.Serializable
       
       AwtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
       
-      Collection<AwtreeEntry> tree_entries = default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, NetNosList.EMPTY, p_cl_class);
+      Collection<AwtreeFindEntry> tree_entries = default_tree.find_overlap_tree_entries_with_clearance(p_shape, p_layer, NetNosList.EMPTY, p_cl_class);
       
-      for (AwtreeEntry curr_tree_entry : tree_entries)
+      for (AwtreeFindEntry curr_tree_entry : tree_entries)
          {
          if (!(curr_tree_entry.object instanceof BrdItem))  continue;
       
@@ -1734,9 +1734,9 @@ public final class RoutingBoard implements java.io.Serializable
 
       AwtreeShapeSearch default_tree = search_tree_manager.get_default_tree();
 
-      Collection<AwtreeEntry> obstacle_list = default_tree.find_overlap_tree_entries_with_clearance(shape_to_check, p_layer, p_net_no_arr, p_cl_class_no);
+      Collection<AwtreeFindEntry> obstacle_list = default_tree.find_overlap_tree_entries_with_clearance(shape_to_check, p_layer, p_net_no_arr, p_cl_class_no);
 
-      for (AwtreeEntry obstacle_entry : obstacle_list)
+      for (AwtreeFindEntry obstacle_entry : obstacle_list)
          {
          if ( ! (obstacle_entry.object instanceof BrdItem)) continue;
 

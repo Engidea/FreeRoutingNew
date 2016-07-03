@@ -31,7 +31,7 @@ import autoroute.expand.ExpandRoomFreespaceComplete;
 import autoroute.expand.ExpandRoomFreespaceIncomplete;
 import autoroute.expand.ExpandRoomObstacle;
 import board.BrdConnectable;
-import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeFindEntry;
 import board.awtree.AwtreeObject;
 import board.awtree.AwtreeShapeSearch;
 import board.items.BrdItem;
@@ -123,14 +123,14 @@ public final class SortedRoomsTop
       }
 
    
-   private void calculate_target_doors(ExpandRoomFreespaceComplete p_room, Collection<AwtreeEntry> p_own_net_objects, ArtEngine p_autoroute_engine)
+   private void calculate_target_doors(ExpandRoomFreespaceComplete p_room, Collection<AwtreeFindEntry> p_own_net_objects, ArtEngine p_autoroute_engine)
       {
       if (!p_own_net_objects.isEmpty())
          {
          p_room.set_net_dependent();
          }
       
-      for (AwtreeEntry curr_entry : p_own_net_objects)
+      for (AwtreeFindEntry curr_entry : p_own_net_objects)
          {
          if ( ! (curr_entry.object instanceof BrdItem)) continue;
 
@@ -174,11 +174,11 @@ public final class SortedRoomsTop
       
       SortedRoomsList result = new SortedRoomsList(p_room, completed_room);
       
-      Collection<AwtreeEntry> overlapping_objects = p_autoroute_search_tree.find_overlap_tree_entries(room_shape, p_room.get_layer());
+      Collection<AwtreeFindEntry> overlapping_objects = p_autoroute_search_tree.find_overlap_tree_entries(room_shape, p_room.get_layer());
 
       // Calculate the touching neigbour objects and sort them in counterclock sence around the border of the room shape.
       
-      for (AwtreeEntry curr_entry : overlapping_objects)
+      for (AwtreeFindEntry curr_entry : overlapping_objects)
          {
          AwtreeObject curr_object = curr_entry.object;
       

@@ -17,16 +17,35 @@ package board.awtree;
 
 
 /**
- * Information of a single object stored in a tree
+ * Information returned by the find methods when searching in the tree
  */
-public final class AwtreeEntry
+public final class AwtreeFindEntry implements Comparable<AwtreeFindEntry>
    {
    public final AwtreeObject object;
    public final int shape_index_in_object;
 
-   public AwtreeEntry(AwtreeObject p_object, int p_shape_index_in_object)
+   public AwtreeFindEntry(AwtreeObject p_object, int p_shape_index_in_object)
       {
+      // do not let this possible error to go unnoticed
+      if ( p_object == null ) throw new IllegalArgumentException("null p_object");
+      
       object = p_object;
       shape_index_in_object = p_shape_index_in_object;
+      }
+
+   @Override
+   public int compareTo(AwtreeFindEntry other)
+      {
+      return object.compareTo(other.object);
+      }
+   
+   @Override
+   public boolean equals ( Object other) 
+      {
+      if ( other == null ) return false;
+      
+      if (  ! (other instanceof AwtreeFindEntry)) return false;
+      
+      return compareTo((AwtreeFindEntry)other) != 0;
       }
    }

@@ -720,8 +720,9 @@ public abstract class ShapeTile extends ShapeSegments implements ShapeConvex
       }
 
    /**
-    * Returns Side.COLLINEAR, if p_line intersects with the interiour of this shape, Side.ON_THE_LEFT, if this shape is completely
-    * on the left of p_line or Side.ON_THE_RIGHT, if this shape is completely on the right of p_line.
+    * Returns Side.COLLINEAR, if p_line intersects with the interiour of this shape, 
+    * Side.ON_THE_LEFT, if this shape is completely  on the left of p_line or Side.ON_THE_RIGHT, 
+    * if this shape is completely on the right of p_line
     */
    public PlaSide side_of(PlaLineInt p_line)
       {

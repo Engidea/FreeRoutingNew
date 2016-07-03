@@ -51,11 +51,4 @@ public final class ExpandRoomFreespaceIncomplete extends ExpandRoomFreespace
       {
       contained_shape = p_shape;
       }
-
-   /*
-   public Collection<ExpandDoorItem> get_target_doors()
-      {
-      return new LinkedList<ExpandDoorItem>();
-      }
-      */
    }

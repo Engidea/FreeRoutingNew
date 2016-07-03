@@ -28,7 +28,7 @@ import java.util.LinkedList;
 import autoroute.ArtEngine;
 import autoroute.maze.MazeSearchElement;
 import board.RoutingBoard;
-import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeFindEntry;
 import board.awtree.AwtreeShapeSearch;
 import board.items.BrdAbitPin;
 import board.items.BrdItem;
@@ -85,14 +85,14 @@ public final class ExpandDrillPage implements ExpandObject
       // Use the search tree from the autoroute, it is adjusted with compensation
       AwtreeShapeSearch search_tree = p_art_engine.art_search_tree;
       
-      Collection<AwtreeEntry> overlaps = search_tree.find_overlap_tree_entries(page_shape, -1);
+      Collection<AwtreeFindEntry> overlaps = search_tree.find_overlap_tree_entries(page_shape, -1);
       
       Collection<ShapeTile> cutout_shapes = new LinkedList<ShapeTile>();
 
       // drills on top of existing vias are used in the ripup algorithm
       ShapeTile prev_obstacle_shape = ShapeTileBox.EMPTY;
       
-      for (AwtreeEntry curr_entry : overlaps)
+      for (AwtreeFindEntry curr_entry : overlaps)
          {
          if (!(curr_entry.object instanceof BrdItem)) continue;
       

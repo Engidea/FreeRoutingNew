@@ -28,7 +28,7 @@ import java.util.TreeSet;
 import autoroute.ArtItem;
 import board.BrdConnectable;
 import board.RoutingBoard;
-import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeFindEntry;
 import board.awtree.AwtreeNodeLeaf;
 import board.awtree.AwtreeObject;
 import board.awtree.AwtreeShapeSearch;
@@ -496,9 +496,9 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
          {
          ShapeTile curr_tile_shape = tile_shape_get(index);
          
-         Collection<AwtreeEntry> overlap_list = default_tree.find_overlap_tree_entries_with_clearance(curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
+         Collection<AwtreeFindEntry> overlap_list = default_tree.find_overlap_tree_entries_with_clearance(curr_tile_shape, shape_layer(index), NetNosList.EMPTY, clearance_idx);
          
-         for (AwtreeEntry curr_entry : overlap_list )
+         for (AwtreeFindEntry curr_entry : overlap_list )
             {
             // skip objects that are not board items
             if ( !(curr_entry.object instanceof BrdItem)) continue;

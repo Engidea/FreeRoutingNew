@@ -32,7 +32,7 @@ import autoroute.expand.ExpandRoomComplete;
 import autoroute.expand.ExpandRoomFreespace;
 import autoroute.expand.ExpandRoomFreespaceComplete;
 import autoroute.expand.ExpandRoomFreespaceIncomplete;
-import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeFindEntry;
 import board.awtree.AwtreeShapeSearch;
 import freert.planar.PlaDimension;
 import freert.planar.PlaDirection;
@@ -58,7 +58,7 @@ public final class SortedRoomsList
    final ExpandRoomComplete completed_room;
    
    final TreeSet<SortedRoom> sorted_neighbours = new TreeSet<SortedRoom>();
-   final LinkedList<AwtreeEntry> own_net_objects = new LinkedList<AwtreeEntry>();
+   final LinkedList<AwtreeFindEntry> own_net_objects = new LinkedList<AwtreeFindEntry>();
 
    SortedRoomsList(ExpandRoom p_from_room, ExpandRoomComplete p_completed_room)
       {

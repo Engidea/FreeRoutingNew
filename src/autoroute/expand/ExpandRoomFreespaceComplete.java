@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import autoroute.ArtEngine;
 import board.BrdConnectable;
-import board.awtree.AwtreeEntry;
+import board.awtree.AwtreeFindEntry;
 import board.awtree.AwtreeNodeLeaf;
 import board.awtree.AwtreeObject;
 import board.awtree.AwtreeShapeSearch;
@@ -70,7 +70,22 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       else
          return -1;
       }
-
+   
+/*
+ * this is making troules, but it should not, really   
+   
+   @Override
+   public boolean equals ( Object other )
+      {
+      if ( other == null ) return false;
+      
+      if ( !(other instanceof ExpandRoomFreespaceComplete)) return false;
+      
+      ExpandRoomFreespaceComplete o_room = (ExpandRoomFreespaceComplete)other;
+      
+      return id_no == o_room.id_no;
+      }
+*/
    /**
     * Removes the tree entries of this roomm from p_shape_tree.
     */
@@ -167,7 +182,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    /**
     * Calculates the doors to the start and destination items of the autoroute algorithm.
     */
-   public final void calculate_target_doors(AwtreeEntry p_own_net_object, int p_net_no, AwtreeShapeSearch p_autoroute_search_tree)
+   public final void calculate_target_doors(AwtreeFindEntry p_own_net_object, int p_net_no, AwtreeShapeSearch p_autoroute_search_tree)
       {
       set_net_dependent();
 
@@ -216,9 +231,9 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
 
       NetNosList net_no_arr = new NetNosList(p_autoroute_engine.get_net_no() );
       
-      Collection<AwtreeEntry> overlap = p_autoroute_engine.art_search_tree.find_overlap_tree_entries(get_shape(), get_layer(), net_no_arr);
+      Collection<AwtreeFindEntry> overlap = p_autoroute_engine.art_search_tree.find_overlap_tree_entries(get_shape(), get_layer(), net_no_arr);
 
-      for (AwtreeEntry curr_entry : overlap )
+      for (AwtreeFindEntry curr_entry : overlap )
          {
          if (curr_entry.object == this) continue;
 
