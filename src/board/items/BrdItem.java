@@ -140,12 +140,12 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
    
    /**
     * Implements the comparable interface
-    * Should it throw exception if non comparable ? Damiano
+    * Since the Item is toreed in the search tree as "object" together with the AwtreeObject then it should compare the class too
     */
    @Override
-   public int compareTo(Object p_other)
+   public final int compareTo(Object p_other)
       {
-      if (p_other instanceof BrdItem)
+      if ( p_other instanceof BrdItem)
          {
          return ((BrdItem) p_other).id_no - id_no;
          }
@@ -154,6 +154,19 @@ public abstract class BrdItem implements GdiDrawable, AwtreeObject, PrintableInf
          return 1;
          }
       }
+   
+   @Override
+   public final boolean equals ( Object p_other )
+      {
+      if ( p_other == null ) return false;
+      
+      if ( ! ( p_other instanceof BrdItem ) ) return false;
+      
+      BrdItem i_other = (BrdItem)p_other;
+      
+      return id_no == i_other.id_no; 
+      }
+   
 
    /**
     * returns the unique identification number of this item

@@ -65,14 +65,14 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
    @Override
    public int compareTo(Object p_other)
       {
-      if (p_other instanceof ExpandRoomFreespace)
-         return ((ExpandRoomFreespaceComplete) p_other).id_no - this.id_no;
-      else
-         return -1;
+      if ( p_other == null ) return -2;
+      
+      if ( ! ( p_other instanceof ExpandRoomFreespace) ) return -1;
+      
+      ExpandRoomFreespaceComplete o_room = (ExpandRoomFreespaceComplete)p_other;
+      
+      return id_no - o_room.id_no;
       }
-   
-/*
- * this is making troules, but it should not, really   
    
    @Override
    public boolean equals ( Object other )
@@ -85,7 +85,7 @@ public final class ExpandRoomFreespaceComplete extends ExpandRoomFreespace imple
       
       return id_no == o_room.id_no;
       }
-*/
+
    /**
     * Removes the tree entries of this roomm from p_shape_tree.
     */
