@@ -1231,6 +1231,7 @@ public final class AwtreeShapeSearch
          {
          result[index] = offset_shape(p_trace.polyline(), offset_width, index);
          }
+      
       return result;
       }
 

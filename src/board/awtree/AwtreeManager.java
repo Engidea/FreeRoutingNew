@@ -21,7 +21,6 @@
 
 package board.awtree;
 
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import board.RoutingBoard;
@@ -39,19 +38,19 @@ import freert.varie.UndoObjectNode;
 public final class AwtreeManager
    {
    private final RoutingBoard r_board;
-   private final Collection<AwtreeShapeSearch> compensated_search_trees;
+   private final LinkedList<AwtreeShapeSearch> search_trees = new LinkedList<AwtreeShapeSearch>();
 
-   private AwtreeShapeSearch default_tree;
+   private final AwtreeShapeSearch default_tree;
    
    public AwtreeManager(RoutingBoard p_board)
       {
       r_board = p_board;
       
       // create a default tree that do NOT use clearance compensation, the program will take care of it during queries
+      // When you are searching if "touching" a trace, you need a tree without clearance compensation, so just the trace is picked
       default_tree = new AwtreeShapeSearch(p_board, 0);
       
-      compensated_search_trees = new LinkedList<AwtreeShapeSearch>();
-      compensated_search_trees.add(default_tree);
+      search_trees.add(default_tree);
       }
 
    /**
@@ -60,7 +59,7 @@ public final class AwtreeManager
     */
    public void insert(BrdItem p_item)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees) curr_tree.insert(p_item);
+      for (AwtreeShapeSearch curr_tree : search_trees) curr_tree.insert(p_item);
       
       p_item.set_on_the_board(true);
       }
@@ -72,7 +71,7 @@ public final class AwtreeManager
       {
       if (!p_item.is_on_the_board()) return;
       
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : search_trees)
          {
          AwtreeNodeLeaf[] curr_tree_entries = p_item.get_search_tree_entries(curr_tree);
 
@@ -102,7 +101,7 @@ public final class AwtreeManager
     */
    public final boolean validate_ok (BrdItem p_item)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : search_trees)
          {
          if ( ! curr_tree.validate_ok(p_item)) return false;
          }
@@ -116,7 +115,7 @@ public final class AwtreeManager
    public void clearance_value_changed()
       {
       // delete all trees except the default tree
-      Iterator<AwtreeShapeSearch> iter = compensated_search_trees.iterator();
+      Iterator<AwtreeShapeSearch> iter = search_trees.iterator();
 
       while (iter.hasNext())
          {
@@ -137,7 +136,7 @@ public final class AwtreeManager
     */
    public void clearance_class_removed(int p_no)
       {
-      Iterator<AwtreeShapeSearch> it = compensated_search_trees.iterator();
+      Iterator<AwtreeShapeSearch> it = search_trees.iterator();
       
       if (p_no == default_tree.compensated_clearance_class_no)
          {
@@ -159,7 +158,7 @@ public final class AwtreeManager
     */
    public AwtreeShapeSearch get_autoroute_tree(int p_clearance_class_no)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : search_trees)
          {
          if (curr_tree.compensated_clearance_class_no == p_clearance_class_no)
             {
@@ -169,7 +168,7 @@ public final class AwtreeManager
 
       AwtreeShapeSearch curr_autoroute_tree = new AwtreeShapeSearch( r_board, p_clearance_class_no);
       
-      compensated_search_trees.add(curr_autoroute_tree);
+      search_trees.add(curr_autoroute_tree);
       
       Iterator<UndoObjectNode> iter = r_board.undo_items.start_read_object();
 
@@ -190,7 +189,7 @@ public final class AwtreeManager
     */
    public void reset_compensated_trees()
       {
-      Iterator<AwtreeShapeSearch> iter = compensated_search_trees.iterator();
+      Iterator<AwtreeShapeSearch> iter = search_trees.iterator();
 
       while (iter.hasNext())
          {
@@ -247,7 +246,7 @@ public final class AwtreeManager
     */
    public void merge_entries_in_front(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : search_trees)
          {
          curr_tree.merge_entries_in_front(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
          }
@@ -259,7 +258,7 @@ public final class AwtreeManager
     */
    public void merge_entries_at_end(BrdTracep p_from_trace, BrdTracep p_to_trace, Polyline p_joined_polyline, int p_from_entry_no, int p_to_entry_no)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : search_trees)
          {
          curr_tree.merge_entries_at_end(p_from_trace, p_to_trace, p_joined_polyline, p_from_entry_no, p_to_entry_no);
          }
@@ -271,7 +270,7 @@ public final class AwtreeManager
     */
    public void change_entries(BrdTracep p_obj, Polyline p_new_polyline, int p_keep_at_start_count, int p_keep_at_end_count)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : search_trees)
          {
          curr_tree.change_entries(p_obj, p_new_polyline, p_keep_at_start_count, p_keep_at_end_count);
          }
@@ -283,7 +282,7 @@ public final class AwtreeManager
     */
    public void reuse_entries_after_cutout(BrdTracep p_from_trace, BrdTracep p_start_piece, BrdTracep p_end_piece)
       {
-      for (AwtreeShapeSearch curr_tree : compensated_search_trees)
+      for (AwtreeShapeSearch curr_tree : search_trees)
          {
          curr_tree.reuse_entries_after_cutout(p_from_trace, p_start_piece, p_end_piece);
          }
