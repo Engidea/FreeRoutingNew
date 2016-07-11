@@ -59,6 +59,7 @@ import freert.varie.NetNosList;
 import freert.varie.Signum;
 import freert.varie.ThreadStoppable;
 import freert.varie.TimeLimitStoppable;
+import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -522,8 +523,9 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
       p_window.append_bold(resources.getString("trace"));
+      p_window.append(" id="+get_id_no());
       p_window.append(" " + resources.getString("from"));
       p_window.append(corner_first().to_float());
       p_window.append(resources.getString("to"));

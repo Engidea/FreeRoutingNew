@@ -44,6 +44,7 @@ import freert.planar.ShapeConvex;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.varie.NetNosList;
+import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -705,9 +706,10 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
    @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
-      p_window.append_bold(resources.getString("pin") + ": ");
-      p_window.append(resources.getString("component_2") + " ");
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
+      p_window.append_bold(resources.getString("pin"));
+      p_window.append(" id="+get_id_no());
+      p_window.append(" "+resources.getString("component_2") + " ");
       BrdComponent component = r_board.brd_components.get(get_component_no());
       p_window.append(component.name, resources.getString("component_info"), component);
       p_window.append(", " + resources.getString("pin_2") + " ");
@@ -841,4 +843,16 @@ public final class BrdAbitPin extends BrdAbit implements java.io.Serializable
          }
       return nearest_exit_corner;
       }
+   
+   @Override
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(500);
+      risul.append("pin");
+      risul.append(" id="+get_id_no());
+      return risul.toString();
+      }
+   
+   
+   
    }

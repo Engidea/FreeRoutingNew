@@ -330,6 +330,11 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
          // if the intersect point is actually inside the segment I can actually add it
          if ( ! i_intersect.is_inside(myi_start, myi_end, 0.1)) return risul; 
 
+         PlaPointInt oi_start = p_other.start_point.round();
+         PlaPointInt oi_end = p_other.end_point.round();
+
+         if ( ! i_intersect.is_inside(oi_start, oi_end, 0.1)) return risul; 
+
          risul.add(i_intersect);
          
          return risul;

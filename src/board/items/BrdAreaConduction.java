@@ -36,6 +36,7 @@ import freert.planar.PlaPointInt;
 import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.varie.NetNosList;
+import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -214,10 +215,20 @@ public final class BrdAreaConduction extends BrdArea implements BrdConnectable
    @Override
    public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
       {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
       p_window.append_bold(resources.getString("conduction_area"));
+      p_window.append(" id="+get_id_no());
       print_shape_info(p_window, p_locale);
       print_connectable_item_info(p_window, p_locale);
       p_window.newline();
+      }
+   
+   @Override
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(500);
+      risul.append("conduction_area");
+      risul.append(" id="+get_id_no());
+      return risul.toString();
       }
    }

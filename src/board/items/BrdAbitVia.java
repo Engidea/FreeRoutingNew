@@ -38,6 +38,7 @@ import freert.planar.PlaVectorInt;
 import freert.planar.ShapeTile;
 import freert.planar.ShapeTileBox;
 import freert.varie.NetNosList;
+import gui.varie.GuiResources;
 import gui.varie.ObjectInfoPanel;
 
 /**
@@ -275,36 +276,20 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
    @Override
    public double get_draw_intensity(freert.graphics.GdiContext p_graphics_context)
       {
-      double result;
-      if (this.net_count() == 0)
+      if ( net_count() == 0)
          {
          // display unconnected vias as obstacles
-         result = p_graphics_context.get_obstacle_color_intensity();
-
+         return p_graphics_context.get_obstacle_color_intensity();
          }
-      else if (this.first_layer() >= this.last_layer())
+      else if ( first_layer() >=  last_layer())
          {
          // display vias with only one layer as pins
-         result = p_graphics_context.get_pin_color_intensity();
+         return p_graphics_context.get_pin_color_intensity();
          }
       else
          {
-         result = p_graphics_context.get_via_color_intensity();
+         return p_graphics_context.get_via_color_intensity();
          }
-      return result;
-      }
-
-   @Override
-   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
-      {
-      java.util.ResourceBundle resources = java.util.ResourceBundle.getBundle("board.resources.ObjectInfoPanel", p_locale);
-      p_window.append_bold(resources.getString("via"));
-      p_window.append(" " + resources.getString("at"));
-      p_window.append(this.center_get().to_float());
-      p_window.append(", " + resources.getString("padstack"));
-      p_window.append(padstack.pads_name, resources.getString("padstack_info"), padstack);
-      print_connectable_item_info(p_window, p_locale);
-      p_window.newline();
       }
 
    @Override
@@ -320,5 +305,30 @@ public final class BrdAbitVia extends BrdAbit implements java.io.Serializable
          }
       return true;
       }
+
+   
+   @Override
+   public void print_info(ObjectInfoPanel p_window, java.util.Locale p_locale)
+      {
+      GuiResources resources = r_board.newGuiResources("board.resources.ObjectInfoPanel");
+      p_window.append_bold(resources.getString("via"));
+      p_window.append(" id="+get_id_no());
+      p_window.append(" " + resources.getString("at"));
+      p_window.append(center_get().to_float());
+      p_window.append(", " + resources.getString("padstack"));
+      p_window.append(padstack.pads_name, resources.getString("padstack_info"), padstack);
+      print_connectable_item_info(p_window, p_locale);
+      p_window.newline();
+      }
+
+   
+   @Override
+   public String toString()
+      {
+      StringBuilder risul = new StringBuilder(500);
+      risul.append("via id="+get_id_no());
+      return risul.toString();
+      }
+   
 
    }
