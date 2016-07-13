@@ -19,6 +19,8 @@
  */
 package interactive.state;
 
+import freert.main.Ldbg;
+import freert.main.Mdbg;
 import freert.planar.PlaPoint;
 import freert.planar.PlaPointFloat;
 import freert.planar.PlaPointInt;
@@ -79,6 +81,10 @@ public abstract class StateRoute extends StateInteractive
       PlaPointInt location = p_location.round();
       
       BrdItem picked_item = pick_start_item(location, i_board);
+      
+      if ( i_board.debug(Mdbg.TRACE, Ldbg.DEBUG))
+         i_board.userPrintln("StateRoute.get_instance: picked_item="+picked_item );
+      
       
       if (picked_item == null) return null;
       

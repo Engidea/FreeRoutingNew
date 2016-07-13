@@ -86,6 +86,7 @@ public final class WindowDebugConfig extends GuiSubWindowSavable
       risul.add(newCheckbox(resources, mask_list, "Push Trace", Mdbg.PUSH_TRACE));
       risul.add(newCheckbox(resources, mask_list, "Clearance Violation", Mdbg.CLRVIOL));
       risul.add(newCheckbox(resources, mask_list, "Trace Split", Mdbg.TRACE_SPLIT));
+      risul.add(newCheckbox(resources, mask_list, "Trace ", Mdbg.TRACE));
       
       return risul.getJPanel();
       }

@@ -183,42 +183,6 @@ public final class StateSelectedItem extends StateInteractive
       return result;
       }
 
-   /**
-    * Split the currently selected traces and turn debuggin  on on the process
-    * Used for debugging, can be removed once I actually have a clear idea on this...
-    */
-   private StateInteractive selected_split_traces()
-      {
-//      int prev_mask = r_brd.stat.debug_mask;
-//      int prev_level = r_brd.stat.debug_level;
-      
-      //      r_brd.stat.debug_mask = Mdbg.TRACE_SPLIT;
-      //r_brd.stat.debug_level |= Ldbg.DEBUG;
-      
-      if ( r_brd.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-         r_brd.userPrintln("selected_split_traces: DEBUG");
-
-      for ( BrdItem curr_item : items_list )
-         {
-         if ( ! ( curr_item instanceof BrdTracep) ) continue;
-
-         BrdTracep a_trace = (BrdTracep)curr_item;
-         
-         if ( r_brd.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-            r_brd.userPrintln("split: "+a_trace);
-
-         a_trace.split(null);
-         }
-
-      if ( r_brd.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-         r_brd.userPrintln("selected_split_traces: DEBUG END");
-      
-      //r_brd.stat.debug_mask = prev_mask;
-      //r_brd.stat.debug_level = prev_level;
-
-      return this;
-      }
-   
    
    
    /**

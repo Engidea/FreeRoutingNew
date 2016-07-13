@@ -36,6 +36,8 @@ public final class Stat
    public int debug_level;               // debug level mask
    
    
+   public static Stat instance;        // use this when the correct stat is not available
+   
    public Stat ()
       {
       locale      = Locale.ENGLISH;

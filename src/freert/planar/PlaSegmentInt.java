@@ -16,6 +16,7 @@
 package freert.planar;
 
 import java.util.ArrayList;
+import freert.main.Stat;
 
 
 
@@ -305,40 +306,34 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
 
    /**
     * Return a list of intersection points where the segments "touch"
-    * The difficult part is when the two segments overlap...
+    * The logic way would be to check that the intersection point is within this segment and the other segment
+    * however, the rest of system really tries to play smart... and this results in missing split...
     * @param p_other
-    * @return
+    * @return pippo
     */
    public ArrayList<PlaPointInt> intersection_points(PlaSegmentInt p_other)
       {
       ArrayList<PlaPointInt> risul = new ArrayList<PlaPointInt> (2);
       
-      PlaPointInt myi_start = start_point.round();
-      PlaPointInt myi_end = end_point.round();
       
       if ( ! middle.is_parallel(p_other.middle))
          {
          PlaPointFloat f_intersect = middle.intersection_approx(p_other.middle);
          if ( f_intersect.is_NaN() )
             {
-            System.err.println("intersection_points: How did this happen ?");
+            Stat.instance.userPrintln("intersection_points: How did this happen ?");
             return risul;
             }
          
          PlaPointInt i_intersect = f_intersect.round();
-         
-         // if the intersect point is actually inside the segment I can actually add it
-         if ( ! i_intersect.is_inside(myi_start, myi_end, 0.1)) return risul; 
-
-         PlaPointInt oi_start = p_other.start_point.round();
-         PlaPointInt oi_end = p_other.end_point.round();
-
-         if ( ! i_intersect.is_inside(oi_start, oi_end, 0.1)) return risul; 
 
          risul.add(i_intersect);
          
          return risul;
          }
+
+      PlaPointInt myi_start = start_point.round();
+      PlaPointInt myi_end = end_point.round();
       
       // now, segments are parallel... so I will be returing two points... which ones ?
       // remember that I am splitting this segment against another one... I should NOT go outside the boundary of this !!

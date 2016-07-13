@@ -17,6 +17,9 @@
 package freert.planar;
 
 import java.util.ArrayList;
+import freert.main.Ldbg;
+import freert.main.Mdbg;
+import freert.main.Stat;
 
 /**
  * A Polyline is a sequence of lines, where no 2 consecutive lines may be parallel. 
@@ -1311,7 +1314,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * insert a line that is at 45 degree of the segment that was split 
     * @return an empty result if nothing wqs split
     */
-   public ArrayList<Polyline> split_at_point(int p_line_no, PlaPointInt p_point)
+   public ArrayList<Polyline> split_at_point(int p_line_no, PlaPointInt p_point, double tolerance)
       {
       ArrayList<Polyline> result = new ArrayList<Polyline>(2);
       
@@ -1324,26 +1327,40 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaLineInt split_line = plaline(p_line_no);
       
       // The idea being that the split point should be in this "line" with some tolerance
-      if ( split_line.side_of(p_point.to_float(), 0.01) != PlaSide.COLLINEAR ) return result;
+      if ( ! split_line.is_colinear(p_point, 2 ) )
+         {
+//         PlaSide aa = split_line.side_of(p_point.to_float(), tolerance);
+         Stat.instance.userPrintln("split_at_point: p-line_no="+p_line_no+" NOT colinear");
+         return result;
+         }
       
       // not only the splitpoint must be colinear, it must also be "within" this "segment"
-      if ( ! p_point.is_inside(corner(p_line_no-1).round(), corner(p_line_no).round(), 0.1)) return result;
+      if ( ! p_point.is_inside(corner(p_line_no-1).round(), corner(p_line_no).round(), tolerance))
+         {
+         if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+            {
+            Stat.instance.userPrintln("split_at_point: p_line_no="+p_line_no+" NOT inside");
+            }
+         return result;
+         }
       
  //     if ( equal_at_start(p_point) ) return result;
  //     if ( equal_at_end(p_point) ) return result;
  //     if ( equal_at_start(p_line_no, p_point) ) return result;
  //     if ( equal_at_end(p_line_no, p_point) ) return result;
 
-      PlaLineInt a_line = plaline(p_line_no);
+      PlaDirection split_direction = split_line.direction();
       
       PlaLineIntAlist first_piece = new PlaLineIntAlist(plaline_len());
       
-      // Copy from the beginning up to the closing line, including the closing line
-      alist_append_to(first_piece, 0, p_line_no+1);
+      // Copy from the beginning up to the closing line
+      alist_append_to(first_piece, 0, p_line_no);
       
-      // now add the end line
-      PlaDirection split_direction = a_line.direction().rotate_45_deg(2);
-      first_piece.add(new PlaLineInt(p_point, split_direction));
+      // add the split line
+      first_piece.add(split_line);  
+      
+      // now add the end line, passing trough thepoint 90 degrees with the split direction
+      first_piece.add(new PlaLineInt(p_point, split_direction.rotate_45_deg(2)));
 
       Polyline first_poly = new Polyline(first_piece);
 
@@ -1353,10 +1370,13 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaLineIntAlist second_piece = new PlaLineIntAlist(plaline_len());
       
       // add the slit point to the second part
-      second_piece.add(new PlaLineInt(p_point, split_direction));
+      second_piece.add(new PlaLineInt(p_point, split_direction.rotate_45_deg(2)));
 
+      // add the slit line
+      second_piece.add(split_line);  
+      
       // and the rest of lines, up until the end
-      alist_append_to(second_piece, p_line_no);
+      alist_append_to(second_piece, p_line_no+1);
       
       Polyline second_poly = new Polyline(second_piece);
       

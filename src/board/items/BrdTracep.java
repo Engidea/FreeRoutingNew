@@ -39,6 +39,7 @@ import freert.graphics.GdiContext;
 import freert.graphics.GdiDrawable;
 import freert.main.Ldbg;
 import freert.main.Mdbg;
+import freert.main.Stat;
 import freert.planar.PlaDirection;
 import freert.planar.PlaLineInt;
 import freert.planar.PlaLineIntAlist;
@@ -970,23 +971,22 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
     * return true if some other trace was split
     */
-   private boolean split_wtrace_other_points (BrdTracep found_trace, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points, AwtreeFindEntry found_entry )
+   private boolean split_wtrace_other_points (BrdTracep other_trace, int other_line_no, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points )
       {
-      if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_B))
-         r_board.userPrintln("split_wtrace_other_points: found_trace == this is "+(found_trace == this) );
+      if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         r_board.userPrintln("split_wtrace_other_points: this.id="+get_id_no()+" other_id="+other_trace.get_id_no()+" equals="+(other_trace == this) );
 
-      if ( found_trace == this ) return false;
+      if ( other_trace == this ) return false;
       
       boolean have_trace_split = false;
       
       for (PlaPointInt inter_point : intersecting_points )
          {
-         int line_no = found_entry.shape_index_in_object + 1;
-         
-         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_B))
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
             r_board.userPrintln("split_wtrace_other_points: point "+inter_point);
 
-         ArrayList<BrdTracep> curr_split_pieces = found_trace.split_with_end_point(line_no, inter_point);
+         // subfunction will check agaoin if the point is inside the  segment
+         ArrayList<BrdTracep> curr_split_pieces = other_trace.split_with_end_point(other_line_no, inter_point, 1);
 
          if (curr_split_pieces.size() < 1 )
             {
@@ -1001,23 +1001,26 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          break;
          }
    
-      if ( ! have_trace_split) split_pieces.add(found_trace);
+      if ( ! have_trace_split) split_pieces.add(other_trace);
 
       return have_trace_split;
       }
 
    
-   private boolean split_wtrace_own_point (int line_index, LinkedList<BrdTracep> result, ArrayList<PlaPointInt> intersecting_points )
+   private boolean split_wtrace_own_point (int line_index, PlaSegmentInt s_my, LinkedList<BrdTracep> result, ArrayList<PlaPointInt> intersecting_points )
       {
       boolean have_trace_split = false;
       
+      
+      
       for (PlaPointInt inter_point : intersecting_points )
          {
-         ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, inter_point);
-
+         // subfunction will check if the point is inside the segment
+         ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, inter_point, 1);
+         
          if (curr_split_pieces.size() < 1 )
             {
-            System.err.println("split_wtrace_other_points: HAPPENS_B");
+            Stat.instance.userPrintln("split_wtrace_own_point: split_with_end_point FAILS this.id="+get_id_no()+" line_index="+line_index);
             continue;
             }
          
@@ -1040,7 +1043,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    private void join_move_to ( PlaPointInt a_point )
       {
       // show the dot only when enabling special A
-      if ( ! r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_A)) return;
+      if ( ! r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG)) return;
 
       if ( join_inserted == null )
          {
@@ -1054,12 +1057,15 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          }
       }
    
-   private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeFindEntry overlap_tentry, BrdTracep found_trace )
+   private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeFindEntry overlap_tentry, BrdTracep other_trace )
       {
       // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
       
       // this is the segment of the other trace that needs to be "joined" with this trace
-      PlaSegmentInt other_segment = found_trace.polyline.segment_get(overlap_tentry.shape_index_in_object + 1);
+      int other_line_no = overlap_tentry.shape_index_in_object + 1;
+      
+      
+      PlaSegmentInt other_segment = other_trace.polyline.segment_get(other_line_no);
       
       // the order is important since I wish to "constraint" the result to curr_segment and not to other_segment 
       ArrayList<PlaPointInt> intersecting_points = curr_segment.intersection_points(other_segment);
@@ -1069,15 +1075,18 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( intersecting_points.size() < 1) return false;
       
       if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-         r_board.userPrintln("split_wtrace_points: have "+intersecting_points.size()+" intersection");
+         {
+         r_board.userPrintln("split_wtrace_points: have "+intersecting_points.size());
+         r_board.userPrintln("   my_id="+get_id_no()+" other id="+other_trace.get_id_no());
+         }
 
       join_move_to ( intersecting_points.get(0));
       
       // try splitting the found trace first
-      boolean other_split = split_wtrace_other_points (found_trace, clean_list, intersecting_points, overlap_tentry);
+      boolean other_split = split_wtrace_other_points (other_trace, other_line_no, clean_list, intersecting_points);
   
       // no need to readjust the iterator since we are actually exiting
-      boolean own_split = split_wtrace_own_point (seg_index, clean_list ,intersecting_points);
+      boolean own_split = split_wtrace_own_point (seg_index, curr_segment, clean_list ,intersecting_points);
    
       if ( other_split && own_split == false ) 
          r_board.userPrintln("split_wtrace_points: other_split && own_split == false");
@@ -1194,7 +1203,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * check if I should avoid testing this segment
     * @return true if this item should not  be used in the split algo
     */
-   private boolean split_avoid_this_item (int my_line_index, AwtreeFindEntry overlap_entry, BrdItem overlap_item)
+   private boolean split_avoid_this_item (int my_shape_index, AwtreeFindEntry overlap_entry, BrdItem overlap_item)
       {
       if (overlap_item != this) return false;
       
@@ -1202,25 +1211,25 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // Basically, it should happen if you "go over" your trace and you are overstepping
       
       // this is zero based, meaning that the first shape
-      int line_index_in_object = overlap_entry.shape_index_in_object; 
+      int shape_index_in_object = overlap_entry.shape_index_in_object; 
       
-      if ( line_index_in_object >= my_line_index - 1 && line_index_in_object <= my_line_index + 1)
+      if ( shape_index_in_object >= my_shape_index - 1 && shape_index_in_object <= my_shape_index + 1)
          {
          // don't split own trace at this line or at neighbour lines
          return true;
          }
 
       // try to handle intermediate segments of length 0 by comparing end corners
-      if (my_line_index < line_index_in_object)
+      if (my_shape_index < shape_index_in_object)
          {
-         if (polyline.corner(my_line_index + 1).equals(polyline.corner(line_index_in_object)))
+         if (polyline.corner(my_shape_index + 1).equals(polyline.corner(shape_index_in_object)))
             {
             return true;
             }
          }
-      else if (line_index_in_object < my_line_index)
+      else if (shape_index_in_object < my_shape_index)
          {
-         if (polyline.corner(line_index_in_object + 1).equals(polyline.corner(my_line_index)))
+         if (polyline.corner(shape_index_in_object + 1).equals(polyline.corner(my_shape_index)))
             {
             return true;
             }
@@ -1264,7 +1273,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( ! curr_line_segment.contains(split_point) ) return;
 
       // the plus one is from how the caller handles indexes...
-      split_with_end_point(my_line_index, split_point);
+      split_with_end_point(my_line_index, split_point, 0.01);
       }
 
 
@@ -1437,7 +1446,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * can return false i for example p_point is not located on this trace or already split !
     * @return the splitted traces, if any, so you can do cleanup 
     */
-   public final ArrayList<BrdTracep> split_with_end_point(int line_idx, PlaPointInt p_point)
+   public final ArrayList<BrdTracep> split_with_end_point(int line_idx, PlaPointInt p_point, double tolerance)
       {
       ArrayList<BrdTracep> risul = new  ArrayList<BrdTracep>(2);
       
@@ -1446,12 +1455,12 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // if split prohibited do nothing
       if ( ! split_inside_drill_pad_allowed(p_point)) return risul;
       
-      ArrayList<Polyline> split_polylines = polyline.split_at_point(line_idx, p_point);
+      ArrayList<Polyline> split_polylines = polyline.split_at_point(line_idx, p_point, tolerance);
          
       if (split_polylines.size() < 2 )
          {
-         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_C))
-            r_board.userPrintln("split_with_end_point: split_at_point FAIL");
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+            r_board.userPrintln("split_with_end_point: split_at_point FAIL id="+get_id_no());
          
          return risul;
          }
@@ -1462,7 +1471,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if ( first_trace == null ) 
          {
-         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_C))
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
             r_board.userPrintln("split_with_end_point: first insert FAILS");
          
          return risul;
@@ -1472,11 +1481,14 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if ( second_trace == null ) 
          {
-         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.SPC_C))
+         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
             r_board.userPrintln("split_with_end_point: second insert FAILS");
          
          return risul;
          }
+      
+    if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+       r_board.userPrintln("split_with_end_point: first.id="+first_trace.get_id_no()+" second.id="+second_trace.get_id_no() );
       
       risul.add( first_trace );
       risul.add( second_trace );

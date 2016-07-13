@@ -75,6 +75,8 @@ public class MainApplication extends JFrame
       {
       main_options = new MainOptions(p_args);
 
+      Stat.instance = stat;
+
       decideUILookAndFeel(main_options);
 
       stat.log = new WindowEventsLog(true);

@@ -38,6 +38,7 @@ public interface Mdbg
    public int SHAPE       = 0x00001000;    // 
    public int DSN         = 0x00002000;    //
    public int TRACE_SPLIT = 0x00004000;    // Splitting traces...
+   public int TRACE       = 0x00008000;    // Generic trace
    
    public int ALL        = 0xFFFFFFFF;    // all masks
    }

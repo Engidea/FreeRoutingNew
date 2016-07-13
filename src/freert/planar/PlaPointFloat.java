@@ -112,7 +112,7 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       }
 
    /**
-    * returns the square of the distance from this Point to the Point p_other
+    * @return the square of the distance from this Point to the Point p_other
     */
    public final double distance_square(PlaPointFloat p_other)
       {

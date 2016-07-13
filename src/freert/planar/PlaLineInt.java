@@ -136,6 +136,33 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       return direction().side_of(point_dir, p_tolerance) ;
       }
 
+   
+   /**
+    * What it does is to calculate the distance from the projection and the point
+    * @param f_point
+    * @param tolerance_sq
+    * @return
+    */
+   public boolean is_colinear ( PlaPointFloat f_point, double tolerance_sq )
+      {
+      PlaPointFloat f_project = f_point.projection_approx(this);
+      
+      double f_dist = f_project.distance_square(f_point);
+      
+      return f_dist < tolerance_sq;
+      }
+
+   /**
+    * Test for colinearity with a tolerance
+    * @param i_point
+    * @param tolerance_sq
+    * @return
+    */
+   public boolean is_colinear ( PlaPointInt i_point, double tolerance_sq )
+      {
+      return is_colinear(i_point.to_float(),tolerance_sq);
+      }
+   
    /**
     * returns Side.ON_THE_LEFT, if this line direction is on the left of p_point, 
     * Side.ON_THE_RIGHT, if this line direction is on the right of p_point,
@@ -363,6 +390,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
     * Returns an approximation of the intersection of the 2 lines by a FloatPoint. 
     * If the lines are parallel the result coordinates will be a NaN PointFloat 
     * Useful in situations where performance is more important than accuracy.
+    * See https://en.wikipedia.org/wiki/Line–line_intersection
     */
    public final PlaPointFloat intersection_approx(PlaLineInt p_other)
       {
@@ -370,13 +398,13 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       PlaPointInt other_a =  p_other.point_a;
       PlaPointInt other_b =  p_other.point_b;
       
-      double d1x = point_b.v_x - point_a.v_x;
-      double d1y = point_b.v_y - point_a.v_y;
+      double m_dx = point_a.v_x - point_b.v_x;   // x1 - x2
+      double m_dy = point_a.v_y - point_b.v_y;   // y1 - y2
       
-      double d2x = other_b.v_x - other_a.v_x;
-      double d2y = other_b.v_y - other_a.v_y;
+      double o_dx = other_a.v_x - other_b.v_x;   // x3 - x4 
+      double o_dy = other_a.v_y - other_b.v_y;   // y3 - y4
       
-      double det = d2x * d1y - d2y * d1x;
+      double det = m_dx * o_dy - m_dy * o_dx;
       
       // this would be an infinite distance since the lines are parallel
       if (det == 0) return new PlaPointFloat();
@@ -384,8 +412,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
       double det_1 = (double) point_a.v_x  * point_b.v_y  - (double) point_a.v_y  * point_b.v_x;
       double det_2 = (double) other_a.v_x * other_b.v_y - (double) other_a.v_y * other_b.v_x;
 
-      double is_x = (d2x * det_1 - d1x * det_2) / det;
-      double is_y = (d2y * det_1 - d1y * det_2) / det;
+      double is_x = ( det_1 * o_dx - m_dx * det_2) / det;
+      double is_y = ( det_1 * o_dy - m_dy * det_2) / det;
       
       return new PlaPointFloat(is_x, is_y);
       }

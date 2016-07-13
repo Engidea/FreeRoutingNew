@@ -377,6 +377,7 @@ public final class PlaDirection implements Comparable<PlaDirection>, java.io.Ser
 
    /**
     * Important: p_other represent a "direction" in a floating point mode
+    * Basically the determinant of two "directions" is zero if they are colinear
     * @param p_other
     * @param p_tolerance
     * @return
