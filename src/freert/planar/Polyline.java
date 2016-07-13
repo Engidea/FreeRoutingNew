@@ -1343,13 +1343,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
             }
          return result;
          }
-      
- //     if ( equal_at_start(p_point) ) return result;
- //     if ( equal_at_end(p_point) ) return result;
- //     if ( equal_at_start(p_line_no, p_point) ) return result;
- //     if ( equal_at_end(p_line_no, p_point) ) return result;
+
 
       PlaDirection split_direction = split_line.direction();
+
+      if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         split_line = new PlaLineInt(p_point,split_direction);
       
       PlaLineIntAlist first_piece = new PlaLineIntAlist(plaline_len());
       

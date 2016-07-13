@@ -986,7 +986,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
             r_board.userPrintln("split_wtrace_other_points: point "+inter_point);
 
          // subfunction will check agaoin if the point is inside the  segment
-         ArrayList<BrdTracep> curr_split_pieces = other_trace.split_with_end_point(other_line_no, inter_point, 1);
+         ArrayList<BrdTracep> curr_split_pieces = other_trace.split_with_end_point(other_line_no, inter_point, 10);
 
          if (curr_split_pieces.size() < 1 )
             {
@@ -1016,7 +1016,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       for (PlaPointInt inter_point : intersecting_points )
          {
          // subfunction will check if the point is inside the segment
-         ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, inter_point, 1);
+         ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, inter_point, 10);
          
          if (curr_split_pieces.size() < 1 )
             {
@@ -1273,7 +1273,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( ! curr_line_segment.contains(split_point) ) return;
 
       // the plus one is from how the caller handles indexes...
-      split_with_end_point(my_line_index, split_point, 0.01);
+      split_with_end_point(my_line_index, split_point, 0.1);
       }
 
 
@@ -1471,9 +1471,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if ( first_trace == null ) 
          {
-         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-            r_board.userPrintln("split_with_end_point: first insert FAILS");
-         
+         r_board.userPrintln("split_with_end_point: first insert FAILS");
          return risul;
          }
       
@@ -1481,9 +1479,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       if ( second_trace == null ) 
          {
-         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-            r_board.userPrintln("split_with_end_point: second insert FAILS");
-         
+         r_board.userPrintln("split_with_end_point: second insert FAILS");
          return risul;
          }
       
