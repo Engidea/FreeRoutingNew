@@ -27,7 +27,8 @@
 
   <target name="compile" description="Compile Java source files" depends="init">
     <javac destdir="${classes.dir}" debug="${javac.debug}" 
-           deprecation="${javac.deprecation}" 
+           deprecation="${javac.deprecation}"
+    	   includeantruntime="false"
            source="1.6" target="1.6">
       <src path="src"/>
     </javac>

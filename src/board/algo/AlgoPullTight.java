@@ -350,32 +350,38 @@ public abstract class AlgoPullTight
       while (connection_to_trace_improved && loop_counter++ < 100)
          {
          connection_to_trace_improved = false;
+
          Polyline adjusted_polyline = smoothen_end_corners_at_trace_two(curr_trace);
          
-         if (adjusted_polyline != null)
+         if (adjusted_polyline == null) continue;
+
+         result = true;
+
+         connection_to_trace_improved = true;
+         int trace_layer = curr_trace.get_layer();
+         int curr_cl_class = curr_trace.clearance_idx();
+         ItemFixState curr_fixed_state = curr_trace.get_fixed_state();
+
+         r_board.remove_item(curr_trace);
+         
+         curr_trace = r_board.insert_trace_without_cleaning(
+               adjusted_polyline, 
+               trace_layer, 
+               curr_half_width, 
+               curr_trace.net_nos, 
+               curr_cl_class, curr_fixed_state);
+         
+         // really strange, insert failed, the previous trace is gone... 
+         // TODO I should really pick it back up
+         if ( curr_trace == null ) continue;
+
+         for (int curr_net_no : curr_trace.net_nos )
             {
-            result = true;
-            connection_to_trace_improved = true;
-            int trace_layer = curr_trace.get_layer();
-            int curr_cl_class = curr_trace.clearance_idx();
-            ItemFixState curr_fixed_state = curr_trace.get_fixed_state();
-            r_board.remove_item(curr_trace);
-            
-            curr_trace = r_board.insert_trace_without_cleaning(
-                  adjusted_polyline, 
-                  trace_layer, 
-                  curr_half_width, 
-                  curr_trace.net_nos, 
-                  curr_cl_class, curr_fixed_state);
+            r_board.split_traces(adjusted_polyline.corner_first(), trace_layer, curr_net_no);
+            r_board.split_traces(adjusted_polyline.corner_last(), trace_layer, curr_net_no);
+            r_board.normalize_traces(curr_net_no);
 
-            for (int curr_net_no : curr_trace.net_nos )
-               {
-               r_board.split_traces(adjusted_polyline.corner_first(), trace_layer, curr_net_no);
-               r_board.split_traces(adjusted_polyline.corner_last(), trace_layer, curr_net_no);
-               r_board.normalize_traces(curr_net_no);
-
-               if (split_traces_keep_point()) return true;
-               }
+            if (split_traces_keep_point()) return true;
             }
          }
       
