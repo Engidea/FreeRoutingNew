@@ -222,6 +222,53 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       return true;
       }
    
+
+   /**
+    * Assume that the point is colinear with this segment
+    * Check if the given point is "within" this segment with a given tolerance
+    * @param p_point
+    * @param tolerance
+    * @return
+    */
+   public final  boolean contains(PlaPointInt p_point, double tolerance)
+      {
+      if ( p_point.is_NaN() || start_point.is_NaN() || end_point.is_NaN() ) return false;
+      
+      PlaPointFloat f_point = p_point.to_float();
+      PlaPointFloat f_begin = start_point.to_float();
+      PlaPointFloat f_end   = end_point.to_float();
+      
+      double d_begin_this = f_begin.distance_square(f_point);
+      double d_end_this   = f_end.distance_square(f_point);
+      double d_begin_end  = f_begin.distance_square(f_end);
+      
+      if ( d_begin_end >= d_begin_this + tolerance )
+         {
+         if ( d_begin_end >= d_end_this + tolerance )
+            {
+            // simplest case, the new point is in the middle of start end
+            return true; 
+            }
+         else
+            {
+            // new point is on the left of start point, close to it
+            return false;
+            }
+         }
+      else
+         {
+         if ( d_begin_end >= d_end_this + tolerance )
+            {
+            // new point is on the right of end, close to it
+            return false;
+            }
+         else
+            {
+            // new point is on the left, far away
+            return false;
+            }
+         }
+      }
    
    /**
     * calculates the smallest surrounding box of this line segmant
@@ -306,8 +353,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
 
    /**
     * Return a list of intersection points where the segments "touch"
-    * The logic way would be to check that the intersection point is within this segment and the other segment
-    * however, the rest of system really tries to play smart... and this results in missing split...
+    * What is happening is that the "intersection" may not be "in the segments", but outside
+    * At the moment I leave to caller decide what to do... 
     * @param p_other
     * @return pippo
     */
@@ -315,10 +362,10 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
       {
       ArrayList<PlaPointInt> risul = new ArrayList<PlaPointInt> (2);
       
-      
       if ( ! middle.is_parallel(p_other.middle))
          {
          PlaPointFloat f_intersect = middle.intersection_approx(p_other.middle);
+
          if ( f_intersect.is_NaN() )
             {
             Stat.instance.userPrintln("intersection_points: How did this happen ?");

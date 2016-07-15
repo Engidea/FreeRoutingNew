@@ -971,68 +971,52 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
 
     * return true if some other trace was split
     */
-   private boolean split_wtrace_other_points (BrdTracep other_trace, int other_line_no, Collection<BrdTracep> split_pieces, ArrayList<PlaPointInt> intersecting_points )
+   private boolean split_wtrace_other_point (Collection<BrdTracep> p_clean_list, PlaPointInt p_intersect, BrdTracep other_trace, int other_line_no, PlaSegmentInt p_my_segment )
       {
       if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-         r_board.userPrintln("split_wtrace_other_points: this.id="+get_id_no()+" other_id="+other_trace.get_id_no()+" equals="+(other_trace == this) );
+         r_board.userPrintln("split_wtrace_other_point: this.id="+get_id_no()+" other_id="+other_trace.get_id_no()+" equals="+(other_trace == this) );
 
       if ( other_trace == this ) return false;
       
-      boolean have_trace_split = false;
+      // the idea being that the intersect point must bealso inside the my_segment but it can actually land at the end points
+      if ( ! p_my_segment.contains(p_intersect,0) ) return false;
       
-      for (PlaPointInt inter_point : intersecting_points )
+      if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         r_board.userPrintln("split_wtrace_other_points: point "+p_intersect);
+
+      // subfunction will check agaoin if the point is inside the  segment
+      ArrayList<BrdTracep> split_traces = other_trace.split_with_end_point(other_line_no, p_intersect, 10);
+
+      if (split_traces.size() < 1 )
          {
-         if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-            r_board.userPrintln("split_wtrace_other_points: point "+inter_point);
-
-         // subfunction will check agaoin if the point is inside the  segment
-         ArrayList<BrdTracep> curr_split_pieces = other_trace.split_with_end_point(other_line_no, inter_point, 10);
-
-         if (curr_split_pieces.size() < 1 )
-            {
-            r_board.userPrintln("split_wtrace_other_points: split_with_end_point FAILED");
-            continue;
-            }
-
-         have_trace_split = true;
-
-         split_pieces.addAll(curr_split_pieces);
-         
-         break;
+         r_board.userPrintln("split_wtrace_other_point: split_with_end_point FAILED");
+         p_clean_list.add(other_trace);
+         return false;
          }
-   
-      if ( ! have_trace_split) split_pieces.add(other_trace);
 
-      return have_trace_split;
+      p_clean_list.addAll(split_traces);
+   
+      return true;
       }
 
    
-   private boolean split_wtrace_own_point (int line_index, PlaSegmentInt s_my, LinkedList<BrdTracep> result, ArrayList<PlaPointInt> intersecting_points )
+   private boolean split_wtrace_own_point (LinkedList<BrdTracep> clean_list, PlaPointInt p_intersect, int line_index, PlaSegmentInt s_my, PlaSegmentInt s_other )
       {
-      boolean have_trace_split = false;
+      // the idea being that the intersect point must be also inside the other segment but it can actually land at the end points
+      if ( ! s_other.contains(p_intersect,0) ) return false;
       
+      // subfunction will check if the point is inside the segment
+      ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, p_intersect, 10);
       
-      
-      for (PlaPointInt inter_point : intersecting_points )
+      if (curr_split_pieces.size() < 1 )
          {
-         // subfunction will check if the point is inside the segment
-         ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, inter_point, 10);
-         
-         if (curr_split_pieces.size() < 1 )
-            {
-            Stat.instance.userPrintln("split_wtrace_own_point: split_with_end_point FAILS this.id="+get_id_no()+" line_index="+line_index);
-            continue;
-            }
-         
-         // yes, we have a trace split
-         have_trace_split = true;
-
-         result.addAll(curr_split_pieces);
-         
-         break;
+         Stat.instance.userPrintln("split_wtrace_own_point: split_with_end_point FAILS this.id="+get_id_no()+" line_index="+line_index);
+         return false;
          }
       
-      return have_trace_split;
+      clean_list.addAll(curr_split_pieces);
+
+      return true;
       }
    
    
@@ -1057,6 +1041,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          }
       }
    
+   /**
+    * Note that the "current trace" is not always what you think it is
+    * @return
+    */
    private boolean split_wtrace_points (LinkedList<BrdTracep> clean_list, int seg_index, PlaSegmentInt curr_segment, AwtreeFindEntry overlap_tentry, BrdTracep other_trace )
       {
       // when you have a trace overlap you need to split the "other" trace and "this" trace, two split operations !
@@ -1064,13 +1052,10 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // this is the segment of the other trace that needs to be "joined" with this trace
       int other_line_no = overlap_tentry.shape_index_in_object + 1;
       
-      
       PlaSegmentInt other_segment = other_trace.polyline.segment_get(other_line_no);
       
       // the order is important since I wish to "constraint" the result to curr_segment and not to other_segment 
       ArrayList<PlaPointInt> intersecting_points = curr_segment.intersection_points(other_segment);
-   
-//      join_move_to ( new PlaPointInt(0,0));
       
       if ( intersecting_points.size() < 1) return false;
       
@@ -1080,13 +1065,16 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          r_board.userPrintln("   my_id="+get_id_no()+" other id="+other_trace.get_id_no());
          }
 
-      join_move_to ( intersecting_points.get(0));
+      // I can deal with just one intersect in any case...
+      PlaPointInt i_intersect = intersecting_points.get(0);
+      
+      join_move_to ( i_intersect );
       
       // try splitting the found trace first
-      boolean other_split = split_wtrace_other_points (other_trace, other_line_no, clean_list, intersecting_points);
+      boolean other_split = split_wtrace_other_point (clean_list, i_intersect, other_trace, other_line_no, curr_segment );
   
       // no need to readjust the iterator since we are actually exiting
-      boolean own_split = split_wtrace_own_point (seg_index, curr_segment, clean_list ,intersecting_points);
+      boolean own_split = split_wtrace_own_point (clean_list ,i_intersect, seg_index, curr_segment, other_segment);
    
       if ( other_split && own_split == false ) 
          r_board.userPrintln("split_wtrace_points: other_split && own_split == false");
