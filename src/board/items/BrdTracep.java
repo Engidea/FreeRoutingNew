@@ -985,7 +985,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          r_board.userPrintln("split_wtrace_other_points: point "+p_intersect);
 
       // subfunction will check agaoin if the point is inside the  segment
-      ArrayList<BrdTracep> split_traces = other_trace.split_with_end_point(other_line_no, p_intersect, 10);
+      ArrayList<BrdTracep> split_traces = other_trace.split_with_end_point(other_line_no, p_intersect, 1);
 
       if (split_traces.size() < 1 )
          {
@@ -1006,7 +1006,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( ! s_other.contains(p_intersect,0) ) return false;
       
       // subfunction will check if the point is inside the segment
-      ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, p_intersect, 10);
+      ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, p_intersect, 1);
       
       if (curr_split_pieces.size() < 1 )
          {

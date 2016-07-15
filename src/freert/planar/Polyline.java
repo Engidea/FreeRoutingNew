@@ -1324,7 +1324,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return result;
          }
       
-      PlaLineInt split_line = plaline(p_line_no);
+      final PlaLineInt split_line = plaline(p_line_no);
       
       // The idea being that the split point should be in this "line" with some tolerance
       if ( ! split_line.is_colinear(p_point, 2 ) )
@@ -1334,29 +1334,39 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return result;
          }
       
+      
+      PlaPoint prev_corner = corner(p_line_no-1);
+      PlaPoint next_corner = corner(p_line_no);
+      
       // not only the splitpoint must be colinear, it must also be "within" this "segment"
-      if ( ! p_point.is_inside(corner(p_line_no-1).round(), corner(p_line_no).round(), tolerance))
+      if ( ! p_point.is_inside(prev_corner.round(), next_corner.round(), tolerance))
          {
          if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-            {
             Stat.instance.userPrintln("split_at_point: p_line_no="+p_line_no+" NOT inside");
-            }
          return result;
          }
 
 
       PlaDirection split_direction = split_line.direction();
-
-      if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-         split_line = new PlaLineInt(p_point,split_direction);
       
       PlaLineIntAlist first_piece = new PlaLineIntAlist(plaline_len());
       
       // Copy from the beginning up to the closing line
       alist_append_to(first_piece, 0, p_line_no);
       
-      // add the split line
-      first_piece.add(split_line);  
+      if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         {
+         // the idea being that when int points I just add a line that pass from the prev to current corner
+         if ( prev_corner.is_rational() )
+            first_piece.add(new PlaLineInt(p_point,split_direction));
+         else
+            first_piece.add(new PlaLineInt(prev_corner.round(),p_point));
+         }
+      else
+         {
+         // normal behaviour
+         first_piece.add(split_line);
+         }
       
       // now add the end line, passing trough thepoint 90 degrees with the split direction
       first_piece.add(new PlaLineInt(p_point, split_direction.rotate_45_deg(2)));
@@ -1372,7 +1382,19 @@ public final class Polyline implements java.io.Serializable, PlaObject
       second_piece.add(new PlaLineInt(p_point, split_direction.rotate_45_deg(2)));
 
       // add the slit line
-      second_piece.add(split_line);  
+      if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+         {
+         // the idea being that when int points I just add a line that pass from the prev to current corner
+         if ( next_corner.is_rational() )
+            first_piece.add(new PlaLineInt(p_point,split_direction));
+         else
+            first_piece.add(new PlaLineInt(p_point,next_corner.round()));
+         }
+      else
+         {
+         // standard behaviour
+         second_piece.add(split_line);
+         }
       
       // and the rest of lines, up until the end
       alist_append_to(second_piece, p_line_no+1);
