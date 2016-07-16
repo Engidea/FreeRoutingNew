@@ -139,6 +139,7 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    
    /**
     * What it does is to calculate the distance from the projection and the point
+    * Note that if the point is exactly colinear then the projection does not exist
     * @param f_point
     * @param tolerance_sq
     * @return
@@ -146,6 +147,8 @@ public final class PlaLineInt implements Comparable<PlaLineInt>, java.io.Seriali
    public boolean is_colinear ( PlaPointFloat f_point, double tolerance_sq )
       {
       PlaPointFloat f_project = f_point.projection_approx(this);
+      
+      if ( f_project.is_NaN() ) return true;
       
       double f_dist = f_project.distance_square(f_point);
       

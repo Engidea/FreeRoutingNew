@@ -1301,13 +1301,15 @@ public final class MazeSearch
       }
 
    /**
-    * Returns the perpendicular projection of p_from_segment onto p_to_segment. Returns null, if the projection is empty.
+    * Returns the perpendicular projection of p_from_segment onto p_to_segment. 
+    * @returns null, if the projection is empty.
     */
    private PlaSegmentFloat segment_projection(PlaSegmentFloat p_from_segment, PlaSegmentFloat p_to_segment)
       {
       PlaSegmentFloat check_segment = p_from_segment.adjust_direction(p_to_segment);
       PlaSegmentFloat first_projection = p_to_segment.segment_projection(check_segment);
       PlaSegmentFloat second_projection = p_to_segment.segment_projection_2(check_segment);
+      
       PlaSegmentFloat result;
       if (first_projection != null && second_projection != null)
          {
@@ -1324,7 +1326,9 @@ public final class MazeSearch
             {
             result_a = second_projection.point_a;
             }
+         
          PlaPointFloat result_b;
+         
          if (first_projection.point_b == p_to_segment.point_b || second_projection.point_b == p_to_segment.point_b)
             {
             result_b = p_to_segment.point_b;

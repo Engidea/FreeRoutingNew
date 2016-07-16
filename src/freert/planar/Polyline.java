@@ -661,6 +661,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
    /**
     * calculates for each line between p_from_no and p_to_no a shape around this line, where the right and left edge lines have the
     * distance p_half_width from the center line
+    * This method is expremly complicated, I wonder if there is a way to make it "simpler" or in any case safer
     */
    public ArrayList<ShapeTile> offset_shapes(int p_half_width, int p_from_no, int p_to_no)
       {
@@ -857,7 +858,12 @@ public final class Polyline implements java.io.Serializable, PlaObject
          return null;
          }
       
+      // apparently the +2 is correct to have just one shape to return...
       ArrayList<ShapeTile> result = offset_shapes(p_half_width, p_no, p_no + 2);
+      
+      // in some way it failed to return a shape...
+      // there are a zillion places where a null return will break things badly, meybe an Empty will not ?
+      if ( result.size() < 1 ) return ShapeTileOctagon.EMPTY;
 
       return result.get(0);
       }

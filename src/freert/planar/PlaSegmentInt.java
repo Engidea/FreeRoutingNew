@@ -199,6 +199,8 @@ public final class PlaSegmentInt implements java.io.Serializable, PlaObject
 
    /**
     * Checks if p_point is contained in this line segment
+    * This uses segment side, it works but it is difficult to insert "tolerance" in it
+    * Below there is one that has some "tolerance", it is possibly better
     */
    public final  boolean contains(PlaPointInt p_point)
       {

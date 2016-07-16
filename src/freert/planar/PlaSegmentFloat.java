@@ -20,6 +20,8 @@
 
 package freert.planar;
 
+import freert.main.Stat;
+
 /**
  * Defines a line in the plane by to FloatPoints. 
  * Calculations with FloatLines are generally not exact. 
@@ -30,29 +32,39 @@ package freert.planar;
  */
 public final class PlaSegmentFloat implements PlaObject
    {
-   private static final String classname = "PlaSegmentFloat.";
-   
    public final PlaPointFloat point_a;
    public final PlaPointFloat point_b;
 
+   private boolean is_nan=false;
+   
    /**
     * Creates a line from two FloatPoints
-    * I cannot see how it could be legal to have a null points, so, let me throw exception
+    * If null points or the same point is given then the segment will be a NaN
     */
    public PlaSegmentFloat(PlaPointFloat p_a, PlaPointFloat p_b)
       {
-      if (p_a == null) throw new IllegalArgumentException(classname+"constructor p_a is null");
-      
-      if (p_b == null) throw new IllegalArgumentException(classname+"constructor p_b is null");
+      point_a = check_input(p_a);
+      point_b = check_input(p_b);
 
-      point_a = p_a;
-      point_b = p_b;
+      is_nan |= point_a.equals(point_b);
+      }
+   
+   
+   private PlaPointFloat check_input ( PlaPointFloat p_float )
+      {
+      if ( (p_float != null) && (p_float.is_NaN() == false) ) return p_float;
+
+      is_nan = true;
+
+      Stat.instance.userPrintln("PlaSegmentFloat: param", new IllegalArgumentException("constructor param is null"));
+      
+      return new PlaPointFloat();
       }
    
    @Override
    public final boolean is_NaN ()
       {
-      return false;
+      return is_nan;
       }
 
 
@@ -138,6 +150,9 @@ public final class PlaSegmentFloat implements PlaObject
 
    /**
     * May return a NaN if no projection exist !
+    * A projection may not exist if the point is colinear, that is exactly on the line
+    * or it may not exist if the segment start and end points are the same
+    * It is better to return a NaN than just p_point since it makes detection failere explicit
     * @returns an approximation of the perpensicular projection of p_point onto this line.
     */
    public PlaPointFloat perpendicular_projection(PlaPointFloat p_point)
@@ -145,8 +160,8 @@ public final class PlaSegmentFloat implements PlaObject
       double dx = point_b.v_x - point_a.v_x;
       double dy = point_b.v_y - point_a.v_y;
       
-      // This just means that we are adealing wiht a point... possibly never happens
-      if (dx == 0 && dy == 0) return point_a;
+      // This just means that we are adealing wiht a point, return a NaN
+      if (dx == 0 && dy == 0) return new PlaPointFloat();
 
       double dxdx = dx * dx;
       double dydy = dy * dy;
@@ -165,7 +180,8 @@ public final class PlaSegmentFloat implements PlaObject
       }
 
    /**
-    * Returns the distance of p_point to the nearest point of this line between this.a and this.b.
+    * TODO need to consider that the distance may not exist
+    * @return the distance of p_point to the nearest point of this line between this.a and this.b.
     */
    public double segment_distance(PlaPointFloat p_point)
       {
@@ -293,7 +309,8 @@ public final class PlaSegmentFloat implements PlaObject
       }
 
    /**
-    * Calculates the nearest point on this line to p_from_point between this.a and this.b.
+    * Calculates the nearest point on this line to p_from_point between this.a and this.b
+    * TODO need to consider that the project may not exist, for whatever reason
     */
    public PlaPointFloat nearest_segment_point(PlaPointFloat p_from_point)
       {

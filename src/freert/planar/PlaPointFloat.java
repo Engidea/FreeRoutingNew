@@ -38,8 +38,8 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
    
    public static final PlaPointFloat ZERO = new PlaPointFloat(0, 0);
 
-   public  final double v_x;
-   public  final double v_y;
+   public final double v_x;
+   public final double v_y;
 
    public final double v_x_square;
    public final double v_y_square;
@@ -58,10 +58,6 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
       dist_square = 0;
       }
    
-   public boolean is_NaN ()
-      {
-      return is_nan;
-      }
 
    public PlaPointFloat(double p_x, double p_y)
       {
@@ -76,24 +72,37 @@ public final class PlaPointFloat   /*extends PlaPoint*/   implements Serializabl
 
    public PlaPointFloat(PlaPointInt p_pt)
       {
-      v_x = p_pt.v_x;
-      v_y = p_pt.v_y;
-      
-      v_x_square  = v_x * v_x;
-      v_y_square  = v_y * v_y;
+      this(p_pt.v_x, p_pt.v_y);
+      }
 
-      dist_square = v_x_square + v_y_square;
+   public boolean is_NaN ()
+      {
+      return is_nan;
       }
 
    /**
-    * Returns the distance from 0,0 to the point, squared
-    * @return
+    * @return the distance from 0,0 to the point, squared
     */
    public final double distance_square()
       {
       return dist_square;
       }
 
+   @Override
+   public final boolean equals(Object p_other)
+      {
+      if ( ! ( p_other instanceof PlaPointFloat)) return false;
+      
+      PlaPointFloat f_other = (PlaPointFloat)p_other;
+      
+      if ( v_x != f_other.v_x ) return false;
+      
+      if ( v_y != f_other.v_y ) return false;
+      
+      return true;
+      }
+   
+   
    /**
     * The "size" of the line from 0,0 to x,y 
     * @return
