@@ -962,19 +962,13 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
    
    
    
-   
-   
-   
-   
    /**
-            if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-
     * return true if some other trace was split
     */
    private boolean split_wtrace_other_point (Collection<BrdTracep> p_clean_list, PlaPointInt p_intersect, BrdTracep other_trace, int other_line_no, PlaSegmentInt p_my_segment )
       {
       if ( r_board.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
-         r_board.userPrintln("split_wtrace_other_point: this.id="+get_id_no()+" other_id="+other_trace.get_id_no()+" equals="+(other_trace == this) );
+         r_board.userPrintln("split_wtrace_other_point: equals="+(other_trace == this) );
 
       if ( other_trace == this ) return false;
       
@@ -985,7 +979,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
          r_board.userPrintln("split_wtrace_other_points: point "+p_intersect);
 
       // subfunction will check agaoin if the point is inside the  segment
-      ArrayList<BrdTracep> split_traces = other_trace.split_with_end_point(other_line_no, p_intersect, 1);
+      ArrayList<BrdTracep> split_traces = other_trace.split_with_end_point(other_line_no, p_intersect);
 
       if (split_traces.size() < 1 )
          {
@@ -1000,13 +994,14 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       }
 
    
-   private boolean split_wtrace_own_point (LinkedList<BrdTracep> clean_list, PlaPointInt p_intersect, int line_index, PlaSegmentInt s_my, PlaSegmentInt s_other )
+   private boolean split_wtrace_own_point (LinkedList<BrdTracep> clean_list, PlaPointInt p_intersect, int line_index, PlaSegmentInt s_my, boolean other_interset )
       {
-      // the idea being that the intersect point must be also inside the other segment but it can actually land at the end points
-      if ( ! s_other.contains(p_intersect,0) ) return false;
+      if ( ! other_interset ) return false;
       
+      Stat.instance.userPrintln("split_wtrace_own_point: try split id="+get_id_no()+" line_index="+line_index);
+
       // subfunction will check if the point is inside the segment
-      ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, p_intersect, 1);
+      ArrayList<BrdTracep> curr_split_pieces = split_with_end_point(line_index, p_intersect);
       
       if (curr_split_pieces.size() < 1 )
          {
@@ -1070,11 +1065,18 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       
       join_move_to ( i_intersect );
       
+      // the idea being that the intersect point must be also inside the other segment but it can actually land at the end points
+      // need to test before the other gets possibly changed... right ?
+      boolean other_interset = other_segment.contains(i_intersect,0);
+
       // try splitting the found trace first
       boolean other_split = split_wtrace_other_point (clean_list, i_intersect, other_trace, other_line_no, curr_segment );
   
+      if ( other_split && ! other_interset )
+         r_board.userPrintln("split_wtrace_points: impossible other_split && ! other_interset ");
+         
       // no need to readjust the iterator since we are actually exiting
-      boolean own_split = split_wtrace_own_point (clean_list ,i_intersect, seg_index, curr_segment, other_segment);
+      boolean own_split = split_wtrace_own_point (clean_list ,i_intersect, seg_index, curr_segment, other_interset);
    
       if ( other_split && own_split == false ) 
          r_board.userPrintln("split_wtrace_points: other_split && own_split == false");
@@ -1261,7 +1263,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       if ( ! curr_line_segment.contains(split_point) ) return;
 
       // the plus one is from how the caller handles indexes...
-      split_with_end_point(my_line_index, split_point, 0.1);
+      split_with_end_point(my_line_index, split_point);
       }
 
 
@@ -1434,7 +1436,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
     * can return false i for example p_point is not located on this trace or already split !
     * @return the splitted traces, if any, so you can do cleanup 
     */
-   public final ArrayList<BrdTracep> split_with_end_point(int line_idx, PlaPointInt p_point, double tolerance)
+   public final ArrayList<BrdTracep> split_with_end_point(int line_idx, PlaPointInt p_point)
       {
       ArrayList<BrdTracep> risul = new  ArrayList<BrdTracep>(2);
       
@@ -1443,7 +1445,7 @@ public final class BrdTracep extends BrdItem implements BrdConnectable, java.io.
       // if split prohibited do nothing
       if ( ! split_inside_drill_pad_allowed(p_point)) return risul;
       
-      ArrayList<Polyline> split_polylines = polyline.split_at_point(line_idx, p_point, tolerance);
+      ArrayList<Polyline> split_polylines = polyline.split_at_point(line_idx, p_point);
          
       if (split_polylines.size() < 2 )
          {

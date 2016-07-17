@@ -229,9 +229,12 @@ public final class WindowEventsLog implements JComponentProvider
     {
     StringBuffer aBuffer = new StringBuffer(1000);
     
-    aBuffer.append("User Message=");
-    aBuffer.append(message);
-    aBuffer.append("\n");
+    if ( message != null )
+       {
+       aBuffer.append("User Message=");
+       aBuffer.append(message);
+       aBuffer.append("\n");
+       }
     
     if ( exc == null )
       {

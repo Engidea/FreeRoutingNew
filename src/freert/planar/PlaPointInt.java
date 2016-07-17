@@ -275,7 +275,9 @@ public class PlaPointInt extends PlaPoint implements java.io.Serializable
    @Override
    public PlaPointFloat to_float()
       {
-      if ( is_nan ) return new PlaPointFloat();
+
+      // addig this makes rountg more fragile... uff
+      //      if ( is_nan ) return new PlaPointFloat();
       
       return new PlaPointFloat(v_x, v_y);
       }

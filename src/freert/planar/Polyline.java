@@ -238,7 +238,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       if ( have_len < 3)
          {
-         System.err.println(classname+"IntLine A < 3");
+         Stat.instance.userPrintln(null,new IllegalArgumentException("IntLine A < 3"));
          return;
          }
       
@@ -267,8 +267,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
       if (plaline_len() < 3)
          {
          // it is not as terrible as it seems...
-         System.err.println(classname+"IntLine B < 3");
-//         new IllegalArgumentException(classname+"lines < 3").printStackTrace();
+         Stat.instance.userPrintln(null,new IllegalArgumentException("IntLine B < 3"));
          return;
          }
 
@@ -835,7 +834,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
          ShapeTile a_risul = bounding_shape.intersection_with_simplify(a_shape);
          
          if ( a_risul.is_empty() )
-            System.err.println(classname+"offset_shapes: shape is empty");
+            Stat.instance.userPrintln(null,new IllegalArgumentException("offset_shapes: shape is empty"));            
          else
             shape_list.add(a_risul);
          
@@ -1320,7 +1319,7 @@ public final class Polyline implements java.io.Serializable, PlaObject
     * insert a line that is at 45 degree of the segment that was split 
     * @return an empty result if nothing wqs split
     */
-   public ArrayList<Polyline> split_at_point(int p_line_no, PlaPointInt p_point, double tolerance)
+   public ArrayList<Polyline> split_at_point(int p_line_no, PlaPointInt p_point)
       {
       ArrayList<Polyline> result = new ArrayList<Polyline>(2);
       
@@ -1332,10 +1331,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
       
       final PlaLineInt split_line = plaline(p_line_no);
       
-      // The idea being that the split point should be in this "line" with some tolerance
       if ( ! split_line.is_colinear(p_point, 2 ) )
          {
-//         PlaSide aa = split_line.side_of(p_point.to_float(), tolerance);
+         // The idea being that the split point should be in this "line" with some tolerance
          Stat.instance.userPrintln("split_at_point: p-line_no="+p_line_no+" NOT colinear");
          return result;
          }
@@ -1345,13 +1343,28 @@ public final class Polyline implements java.io.Serializable, PlaObject
       PlaPoint next_corner = corner(p_line_no);
       
       // not only the splitpoint must be colinear, it must also be "within" this "segment"
-      if ( ! p_point.is_inside(prev_corner.round(), next_corner.round(), tolerance))
+      if ( ! p_point.is_inside(prev_corner.round(), next_corner.round(), 0))
          {
          if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
             Stat.instance.userPrintln("split_at_point: p_line_no="+p_line_no+" NOT inside");
          return result;
          }
 
+      // however, do not split exaclty in the start/end corner
+      if ( p_point.equals(prev_corner)) 
+         {
+         if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+            Stat.instance.userPrintln("split_at_point: p_line_no="+p_line_no+" p_point.equals(prev_corner)");
+         return result;
+         }
+      
+      if ( p_point.equals(next_corner)) 
+         {
+         if ( Stat.instance.debug(Mdbg.TRACE_SPLIT, Ldbg.DEBUG))
+            Stat.instance.userPrintln("split_at_point: p_line_no="+p_line_no+" p_point.equals(next_corner)");
+         return result;
+         }
+      
 
       PlaDirection split_direction = split_line.direction();
       
@@ -1392,9 +1405,9 @@ public final class Polyline implements java.io.Serializable, PlaObject
          {
          // the idea being that when int points I just add a line that pass from the prev to current corner
          if ( next_corner.is_rational() )
-            first_piece.add(new PlaLineInt(p_point,split_direction));
+            second_piece.add(new PlaLineInt(p_point,split_direction));
          else
-            first_piece.add(new PlaLineInt(p_point,next_corner.round()));
+            second_piece.add(new PlaLineInt(p_point,next_corner.round()));
          }
       else
          {

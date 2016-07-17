@@ -413,7 +413,7 @@ public abstract class AlgoPullTight
          if ( line_idx < 1 ) continue;
          
          // normally there is just one trace at a given keep point, no ?
-         ArrayList<BrdTracep> clean_list = a_trace.split_with_end_point(line_idx, keep_point.keep_point, 0.1);
+         ArrayList<BrdTracep> clean_list = a_trace.split_with_end_point(line_idx, keep_point.keep_point);
          
          // return true if something happenend
          return clean_list.size() > 0;
