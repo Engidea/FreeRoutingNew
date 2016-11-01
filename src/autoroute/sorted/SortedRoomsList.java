@@ -218,7 +218,8 @@ public final class SortedRoomsList
          boolean first_time = true;
        
          // The loop goes backwards fromm the edge line of next_neigbour to the edge line of prev_neigbour.
-         for (;;)
+         // Ah, the pleasure of unchecked terminating loops , this loop may never end Damiano this is a dirty fix
+         for (int cout=0; cout<1000; cout++)
             {
             boolean corner_cut_off = false;
             
