@@ -20,8 +20,8 @@
 package freert.spectra;
 
 import freert.planar.PlaArea;
-import freert.planar.PlaShape;
 import freert.planar.PlaAreaLinear;
+import freert.planar.PlaShape;
 import freert.planar.ShapeSegments;
 import freert.spectra.varie.DsnReadUtils;
 import gui.varie.IndentFileWriter;
@@ -65,17 +65,14 @@ public abstract class DsnShape
 
          if (next_token == DsnKeyword.RECTANGLE)
             {
-
             result = DsnShape.read_rectangle_scope(p_scanner, p_layer_structure);
             }
          else if (next_token == DsnKeyword.POLYGON)
             {
-
             result = DsnShape.read_polygon_scope(p_scanner, p_layer_structure);
             }
          else if (next_token == DsnKeyword.CIRCLE)
             {
-
             result = DsnShape.read_circle_scope(p_scanner, p_layer_structure);
             }
          else if (next_token == DsnKeyword.POLYGON_PATH)

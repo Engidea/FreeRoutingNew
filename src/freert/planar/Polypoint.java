@@ -41,7 +41,7 @@ public final class Polypoint implements java.io.Serializable
          if ( has_point(a_point) ) continue;
          
          // if this point is "colinear" with some points in the list
-         if ( has_colinear(a_point)) continue;
+         if ( has_colinear_last(a_point)) continue;
          
          point_alist.add(a_point);
          }
@@ -116,6 +116,66 @@ public final class Polypoint implements java.io.Serializable
       
       return false;
       }
+   
+   /**
+    * Return true if the given point is colinear with the last two points in the list (since I am adding to the end)
+    * Now, the issue is that this point may be colinear (on the same line) but further away, so, it should be the one
+    * being kept, not the one currently in the list....
+    * @param a_point
+    * @return
+    */
+   private boolean has_colinear_last (PlaPointInt a_point)
+      {
+      int count = point_alist.size();
+      
+      // I need at least two points in the corners for algorithm to work
+      if ( count < 2 ) return false;
+
+      int last_idx  = count - 1;
+      int prev_last = last_idx - 1;
+      
+      PlaPointInt start = point_alist.get(prev_last);
+      PlaPointInt end   = point_alist.get(last_idx);
+      
+      // the given point is not on the same line as start end
+      if (a_point.side_of(start, end) != PlaSide.COLLINEAR) return false;
+
+      // use distance square instread of distance to avoid a square root calculation
+      double d_start_p   = start.distance_square(a_point);
+      double d_p_end     = a_point.distance_square(end);
+      double d_start_end = start.distance_square(end);
+
+      if ( d_start_end >= d_start_p )
+         {
+         if ( d_start_end >= d_p_end )
+            {
+            // simplest case, the new point is in the middle of start end
+            return true; 
+            }
+         else
+            {
+            // new point is on the left of start point, close to it
+            point_alist.set(prev_last, a_point);
+            return true;
+            }
+         }
+      else
+         {
+         if ( d_start_end >= d_p_end )
+            {
+            // new point is on the right of end, close to it
+            point_alist.set(last_idx, a_point);
+            return true;
+            }
+         else
+            {
+            // new point is on the left, far away
+            point_alist.set(prev_last, a_point);
+            return true;
+            }
+         }
+      }
+
    
    /**
     * @return true if there is already this exact point in the list

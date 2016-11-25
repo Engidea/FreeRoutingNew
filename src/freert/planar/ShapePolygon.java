@@ -54,7 +54,7 @@ public final class ShapePolygon extends ShapeSegments
       }
    
    
-   public ShapePolygon(Polypoint p_polypoint)
+   private ShapePolygon(Polypoint p_polypoint)
       {
       if (p_polypoint.winding_number_after_closing() < 0)
          {

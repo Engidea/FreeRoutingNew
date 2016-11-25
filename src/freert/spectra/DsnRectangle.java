@@ -29,8 +29,10 @@ import gui.varie.IndentFileWriter;
  *
  * @author alfons
  */
-public class DsnRectangle extends DsnShape
+public final class DsnRectangle extends DsnShape
    {
+   private final double[] coor;
+
    /**
     * Creates a new instance of Rectangle p_coor is an array of dimension 4 and contains the rectangle coordinates in the following
     * order: lower left x, lower left y, upper right x, uppper right y.
@@ -41,11 +43,33 @@ public class DsnRectangle extends DsnShape
       coor = p_coor;
       }
 
+   @Override
    public DsnRectangle bounding_box()
       {
       return this;
       }
 
+   /**
+    * Calculate the max value of any coordinate multiplied by resolution
+    * Note that negative values are converted to positive
+    * @param resolution
+    * @return
+    */
+   public double maxValue ( int resolution )
+      {
+      double risul = 0;
+      
+      for (int index = 0; index < coor.length; ++index)
+         {
+         double aval = Math.abs(coor[index] * resolution);
+         
+         if ( aval > risul ) risul = aval;
+         }      
+      
+      return risul;
+      }
+   
+   
    /**
     * Creates the smallest rectangle containing this rectangle and p_other
     */
@@ -122,6 +146,4 @@ public class DsnRectangle extends DsnShape
          }
       p_file.write(")");
       }
-
-   public final double[] coor;
    }

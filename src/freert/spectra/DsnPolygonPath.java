@@ -99,9 +99,9 @@ public final class DsnPolygonPath extends DsnPath
          }
       
       PlaPointIntAlist rounded_corner_arr = new PlaPointIntAlist(corner_arr.length);
-      for (int i = 0; i < corner_arr.length; ++i)
+      for (int index = 0; index < corner_arr.length; ++index)
          {
-         rounded_corner_arr.add( corner_arr[i].round());
+         rounded_corner_arr.add( corner_arr[index].round());
          }
       
       PlaShape result = new ShapePolygon(rounded_corner_arr);

@@ -848,11 +848,8 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       // Calculate an appropriate scaling between dsn coordinates and board coordinates.
       int scale_factor = Math.max(p_par.dsn_resolution, 1);
 
-      double max_coor = 0;
-      for (int i = 0; i < 4; ++i)
-         {
-         max_coor = Math.max(max_coor, Math.abs(bounding_box.coor[i] * p_par.dsn_resolution));
-         }
+      double max_coor = bounding_box.maxValue(p_par.dsn_resolution);
+
       if (max_coor == 0)
          {
          p_par.board_outline_ok = false;
@@ -873,6 +870,7 @@ public final class DsnKeywordStructure extends DsnKeywordScope
       bounds = bounds.offset(1000);
 
       Collection<ShapeSegments> board_outline_shapes = new LinkedList<ShapeSegments>();
+
       for (DsnShape curr_shape : p_board_construction_info.outline_shapes)
          {
          if (curr_shape instanceof DsnPolygonPath)
