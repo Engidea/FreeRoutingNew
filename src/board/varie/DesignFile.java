@@ -20,18 +20,19 @@
  */
 package board.varie;
 
-import freert.main.Stat;
-import gui.BoardFrame;
-import gui.varie.FileFilter;
-import gui.varie.GuiResources;
-import gui.win.WindowMessage;
 import interactive.IteraBoard;
+import java.awt.Component;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
 import javax.swing.JFileChooser;
+import freert.main.Stat;
+import gui.BoardFrame;
+import gui.varie.FileFilter;
+import gui.varie.GuiResources;
+import gui.win.WindowMessage;
 
 /**
  * File functionality
@@ -56,7 +57,7 @@ public final class DesignFile
 
 
    /**
-    * Creates a new instance of DesignFile. If p_is_webstart, the application was opened with Java Web Start.
+    * Creates a new instance of DesignFile.
     */
    public DesignFile(Stat p_stat, File p_design_file, JFileChooser p_file_chooser)
       {
@@ -119,7 +120,7 @@ public final class DesignFile
     * @param p_parent
     * @param p_board_frame
     */
-   public void save_as_dialog(java.awt.Component p_parent, BoardFrame p_board_frame)
+   public void save_as_dialog( Component p_parent, BoardFrame p_board_frame)
       {
       String[] file_name_parts = get_name().split("\\.", 2);
       String design_name = file_name_parts[0];

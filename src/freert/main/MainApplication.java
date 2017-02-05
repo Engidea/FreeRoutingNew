@@ -94,8 +94,14 @@ public class MainApplication extends JFrame
       setVisible(true);
 
       stat.log.setVisible(false);
+      
+      if ( haveArgsFname() ) open_board_design_action();
       }
 
+   private boolean haveArgsFname ()
+      {
+      return main_options.design_file_name != null && main_options.design_file_name.length() > 3 ;
+      }
    
    /**
     * NOrmally the look and feel should be the standard one, java, allow to set the systemplaf
@@ -142,13 +148,40 @@ public class MainApplication extends JFrame
       setLocationRelativeTo(null);
       }
 
+   /**
+    * If no option has been given at boot then shows a file chooser for opening a design file
+    * Otherwise, try to open the given file
+    */
+   private DesignFile open_dialog()
+      {
+      JFileChooser file_chooser = new JFileChooser(main_options.design_dir_name);
+      FileFilter file_filter = new FileFilter(DesignFile.all_file_extensions);
+      file_chooser.setFileFilter(file_filter);
+      file_chooser.showOpenDialog(null);
+      
+      File curr_design_file;
+      
+      if ( haveArgsFname() )
+         {
+         curr_design_file = new File (main_options.design_file_name );
+         }
+      else
+         {
+         curr_design_file = file_chooser.getSelectedFile();
+         }
+      
+      if (curr_design_file == null) return null;
+      
+      return new DesignFile(stat, curr_design_file, file_chooser);
+      }
+   
    /** 
     * opens a board design from a binary file or a specctra dsn file
     * Need to detach from swing thread since messages are not printed... 
     */
    private void open_board_design_action()
       {
-      DesignFile design_file = open_dialog(stat, main_options.design_dir_name);
+      DesignFile design_file = open_dialog();
       
       if (design_file == null)
          {
@@ -167,22 +200,6 @@ public class MainApplication extends JFrame
       d_import.execute();
       }
 
-   /**
-    * Shows a file chooser for opening a design file
-    */
-   private DesignFile open_dialog(Stat stat, String p_design_dir_name)
-      {
-      JFileChooser file_chooser = new JFileChooser(p_design_dir_name);
-      FileFilter file_filter = new FileFilter(DesignFile.all_file_extensions);
-      file_chooser.setFileFilter(file_filter);
-      file_chooser.showOpenDialog(null);
-      
-      File curr_design_file = file_chooser.getSelectedFile();
-      
-      if (curr_design_file == null) return null;
-      
-      return new DesignFile(stat, curr_design_file, file_chooser);
-      }
    
 
    private boolean open_board_file (BoardFrame b_frame)
