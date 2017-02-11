@@ -57,7 +57,6 @@ public class MainApplication extends JFrame
 
    private final GuiResources resources;
    private JButton open_board_button;
-   private javax.swing.JPanel main_panel;
 
    private Collection<BoardFrame> board_frames = new LinkedList<BoardFrame>();
 
@@ -91,11 +90,14 @@ public class MainApplication extends JFrame
       addWindowListener(new WindowStateListener());
       
       mainApplication();
-      setVisible(true);
 
       stat.log.setVisible(false);
       
-      if ( haveArgsFname() ) open_board_design_action();
+      if ( haveArgsFname() ) 
+         open_board_design_action();
+      else
+         setVisible(true);
+         
       }
 
    private boolean haveArgsFname ()
@@ -134,15 +136,16 @@ public class MainApplication extends JFrame
     */
    private void mainApplication()
       {
-      main_panel = new JPanel(new BorderLayout());
-      getContentPane().add(main_panel);
+      JPanel main_panel = new JPanel(new BorderLayout());
 
       open_board_button = resources.newJButton("open_own_design", "open_own_design_tooltip", listener);
 
       main_panel.add(open_board_button,BorderLayout.NORTH);
 
       main_panel.add(stat.log.getComponentToDisplay(),BorderLayout.CENTER);
-      
+
+      getContentPane().add(main_panel);
+
       pack();
       
       setLocationRelativeTo(null);
