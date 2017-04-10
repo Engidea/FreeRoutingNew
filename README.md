@@ -1,6 +1,12 @@
 FreeRouting
 ===========
 
+NOTE: if you just want the latest version use
+
+**
+git clone --depth=1 https://github.com/Engidea/FreeRoutingNew.git
+**
+
 You should be able to run it by going to deploy and use run.sh
 You can run the jar and it is not dependent on the java web start anymore
 
@@ -41,6 +47,8 @@ Yes, I understand the reasoning and it is formally correct, it is just me that p
 
 How to run the Freerouting project in the Eclipse IDE
 ==================================================================================
+
+
 
 1) Have a Java to run Eclipse Java (I use Luna), download Eclipse Java from www.eclipse.org
 
