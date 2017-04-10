@@ -11,6 +11,12 @@
   <property name="lib.dir" value="jarlibs"/>
   <property name="app.jar" value="${deploy.dir}/FreeRouting.jar"/>
   
+   <path id="jclasspath">
+	   <fileset dir="${lib.dir}">
+	      <include name="*.jar"/>
+	   </fileset>
+   </path>
+	
   <tstamp>
 	  <format property="TODAY_ISO"
 	          pattern="yyyyMMdd_hhmm"
@@ -37,6 +43,7 @@
     	   includeantruntime="false"
            source="1.6" target="1.6">
       <src path="src"/>
+      <classpath refid="jclasspath"/>
     </javac>
   </target>
 
