@@ -150,9 +150,11 @@ public final class GdiContext implements java.io.Serializable
       if (p_color == null) return;
 
       Graphics2D g2 = (Graphics2D) p_g;
-      Rectangle clip_shape = (Rectangle) p_g.getClip();
+      Rectangle clip_shape = p_g.getClipBounds();
+      
       // the class member update_box cannot be used here, because the dirty rectangle is internally enlarged by the system.
       // Therefore we can not improve the performance by using an update octagon instead of a box.
+      
       ShapeTileBox clip_box = coordinate_transform.screen_to_board(clip_shape);
       double scaled_width = coordinate_transform.board_to_screen(p_half_width);
 
@@ -264,7 +266,9 @@ public final class GdiContext implements java.io.Serializable
    public void draw_boundary(PlaArea p_area, double p_draw_half_width, Color p_color, Graphics p_g, double p_translucency_factor)
       {
       draw_boundary(p_area.get_border(), p_draw_half_width, p_color, p_g, p_translucency_factor);
+      
       PlaShape[] holes = p_area.get_holes();
+      
       for (int index = 0; index < holes.length; ++index)
          {
          draw_boundary(holes[index], p_draw_half_width, p_color, p_g, p_translucency_factor);
@@ -281,7 +285,7 @@ public final class GdiContext implements java.io.Serializable
       Point2D center = coordinate_transform.board_to_screen(p_circle.center.to_float());
       double radius = coordinate_transform.board_to_screen(p_circle.radius);
 
-      if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle) p_g.getClip(), radius))  return;
+      if (!point_near_rectangle(center.getX(), center.getY(), p_g.getClipBounds(), radius))  return;
 
       double diameter = 2 * radius;
       Ellipse2D circle = new Ellipse2D.Double(center.getX() - radius, center.getY() - radius, diameter, diameter);
@@ -317,7 +321,7 @@ public final class GdiContext implements java.io.Serializable
          Point2D center = coordinate_transform.board_to_screen(curr_ellipse.center);
          double bigger_radius = coordinate_transform.board_to_screen(curr_ellipse.bigger_radius);
 
-         if (!point_near_rectangle(center.getX(), center.getY(), (Rectangle) p_g.getClip(), bigger_radius))
+         if (!point_near_rectangle(center.getX(), center.getY(), p_g.getClipBounds(), bigger_radius))
             {
             continue;
             }
@@ -427,8 +431,9 @@ public final class GdiContext implements java.io.Serializable
             System.out.println("GraphicsContext.fill_area: shape not bounded");
             return;
             }
-         Rectangle clip_shape = (Rectangle) p_g.getClip();
+         Rectangle clip_shape = p_g.getClipBounds();
          ShapeTileBox clip_box = coordinate_transform.screen_to_board(clip_shape);
+         
          if (!border.bounding_box().intersects(clip_box))
             {
             return;
