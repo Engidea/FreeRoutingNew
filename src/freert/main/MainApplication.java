@@ -93,16 +93,9 @@ public class MainApplication extends JFrame
 
       stat.log.setVisible(false);
       
-      if ( haveArgsFname() ) 
-         open_board_design_action();
-      else
-         setVisible(true);
-         
-      }
+      setVisible(true);
 
-   private boolean haveArgsFname ()
-      {
-      return main_options.design_file_name != null && main_options.design_file_name.length() > 3 ;
+      open_board_design_action();
       }
    
    /**
@@ -160,16 +153,16 @@ public class MainApplication extends JFrame
       JFileChooser file_chooser = new JFileChooser(main_options.design_dir_name);
       FileFilter file_filter = new FileFilter(DesignFile.all_file_extensions);
       file_chooser.setFileFilter(file_filter);
-      file_chooser.showOpenDialog(null);
       
       File curr_design_file;
       
-      if ( haveArgsFname() )
+      if ( main_options.haveDesignFname() )
          {
          curr_design_file = new File (main_options.design_file_name );
          }
       else
          {
+         file_chooser.showOpenDialog(null);
          curr_design_file = file_chooser.getSelectedFile();
          }
       
@@ -202,8 +195,6 @@ public class MainApplication extends JFrame
       
       d_import.execute();
       }
-
-   
 
    private boolean open_board_file (BoardFrame b_frame)
       {

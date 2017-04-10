@@ -66,4 +66,11 @@ public class MainOptions
             }
          }
       }
+   
+   public boolean haveDesignFname ()
+      {
+      return design_file_name != null && design_file_name.length() > 3 ;
+      }
+   
+   
    }
