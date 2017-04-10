@@ -18,6 +18,7 @@ package freert.main;
 
 
 import java.util.Locale;
+import freert.varie.JarManifest;
 
 /**
  * For all of you wondering on this class, the rationale is this
@@ -28,15 +29,16 @@ import java.util.Locale;
  */
 public final class Stat
    {
+   public static Stat instance;        // use this when the correct stat is not available
+
    public java.util.Locale locale;        // The Locale to be used in the whole program
    
    public WindowEventsLog log;
-
+   public JarManifest jmanifest;        // use to pick up info about the program
+   
    public int debug_mask;                // debug log mask
    public int debug_level;               // debug level mask
    
-   
-   public static Stat instance;        // use this when the correct stat is not available
    
    public Stat ()
       {

@@ -11,6 +11,12 @@
   <property name="lib.dir" value="jarlibs"/>
   <property name="app.jar" value="${deploy.dir}/FreeRouting.jar"/>
   
+  <tstamp>
+	  <format property="TODAY_ISO"
+	          pattern="yyyyMMdd_hhmm"
+	          locale="en,UK"/>
+  </tstamp>
+	
   <target name="init">
     <tstamp/>
     <mkdir dir="${classes.dir}" />
@@ -56,6 +62,8 @@
           <attribute name="Main-Class" value="freert.main.MainApplication"/>
           <attribute name="Copyright" value="Damiano Bolla"/>     
           <attribute name="SplashScreen-Image" value="logo.gif" /> 
+      	  <attribute name="Specification-Version" value="2017"/>
+          <attribute name="Implementation-Version" value="${TODAY_ISO}"/>
       </manifest>
       <fileset dir="${classes.dir}">
           <include name="**/*.class"/>

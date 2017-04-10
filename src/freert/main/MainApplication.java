@@ -20,6 +20,7 @@
  */
 package freert.main;
 
+import freert.varie.JarManifest;
 import gui.BoardFrame;
 import gui.varie.FileFilter;
 import gui.varie.GuiResources;
@@ -48,9 +49,6 @@ import board.varie.DesignFile;
 public class MainApplication extends JFrame
    {
    private static final long serialVersionUID = 1L;
-
-   // Change this string when creating a new version
-   public static final String VERSION_NUMBER_STRING = "20170410";
    
    private final MainApplicationListener listener = new MainApplicationListener();
    private final Stat stat = new Stat();
@@ -80,6 +78,8 @@ public class MainApplication extends JFrame
 
       stat.log = new WindowEventsLog(true);
 
+      stat.jmanifest = new JarManifest();
+      
       resources = new GuiResources(stat,"gui.resources.MainApplication");
       
       setTitle(resources.getString("title"));

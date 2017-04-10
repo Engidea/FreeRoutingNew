@@ -41,6 +41,12 @@ public class WindowAbout extends GuiSubWindowSavable
       {
       super (p_board_frame);
       
+//      String version = p_board_frame.stat.jmanifest.getValue("Built-Date");
+
+      Package pack = MainApplication.class.getPackage();
+      String version = pack.getImplementationVersion();
+       
+      
       GuiResources resources = board_frame.newGuiResources("gui.resources.WindowAbout");
       
       setTitle(resources.getString("title"));
@@ -60,7 +66,7 @@ public class WindowAbout extends GuiSubWindowSavable
       gridbag.setConstraints(description_label, gridbag_constraints);
       window_panel.add(description_label, gridbag_constraints);
 
-      String version_string = resources.getString("version") + " " + MainApplication.VERSION_NUMBER_STRING;
+      String version_string = resources.getString("version") + " " + version;
       JLabel version_label = new JLabel(version_string);
       gridbag.setConstraints(version_label, gridbag_constraints);
       window_panel.add(version_label, gridbag_constraints);
