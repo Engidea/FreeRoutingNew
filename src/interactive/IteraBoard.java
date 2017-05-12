@@ -1084,9 +1084,10 @@ public final class IteraBoard
          read_result = reader.read( p_item_id_no_generator );
          p_design.close();
          }
-      catch (Exception exc)
+      catch (Throwable exc)
          {
-         stat.userPrintln("import_design", exc);
+         stat.userPrintln("import_design"+ exc.toString());
+         exc.printStackTrace();
          return false;
          }
 

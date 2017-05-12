@@ -1,8 +1,9 @@
-package designformats.specctra;
+package freert.spectra;
 @SuppressWarnings("all")
 %%
 
 %class DsnFileScanner
+%public
 %implements JflexScanner
 %unicode
 %ignorecase 
@@ -33,8 +34,8 @@ QuoteChar2 = '
 
 SpecCharASCII = _|\.|\/|\\|:|#|\$|&|>|<|,|;|=|@|\[|\]||\~|\*|\?|\!|\%|\^
 
-SpecCharANSI1 = €|‚|ƒ|„|…|†|‡|ˆ|‰|Š|‹|Œ|Ž|‘|’|“|”|•|–|—|˜|™|š|›|œ|ž|Ÿ
-SpecCharANSI2 = [¡-ÿ]
+SpecCharANSI1 = ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|ï¿½|\u03A9
+SpecCharANSI2 = [ï¿½-ï¿½]
 SpecCharANSI = {SpecCharANSI1}|{SpecCharANSI2}
 
 
@@ -308,5 +309,4 @@ ComponentIdentifier = ({Letter}|{Digit}|{SpecChar4})({Letter}|{Digit}|{SpecChar5
 }
 
 /* error fallback */
-.|\n                             { throw new Error("Illegal character <"+
-                                                    yytext()+">"); }
+[^]|\n                             { throw new Error("Illegal character <"+yytext()+">"); }

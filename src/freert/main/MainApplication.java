@@ -228,7 +228,7 @@ public class MainApplication extends JFrame
       return true;
       }
    
-   private void open_board_file_gui (BoardFrame b_frame, boolean read_ok )
+   private void open_board_file_gui (BoardFrame b_frame, Boolean read_ok )
       {
       
       if ( read_ok )
