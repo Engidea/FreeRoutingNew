@@ -38,6 +38,7 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
 import javax.swing.UIManager;
 import board.varie.DesignFile;
@@ -95,7 +96,10 @@ public class MainApplication extends JFrame
       
       setVisible(true);
 
-      open_board_design_action();
+      SwingUtilities.invokeLater(new Runnable() {
+         public void run() {
+            open_board_design_action();
+         }});
       }
    
    /**
